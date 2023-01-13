@@ -362,7 +362,7 @@ public class NotificationGroupAlertTransferHelper implements OnHeadsUpChangedLis
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$alertNotificationWhenPossible$0$com-android-systemui-statusbar-phone-NotificationGroupAlertTransferHelper */
-    public /* synthetic */ void mo44456xd966a209(NotificationEntry notificationEntry, int i, NotificationEntry notificationEntry2) {
+    public /* synthetic */ void mo44471xd966a209(NotificationEntry notificationEntry, int i, NotificationEntry notificationEntry2) {
         PendingAlertInfo remove = this.mPendingAlerts.remove(notificationEntry.getKey());
         if (remove == null) {
             return;

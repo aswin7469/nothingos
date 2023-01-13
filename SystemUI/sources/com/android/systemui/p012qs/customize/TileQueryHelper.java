@@ -11,7 +11,7 @@ import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.ArraySet;
 import android.widget.Button;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.qualifiers.Background;
 import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.navigationbar.NavigationBarInflaterView;
@@ -74,7 +74,7 @@ public class TileQueryHelper {
 
     private void addCurrentAndStockTiles(QSTileHost qSTileHost) {
         QSTile createTile;
-        String string = this.mContext.getString(C1893R.string.quick_settings_tiles_stock);
+        String string = this.mContext.getString(C1894R.string.quick_settings_tiles_stock);
         String string2 = Settings.Secure.getString(this.mContext.getContentResolver(), QSTileHost.TILES_SETTING);
         ArrayList arrayList = new ArrayList();
         if (string2 != null) {
@@ -181,11 +181,11 @@ public class TileQueryHelper {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$addPackageTiles$0$com-android-systemui-qs-customize-TileQueryHelper */
-    public /* synthetic */ void mo36552x4cc84b7e(QSTileHost qSTileHost) {
+    public /* synthetic */ void mo36556x4cc84b7e(QSTileHost qSTileHost) {
         Collection<QSTile> tiles = qSTileHost.getTiles();
         PackageManager packageManager = this.mContext.getPackageManager();
         List<ResolveInfo> queryIntentServicesAsUser = packageManager.queryIntentServicesAsUser(new Intent("android.service.quicksettings.action.QS_TILE"), 0, this.mUserTracker.getUserId());
-        String string = this.mContext.getString(C1893R.string.quick_settings_tiles_stock);
+        String string = this.mContext.getString(C1894R.string.quick_settings_tiles_stock);
         for (ResolveInfo resolveInfo : queryIntentServicesAsUser) {
             ComponentName componentName = new ComponentName(resolveInfo.serviceInfo.packageName, resolveInfo.serviceInfo.name);
             if (!string.contains(componentName.flattenToString())) {
@@ -215,7 +215,7 @@ public class TileQueryHelper {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$notifyTilesChanged$1$com-android-systemui-qs-customize-TileQueryHelper */
-    public /* synthetic */ void mo36553x8126aa51(ArrayList arrayList, boolean z) {
+    public /* synthetic */ void mo36557x8126aa51(ArrayList arrayList, boolean z) {
         TileStateListener tileStateListener = this.mListener;
         if (tileStateListener != null) {
             tileStateListener.onTilesChanged(arrayList);

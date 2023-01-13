@@ -11,6 +11,6 @@ public final /* synthetic */ class VariableDateViewController$$ExternalSynthetic
     }
 
     public final void run() {
-        VariableDateViewController.m3246post$lambda0(this.f$0);
+        VariableDateViewController.m3251post$lambda0(this.f$0);
     }
 }

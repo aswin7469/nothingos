@@ -8,7 +8,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.Window;
 import android.widget.LinearLayout;
-import com.google.android.setupcompat.C3931R;
+import com.google.android.setupcompat.C3941R;
 import com.google.android.setupcompat.PartnerCustomizationLayout;
 import com.google.android.setupcompat.partnerconfig.PartnerConfig;
 import com.google.android.setupcompat.partnerconfig.PartnerConfigHelper;
@@ -22,7 +22,7 @@ public class StatusBarMixin implements Mixin {
 
     public StatusBarMixin(PartnerCustomizationLayout partnerCustomizationLayout2, Window window, AttributeSet attributeSet, int i) {
         this.partnerCustomizationLayout = partnerCustomizationLayout2;
-        View findManagedViewById = partnerCustomizationLayout2.findManagedViewById(C3931R.C3933id.suc_layout_status);
+        View findManagedViewById = partnerCustomizationLayout2.findManagedViewById(C3941R.C3943id.suc_layout_status);
         if (findManagedViewById != null) {
             if (findManagedViewById instanceof StatusBarBackgroundLayout) {
                 this.statusBarLayout = (StatusBarBackgroundLayout) findManagedViewById;
@@ -31,9 +31,9 @@ public class StatusBarMixin implements Mixin {
             }
             this.decorView = window.getDecorView();
             window.setStatusBarColor(0);
-            TypedArray obtainStyledAttributes = partnerCustomizationLayout2.getContext().obtainStyledAttributes(attributeSet, C3931R.styleable.SucStatusBarMixin, i, 0);
-            setLightStatusBar(obtainStyledAttributes.getBoolean(C3931R.styleable.SucStatusBarMixin_sucLightStatusBar, isLightStatusBar()));
-            setStatusBarBackground(obtainStyledAttributes.getDrawable(C3931R.styleable.SucStatusBarMixin_sucStatusBarBackground));
+            TypedArray obtainStyledAttributes = partnerCustomizationLayout2.getContext().obtainStyledAttributes(attributeSet, C3941R.styleable.SucStatusBarMixin, i, 0);
+            setLightStatusBar(obtainStyledAttributes.getBoolean(C3941R.styleable.SucStatusBarMixin_sucLightStatusBar, isLightStatusBar()));
+            setStatusBarBackground(obtainStyledAttributes.getDrawable(C3941R.styleable.SucStatusBarMixin_sucStatusBarBackground));
             obtainStyledAttributes.recycle();
             return;
         }

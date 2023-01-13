@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.Constraints;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dreams.complication.Complication;
 import com.android.systemui.dreams.dagger.DreamOverlayComponent;
 import com.android.systemui.touch.TouchInsetManager;
@@ -76,7 +76,7 @@ public class ComplicationLayoutEngine implements Complication.VisibilityControll
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$applyLayoutParams$0$com-android-systemui-dreams-complication-ComplicationLayoutEngine$ViewEntry */
-        public /* synthetic */ void mo32580xd35d1ce(boolean z, int i, ConstraintLayout.LayoutParams layoutParams, View view, boolean z2, Integer num) {
+        public /* synthetic */ void mo32591xd35d1ce(boolean z, int i, ConstraintLayout.LayoutParams layoutParams, View view, boolean z2, Integer num) {
             int intValue = num.intValue();
             if (intValue == 1) {
                 if (z || i != 2) {
@@ -85,7 +85,7 @@ public class ComplicationLayoutEngine implements Complication.VisibilityControll
                     layoutParams.topToBottom = view.getId();
                 }
                 if (z2 && (i == 8 || i == 4)) {
-                    layoutParams.endToStart = C1893R.C1897id.complication_top_guide;
+                    layoutParams.endToStart = C1894R.C1898id.complication_top_guide;
                 }
             } else if (intValue == 2) {
                 if (z || i != 1) {
@@ -94,7 +94,7 @@ public class ComplicationLayoutEngine implements Complication.VisibilityControll
                     layoutParams.bottomToTop = view.getId();
                 }
                 if (z2 && (i == 8 || i == 4)) {
-                    layoutParams.topToBottom = C1893R.C1897id.complication_bottom_guide;
+                    layoutParams.topToBottom = C1894R.C1898id.complication_bottom_guide;
                 }
             } else if (intValue == 4) {
                 if (z || i != 8) {
@@ -103,7 +103,7 @@ public class ComplicationLayoutEngine implements Complication.VisibilityControll
                     layoutParams.startToEnd = view.getId();
                 }
                 if (z2 && (i == 2 || i == 1)) {
-                    layoutParams.endToStart = C1893R.C1897id.complication_start_guide;
+                    layoutParams.endToStart = C1894R.C1898id.complication_start_guide;
                 }
             } else if (intValue == 8) {
                 if (z || i != 4) {
@@ -112,7 +112,7 @@ public class ComplicationLayoutEngine implements Complication.VisibilityControll
                     layoutParams.endToStart = view.getId();
                 }
                 if (z2 && (i == 1 || i == 2)) {
-                    layoutParams.startToEnd = C1893R.C1897id.complication_end_guide;
+                    layoutParams.startToEnd = C1894R.C1898id.complication_end_guide;
                 }
             }
             if (z) {

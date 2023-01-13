@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import com.google.android.setupcompat.PartnerCustomizationLayout;
-import com.google.android.setupdesign.C3953R;
+import com.google.android.setupdesign.C3963R;
 import com.google.android.setupdesign.GlifLayout;
 import com.google.android.setupdesign.util.DescriptionStyler;
 
@@ -42,7 +42,7 @@ public class DescriptionItem extends Item {
 
     public void onBindView(View view) {
         super.onBindView(view);
-        TextView textView = (TextView) view.findViewById(C3953R.C3956id.sud_items_title);
+        TextView textView = (TextView) view.findViewById(C3963R.C3966id.sud_items_title);
         if (shouldApplyPartnerDescriptionHeavyStyle()) {
             DescriptionStyler.applyPartnerCustomizationHeavyStyle(textView);
         } else if (shouldApplyPartnerDescriptionLightStyle()) {

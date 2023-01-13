@@ -19,7 +19,7 @@ import com.android.keyguard.KeyguardSecurityContainer;
 import com.android.keyguard.KeyguardSecurityModel;
 import com.android.keyguard.dagger.KeyguardBouncerScope;
 import com.android.settingslib.utils.ThreadUtils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.DejankUtils;
 import com.android.systemui.Dependency;
 import com.android.systemui.Gefingerpoken;
@@ -166,9 +166,9 @@ public class KeyguardSecurityContainerController extends ViewController<Keyguard
                     Thread.sleep(5000);
                 } catch (InterruptedException unused) {
                 }
-                System.m1693gc();
+                System.m1699gc();
                 System.runFinalization();
-                System.m1693gc();
+                System.m1699gc();
             }
 
             public void reset() {
@@ -487,7 +487,7 @@ public class KeyguardSecurityContainerController extends ViewController<Keyguard
 
     private boolean canUseOneHandedBouncer() {
         if (this.mCurrentSecurityMode == KeyguardSecurityModel.SecurityMode.Pattern || this.mCurrentSecurityMode == KeyguardSecurityModel.SecurityMode.PIN) {
-            return getResources().getBoolean(C1893R.bool.can_use_one_handed_bouncer);
+            return getResources().getBoolean(C1894R.bool.can_use_one_handed_bouncer);
         }
         return false;
     }

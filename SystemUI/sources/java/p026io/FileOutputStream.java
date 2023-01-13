@@ -16,7 +16,7 @@ public class FileOutputStream extends OutputStream {
     private volatile boolean closed;
 
     /* renamed from: fd */
-    private final FileDescriptor f520fd;
+    private final FileDescriptor f518fd;
     private final CloseGuard guard;
     private final boolean isFdOwner;
     private final String path;
@@ -51,7 +51,7 @@ public class FileOutputStream extends OutputStream {
             throw new NullPointerException();
         } else if (!file.isInvalid()) {
             FileDescriptor open = IoBridge.open(path2, OsConstants.O_WRONLY | OsConstants.O_CREAT | (append2 ? OsConstants.O_APPEND : OsConstants.O_TRUNC));
-            this.f520fd = open;
+            this.f518fd = open;
             this.isFdOwner = true;
             this.append = append2;
             this.path = path2;
@@ -72,7 +72,7 @@ public class FileOutputStream extends OutputStream {
         this.guard = CloseGuard.get();
         this.tracker = new IoTracker();
         if (fdObj != null) {
-            this.f520fd = fdObj;
+            this.f518fd = fdObj;
             this.append = false;
             this.path = null;
             this.isFdOwner = isFdOwner2;
@@ -96,7 +96,7 @@ public class FileOutputStream extends OutputStream {
     public void write(byte[] b, int off, int len) throws IOException {
         if (!this.closed || len <= 0) {
             this.tracker.trackIo(len, IoTracker.Mode.WRITE);
-            IoBridge.write(this.f520fd, b, off, len);
+            IoBridge.write(this.f518fd, b, off, len);
             return;
         }
         throw new IOException("Stream Closed");
@@ -112,7 +112,7 @@ public class FileOutputStream extends OutputStream {
         if (r2.isFdOwner == false) goto L_?;
      */
     /* JADX WARNING: Code restructure failed: missing block: B:14:0x001d, code lost:
-        libcore.p030io.IoBridge.closeAndSignalBlockedThreads(r2.f520fd);
+        libcore.p030io.IoBridge.closeAndSignalBlockedThreads(r2.f518fd);
      */
     /* JADX WARNING: Code restructure failed: missing block: B:22:?, code lost:
         return;
@@ -146,7 +146,7 @@ public class FileOutputStream extends OutputStream {
         L_0x0019:
             boolean r0 = r2.isFdOwner
             if (r0 == 0) goto L_0x0022
-            java.io.FileDescriptor r0 = r2.f520fd
+            java.io.FileDescriptor r0 = r2.f518fd
             libcore.p030io.IoBridge.closeAndSignalBlockedThreads(r0)
         L_0x0022:
             return
@@ -159,7 +159,7 @@ public class FileOutputStream extends OutputStream {
     }
 
     public final FileDescriptor getFD() throws IOException {
-        FileDescriptor fileDescriptor = this.f520fd;
+        FileDescriptor fileDescriptor = this.f518fd;
         if (fileDescriptor != null) {
             return fileDescriptor;
         }
@@ -170,7 +170,7 @@ public class FileOutputStream extends OutputStream {
         FileChannel fileChannel;
         synchronized (this) {
             if (this.channel == null) {
-                this.channel = FileChannelImpl.open(this.f520fd, this.path, false, true, this.append, this);
+                this.channel = FileChannelImpl.open(this.f518fd, this.path, false, true, this.append, this);
             }
             fileChannel = this.channel;
         }
@@ -183,11 +183,11 @@ public class FileOutputStream extends OutputStream {
         if (closeGuard != null) {
             closeGuard.warnIfOpen();
         }
-        FileDescriptor fileDescriptor = this.f520fd;
+        FileDescriptor fileDescriptor = this.f518fd;
         if (fileDescriptor == null) {
             return;
         }
-        if (fileDescriptor == FileDescriptor.out || this.f520fd == FileDescriptor.err) {
+        if (fileDescriptor == FileDescriptor.out || this.f518fd == FileDescriptor.err) {
             flush();
         } else {
             close();

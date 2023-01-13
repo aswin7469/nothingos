@@ -222,7 +222,7 @@ class SplitScreenTransitions {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startExampleAnimation$2$com-android-wm-shell-splitscreen-SplitScreenTransitions */
-    public /* synthetic */ void mo50797xbd66a272(SurfaceControl.Transaction transaction, SurfaceControl surfaceControl, float f, ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo50806xbd66a272(SurfaceControl.Transaction transaction, SurfaceControl surfaceControl, float f, ValueAnimator valueAnimator) {
         transaction.setAlpha(surfaceControl, f);
         transaction.apply();
         this.mTransactionPool.release(transaction);
@@ -231,7 +231,7 @@ class SplitScreenTransitions {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startExampleAnimation$1$com-android-wm-shell-splitscreen-SplitScreenTransitions */
-    public /* synthetic */ void mo50796x97d29971(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo50805x97d29971(ValueAnimator valueAnimator) {
         this.mAnimations.remove((Object) valueAnimator);
         onFinish((WindowContainerTransaction) null, (WindowContainerTransactionCallback) null);
     }
@@ -267,7 +267,7 @@ class SplitScreenTransitions {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startExampleResizeAnimation$5$com-android-wm-shell-splitscreen-SplitScreenTransitions */
-    public /* synthetic */ void mo50799xac48ebe1(SurfaceControl.Transaction transaction, SurfaceControl surfaceControl, Rect rect, ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo50808xac48ebe1(SurfaceControl.Transaction transaction, SurfaceControl surfaceControl, Rect rect, ValueAnimator valueAnimator) {
         transaction.setWindowCrop(surfaceControl, 0, 0);
         transaction.setPosition(surfaceControl, (float) rect.left, (float) rect.top);
         transaction.apply();
@@ -277,7 +277,7 @@ class SplitScreenTransitions {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startExampleResizeAnimation$4$com-android-wm-shell-splitscreen-SplitScreenTransitions */
-    public /* synthetic */ void mo50798x86b4e2e0(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo50807x86b4e2e0(ValueAnimator valueAnimator) {
         this.mAnimations.remove((Object) valueAnimator);
         onFinish((WindowContainerTransaction) null, (WindowContainerTransactionCallback) null);
     }

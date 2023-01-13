@@ -9,10 +9,10 @@ class TimSort<T> {
     private static final int MIN_MERGE = 32;
 
     /* renamed from: a */
-    private final T[] f708a;
+    private final T[] f706a;
 
     /* renamed from: c */
-    private final Comparator<? super T> f709c;
+    private final Comparator<? super T> f707c;
     private int minGallop = 7;
     private final int[] runBase;
     private final int[] runLen;
@@ -31,8 +31,8 @@ class TimSort<T> {
     }
 
     private TimSort(T[] tArr, Comparator<? super T> comparator, T[] tArr2, int i, int i2) {
-        this.f708a = tArr;
-        this.f709c = comparator;
+        this.f706a = tArr;
+        this.f707c = comparator;
         int length = tArr.length;
         int i3 = length < 512 ? length >>> 1 : 256;
         if (tArr2 == null || i2 < i3 || i + i3 > tArr2.length) {
@@ -319,14 +319,14 @@ class TimSort<T> {
             iArr2[i5] = iArr2[i9];
         }
         this.stackSize = i8 - 1;
-        T[] tArr = this.f708a;
-        int gallopRight = gallopRight(tArr[i6], tArr, i3, i4, 0, this.f709c);
+        T[] tArr = this.f706a;
+        int gallopRight = gallopRight(tArr[i6], tArr, i3, i4, 0, this.f707c);
         int i10 = i3 + gallopRight;
         int i11 = i4 - gallopRight;
         if (i11 != 0) {
-            T[] tArr2 = this.f708a;
+            T[] tArr2 = this.f706a;
             int i12 = i6;
-            int gallopLeft = gallopLeft(tArr2[(i10 + i11) - 1], tArr2, i6, i7, i7 - 1, this.f709c);
+            int gallopLeft = gallopLeft(tArr2[(i10 + i11) - 1], tArr2, i6, i7, i7 - 1, this.f707c);
             if (gallopLeft != 0) {
                 if (i11 <= gallopLeft) {
                     mergeLo(i10, i11, i12, gallopLeft);
@@ -602,7 +602,7 @@ class TimSort<T> {
             r0 = r19
             r1 = r20
             r2 = r21
-            T[] r7 = r0.f708a
+            T[] r7 = r0.f706a
             java.lang.Object[] r8 = r0.ensureCapacity(r2)
             int r3 = r0.tmpBase
             java.lang.System.arraycopy((java.lang.Object) r7, (int) r1, (java.lang.Object) r8, (int) r3, (int) r2)
@@ -623,7 +623,7 @@ class TimSort<T> {
             r7[r4] = r0
             return
         L_0x002d:
-            java.util.Comparator<? super T> r10 = r0.f709c
+            java.util.Comparator<? super T> r10 = r0.f707c
             int r6 = r0.minGallop
         L_0x0031:
             r12 = 0
@@ -950,7 +950,7 @@ class TimSort<T> {
             r0 = r20
             r1 = r23
             r2 = r24
-            T[] r7 = r0.f708a
+            T[] r7 = r0.f706a
             java.lang.Object[] r8 = r0.ensureCapacity(r2)
             int r9 = r0.tmpBase
             java.lang.System.arraycopy((java.lang.Object) r7, (int) r1, (java.lang.Object) r8, (int) r9, (int) r2)
@@ -982,7 +982,7 @@ class TimSort<T> {
             r7[r5] = r0
             return
         L_0x003c:
-            java.util.Comparator<? super T> r11 = r0.f709c
+            java.util.Comparator<? super T> r11 = r0.f707c
             int r3 = r0.minGallop
         L_0x0040:
             r13 = 0
@@ -1178,9 +1178,9 @@ class TimSort<T> {
         if (this.tmpLen < i) {
             int numberOfLeadingZeros = (-1 >>> Integer.numberOfLeadingZeros(i)) + 1;
             if (numberOfLeadingZeros >= 0) {
-                i = Math.min(numberOfLeadingZeros, this.f708a.length >>> 1);
+                i = Math.min(numberOfLeadingZeros, this.f706a.length >>> 1);
             }
-            this.tmp = (Object[]) Array.newInstance(this.f708a.getClass().getComponentType(), i);
+            this.tmp = (Object[]) Array.newInstance(this.f706a.getClass().getComponentType(), i);
             this.tmpLen = i;
             this.tmpBase = 0;
         }

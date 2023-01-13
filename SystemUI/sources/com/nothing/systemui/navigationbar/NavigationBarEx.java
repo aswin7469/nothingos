@@ -3,7 +3,7 @@ package com.nothing.systemui.navigationbar;
 import android.content.Context;
 import android.os.SystemClock;
 import android.widget.Toast;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.nothing.gamemode.NTGameModeHelper;
 import com.nothing.systemui.NTDependencyEx;
 
@@ -29,7 +29,7 @@ public class NavigationBarEx {
     }
 
     public void showToast(Context context) {
-        Toast makeText = Toast.makeText(context, C1893R.string.click_again, 0);
+        Toast makeText = Toast.makeText(context, C1894R.string.click_again, 0);
         this.mToast = makeText;
         makeText.show();
     }

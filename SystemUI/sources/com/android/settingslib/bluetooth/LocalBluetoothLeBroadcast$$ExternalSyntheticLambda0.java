@@ -12,6 +12,6 @@ public final /* synthetic */ class LocalBluetoothLeBroadcast$$ExternalSyntheticL
     }
 
     public final boolean test(Object obj) {
-        return this.f$0.mo28333xac3c3202((BluetoothLeBroadcastMetadata) obj);
+        return this.f$0.mo28338xac3c3202((BluetoothLeBroadcastMetadata) obj);
     }
 }

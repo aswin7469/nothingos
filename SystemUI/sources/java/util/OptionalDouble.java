@@ -25,7 +25,7 @@ public final class OptionalDouble {
     }
 
     /* renamed from: of */
-    public static OptionalDouble m1747of(double d) {
+    public static OptionalDouble m1753of(double d) {
         return new OptionalDouble(d);
     }
 
@@ -60,7 +60,7 @@ public final class OptionalDouble {
 
     public DoubleStream stream() {
         if (this.isPresent) {
-            return DoubleStream.m1774of(this.value);
+            return DoubleStream.m1780of(this.value);
         }
         return DoubleStream.empty();
     }

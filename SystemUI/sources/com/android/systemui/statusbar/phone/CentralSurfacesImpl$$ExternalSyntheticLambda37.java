@@ -28,6 +28,6 @@ public final /* synthetic */ class CentralSurfacesImpl$$ExternalSyntheticLambda3
     }
 
     public final void run() {
-        this.f$0.mo43908x93d22f9e(this.f$1, this.f$2, this.f$3, this.f$4, this.f$5, this.f$6, this.f$7);
+        this.f$0.mo43917x93d22f9e(this.f$1, this.f$2, this.f$3, this.f$4, this.f$5, this.f$6, this.f$7);
     }
 }

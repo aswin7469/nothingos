@@ -7,13 +7,13 @@ import kotlin.coroutines.jvm.internal.DebugMetadata;
 import kotlin.coroutines.jvm.internal.SuspendLambda;
 import kotlin.jvm.functions.Function2;
 
-@Metadata(mo64986d1 = {"\u0000\f\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\u0010\u0000\u001a\u00020\u0001\"\u0004\b\u0000\u0010\u0002*\b\u0012\u0004\u0012\u0002H\u00020\u0003H@"}, mo64987d2 = {"<anonymous>", "", "E", "Lkotlinx/coroutines/channels/ProducerScope;"}, mo64988k = 3, mo64989mv = {1, 5, 1}, mo64991xi = 48)
-@DebugMetadata(mo65240c = "kotlinx.coroutines.channels.ChannelsKt__DeprecatedKt$take$1", mo65241f = "Deprecated.kt", mo65242i = {0, 1}, mo65243l = {223, 224}, mo65244m = "invokeSuspend", mo65245n = {"remaining", "remaining"}, mo65246s = {"I$0", "I$0"})
+@Metadata(mo65042d1 = {"\u0000\f\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\u0010\u0000\u001a\u00020\u0001\"\u0004\b\u0000\u0010\u0002*\b\u0012\u0004\u0012\u0002H\u00020\u0003H@"}, mo65043d2 = {"<anonymous>", "", "E", "Lkotlinx/coroutines/channels/ProducerScope;"}, mo65044k = 3, mo65045mv = {1, 5, 1}, mo65047xi = 48)
+@DebugMetadata(mo65296c = "kotlinx.coroutines.channels.ChannelsKt__DeprecatedKt$take$1", mo65297f = "Deprecated.kt", mo65298i = {0, 1}, mo65299l = {223, 224}, mo65300m = "invokeSuspend", mo65301n = {"remaining", "remaining"}, mo65302s = {"I$0", "I$0"})
 /* compiled from: Deprecated.kt */
 final class ChannelsKt__DeprecatedKt$take$1 extends SuspendLambda implements Function2<ProducerScope<? super E>, Continuation<? super Unit>, Object> {
 
     /* renamed from: $n */
-    final /* synthetic */ int f847$n;
+    final /* synthetic */ int f845$n;
     final /* synthetic */ ReceiveChannel<E> $this_take;
     int I$0;
     private /* synthetic */ Object L$0;
@@ -23,12 +23,12 @@ final class ChannelsKt__DeprecatedKt$take$1 extends SuspendLambda implements Fun
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     ChannelsKt__DeprecatedKt$take$1(int i, ReceiveChannel<? extends E> receiveChannel, Continuation<? super ChannelsKt__DeprecatedKt$take$1> continuation) {
         super(2, continuation);
-        this.f847$n = i;
+        this.f845$n = i;
         this.$this_take = receiveChannel;
     }
 
     public final Continuation<Unit> create(Object obj, Continuation<?> continuation) {
-        ChannelsKt__DeprecatedKt$take$1 channelsKt__DeprecatedKt$take$1 = new ChannelsKt__DeprecatedKt$take$1(this.f847$n, this.$this_take, continuation);
+        ChannelsKt__DeprecatedKt$take$1 channelsKt__DeprecatedKt$take$1 = new ChannelsKt__DeprecatedKt$take$1(this.f845$n, this.$this_take, continuation);
         channelsKt__DeprecatedKt$take$1.L$0 = obj;
         return channelsKt__DeprecatedKt$take$1;
     }
@@ -76,7 +76,7 @@ final class ChannelsKt__DeprecatedKt$take$1 extends SuspendLambda implements Fun
             kotlin.ResultKt.throwOnFailure(r9)
             java.lang.Object r9 = r8.L$0
             kotlinx.coroutines.channels.ProducerScope r9 = (kotlinx.coroutines.channels.ProducerScope) r9
-            int r1 = r8.f847$n
+            int r1 = r8.f845$n
             if (r1 != 0) goto L_0x0041
             kotlin.Unit r8 = kotlin.Unit.INSTANCE
             return r8

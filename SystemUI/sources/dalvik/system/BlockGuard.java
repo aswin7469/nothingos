@@ -107,7 +107,7 @@ public final class BlockGuard {
     }
 
     static {
-        C42702 r0 = new VmPolicy() {
+        C42822 r0 = new VmPolicy() {
             public void onPathAccess(String str) {
             }
 

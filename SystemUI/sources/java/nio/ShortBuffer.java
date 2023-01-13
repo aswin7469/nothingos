@@ -5,7 +5,7 @@ import com.android.systemui.navigationbar.NavigationBarInflaterView;
 public abstract class ShortBuffer extends Buffer implements Comparable<ShortBuffer> {
 
     /* renamed from: hb */
-    final short[] f573hb;
+    final short[] f571hb;
     boolean isReadOnly;
     final int offset;
 
@@ -35,7 +35,7 @@ public abstract class ShortBuffer extends Buffer implements Comparable<ShortBuff
 
     ShortBuffer(int i, int i2, int i3, int i4, short[] sArr, int i5) {
         super(i, i2, i3, i4, 1);
-        this.f573hb = sArr;
+        this.f571hb = sArr;
         this.offset = i5;
     }
 
@@ -114,11 +114,11 @@ public abstract class ShortBuffer extends Buffer implements Comparable<ShortBuff
     }
 
     public final boolean hasArray() {
-        return this.f573hb != null && !this.isReadOnly;
+        return this.f571hb != null && !this.isReadOnly;
     }
 
     public final short[] array() {
-        short[] sArr = this.f573hb;
+        short[] sArr = this.f571hb;
         if (sArr == null) {
             throw new UnsupportedOperationException();
         } else if (!this.isReadOnly) {
@@ -129,7 +129,7 @@ public abstract class ShortBuffer extends Buffer implements Comparable<ShortBuff
     }
 
     public final int arrayOffset() {
-        if (this.f573hb == null) {
+        if (this.f571hb == null) {
             throw new UnsupportedOperationException();
         } else if (!this.isReadOnly) {
             return this.offset;

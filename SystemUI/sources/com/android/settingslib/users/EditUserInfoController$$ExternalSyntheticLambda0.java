@@ -22,6 +22,6 @@ public final /* synthetic */ class EditUserInfoController$$ExternalSyntheticLamb
     }
 
     public final void onClick(DialogInterface dialogInterface, int i) {
-        this.f$0.mo29225x83902b37(this.f$1, this.f$2, this.f$3, this.f$4, dialogInterface, i);
+        this.f$0.mo29230x83902b37(this.f$1, this.f$2, this.f$3, this.f$4, dialogInterface, i);
     }
 }

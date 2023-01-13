@@ -1436,12 +1436,12 @@ public final class URI implements Comparable<URI>, Serializable {
         }
 
         /* renamed from: at */
-        private boolean m1696at(int i, int i2, char c) {
+        private boolean m1702at(int i, int i2, char c) {
             return i < i2 && charAt(i) == c;
         }
 
         /* renamed from: at */
-        private boolean m1697at(int i, int i2, String str) {
+        private boolean m1703at(int i, int i2, String str) {
             int length = str.length();
             if (length > i2 - i) {
                 return false;
@@ -1525,7 +1525,7 @@ public final class URI implements Comparable<URI>, Serializable {
             int length = this.input.length();
             int i2 = 0;
             int scan = scan(0, length, "/?#", ":");
-            if (scan < 0 || !m1696at(scan, length, (char) AccessibilityUtils.ENABLED_ACCESSIBILITY_SERVICES_SEPARATOR)) {
+            if (scan < 0 || !m1702at(scan, length, (char) AccessibilityUtils.ENABLED_ACCESSIBILITY_SERVICES_SEPARATOR)) {
                 i = parseHierarchical(0, length);
             } else {
                 if (scan == 0) {
@@ -1535,7 +1535,7 @@ public final class URI implements Comparable<URI>, Serializable {
                 checkChars(1, scan, URI.L_SCHEME, URI.H_SCHEME, "scheme name");
                 URI.this.scheme = substring(0, scan);
                 i2 = scan + 1;
-                if (m1696at(i2, length, '/')) {
+                if (m1702at(i2, length, '/')) {
                     i = parseHierarchical(i2, length);
                 } else {
                     i = scan(i2, length, "", "#");
@@ -1546,7 +1546,7 @@ public final class URI implements Comparable<URI>, Serializable {
                 }
             }
             URI.this.schemeSpecificPart = substring(i2, i);
-            if (m1696at(i, length, '#')) {
+            if (m1702at(i, length, '#')) {
                 int i3 = i + 1;
                 checkChars(i3, length, URI.L_URIC, URI.H_URIC, "fragment");
                 URI.this.fragment = substring(i3, length);
@@ -1558,7 +1558,7 @@ public final class URI implements Comparable<URI>, Serializable {
         }
 
         private int parseHierarchical(int i, int i2) throws URISyntaxException {
-            if (m1696at(i, i2, '/') && m1696at(i + 1, i2, '/')) {
+            if (m1702at(i, i2, '/') && m1702at(i + 1, i2, '/')) {
                 i += 2;
                 int scan = scan(i, i2, "", "/?#");
                 if (scan > i) {
@@ -1570,7 +1570,7 @@ public final class URI implements Comparable<URI>, Serializable {
             int scan2 = scan(i, i2, "", "?#");
             checkChars(i, scan2, URI.L_PATH, URI.H_PATH, "path");
             URI.this.path = substring(i, scan2);
-            if (!m1696at(scan2, i2, '?')) {
+            if (!m1702at(scan2, i2, '?')) {
                 return scan2;
             }
             int i3 = scan2 + 1;
@@ -1581,13 +1581,13 @@ public final class URI implements Comparable<URI>, Serializable {
         }
 
         /* JADX WARNING: Code restructure failed: missing block: B:3:0x001b, code lost:
-            if (scan(r11, r12, java.net.URI.m3696$$Nest$sfgetL_SERVER_PERCENT(), java.net.URI.m3683$$Nest$sfgetH_SERVER_PERCENT()) == r12) goto L_0x001d;
+            if (scan(r11, r12, java.net.URI.m3714$$Nest$sfgetL_SERVER_PERCENT(), java.net.URI.m3701$$Nest$sfgetH_SERVER_PERCENT()) == r12) goto L_0x001d;
          */
         /* JADX WARNING: Code restructure failed: missing block: B:5:0x001f, code lost:
             r0 = false;
          */
         /* JADX WARNING: Code restructure failed: missing block: B:7:0x0030, code lost:
-            if (scan(r11, r12, java.net.URI.m3695$$Nest$sfgetL_SERVER(), java.net.URI.m3682$$Nest$sfgetH_SERVER()) == r12) goto L_0x001d;
+            if (scan(r11, r12, java.net.URI.m3713$$Nest$sfgetL_SERVER(), java.net.URI.m3700$$Nest$sfgetH_SERVER()) == r12) goto L_0x001d;
          */
         /* JADX WARNING: Removed duplicated region for block: B:29:0x0087  */
         /* Code decompiled incorrectly, please refer to instructions dump. */
@@ -1699,7 +1699,7 @@ public final class URI implements Comparable<URI>, Serializable {
                 int r0 = r11.scan((int) r12, (int) r13, (java.lang.String) r1, (java.lang.String) r0)
                 if (r0 < r12) goto L_0x002e
                 r2 = 64
-                boolean r2 = r11.m1696at((int) r0, (int) r13, (char) r2)
+                boolean r2 = r11.m1702at((int) r0, (int) r13, (char) r2)
                 if (r2 == 0) goto L_0x002e
                 long r5 = java.net.URI.L_USERINFO
                 long r7 = java.net.URI.H_USERINFO
@@ -1714,7 +1714,7 @@ public final class URI implements Comparable<URI>, Serializable {
                 int r12 = r0 + 1
             L_0x002e:
                 r0 = 91
-                boolean r0 = r11.m1696at((int) r12, (int) r13, (char) r0)
+                boolean r0 = r11.m1702at((int) r12, (int) r13, (char) r0)
                 java.lang.String r2 = ""
                 if (r0 == 0) goto L_0x0086
                 int r12 = r12 + 1
@@ -1722,7 +1722,7 @@ public final class URI implements Comparable<URI>, Serializable {
                 int r0 = r11.scan((int) r12, (int) r13, (java.lang.String) r1, (java.lang.String) r0)
                 if (r0 <= r12) goto L_0x0080
                 r1 = 93
-                boolean r1 = r11.m1696at((int) r0, (int) r13, (char) r1)
+                boolean r1 = r11.m1702at((int) r0, (int) r13, (char) r1)
                 if (r1 == 0) goto L_0x0080
                 java.lang.String r1 = "%"
                 int r1 = r11.scan((int) r12, (int) r0, (java.lang.String) r2, (java.lang.String) r1)
@@ -1761,7 +1761,7 @@ public final class URI implements Comparable<URI>, Serializable {
                 int r12 = r11.parseHostname(r12, r13)
             L_0x0090:
                 r0 = 58
-                boolean r0 = r11.m1696at((int) r12, (int) r13, (char) r0)
+                boolean r0 = r11.m1702at((int) r12, (int) r13, (char) r0)
                 if (r0 == 0) goto L_0x00c4
                 int r12 = r12 + 1
                 java.lang.String r0 = "/"
@@ -1891,7 +1891,7 @@ public final class URI implements Comparable<URI>, Serializable {
                     break;
                 }
             }
-            if (i6 < i4 && !m1696at(i6, i4, (char) AccessibilityUtils.ENABLED_ACCESSIBILITY_SERVICES_SEPARATOR)) {
+            if (i6 < i4 && !m1702at(i6, i4, (char) AccessibilityUtils.ENABLED_ACCESSIBILITY_SERVICES_SEPARATOR)) {
                 fail("Illegal character in hostname", i6);
             }
             if (i5 < 0) {
@@ -1915,14 +1915,14 @@ public final class URI implements Comparable<URI>, Serializable {
                 r2 = 1
                 r3 = 0
                 if (r0 <= r5) goto L_0x002e
-                boolean r1 = r4.m1697at((int) r0, (int) r6, (java.lang.String) r1)
+                boolean r1 = r4.m1703at((int) r0, (int) r6, (java.lang.String) r1)
                 if (r1 == 0) goto L_0x0017
                 int r0 = r0 + 2
                 int r0 = r4.scanHexPost(r0, r6)
                 goto L_0x003d
             L_0x0017:
                 r1 = 58
-                boolean r1 = r4.m1696at((int) r0, (int) r6, (char) r1)
+                boolean r1 = r4.m1702at((int) r0, (int) r6, (char) r1)
                 if (r1 == 0) goto L_0x003c
                 int r0 = r0 + 1
                 java.lang.String r1 = "IPv4 address"
@@ -1932,7 +1932,7 @@ public final class URI implements Comparable<URI>, Serializable {
                 r4.ipv6byteCount = r1
                 goto L_0x003c
             L_0x002e:
-                boolean r0 = r4.m1697at((int) r5, (int) r6, (java.lang.String) r1)
+                boolean r0 = r4.m1703at((int) r5, (int) r6, (java.lang.String) r1)
                 if (r0 == 0) goto L_0x003b
                 int r0 = r5 + 2
                 int r0 = r4.scanHexPost(r0, r6)
@@ -1977,7 +1977,7 @@ public final class URI implements Comparable<URI>, Serializable {
                 int takeIPv4Address = takeIPv4Address(i, i2, "hex digits or IPv4 address");
                 this.ipv6byteCount += 4;
                 return takeIPv4Address;
-            } else if (!m1696at(scanHexSeq, i2, (char) AccessibilityUtils.ENABLED_ACCESSIBILITY_SERVICES_SEPARATOR)) {
+            } else if (!m1702at(scanHexSeq, i2, (char) AccessibilityUtils.ENABLED_ACCESSIBILITY_SERVICES_SEPARATOR)) {
                 return scanHexSeq;
             } else {
                 int takeIPv4Address2 = takeIPv4Address(scanHexSeq + 1, i2, "hex digits or IPv4 address");
@@ -1988,23 +1988,23 @@ public final class URI implements Comparable<URI>, Serializable {
 
         private int scanHexSeq(int i, int i2) throws URISyntaxException {
             int scan = scan(i, i2, URI.L_HEX, URI.H_HEX);
-            if (scan <= i || m1696at(scan, i2, '.')) {
+            if (scan <= i || m1702at(scan, i2, '.')) {
                 return -1;
             }
             if (scan > i + 4) {
                 fail("IPv6 hexadecimal digit sequence too long", i);
             }
             this.ipv6byteCount += 2;
-            while (scan < i2 && m1696at(scan, i2, (char) AccessibilityUtils.ENABLED_ACCESSIBILITY_SERVICES_SEPARATOR)) {
+            while (scan < i2 && m1702at(scan, i2, (char) AccessibilityUtils.ENABLED_ACCESSIBILITY_SERVICES_SEPARATOR)) {
                 int i3 = scan + 1;
-                if (m1696at(i3, i2, (char) AccessibilityUtils.ENABLED_ACCESSIBILITY_SERVICES_SEPARATOR)) {
+                if (m1702at(i3, i2, (char) AccessibilityUtils.ENABLED_ACCESSIBILITY_SERVICES_SEPARATOR)) {
                     return scan;
                 }
                 scan = scan(i3, i2, URI.L_HEX, URI.H_HEX);
                 if (scan <= i3) {
                     failExpecting("digits for an IPv6 address", i3);
                 }
-                if (m1696at(scan, i2, '.')) {
+                if (m1702at(scan, i2, '.')) {
                     return i3 - 1;
                 }
                 if (scan > i3 + 4) {

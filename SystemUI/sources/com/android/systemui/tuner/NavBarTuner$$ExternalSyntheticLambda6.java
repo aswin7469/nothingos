@@ -22,6 +22,6 @@ public final /* synthetic */ class NavBarTuner$$ExternalSyntheticLambda6 impleme
     }
 
     public final void run() {
-        this.f$0.m3253lambda$bindButton$4$comandroidsystemuitunerNavBarTuner(this.f$1, this.f$2, this.f$3, this.f$4, this.f$5);
+        this.f$0.m3258lambda$bindButton$4$comandroidsystemuitunerNavBarTuner(this.f$1, this.f$2, this.f$3, this.f$4, this.f$5);
     }
 }

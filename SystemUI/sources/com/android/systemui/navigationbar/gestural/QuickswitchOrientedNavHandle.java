@@ -3,7 +3,7 @@ package com.android.systemui.navigationbar.gestural;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.RectF;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 
 public class QuickswitchOrientedNavHandle extends NavigationHandle {
     private int mDeltaRotation;
@@ -12,7 +12,7 @@ public class QuickswitchOrientedNavHandle extends NavigationHandle {
 
     public QuickswitchOrientedNavHandle(Context context) {
         super(context);
-        this.mWidth = context.getResources().getDimensionPixelSize(C1893R.dimen.navigation_home_handle_width);
+        this.mWidth = context.getResources().getDimensionPixelSize(C1894R.dimen.navigation_home_handle_width);
     }
 
     public void setDeltaRotation(int i) {

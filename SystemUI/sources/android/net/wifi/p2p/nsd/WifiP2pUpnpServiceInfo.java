@@ -31,7 +31,7 @@ public class WifiP2pUpnpServiceInfo extends WifiP2pServiceInfo {
 
     private static String createSupplicantQuery(String str, String str2) {
         StringBuffer stringBuffer = new StringBuffer("upnp ");
-        stringBuffer.append(String.format(Locale.f700US, "%02x ", 16));
+        stringBuffer.append(String.format(Locale.f698US, "%02x ", 16));
         stringBuffer.append("uuid:");
         stringBuffer.append(str);
         if (str2 != null) {

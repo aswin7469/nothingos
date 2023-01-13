@@ -7,7 +7,7 @@ import android.net.Uri;
 import android.provider.Settings;
 import android.text.TextUtils;
 import com.android.internal.accessibility.AccessibilityShortcutController;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.p026io.PrintWriter;
@@ -89,11 +89,11 @@ public final class OneHandedSettingsUtil {
     }
 
     public int getTransitionDuration(Context context) {
-        return context.getResources().getInteger(C3343R.integer.config_one_handed_translate_animation_duration);
+        return context.getResources().getInteger(C3353R.integer.config_one_handed_translate_animation_duration);
     }
 
     public float getTranslationFraction(Context context) {
-        return context.getResources().getFraction(C3343R.fraction.config_one_handed_offset, 1, 1);
+        return context.getResources().getFraction(C3353R.fraction.config_one_handed_offset, 1, 1);
     }
 
     /* access modifiers changed from: package-private */

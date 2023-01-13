@@ -9,6 +9,6 @@ public final /* synthetic */ class QRCodeScannerController$$ExternalSyntheticLam
     }
 
     public final void run() {
-        this.f$0.mo35805x52bbd2c4();
+        this.f$0.mo35809x52bbd2c4();
     }
 }

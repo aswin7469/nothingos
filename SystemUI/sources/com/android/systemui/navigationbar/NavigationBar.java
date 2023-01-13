@@ -35,14 +35,14 @@ import com.android.internal.util.LatencyTracker;
 import com.android.internal.view.AppearanceRegion;
 import com.android.p019wm.shell.back.BackAnimation;
 import com.android.p019wm.shell.pip.Pip;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Gefingerpoken;
 import com.android.systemui.assist.AssistManager;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.dagger.qualifiers.Background;
 import com.android.systemui.dagger.qualifiers.DisplayId;
 import com.android.systemui.dagger.qualifiers.Main;
-import com.android.systemui.globalactions.C2137x58d1e4b7;
+import com.android.systemui.globalactions.C2139x58d1e4b7;
 import com.android.systemui.model.SysUiState;
 import com.android.systemui.navigationbar.NavBarHelper;
 import com.android.systemui.navigationbar.NavigationBarComponent;
@@ -237,7 +237,7 @@ public class NavigationBar extends ViewController<NavigationBarView> implements 
                 boolean unused = NavigationBar.this.mForceNavBarHandleOpaque = properties.getBoolean("nav_bar_handle_force_opaque", true);
             }
             if (properties.getKeyset().contains("home_button_long_press_duration_ms")) {
-                Optional unused2 = NavigationBar.this.mHomeButtonLongPressDurationMs = Optional.m1745of(Long.valueOf(properties.getLong("home_button_long_press_duration_ms", 0))).filter(new NavigationBar$5$$ExternalSyntheticLambda0());
+                Optional unused2 = NavigationBar.this.mHomeButtonLongPressDurationMs = Optional.m1751of(Long.valueOf(properties.getLong("home_button_long_press_duration_ms", 0))).filter(new NavigationBar$5$$ExternalSyntheticLambda0());
                 if (NavigationBar.this.mView != null) {
                     NavigationBar.this.reconfigureHomeLongClick();
                 }
@@ -402,19 +402,19 @@ public class NavigationBar extends ViewController<NavigationBarView> implements 
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-navigationbar-NavigationBar  reason: not valid java name */
-    public /* synthetic */ void m2850lambda$new$0$comandroidsystemuinavigationbarNavigationBar() {
+    public /* synthetic */ void m2855lambda$new$0$comandroidsystemuinavigationbarNavigationBar() {
         getBarTransitions().setAutoDim(true);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$1$com-android-systemui-navigationbar-NavigationBar  reason: not valid java name */
-    public /* synthetic */ void m2851lambda$new$1$comandroidsystemuinavigationbarNavigationBar() {
+    public /* synthetic */ void m2856lambda$new$1$comandroidsystemuinavigationbarNavigationBar() {
         ((NavigationBarView) this.mView).setLayoutTransitionsEnabled(true);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$2$com-android-systemui-navigationbar-NavigationBar  reason: not valid java name */
-    public /* synthetic */ void m2852lambda$new$2$comandroidsystemuinavigationbarNavigationBar() {
+    public /* synthetic */ void m2857lambda$new$2$comandroidsystemuinavigationbarNavigationBar() {
         if (onHomeLongClick(((NavigationBarView) this.mView).getHomeButton().getCurrentView())) {
             ((NavigationBarView) this.mView).getHomeButton().getCurrentView().performHapticFeedback(0, 1);
         }
@@ -426,7 +426,7 @@ public class NavigationBar extends ViewController<NavigationBarView> implements 
         super(navigationBarView);
         NavigationModeController navigationModeController2 = navigationModeController;
         EdgeBackGestureHandler edgeBackGestureHandler2 = edgeBackGestureHandler;
-        C224710 r3 = new NavigationModeController.ModeChangedListener() {
+        C225010 r3 = new NavigationModeController.ModeChangedListener() {
             public void onNavigationModeChanged(int i) {
                 int unused = NavigationBar.this.mNavBarMode = i;
                 if (!QuickStepContract.isGesturalMode(i) && NavigationBar.this.getBarTransitions() != null) {
@@ -510,11 +510,11 @@ public class NavigationBar extends ViewController<NavigationBarView> implements 
         this.mTelecomManagerOptional = optional3;
         this.mInputMethodManager = inputMethodManager;
         this.mUserContextProvider = userContextProvider;
-        this.mNavColorSampleMargin = getResources().getDimensionPixelSize(C1893R.dimen.navigation_handle_sample_horizontal_margin);
+        this.mNavColorSampleMargin = getResources().getDimensionPixelSize(C1894R.dimen.navigation_handle_sample_horizontal_margin);
         this.mOnComputeInternalInsetsListener = new NavigationBar$$ExternalSyntheticLambda22(this);
         this.mRegionSamplingHelper = new RegionSamplingHelper(this.mView, new RegionSamplingHelper.SamplingCallback() {
             public void onRegionDarknessChanged(boolean z) {
-                NTLogUtil.m1680d(NavigationBar.TAG, "onRegionDarknessChanged: isRegionDark = " + z);
+                NTLogUtil.m1686d(NavigationBar.TAG, "onRegionDarknessChanged: isRegionDark = " + z);
                 NavigationBar.this.getBarTransitions().getLightTransitionsController().setIconsDark(!z, true);
             }
 
@@ -527,7 +527,7 @@ public class NavigationBar extends ViewController<NavigationBarView> implements 
 
             public boolean isSamplingEnabled() {
                 boolean isRegionSamplingAvailable = NavigationBar.this.mEx.isRegionSamplingAvailable(NavigationBar.this.mNavigationBarTransitions.getMode());
-                NTLogUtil.m1680d(NavigationBar.TAG, "isSamplingEnabled: " + isRegionSamplingAvailable);
+                NTLogUtil.m1686d(NavigationBar.TAG, "isSamplingEnabled: " + isRegionSamplingAvailable);
                 return isRegionSamplingAvailable;
             }
         }, executor, executor2);
@@ -537,7 +537,7 @@ public class NavigationBar extends ViewController<NavigationBarView> implements 
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$3$com-android-systemui-navigationbar-NavigationBar  reason: not valid java name */
-    public /* synthetic */ void m2853lambda$new$3$comandroidsystemuinavigationbarNavigationBar(ViewTreeObserver.InternalInsetsInfo internalInsetsInfo) {
+    public /* synthetic */ void m2858lambda$new$3$comandroidsystemuinavigationbarNavigationBar(ViewTreeObserver.InternalInsetsInfo internalInsetsInfo) {
         if (!this.mEdgeBackGestureHandler.isHandlingGestures()) {
             if (!this.mImeVisible) {
                 internalInsetsInfo.setTouchableInsets(0);
@@ -573,9 +573,9 @@ public class NavigationBar extends ViewController<NavigationBarView> implements 
         this.mCommandQueue.addCallback((CommandQueue.Callbacks) this);
         this.mLongPressHomeEnabled = this.mNavBarHelper.getLongPressHomeEnabled();
         this.mNavBarHelper.init();
-        this.mAllowForceNavBarHandleOpaque = this.mContext.getResources().getBoolean(C1893R.bool.allow_force_nav_bar_handle_opaque);
+        this.mAllowForceNavBarHandleOpaque = this.mContext.getResources().getBoolean(C1894R.bool.allow_force_nav_bar_handle_opaque);
         this.mForceNavBarHandleOpaque = this.mDeviceConfigProxy.getBoolean("systemui", "nav_bar_handle_force_opaque", true);
-        this.mHomeButtonLongPressDurationMs = Optional.m1745of(Long.valueOf(this.mDeviceConfigProxy.getLong("systemui", "home_button_long_press_duration_ms", 0))).filter(new NavigationBar$$ExternalSyntheticLambda8());
+        this.mHomeButtonLongPressDurationMs = Optional.m1751of(Long.valueOf(this.mDeviceConfigProxy.getLong("systemui", "home_button_long_press_duration_ms", 0))).filter(new NavigationBar$$ExternalSyntheticLambda8());
         DeviceConfigProxy deviceConfigProxy = this.mDeviceConfigProxy;
         Handler handler = this.mHandler;
         Objects.requireNonNull(handler);
@@ -662,7 +662,7 @@ public class NavigationBar extends ViewController<NavigationBarView> implements 
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onViewAttached$5$com-android-systemui-navigationbar-NavigationBar */
-    public /* synthetic */ void mo34640xba59c33f() {
+    public /* synthetic */ void mo34644xba59c33f() {
         this.mOverviewProxyService.onActiveNavBarRegionChanges(getButtonLocations(true, true, true));
     }
 
@@ -720,7 +720,7 @@ public class NavigationBar extends ViewController<NavigationBarView> implements 
         if (this.mNavBarMode == 2) {
             QuickswitchOrientedNavHandle quickswitchOrientedNavHandle = new QuickswitchOrientedNavHandle(this.mContext);
             this.mOrientationHandle = quickswitchOrientedNavHandle;
-            quickswitchOrientedNavHandle.setId(C1893R.C1897id.secondary_home_handle);
+            quickswitchOrientedNavHandle.setId(C1894R.C1898id.secondary_home_handle);
             getBarTransitions().addDarkIntensityListener(this.mOrientationHandleIntensityListener);
             WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(0, 0, 2024, 536871224, -3);
             this.mOrientationParams = layoutParams;
@@ -736,7 +736,7 @@ public class NavigationBar extends ViewController<NavigationBarView> implements 
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$initSecondaryHomeHandleForRotation$6$com-android-systemui-navigationbar-NavigationBar */
-    public /* synthetic */ void mo34633x2a92272a() {
+    public /* synthetic */ void mo34637x2a92272a() {
         if (this.mStartingQuickSwitchRotation != -1) {
             RectF computeHomeHandleBounds = this.mOrientationHandle.computeHomeHandleBounds();
             this.mOrientationHandle.mapRectFromViewToScreenCoords(computeHomeHandleBounds, true);
@@ -1096,7 +1096,7 @@ public class NavigationBar extends ViewController<NavigationBarView> implements 
         int action = motionEvent.getAction();
         if (action == 0) {
             this.mHomeBlockedThisTouch = false;
-            if (this.mTelecomManagerOptional.isPresent() && this.mTelecomManagerOptional.get().isRinging() && ((Boolean) optional.map(new C2137x58d1e4b7()).orElse(false)).booleanValue()) {
+            if (this.mTelecomManagerOptional.isPresent() && this.mTelecomManagerOptional.get().isRinging() && ((Boolean) optional.map(new C2139x58d1e4b7()).orElse(false)).booleanValue()) {
                 Log.i(TAG, "Ignoring HOME; there's a ringing incoming call. No heads up");
                 this.mHomeBlockedThisTouch = true;
                 return true;
@@ -1112,7 +1112,7 @@ public class NavigationBar extends ViewController<NavigationBarView> implements 
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onHomeTouch$7$com-android-systemui-navigationbar-NavigationBar */
-    public /* synthetic */ void mo34639x5349b95e(Long l) {
+    public /* synthetic */ void mo34643x5349b95e(Long l) {
         this.mHandler.postDelayed(this.mOnVariableDurationHomeLongClick, l.longValue());
     }
 
@@ -1185,12 +1185,12 @@ public class NavigationBar extends ViewController<NavigationBarView> implements 
 
     /* access modifiers changed from: private */
     public boolean onLongPressBackHome(View view) {
-        return onLongPressNavigationButtons(view, C1893R.C1897id.back, C1893R.C1897id.home);
+        return onLongPressNavigationButtons(view, C1894R.C1898id.back, C1894R.C1898id.home);
     }
 
     /* access modifiers changed from: private */
     public boolean onLongPressBackRecents(View view) {
-        return onLongPressNavigationButtons(view, C1893R.C1897id.back, C1893R.C1897id.recent_apps);
+        return onLongPressNavigationButtons(view, C1894R.C1898id.back, C1894R.C1898id.recent_apps);
     }
 
     /* JADX WARNING: Code restructure failed: missing block: B:45:0x009b, code lost:
@@ -1209,7 +1209,7 @@ public class NavigationBar extends ViewController<NavigationBarView> implements 
             android.view.accessibility.AccessibilityManager r2 = r10.mAccessibilityManager     // Catch:{ RemoteException -> 0x009b }
             boolean r2 = r2.isTouchExplorationEnabled()     // Catch:{ RemoteException -> 0x009b }
             boolean r3 = r1.isInLockTaskMode()     // Catch:{ RemoteException -> 0x009b }
-            r4 = 2131428670(0x7f0b053e, float:1.8478991E38)
+            r4 = 2131428673(0x7f0b0541, float:1.8478997E38)
             r5 = 1
             if (r3 == 0) goto L_0x0059
             if (r2 != 0) goto L_0x0059
@@ -1538,7 +1538,7 @@ public class NavigationBar extends ViewController<NavigationBarView> implements 
             android.os.Binder r14 = new android.os.Binder
             r14.<init>()
             r1.token = r14
-            r14 = 2131952867(0x7f1304e3, float:1.9542189E38)
+            r14 = 2131952873(0x7f1304e9, float:1.9542201E38)
             java.lang.String r14 = r0.getString(r14)
             r1.accessibilityTitle = r14
             int r14 = r1.privateFlags
@@ -1568,7 +1568,7 @@ public class NavigationBar extends ViewController<NavigationBarView> implements 
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$9$com-android-systemui-navigationbar-NavigationBar  reason: not valid java name */
-    public /* synthetic */ void m2854lambda$new$9$comandroidsystemuinavigationbarNavigationBar(Integer num) {
+    public /* synthetic */ void m2859lambda$new$9$comandroidsystemuinavigationbarNavigationBar(Integer num) {
         if (this.mView != null && ((NavigationBarView) this.mView).needsReorient(num.intValue())) {
             repositionNavigationBar(num.intValue());
         }
@@ -1656,7 +1656,7 @@ public class NavigationBar extends ViewController<NavigationBarView> implements 
         this.mSamplingBounds.setEmpty();
         View currentView = ((NavigationBarView) this.mView).getHomeHandle().getCurrentView();
         if (!QuickStepContract.isGesturalMode(this.mNavBarMode)) {
-            currentView = ((NavigationBarView) this.mView).getCurrentView().findViewById(C1893R.C1897id.nav_buttons);
+            currentView = ((NavigationBarView) this.mView).getCurrentView().findViewById(C1894R.C1898id.nav_buttons);
         }
         if (currentView != null) {
             int[] iArr = new int[2];

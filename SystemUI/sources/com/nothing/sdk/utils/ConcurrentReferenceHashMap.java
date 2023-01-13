@@ -494,7 +494,7 @@ public class ConcurrentReferenceHashMap<K, V> extends AbstractMap<K, V> implemen
         }
 
         public Task(TaskOption... taskOptionArr) {
-            this.options = taskOptionArr.length == 0 ? EnumSet.noneOf(TaskOption.class) : EnumSet.m1721of(taskOptionArr[0], (E[]) taskOptionArr);
+            this.options = taskOptionArr.length == 0 ? EnumSet.noneOf(TaskOption.class) : EnumSet.m1727of(taskOptionArr[0], (E[]) taskOptionArr);
         }
 
         public boolean hasOption(TaskOption taskOption) {

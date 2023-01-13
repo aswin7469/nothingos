@@ -155,7 +155,7 @@ public class ExpandHelper implements Gefingerpoken {
         this.mScaler = viewScaler;
         this.mGravity = 48;
         this.mScaleAnimation = ObjectAnimator.ofFloat(viewScaler, VIEW_SCALER_HEIGHT_PROPERTY, new float[]{0.0f});
-        this.mPullGestureMinXSpan = this.mContext.getResources().getDimension(C1893R.dimen.pull_span_min);
+        this.mPullGestureMinXSpan = this.mContext.getResources().getDimension(C1894R.dimen.pull_span_min);
         this.mTouchSlop = ViewConfiguration.get(this.mContext).getScaledTouchSlop();
         this.mSlopMultiplier = ViewConfiguration.getAmbiguousGestureMultiplier();
         this.mSGD = new ScaleGestureDetector(context, this.mScaleGestureListener);

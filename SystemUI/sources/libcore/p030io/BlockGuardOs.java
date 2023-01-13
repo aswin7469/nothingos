@@ -23,7 +23,7 @@ import java.p026io.InterruptedIOException;
 
 /* renamed from: libcore.io.BlockGuardOs */
 public class BlockGuardOs extends ForwardingOs {
-    public BlockGuardOs(C4699Os os) {
+    public BlockGuardOs(C4711Os os) {
         super(os);
     }
 
@@ -83,7 +83,7 @@ public class BlockGuardOs extends ForwardingOs {
     }
 
     public static boolean isUnixSocket(FileDescriptor fileDescriptor) throws ErrnoException {
-        return isUnixDomain(Libcore.f857os.getsockoptInt(fileDescriptor, OsConstants.SOL_SOCKET, OsConstants.SO_DOMAIN));
+        return isUnixDomain(Libcore.f855os.getsockoptInt(fileDescriptor, OsConstants.SOL_SOCKET, OsConstants.SO_DOMAIN));
     }
 
     private static boolean isUnixDomain(int i) {
@@ -91,7 +91,7 @@ public class BlockGuardOs extends ForwardingOs {
     }
 
     private static boolean isInetSocket(FileDescriptor fileDescriptor) throws ErrnoException {
-        return isInetDomain(Libcore.f857os.getsockoptInt(fileDescriptor, OsConstants.SOL_SOCKET, OsConstants.SO_DOMAIN));
+        return isInetDomain(Libcore.f855os.getsockoptInt(fileDescriptor, OsConstants.SOL_SOCKET, OsConstants.SO_DOMAIN));
     }
 
     private static boolean isInetDomain(int i) {
@@ -99,12 +99,12 @@ public class BlockGuardOs extends ForwardingOs {
     }
 
     private static boolean isLingerSocket(FileDescriptor fileDescriptor) throws ErrnoException {
-        StructLinger structLinger = Libcore.f857os.getsockoptLinger(fileDescriptor, OsConstants.SOL_SOCKET, OsConstants.SO_LINGER);
+        StructLinger structLinger = Libcore.f855os.getsockoptLinger(fileDescriptor, OsConstants.SOL_SOCKET, OsConstants.SO_LINGER);
         return structLinger.isOn() && structLinger.l_linger > 0;
     }
 
     private static boolean isUdpSocket(FileDescriptor fileDescriptor) throws ErrnoException {
-        return Libcore.f857os.getsockoptInt(fileDescriptor, OsConstants.SOL_SOCKET, OsConstants.SO_PROTOCOL) == OsConstants.IPPROTO_UDP;
+        return Libcore.f855os.getsockoptInt(fileDescriptor, OsConstants.SOL_SOCKET, OsConstants.SO_PROTOCOL) == OsConstants.IPPROTO_UDP;
     }
 
     public void connect(FileDescriptor fileDescriptor, InetAddress inetAddress, int i) throws ErrnoException, SocketException {

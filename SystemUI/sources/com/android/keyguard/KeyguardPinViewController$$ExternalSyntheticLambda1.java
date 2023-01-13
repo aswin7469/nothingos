@@ -11,6 +11,6 @@ public final /* synthetic */ class KeyguardPinViewController$$ExternalSyntheticL
     }
 
     public final void onPostureChanged(int i) {
-        this.f$0.m2289lambda$new$0$comandroidkeyguardKeyguardPinViewController(i);
+        this.f$0.m2295lambda$new$0$comandroidkeyguardKeyguardPinViewController(i);
     }
 }

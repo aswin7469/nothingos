@@ -11,6 +11,6 @@ public final /* synthetic */ class ScreenInternalAudioRecorder$$ExternalSyntheti
     }
 
     public final void run() {
-        this.f$0.mo37264x3197a335(this.f$1);
+        this.f$0.mo37265x3197a335(this.f$1);
     }
 }

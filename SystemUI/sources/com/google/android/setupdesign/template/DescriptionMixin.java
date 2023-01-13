@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.google.android.setupcompat.internal.TemplateLayout;
 import com.google.android.setupcompat.template.Mixin;
-import com.google.android.setupdesign.C3953R;
+import com.google.android.setupdesign.C3963R;
 import com.google.android.setupdesign.util.HeaderAreaStyler;
 import com.google.android.setupdesign.util.PartnerStyleHelper;
 
@@ -20,12 +20,12 @@ public class DescriptionMixin implements Mixin {
 
     public DescriptionMixin(TemplateLayout templateLayout2, AttributeSet attributeSet, int i) {
         this.templateLayout = templateLayout2;
-        TypedArray obtainStyledAttributes = templateLayout2.getContext().obtainStyledAttributes(attributeSet, C3953R.styleable.SudDescriptionMixin, i, 0);
-        CharSequence text = obtainStyledAttributes.getText(C3953R.styleable.SudDescriptionMixin_sudDescriptionText);
+        TypedArray obtainStyledAttributes = templateLayout2.getContext().obtainStyledAttributes(attributeSet, C3963R.styleable.SudDescriptionMixin, i, 0);
+        CharSequence text = obtainStyledAttributes.getText(C3963R.styleable.SudDescriptionMixin_sudDescriptionText);
         if (text != null) {
             setText(text);
         }
-        ColorStateList colorStateList = obtainStyledAttributes.getColorStateList(C3953R.styleable.SudDescriptionMixin_sudDescriptionTextColor);
+        ColorStateList colorStateList = obtainStyledAttributes.getColorStateList(C3963R.styleable.SudDescriptionMixin_sudDescriptionTextColor);
         if (colorStateList != null) {
             setTextColor(colorStateList);
         }
@@ -33,14 +33,14 @@ public class DescriptionMixin implements Mixin {
     }
 
     public void tryApplyPartnerCustomizationStyle() {
-        TextView textView = (TextView) this.templateLayout.findManagedViewById(C3953R.C3956id.sud_layout_subtitle);
+        TextView textView = (TextView) this.templateLayout.findManagedViewById(C3963R.C3966id.sud_layout_subtitle);
         if (textView != null && PartnerStyleHelper.shouldApplyPartnerResource((View) this.templateLayout)) {
             HeaderAreaStyler.applyPartnerCustomizationDescriptionHeavyStyle(textView);
         }
     }
 
     public TextView getTextView() {
-        return (TextView) this.templateLayout.findManagedViewById(C3953R.C3956id.sud_layout_subtitle);
+        return (TextView) this.templateLayout.findManagedViewById(C3963R.C3966id.sud_layout_subtitle);
     }
 
     public void setText(int i) {
@@ -97,7 +97,7 @@ public class DescriptionMixin implements Mixin {
         ViewGroup.LayoutParams layoutParams = textView.getLayoutParams();
         if (layoutParams instanceof ViewGroup.MarginLayoutParams) {
             ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) layoutParams;
-            marginLayoutParams.setMargins(marginLayoutParams.leftMargin, marginLayoutParams.topMargin + ((int) context.getResources().getDimension(C3953R.dimen.sud_description_margin_top_extra)), marginLayoutParams.rightMargin, marginLayoutParams.bottomMargin + ((int) context.getResources().getDimension(C3953R.dimen.sud_description_margin_bottom_extra)));
+            marginLayoutParams.setMargins(marginLayoutParams.leftMargin, marginLayoutParams.topMargin + ((int) context.getResources().getDimension(C3963R.dimen.sud_description_margin_top_extra)), marginLayoutParams.rightMargin, marginLayoutParams.bottomMargin + ((int) context.getResources().getDimension(C3963R.dimen.sud_description_margin_bottom_extra)));
         }
     }
 }

@@ -14,6 +14,6 @@ public final /* synthetic */ class PipMotionHelper$$ExternalSyntheticLambda4 imp
     }
 
     public final void onAnimationUpdateForProperty(Object obj, ArrayMap arrayMap) {
-        this.f$0.m3471lambda$new$2$comandroidwmshellpipphonePipMotionHelper((Rect) obj, arrayMap);
+        this.f$0.m3475lambda$new$2$comandroidwmshellpipphonePipMotionHelper((Rect) obj, arrayMap);
     }
 }

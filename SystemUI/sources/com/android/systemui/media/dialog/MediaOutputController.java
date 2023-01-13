@@ -44,7 +44,7 @@ import com.android.settingslib.media.InfoMediaManager;
 import com.android.settingslib.media.LocalMediaManager;
 import com.android.settingslib.media.MediaDevice;
 import com.android.settingslib.utils.ThreadUtils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.animation.ActivityLaunchAnimator;
 import com.android.systemui.animation.DialogLaunchAnimator;
 import com.android.systemui.broadcast.BroadcastSender;
@@ -155,14 +155,14 @@ public class MediaOutputController implements LocalMediaManager.DeviceCallback, 
         this.mMetricLogger = new MediaOutputMetricLogger(context, str);
         this.mDialogLaunchAnimator = dialogLaunchAnimator;
         this.mNearbyMediaDevicesManager = optional.orElse(null);
-        this.mColorItemContent = Utils.getColorStateListDefaultColor(context, C1893R.C1894color.media_dialog_item_main_content);
-        this.mColorSeekbarProgress = Utils.getColorStateListDefaultColor(context, C1893R.C1894color.media_dialog_seekbar_progress);
-        this.mColorButtonBackground = Utils.getColorStateListDefaultColor(context, C1893R.C1894color.media_dialog_button_background);
-        this.mColorItemBackground = Utils.getColorStateListDefaultColor(context, C1893R.C1894color.media_dialog_item_background);
-        this.mColorConnectedItemBackground = Utils.getColorStateListDefaultColor(context, C1893R.C1894color.media_dialog_connected_item_background);
-        this.mColorPositiveButtonText = Utils.getColorStateListDefaultColor(context, C1893R.C1894color.media_dialog_solid_button_text);
-        this.mInactiveRadius = context.getResources().getDimension(C1893R.dimen.media_output_dialog_background_radius);
-        this.mActiveRadius = context.getResources().getDimension(C1893R.dimen.media_output_dialog_active_background_radius);
+        this.mColorItemContent = Utils.getColorStateListDefaultColor(context, C1894R.C1895color.media_dialog_item_main_content);
+        this.mColorSeekbarProgress = Utils.getColorStateListDefaultColor(context, C1894R.C1895color.media_dialog_seekbar_progress);
+        this.mColorButtonBackground = Utils.getColorStateListDefaultColor(context, C1894R.C1895color.media_dialog_button_background);
+        this.mColorItemBackground = Utils.getColorStateListDefaultColor(context, C1894R.C1895color.media_dialog_item_background);
+        this.mColorConnectedItemBackground = Utils.getColorStateListDefaultColor(context, C1894R.C1895color.media_dialog_connected_item_background);
+        this.mColorPositiveButtonText = Utils.getColorStateListDefaultColor(context, C1894R.C1895color.media_dialog_solid_button_text);
+        this.mInactiveRadius = context.getResources().getDimension(C1894R.dimen.media_output_dialog_background_radius);
+        this.mActiveRadius = context.getResources().getDimension(C1894R.dimen.media_output_dialog_active_background_radius);
     }
 
     /* access modifiers changed from: package-private */
@@ -309,7 +309,7 @@ public class MediaOutputController implements LocalMediaManager.DeviceCallback, 
         if (applicationInfo != null) {
             obj = packageManager.getApplicationLabel(applicationInfo);
         } else {
-            obj = this.mContext.getString(C1893R.string.media_output_dialog_unknown_launch_app_name);
+            obj = this.mContext.getString(C1894R.string.media_output_dialog_unknown_launch_app_name);
         }
         return (String) obj;
     }
@@ -327,7 +327,7 @@ public class MediaOutputController implements LocalMediaManager.DeviceCallback, 
         MediaMetadata metadata;
         MediaController mediaController = this.mMediaController;
         if (mediaController == null || (metadata = mediaController.getMetadata()) == null) {
-            return this.mContext.getText(C1893R.string.controls_media_title);
+            return this.mContext.getText(C1894R.string.controls_media_title);
         }
         return metadata.getDescription().getTitle();
     }
@@ -357,7 +357,7 @@ public class MediaOutputController implements LocalMediaManager.DeviceCallback, 
             return getNotificationIcon();
         }
         Context context = this.mContext;
-        return IconCompat.createWithBitmap(Utils.convertCornerRadiusBitmap(context, iconBitmap, (float) context.getResources().getDimensionPixelSize(C1893R.dimen.media_output_dialog_icon_corner_radius)));
+        return IconCompat.createWithBitmap(Utils.convertCornerRadiusBitmap(context, iconBitmap, (float) context.getResources().getDimensionPixelSize(C1894R.dimen.media_output_dialog_icon_corner_radius)));
     }
 
     /* access modifiers changed from: package-private */
@@ -659,7 +659,7 @@ public class MediaOutputController implements LocalMediaManager.DeviceCallback, 
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$connectDevice$0$com-android-systemui-media-dialog-MediaOutputController */
-    public /* synthetic */ void mo34431xe5ef5630(MediaDevice mediaDevice) {
+    public /* synthetic */ void mo34435xe5ef5630(MediaDevice mediaDevice) {
         this.mLocalMediaManager.connectDevice(mediaDevice);
     }
 
@@ -838,10 +838,10 @@ public class MediaOutputController implements LocalMediaManager.DeviceCallback, 
     }
 
     /* renamed from: com.android.systemui.media.dialog.MediaOutputController$2 */
-    static /* synthetic */ class C22282 {
+    static /* synthetic */ class C22312 {
 
         /* renamed from: $SwitchMap$com$android$systemui$media$dialog$MediaOutputController$BroadcastNotifyDialog */
-        static final /* synthetic */ int[] f319x2ffb14dc;
+        static final /* synthetic */ int[] f318x2ffb14dc;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(6:0|1|2|3|4|6) */
         /* JADX WARNING: Code restructure failed: missing block: B:7:?, code lost:
@@ -854,13 +854,13 @@ public class MediaOutputController implements LocalMediaManager.DeviceCallback, 
                 com.android.systemui.media.dialog.MediaOutputController$BroadcastNotifyDialog[] r0 = com.android.systemui.media.dialog.MediaOutputController.BroadcastNotifyDialog.values()
                 int r0 = r0.length
                 int[] r0 = new int[r0]
-                f319x2ffb14dc = r0
+                f318x2ffb14dc = r0
                 com.android.systemui.media.dialog.MediaOutputController$BroadcastNotifyDialog r1 = com.android.systemui.media.dialog.MediaOutputController.BroadcastNotifyDialog.ACTION_FIRST_LAUNCH     // Catch:{ NoSuchFieldError -> 0x0012 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
                 r2 = 1
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0012 }
             L_0x0012:
-                int[] r0 = f319x2ffb14dc     // Catch:{ NoSuchFieldError -> 0x001d }
+                int[] r0 = f318x2ffb14dc     // Catch:{ NoSuchFieldError -> 0x001d }
                 com.android.systemui.media.dialog.MediaOutputController$BroadcastNotifyDialog r1 = com.android.systemui.media.dialog.MediaOutputController.BroadcastNotifyDialog.ACTION_BROADCAST_INFO_ICON     // Catch:{ NoSuchFieldError -> 0x001d }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
                 r2 = 2
@@ -868,22 +868,22 @@ public class MediaOutputController implements LocalMediaManager.DeviceCallback, 
             L_0x001d:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.media.dialog.MediaOutputController.C22282.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.media.dialog.MediaOutputController.C22312.<clinit>():void");
         }
     }
 
     /* access modifiers changed from: package-private */
     public void launchLeBroadcastNotifyDialog(View view, BroadcastSender broadcastSender, BroadcastNotifyDialog broadcastNotifyDialog, DialogInterface.OnClickListener onClickListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this.mContext);
-        int i = C22282.f319x2ffb14dc[broadcastNotifyDialog.ordinal()];
+        int i = C22312.f318x2ffb14dc[broadcastNotifyDialog.ordinal()];
         if (i == 1) {
-            builder.setTitle(C1893R.string.media_output_first_broadcast_title);
-            builder.setMessage(C1893R.string.media_output_first_notify_broadcast_message);
+            builder.setTitle(C1894R.string.media_output_first_broadcast_title);
+            builder.setMessage(C1894R.string.media_output_first_notify_broadcast_message);
             builder.setNegativeButton(17039360, (DialogInterface.OnClickListener) null);
-            builder.setPositiveButton(C1893R.string.media_output_broadcast, onClickListener);
+            builder.setPositiveButton(C1894R.string.media_output_broadcast, onClickListener);
         } else if (i == 2) {
-            builder.setTitle(C1893R.string.media_output_broadcast);
-            builder.setMessage(C1893R.string.media_output_broadcasting_message);
+            builder.setTitle(C1894R.string.media_output_broadcast);
+            builder.setMessage(C1894R.string.media_output_broadcasting_message);
             builder.setPositiveButton(17039370, (DialogInterface.OnClickListener) null);
         }
         AlertDialog create = builder.create();
@@ -895,7 +895,7 @@ public class MediaOutputController implements LocalMediaManager.DeviceCallback, 
 
     /* access modifiers changed from: package-private */
     public void launchMediaOutputBroadcastDialog(View view, BroadcastSender broadcastSender) {
-        this.mDialogLaunchAnimator.showFromView(new MediaOutputBroadcastDialog(this.mContext, true, broadcastSender, new MediaOutputController(this.mContext, this.mPackageName, this.mMediaSessionManager, this.mLocalBluetoothManager, this.mActivityStarter, this.mNotifCollection, this.mDialogLaunchAnimator, Optional.m1745of(this.mNearbyMediaDevicesManager), this.mAudioManager, this.mPowerExemptionManager)), view);
+        this.mDialogLaunchAnimator.showFromView(new MediaOutputBroadcastDialog(this.mContext, true, broadcastSender, new MediaOutputController(this.mContext, this.mPackageName, this.mMediaSessionManager, this.mLocalBluetoothManager, this.mActivityStarter, this.mNotifCollection, this.mDialogLaunchAnimator, Optional.m1751of(this.mNearbyMediaDevicesManager), this.mAudioManager, this.mPowerExemptionManager)), view);
     }
 
     /* access modifiers changed from: package-private */

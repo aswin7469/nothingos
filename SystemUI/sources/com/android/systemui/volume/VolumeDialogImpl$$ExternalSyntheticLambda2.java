@@ -3,12 +3,14 @@ package com.android.systemui.volume;
 /* compiled from: D8$$SyntheticClass */
 public final /* synthetic */ class VolumeDialogImpl$$ExternalSyntheticLambda2 implements Runnable {
     public final /* synthetic */ VolumeDialogImpl f$0;
+    public final /* synthetic */ int f$1;
 
-    public /* synthetic */ VolumeDialogImpl$$ExternalSyntheticLambda2(VolumeDialogImpl volumeDialogImpl) {
+    public /* synthetic */ VolumeDialogImpl$$ExternalSyntheticLambda2(VolumeDialogImpl volumeDialogImpl, int i) {
         this.f$0 = volumeDialogImpl;
+        this.f$1 = i;
     }
 
     public final void run() {
-        this.f$0.mo47354x3309f5ea();
+        this.f$0.mo47359xcdf59921(this.f$1);
     }
 }

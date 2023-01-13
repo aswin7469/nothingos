@@ -11,6 +11,6 @@ public final /* synthetic */ class LightSourceDrawable$$ExternalSyntheticLambda2
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        LightSourceDrawable.m2765_set_active_$lambda1$lambda0(this.f$0, valueAnimator);
+        LightSourceDrawable.m2770_set_active_$lambda1$lambda0(this.f$0, valueAnimator);
     }
 }

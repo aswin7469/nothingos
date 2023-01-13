@@ -1,18 +1,24 @@
 package com.android.p019wm.shell.splitscreen;
 
-import android.window.WindowContainerTransaction;
-import com.android.p019wm.shell.common.DisplayChangeController;
+import android.window.TransitionInfo;
+import com.android.p019wm.shell.recents.RecentTasksController;
+import com.android.p019wm.shell.splitscreen.SplitScreenTransitions;
+import java.util.function.Consumer;
 
 /* renamed from: com.android.wm.shell.splitscreen.StageCoordinator$$ExternalSyntheticLambda6 */
 /* compiled from: D8$$SyntheticClass */
-public final /* synthetic */ class StageCoordinator$$ExternalSyntheticLambda6 implements DisplayChangeController.OnDisplayChangingListener {
+public final /* synthetic */ class StageCoordinator$$ExternalSyntheticLambda6 implements Consumer {
     public final /* synthetic */ StageCoordinator f$0;
+    public final /* synthetic */ SplitScreenTransitions.DismissTransition f$1;
+    public final /* synthetic */ TransitionInfo f$2;
 
-    public /* synthetic */ StageCoordinator$$ExternalSyntheticLambda6(StageCoordinator stageCoordinator) {
+    public /* synthetic */ StageCoordinator$$ExternalSyntheticLambda6(StageCoordinator stageCoordinator, SplitScreenTransitions.DismissTransition dismissTransition, TransitionInfo transitionInfo) {
         this.f$0 = stageCoordinator;
+        this.f$1 = dismissTransition;
+        this.f$2 = transitionInfo;
     }
 
-    public final void onRotateDisplay(int i, int i2, int i3, WindowContainerTransaction windowContainerTransaction) {
-        this.f$0.onRotateDisplay(i, i2, i3, windowContainerTransaction);
+    public final void accept(Object obj) {
+        this.f$0.mo50852x482edfd9(this.f$1, this.f$2, (RecentTasksController) obj);
     }
 }

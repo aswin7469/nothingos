@@ -3,7 +3,7 @@ package com.android.p019wm.shell.onehanded;
 import android.content.Context;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityManager;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import java.p026io.PrintWriter;
 
 /* renamed from: com.android.wm.shell.onehanded.OneHandedAccessibilityUtil */
@@ -18,8 +18,8 @@ public final class OneHandedAccessibilityUtil {
     public OneHandedAccessibilityUtil(Context context) {
         this.mAccessibilityManager = AccessibilityManager.getInstance(context);
         this.mPackageName = context.getPackageName();
-        this.mStartOneHandedDescription = context.getResources().getString(C3343R.string.accessibility_action_start_one_handed);
-        this.mStopOneHandedDescription = context.getResources().getString(C3343R.string.accessibility_action_stop_one_handed);
+        this.mStartOneHandedDescription = context.getResources().getString(C3353R.string.accessibility_action_start_one_handed);
+        this.mStopOneHandedDescription = context.getResources().getString(C3353R.string.accessibility_action_stop_one_handed);
     }
 
     public String getOneHandedStartDescription() {

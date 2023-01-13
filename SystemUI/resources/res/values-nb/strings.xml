@@ -708,9 +708,15 @@
     <string name="force_rtl_layout_all_locales_summary">Tving RTL-retning på skjermen for alle språk</string>
     <string name="forced_resizable_secondary_display">Appen fungerer kanskje ikke på en sekundær skjerm.</string>
     <string name="game_status">Spiller</string>
+    <string name="gamemode_description">Spillmodus avgjør om du er i et spill og slås automatisk på for deg</string>
+    <string name="gamemode_gamedashboard_title">Spillkontrollpanel</string>
+    <string name="gamemode_notification_content">Trykk for å gå til Innstillinger</string>
+    <string name="gamemode_notification_title">Spillmodus er for øyeblikket på</string>
     <string name="global_action_lock_message">Lås opp telefonen din for å få flere alternativer</string>
     <string name="global_action_screenshot">Skjermdump</string>
     <string name="global_action_smart_lock_disabled">Smart Lock er slått av</string>
+    <string name="gm_guide_status_on">PÅ</string>
+    <string name="gm_notification_title">Spillmodus</string>
     <string name="go_to_web">Gå til nettleser</string>
     <string name="got_it">Greit</string>
     <string name="guest_exit_guest">Fjern gjesten</string>

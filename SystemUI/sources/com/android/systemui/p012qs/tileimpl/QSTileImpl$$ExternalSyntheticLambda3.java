@@ -10,6 +10,6 @@ public final /* synthetic */ class QSTileImpl$$ExternalSyntheticLambda3 implemen
     }
 
     public final void run() {
-        this.f$0.m2958lambda$new$0$comandroidsystemuiqstileimplQSTileImpl();
+        this.f$0.m2963lambda$new$0$comandroidsystemuiqstileimplQSTileImpl();
     }
 }

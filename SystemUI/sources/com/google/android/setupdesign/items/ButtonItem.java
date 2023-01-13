@@ -8,14 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import com.google.android.setupdesign.C3953R;
+import com.google.android.setupdesign.C3963R;
 
 public class ButtonItem extends AbstractItem implements View.OnClickListener {
     private Button button;
     private boolean enabled = true;
     private OnClickListener listener;
     private CharSequence text;
-    private int theme = C3953R.style.SudButtonItem;
+    private int theme = C3963R.style.SudButtonItem;
 
     public interface OnClickListener {
         void onClick(ButtonItem buttonItem);
@@ -34,10 +34,10 @@ public class ButtonItem extends AbstractItem implements View.OnClickListener {
 
     public ButtonItem(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C3953R.styleable.SudButtonItem);
-        this.enabled = obtainStyledAttributes.getBoolean(C3953R.styleable.SudButtonItem_android_enabled, true);
-        this.text = obtainStyledAttributes.getText(C3953R.styleable.SudButtonItem_android_text);
-        this.theme = obtainStyledAttributes.getResourceId(C3953R.styleable.SudButtonItem_android_theme, C3953R.style.SudButtonItem);
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C3963R.styleable.SudButtonItem);
+        this.enabled = obtainStyledAttributes.getBoolean(C3963R.styleable.SudButtonItem_android_enabled, true);
+        this.text = obtainStyledAttributes.getText(C3963R.styleable.SudButtonItem_android_text);
+        this.theme = obtainStyledAttributes.getResourceId(C3963R.styleable.SudButtonItem_android_theme, C3963R.style.SudButtonItem);
         obtainStyledAttributes.recycle();
     }
 
@@ -95,7 +95,7 @@ public class ButtonItem extends AbstractItem implements View.OnClickListener {
     }
 
     private Button createButton(Context context) {
-        return (Button) LayoutInflater.from(context).inflate(C3953R.layout.sud_button, (ViewGroup) null, false);
+        return (Button) LayoutInflater.from(context).inflate(C3963R.layout.sud_button, (ViewGroup) null, false);
     }
 
     public void onClick(View view) {

@@ -9,6 +9,6 @@ public final /* synthetic */ class PowerNotificationWarnings$$ExternalSyntheticL
     }
 
     public final void run() {
-        this.f$0.mo35559x55f2606c();
+        this.f$0.mo35563x55f2606c();
     }
 }

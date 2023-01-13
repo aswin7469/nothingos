@@ -45,7 +45,7 @@ public class DozeUi implements DozeMachine.Part {
 
     @Inject
     public DozeUi(Context context, AlarmManager alarmManager, WakeLock wakeLock, DozeHost dozeHost, @Main Handler handler, DozeParameters dozeParameters, KeyguardUpdateMonitor keyguardUpdateMonitor, StatusBarStateController statusBarStateController, DozeLog dozeLog) {
-        C20701 r0 = new KeyguardUpdateMonitorCallback() {
+        C20721 r0 = new KeyguardUpdateMonitorCallback() {
             private static /* synthetic */ void lambda$onTimeChanged$0() {
             }
 
@@ -92,7 +92,7 @@ public class DozeUi implements DozeMachine.Part {
     }
 
     public void transitionTo(DozeMachine.State state, DozeMachine.State state2) {
-        switch (C20723.$SwitchMap$com$android$systemui$doze$DozeMachine$State[state2.ordinal()]) {
+        switch (C20743.$SwitchMap$com$android$systemui$doze$DozeMachine$State[state2.ordinal()]) {
             case 1:
             case 2:
                 if (state == DozeMachine.State.DOZE_AOD_PAUSED || state == DozeMachine.State.DOZE) {

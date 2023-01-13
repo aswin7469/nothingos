@@ -2,7 +2,7 @@ package com.android.systemui.statusbar.notification.stack;
 
 import android.content.Context;
 import android.util.MathUtils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dumpable;
 import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.dump.DumpManager;
@@ -159,7 +159,7 @@ public class AmbientState implements Dumpable {
     }
 
     private static int getZDistanceBetweenElements(Context context) {
-        return Math.max(1, context.getResources().getDimensionPixelSize(C1893R.dimen.z_distance_between_notifications));
+        return Math.max(1, context.getResources().getDimensionPixelSize(C1894R.dimen.z_distance_between_notifications));
     }
 
     public static int getNotificationLaunchHeight(Context context) {

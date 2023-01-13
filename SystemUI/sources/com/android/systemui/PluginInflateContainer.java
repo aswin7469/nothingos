@@ -16,7 +16,7 @@ public class PluginInflateContainer extends AutoReinflateContainer implements Pl
 
     public PluginInflateContainer(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C1893R.styleable.PluginInflateContainer);
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C1894R.styleable.PluginInflateContainer);
         String string = obtainStyledAttributes.getString(0);
         obtainStyledAttributes.recycle();
         try {

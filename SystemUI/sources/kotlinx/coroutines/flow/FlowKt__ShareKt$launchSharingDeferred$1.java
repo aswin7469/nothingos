@@ -12,8 +12,8 @@ import kotlin.jvm.internal.Ref;
 import kotlinx.coroutines.CompletableDeferred;
 import kotlinx.coroutines.CoroutineScope;
 
-@Metadata(mo64986d1 = {"\u0000\f\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\u0010\u0000\u001a\u00020\u0001\"\u0004\b\u0000\u0010\u0002*\u00020\u0003H@"}, mo64987d2 = {"<anonymous>", "", "T", "Lkotlinx/coroutines/CoroutineScope;"}, mo64988k = 3, mo64989mv = {1, 5, 1}, mo64991xi = 48)
-@DebugMetadata(mo65240c = "kotlinx.coroutines.flow.FlowKt__ShareKt$launchSharingDeferred$1", mo65241f = "Share.kt", mo65242i = {}, mo65243l = {418}, mo65244m = "invokeSuspend", mo65245n = {}, mo65246s = {})
+@Metadata(mo65042d1 = {"\u0000\f\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\u0010\u0000\u001a\u00020\u0001\"\u0004\b\u0000\u0010\u0002*\u00020\u0003H@"}, mo65043d2 = {"<anonymous>", "", "T", "Lkotlinx/coroutines/CoroutineScope;"}, mo65044k = 3, mo65045mv = {1, 5, 1}, mo65047xi = 48)
+@DebugMetadata(mo65296c = "kotlinx.coroutines.flow.FlowKt__ShareKt$launchSharingDeferred$1", mo65297f = "Share.kt", mo65298i = {}, mo65299l = {418}, mo65300m = "invokeSuspend", mo65301n = {}, mo65302s = {})
 /* compiled from: Share.kt */
 final class FlowKt__ShareKt$launchSharingDeferred$1 extends SuspendLambda implements Function2<CoroutineScope, Continuation<? super Unit>, Object> {
     final /* synthetic */ CompletableDeferred<StateFlow<T>> $result;
@@ -46,7 +46,7 @@ final class FlowKt__ShareKt$launchSharingDeferred$1 extends SuspendLambda implem
             CoroutineScope coroutineScope = (CoroutineScope) this.L$0;
             Ref.ObjectRef objectRef = new Ref.ObjectRef();
             this.label = 1;
-            if (this.$upstream.collect(new C4639x6e5ea3bc(objectRef, coroutineScope, this.$result), this) == coroutine_suspended) {
+            if (this.$upstream.collect(new C4651x6e5ea3bc(objectRef, coroutineScope, this.$result), this) == coroutine_suspended) {
                 return coroutine_suspended;
             }
         } else if (i == 1) {

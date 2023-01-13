@@ -3,7 +3,7 @@ package com.google.android.material.datepicker;
 import android.content.res.Resources;
 import android.icu.text.DateFormat;
 import android.net.wifi.WifiEnterpriseConfig;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -92,9 +92,9 @@ class UtcDates {
 
     static String getTextInputHint(Resources resources, SimpleDateFormat simpleDateFormat) {
         String pattern = simpleDateFormat.toPattern();
-        String string = resources.getString(C3621R.string.mtrl_picker_text_input_year_abbr);
-        String string2 = resources.getString(C3621R.string.mtrl_picker_text_input_month_abbr);
-        String string3 = resources.getString(C3621R.string.mtrl_picker_text_input_day_abbr);
+        String string = resources.getString(C3631R.string.mtrl_picker_text_input_year_abbr);
+        String string2 = resources.getString(C3631R.string.mtrl_picker_text_input_month_abbr);
+        String string3 = resources.getString(C3631R.string.mtrl_picker_text_input_day_abbr);
         if (pattern.replaceAll("[^y]", "").length() == 1) {
             pattern = pattern.replace((CharSequence) DateFormat.YEAR, (CharSequence) "yyyy");
         }

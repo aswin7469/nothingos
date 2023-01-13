@@ -76,7 +76,7 @@ public class AccessPointControllerImpl implements AccessPointController, WifiPic
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-statusbar-connectivity-AccessPointControllerImpl */
-    public /* synthetic */ void mo39282x4d42dfc9() {
+    public /* synthetic */ void mo39283x4d42dfc9() {
         this.mLifecycle.setCurrentState(Lifecycle.State.CREATED);
     }
 
@@ -98,7 +98,7 @@ public class AccessPointControllerImpl implements AccessPointController, WifiPic
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$finalize$1$com-android-systemui-statusbar-connectivity-AccessPointControllerImpl */
-    public /* synthetic */ void mo39281xdbd89022() {
+    public /* synthetic */ void mo39282xdbd89022() {
         this.mLifecycle.setCurrentState(Lifecycle.State.DESTROYED);
     }
 
@@ -132,7 +132,7 @@ public class AccessPointControllerImpl implements AccessPointController, WifiPic
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$addAccessPointCallback$2$com-android-systemui-statusbar-connectivity-AccessPointControllerImpl */
-    public /* synthetic */ void mo39280xce7d1f15() {
+    public /* synthetic */ void mo39281xce7d1f15() {
         this.mLifecycle.setCurrentState(Lifecycle.State.STARTED);
     }
 
@@ -150,7 +150,7 @@ public class AccessPointControllerImpl implements AccessPointController, WifiPic
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$removeAccessPointCallback$3$com-android-systemui-statusbar-connectivity-AccessPointControllerImpl */
-    public /* synthetic */ void mo39283x2005fe79() {
+    public /* synthetic */ void mo39284x2005fe79() {
         this.mLifecycle.setCurrentState(Lifecycle.State.CREATED);
     }
 

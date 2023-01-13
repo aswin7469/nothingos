@@ -18,7 +18,7 @@ import android.service.notification.ZenModeConfig;
 import android.telecom.TelecomManager;
 import android.text.format.DateFormat;
 import android.util.Log;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.biometrics.AuthDialog;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.dagger.qualifiers.DisplayId;
@@ -190,7 +190,7 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onSensorPrivacyChanged$0$com-android-systemui-statusbar-phone-PhoneStatusBarPolicy$5 */
-        public /* synthetic */ void mo44975x5d39614b(boolean z) {
+        public /* synthetic */ void mo44990x5d39614b(boolean z) {
             PhoneStatusBarPolicy.this.mIconController.setIconVisibility(PhoneStatusBarPolicy.this.mSlotSensorsOff, z);
         }
     };
@@ -223,7 +223,7 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
     private final SynchronousUserSwitchObserver mUserSwitchListener = new SynchronousUserSwitchObserver() {
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onUserSwitching$0$com-android-systemui-statusbar-phone-PhoneStatusBarPolicy$1 */
-        public /* synthetic */ void mo44971x87306a4c() {
+        public /* synthetic */ void mo44986x87306a4c() {
             PhoneStatusBarPolicy.this.mUserInfoController.reloadUserInfo();
         }
 
@@ -237,7 +237,7 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onUserSwitchComplete$1$com-android-systemui-statusbar-phone-PhoneStatusBarPolicy$1 */
-        public /* synthetic */ void mo44970x263abe1a() {
+        public /* synthetic */ void mo44985x263abe1a() {
             PhoneStatusBarPolicy.this.updateAlarm();
             PhoneStatusBarPolicy.this.updateManagedProfile();
         }
@@ -315,31 +315,31 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
         }
         updateTTY();
         updateBluetooth();
-        this.mIconController.setIcon(this.mSlotAlarmClock, C1893R.C1895drawable.stat_sys_alarm, (CharSequence) null);
+        this.mIconController.setIcon(this.mSlotAlarmClock, C1894R.C1896drawable.stat_sys_alarm, (CharSequence) null);
         this.mIconController.setIconVisibility(this.mSlotAlarmClock, false);
-        this.mIconController.setIcon(this.mSlotZen, C1893R.C1895drawable.stat_sys_dnd, (CharSequence) null);
+        this.mIconController.setIcon(this.mSlotZen, C1894R.C1896drawable.stat_sys_dnd, (CharSequence) null);
         this.mIconController.setIconVisibility(this.mSlotZen, false);
-        this.mIconController.setIcon(this.mSlotVibrate, C1893R.C1895drawable.stat_sys_ringer_vibrate, this.mResources.getString(C1893R.string.accessibility_ringer_vibrate));
+        this.mIconController.setIcon(this.mSlotVibrate, C1894R.C1896drawable.stat_sys_ringer_vibrate, this.mResources.getString(C1894R.string.accessibility_ringer_vibrate));
         this.mIconController.setIconVisibility(this.mSlotVibrate, false);
-        this.mIconController.setIcon(this.mSlotMute, C1893R.C1895drawable.stat_sys_ringer_silent, this.mResources.getString(C1893R.string.accessibility_ringer_silent));
+        this.mIconController.setIcon(this.mSlotMute, C1894R.C1896drawable.stat_sys_ringer_silent, this.mResources.getString(C1894R.string.accessibility_ringer_silent));
         this.mIconController.setIconVisibility(this.mSlotMute, false);
         updateVolumeZen();
-        this.mIconController.setIcon(this.mSlotCast, C1893R.C1895drawable.stat_sys_cast, (CharSequence) null);
+        this.mIconController.setIcon(this.mSlotCast, C1894R.C1896drawable.stat_sys_cast, (CharSequence) null);
         this.mIconController.setIconVisibility(this.mSlotCast, false);
         updateManagedProfile();
-        this.mIconController.setIcon(this.mSlotDataSaver, C1893R.C1895drawable.stat_sys_data_saver, this.mResources.getString(C1893R.string.accessibility_data_saver_on));
+        this.mIconController.setIcon(this.mSlotDataSaver, C1894R.C1896drawable.stat_sys_data_saver, this.mResources.getString(C1894R.string.accessibility_data_saver_on));
         this.mIconController.setIconVisibility(this.mSlotDataSaver, false);
         String string = this.mResources.getString(PrivacyType.TYPE_MICROPHONE.getNameId());
-        this.mIconController.setIcon(this.mSlotMicrophone, PrivacyType.TYPE_MICROPHONE.getIconId(), this.mResources.getString(C1893R.string.ongoing_privacy_chip_content_multiple_apps, new Object[]{string}));
+        this.mIconController.setIcon(this.mSlotMicrophone, PrivacyType.TYPE_MICROPHONE.getIconId(), this.mResources.getString(C1894R.string.ongoing_privacy_chip_content_multiple_apps, new Object[]{string}));
         this.mIconController.setIconVisibility(this.mSlotMicrophone, false);
         String string2 = this.mResources.getString(PrivacyType.TYPE_CAMERA.getNameId());
-        this.mIconController.setIcon(this.mSlotCamera, PrivacyType.TYPE_CAMERA.getIconId(), this.mResources.getString(C1893R.string.ongoing_privacy_chip_content_multiple_apps, new Object[]{string2}));
+        this.mIconController.setIcon(this.mSlotCamera, PrivacyType.TYPE_CAMERA.getIconId(), this.mResources.getString(C1894R.string.ongoing_privacy_chip_content_multiple_apps, new Object[]{string2}));
         this.mIconController.setIconVisibility(this.mSlotCamera, false);
-        this.mIconController.setIcon(this.mSlotLocation, LOCATION_STATUS_ICON_ID, this.mResources.getString(C1893R.string.accessibility_location_active));
+        this.mIconController.setIcon(this.mSlotLocation, LOCATION_STATUS_ICON_ID, this.mResources.getString(C1894R.string.accessibility_location_active));
         this.mIconController.setIconVisibility(this.mSlotLocation, false);
-        this.mIconController.setIcon(this.mSlotSensorsOff, C1893R.C1895drawable.stat_sys_sensors_off, this.mResources.getString(C1893R.string.accessibility_sensors_off_active));
+        this.mIconController.setIcon(this.mSlotSensorsOff, C1894R.C1896drawable.stat_sys_sensors_off, this.mResources.getString(C1894R.string.accessibility_sensors_off_active));
         this.mIconController.setIconVisibility(this.mSlotSensorsOff, this.mSensorPrivacyController.isSensorPrivacyEnabled());
-        this.mIconController.setIcon(this.mSlotScreenRecord, C1893R.C1895drawable.stat_sys_screen_record, (CharSequence) null);
+        this.mIconController.setIcon(this.mSlotScreenRecord, C1894R.C1896drawable.stat_sys_screen_record, (CharSequence) null);
         this.mIconController.setIconVisibility(this.mSlotScreenRecord, false);
         this.mRotationLockController.addCallback(this);
         this.mBluetooth.addCallback(this);
@@ -359,7 +359,7 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$init$0$com-android-systemui-statusbar-phone-PhoneStatusBarPolicy */
-    public /* synthetic */ void mo44962x439b9625(Integer num) {
+    public /* synthetic */ void mo44977x439b9625(Integer num) {
         this.mHandler.post(new PhoneStatusBarPolicy$$ExternalSyntheticLambda5(this));
     }
 
@@ -369,8 +369,8 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$getManagedProfileAccessibilityString$1$com-android-systemui-statusbar-phone-PhoneStatusBarPolicy */
-    public /* synthetic */ String mo44961xc8809635() {
-        return this.mResources.getString(C1893R.string.accessibility_managed_profile);
+    public /* synthetic */ String mo44976xc8809635() {
+        return this.mResources.getString(C1894R.string.accessibility_managed_profile);
     }
 
     public void onZenChanged(int i) {
@@ -386,7 +386,7 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
         AlarmManager.AlarmClockInfo nextAlarmClock = this.mAlarmManager.getNextAlarmClock(-2);
         boolean z = true;
         boolean z2 = nextAlarmClock != null && nextAlarmClock.getTriggerTime() > 0;
-        this.mIconController.setIcon(this.mSlotAlarmClock, this.mZenController.getZen() == 2 ? C1893R.C1895drawable.stat_sys_alarm_dim : C1893R.C1895drawable.stat_sys_alarm, buildAlarmContentDescription());
+        this.mIconController.setIcon(this.mSlotAlarmClock, this.mZenController.getZen() == 2 ? C1894R.C1896drawable.stat_sys_alarm_dim : C1894R.C1896drawable.stat_sys_alarm, buildAlarmContentDescription());
         StatusBarIconController statusBarIconController = this.mIconController;
         String str = this.mSlotAlarmClock;
         if (!this.mCurrentUserSetup || !z2) {
@@ -397,9 +397,9 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
 
     private String buildAlarmContentDescription() {
         if (this.mNextAlarm == null) {
-            return this.mResources.getString(C1893R.string.status_bar_alarm);
+            return this.mResources.getString(C1894R.string.status_bar_alarm);
         }
-        return this.mResources.getString(C1893R.string.accessibility_quick_settings_alarm, new Object[]{DateFormat.format(DateFormat.getBestDateTimePattern(Locale.getDefault(), this.mDateFormatUtil.is24HourFormat() ? "EHm" : "Ehma"), this.mNextAlarm.getTriggerTime()).toString()});
+        return this.mResources.getString(C1894R.string.accessibility_quick_settings_alarm, new Object[]{DateFormat.format(DateFormat.getBestDateTimePattern(Locale.getDefault(), this.mDateFormatUtil.is24HourFormat() ? "EHm" : "Ehma"), this.mNextAlarm.getTriggerTime()).toString()});
     }
 
     /* access modifiers changed from: private */
@@ -415,7 +415,7 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
             int r0 = r0.getZen()
             android.content.SharedPreferences r1 = r8.mSharedPreferences
             boolean r1 = com.android.systemui.p012qs.tiles.DndTile.isVisible(r1)
-            r2 = 2131232822(0x7f080836, float:1.8081764E38)
+            r2 = 2131232826(0x7f08083a, float:1.8081772E38)
             r3 = 1
             r4 = 0
             if (r1 != 0) goto L_0x003c
@@ -427,7 +427,7 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
             r1 = 2
             if (r0 != r1) goto L_0x002b
             android.content.res.Resources r1 = r8.mResources
-            r5 = 2131952466(0x7f130352, float:1.9541376E38)
+            r5 = 2131952472(0x7f130358, float:1.9541388E38)
             java.lang.String r1 = r1.getString(r5)
         L_0x0028:
             r5 = r1
@@ -436,7 +436,7 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
         L_0x002b:
             if (r0 != r3) goto L_0x0037
             android.content.res.Resources r1 = r8.mResources
-            r5 = 2131952469(0x7f130355, float:1.9541382E38)
+            r5 = 2131952475(0x7f13035b, float:1.9541394E38)
             java.lang.String r1 = r1.getString(r5)
             goto L_0x0028
         L_0x0037:
@@ -453,7 +453,7 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
             r1 = r4
         L_0x0041:
             android.content.res.Resources r5 = r8.mResources
-            r6 = 2131953139(0x7f1305f3, float:1.954274E38)
+            r6 = 2131953147(0x7f1305fb, float:1.9542757E38)
             java.lang.String r5 = r5.getString(r6)
         L_0x004a:
             com.android.systemui.statusbar.policy.ZenModeController r6 = r8.mZenController
@@ -520,16 +520,16 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
 
     private final void updateBluetooth() {
         boolean z;
-        String string = this.mResources.getString(C1893R.string.accessibility_quick_settings_bluetooth_on);
+        String string = this.mResources.getString(C1894R.string.accessibility_quick_settings_bluetooth_on);
         BluetoothController bluetoothController = this.mBluetooth;
         if (bluetoothController == null || !bluetoothController.isBluetoothConnected() || (!this.mBluetooth.isBluetoothAudioActive() && this.mBluetooth.isBluetoothAudioProfileOnly())) {
             z = false;
         } else {
-            string = this.mResources.getString(C1893R.string.accessibility_bluetooth_connected);
+            string = this.mResources.getString(C1894R.string.accessibility_bluetooth_connected);
             z = this.mBluetooth.isBluetoothEnabled();
         }
         this.mEx.startOrStopTether(this.mBluetooth);
-        this.mIconController.setIcon(this.mSlotBluetooth, C1893R.C1895drawable.stat_sys_data_bluetooth_connected, string);
+        this.mIconController.setIcon(this.mSlotBluetooth, C1894R.C1896drawable.stat_sys_data_bluetooth_connected, string);
         this.mIconController.setIconVisibility(this.mSlotBluetooth, z);
     }
 
@@ -553,7 +553,7 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
             if (z2) {
                 Log.v(TAG, "updateTTY: set TTY on");
             }
-            this.mIconController.setIcon(this.mSlotTty, C1893R.C1895drawable.stat_sys_tty_mode, this.mResources.getString(C1893R.string.accessibility_tty_enabled));
+            this.mIconController.setIcon(this.mSlotTty, C1894R.C1896drawable.stat_sys_tty_mode, this.mResources.getString(C1894R.string.accessibility_tty_enabled));
             this.mIconController.setIconVisibility(this.mSlotTty, true);
             return;
         }
@@ -612,7 +612,7 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
             android.content.res.Resources r3 = r6.mResources
             r4 = 2131951692(0x7f13004c, float:1.9539806E38)
             java.lang.String r3 = r3.getString(r4)
-            r4 = 2131232819(0x7f080833, float:1.8081758E38)
+            r4 = 2131232823(0x7f080837, float:1.8081766E38)
             r0.setIcon(r1, r4, r3)
             com.android.systemui.statusbar.phone.StatusBarIconController r0 = r6.mIconController
             java.lang.String r6 = r6.mSlotCast
@@ -640,7 +640,7 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateManagedProfile$3$com-android-systemui-statusbar-phone-PhoneStatusBarPolicy */
-    public /* synthetic */ void mo44968xda54710b() {
+    public /* synthetic */ void mo44983xda54710b() {
         try {
             this.mHandler.post(new PhoneStatusBarPolicy$$ExternalSyntheticLambda6(this, this.mUserManager.isManagedProfile(ActivityTaskManager.getService().getLastResumedActivityUserId()), getManagedProfileAccessibilityString()));
         } catch (RemoteException e) {
@@ -650,12 +650,12 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateManagedProfile$2$com-android-systemui-statusbar-phone-PhoneStatusBarPolicy */
-    public /* synthetic */ void mo44967xc99ea44a(boolean z, String str) {
+    public /* synthetic */ void mo44982xc99ea44a(boolean z, String str) {
         boolean z2;
         if (!z || (this.mKeyguardStateController.isShowing() && !this.mKeyguardStateController.isOccluded())) {
             z2 = false;
         } else {
-            this.mIconController.setIcon(this.mSlotManagedProfile, C1893R.C1895drawable.stat_sys_managed_profile_status, str);
+            this.mIconController.setIcon(this.mSlotManagedProfile, C1894R.C1896drawable.stat_sys_managed_profile_status, str);
             z2 = true;
         }
         if (this.mManagedProfileIconVisible != z2) {
@@ -686,9 +686,9 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
         boolean isCurrentOrientationLockPortrait = RotationLockTile.isCurrentOrientationLockPortrait(this.mRotationLockController, this.mResources);
         if (z) {
             if (isCurrentOrientationLockPortrait) {
-                this.mIconController.setIcon(this.mSlotRotate, C1893R.C1895drawable.stat_sys_rotate_portrait, this.mResources.getString(C1893R.string.accessibility_rotation_lock_on_portrait));
+                this.mIconController.setIcon(this.mSlotRotate, C1894R.C1896drawable.stat_sys_rotate_portrait, this.mResources.getString(C1894R.string.accessibility_rotation_lock_on_portrait));
             } else {
-                this.mIconController.setIcon(this.mSlotRotate, C1893R.C1895drawable.stat_sys_rotate_landscape, this.mResources.getString(C1893R.string.accessibility_rotation_lock_on_landscape));
+                this.mIconController.setIcon(this.mSlotRotate, C1894R.C1896drawable.stat_sys_rotate_landscape, this.mResources.getString(C1894R.string.accessibility_rotation_lock_on_landscape));
             }
             this.mIconController.setIconVisibility(this.mSlotRotate, true);
             return;
@@ -701,7 +701,7 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
         boolean z = intent.getIntExtra(AuthDialog.KEY_BIOMETRIC_STATE, 0) != 0;
         boolean z2 = intent.getIntExtra("microphone", 0) != 0;
         if (z) {
-            this.mIconController.setIcon(this.mSlotHeadset, z2 ? C1893R.C1895drawable.stat_sys_headset_mic : C1893R.C1895drawable.stat_sys_headset, this.mResources.getString(z2 ? C1893R.string.accessibility_status_bar_headset : C1893R.string.accessibility_status_bar_headphones));
+            this.mIconController.setIcon(this.mSlotHeadset, z2 ? C1894R.C1896drawable.stat_sys_headset_mic : C1894R.C1896drawable.stat_sys_headset, this.mResources.getString(z2 ? C1894R.string.accessibility_status_bar_headset : C1894R.string.accessibility_status_bar_headphones));
             this.mIconController.setIconVisibility(this.mSlotHeadset, true);
             return;
         }
@@ -722,7 +722,7 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
         boolean z3 = false;
         for (PrivacyItem next : list) {
             if (next != null) {
-                int i = C30608.$SwitchMap$com$android$systemui$privacy$PrivacyType[next.getPrivacyType().ordinal()];
+                int i = C30708.$SwitchMap$com$android$systemui$privacy$PrivacyType[next.getPrivacyType().ordinal()];
                 if (i == 1) {
                     z = true;
                 } else if (i == 2) {
@@ -741,7 +741,7 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
     }
 
     /* renamed from: com.android.systemui.statusbar.phone.PhoneStatusBarPolicy$8 */
-    static /* synthetic */ class C30608 {
+    static /* synthetic */ class C30708 {
         static final /* synthetic */ int[] $SwitchMap$com$android$systemui$privacy$PrivacyType;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(6:0|1|2|3|4|(3:5|6|8)) */
@@ -773,7 +773,7 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
             L_0x0028:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.PhoneStatusBarPolicy.C30608.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.PhoneStatusBarPolicy.C30708.<clinit>():void");
         }
     }
 
@@ -796,7 +796,7 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
             Log.d(TAG, "screenrecord: countdown " + j);
         }
         int floorDiv = (int) Math.floorDiv(j + 500, 1000);
-        this.mIconController.setIcon(this.mSlotScreenRecord, floorDiv != 1 ? floorDiv != 2 ? floorDiv != 3 ? C1893R.C1895drawable.stat_sys_screen_record : C1893R.C1895drawable.stat_sys_screen_record_3 : C1893R.C1895drawable.stat_sys_screen_record_2 : C1893R.C1895drawable.stat_sys_screen_record_1, Integer.toString(floorDiv));
+        this.mIconController.setIcon(this.mSlotScreenRecord, floorDiv != 1 ? floorDiv != 2 ? floorDiv != 3 ? C1894R.C1896drawable.stat_sys_screen_record : C1894R.C1896drawable.stat_sys_screen_record_3 : C1894R.C1896drawable.stat_sys_screen_record_2 : C1894R.C1896drawable.stat_sys_screen_record_1, Integer.toString(floorDiv));
         this.mIconController.setIconVisibility(this.mSlotScreenRecord, true);
         this.mIconController.setIconAccessibilityLiveRegion(this.mSlotScreenRecord, 2);
     }
@@ -811,13 +811,13 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onCountdownEnd$4$com-android-systemui-statusbar-phone-PhoneStatusBarPolicy */
-    public /* synthetic */ void mo44963x6ce8d4c2() {
+    public /* synthetic */ void mo44978x6ce8d4c2() {
         this.mIconController.setIconVisibility(this.mSlotScreenRecord, false);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onCountdownEnd$5$com-android-systemui-statusbar-phone-PhoneStatusBarPolicy */
-    public /* synthetic */ void mo44964x7d9ea183() {
+    public /* synthetic */ void mo44979x7d9ea183() {
         this.mIconController.setIconAccessibilityLiveRegion(this.mSlotScreenRecord, 0);
     }
 
@@ -825,13 +825,13 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
         if (DEBUG) {
             Log.d(TAG, "screenrecord: showing icon");
         }
-        this.mIconController.setIcon(this.mSlotScreenRecord, C1893R.C1895drawable.stat_sys_screen_record, this.mResources.getString(C1893R.string.screenrecord_ongoing_screen_only));
+        this.mIconController.setIcon(this.mSlotScreenRecord, C1894R.C1896drawable.stat_sys_screen_record, this.mResources.getString(C1894R.string.screenrecord_ongoing_screen_only));
         this.mHandler.post(new PhoneStatusBarPolicy$$ExternalSyntheticLambda0(this));
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onRecordingStart$6$com-android-systemui-statusbar-phone-PhoneStatusBarPolicy */
-    public /* synthetic */ void mo44966x8cce6cb() {
+    public /* synthetic */ void mo44981x8cce6cb() {
         this.mIconController.setIconVisibility(this.mSlotScreenRecord, true);
     }
 
@@ -844,20 +844,20 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onRecordingEnd$7$com-android-systemui-statusbar-phone-PhoneStatusBarPolicy */
-    public /* synthetic */ void mo44965x6ce51b45() {
+    public /* synthetic */ void mo44980x6ce51b45() {
         this.mIconController.setIconVisibility(this.mSlotScreenRecord, false);
     }
 
     /* access modifiers changed from: private */
     public void updateHotspotIcon(int i) {
         if (i == 6) {
-            this.mIconController.setIcon(this.mSlotHotspot, C1893R.C1895drawable.stat_sys_wifi_6_hotspot, this.mResources.getString(C1893R.string.accessibility_status_bar_hotspot));
+            this.mIconController.setIcon(this.mSlotHotspot, C1894R.C1896drawable.stat_sys_wifi_6_hotspot, this.mResources.getString(C1894R.string.accessibility_status_bar_hotspot));
         } else if (i == 5) {
-            this.mIconController.setIcon(this.mSlotHotspot, C1893R.C1895drawable.stat_sys_wifi_5_hotspot, this.mResources.getString(C1893R.string.accessibility_status_bar_hotspot));
+            this.mIconController.setIcon(this.mSlotHotspot, C1894R.C1896drawable.stat_sys_wifi_5_hotspot, this.mResources.getString(C1894R.string.accessibility_status_bar_hotspot));
         } else if (i == 4) {
-            this.mIconController.setIcon(this.mSlotHotspot, C1893R.C1895drawable.stat_sys_wifi_4_hotspot, this.mResources.getString(C1893R.string.accessibility_status_bar_hotspot));
+            this.mIconController.setIcon(this.mSlotHotspot, C1894R.C1896drawable.stat_sys_wifi_4_hotspot, this.mResources.getString(C1894R.string.accessibility_status_bar_hotspot));
         } else {
-            this.mIconController.setIcon(this.mSlotHotspot, C1893R.C1895drawable.stat_sys_hotspot, this.mResources.getString(C1893R.string.accessibility_status_bar_hotspot));
+            this.mIconController.setIcon(this.mSlotHotspot, C1894R.C1896drawable.stat_sys_hotspot, this.mResources.getString(C1894R.string.accessibility_status_bar_hotspot));
         }
     }
 }

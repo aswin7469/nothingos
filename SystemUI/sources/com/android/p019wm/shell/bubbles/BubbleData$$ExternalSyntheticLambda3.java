@@ -12,6 +12,6 @@ public final /* synthetic */ class BubbleData$$ExternalSyntheticLambda3 implemen
     }
 
     public final void accept(Object obj) {
-        this.f$0.m3413lambda$trim$8$comandroidwmshellbubblesBubbleData((Bubble) obj);
+        this.f$0.m3417lambda$trim$8$comandroidwmshellbubblesBubbleData((Bubble) obj);
     }
 }

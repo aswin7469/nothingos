@@ -17,6 +17,6 @@ public final /* synthetic */ class GlobalActionsImpl$$ExternalSyntheticLambda0 i
     }
 
     public final void onShow(DialogInterface dialogInterface) {
-        this.f$0.mo33002x50e7553b(this.f$1, this.f$2, dialogInterface);
+        this.f$0.mo33012x50e7553b(this.f$1, this.f$2, dialogInterface);
     }
 }

@@ -56,7 +56,7 @@ public abstract class EnumSet<E extends Enum<E>> extends AbstractSet<E> implemen
         }
         if (!collection.isEmpty()) {
             Iterator<E> it = collection.iterator();
-            EnumSet<E> of = m1716of((Enum) it.next());
+            EnumSet<E> of = m1722of((Enum) it.next());
             while (it.hasNext()) {
                 of.add((Enum) it.next());
             }
@@ -72,14 +72,14 @@ public abstract class EnumSet<E extends Enum<E>> extends AbstractSet<E> implemen
     }
 
     /* renamed from: of */
-    public static <E extends Enum<E>> EnumSet<E> m1716of(E e) {
+    public static <E extends Enum<E>> EnumSet<E> m1722of(E e) {
         EnumSet<E> noneOf = noneOf(e.getDeclaringClass());
         noneOf.add(e);
         return noneOf;
     }
 
     /* renamed from: of */
-    public static <E extends Enum<E>> EnumSet<E> m1717of(E e, E e2) {
+    public static <E extends Enum<E>> EnumSet<E> m1723of(E e, E e2) {
         EnumSet<E> noneOf = noneOf(e.getDeclaringClass());
         noneOf.add(e);
         noneOf.add(e2);
@@ -87,7 +87,7 @@ public abstract class EnumSet<E extends Enum<E>> extends AbstractSet<E> implemen
     }
 
     /* renamed from: of */
-    public static <E extends Enum<E>> EnumSet<E> m1718of(E e, E e2, E e3) {
+    public static <E extends Enum<E>> EnumSet<E> m1724of(E e, E e2, E e3) {
         EnumSet<E> noneOf = noneOf(e.getDeclaringClass());
         noneOf.add(e);
         noneOf.add(e2);
@@ -96,7 +96,7 @@ public abstract class EnumSet<E extends Enum<E>> extends AbstractSet<E> implemen
     }
 
     /* renamed from: of */
-    public static <E extends Enum<E>> EnumSet<E> m1719of(E e, E e2, E e3, E e4) {
+    public static <E extends Enum<E>> EnumSet<E> m1725of(E e, E e2, E e3, E e4) {
         EnumSet<E> noneOf = noneOf(e.getDeclaringClass());
         noneOf.add(e);
         noneOf.add(e2);
@@ -106,7 +106,7 @@ public abstract class EnumSet<E extends Enum<E>> extends AbstractSet<E> implemen
     }
 
     /* renamed from: of */
-    public static <E extends Enum<E>> EnumSet<E> m1720of(E e, E e2, E e3, E e4, E e5) {
+    public static <E extends Enum<E>> EnumSet<E> m1726of(E e, E e2, E e3, E e4, E e5) {
         EnumSet<E> noneOf = noneOf(e.getDeclaringClass());
         noneOf.add(e);
         noneOf.add(e2);
@@ -118,7 +118,7 @@ public abstract class EnumSet<E extends Enum<E>> extends AbstractSet<E> implemen
 
     @SafeVarargs
     /* renamed from: of */
-    public static <E extends Enum<E>> EnumSet<E> m1721of(E e, E... eArr) {
+    public static <E extends Enum<E>> EnumSet<E> m1727of(E e, E... eArr) {
         EnumSet<E> noneOf = noneOf(e.getDeclaringClass());
         noneOf.add(e);
         for (E add : eArr) {

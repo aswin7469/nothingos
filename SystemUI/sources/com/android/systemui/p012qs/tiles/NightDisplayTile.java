@@ -12,7 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Switch;
 import com.android.internal.logging.MetricsLogger;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.NightDisplayListenerModule;
 import com.android.systemui.dagger.qualifiers.Background;
 import com.android.systemui.dagger.qualifiers.Main;
@@ -94,7 +94,7 @@ public class NightDisplayTile extends QSTileImpl<QSTile.BooleanState> implements
     public void handleUpdateState(QSTile.BooleanState booleanState, Object obj) {
         CharSequence charSequence;
         booleanState.value = this.mManager.isNightDisplayActivated();
-        booleanState.label = this.mContext.getString(C1893R.string.quick_settings_night_display_label);
+        booleanState.label = this.mContext.getString(C1894R.string.quick_settings_night_display_label);
         booleanState.icon = QSTileImpl.ResourceIcon.get(17302833);
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
         booleanState.state = booleanState.value ? 2 : 1;
@@ -119,10 +119,10 @@ public class NightDisplayTile extends QSTileImpl<QSTile.BooleanState> implements
         if (nightDisplayAutoMode == 1) {
             if (z) {
                 localTime = this.mManager.getNightDisplayCustomEndTime();
-                i = C1893R.string.quick_settings_secondary_label_until;
+                i = C1894R.string.quick_settings_secondary_label_until;
             } else {
                 localTime = this.mManager.getNightDisplayCustomStartTime();
-                i = C1893R.string.quick_settings_night_secondary_label_on_at;
+                i = C1894R.string.quick_settings_night_secondary_label_on_at;
             }
             Calendar instance = Calendar.getInstance();
             DateFormat timeFormat = android.text.format.DateFormat.getTimeFormat(this.mContext);
@@ -137,9 +137,9 @@ public class NightDisplayTile extends QSTileImpl<QSTile.BooleanState> implements
             return null;
         } else {
             if (z) {
-                return this.mContext.getString(C1893R.string.quick_settings_night_secondary_label_until_sunrise);
+                return this.mContext.getString(C1894R.string.quick_settings_night_secondary_label_until_sunrise);
             }
-            return this.mContext.getString(C1893R.string.quick_settings_night_secondary_label_on_at_sunset);
+            return this.mContext.getString(C1894R.string.quick_settings_night_secondary_label_on_at_sunset);
         }
     }
 
@@ -164,7 +164,7 @@ public class NightDisplayTile extends QSTileImpl<QSTile.BooleanState> implements
     }
 
     public CharSequence getTileLabel() {
-        return this.mContext.getString(C1893R.string.quick_settings_night_display_label);
+        return this.mContext.getString(C1894R.string.quick_settings_night_display_label);
     }
 
     public void onActivated(boolean z) {

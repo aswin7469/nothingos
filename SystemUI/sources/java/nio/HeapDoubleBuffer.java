@@ -33,35 +33,35 @@ class HeapDoubleBuffer extends DoubleBuffer {
     }
 
     public DoubleBuffer slice() {
-        return new HeapDoubleBuffer(this.f568hb, -1, 0, remaining(), remaining(), this.offset + position(), this.isReadOnly);
+        return new HeapDoubleBuffer(this.f566hb, -1, 0, remaining(), remaining(), this.offset + position(), this.isReadOnly);
     }
 
     public DoubleBuffer duplicate() {
-        return new HeapDoubleBuffer(this.f568hb, markValue(), position(), limit(), capacity(), this.offset, this.isReadOnly);
+        return new HeapDoubleBuffer(this.f566hb, markValue(), position(), limit(), capacity(), this.offset, this.isReadOnly);
     }
 
     public DoubleBuffer asReadOnlyBuffer() {
-        return new HeapDoubleBuffer(this.f568hb, markValue(), position(), limit(), capacity(), this.offset, true);
+        return new HeapDoubleBuffer(this.f566hb, markValue(), position(), limit(), capacity(), this.offset, true);
     }
 
     /* access modifiers changed from: protected */
     /* renamed from: ix */
-    public int mo60910ix(int i) {
+    public int mo60966ix(int i) {
         return i + this.offset;
     }
 
     public double get() {
-        return this.f568hb[mo60910ix(nextGetIndex())];
+        return this.f566hb[mo60966ix(nextGetIndex())];
     }
 
     public double get(int i) {
-        return this.f568hb[mo60910ix(checkIndex(i))];
+        return this.f566hb[mo60966ix(checkIndex(i))];
     }
 
     public DoubleBuffer get(double[] dArr, int i, int i2) {
         checkBounds(i, i2, dArr.length);
         if (i2 <= remaining()) {
-            System.arraycopy((Object) this.f568hb, mo60910ix(position()), (Object) dArr, i, i2);
+            System.arraycopy((Object) this.f566hb, mo60966ix(position()), (Object) dArr, i, i2);
             position(position() + i2);
             return this;
         }
@@ -74,7 +74,7 @@ class HeapDoubleBuffer extends DoubleBuffer {
 
     public DoubleBuffer put(double d) {
         if (!this.isReadOnly) {
-            this.f568hb[mo60910ix(nextPutIndex())] = d;
+            this.f566hb[mo60966ix(nextPutIndex())] = d;
             return this;
         }
         throw new ReadOnlyBufferException();
@@ -82,7 +82,7 @@ class HeapDoubleBuffer extends DoubleBuffer {
 
     public DoubleBuffer put(int i, double d) {
         if (!this.isReadOnly) {
-            this.f568hb[mo60910ix(checkIndex(i))] = d;
+            this.f566hb[mo60966ix(checkIndex(i))] = d;
             return this;
         }
         throw new ReadOnlyBufferException();
@@ -92,7 +92,7 @@ class HeapDoubleBuffer extends DoubleBuffer {
         if (!this.isReadOnly) {
             checkBounds(i, i2, dArr.length);
             if (i2 <= remaining()) {
-                System.arraycopy((Object) dArr, i, (Object) this.f568hb, mo60910ix(position()), i2);
+                System.arraycopy((Object) dArr, i, (Object) this.f566hb, mo60966ix(position()), i2);
                 position(position() + i2);
                 return this;
             }
@@ -109,7 +109,7 @@ class HeapDoubleBuffer extends DoubleBuffer {
                 HeapDoubleBuffer heapDoubleBuffer = (HeapDoubleBuffer) doubleBuffer;
                 int remaining = heapDoubleBuffer.remaining();
                 if (remaining <= remaining()) {
-                    System.arraycopy((Object) heapDoubleBuffer.f568hb, heapDoubleBuffer.mo60910ix(heapDoubleBuffer.position()), (Object) this.f568hb, mo60910ix(position()), remaining);
+                    System.arraycopy((Object) heapDoubleBuffer.f566hb, heapDoubleBuffer.mo60966ix(heapDoubleBuffer.position()), (Object) this.f566hb, mo60966ix(position()), remaining);
                     heapDoubleBuffer.position(heapDoubleBuffer.position() + remaining);
                     position(position() + remaining);
                 } else {
@@ -118,7 +118,7 @@ class HeapDoubleBuffer extends DoubleBuffer {
             } else if (doubleBuffer.isDirect()) {
                 int remaining2 = doubleBuffer.remaining();
                 if (remaining2 <= remaining()) {
-                    doubleBuffer.get(this.f568hb, mo60910ix(position()), remaining2);
+                    doubleBuffer.get(this.f566hb, mo60966ix(position()), remaining2);
                     position(position() + remaining2);
                 } else {
                     throw new BufferOverflowException();
@@ -134,7 +134,7 @@ class HeapDoubleBuffer extends DoubleBuffer {
 
     public DoubleBuffer compact() {
         if (!this.isReadOnly) {
-            System.arraycopy((Object) this.f568hb, mo60910ix(position()), (Object) this.f568hb, mo60910ix(0), remaining());
+            System.arraycopy((Object) this.f566hb, mo60966ix(position()), (Object) this.f566hb, mo60966ix(0), remaining());
             position(remaining());
             limit(capacity());
             discardMark();

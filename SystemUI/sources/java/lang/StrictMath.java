@@ -8,10 +8,10 @@ public final class StrictMath {
     private static final double DEGREES_TO_RADIANS = 0.017453292519943295d;
 
     /* renamed from: E */
-    public static final double f546E = 2.718281828459045d;
+    public static final double f544E = 2.718281828459045d;
 
     /* renamed from: PI */
-    public static final double f547PI = 3.141592653589793d;
+    public static final double f545PI = 3.141592653589793d;
     private static final double RADIANS_TO_DEGREES = 57.29577951308232d;
 
     public static native double IEEEremainder(double d, double d2);

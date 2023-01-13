@@ -7,8 +7,8 @@ import kotlin.coroutines.jvm.internal.DebugMetadata;
 import kotlin.coroutines.jvm.internal.RestrictedSuspendLambda;
 import kotlin.jvm.functions.Function2;
 
-@Metadata(mo64986d1 = {"\u0000\u000e\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\u0010\u0000\u001a\u00020\u0001\"\u0004\b\u0000\u0010\u0002\"\b\b\u0001\u0010\u0003*\u0002H\u0002*\b\u0012\u0004\u0012\u0002H\u00020\u0004H@"}, mo64987d2 = {"<anonymous>", "", "S", "T", "Lkotlin/sequences/SequenceScope;"}, mo64988k = 3, mo64989mv = {1, 7, 1}, mo64991xi = 48)
-@DebugMetadata(mo65240c = "kotlin.sequences.SequencesKt___SequencesKt$runningReduce$1", mo65241f = "_Sequences.kt", mo65242i = {0, 0, 0, 1, 1, 1}, mo65243l = {2344, 2347}, mo65244m = "invokeSuspend", mo65245n = {"$this$sequence", "iterator", "accumulator", "$this$sequence", "iterator", "accumulator"}, mo65246s = {"L$0", "L$1", "L$2", "L$0", "L$1", "L$2"})
+@Metadata(mo65042d1 = {"\u0000\u000e\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\u0010\u0000\u001a\u00020\u0001\"\u0004\b\u0000\u0010\u0002\"\b\b\u0001\u0010\u0003*\u0002H\u0002*\b\u0012\u0004\u0012\u0002H\u00020\u0004H@"}, mo65043d2 = {"<anonymous>", "", "S", "T", "Lkotlin/sequences/SequenceScope;"}, mo65044k = 3, mo65045mv = {1, 7, 1}, mo65047xi = 48)
+@DebugMetadata(mo65296c = "kotlin.sequences.SequencesKt___SequencesKt$runningReduce$1", mo65297f = "_Sequences.kt", mo65298i = {0, 0, 0, 1, 1, 1}, mo65299l = {2344, 2347}, mo65300m = "invokeSuspend", mo65301n = {"$this$sequence", "iterator", "accumulator", "$this$sequence", "iterator", "accumulator"}, mo65302s = {"L$0", "L$1", "L$2", "L$0", "L$1", "L$2"})
 /* compiled from: _Sequences.kt */
 final class SequencesKt___SequencesKt$runningReduce$1 extends RestrictedSuspendLambda implements Function2<SequenceScope<? super S>, Continuation<? super Unit>, Object> {
     final /* synthetic */ Function2<S, T, S> $operation;

@@ -7,7 +7,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ListPopupWindow;
 import android.widget.ListView;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.plugins.FalsingManager;
 
 public class KeyguardUserSwitcherPopupMenu extends ListPopupWindow {
@@ -18,7 +18,7 @@ public class KeyguardUserSwitcherPopupMenu extends ListPopupWindow {
         super(context);
         this.mContext = context;
         this.mFalsingManager = falsingManager;
-        setBackgroundDrawable(context.getResources().getDrawable(C1893R.C1895drawable.bouncer_user_switcher_popup_bg, context.getTheme()));
+        setBackgroundDrawable(context.getResources().getDrawable(C1894R.C1896drawable.bouncer_user_switcher_popup_bg, context.getTheme()));
         setModal(true);
         setOverlapAnchor(true);
     }
@@ -31,8 +31,8 @@ public class KeyguardUserSwitcherPopupMenu extends ListPopupWindow {
         ShapeDrawable shapeDrawable = new ShapeDrawable();
         shapeDrawable.setAlpha(0);
         listView.setDivider(shapeDrawable);
-        listView.setDividerHeight(this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.bouncer_user_switcher_popup_divider_height));
-        int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.bouncer_user_switcher_popup_header_height);
+        listView.setDividerHeight(this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.bouncer_user_switcher_popup_divider_height));
+        int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.bouncer_user_switcher_popup_header_height);
         listView.addHeaderView(createSpacer(dimensionPixelSize), (Object) null, false);
         listView.addFooterView(createSpacer(dimensionPixelSize), (Object) null, false);
         listView.setOnTouchListener(new KeyguardUserSwitcherPopupMenu$$ExternalSyntheticLambda0(this));
@@ -41,7 +41,7 @@ public class KeyguardUserSwitcherPopupMenu extends ListPopupWindow {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$show$0$com-android-keyguard-KeyguardUserSwitcherPopupMenu  reason: not valid java name */
-    public /* synthetic */ boolean m2298lambda$show$0$comandroidkeyguardKeyguardUserSwitcherPopupMenu(View view, MotionEvent motionEvent) {
+    public /* synthetic */ boolean m2304lambda$show$0$comandroidkeyguardKeyguardUserSwitcherPopupMenu(View view, MotionEvent motionEvent) {
         if (motionEvent.getActionMasked() == 0) {
             return this.mFalsingManager.isFalseTap(1);
         }

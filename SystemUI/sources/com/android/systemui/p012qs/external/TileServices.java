@@ -55,10 +55,10 @@ public class TileServices extends IQSService.Stub {
 
     @Inject
     public TileServices(QSTileHost qSTileHost, @Main Provider<Handler> provider, BroadcastDispatcher broadcastDispatcher, UserTracker userTracker, KeyguardStateController keyguardStateController, CommandQueue commandQueue) {
-        C23792 r0 = new CommandQueue.Callbacks() {
+        C23822 r0 = new CommandQueue.Callbacks() {
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$requestTileServiceListeningState$0$com-android-systemui-qs-external-TileServices$2 */
-            public /* synthetic */ void mo36683x1d2c1004(ComponentName componentName) {
+            public /* synthetic */ void mo36687x1d2c1004(ComponentName componentName) {
                 TileServices.this.requestListening(componentName);
             }
 
@@ -116,7 +116,7 @@ public class TileServices extends IQSService.Stub {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$freeService$0$com-android-systemui-qs-external-TileServices */
-    public /* synthetic */ void mo36672xe19e37(String str) {
+    public /* synthetic */ void mo36676xe19e37(String str) {
         this.mHost.getIconController().removeAllIconsForSlot(str);
     }
 

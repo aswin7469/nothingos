@@ -81,7 +81,7 @@ public interface ChronoZonedDateTime<D extends ChronoLocalDate> extends Temporal
     }
 
     /* renamed from: java.time.chrono.ChronoZonedDateTime$1 */
-    static /* synthetic */ class C28641 {
+    static /* synthetic */ class C28701 {
         static final /* synthetic */ int[] $SwitchMap$java$time$temporal$ChronoField;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(6:0|1|2|3|4|6) */
@@ -109,7 +109,7 @@ public interface ChronoZonedDateTime<D extends ChronoLocalDate> extends Temporal
             L_0x001d:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: java.time.chrono.ChronoZonedDateTime.C28641.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: java.time.chrono.ChronoZonedDateTime.C28701.<clinit>():void");
         }
     }
 
@@ -117,7 +117,7 @@ public interface ChronoZonedDateTime<D extends ChronoLocalDate> extends Temporal
         if (!(temporalField instanceof ChronoField)) {
             return super.get(temporalField);
         }
-        int i = C28641.$SwitchMap$java$time$temporal$ChronoField[((ChronoField) temporalField).ordinal()];
+        int i = C28701.$SwitchMap$java$time$temporal$ChronoField[((ChronoField) temporalField).ordinal()];
         if (i == 1) {
             throw new UnsupportedTemporalTypeException("Invalid field 'InstantSeconds' for get() method, use getLong() instead");
         } else if (i != 2) {
@@ -131,7 +131,7 @@ public interface ChronoZonedDateTime<D extends ChronoLocalDate> extends Temporal
         if (!(temporalField instanceof ChronoField)) {
             return temporalField.getFrom(this);
         }
-        int i = C28641.$SwitchMap$java$time$temporal$ChronoField[((ChronoField) temporalField).ordinal()];
+        int i = C28701.$SwitchMap$java$time$temporal$ChronoField[((ChronoField) temporalField).ordinal()];
         if (i == 1) {
             return toEpochSecond();
         }

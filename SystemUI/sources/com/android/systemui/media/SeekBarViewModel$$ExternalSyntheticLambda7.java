@@ -11,6 +11,6 @@ public final /* synthetic */ class SeekBarViewModel$$ExternalSyntheticLambda7 im
     }
 
     public final void run() {
-        SeekBarViewModel.m2833_set_listening_$lambda1(this.f$0, this.f$1);
+        SeekBarViewModel.m2838_set_listening_$lambda1(this.f$0, this.f$1);
     }
 }

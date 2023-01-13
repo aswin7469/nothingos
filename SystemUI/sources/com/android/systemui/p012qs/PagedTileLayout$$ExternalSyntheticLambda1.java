@@ -12,6 +12,6 @@ public final /* synthetic */ class PagedTileLayout$$ExternalSyntheticLambda1 imp
     }
 
     public final void run() {
-        this.f$0.m2906lambda$fakeDragBy$1$comandroidsystemuiqsPagedTileLayout(this.f$1);
+        this.f$0.m2911lambda$fakeDragBy$1$comandroidsystemuiqsPagedTileLayout(this.f$1);
     }
 }

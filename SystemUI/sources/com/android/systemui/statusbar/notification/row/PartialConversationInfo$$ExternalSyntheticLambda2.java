@@ -11,6 +11,6 @@ public final /* synthetic */ class PartialConversationInfo$$ExternalSyntheticLam
     }
 
     public final void onClick(View view) {
-        this.f$0.mo41716xcab7bb4(view);
+        this.f$0.mo41724xcab7bb4(view);
     }
 }

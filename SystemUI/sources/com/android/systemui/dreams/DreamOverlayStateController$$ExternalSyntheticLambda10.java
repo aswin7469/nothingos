@@ -12,6 +12,6 @@ public final /* synthetic */ class DreamOverlayStateController$$ExternalSyntheti
     }
 
     public final boolean test(Object obj) {
-        return this.f$0.mo32524x6071a1ab((Complication) obj);
+        return this.f$0.mo32535x6071a1ab((Complication) obj);
     }
 }

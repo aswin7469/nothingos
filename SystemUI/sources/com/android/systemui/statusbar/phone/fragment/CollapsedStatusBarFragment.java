@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.LinearLayout;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.animation.Interpolators;
 import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.flags.FeatureFlags;
@@ -146,7 +146,7 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
     }
 
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
-        return layoutInflater.inflate(C1893R.layout.status_bar, viewGroup, false);
+        return layoutInflater.inflate(C1894R.layout.status_bar, viewGroup, false);
     }
 
     public void onViewCreated(View view, Bundle bundle) {
@@ -156,20 +156,20 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
         create.init();
         PhoneStatusBarView phoneStatusBarView = (PhoneStatusBarView) view;
         this.mStatusBar = phoneStatusBarView;
-        View findViewById = phoneStatusBarView.findViewById(C1893R.C1897id.status_bar_contents);
+        View findViewById = phoneStatusBarView.findViewById(C1894R.C1898id.status_bar_contents);
         findViewById.addOnLayoutChangeListener(this.mStatusBarLayoutListener);
         updateStatusBarLocation(findViewById.getLeft(), findViewById.getRight());
         if (bundle != null && bundle.containsKey(EXTRA_PANEL_STATE)) {
             this.mStatusBar.restoreHierarchyState(bundle.getSparseParcelableArray(EXTRA_PANEL_STATE));
         }
-        StatusBarIconController.DarkIconManager darkIconManager = new StatusBarIconController.DarkIconManager((LinearLayout) view.findViewById(C1893R.C1897id.statusIcons), this.mFeatureFlags);
+        StatusBarIconController.DarkIconManager darkIconManager = new StatusBarIconController.DarkIconManager((LinearLayout) view.findViewById(C1894R.C1898id.statusIcons), this.mFeatureFlags);
         this.mDarkIconManager = darkIconManager;
         darkIconManager.setShouldLog(true);
         updateBlockedIcons();
         this.mStatusBarIconController.addIconGroup(this.mDarkIconManager);
-        this.mSystemIconArea = (LinearLayout) this.mStatusBar.findViewById(C1893R.C1897id.system_icon_area);
-        this.mClockView = this.mStatusBar.findViewById(C1893R.C1897id.clock);
-        this.mOngoingCallChip = this.mStatusBar.findViewById(C1893R.C1897id.ongoing_call_chip);
+        this.mSystemIconArea = (LinearLayout) this.mStatusBar.findViewById(C1894R.C1898id.system_icon_area);
+        this.mClockView = this.mStatusBar.findViewById(C1894R.C1898id.clock);
+        this.mOngoingCallChip = this.mStatusBar.findViewById(C1894R.C1898id.ongoing_call_chip);
         showSystemIconArea(false);
         showClock(false);
         initEmergencyCryptkeeperText();
@@ -183,7 +183,7 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
     /* access modifiers changed from: package-private */
     public void updateBlockedIcons() {
         this.mBlockedIcons.clear();
-        List asList = Arrays.asList(getResources().getStringArray(C1893R.array.config_collapsed_statusbar_icon_blocklist));
+        List asList = Arrays.asList(getResources().getStringArray(C1894R.array.config_collapsed_statusbar_icon_blocklist));
         String string = getString(17041585);
         boolean z = this.mSecureSettings.getIntForUser("status_bar_show_vibrate_icon", 0, -2) == 0;
         for (int i = 0; i < asList.size(); i++) {
@@ -198,7 +198,7 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateBlockedIcons$0$com-android-systemui-statusbar-phone-fragment-CollapsedStatusBarFragment */
-    public /* synthetic */ void mo45438x91f80fd0() {
+    public /* synthetic */ void mo45450x91f80fd0() {
         this.mDarkIconManager.setBlockList(this.mBlockedIcons);
     }
 
@@ -243,7 +243,7 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
     }
 
     public void initNotificationIconArea() {
-        ViewGroup viewGroup = (ViewGroup) this.mStatusBar.findViewById(C1893R.C1897id.notification_icon_area);
+        ViewGroup viewGroup = (ViewGroup) this.mStatusBar.findViewById(C1894R.C1898id.notification_icon_area);
         View notificationInnerAreaView = this.mNotificationIconAreaController.getNotificationInnerAreaView();
         this.mNotificationIconAreaInner = notificationInnerAreaView;
         if (notificationInnerAreaView.getParent() != null) {
@@ -421,7 +421,7 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
     }
 
     private void initEmergencyCryptkeeperText() {
-        View findViewById = this.mStatusBar.findViewById(C1893R.C1897id.emergency_cryptkeeper_text);
+        View findViewById = this.mStatusBar.findViewById(C1894R.C1898id.emergency_cryptkeeper_text);
         if (this.mNetworkController.hasEmergencyCryptKeeperText()) {
             if (findViewById != null) {
                 ((ViewStub) findViewById).inflate();
@@ -435,7 +435,7 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
     /* access modifiers changed from: private */
     public void initOperatorName() {
         if (this.mCarrierConfigTracker.getShowOperatorNameInStatusBarConfig(SubscriptionManager.getDefaultDataSubscriptionId())) {
-            OperatorNameViewController create = this.mOperatorNameViewControllerFactory.create((OperatorNameView) ((ViewStub) this.mStatusBar.findViewById(C1893R.C1897id.operator_name)).inflate());
+            OperatorNameViewController create = this.mOperatorNameViewControllerFactory.create((OperatorNameView) ((ViewStub) this.mStatusBar.findViewById(C1894R.C1898id.operator_name)).inflate());
             this.mOperatorNameViewController = create;
             create.init();
             if (this.mKeyguardStateController.isShowing()) {
@@ -475,7 +475,7 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$2$com-android-systemui-statusbar-phone-fragment-CollapsedStatusBarFragment */
-    public /* synthetic */ void mo45437x8ee6af5f(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
+    public /* synthetic */ void mo45449x8ee6af5f(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
         if (i != i5 || i3 != i7) {
             updateStatusBarLocation(i, i3);
         }

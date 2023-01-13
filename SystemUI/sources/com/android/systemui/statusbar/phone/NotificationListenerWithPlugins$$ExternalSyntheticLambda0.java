@@ -12,6 +12,6 @@ public final /* synthetic */ class NotificationListenerWithPlugins$$ExternalSynt
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo44515xddcf832e((NotificationListenerController) obj);
+        this.f$0.mo44530xddcf832e((NotificationListenerController) obj);
     }
 }

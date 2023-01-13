@@ -8,7 +8,7 @@ public abstract class ByteBuffer extends Buffer implements Comparable<ByteBuffer
     boolean bigEndian;
 
     /* renamed from: hb */
-    final byte[] f560hb;
+    final byte[] f558hb;
     boolean isReadOnly;
     boolean nativeByteOrder;
     final int offset;
@@ -185,7 +185,7 @@ public abstract class ByteBuffer extends Buffer implements Comparable<ByteBuffer
         boolean z = true;
         this.bigEndian = true;
         this.nativeByteOrder = Bits.byteOrder() != ByteOrder.BIG_ENDIAN ? false : z;
-        this.f560hb = bArr;
+        this.f558hb = bArr;
         this.offset = i5;
     }
 
@@ -246,14 +246,14 @@ public abstract class ByteBuffer extends Buffer implements Comparable<ByteBuffer
             int r0 = r9.remaining()
             int r1 = r8.remaining()
             if (r0 > r1) goto L_0x0074
-            byte[] r1 = r8.f560hb
+            byte[] r1 = r8.f558hb
             if (r1 == 0) goto L_0x002e
-            byte[] r1 = r9.f560hb
+            byte[] r1 = r9.f558hb
             if (r1 == 0) goto L_0x002e
             int r2 = r9.position()
             int r3 = r9.offset
             int r2 = r2 + r3
-            byte[] r3 = r8.f560hb
+            byte[] r3 = r8.f558hb
             int r4 = r8.position()
             int r5 = r8.offset
             int r4 = r4 + r5
@@ -265,7 +265,7 @@ public abstract class ByteBuffer extends Buffer implements Comparable<ByteBuffer
             r4 = r9
             goto L_0x0039
         L_0x0036:
-            byte[] r1 = r9.f560hb
+            byte[] r1 = r9.f558hb
             r4 = r1
         L_0x0039:
             int r1 = r9.position()
@@ -280,7 +280,7 @@ public abstract class ByteBuffer extends Buffer implements Comparable<ByteBuffer
             r2 = r8
             goto L_0x0052
         L_0x004f:
-            byte[] r1 = r8.f560hb
+            byte[] r1 = r8.f558hb
             r2 = r1
         L_0x0052:
             int r1 = r8.position()
@@ -333,11 +333,11 @@ public abstract class ByteBuffer extends Buffer implements Comparable<ByteBuffer
     }
 
     public final boolean hasArray() {
-        return this.f560hb != null && !this.isReadOnly;
+        return this.f558hb != null && !this.isReadOnly;
     }
 
     public final byte[] array() {
-        byte[] bArr = this.f560hb;
+        byte[] bArr = this.f558hb;
         if (bArr == null) {
             throw new UnsupportedOperationException();
         } else if (!this.isReadOnly) {
@@ -348,7 +348,7 @@ public abstract class ByteBuffer extends Buffer implements Comparable<ByteBuffer
     }
 
     public final int arrayOffset() {
-        if (this.f560hb == null) {
+        if (this.f558hb == null) {
             throw new UnsupportedOperationException();
         } else if (!this.isReadOnly) {
             return this.offset;

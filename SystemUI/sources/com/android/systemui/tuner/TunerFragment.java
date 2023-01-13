@@ -14,7 +14,7 @@ import android.view.MenuItem;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragment;
 import com.android.internal.logging.MetricsLogger;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.shared.plugins.PluginPrefs;
 
 public class TunerFragment extends PreferenceFragment {
@@ -43,7 +43,7 @@ public class TunerFragment extends PreferenceFragment {
     }
 
     public void onCreatePreferences(Bundle bundle, String str) {
-        addPreferencesFromResource(C1893R.C1901xml.tuner_prefs);
+        addPreferencesFromResource(C1894R.C1902xml.tuner_prefs);
         if (!PluginPrefs.hasPlugins(getContext())) {
             getPreferenceScreen().removePreference(findPreference(KEY_PLUGINS));
         }
@@ -75,7 +75,7 @@ public class TunerFragment extends PreferenceFragment {
 
     public void onResume() {
         super.onResume();
-        getActivity().setTitle(C1893R.string.system_ui_tuner);
+        getActivity().setTitle(C1894R.string.system_ui_tuner);
         MetricsLogger.visibility(getContext(), 227, true);
     }
 
@@ -85,7 +85,7 @@ public class TunerFragment extends PreferenceFragment {
     }
 
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
-        menu.add(0, 2, 0, C1893R.string.remove_from_settings);
+        menu.add(0, 2, 0, C1894R.string.remove_from_settings);
     }
 
     public boolean onOptionsItemSelected(MenuItem menuItem) {
@@ -103,7 +103,7 @@ public class TunerFragment extends PreferenceFragment {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onOptionsItemSelected$0$com-android-systemui-tuner-TunerFragment */
-    public /* synthetic */ void mo46448x848f5a5f() {
+    public /* synthetic */ void mo46460x848f5a5f() {
         if (getActivity() != null) {
             getActivity().finish();
         }
@@ -111,7 +111,7 @@ public class TunerFragment extends PreferenceFragment {
 
     public static class TunerWarningFragment extends DialogFragment {
         public Dialog onCreateDialog(Bundle bundle) {
-            return new AlertDialog.Builder(getContext()).setTitle(C1893R.string.tuner_warning_title).setMessage(C1893R.string.tuner_warning).setPositiveButton(C1893R.string.got_it, new DialogInterface.OnClickListener() {
+            return new AlertDialog.Builder(getContext()).setTitle(C1894R.string.tuner_warning_title).setMessage(C1894R.string.tuner_warning).setPositiveButton(C1894R.string.got_it, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogInterface, int i) {
                     Settings.Secure.putInt(TunerWarningFragment.this.getContext().getContentResolver(), TunerFragment.SETTING_SEEN_TUNER_WARNING, 1);
                 }

@@ -13,6 +13,6 @@ public final /* synthetic */ class ControlsProviderSelectorActivity$$ExternalSyn
     }
 
     public final void run() {
-        ControlsProviderSelectorActivity.m2658launchFavoritingActivity$lambda8(this.f$0, this.f$1);
+        ControlsProviderSelectorActivity.m2663launchFavoritingActivity$lambda8(this.f$0, this.f$1);
     }
 }

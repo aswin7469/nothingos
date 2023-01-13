@@ -12,6 +12,6 @@ public final /* synthetic */ class LockscreenFragment$$ExternalSyntheticLambda1 
     }
 
     public final void accept(Object obj) {
-        this.f$0.m3252lambda$onDestroy$0$comandroidsystemuitunerLockscreenFragment((TunerService.Tunable) obj);
+        this.f$0.m3257lambda$onDestroy$0$comandroidsystemuitunerLockscreenFragment((TunerService.Tunable) obj);
     }
 }

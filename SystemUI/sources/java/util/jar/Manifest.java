@@ -202,7 +202,7 @@ public class Manifest implements Cloneable {
             int i3 = this.count - this.pos;
             if (i3 <= 0) {
                 if (i2 >= this.buf.length) {
-                    return this.f521in.read(bArr, i, i2);
+                    return this.f519in.read(bArr, i, i2);
                 }
                 fill();
                 i3 = this.count - this.pos;
@@ -283,7 +283,7 @@ public class Manifest implements Cloneable {
             int i2 = this.pos;
             long j2 = (long) (i - i2);
             if (j2 <= 0) {
-                return this.f521in.skip(j);
+                return this.f519in.skip(j);
             }
             if (j > j2) {
                 j = j2;
@@ -293,13 +293,13 @@ public class Manifest implements Cloneable {
         }
 
         public int available() throws IOException {
-            return (this.count - this.pos) + this.f521in.available();
+            return (this.count - this.pos) + this.f519in.available();
         }
 
         public void close() throws IOException {
-            if (this.f521in != null) {
-                this.f521in.close();
-                this.f521in = null;
+            if (this.f519in != null) {
+                this.f519in.close();
+                this.f519in = null;
                 this.buf = null;
             }
         }
@@ -307,7 +307,7 @@ public class Manifest implements Cloneable {
         private void fill() throws IOException {
             this.pos = 0;
             this.count = 0;
-            InputStream inputStream = this.f521in;
+            InputStream inputStream = this.f519in;
             byte[] bArr = this.buf;
             int read = inputStream.read(bArr, 0, bArr.length);
             if (read > 0) {

@@ -11,6 +11,6 @@ public final /* synthetic */ class NavigationBar$$ExternalSyntheticLambda21 impl
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo34639x5349b95e((Long) obj);
+        this.f$0.mo34643x5349b95e((Long) obj);
     }
 }

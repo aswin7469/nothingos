@@ -155,13 +155,13 @@ public class OperatorNameViewController extends ViewController<OperatorNameView>
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-statusbar-OperatorNameViewController */
-    public /* synthetic */ void mo38980x9ffb20e7(ArrayList arrayList, float f, int i) {
+    public /* synthetic */ void mo38981x9ffb20e7(ArrayList arrayList, float f, int i) {
         ((OperatorNameView) this.mView).setTextColor(DarkIconDispatcher.getTint(arrayList, this.mView, i));
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$1$com-android-systemui-statusbar-OperatorNameViewController */
-    public /* synthetic */ void mo38981xb0b0eda8(String str, String str2) {
+    public /* synthetic */ void mo38982xb0b0eda8(String str, String str2) {
         update();
     }
 

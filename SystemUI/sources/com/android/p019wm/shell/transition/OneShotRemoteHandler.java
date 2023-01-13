@@ -40,7 +40,7 @@ public class OneShotRemoteHandler implements Transitions.TransitionHandler {
         }
         ProtoLog.v(ShellProtoLogGroup.WM_SHELL_TRANSITIONS, "Using registered One-shot remote transition %s for %s.", new Object[]{this.mRemote, iBinder});
         final OneShotRemoteHandler$$ExternalSyntheticLambda0 oneShotRemoteHandler$$ExternalSyntheticLambda0 = new OneShotRemoteHandler$$ExternalSyntheticLambda0(this, transitionFinishCallback);
-        C36111 r3 = new IRemoteTransitionFinishedCallback.Stub() {
+        C36211 r3 = new IRemoteTransitionFinishedCallback.Stub() {
             public void onTransitionFinished(WindowContainerTransaction windowContainerTransaction, SurfaceControl.Transaction transaction) {
                 if (OneShotRemoteHandler.this.mRemote.asBinder() != null) {
                     OneShotRemoteHandler.this.mRemote.asBinder().unlinkToDeath(oneShotRemoteHandler$$ExternalSyntheticLambda0, 0);
@@ -77,7 +77,7 @@ public class OneShotRemoteHandler implements Transitions.TransitionHandler {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startAnimation$1$com-android-wm-shell-transition-OneShotRemoteHandler */
-    public /* synthetic */ void mo51253x2986f74a(Transitions.TransitionFinishCallback transitionFinishCallback) {
+    public /* synthetic */ void mo51264x2986f74a(Transitions.TransitionFinishCallback transitionFinishCallback) {
         Log.e("ShellTransitions", "Remote transition died, finishing");
         this.mMainExecutor.execute(new OneShotRemoteHandler$$ExternalSyntheticLambda1(transitionFinishCallback));
     }

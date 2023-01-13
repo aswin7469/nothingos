@@ -25,7 +25,7 @@ final class EPollPort extends Port {
     /* access modifiers changed from: private */
 
     /* renamed from: sp */
-    public final int[] f882sp;
+    public final int[] f880sp;
     /* access modifiers changed from: private */
     public final AtomicInteger wakeupCount = new AtomicInteger();
 
@@ -70,7 +70,7 @@ final class EPollPort extends Port {
         try {
             socketpair(iArr);
             EPoll.epollCtl(epollCreate, 1, iArr[0], Net.POLLIN);
-            this.f882sp = iArr;
+            this.f880sp = iArr;
             this.address = EPoll.allocatePollArray(512);
             ArrayBlockingQueue<Event> arrayBlockingQueue = new ArrayBlockingQueue<>(512);
             this.queue = arrayBlockingQueue;
@@ -93,8 +93,8 @@ final class EPollPort extends Port {
             if (!this.closed) {
                 this.closed = true;
                 EPoll.freePollArray(this.address);
-                close0(this.f882sp[0]);
-                close0(this.f882sp[1]);
+                close0(this.f880sp[0]);
+                close0(this.f880sp[1]);
                 close0(this.epfd);
             }
         }
@@ -103,7 +103,7 @@ final class EPollPort extends Port {
     private void wakeup() {
         if (this.wakeupCount.incrementAndGet() == 1) {
             try {
-                interrupt(this.f882sp[1]);
+                interrupt(this.f880sp[1]);
             } catch (IOException e) {
                 throw new AssertionError((Object) e);
             }
@@ -169,9 +169,9 @@ final class EPollPort extends Port {
                         }
                         long event = EPoll.getEvent(EPollPort.this.address, i);
                         int descriptor = EPoll.getDescriptor(event);
-                        if (descriptor == EPollPort.this.f882sp[0]) {
+                        if (descriptor == EPollPort.this.f880sp[0]) {
                             if (EPollPort.this.wakeupCount.decrementAndGet() == 0) {
-                                EPollPort.drain1(EPollPort.this.f882sp[0]);
+                                EPollPort.drain1(EPollPort.this.f880sp[0]);
                             }
                             if (i > 0) {
                                 EPollPort.this.queue.offer(EPollPort.this.EXECUTE_TASK_OR_SHUTDOWN);

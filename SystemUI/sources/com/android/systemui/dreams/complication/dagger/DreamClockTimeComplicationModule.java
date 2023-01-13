@@ -5,7 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextClock;
 import com.android.internal.util.Preconditions;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dreams.complication.ComplicationLayoutParams;
 import dagger.Module;
 import dagger.Provides;
@@ -22,7 +22,7 @@ public interface DreamClockTimeComplicationModule {
     @Provides
     @Named("clock_time_complication_view")
     static View provideComplicationView(LayoutInflater layoutInflater) {
-        TextClock textClock = (TextClock) Preconditions.checkNotNull((TextClock) layoutInflater.inflate(C1893R.layout.dream_overlay_complication_clock_time, (ViewGroup) null, false), "R.layout.dream_overlay_complication_clock_time did not properly inflated");
+        TextClock textClock = (TextClock) Preconditions.checkNotNull((TextClock) layoutInflater.inflate(C1894R.layout.dream_overlay_complication_clock_time, (ViewGroup) null, false), "R.layout.dream_overlay_complication_clock_time did not properly inflated");
         textClock.setFontVariationSettings("'wght' 200");
         return textClock;
     }

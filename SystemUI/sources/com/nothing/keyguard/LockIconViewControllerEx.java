@@ -14,7 +14,7 @@ import android.view.WindowManager;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.LockIconView;
 import com.android.keyguard.LockIconViewController;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.biometrics.AuthController;
 import com.nothing.systemui.NTDependencyEx;
 import com.nothing.systemui.facerecognition.FaceRecognitionController;
@@ -93,14 +93,14 @@ public class LockIconViewControllerEx {
         this.mLockIconViewController = lockIconViewController;
         this.mLockIconView = lockIconView;
         this.mKeyguardUpdateMonitor = keyguardUpdateMonitor;
-        this.mUnlockedLabel = resources.getString(C1893R.string.accessibility_unlock_button);
-        this.mLockedLabel = resources.getString(C1893R.string.accessibility_lock_icon);
-        this.mFaceLoadingIcon = (AnimatedVectorDrawable) this.mLockIconView.getResources().getDrawable(C1893R.C1895drawable.nt_lock_face_loading, context.getTheme());
+        this.mUnlockedLabel = resources.getString(C1894R.string.accessibility_unlock_button);
+        this.mLockedLabel = resources.getString(C1894R.string.accessibility_lock_icon);
+        this.mFaceLoadingIcon = (AnimatedVectorDrawable) this.mLockIconView.getResources().getDrawable(C1894R.C1896drawable.nt_lock_face_loading, context.getTheme());
         this.mRepeatingAnimation = new RepeatingVectorAnimation(this.mFaceLoadingIcon);
-        this.mUnlockIcon = lockIconView.getContext().getResources().getDrawable(C1893R.C1895drawable.nt_ic_unlock, lockIconView.getContext().getTheme());
-        this.mLockIcon = lockIconView.getContext().getResources().getDrawable(C1893R.anim.nt_lock_to_unlock, lockIconView.getContext().getTheme());
-        this.mFpToUnlockIcon = (AnimatedVectorDrawable) lockIconView.getContext().getResources().getDrawable(C1893R.anim.nt_lock_to_unlock, lockIconView.getContext().getTheme());
-        this.mLockToUnlockIcon = (AnimatedVectorDrawable) lockIconView.getContext().getResources().getDrawable(C1893R.anim.nt_lock_to_unlock, lockIconView.getContext().getTheme());
+        this.mUnlockIcon = lockIconView.getContext().getResources().getDrawable(C1894R.C1896drawable.nt_ic_unlock, lockIconView.getContext().getTheme());
+        this.mLockIcon = lockIconView.getContext().getResources().getDrawable(C1894R.anim.nt_lock_to_unlock, lockIconView.getContext().getTheme());
+        this.mFpToUnlockIcon = (AnimatedVectorDrawable) lockIconView.getContext().getResources().getDrawable(C1894R.anim.nt_lock_to_unlock, lockIconView.getContext().getTheme());
+        this.mLockToUnlockIcon = (AnimatedVectorDrawable) lockIconView.getContext().getResources().getDrawable(C1894R.anim.nt_lock_to_unlock, lockIconView.getContext().getTheme());
     }
 
     public void updateConfiguration() {
@@ -113,7 +113,7 @@ public class LockIconViewControllerEx {
         float f = displayMetrics.density;
         int i = displayMetrics.densityDpi;
         this.mBottomPadding = (int) (this.mHeightPixels * 0.283f);
-        sLockIconRadiusPx = this.mLockIconView.getContext().getResources().getDimensionPixelSize(C1893R.dimen.nt_lock_icon_radius);
+        sLockIconRadiusPx = this.mLockIconView.getContext().getResources().getDimensionPixelSize(C1894R.dimen.nt_lock_icon_radius);
         Log.i(TAG, "currentDensity=" + f + ", currentDensityDPI=" + i + ", mWidthPixels=" + this.mWidthPixels + ", mHeightPixels=" + this.mHeightPixels + ", mBottomPadding=" + this.mBottomPadding + ", sLockIconRadiusPx=" + sLockIconRadiusPx + ", old sDefaultDensity=" + sDefaultDensity);
     }
 

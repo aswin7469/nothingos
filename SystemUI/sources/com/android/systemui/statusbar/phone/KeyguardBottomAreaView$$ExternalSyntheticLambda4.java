@@ -12,6 +12,6 @@ public final /* synthetic */ class KeyguardBottomAreaView$$ExternalSyntheticLamb
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo44129x12d52e1((ControlsListingController) obj);
+        this.f$0.mo44139x12d52e1((ControlsListingController) obj);
     }
 }

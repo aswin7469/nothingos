@@ -9,6 +9,6 @@ public final /* synthetic */ class ScrimController$$ExternalSyntheticLambda3 imp
     }
 
     public final void run() {
-        this.f$0.mo45049x3926e8e1();
+        this.f$0.mo45064x3926e8e1();
     }
 }

@@ -16,7 +16,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import java.sql.Types;
 
 class KeyguardEsimArea extends Button implements View.OnClickListener {
@@ -46,7 +46,7 @@ class KeyguardEsimArea extends Button implements View.OnClickListener {
                 int resultCode;
                 if (KeyguardEsimArea.ACTION_DISABLE_ESIM.equals(intent.getAction()) && (resultCode = getResultCode()) != 0) {
                     Log.e(KeyguardEsimArea.TAG, "Error disabling esim, result code = " + resultCode);
-                    AlertDialog create = new AlertDialog.Builder(KeyguardEsimArea.this.mContext).setMessage(C1893R.string.error_disable_esim_msg).setTitle(C1893R.string.error_disable_esim_title).setCancelable(false).setPositiveButton(C1893R.string.f262ok, (DialogInterface.OnClickListener) null).create();
+                    AlertDialog create = new AlertDialog.Builder(KeyguardEsimArea.this.mContext).setMessage(C1894R.string.error_disable_esim_msg).setTitle(C1894R.string.error_disable_esim_title).setCancelable(false).setPositiveButton(C1894R.string.f262ok, (DialogInterface.OnClickListener) null).create();
                     create.getWindow().setType(Types.SQLXML);
                     create.show();
                 }

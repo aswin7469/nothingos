@@ -15,7 +15,7 @@ import android.os.SystemProperties;
 import android.util.Log;
 import com.android.internal.app.AlertActivity;
 import com.android.internal.app.AlertController;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import javax.inject.Inject;
 
@@ -37,8 +37,8 @@ public class UsbDebuggingSecondaryUserActivity extends AlertActivity implements 
             this.mDisconnectedReceiver = new UsbDisconnectedReceiver(this);
         }
         AlertController.AlertParams alertParams = this.mAlertParams;
-        alertParams.mTitle = getString(C1893R.string.usb_debugging_secondary_user_title);
-        alertParams.mMessage = getString(C1893R.string.usb_debugging_secondary_user_message);
+        alertParams.mTitle = getString(C1894R.string.usb_debugging_secondary_user_title);
+        alertParams.mMessage = getString(C1894R.string.usb_debugging_secondary_user_message);
         alertParams.mPositiveButtonText = getString(17039370);
         alertParams.mPositiveButtonListener = this;
         setupAlert();

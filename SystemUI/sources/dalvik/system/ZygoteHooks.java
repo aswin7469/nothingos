@@ -52,7 +52,7 @@ public final class ZygoteHooks {
     @SystemApi(client = SystemApi.Client.MODULE_LIBRARIES)
     public static void onEndPreload() {
         com.android.i18n.system.ZygoteHooks.onEndPreload();
-        FileDescriptor.f518in.cloneForFork();
+        FileDescriptor.f516in.cloneForFork();
         FileDescriptor.out.cloneForFork();
         FileDescriptor.err.cloneForFork();
     }
@@ -65,10 +65,10 @@ public final class ZygoteHooks {
     @SystemApi(client = SystemApi.Client.MODULE_LIBRARIES)
     public static void gcAndFinalize() {
         VMRuntime runtime = VMRuntime.getRuntime();
-        System.m1693gc();
+        System.m1699gc();
         runtime.runFinalizationSync();
         cleanLocaleCaches();
-        System.m1693gc();
+        System.m1699gc();
     }
 
     @SystemApi(client = SystemApi.Client.MODULE_LIBRARIES)

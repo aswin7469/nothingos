@@ -10,7 +10,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.accessibility.MirrorWindowControl;
 
 class SimpleMirrorWindowControl extends MirrorWindowControl implements View.OnClickListener, View.OnTouchListener, View.OnLongClickListener {
@@ -28,22 +28,22 @@ class SimpleMirrorWindowControl extends MirrorWindowControl implements View.OnCl
         super(context);
         this.mHandler = handler;
         Resources resources = context.getResources();
-        this.mMoveFrameAmountShort = resources.getDimensionPixelSize(C1893R.dimen.magnification_frame_move_short);
-        this.mMoveFrameAmountLong = resources.getDimensionPixelSize(C1893R.dimen.magnification_frame_move_long);
+        this.mMoveFrameAmountShort = resources.getDimensionPixelSize(C1894R.dimen.magnification_frame_move_short);
+        this.mMoveFrameAmountLong = resources.getDimensionPixelSize(C1894R.dimen.magnification_frame_move_long);
     }
 
     /* access modifiers changed from: package-private */
     public String getWindowTitle() {
-        return this.mContext.getString(C1893R.string.magnification_controls_title);
+        return this.mContext.getString(C1894R.string.magnification_controls_title);
     }
 
     /* access modifiers changed from: package-private */
     public View onCreateView(LayoutInflater layoutInflater, Point point) {
-        View inflate = layoutInflater.inflate(C1893R.layout.magnifier_controllers, (ViewGroup) null);
-        View findViewById = inflate.findViewById(C1893R.C1897id.left_control);
-        View findViewById2 = inflate.findViewById(C1893R.C1897id.up_control);
-        View findViewById3 = inflate.findViewById(C1893R.C1897id.right_control);
-        View findViewById4 = inflate.findViewById(C1893R.C1897id.down_control);
+        View inflate = layoutInflater.inflate(C1894R.layout.magnifier_controllers, (ViewGroup) null);
+        View findViewById = inflate.findViewById(C1894R.C1898id.left_control);
+        View findViewById2 = inflate.findViewById(C1894R.C1898id.up_control);
+        View findViewById3 = inflate.findViewById(C1894R.C1898id.right_control);
+        View findViewById4 = inflate.findViewById(C1894R.C1898id.down_control);
         findViewById.setOnClickListener(this);
         findViewById2.setOnClickListener(this);
         findViewById3.setOnClickListener(this);
@@ -63,13 +63,13 @@ class SimpleMirrorWindowControl extends MirrorWindowControl implements View.OnCl
 
     private Point findOffset(View view, int i) {
         this.mTmpPoint.set(0, 0);
-        if (view.getId() == C1893R.C1897id.left_control) {
+        if (view.getId() == C1894R.C1898id.left_control) {
             this.mTmpPoint.x = -i;
-        } else if (view.getId() == C1893R.C1897id.up_control) {
+        } else if (view.getId() == C1894R.C1898id.up_control) {
             this.mTmpPoint.y = -i;
-        } else if (view.getId() == C1893R.C1897id.right_control) {
+        } else if (view.getId() == C1894R.C1898id.right_control) {
             this.mTmpPoint.x = i;
-        } else if (view.getId() == C1893R.C1897id.down_control) {
+        } else if (view.getId() == C1894R.C1898id.down_control) {
             this.mTmpPoint.y = i;
         } else {
             Log.w(TAG, "findOffset move is zero ");

@@ -11,6 +11,6 @@ public final /* synthetic */ class ControlsProviderSelectorActivity$$ExternalSyn
     }
 
     public final void onClick(View view) {
-        ControlsProviderSelectorActivity.m2659onCreate$lambda3$lambda2(this.f$0, view);
+        ControlsProviderSelectorActivity.m2664onCreate$lambda3$lambda2(this.f$0, view);
     }
 }

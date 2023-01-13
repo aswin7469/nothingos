@@ -1312,26 +1312,26 @@ public class Arrays {
         private static final long serialVersionUID = -2764017481108945198L;
 
         /* renamed from: a */
-        private final E[] f602a;
+        private final E[] f600a;
 
         ArrayList(E[] eArr) {
-            this.f602a = (Object[]) Objects.requireNonNull(eArr);
+            this.f600a = (Object[]) Objects.requireNonNull(eArr);
         }
 
         public int size() {
-            return this.f602a.length;
+            return this.f600a.length;
         }
 
         public Object[] toArray() {
-            return (Object[]) this.f602a.clone();
+            return (Object[]) this.f600a.clone();
         }
 
         public <T> T[] toArray(T[] tArr) {
             int size = size();
             if (tArr.length < size) {
-                return Arrays.copyOf(this.f602a, size, tArr.getClass());
+                return Arrays.copyOf(this.f600a, size, tArr.getClass());
             }
-            System.arraycopy((Object) this.f602a, 0, (Object) tArr, 0, size);
+            System.arraycopy((Object) this.f600a, 0, (Object) tArr, 0, size);
             if (tArr.length > size) {
                 tArr[size] = null;
             }
@@ -1339,18 +1339,18 @@ public class Arrays {
         }
 
         public E get(int i) {
-            return this.f602a[i];
+            return this.f600a[i];
         }
 
         public E set(int i, E e) {
-            E[] eArr = this.f602a;
+            E[] eArr = this.f600a;
             E e2 = eArr[i];
             eArr[i] = e;
             return e2;
         }
 
         public int indexOf(Object obj) {
-            E[] eArr = this.f602a;
+            E[] eArr = this.f600a;
             int i = 0;
             if (obj == null) {
                 while (i < eArr.length) {
@@ -1375,50 +1375,50 @@ public class Arrays {
         }
 
         public Spliterator<E> spliterator() {
-            return Spliterators.spliterator((Object[]) this.f602a, 16);
+            return Spliterators.spliterator((Object[]) this.f600a, 16);
         }
 
         public void forEach(Consumer<? super E> consumer) {
             Objects.requireNonNull(consumer);
-            for (E accept : this.f602a) {
+            for (E accept : this.f600a) {
                 consumer.accept(accept);
             }
         }
 
         public void replaceAll(UnaryOperator<E> unaryOperator) {
             Objects.requireNonNull(unaryOperator);
-            E[] eArr = this.f602a;
+            E[] eArr = this.f600a;
             for (int i = 0; i < eArr.length; i++) {
                 eArr[i] = unaryOperator.apply(eArr[i]);
             }
         }
 
         public void sort(Comparator<? super E> comparator) {
-            Arrays.sort(this.f602a, comparator);
+            Arrays.sort(this.f600a, comparator);
         }
 
         public Iterator<E> iterator() {
-            return new ArrayItr(this.f602a);
+            return new ArrayItr(this.f600a);
         }
     }
 
     private static class ArrayItr<E> implements Iterator<E> {
 
         /* renamed from: a */
-        private final E[] f601a;
+        private final E[] f599a;
         private int cursor;
 
         ArrayItr(E[] eArr) {
-            this.f601a = eArr;
+            this.f599a = eArr;
         }
 
         public boolean hasNext() {
-            return this.cursor < this.f601a.length;
+            return this.cursor < this.f599a.length;
         }
 
         public E next() {
             int i = this.cursor;
-            E[] eArr = this.f601a;
+            E[] eArr = this.f599a;
             if (i < eArr.length) {
                 this.cursor = i + 1;
                 return eArr[i];

@@ -14,6 +14,6 @@ public final /* synthetic */ class BubbleViewInfoTask$$ExternalSyntheticLambda0 
     }
 
     public final void run() {
-        this.f$0.mo48783x4542a15(this.f$1);
+        this.f$0.mo48792x4542a15(this.f$1);
     }
 }

@@ -34,7 +34,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.graphics.ColorUtils;
 import com.android.internal.statusbar.StatusBarIcon;
 import com.android.internal.util.ContrastColorUtil;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.animation.Interpolators;
 import com.android.systemui.navigationbar.NavigationBarInflaterView;
 import com.android.systemui.plugins.DarkIconDispatcher;
@@ -144,7 +144,7 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-statusbar-StatusBarIconView  reason: not valid java name */
-    public /* synthetic */ void m3042lambda$new$0$comandroidsystemuistatusbarStatusBarIconView(ValueAnimator valueAnimator) {
+    public /* synthetic */ void m3046lambda$new$0$comandroidsystemuistatusbarStatusBarIconView(ValueAnimator valueAnimator) {
         setColorInternal(NotificationUtils.interpolateColors(this.mAnimationStartColor, this.mIconColor, valueAnimator.getAnimatedFraction()));
     }
 
@@ -178,7 +178,7 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
         Paint paint2 = new Paint();
         this.mNumberPain = paint2;
         paint2.setTextAlign(Paint.Align.CENTER);
-        this.mNumberPain.setColor(context.getColor(C1893R.C1895drawable.notification_number_text_color));
+        this.mNumberPain.setColor(context.getColor(C1894R.C1896drawable.notification_number_text_color));
         this.mNumberPain.setAntiAlias(true);
         setNotification(statusBarNotification);
         setScaleType(ImageView.ScaleType.CENTER);
@@ -277,10 +277,10 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
     private void reloadDimens() {
         boolean z = this.mDotRadius == ((float) this.mStaticDotRadius);
         Resources resources = getResources();
-        this.mStaticDotRadius = resources.getDimensionPixelSize(C1893R.dimen.overflow_dot_radius);
-        this.mStatusBarIconSize = resources.getDimensionPixelSize(C1893R.dimen.status_bar_icon_size);
-        this.mStatusBarIconDrawingSizeIncreased = resources.getDimensionPixelSize(C1893R.dimen.status_bar_icon_drawing_size_dark);
-        this.mStatusBarIconDrawingSize = resources.getDimensionPixelSize(C1893R.dimen.status_bar_icon_drawing_size);
+        this.mStaticDotRadius = resources.getDimensionPixelSize(C1894R.dimen.overflow_dot_radius);
+        this.mStatusBarIconSize = resources.getDimensionPixelSize(C1894R.dimen.status_bar_icon_size);
+        this.mStatusBarIconDrawingSizeIncreased = resources.getDimensionPixelSize(C1894R.dimen.status_bar_icon_drawing_size_dark);
+        this.mStatusBarIconDrawingSize = resources.getDimensionPixelSize(C1894R.dimen.status_bar_icon_drawing_size);
         if (z) {
             this.mDotRadius = (float) this.mStaticDotRadius;
         }
@@ -346,19 +346,19 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
             if (!updateDrawable(false)) {
                 return false;
             }
-            setTag(C1893R.C1897id.icon_is_grayscale, (Object) null);
+            setTag(C1894R.C1898id.icon_is_grayscale, (Object) null);
             maybeUpdateIconScaleDimens();
         }
         if (!z2) {
             setImageLevel(statusBarIcon.iconLevel);
         }
         if (!z4) {
-            if (statusBarIcon.number <= 0 || !getContext().getResources().getBoolean(C1893R.bool.config_statusBarShowNumber)) {
+            if (statusBarIcon.number <= 0 || !getContext().getResources().getBoolean(C1894R.bool.config_statusBarShowNumber)) {
                 this.mNumberBackground = null;
                 this.mNumberText = null;
             } else {
                 if (this.mNumberBackground == null) {
-                    this.mNumberBackground = getContext().getResources().getDrawable(C1893R.C1895drawable.ic_notification_overlay);
+                    this.mNumberBackground = getContext().getResources().getDrawable(C1894R.C1896drawable.ic_notification_overlay);
                 }
                 placeNumber();
             }
@@ -481,7 +481,7 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
         }
         Drawable loadDrawableAsUser = statusBarIcon.icon.loadDrawableAsUser(context2, identifier);
         TypedValue typedValue = new TypedValue();
-        context.getResources().getValue(C1893R.dimen.status_bar_icon_scale_factor, typedValue, true);
+        context.getResources().getValue(C1894R.dimen.status_bar_icon_scale_factor, typedValue, true);
         float f = typedValue.getFloat();
         if (loadDrawableAsUser != null) {
             boolean isLowRamDeviceStatic = ActivityManager.isLowRamDeviceStatic();
@@ -632,7 +632,7 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
         } else if (!TextUtils.isEmpty(charSequence5)) {
             charSequence2 = charSequence5;
         }
-        return context.getString(C1893R.string.accessibility_desc_notification_icon, new Object[]{charSequence, charSequence2});
+        return context.getString(C1894R.string.accessibility_desc_notification_icon, new Object[]{charSequence, charSequence2});
     }
 
     public void setDecorColor(int i) {
@@ -899,7 +899,7 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setDozing$1$com-android-systemui-statusbar-StatusBarIconView */
-    public /* synthetic */ void mo39074x56d089d2(Float f) {
+    public /* synthetic */ void mo39075x56d089d2(Float f) {
         this.mDozeAmount = f.floatValue();
         updateDecorColor();
         updateIconColor();

@@ -4,7 +4,7 @@ import android.content.ClipData;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -24,6 +24,7 @@ import java.p026io.FileOutputStream;
 import java.p026io.IOException;
 import java.p026io.InputStream;
 import java.p026io.OutputStream;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import libcore.p030io.Streams;
 
@@ -130,7 +131,7 @@ class AvatarPhotoController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$copyAndCropPhoto$1$com-android-settingslib-users-AvatarPhotoController */
-    public /* synthetic */ void mo29187xdf1d27a1(Uri uri, boolean z) {
+    public /* synthetic */ void mo29192xdf1d27a1(Uri uri, boolean z) {
         OutputStream openOutputStream;
         ContentResolver contentResolver = this.mContextInjector.getContentResolver();
         try {
@@ -168,7 +169,7 @@ class AvatarPhotoController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$copyAndCropPhoto$0$com-android-settingslib-users-AvatarPhotoController */
-    public /* synthetic */ void mo29186x51e27620() {
+    public /* synthetic */ void mo29191x51e27620() {
         if (!this.mAvatarUi.isFinishing()) {
             cropPhoto(this.mPreCropPictureUri);
         }
@@ -216,7 +217,7 @@ class AvatarPhotoController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onPhotoNotCropped$3$com-android-settingslib-users-AvatarPhotoController */
-    public /* synthetic */ void mo29189xd76a6ea8(Uri uri) {
+    public /* synthetic */ void mo29194xd76a6ea8(Uri uri) {
         int i = this.mPhotoSize;
         Bitmap createBitmap = Bitmap.createBitmap(i, i, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(createBitmap);
@@ -243,7 +244,7 @@ class AvatarPhotoController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onPhotoNotCropped$2$com-android-settingslib-users-AvatarPhotoController */
-    public /* synthetic */ void mo29188x4a2fbd27() {
+    public /* synthetic */ void mo29193x4a2fbd27() {
         this.mAvatarUi.returnUriResult(this.mCropPictureUri);
     }
 
@@ -294,12 +295,12 @@ class AvatarPhotoController {
         }
 
         public boolean startSystemActivityForResult(Intent intent, int i) {
-            ActivityInfo resolveActivityInfo = intent.resolveActivityInfo(this.mActivity.getPackageManager(), 1048576);
-            if (resolveActivityInfo == null) {
+            List<ResolveInfo> queryIntentActivities = this.mActivity.getPackageManager().queryIntentActivities(intent, 1048576);
+            if (queryIntentActivities.isEmpty()) {
                 Log.w(AvatarPhotoController.TAG, "No system package activity could be found for code " + i);
                 return false;
             }
-            intent.setPackage(resolveActivityInfo.packageName);
+            intent.setPackage(queryIntentActivities.get(0).activityInfo.packageName);
             this.mActivity.startActivityForResult(intent, i);
             return true;
         }

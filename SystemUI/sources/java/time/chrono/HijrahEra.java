@@ -16,7 +16,7 @@ public enum HijrahEra implements Era {
     }
 
     /* renamed from: of */
-    public static HijrahEra m944of(int i) {
+    public static HijrahEra m942of(int i) {
         if (i == 1) {
             return AH;
         }
@@ -25,7 +25,7 @@ public enum HijrahEra implements Era {
 
     public ValueRange range(TemporalField temporalField) {
         if (temporalField == ChronoField.ERA) {
-            return ValueRange.m955of(1, 1);
+            return ValueRange.m953of(1, 1);
         }
         return super.range(temporalField);
     }

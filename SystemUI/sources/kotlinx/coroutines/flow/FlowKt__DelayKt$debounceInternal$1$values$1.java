@@ -10,8 +10,8 @@ import kotlin.coroutines.jvm.internal.SuspendLambda;
 import kotlin.jvm.functions.Function2;
 import kotlinx.coroutines.channels.ProducerScope;
 
-@Metadata(mo64986d1 = {"\u0000\u0010\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\u0010\u0000\u0010\u0000\u001a\u00020\u0001\"\u0004\b\u0000\u0010\u0002*\b\u0012\u0004\u0012\u00020\u00040\u0003H@"}, mo64987d2 = {"<anonymous>", "", "T", "Lkotlinx/coroutines/channels/ProducerScope;", ""}, mo64988k = 3, mo64989mv = {1, 5, 1}, mo64991xi = 48)
-@DebugMetadata(mo65240c = "kotlinx.coroutines.flow.FlowKt__DelayKt$debounceInternal$1$values$1", mo65241f = "Delay.kt", mo65242i = {}, mo65243l = {352}, mo65244m = "invokeSuspend", mo65245n = {}, mo65246s = {})
+@Metadata(mo65042d1 = {"\u0000\u0010\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\u0010\u0000\u0010\u0000\u001a\u00020\u0001\"\u0004\b\u0000\u0010\u0002*\b\u0012\u0004\u0012\u00020\u00040\u0003H@"}, mo65043d2 = {"<anonymous>", "", "T", "Lkotlinx/coroutines/channels/ProducerScope;", ""}, mo65044k = 3, mo65045mv = {1, 5, 1}, mo65047xi = 48)
+@DebugMetadata(mo65296c = "kotlinx.coroutines.flow.FlowKt__DelayKt$debounceInternal$1$values$1", mo65297f = "Delay.kt", mo65298i = {}, mo65299l = {352}, mo65300m = "invokeSuspend", mo65301n = {}, mo65302s = {})
 /* compiled from: Delay.kt */
 final class FlowKt__DelayKt$debounceInternal$1$values$1 extends SuspendLambda implements Function2<ProducerScope<? super Object>, Continuation<? super Unit>, Object> {
     final /* synthetic */ Flow<T> $this_debounceInternal;
@@ -40,7 +40,7 @@ final class FlowKt__DelayKt$debounceInternal$1$values$1 extends SuspendLambda im
         if (i == 0) {
             ResultKt.throwOnFailure(obj);
             this.label = 1;
-            if (this.$this_debounceInternal.collect(new C4614xec8ab92d((ProducerScope) this.L$0), this) == coroutine_suspended) {
+            if (this.$this_debounceInternal.collect(new C4626xec8ab92d((ProducerScope) this.L$0), this) == coroutine_suspended) {
                 return coroutine_suspended;
             }
         } else if (i == 1) {

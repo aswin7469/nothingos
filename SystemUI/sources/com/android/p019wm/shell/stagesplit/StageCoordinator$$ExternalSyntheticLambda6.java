@@ -17,6 +17,6 @@ public final /* synthetic */ class StageCoordinator$$ExternalSyntheticLambda6 im
     }
 
     public final void runWithTransaction(SurfaceControl.Transaction transaction) {
-        this.f$0.mo51031xba06c2ee(this.f$1, this.f$2, transaction);
+        this.f$0.mo51042xba06c2ee(this.f$1, this.f$2, transaction);
     }
 }

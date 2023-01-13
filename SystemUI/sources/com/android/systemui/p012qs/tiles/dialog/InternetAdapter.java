@@ -15,7 +15,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.android.settingslib.Utils;
 import com.android.settingslib.wifi.WifiUtils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.wifitrackerlib.WifiEntry;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -37,7 +37,7 @@ public class InternetAdapter extends RecyclerView.Adapter<InternetViewHolder> {
     public InternetViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         Context context = viewGroup.getContext();
         this.mContext = context;
-        this.mHolderView = LayoutInflater.from(context).inflate(C1893R.layout.internet_list_item, viewGroup, false);
+        this.mHolderView = LayoutInflater.from(context).inflate(C1894R.layout.internet_list_item, viewGroup, false);
         return new InternetViewHolder(this.mHolderView, this.mInternetDialogController);
     }
 
@@ -88,13 +88,13 @@ public class InternetAdapter extends RecyclerView.Adapter<InternetViewHolder> {
             super(view);
             this.mContext = view.getContext();
             this.mInternetDialogController = internetDialogController;
-            this.mContainerLayout = (LinearLayout) view.requireViewById(C1893R.C1897id.internet_container);
-            this.mWifiListLayout = (LinearLayout) view.requireViewById(C1893R.C1897id.wifi_list);
-            this.mWifiNetworkLayout = (LinearLayout) view.requireViewById(C1893R.C1897id.wifi_network_layout);
-            this.mWifiIcon = (ImageView) view.requireViewById(C1893R.C1897id.wifi_icon);
-            this.mWifiTitleText = (TextView) view.requireViewById(C1893R.C1897id.wifi_title);
-            this.mWifiSummaryText = (TextView) view.requireViewById(C1893R.C1897id.wifi_summary);
-            this.mWifiEndIcon = (ImageView) view.requireViewById(C1893R.C1897id.wifi_end_icon);
+            this.mContainerLayout = (LinearLayout) view.requireViewById(C1894R.C1898id.internet_container);
+            this.mWifiListLayout = (LinearLayout) view.requireViewById(C1894R.C1898id.wifi_list);
+            this.mWifiNetworkLayout = (LinearLayout) view.requireViewById(C1894R.C1898id.wifi_network_layout);
+            this.mWifiIcon = (ImageView) view.requireViewById(C1894R.C1898id.wifi_icon);
+            this.mWifiTitleText = (TextView) view.requireViewById(C1894R.C1898id.wifi_title);
+            this.mWifiSummaryText = (TextView) view.requireViewById(C1894R.C1898id.wifi_summary);
+            this.mWifiEndIcon = (ImageView) view.requireViewById(C1894R.C1898id.wifi_end_icon);
             this.mWifiIconInjector = internetDialogController.getWifiIconInjector();
         }
 
@@ -114,7 +114,7 @@ public class InternetAdapter extends RecyclerView.Adapter<InternetViewHolder> {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onBind$0$com-android-systemui-qs-tiles-dialog-InternetAdapter$InternetViewHolder */
-        public /* synthetic */ void mo36960x72a4da9b(WifiEntry wifiEntry, View view) {
+        public /* synthetic */ void mo36958x72a4da9b(WifiEntry wifiEntry, View view) {
             this.mInternetDialogController.launchWifiDetailsSetting(wifiEntry.getKey(), view);
         }
 
@@ -128,7 +128,7 @@ public class InternetAdapter extends RecyclerView.Adapter<InternetViewHolder> {
 
         /* access modifiers changed from: package-private */
         /* renamed from: onWifiClick */
-        public void mo36961x39b0c19c(WifiEntry wifiEntry, View view) {
+        public void mo36959x39b0c19c(WifiEntry wifiEntry, View view) {
             if (wifiEntry.shouldEditBeforeConnect()) {
                 Intent wifiDialogIntent = WifiUtils.getWifiDialogIntent(wifiEntry.getKey(), true);
                 wifiDialogIntent.addFlags(268435456);
@@ -169,9 +169,9 @@ public class InternetAdapter extends RecyclerView.Adapter<InternetViewHolder> {
         public void updateEndIcon(int i, int i2) {
             Drawable drawable;
             if (i != 0) {
-                drawable = this.mContext.getDrawable(C1893R.C1895drawable.ic_settings_24dp);
+                drawable = this.mContext.getDrawable(C1894R.C1896drawable.ic_settings_24dp);
             } else {
-                drawable = (i2 == 0 || i2 == 4) ? null : this.mContext.getDrawable(C1893R.C1895drawable.ic_friction_lock_closed);
+                drawable = (i2 == 0 || i2 == 4) ? null : this.mContext.getDrawable(C1894R.C1896drawable.ic_friction_lock_closed);
             }
             if (drawable == null) {
                 this.mWifiEndIcon.setVisibility(8);

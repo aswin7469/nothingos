@@ -8,14 +8,14 @@ public class ProgressMonitor {
     private static ProgressMeteringPolicy meteringPolicy = new DefaultProgressMeteringPolicy();
 
     /* renamed from: pm */
-    private static ProgressMonitor f863pm = new ProgressMonitor();
+    private static ProgressMonitor f861pm = new ProgressMonitor();
     private ArrayList<ProgressListener> progressListenerList = new ArrayList<>();
     private ArrayList<ProgressSource> progressSourceList = new ArrayList<>();
 
     public static synchronized ProgressMonitor getDefault() {
         ProgressMonitor progressMonitor;
         synchronized (ProgressMonitor.class) {
-            progressMonitor = f863pm;
+            progressMonitor = f861pm;
         }
         return progressMonitor;
     }
@@ -23,7 +23,7 @@ public class ProgressMonitor {
     public static synchronized void setDefault(ProgressMonitor progressMonitor) {
         synchronized (ProgressMonitor.class) {
             if (progressMonitor != null) {
-                f863pm = progressMonitor;
+                f861pm = progressMonitor;
             }
         }
     }

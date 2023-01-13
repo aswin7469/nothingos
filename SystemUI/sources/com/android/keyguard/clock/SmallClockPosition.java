@@ -3,7 +3,7 @@ package com.android.keyguard.clock;
 import android.content.Context;
 import android.util.MathUtils;
 import com.android.internal.policy.SystemBarUtils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 
 class SmallClockPosition {
     private final int mBurnInOffsetY;
@@ -13,7 +13,7 @@ class SmallClockPosition {
     private final int mStatusBarHeight;
 
     SmallClockPosition(Context context) {
-        this(SystemBarUtils.getStatusBarHeight(context), context.getResources().getDimensionPixelSize(C1893R.dimen.keyguard_lock_padding), context.getResources().getDimensionPixelSize(C1893R.dimen.keyguard_lock_height), context.getResources().getDimensionPixelSize(C1893R.dimen.burn_in_prevention_offset_y));
+        this(SystemBarUtils.getStatusBarHeight(context), context.getResources().getDimensionPixelSize(C1894R.dimen.keyguard_lock_padding), context.getResources().getDimensionPixelSize(C1894R.dimen.keyguard_lock_height), context.getResources().getDimensionPixelSize(C1894R.dimen.burn_in_prevention_offset_y));
     }
 
     SmallClockPosition(int i, int i2, int i3, int i4) {

@@ -13,6 +13,6 @@ public final /* synthetic */ class FooterActionsController$$ExternalSyntheticLam
     }
 
     public final void onUserInfoChanged(String str, Drawable drawable, String str2) {
-        FooterActionsController.m2897onUserInfoChangedListener$lambda1(this.f$0, str, drawable, str2);
+        FooterActionsController.m2902onUserInfoChangedListener$lambda1(this.f$0, str, drawable, str2);
     }
 }

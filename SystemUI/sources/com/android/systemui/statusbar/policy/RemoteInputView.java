@@ -48,7 +48,7 @@ import android.widget.TextView;
 import com.android.internal.graphics.ColorUtils;
 import com.android.internal.logging.UiEventLogger;
 import com.android.p019wm.shell.animation.Interpolators;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.RemoteInputController;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
@@ -153,7 +153,7 @@ public class RemoteInputView extends LinearLayout implements View.OnClickListene
         if (z != this.mColorized || i != this.mTint) {
             this.mColorized = z;
             this.mTint = i;
-            int dimensionPixelSize = z ? this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.remote_input_view_text_stroke) : 0;
+            int dimensionPixelSize = z ? this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.remote_input_view_text_stroke) : 0;
             if (z) {
                 boolean isColorDark = Notification.Builder.isColorDark(i);
                 int i6 = -1;
@@ -168,9 +168,9 @@ public class RemoteInputView extends LinearLayout implements View.OnClickListene
                 i3 = i6;
                 i5 = i;
             } else {
-                colorStateList = this.mContext.getColorStateList(C1893R.C1894color.remote_input_send);
-                colorStateList2 = this.mContext.getColorStateList(C1893R.C1894color.remote_input_text);
-                i4 = this.mContext.getColor(C1893R.C1894color.remote_input_hint);
+                colorStateList = this.mContext.getColorStateList(C1894R.C1895color.remote_input_send);
+                colorStateList2 = this.mContext.getColorStateList(C1894R.C1895color.remote_input_text);
+                i4 = this.mContext.getColor(C1894R.C1895color.remote_input_hint);
                 i3 = colorStateList2.getDefaultColor();
                 TypedArray obtainStyledAttributes = getContext().getTheme().obtainStyledAttributes(new int[]{17956911, 17956912});
                 try {
@@ -204,19 +204,19 @@ public class RemoteInputView extends LinearLayout implements View.OnClickListene
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mProgressBar = (ProgressBar) findViewById(C1893R.C1897id.remote_input_progress);
-        ImageButton imageButton = (ImageButton) findViewById(C1893R.C1897id.remote_input_send);
+        this.mProgressBar = (ProgressBar) findViewById(C1894R.C1898id.remote_input_progress);
+        ImageButton imageButton = (ImageButton) findViewById(C1894R.C1898id.remote_input_send);
         this.mSendButton = imageButton;
         imageButton.setOnClickListener(this);
-        this.mContentBackground = (GradientDrawable) this.mContext.getDrawable(C1893R.C1895drawable.remote_input_view_text_bg).mutate();
-        this.mDelete = (ImageView) findViewById(C1893R.C1897id.remote_input_delete);
-        ImageView imageView = (ImageView) findViewById(C1893R.C1897id.remote_input_delete_bg);
+        this.mContentBackground = (GradientDrawable) this.mContext.getDrawable(C1894R.C1896drawable.remote_input_view_text_bg).mutate();
+        this.mDelete = (ImageView) findViewById(C1894R.C1898id.remote_input_delete);
+        ImageView imageView = (ImageView) findViewById(C1894R.C1898id.remote_input_delete_bg);
         this.mDeleteBg = imageView;
         imageView.setImageTintBlendMode(BlendMode.SRC_IN);
         this.mDelete.setImageTintBlendMode(BlendMode.SRC_IN);
         this.mDelete.setOnClickListener(new RemoteInputView$$ExternalSyntheticLambda0(this));
-        ((LinearLayout) findViewById(C1893R.C1897id.remote_input_content)).setBackground(this.mContentBackground);
-        RemoteEditText remoteEditText = (RemoteEditText) findViewById(C1893R.C1897id.remote_input_text);
+        ((LinearLayout) findViewById(C1894R.C1898id.remote_input_content)).setBackground(this.mContentBackground);
+        RemoteEditText remoteEditText = (RemoteEditText) findViewById(C1894R.C1898id.remote_input_text);
         this.mEditText = remoteEditText;
         remoteEditText.setInnerFocusable(false);
         this.mEditText.setEnabled(false);
@@ -249,7 +249,7 @@ public class RemoteInputView extends LinearLayout implements View.OnClickListene
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onFinishInflate$0$com-android-systemui-statusbar-policy-RemoteInputView */
-    public /* synthetic */ void mo45959xd8e6eb5a(View view) {
+    public /* synthetic */ void mo45971xd8e6eb5a(View view) {
         setAttachment((ContentInfo) null);
     }
 
@@ -277,8 +277,8 @@ public class RemoteInputView extends LinearLayout implements View.OnClickListene
             this.mEntry.remoteInputUri = contentInfo.getClip().getItemAt(0).getUri();
             this.mEntry.remoteInputMimeType = contentInfo.getClip().getDescription().getMimeType(0);
         }
-        View findViewById = findViewById(C1893R.C1897id.remote_input_content_container);
-        ImageView imageView = (ImageView) findViewById(C1893R.C1897id.remote_input_attachment_image);
+        View findViewById = findViewById(C1894R.C1898id.remote_input_content_container);
+        ImageView imageView = (ImageView) findViewById(C1894R.C1898id.remote_input_attachment_image);
         imageView.setImageDrawable((Drawable) null);
         if (contentInfo == null) {
             findViewById.setVisibility(8);
@@ -315,7 +315,7 @@ public class RemoteInputView extends LinearLayout implements View.OnClickListene
     }
 
     public static RemoteInputView inflate(Context context, ViewGroup viewGroup, NotificationEntry notificationEntry, RemoteInputController remoteInputController) {
-        RemoteInputView remoteInputView = (RemoteInputView) LayoutInflater.from(context).inflate(C1893R.layout.remote_input, viewGroup, false);
+        RemoteInputView remoteInputView = (RemoteInputView) LayoutInflater.from(context).inflate(C1894R.layout.remote_input, viewGroup, false);
         remoteInputView.mController = remoteInputController;
         remoteInputView.mEntry = notificationEntry;
         UserHandle computeTextOperationUser = computeTextOperationUser(notificationEntry.getSbn().getUser());

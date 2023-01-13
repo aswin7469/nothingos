@@ -17,6 +17,6 @@ public final /* synthetic */ class WalletScreenController$$ExternalSyntheticLamb
     }
 
     public final void run() {
-        this.f$0.mo47466xe1b09808(this.f$1, this.f$2);
+        this.f$0.mo47475xe1b09808(this.f$1, this.f$2);
     }
 }

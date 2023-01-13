@@ -14,6 +14,6 @@ public final /* synthetic */ class AlertingNotificationManager$AlertEntry$$Exter
     }
 
     public final void run() {
-        this.f$0.mo38311xbf8c1f(this.f$1);
+        this.f$0.mo38312xbf8c1f(this.f$1);
     }
 }

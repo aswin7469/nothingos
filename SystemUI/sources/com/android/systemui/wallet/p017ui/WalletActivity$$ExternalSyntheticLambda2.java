@@ -12,6 +12,6 @@ public final /* synthetic */ class WalletActivity$$ExternalSyntheticLambda2 impl
     }
 
     public final void onClick(View view) {
-        this.f$0.m3322lambda$onCreate$1$comandroidsystemuiwalletuiWalletActivity(view);
+        this.f$0.m3326lambda$onCreate$1$comandroidsystemuiwalletuiWalletActivity(view);
     }
 }

@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.view.ViewOverlay;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dumpable;
 import com.android.systemui.navigationbar.NavigationBarInflaterView;
 import java.p026io.PrintWriter;
@@ -82,8 +82,8 @@ public class LockIconView extends FrameLayout implements Dumpable {
 
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mLockIcon = (ImageView) findViewById(C1893R.C1897id.lock_icon);
-        this.mBgView = (ImageView) findViewById(C1893R.C1897id.lock_icon_bg);
+        this.mLockIcon = (ImageView) findViewById(C1894R.C1898id.lock_icon);
+        this.mBgView = (ImageView) findViewById(C1894R.C1898id.lock_icon_bg);
     }
 
     /* access modifiers changed from: package-private */
@@ -94,7 +94,7 @@ public class LockIconView extends FrameLayout implements Dumpable {
 
     /* access modifiers changed from: package-private */
     public void updateColorAndBackgroundVisibility() {
-        this.mLockIconColor = getContext().getColor(C1893R.C1894color.nt_default_text_color);
+        this.mLockIconColor = getContext().getColor(C1894R.C1895color.nt_default_text_color);
         this.mBgView.setVisibility(8);
         this.mLockIcon.setImageTintList(ColorStateList.valueOf(this.mLockIconColor));
     }

@@ -10,6 +10,6 @@ public final /* synthetic */ class HeaderPrivacyIconsController$$ExternalSynthet
     }
 
     public final void run() {
-        HeaderPrivacyIconsController.m2904showSafetyCenter$lambda3(this.f$0);
+        HeaderPrivacyIconsController.m2909showSafetyCenter$lambda3(this.f$0);
     }
 }

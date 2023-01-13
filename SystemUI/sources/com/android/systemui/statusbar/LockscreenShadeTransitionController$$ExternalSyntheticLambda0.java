@@ -14,6 +14,6 @@ public final /* synthetic */ class LockscreenShadeTransitionController$$External
     }
 
     public final boolean onDismiss() {
-        return LockscreenShadeTransitionController.m3028goToLockedShadeInternal$lambda5(this.f$0, this.f$1);
+        return LockscreenShadeTransitionController.m3032goToLockedShadeInternal$lambda5(this.f$0, this.f$1);
     }
 }

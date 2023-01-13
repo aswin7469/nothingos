@@ -12,6 +12,6 @@ public final /* synthetic */ class KeyguardStatusBarViewController$$ExternalSynt
     }
 
     public final void onUserInfoChanged(String str, Drawable drawable, String str2) {
-        this.f$0.mo44297x4336c5a4(str, drawable, str2);
+        this.f$0.mo44312x4336c5a4(str, drawable, str2);
     }
 }

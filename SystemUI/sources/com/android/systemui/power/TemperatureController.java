@@ -81,7 +81,7 @@ public class TemperatureController implements CallbackController<ShutdownTimeCal
     }
 
     public void startCountdown(long j, long j2) {
-        C23091 r0 = new CountDownTimer(j, j2) {
+        C23121 r0 = new CountDownTimer(j, j2) {
             public void onTick(long j) {
                 Log.e(TemperatureController.TAG, "onTick: " + j);
                 TemperatureController.this.mShutdownTimeCallback.onCountdown(j / 1000);

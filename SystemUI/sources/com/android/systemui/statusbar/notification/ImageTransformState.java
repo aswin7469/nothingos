@@ -4,7 +4,7 @@ import android.graphics.drawable.Icon;
 import android.util.Pools;
 import android.view.View;
 import android.widget.ImageView;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.animation.Interpolators;
 import com.android.systemui.statusbar.CrossFadeHelper;
 import com.android.systemui.statusbar.TransformableView;
@@ -20,7 +20,7 @@ public class ImageTransformState extends TransformState {
     public void initFrom(View view, TransformState.TransformInfo transformInfo) {
         super.initFrom(view, transformInfo);
         if (view instanceof ImageView) {
-            this.mIcon = (Icon) view.getTag(C1893R.C1897id.image_icon_tag);
+            this.mIcon = (Icon) view.getTag(C1894R.C1898id.image_icon_tag);
         }
     }
 
@@ -32,11 +32,13 @@ public class ImageTransformState extends TransformState {
         if (!(transformState instanceof ImageTransformState)) {
             return false;
         }
-        Icon icon = this.mIcon;
-        if (icon == null || !icon.sameAs(((ImageTransformState) transformState).getIcon())) {
-            return false;
+        if (this.mIcon != null) {
+            ImageTransformState imageTransformState = (ImageTransformState) transformState;
+            if (imageTransformState.getIcon() != null && this.mIcon.sameAs(imageTransformState.getIcon())) {
+                return true;
+            }
         }
-        return true;
+        return false;
     }
 
     public void appear(float f, TransformableView transformableView) {

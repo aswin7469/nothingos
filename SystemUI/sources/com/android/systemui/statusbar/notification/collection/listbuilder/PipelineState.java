@@ -21,7 +21,7 @@ public class PipelineState {
     }
 
     /* renamed from: is */
-    public boolean mo40417is(int i) {
+    public boolean mo40420is(int i) {
         return i == this.mState;
     }
 

@@ -12,6 +12,6 @@ public final /* synthetic */ class MagnificationModeSwitch$$ExternalSyntheticLam
     }
 
     public final WindowInsets onApplyWindowInsets(View view, WindowInsets windowInsets) {
-        return this.f$0.mo29907xb290f910(view, windowInsets);
+        return this.f$0.mo29917xb290f910(view, windowInsets);
     }
 }

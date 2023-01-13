@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Prefs;
 import com.android.systemui.recents.TriangleShape;
 import kotlin.Metadata;
@@ -20,7 +20,7 @@ import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 
-@Metadata(mo64986d1 = {"\u0000H\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u000e\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0010\u000b\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\u0010\u0002\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0002\b\t\u0018\u0000 \"2\u00020\u0001:\u0001\"B)\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\b\b\u0002\u0010\u0006\u001a\u00020\u0007\u0012\b\b\u0002\u0010\b\u001a\u00020\t¢\u0006\u0002\u0010\nJ\u0010\u0010\u001b\u001a\u00020\u00152\b\b\u0002\u0010\u001c\u001a\u00020\tJ\b\u0010\u001d\u001a\u00020\tH\u0002J\u001e\u0010\u001e\u001a\u00020\u00152\u0006\u0010\u001f\u001a\u00020\u00072\u0006\u0010 \u001a\u00020\u00072\u0006\u0010!\u001a\u00020\u0007R\u0016\u0010\u000b\u001a\n \r*\u0004\u0018\u00010\f0\fX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\b\u001a\u00020\tX\u0004¢\u0006\u0002\n\u0000R\u0016\u0010\u000e\u001a\n \r*\u0004\u0018\u00010\f0\fX\u0004¢\u0006\u0002\n\u0000R\u0011\u0010\u000f\u001a\u00020\u0010¢\u0006\b\n\u0000\u001a\u0004\b\u0011\u0010\u0012R\u000e\u0010\u0006\u001a\u00020\u0007X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0004\u001a\u00020\u0005X\u0004¢\u0006\u0002\n\u0000R\u001d\u0010\u0013\u001a\u000e\u0012\u0004\u0012\u00020\u0007\u0012\u0004\u0012\u00020\u00150\u0014¢\u0006\b\n\u0000\u001a\u0004\b\u0016\u0010\u0017R\u000e\u0010\u0018\u001a\u00020\u0007X\u000e¢\u0006\u0002\n\u0000R\u0016\u0010\u0019\u001a\n \r*\u0004\u0018\u00010\u001a0\u001aX\u0004¢\u0006\u0002\n\u0000¨\u0006#"}, mo64987d2 = {"Lcom/android/systemui/controls/TooltipManager;", "", "context", "Landroid/content/Context;", "preferenceName", "", "maxTimesShown", "", "below", "", "(Landroid/content/Context;Ljava/lang/String;IZ)V", "arrowView", "Landroid/view/View;", "kotlin.jvm.PlatformType", "dismissView", "layout", "Landroid/view/ViewGroup;", "getLayout", "()Landroid/view/ViewGroup;", "preferenceStorer", "Lkotlin/Function1;", "", "getPreferenceStorer", "()Lkotlin/jvm/functions/Function1;", "shown", "textView", "Landroid/widget/TextView;", "hide", "animate", "shouldShow", "show", "stringRes", "x", "y", "Companion", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000H\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u000e\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0010\u000b\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\u0010\u0002\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0002\b\t\u0018\u0000 \"2\u00020\u0001:\u0001\"B)\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\b\b\u0002\u0010\u0006\u001a\u00020\u0007\u0012\b\b\u0002\u0010\b\u001a\u00020\t¢\u0006\u0002\u0010\nJ\u0010\u0010\u001b\u001a\u00020\u00152\b\b\u0002\u0010\u001c\u001a\u00020\tJ\b\u0010\u001d\u001a\u00020\tH\u0002J\u001e\u0010\u001e\u001a\u00020\u00152\u0006\u0010\u001f\u001a\u00020\u00072\u0006\u0010 \u001a\u00020\u00072\u0006\u0010!\u001a\u00020\u0007R\u0016\u0010\u000b\u001a\n \r*\u0004\u0018\u00010\f0\fX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\b\u001a\u00020\tX\u0004¢\u0006\u0002\n\u0000R\u0016\u0010\u000e\u001a\n \r*\u0004\u0018\u00010\f0\fX\u0004¢\u0006\u0002\n\u0000R\u0011\u0010\u000f\u001a\u00020\u0010¢\u0006\b\n\u0000\u001a\u0004\b\u0011\u0010\u0012R\u000e\u0010\u0006\u001a\u00020\u0007X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0004\u001a\u00020\u0005X\u0004¢\u0006\u0002\n\u0000R\u001d\u0010\u0013\u001a\u000e\u0012\u0004\u0012\u00020\u0007\u0012\u0004\u0012\u00020\u00150\u0014¢\u0006\b\n\u0000\u001a\u0004\b\u0016\u0010\u0017R\u000e\u0010\u0018\u001a\u00020\u0007X\u000e¢\u0006\u0002\n\u0000R\u0016\u0010\u0019\u001a\n \r*\u0004\u0018\u00010\u001a0\u001aX\u0004¢\u0006\u0002\n\u0000¨\u0006#"}, mo65043d2 = {"Lcom/android/systemui/controls/TooltipManager;", "", "context", "Landroid/content/Context;", "preferenceName", "", "maxTimesShown", "", "below", "", "(Landroid/content/Context;Ljava/lang/String;IZ)V", "arrowView", "Landroid/view/View;", "kotlin.jvm.PlatformType", "dismissView", "layout", "Landroid/view/ViewGroup;", "getLayout", "()Landroid/view/ViewGroup;", "preferenceStorer", "Lkotlin/Function1;", "", "getPreferenceStorer", "()Lkotlin/jvm/functions/Function1;", "shown", "textView", "Landroid/widget/TextView;", "hide", "animate", "shouldShow", "show", "stringRes", "x", "y", "Companion", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* compiled from: TooltipManager.kt */
 public final class TooltipManager {
     public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
@@ -45,21 +45,21 @@ public final class TooltipManager {
         this.maxTimesShown = i;
         this.below = z;
         this.shown = Prefs.getInt(context, str, 0);
-        View inflate = LayoutInflater.from(context).inflate(C1893R.layout.controls_onboarding, (ViewGroup) null);
+        View inflate = LayoutInflater.from(context).inflate(C1894R.layout.controls_onboarding, (ViewGroup) null);
         if (inflate != null) {
             ViewGroup viewGroup = (ViewGroup) inflate;
             this.layout = viewGroup;
             this.preferenceStorer = new TooltipManager$preferenceStorer$1(context, this);
             viewGroup.setAlpha(0.0f);
-            this.textView = (TextView) viewGroup.requireViewById(C1893R.C1897id.onboarding_text);
-            View requireViewById = viewGroup.requireViewById(C1893R.C1897id.dismiss);
+            this.textView = (TextView) viewGroup.requireViewById(C1894R.C1898id.onboarding_text);
+            View requireViewById = viewGroup.requireViewById(C1894R.C1898id.dismiss);
             requireViewById.setOnClickListener(new TooltipManager$$ExternalSyntheticLambda2(this));
             this.dismissView = requireViewById;
-            View requireViewById2 = viewGroup.requireViewById(C1893R.C1897id.arrow);
+            View requireViewById2 = viewGroup.requireViewById(C1894R.C1898id.arrow);
             TypedValue typedValue = new TypedValue();
             context.getTheme().resolveAttribute(16843829, typedValue, true);
             int color = context.getResources().getColor(typedValue.resourceId, context.getTheme());
-            int dimensionPixelSize = context.getResources().getDimensionPixelSize(C1893R.dimen.recents_onboarding_toast_arrow_corner_radius);
+            int dimensionPixelSize = context.getResources().getDimensionPixelSize(C1894R.dimen.recents_onboarding_toast_arrow_corner_radius);
             ViewGroup.LayoutParams layoutParams = requireViewById2.getLayoutParams();
             ShapeDrawable shapeDrawable = new ShapeDrawable(TriangleShape.create((float) layoutParams.width, (float) layoutParams.height, z));
             Paint paint = shapeDrawable.getPaint();
@@ -89,7 +89,7 @@ public final class TooltipManager {
         this(context, str, (i2 & 4) != 0 ? 2 : i, (i2 & 8) != 0 ? true : z);
     }
 
-    @Metadata(mo64986d1 = {"\u0000\u0014\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\t\n\u0002\b\u0003\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u000e\u0010\u0003\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0005\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0006\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000¨\u0006\u0007"}, mo64987d2 = {"Lcom/android/systemui/controls/TooltipManager$Companion;", "", "()V", "HIDE_DURATION_MS", "", "SHOW_DELAY_MS", "SHOW_DURATION_MS", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u0000\u0014\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\t\n\u0002\b\u0003\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u000e\u0010\u0003\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0005\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0006\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000¨\u0006\u0007"}, mo65043d2 = {"Lcom/android/systemui/controls/TooltipManager$Companion;", "", "()V", "HIDE_DURATION_MS", "", "SHOW_DELAY_MS", "SHOW_DURATION_MS", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* compiled from: TooltipManager.kt */
     public static final class Companion {
         public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
@@ -110,7 +110,7 @@ public final class TooltipManager {
 
     /* access modifiers changed from: private */
     /* renamed from: dismissView$lambda-1$lambda-0  reason: not valid java name */
-    public static final void m2599dismissView$lambda1$lambda0(TooltipManager tooltipManager, View view) {
+    public static final void m2604dismissView$lambda1$lambda0(TooltipManager tooltipManager, View view) {
         Intrinsics.checkNotNullParameter(tooltipManager, "this$0");
         tooltipManager.hide(true);
     }
@@ -127,7 +127,7 @@ public final class TooltipManager {
 
     /* access modifiers changed from: private */
     /* renamed from: show$lambda-4  reason: not valid java name */
-    public static final void m2601show$lambda4(TooltipManager tooltipManager, int i, int i2) {
+    public static final void m2606show$lambda4(TooltipManager tooltipManager, int i, int i2) {
         Intrinsics.checkNotNullParameter(tooltipManager, "this$0");
         int[] iArr = new int[2];
         tooltipManager.layout.getLocationOnScreen(iArr);
@@ -159,7 +159,7 @@ public final class TooltipManager {
 
     /* access modifiers changed from: private */
     /* renamed from: hide$lambda-5  reason: not valid java name */
-    public static final void m2600hide$lambda5(boolean z, TooltipManager tooltipManager) {
+    public static final void m2605hide$lambda5(boolean z, TooltipManager tooltipManager) {
         Intrinsics.checkNotNullParameter(tooltipManager, "this$0");
         if (z) {
             tooltipManager.layout.animate().alpha(0.0f).withLayer().setStartDelay(0).setDuration(100).setInterpolator(new AccelerateInterpolator()).start();

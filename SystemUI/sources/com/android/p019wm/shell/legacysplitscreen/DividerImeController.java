@@ -297,7 +297,7 @@ class DividerImeController implements DisplayImeController.ImePositionProcessor 
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startAsyncAnimation$0$com-android-wm-shell-legacysplitscreen-DividerImeController */
-    public /* synthetic */ void mo49598xda26b353(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo49607xda26b353(ValueAnimator valueAnimator) {
         SurfaceControl.Transaction acquire = this.mTransactionPool.acquire();
         onProgress(((Float) valueAnimator.getAnimatedValue()).floatValue(), acquire);
         acquire.setFrameTimelineVsync(Choreographer.getSfInstance().getVsyncId());
@@ -315,7 +315,7 @@ class DividerImeController implements DisplayImeController.ImePositionProcessor 
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$pause$1$com-android-wm-shell-legacysplitscreen-DividerImeController */
-    public /* synthetic */ void mo49596xfc6d64a0() {
+    public /* synthetic */ void mo49605xfc6d64a0() {
         if (!this.mPaused) {
             this.mPaused = true;
             this.mPausedTargetAdjusted = this.mTargetAdjusted;
@@ -337,7 +337,7 @@ class DividerImeController implements DisplayImeController.ImePositionProcessor 
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$resume$2$com-android-wm-shell-legacysplitscreen-DividerImeController */
-    public /* synthetic */ void mo49597x71668a32() {
+    public /* synthetic */ void mo49606x71668a32() {
         if (this.mPaused) {
             this.mPaused = false;
             this.mTargetAdjusted = this.mPausedTargetAdjusted;

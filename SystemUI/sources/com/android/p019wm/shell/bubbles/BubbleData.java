@@ -10,7 +10,7 @@ import android.util.ArraySet;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.bubbles.BubbleLogger;
 import com.android.p019wm.shell.bubbles.Bubbles;
 import java.p026io.PrintWriter;
@@ -114,7 +114,7 @@ public class BubbleData {
         this.mPendingBubbles = new HashMap<>();
         this.mStateChange = new Update(arrayList, arrayList2);
         this.mMaxBubbles = bubblePositioner.getMaxBubbles();
-        this.mMaxOverflowBubbles = context.getResources().getInteger(C3343R.integer.bubbles_max_overflow);
+        this.mMaxOverflowBubbles = context.getResources().getInteger(C3353R.integer.bubbles_max_overflow);
     }
 
     public void setSuppressionChangedListener(Bubbles.BubbleMetadataFlagListener bubbleMetadataFlagListener) {
@@ -344,7 +344,7 @@ public class BubbleData {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$removeBubblesWithInvalidShortcuts$2$com-android-wm-shell-bubbles-BubbleData */
-    public /* synthetic */ void mo48484x12646c12(int i, Bubble bubble) {
+    public /* synthetic */ void mo48493x12646c12(int i, Bubble bubble) {
         dismissBubbleWithKey(bubble.getKey(), i);
     }
 
@@ -357,7 +357,7 @@ public class BubbleData {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$removeBubblesWithPackageName$4$com-android-wm-shell-bubbles-BubbleData */
-    public /* synthetic */ void mo48485x60f571b7(int i, Bubble bubble) {
+    public /* synthetic */ void mo48494x60f571b7(int i, Bubble bubble) {
         dismissBubbleWithKey(bubble.getKey(), i);
     }
 
@@ -400,7 +400,7 @@ public class BubbleData {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$trim$6$com-android-wm-shell-bubbles-BubbleData  reason: not valid java name */
-    public /* synthetic */ boolean m3412lambda$trim$6$comandroidwmshellbubblesBubbleData(Bubble bubble) {
+    public /* synthetic */ boolean m3416lambda$trim$6$comandroidwmshellbubblesBubbleData(Bubble bubble) {
         return !bubble.equals(this.mSelectedBubble);
     }
 
@@ -412,7 +412,7 @@ public class BubbleData {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$trim$8$com-android-wm-shell-bubbles-BubbleData  reason: not valid java name */
-    public /* synthetic */ void m3413lambda$trim$8$comandroidwmshellbubblesBubbleData(Bubble bubble) {
+    public /* synthetic */ void m3417lambda$trim$8$comandroidwmshellbubblesBubbleData(Bubble bubble) {
         doRemove(bubble.getKey(), 2);
     }
 

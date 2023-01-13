@@ -89,7 +89,7 @@ abstract class AbstractPlainSocketImpl extends SocketImpl {
         if (this.serverSocket != null) {
             this.serverSocket.setCreated();
         }
-        if (this.f559fd != null && this.f559fd.valid()) {
+        if (this.f557fd != null && this.f557fd.valid()) {
             this.guard.open("close");
         }
     }
@@ -192,7 +192,7 @@ abstract class AbstractPlainSocketImpl extends SocketImpl {
     public synchronized void doConnect(InetAddress address, int port, int timeout2) throws IOException {
         synchronized (this.fdLock) {
             if (!this.closePending && (this.socket == null || !this.socket.isBound())) {
-                NetHooks.beforeTcpConnect(this.f559fd, address, port);
+                NetHooks.beforeTcpConnect(this.f557fd, address, port);
             }
         }
         try {
@@ -224,7 +224,7 @@ abstract class AbstractPlainSocketImpl extends SocketImpl {
     public synchronized void bind(InetAddress address, int lport) throws IOException {
         synchronized (this.fdLock) {
             if (!this.closePending && (this.socket == null || !this.socket.isBound())) {
-                NetHooks.beforeTcpBind(this.f559fd, address, lport);
+                NetHooks.beforeTcpBind(this.f557fd, address, lport);
             }
         }
         socketBind(address, lport);
@@ -368,9 +368,9 @@ abstract class AbstractPlainSocketImpl extends SocketImpl {
             r3 = this;
             java.lang.Object r0 = r3.fdLock
             monitor-enter(r0)
-            java.io.FileDescriptor r1 = r3.f559fd     // Catch:{ all -> 0x003e }
+            java.io.FileDescriptor r1 = r3.f557fd     // Catch:{ all -> 0x003e }
             if (r1 == 0) goto L_0x003b
-            java.io.FileDescriptor r1 = r3.f559fd     // Catch:{ all -> 0x003e }
+            java.io.FileDescriptor r1 = r3.f557fd     // Catch:{ all -> 0x003e }
             boolean r1 = r1.valid()     // Catch:{ all -> 0x003e }
             if (r1 == 0) goto L_0x003b
             boolean r1 = r3.stream     // Catch:{ all -> 0x003e }
@@ -410,7 +410,7 @@ abstract class AbstractPlainSocketImpl extends SocketImpl {
 
     /* access modifiers changed from: package-private */
     public void reset() throws IOException {
-        if (this.f559fd != null && this.f559fd.valid()) {
+        if (this.f557fd != null && this.f557fd.valid()) {
             socketClose();
             this.guard.close();
         }
@@ -419,7 +419,7 @@ abstract class AbstractPlainSocketImpl extends SocketImpl {
 
     /* access modifiers changed from: protected */
     public void shutdownInput() throws IOException {
-        if (this.f559fd != null && this.f559fd.valid()) {
+        if (this.f557fd != null && this.f557fd.valid()) {
             socketShutdown(0);
             SocketInputStream socketInputStream2 = this.socketInputStream;
             if (socketInputStream2 != null) {
@@ -431,7 +431,7 @@ abstract class AbstractPlainSocketImpl extends SocketImpl {
 
     /* access modifiers changed from: protected */
     public void shutdownOutput() throws IOException {
-        if (this.f559fd != null && this.f559fd.valid()) {
+        if (this.f557fd != null && this.f557fd.valid()) {
             socketShutdown(1);
             this.shut_wr = true;
         }
@@ -439,7 +439,7 @@ abstract class AbstractPlainSocketImpl extends SocketImpl {
 
     /* access modifiers changed from: protected */
     public void sendUrgentData(int data) throws IOException {
-        if (this.f559fd == null || !this.f559fd.valid()) {
+        if (this.f557fd == null || !this.f557fd.valid()) {
             throw new IOException("Socket Closed");
         }
         socketSendUrgentData(data);
@@ -459,7 +459,7 @@ abstract class AbstractPlainSocketImpl extends SocketImpl {
         FileDescriptor fileDescriptor;
         synchronized (this.fdLock) {
             this.fdUseCount++;
-            fileDescriptor = this.f559fd;
+            fileDescriptor = this.f557fd;
         }
         return fileDescriptor;
     }
@@ -469,7 +469,7 @@ abstract class AbstractPlainSocketImpl extends SocketImpl {
         synchronized (this.fdLock) {
             int i = this.fdUseCount - 1;
             this.fdUseCount = i;
-            if (i == -1 && this.f559fd != null) {
+            if (i == -1 && this.f557fd != null) {
                 try {
                     socketClose();
                 } catch (IOException e) {
@@ -519,9 +519,9 @@ abstract class AbstractPlainSocketImpl extends SocketImpl {
             monitor-enter(r0)
             boolean r1 = r2.closePending     // Catch:{ all -> 0x001a }
             if (r1 != 0) goto L_0x0017
-            java.io.FileDescriptor r1 = r2.f559fd     // Catch:{ all -> 0x001a }
+            java.io.FileDescriptor r1 = r2.f557fd     // Catch:{ all -> 0x001a }
             if (r1 == 0) goto L_0x0017
-            java.io.FileDescriptor r1 = r2.f559fd     // Catch:{ all -> 0x001a }
+            java.io.FileDescriptor r1 = r2.f557fd     // Catch:{ all -> 0x001a }
             boolean r1 = r1.valid()     // Catch:{ all -> 0x001a }
             if (r1 != 0) goto L_0x0014
             goto L_0x0017

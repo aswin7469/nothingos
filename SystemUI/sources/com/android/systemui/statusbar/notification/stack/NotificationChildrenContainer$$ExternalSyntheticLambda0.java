@@ -9,6 +9,6 @@ public final /* synthetic */ class NotificationChildrenContainer$$ExternalSynthe
     }
 
     public final void run() {
-        this.f$0.mo41970x29284b69();
+        this.f$0.mo41978x29284b69();
     }
 }

@@ -11,6 +11,6 @@ public final /* synthetic */ class AuthBiometricView$$ExternalSyntheticLambda9 i
     }
 
     public final void onClick(View view) {
-        this.f$0.mo30513xc510558c(view);
+        this.f$0.mo30523xc510558c(view);
     }
 }

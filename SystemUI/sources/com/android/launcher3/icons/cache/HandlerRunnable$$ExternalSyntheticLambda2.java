@@ -11,6 +11,6 @@ public final /* synthetic */ class HandlerRunnable$$ExternalSyntheticLambda2 imp
     }
 
     public final void run() {
-        this.f$0.m2318lambda$run$1$comandroidlauncher3iconscacheHandlerRunnable(this.f$1);
+        this.f$0.m2324lambda$run$1$comandroidlauncher3iconscacheHandlerRunnable(this.f$1);
     }
 }

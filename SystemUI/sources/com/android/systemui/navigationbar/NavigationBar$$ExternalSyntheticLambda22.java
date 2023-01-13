@@ -11,6 +11,6 @@ public final /* synthetic */ class NavigationBar$$ExternalSyntheticLambda22 impl
     }
 
     public final void onComputeInternalInsets(ViewTreeObserver.InternalInsetsInfo internalInsetsInfo) {
-        this.f$0.m2853lambda$new$3$comandroidsystemuinavigationbarNavigationBar(internalInsetsInfo);
+        this.f$0.m2858lambda$new$3$comandroidsystemuinavigationbarNavigationBar(internalInsetsInfo);
     }
 }

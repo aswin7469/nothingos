@@ -12,6 +12,6 @@ public final /* synthetic */ class WifiTile$$ExternalSyntheticLambda2 implements
     }
 
     public final boolean onLongClick(View view) {
-        return this.f$0.m2984lambda$createTileView$2$comandroidsystemuiqstilesWifiTile(view);
+        return this.f$0.m2988lambda$createTileView$2$comandroidsystemuiqstilesWifiTile(view);
     }
 }

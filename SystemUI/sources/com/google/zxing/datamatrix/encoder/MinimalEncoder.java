@@ -74,7 +74,7 @@ public final class MinimalEncoder {
     }
 
     static byte[] encode(String str, Charset charset, int i, SymbolShapeHint symbolShapeHint, int i2) {
-        return encodeMinimally(new Input(str, charset, i, symbolShapeHint, i2, (C40961) null)).getBytes();
+        return encodeMinimally(new Input(str, charset, i, symbolShapeHint, i2, (C41061) null)).getBytes();
     }
 
     static void addEdge(Edge[][] edgeArr, Edge edge) {
@@ -420,7 +420,7 @@ public final class MinimalEncoder {
             Class<MinimalEncoder> cls = MinimalEncoder.class;
         }
 
-        /* synthetic */ Edge(Input input2, Mode mode2, int i, int i2, Edge edge, C40961 r6) {
+        /* synthetic */ Edge(Input input2, Mode mode2, int i, int i2, Edge edge, C41061 r6) {
             this(input2, mode2, i, i2, edge);
         }
 
@@ -464,7 +464,7 @@ public final class MinimalEncoder {
                 r9 = r8
             L_0x0014:
                 com.google.zxing.datamatrix.encoder.MinimalEncoder$Mode r0 = r4.getPreviousMode()
-                int[] r1 = com.google.zxing.datamatrix.encoder.MinimalEncoder.C40961.f467x93f64673
+                int[] r1 = com.google.zxing.datamatrix.encoder.MinimalEncoder.C41061.f466x93f64673
                 int r2 = r6.ordinal()
                 r1 = r1[r2]
                 switch(r1) {
@@ -666,7 +666,7 @@ public final class MinimalEncoder {
 
         /* access modifiers changed from: package-private */
         public int getMinSymbolSize(int i) {
-            int i2 = C40961.$SwitchMap$com$google$zxing$datamatrix$encoder$SymbolShapeHint[this.input.getShapeHint().ordinal()];
+            int i2 = C41061.$SwitchMap$com$google$zxing$datamatrix$encoder$SymbolShapeHint[this.input.getShapeHint().ordinal()];
             if (i2 == 1) {
                 for (int i3 : squareCodewordCapacities) {
                     if (i3 >= i) {
@@ -782,10 +782,10 @@ public final class MinimalEncoder {
 
         /* access modifiers changed from: package-private */
         public byte[] getLatchBytes() {
-            switch (C40961.f467x93f64673[getPreviousMode().ordinal()]) {
+            switch (C41061.f466x93f64673[getPreviousMode().ordinal()]) {
                 case 1:
                 case 2:
-                    int i = C40961.f467x93f64673[this.mode.ordinal()];
+                    int i = C41061.f466x93f64673[this.mode.ordinal()];
                     if (i == 2) {
                         return getBytes(UCharacter.UnicodeBlock.LATIN_EXTENDED_E_ID);
                     }
@@ -806,7 +806,7 @@ public final class MinimalEncoder {
                 case 4:
                 case 5:
                     if (this.mode != getPreviousMode()) {
-                        switch (C40961.f467x93f64673[this.mode.ordinal()]) {
+                        switch (C41061.f466x93f64673[this.mode.ordinal()]) {
                             case 1:
                                 return getBytes(254);
                             case 2:
@@ -828,7 +828,7 @@ public final class MinimalEncoder {
 
         /* access modifiers changed from: package-private */
         public byte[] getDataBytes() {
-            switch (C40961.f467x93f64673[this.mode.ordinal()]) {
+            switch (C41061.f466x93f64673[this.mode.ordinal()]) {
                 case 1:
                     if (this.input.isECI(this.fromPosition)) {
                         return getBytes(UCharacter.UnicodeBlock.OLD_PERMIC_ID, this.input.getECIValue(this.fromPosition) + 1);
@@ -860,10 +860,10 @@ public final class MinimalEncoder {
     }
 
     /* renamed from: com.google.zxing.datamatrix.encoder.MinimalEncoder$1 */
-    static /* synthetic */ class C40961 {
+    static /* synthetic */ class C41061 {
 
         /* renamed from: $SwitchMap$com$google$zxing$datamatrix$encoder$MinimalEncoder$Mode */
-        static final /* synthetic */ int[] f467x93f64673;
+        static final /* synthetic */ int[] f466x93f64673;
         static final /* synthetic */ int[] $SwitchMap$com$google$zxing$datamatrix$encoder$SymbolShapeHint;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(16:0|(2:1|2)|3|(2:5|6)|7|9|10|11|12|13|14|15|16|17|18|(3:19|20|22)) */
@@ -894,35 +894,35 @@ public final class MinimalEncoder {
                 com.google.zxing.datamatrix.encoder.MinimalEncoder$Mode[] r2 = com.google.zxing.datamatrix.encoder.MinimalEncoder.Mode.values()
                 int r2 = r2.length
                 int[] r2 = new int[r2]
-                f467x93f64673 = r2
+                f466x93f64673 = r2
                 com.google.zxing.datamatrix.encoder.MinimalEncoder$Mode r3 = com.google.zxing.datamatrix.encoder.MinimalEncoder.Mode.ASCII     // Catch:{ NoSuchFieldError -> 0x002e }
                 int r3 = r3.ordinal()     // Catch:{ NoSuchFieldError -> 0x002e }
                 r2[r3] = r1     // Catch:{ NoSuchFieldError -> 0x002e }
             L_0x002e:
-                int[] r1 = f467x93f64673     // Catch:{ NoSuchFieldError -> 0x0038 }
+                int[] r1 = f466x93f64673     // Catch:{ NoSuchFieldError -> 0x0038 }
                 com.google.zxing.datamatrix.encoder.MinimalEncoder$Mode r2 = com.google.zxing.datamatrix.encoder.MinimalEncoder.Mode.B256     // Catch:{ NoSuchFieldError -> 0x0038 }
                 int r2 = r2.ordinal()     // Catch:{ NoSuchFieldError -> 0x0038 }
                 r1[r2] = r0     // Catch:{ NoSuchFieldError -> 0x0038 }
             L_0x0038:
-                int[] r0 = f467x93f64673     // Catch:{ NoSuchFieldError -> 0x0043 }
+                int[] r0 = f466x93f64673     // Catch:{ NoSuchFieldError -> 0x0043 }
                 com.google.zxing.datamatrix.encoder.MinimalEncoder$Mode r1 = com.google.zxing.datamatrix.encoder.MinimalEncoder.Mode.C40     // Catch:{ NoSuchFieldError -> 0x0043 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0043 }
                 r2 = 3
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0043 }
             L_0x0043:
-                int[] r0 = f467x93f64673     // Catch:{ NoSuchFieldError -> 0x004e }
+                int[] r0 = f466x93f64673     // Catch:{ NoSuchFieldError -> 0x004e }
                 com.google.zxing.datamatrix.encoder.MinimalEncoder$Mode r1 = com.google.zxing.datamatrix.encoder.MinimalEncoder.Mode.TEXT     // Catch:{ NoSuchFieldError -> 0x004e }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x004e }
                 r2 = 4
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x004e }
             L_0x004e:
-                int[] r0 = f467x93f64673     // Catch:{ NoSuchFieldError -> 0x0059 }
+                int[] r0 = f466x93f64673     // Catch:{ NoSuchFieldError -> 0x0059 }
                 com.google.zxing.datamatrix.encoder.MinimalEncoder$Mode r1 = com.google.zxing.datamatrix.encoder.MinimalEncoder.Mode.X12     // Catch:{ NoSuchFieldError -> 0x0059 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0059 }
                 r2 = 5
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0059 }
             L_0x0059:
-                int[] r0 = f467x93f64673     // Catch:{ NoSuchFieldError -> 0x0064 }
+                int[] r0 = f466x93f64673     // Catch:{ NoSuchFieldError -> 0x0064 }
                 com.google.zxing.datamatrix.encoder.MinimalEncoder$Mode r1 = com.google.zxing.datamatrix.encoder.MinimalEncoder.Mode.EDF     // Catch:{ NoSuchFieldError -> 0x0064 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0064 }
                 r2 = 6
@@ -930,7 +930,7 @@ public final class MinimalEncoder {
             L_0x0064:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: com.google.zxing.datamatrix.encoder.MinimalEncoder.C40961.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: com.google.zxing.datamatrix.encoder.MinimalEncoder.C41061.<clinit>():void");
         }
     }
 
@@ -1026,7 +1026,7 @@ public final class MinimalEncoder {
         private final int macroId;
         private final SymbolShapeHint shape;
 
-        /* synthetic */ Input(String str, Charset charset, int i, SymbolShapeHint symbolShapeHint, int i2, C40961 r6) {
+        /* synthetic */ Input(String str, Charset charset, int i, SymbolShapeHint symbolShapeHint, int i2, C41061 r6) {
             this(str, charset, i, symbolShapeHint, i2);
         }
 

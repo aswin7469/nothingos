@@ -23,18 +23,18 @@ public class StreamDecoder extends Reader {
     private static volatile boolean channelsAvailable = true;
 
     /* renamed from: bb */
-    private ByteBuffer f900bb;
+    private ByteBuffer f898bb;
 
     /* renamed from: ch */
-    private ReadableByteChannel f901ch;
+    private ReadableByteChannel f899ch;
 
     /* renamed from: cs */
-    private Charset f902cs;
+    private Charset f900cs;
     private CharsetDecoder decoder;
     private boolean haveLeftoverChar;
 
     /* renamed from: in */
-    private InputStream f903in;
+    private InputStream f901in;
     private volatile boolean isOpen;
     private char leftoverChar;
     private boolean needsFlush;
@@ -231,31 +231,31 @@ public class StreamDecoder extends Reader {
         this.isOpen = true;
         this.haveLeftoverChar = false;
         this.needsFlush = false;
-        this.f902cs = charsetDecoder.charset();
+        this.f900cs = charsetDecoder.charset();
         this.decoder = charsetDecoder;
-        if (this.f901ch == null) {
-            this.f903in = inputStream;
-            this.f901ch = null;
-            this.f900bb = ByteBuffer.allocate(8192);
+        if (this.f899ch == null) {
+            this.f901in = inputStream;
+            this.f899ch = null;
+            this.f898bb = ByteBuffer.allocate(8192);
         }
-        this.f900bb.flip();
+        this.f898bb.flip();
     }
 
     StreamDecoder(ReadableByteChannel readableByteChannel, CharsetDecoder charsetDecoder, int i) {
         this.isOpen = true;
         this.haveLeftoverChar = false;
         this.needsFlush = false;
-        this.f903in = null;
-        this.f901ch = readableByteChannel;
+        this.f901in = null;
+        this.f899ch = readableByteChannel;
         this.decoder = charsetDecoder;
-        this.f902cs = charsetDecoder.charset();
+        this.f900cs = charsetDecoder.charset();
         if (i < 0) {
             i = 8192;
         } else if (i < 32) {
             i = 32;
         }
         ByteBuffer allocate = ByteBuffer.allocate(i);
-        this.f900bb = allocate;
+        this.f898bb = allocate;
         allocate.flip();
     }
 
@@ -266,22 +266,22 @@ public class StreamDecoder extends Reader {
     private int readBytes() throws java.p026io.IOException {
         /*
             r5 = this;
-            java.nio.ByteBuffer r0 = r5.f900bb
+            java.nio.ByteBuffer r0 = r5.f898bb
             r0.compact()
-            java.nio.channels.ReadableByteChannel r0 = r5.f901ch     // Catch:{ all -> 0x005b }
+            java.nio.channels.ReadableByteChannel r0 = r5.f899ch     // Catch:{ all -> 0x005b }
             if (r0 == 0) goto L_0x0018
-            java.nio.ByteBuffer r1 = r5.f900bb     // Catch:{ all -> 0x005b }
+            java.nio.ByteBuffer r1 = r5.f898bb     // Catch:{ all -> 0x005b }
             r2 = 1
             int r0 = sun.nio.p033ch.ChannelInputStream.read((java.nio.channels.ReadableByteChannel) r0, (java.nio.ByteBuffer) r1, (boolean) r2)     // Catch:{ all -> 0x005b }
             if (r0 >= 0) goto L_0x0047
         L_0x0012:
-            java.nio.ByteBuffer r5 = r5.f900bb
+            java.nio.ByteBuffer r5 = r5.f898bb
             r5.flip()
             return r0
         L_0x0018:
-            java.nio.ByteBuffer r0 = r5.f900bb     // Catch:{ all -> 0x005b }
+            java.nio.ByteBuffer r0 = r5.f898bb     // Catch:{ all -> 0x005b }
             int r0 = r0.limit()     // Catch:{ all -> 0x005b }
-            java.nio.ByteBuffer r1 = r5.f900bb     // Catch:{ all -> 0x005b }
+            java.nio.ByteBuffer r1 = r5.f898bb     // Catch:{ all -> 0x005b }
             int r1 = r1.position()     // Catch:{ all -> 0x005b }
             if (r1 > r0) goto L_0x0028
             int r0 = r0 - r1
@@ -289,10 +289,10 @@ public class StreamDecoder extends Reader {
         L_0x0028:
             r0 = 0
         L_0x0029:
-            java.io.InputStream r2 = r5.f903in     // Catch:{ all -> 0x005b }
-            java.nio.ByteBuffer r3 = r5.f900bb     // Catch:{ all -> 0x005b }
+            java.io.InputStream r2 = r5.f901in     // Catch:{ all -> 0x005b }
+            java.nio.ByteBuffer r3 = r5.f898bb     // Catch:{ all -> 0x005b }
             byte[] r3 = r3.array()     // Catch:{ all -> 0x005b }
-            java.nio.ByteBuffer r4 = r5.f900bb     // Catch:{ all -> 0x005b }
+            java.nio.ByteBuffer r4 = r5.f898bb     // Catch:{ all -> 0x005b }
             int r4 = r4.arrayOffset()     // Catch:{ all -> 0x005b }
             int r4 = r4 + r1
             int r0 = r2.read(r3, r4, r0)     // Catch:{ all -> 0x005b }
@@ -300,13 +300,13 @@ public class StreamDecoder extends Reader {
             goto L_0x0012
         L_0x003f:
             if (r0 == 0) goto L_0x0053
-            java.nio.ByteBuffer r2 = r5.f900bb     // Catch:{ all -> 0x005b }
+            java.nio.ByteBuffer r2 = r5.f898bb     // Catch:{ all -> 0x005b }
             int r1 = r1 + r0
             r2.position((int) r1)     // Catch:{ all -> 0x005b }
         L_0x0047:
-            java.nio.ByteBuffer r0 = r5.f900bb
+            java.nio.ByteBuffer r0 = r5.f898bb
             r0.flip()
-            java.nio.ByteBuffer r5 = r5.f900bb
+            java.nio.ByteBuffer r5 = r5.f898bb
             int r5 = r5.remaining()
             return r5
         L_0x0053:
@@ -316,7 +316,7 @@ public class StreamDecoder extends Reader {
             throw r0     // Catch:{ all -> 0x005b }
         L_0x005b:
             r0 = move-exception
-            java.nio.ByteBuffer r5 = r5.f900bb
+            java.nio.ByteBuffer r5 = r5.f898bb
             r5.flip()
             throw r0
         */
@@ -344,7 +344,7 @@ public class StreamDecoder extends Reader {
         }
         boolean z = false;
         while (true) {
-            CoderResult decode = this.decoder.decode(this.f900bb, wrap, z);
+            CoderResult decode = this.decoder.decode(this.f898bb, wrap, z);
             if (decode.isUnderflow()) {
                 if (z || !wrap.hasRemaining() || (wrap.position() > 0 && !inReady())) {
                     break;
@@ -376,7 +376,7 @@ public class StreamDecoder extends Reader {
 
     /* access modifiers changed from: package-private */
     public String encodingName() {
-        Charset charset = this.f902cs;
+        Charset charset = this.f900cs;
         if (charset instanceof HistoricallyNamedCharset) {
             return ((HistoricallyNamedCharset) charset).historicalName();
         }
@@ -385,8 +385,8 @@ public class StreamDecoder extends Reader {
 
     private boolean inReady() {
         try {
-            InputStream inputStream = this.f903in;
-            return (inputStream != null && inputStream.available() > 0) || (this.f901ch instanceof FileChannel);
+            InputStream inputStream = this.f901in;
+            return (inputStream != null && inputStream.available() > 0) || (this.f899ch instanceof FileChannel);
         } catch (IOException unused) {
             return false;
         }
@@ -394,16 +394,16 @@ public class StreamDecoder extends Reader {
 
     /* access modifiers changed from: package-private */
     public boolean implReady() {
-        return this.f900bb.hasRemaining() || inReady();
+        return this.f898bb.hasRemaining() || inReady();
     }
 
     /* access modifiers changed from: package-private */
     public void implClose() throws IOException {
-        ReadableByteChannel readableByteChannel = this.f901ch;
+        ReadableByteChannel readableByteChannel = this.f899ch;
         if (readableByteChannel != null) {
             readableByteChannel.close();
         } else {
-            this.f903in.close();
+            this.f901in.close();
         }
     }
 }

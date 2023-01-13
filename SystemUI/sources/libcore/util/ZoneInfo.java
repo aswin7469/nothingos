@@ -77,19 +77,19 @@ public final class ZoneInfo extends TimeZone {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$readObject$0$libcore-util-ZoneInfo  reason: not valid java name */
-    public /* synthetic */ void m5500lambda$readObject$0$libcoreutilZoneInfo(int i, Field field) throws IllegalArgumentException, IllegalAccessException {
+    public /* synthetic */ void m5518lambda$readObject$0$libcoreutilZoneInfo(int i, Field field) throws IllegalArgumentException, IllegalAccessException {
         field.setInt(this, i);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$readObject$1$libcore-util-ZoneInfo  reason: not valid java name */
-    public /* synthetic */ void m5501lambda$readObject$1$libcoreutilZoneInfo(boolean z, Field field) throws IllegalArgumentException, IllegalAccessException {
+    public /* synthetic */ void m5519lambda$readObject$1$libcoreutilZoneInfo(boolean z, Field field) throws IllegalArgumentException, IllegalAccessException {
         field.setBoolean(this, z);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$readObject$2$libcore-util-ZoneInfo  reason: not valid java name */
-    public /* synthetic */ void m5502lambda$readObject$2$libcoreutilZoneInfo(long[] jArr, Field field) throws IllegalArgumentException, IllegalAccessException {
+    public /* synthetic */ void m5520lambda$readObject$2$libcoreutilZoneInfo(long[] jArr, Field field) throws IllegalArgumentException, IllegalAccessException {
         field.set(this, jArr);
     }
 

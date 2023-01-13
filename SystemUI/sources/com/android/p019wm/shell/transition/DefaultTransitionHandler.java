@@ -98,7 +98,7 @@ public class DefaultTransitionHandler implements Transitions.TransitionHandler {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateEnterpriseThumbnailDrawable$0$com-android-wm-shell-transition-DefaultTransitionHandler */
-    public /* synthetic */ Drawable mo51234x2eaae0b7() {
+    public /* synthetic */ Drawable mo51245x2eaae0b7() {
         return this.mContext.getDrawable(17302400);
     }
 
@@ -455,7 +455,7 @@ public class DefaultTransitionHandler implements Transitions.TransitionHandler {
             int r0 = r13.getMode()
             boolean r0 = com.android.p019wm.shell.transition.Transitions.isOpeningType(r0)
             if (r0 != 0) goto L_0x0254
-            r8.mo51232xd4c5f5d9(r13, r3, r11, r12)
+            r8.mo51243xd4c5f5d9(r13, r3, r11, r12)
             goto L_0x0260
         L_0x0254:
             com.android.wm.shell.transition.DefaultTransitionHandler$$ExternalSyntheticLambda4 r0 = new com.android.wm.shell.transition.DefaultTransitionHandler$$ExternalSyntheticLambda4
@@ -594,7 +594,7 @@ public class DefaultTransitionHandler implements Transitions.TransitionHandler {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startAnimation$1$com-android-wm-shell-transition-DefaultTransitionHandler */
-    public /* synthetic */ void mo51231x47d8deba(ArrayList arrayList, IBinder iBinder, Transitions.TransitionFinishCallback transitionFinishCallback) {
+    public /* synthetic */ void mo51242x47d8deba(ArrayList arrayList, IBinder iBinder, Transitions.TransitionFinishCallback transitionFinishCallback) {
         if (arrayList.isEmpty()) {
             ScreenRotationAnimation screenRotationAnimation = this.mRotationAnimation;
             if (screenRotationAnimation != null) {
@@ -608,13 +608,13 @@ public class DefaultTransitionHandler implements Transitions.TransitionHandler {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startAnimation$3$com-android-wm-shell-transition-DefaultTransitionHandler */
-    public /* synthetic */ void mo51233x61b30cf8(ArrayList arrayList, Animation animation, TransitionInfo.Change change, Runnable runnable, float f, Rect rect, SurfaceControl.Transaction transaction) {
+    public /* synthetic */ void mo51244x61b30cf8(ArrayList arrayList, Animation animation, TransitionInfo.Change change, Runnable runnable, float f, Rect rect, SurfaceControl.Transaction transaction) {
         startSurfaceAnimation(arrayList, animation, change.getLeash(), runnable, this.mTransactionPool, this.mMainExecutor, this.mAnimExecutor, (Point) null, f, rect);
     }
 
     /* access modifiers changed from: private */
     /* renamed from: edgeExtendWindow */
-    public void mo51232xd4c5f5d9(TransitionInfo.Change change, Animation animation, SurfaceControl.Transaction transaction, SurfaceControl.Transaction transaction2) {
+    public void mo51243xd4c5f5d9(TransitionInfo.Change change, Animation animation, SurfaceControl.Transaction transaction, SurfaceControl.Transaction transaction2) {
         Animation animation2 = animation;
         Transformation transformation = new Transformation();
         animation2.getTransformationAt(0.0f, transformation);
@@ -1061,7 +1061,7 @@ public class DefaultTransitionHandler implements Transitions.TransitionHandler {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$attachCrossProfileThumbnailAnimation$7$com-android-wm-shell-transition-DefaultTransitionHandler */
-    public /* synthetic */ void mo51229x36d5eb30(WindowThumbnail windowThumbnail, SurfaceControl.Transaction transaction, Runnable runnable) {
+    public /* synthetic */ void mo51240x36d5eb30(WindowThumbnail windowThumbnail, SurfaceControl.Transaction transaction, Runnable runnable) {
         windowThumbnail.destroy(transaction);
         this.mTransactionPool.release(transaction);
         runnable.run();
@@ -1079,7 +1079,7 @@ public class DefaultTransitionHandler implements Transitions.TransitionHandler {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$attachThumbnailAnimation$8$com-android-wm-shell-transition-DefaultTransitionHandler */
-    public /* synthetic */ void mo51230x59e8ca18(WindowThumbnail windowThumbnail, SurfaceControl.Transaction transaction, Runnable runnable) {
+    public /* synthetic */ void mo51241x59e8ca18(WindowThumbnail windowThumbnail, SurfaceControl.Transaction transaction, Runnable runnable) {
         windowThumbnail.destroy(transaction);
         this.mTransactionPool.release(transaction);
         runnable.run();

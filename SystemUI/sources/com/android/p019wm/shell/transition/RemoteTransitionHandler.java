@@ -92,7 +92,7 @@ public class RemoteTransitionHandler implements Transitions.TransitionHandler {
         final Transitions.TransitionFinishCallback transitionFinishCallback3 = transitionFinishCallback;
         final SurfaceControl.Transaction transaction3 = transaction2;
         final IBinder iBinder3 = iBinder;
-        C36131 r1 = new IRemoteTransitionFinishedCallback.Stub() {
+        C36231 r1 = new IRemoteTransitionFinishedCallback.Stub() {
             public void onTransitionFinished(WindowContainerTransaction windowContainerTransaction, SurfaceControl.Transaction transaction) {
                 RemoteTransitionHandler.this.unhandleDeath(remoteTransition3.asBinder(), transitionFinishCallback3);
                 RemoteTransitionHandler.this.mMainExecutor.execute(new RemoteTransitionHandler$1$$ExternalSyntheticLambda0(this, transaction, transaction3, iBinder3, transitionFinishCallback3, windowContainerTransaction));
@@ -100,7 +100,7 @@ public class RemoteTransitionHandler implements Transitions.TransitionHandler {
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onTransitionFinished$0$com-android-wm-shell-transition-RemoteTransitionHandler$1 */
-            public /* synthetic */ void mo51260x67d3e2b9(SurfaceControl.Transaction transaction, SurfaceControl.Transaction transaction2, IBinder iBinder, Transitions.TransitionFinishCallback transitionFinishCallback, WindowContainerTransaction windowContainerTransaction) {
+            public /* synthetic */ void mo51271x67d3e2b9(SurfaceControl.Transaction transaction, SurfaceControl.Transaction transaction2, IBinder iBinder, Transitions.TransitionFinishCallback transitionFinishCallback, WindowContainerTransaction windowContainerTransaction) {
                 if (transaction != null) {
                     transaction2.merge(transaction);
                 }
@@ -137,7 +137,7 @@ public class RemoteTransitionHandler implements Transitions.TransitionHandler {
 
                     /* access modifiers changed from: package-private */
                     /* renamed from: lambda$onTransitionFinished$0$com-android-wm-shell-transition-RemoteTransitionHandler$2 */
-                    public /* synthetic */ void mo51262x67d3e2ba(IBinder iBinder, Transitions.TransitionFinishCallback transitionFinishCallback, WindowContainerTransaction windowContainerTransaction) {
+                    public /* synthetic */ void mo51273x67d3e2ba(IBinder iBinder, Transitions.TransitionFinishCallback transitionFinishCallback, WindowContainerTransaction windowContainerTransaction) {
                         if (!RemoteTransitionHandler.this.mRequestedRemotes.containsKey(iBinder)) {
                             Log.e(RemoteTransitionHandler.TAG, "Merged transition finished after it's mergeTarget (the transition it was supposed to merge into). This usually means that the mergeTarget's RemoteTransition impl erroneously accepted/ran the merge request after finishing the mergeTarget");
                         }
@@ -254,12 +254,12 @@ public class RemoteTransitionHandler implements Transitions.TransitionHandler {
         }
 
         public void binderDied() {
-            RemoteTransitionHandler.this.mMainExecutor.execute(new C3615xe5e43da0(this));
+            RemoteTransitionHandler.this.mMainExecutor.execute(new C3625xe5e43da0(this));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$binderDied$0$com-android-wm-shell-transition-RemoteTransitionHandler$RemoteDeathHandler */
-        public /* synthetic */ void mo51267xe7f9796c() {
+        public /* synthetic */ void mo51278xe7f9796c() {
             for (int size = RemoteTransitionHandler.this.mFilters.size() - 1; size >= 0; size--) {
                 if (this.mRemote.equals(((RemoteTransition) ((Pair) RemoteTransitionHandler.this.mFilters.get(size)).second).asBinder())) {
                     RemoteTransitionHandler.this.mFilters.remove(size);

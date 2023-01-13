@@ -15,6 +15,6 @@ public final /* synthetic */ class ScrimDrawable$$ExternalSyntheticLambda0 imple
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        this.f$0.m3004lambda$setColor$0$comandroidsystemuiscrimScrimDrawable(this.f$1, this.f$2, valueAnimator);
+        this.f$0.m3008lambda$setColor$0$comandroidsystemuiscrimScrimDrawable(this.f$1, this.f$2, valueAnimator);
     }
 }

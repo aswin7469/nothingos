@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.qualifiers.DisplayId;
 import com.android.systemui.navigationbar.NavigationBarComponent;
 import com.android.systemui.navigationbar.gestural.EdgeBackGestureHandler;
@@ -23,13 +23,13 @@ public interface NavigationBarModule {
     @NavigationBarComponent.NavigationBarScope
     @Provides
     static NavigationBarFrame provideNavigationBarFrame(@DisplayId LayoutInflater layoutInflater) {
-        return (NavigationBarFrame) layoutInflater.inflate(C1893R.layout.navigation_bar_window, (ViewGroup) null);
+        return (NavigationBarFrame) layoutInflater.inflate(C1894R.layout.navigation_bar_window, (ViewGroup) null);
     }
 
     @NavigationBarComponent.NavigationBarScope
     @Provides
     static NavigationBarView provideNavigationBarview(@DisplayId LayoutInflater layoutInflater, NavigationBarFrame navigationBarFrame) {
-        return (NavigationBarView) layoutInflater.inflate(C1893R.layout.navigation_bar, navigationBarFrame).findViewById(C1893R.C1897id.navigation_bar_view);
+        return (NavigationBarView) layoutInflater.inflate(C1894R.layout.navigation_bar, navigationBarFrame).findViewById(C1894R.C1898id.navigation_bar_view);
     }
 
     @NavigationBarComponent.NavigationBarScope

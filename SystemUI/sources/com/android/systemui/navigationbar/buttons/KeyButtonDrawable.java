@@ -17,7 +17,7 @@ import android.graphics.drawable.AnimatedVectorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.FloatProperty;
 import com.android.settingslib.Utils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 
 public class KeyButtonDrawable extends Drawable {
     public static final FloatProperty<KeyButtonDrawable> KEY_DRAWABLE_ROTATE = new FloatProperty<KeyButtonDrawable>("KeyButtonRotation") {
@@ -63,7 +63,7 @@ public class KeyButtonDrawable extends Drawable {
     private KeyButtonDrawable(Drawable drawable, ShadowDrawableState shadowDrawableState) {
         this.mIconPaint = new Paint(3);
         this.mShadowPaint = new Paint(3);
-        C22723 r0 = new Drawable.Callback() {
+        C22753 r0 = new Drawable.Callback() {
             public void invalidateDrawable(Drawable drawable) {
                 KeyButtonDrawable.this.invalidateSelf();
             }
@@ -372,7 +372,7 @@ public class KeyButtonDrawable extends Drawable {
     }
 
     public static KeyButtonDrawable create(Context context, Context context2, int i, boolean z, Color color) {
-        return create(context, Utils.getColorAttrDefaultColor(context, C1893R.attr.singleToneColor), Utils.getColorAttrDefaultColor(context2, C1893R.attr.singleToneColor), i, z, color);
+        return create(context, Utils.getColorAttrDefaultColor(context, C1894R.attr.singleToneColor), Utils.getColorAttrDefaultColor(context2, C1894R.attr.singleToneColor), i, z, color);
     }
 
     public static KeyButtonDrawable create(Context context, int i, int i2, int i3, boolean z, Color color) {
@@ -381,7 +381,7 @@ public class KeyButtonDrawable extends Drawable {
         Drawable drawable = context.getDrawable(i3);
         KeyButtonDrawable keyButtonDrawable = new KeyButtonDrawable(drawable, i, i2, z2 && drawable.isAutoMirrored(), color);
         if (z) {
-            keyButtonDrawable.setShadowProperties(resources.getDimensionPixelSize(C1893R.dimen.nav_key_button_shadow_offset_x), resources.getDimensionPixelSize(C1893R.dimen.nav_key_button_shadow_offset_y), resources.getDimensionPixelSize(C1893R.dimen.nav_key_button_shadow_radius), context.getColor(C1893R.C1894color.nav_key_button_shadow_color));
+            keyButtonDrawable.setShadowProperties(resources.getDimensionPixelSize(C1894R.dimen.nav_key_button_shadow_offset_x), resources.getDimensionPixelSize(C1894R.dimen.nav_key_button_shadow_offset_y), resources.getDimensionPixelSize(C1894R.dimen.nav_key_button_shadow_radius), context.getColor(C1894R.C1895color.nav_key_button_shadow_color));
         }
         return keyButtonDrawable;
     }

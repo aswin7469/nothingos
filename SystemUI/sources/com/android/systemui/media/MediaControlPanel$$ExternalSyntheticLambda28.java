@@ -20,6 +20,6 @@ public final /* synthetic */ class MediaControlPanel$$ExternalSyntheticLambda28 
     }
 
     public final Object invoke() {
-        return this.f$0.mo33668xd7690b7e(this.f$1, this.f$2, this.f$3, this.f$4);
+        return this.f$0.mo33672xd7690b7e(this.f$1, this.f$2, this.f$3, this.f$4);
     }
 }

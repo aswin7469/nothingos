@@ -10,6 +10,6 @@ public final /* synthetic */ class WifiStateWorker$$ExternalSyntheticLambda1 imp
     }
 
     public final void run() {
-        this.f$0.mo37097xefab5b9d();
+        this.f$0.mo37096xefab5b9d();
     }
 }

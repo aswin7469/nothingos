@@ -24,6 +24,6 @@ public final /* synthetic */ class PluginFragment$$ExternalSyntheticLambda0 impl
     }
 
     public final void accept(Object obj) {
-        this.f$0.m3260lambda$loadPrefs$0$comandroidsystemuitunerPluginFragment(this.f$1, this.f$2, this.f$3, this.f$4, (PackageInfo) obj);
+        this.f$0.m3265lambda$loadPrefs$0$comandroidsystemuitunerPluginFragment(this.f$1, this.f$2, this.f$3, this.f$4, (PackageInfo) obj);
     }
 }

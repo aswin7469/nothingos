@@ -82,14 +82,14 @@ public class RegexpPool {
             goto L_0x0043
         L_0x005c:
             if (r2 == 0) goto L_0x006b
-            java.lang.String r9 = r5.f862re
+            java.lang.String r9 = r5.f860re
             boolean r9 = r10.equals(r9)
             if (r9 == 0) goto L_0x0078
             java.lang.Object r9 = r5.result
             r5.result = r3
             goto L_0x0077
         L_0x006b:
-            java.lang.String r9 = r5.f862re
+            java.lang.String r9 = r5.f860re
             boolean r9 = r10.equals(r9)
             if (r9 == 0) goto L_0x0078
             java.lang.Object r9 = r5.result
@@ -132,7 +132,7 @@ public class RegexpPool {
             regexpNode.exact = z2;
         }
         if (regexpNode.result == null || z) {
-            regexpNode.f862re = str;
+            regexpNode.f860re = str;
             regexpNode.result = obj;
             return;
         }

@@ -12,6 +12,6 @@ public final /* synthetic */ class PeopleSpaceWidgetManager$$ExternalSyntheticLa
     }
 
     public final void accept(Object obj, Object obj2) {
-        this.f$0.mo35179x6a4957cc((Integer) obj, (Optional) obj2);
+        this.f$0.mo35183x6a4957cc((Integer) obj, (Optional) obj2);
     }
 }

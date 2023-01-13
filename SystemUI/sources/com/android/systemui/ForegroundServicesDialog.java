@@ -63,7 +63,7 @@ public final class ForegroundServicesDialog extends AlertActivity implements Ada
         AlertController.AlertParams alertParams = this.mAlertParams;
         alertParams.mAdapter = this.mAdapter;
         alertParams.mOnClickListener = this.mAppClickListener;
-        alertParams.mCustomTitleView = this.mInflater.inflate(C1893R.layout.foreground_service_title, (ViewGroup) null);
+        alertParams.mCustomTitleView = this.mInflater.inflate(C1894R.layout.foreground_service_title, (ViewGroup) null);
         alertParams.mIsSingleChoice = true;
         alertParams.mOnItemSelectedListener = this;
         alertParams.mPositiveButtonText = getString(17040167);
@@ -123,7 +123,7 @@ public final class ForegroundServicesDialog extends AlertActivity implements Ada
         final PackageManager mPm;
 
         public PackageItemAdapter(Context context) {
-            super(context, C1893R.layout.foreground_service_item);
+            super(context, C1894R.layout.foreground_service_item);
             this.mPm = context.getPackageManager();
             this.mInflater = LayoutInflater.from(context);
             this.mIconDrawableFactory = IconDrawableFactory.newInstance(context, true);
@@ -144,10 +144,10 @@ public final class ForegroundServicesDialog extends AlertActivity implements Ada
 
         public View getView(int i, View view, ViewGroup viewGroup) {
             if (view == null) {
-                view = this.mInflater.inflate(C1893R.layout.foreground_service_item, viewGroup, false);
+                view = this.mInflater.inflate(C1894R.layout.foreground_service_item, viewGroup, false);
             }
-            ((ImageView) view.findViewById(C1893R.C1897id.app_icon)).setImageDrawable(this.mIconDrawableFactory.getBadgedIcon((ApplicationInfo) getItem(i)));
-            ((TextView) view.findViewById(C1893R.C1897id.app_name)).setText(((ApplicationInfo) getItem(i)).loadLabel(this.mPm));
+            ((ImageView) view.findViewById(C1894R.C1898id.app_icon)).setImageDrawable(this.mIconDrawableFactory.getBadgedIcon((ApplicationInfo) getItem(i)));
+            ((TextView) view.findViewById(C1894R.C1898id.app_name)).setText(((ApplicationInfo) getItem(i)).loadLabel(this.mPm));
             return view;
         }
     }

@@ -34,7 +34,7 @@ public class DevicePostureControllerImpl implements DevicePostureController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$1$com-android-systemui-statusbar-policy-DevicePostureControllerImpl */
-    public /* synthetic */ void mo45687xf7cace0b(int i) {
+    public /* synthetic */ void mo45699xf7cace0b(int i) {
         Assert.isMainThread();
         this.mCurrentDevicePosture = this.mDeviceStateToPostureMap.get(i, 0);
         this.mListeners.forEach(new DevicePostureControllerImpl$$ExternalSyntheticLambda1(this));
@@ -42,7 +42,7 @@ public class DevicePostureControllerImpl implements DevicePostureController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-statusbar-policy-DevicePostureControllerImpl */
-    public /* synthetic */ void mo45686x1c09524a(DevicePostureController.Callback callback) {
+    public /* synthetic */ void mo45698x1c09524a(DevicePostureController.Callback callback) {
         callback.onPostureChanged(this.mCurrentDevicePosture);
     }
 

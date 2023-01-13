@@ -9,6 +9,6 @@ public final /* synthetic */ class ScreenDecorations$$ExternalSyntheticLambda2 i
     }
 
     public final void run() {
-        this.f$0.mo29766xa0b75a31();
+        this.f$0.mo29776xa0b75a31();
     }
 }

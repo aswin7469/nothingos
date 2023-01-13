@@ -207,7 +207,7 @@ public class Layer {
             sb.append(str).append("\tMasks: ").append(getMasks().size()).append("\n");
         }
         if (!(getSolidWidth() == 0 || getSolidHeight() == 0)) {
-            sb.append(str).append("\tBackground: ").append(String.format(Locale.f700US, "%dx%d %X\n", Integer.valueOf(getSolidWidth()), Integer.valueOf(getSolidHeight()), Integer.valueOf(getSolidColor())));
+            sb.append(str).append("\tBackground: ").append(String.format(Locale.f698US, "%dx%d %X\n", Integer.valueOf(getSolidWidth()), Integer.valueOf(getSolidHeight()), Integer.valueOf(getSolidColor())));
         }
         if (!this.shapes.isEmpty()) {
             sb.append(str).append("\tShapes:\n");

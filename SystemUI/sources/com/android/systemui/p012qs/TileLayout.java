@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.view.ViewOverlay;
 import android.view.accessibility.AccessibilityNodeInfo;
 import com.android.internal.logging.UiEventLogger;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.p012qs.QSPanel;
 import com.android.systemui.p012qs.QSPanelControllerBase;
 import com.android.systemui.p012qs.tileimpl.HeightOverrideable;
@@ -70,7 +70,7 @@ public class TileLayout extends ViewGroup implements QSPanel.QSTileLayout {
 
     public TileLayout(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        this.mCellHeightResId = C1893R.dimen.qs_tile_height;
+        this.mCellHeightResId = C1894R.dimen.qs_tile_height;
         boolean z = true;
         this.mRows = 1;
         this.mRecords = new ArrayList<>();
@@ -147,14 +147,14 @@ public class TileLayout extends ViewGroup implements QSPanel.QSTileLayout {
 
     public boolean updateResources() {
         Resources resources = this.mContext.getResources();
-        this.mResourceColumns = Math.max(1, resources.getInteger(C1893R.integer.quick_settings_num_columns));
+        this.mResourceColumns = Math.max(1, resources.getInteger(C1894R.integer.quick_settings_num_columns));
         updateColumns();
         this.mMaxCellHeight = this.mContext.getResources().getDimensionPixelSize(this.mCellHeightResId);
-        this.mMaxCollapsedSignalOrBtCellHeight = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.qs_tile_height);
-        this.mCellMarginHorizontal = resources.getDimensionPixelSize(C1893R.dimen.qs_tile_margin_horizontal);
+        this.mMaxCollapsedSignalOrBtCellHeight = this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.qs_tile_height);
+        this.mCellMarginHorizontal = resources.getDimensionPixelSize(C1894R.dimen.qs_tile_margin_horizontal);
         this.mSidePadding = useSidePadding() ? this.mCellMarginHorizontal / 2 : 0;
-        this.mCellMarginVertical = resources.getDimensionPixelSize(C1893R.dimen.qs_tile_margin_vertical);
-        int max = Math.max(1, getResources().getInteger(C1893R.integer.quick_settings_max_rows));
+        this.mCellMarginVertical = resources.getDimensionPixelSize(C1894R.dimen.qs_tile_margin_vertical);
+        int max = Math.max(1, getResources().getInteger(C1894R.integer.quick_settings_max_rows));
         this.mMaxAllowedRows = max;
         if (this.mLessRows) {
             this.mMaxAllowedRows = Math.max(this.mMinRows, max - 1);

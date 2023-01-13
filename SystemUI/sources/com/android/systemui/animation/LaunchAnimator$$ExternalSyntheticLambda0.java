@@ -71,6 +71,6 @@ public final /* synthetic */ class LaunchAnimator$$ExternalSyntheticLambda0 impl
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
         ValueAnimator valueAnimator2 = valueAnimator;
-        LaunchAnimator.m2544startAnimation$lambda1(this.f$0, this.f$1, this.f$2, this.f$3, this.f$4, this.f$5, this.f$6, this.f$7, this.f$8, this.f$9, this.f$10, this.f$11, this.f$12, this.f$13, this.f$14, this.f$15, this.f$16, this.f$17, this.f$18, this.f$19, this.f$20, this.f$21, this.f$22, this.f$23, this.f$24, this.f$25, this.f$26, valueAnimator2);
+        LaunchAnimator.m2550startAnimation$lambda1(this.f$0, this.f$1, this.f$2, this.f$3, this.f$4, this.f$5, this.f$6, this.f$7, this.f$8, this.f$9, this.f$10, this.f$11, this.f$12, this.f$13, this.f$14, this.f$15, this.f$16, this.f$17, this.f$18, this.f$19, this.f$20, this.f$21, this.f$22, this.f$23, this.f$24, this.f$25, this.f$26, valueAnimator2);
     }
 }

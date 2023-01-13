@@ -50,7 +50,7 @@ public class FeatureFlagsDebug implements FeatureFlags, Dumpable {
 
     @Inject
     public FeatureFlagsDebug(FlagManager flagManager, Context context, SecureSettings secureSettings, SystemPropertiesHelper systemPropertiesHelper, @Main Resources resources, DumpManager dumpManager, @Named("all_flags") Map<Integer, Flag<?>> map, CommandRegistry commandRegistry, IStatusBarService iStatusBarService) {
-        C21071 r4 = new BroadcastReceiver() {
+        C21091 r4 = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
                 String action = intent == null ? null : intent.getAction();
                 if (action != null) {
@@ -146,7 +146,7 @@ public class FeatureFlagsDebug implements FeatureFlags, Dumpable {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-flags-FeatureFlagsDebug  reason: not valid java name */
-    public /* synthetic */ Command m2750lambda$new$0$comandroidsystemuiflagsFeatureFlagsDebug() {
+    public /* synthetic */ Command m2755lambda$new$0$comandroidsystemuiflagsFeatureFlagsDebug() {
         return new FlagCommand();
     }
 
@@ -326,8 +326,8 @@ public class FeatureFlagsDebug implements FeatureFlags, Dumpable {
     }
 
     class FlagCommand implements Command {
-        private final List<String> mOffCommands = List.m1726of("false", "off", "0", "disable");
-        private final List<String> mOnCommands = List.m1726of("true", DebugKt.DEBUG_PROPERTY_VALUE_ON, "1", "enabled");
+        private final List<String> mOffCommands = List.m1732of("false", "off", "0", "disable");
+        private final List<String> mOnCommands = List.m1732of("true", DebugKt.DEBUG_PROPERTY_VALUE_ON, "1", "enabled");
 
         FlagCommand() {
         }

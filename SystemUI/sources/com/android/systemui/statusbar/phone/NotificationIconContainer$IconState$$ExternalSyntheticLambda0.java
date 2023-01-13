@@ -13,6 +13,6 @@ public final /* synthetic */ class NotificationIconContainer$IconState$$External
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo44512xd869f11b((Property) obj);
+        this.f$0.mo44527xd869f11b((Property) obj);
     }
 }

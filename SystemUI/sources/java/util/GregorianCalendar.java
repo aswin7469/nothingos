@@ -19,14 +19,14 @@ public class GregorianCalendar extends Calendar {
     static final /* synthetic */ boolean $assertionsDisabled = false;
 
     /* renamed from: AD */
-    public static final int f685AD = 1;
+    public static final int f683AD = 1;
 
     /* renamed from: BC */
-    public static final int f686BC = 0;
+    public static final int f684BC = 0;
     static final int BCE = 0;
 
     /* renamed from: CE */
-    static final int f687CE = 1;
+    static final int f685CE = 1;
     static final long DEFAULT_GREGORIAN_CUTOVER = -12219292800000L;
     private static final int EPOCH_OFFSET = 719163;
     private static final int EPOCH_YEAR = 1970;

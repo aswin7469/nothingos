@@ -12,6 +12,6 @@ public final /* synthetic */ class NotificationsQSContainerController$$ExternalS
     }
 
     public final void accept(Object obj) {
-        NotificationsQSContainerController.m3186onViewAttached$lambda2(this.f$0, (Configuration) obj);
+        NotificationsQSContainerController.m3191onViewAttached$lambda2(this.f$0, (Configuration) obj);
     }
 }

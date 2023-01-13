@@ -9,7 +9,7 @@ import android.provider.Settings;
 import android.service.quickaccesswallet.GetWalletCardsRequest;
 import android.service.quickaccesswallet.QuickAccessWalletClient;
 import android.util.Log;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.animation.ActivityLaunchAnimator;
 import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.dagger.qualifiers.Background;
@@ -107,7 +107,7 @@ public class QuickAccessWalletController {
             Log.d(TAG, "QuickAccessWallet feature is not available.");
             return;
         }
-        this.mQuickAccessWalletClient.getWalletCards(this.mBgExecutor, new GetWalletCardsRequest(this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.wallet_tile_card_view_width), this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.wallet_tile_card_view_height), this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.wallet_icon_size), 1), onWalletCardsRetrievedCallback);
+        this.mQuickAccessWalletClient.getWalletCards(this.mBgExecutor, new GetWalletCardsRequest(this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.wallet_tile_card_view_width), this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.wallet_tile_card_view_height), this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.wallet_icon_size), 1), onWalletCardsRetrievedCallback);
     }
 
     public void reCreateWalletClient() {
@@ -121,7 +121,7 @@ public class QuickAccessWalletController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startQuickAccessUiIntent$0$com-android-systemui-wallet-controller-QuickAccessWalletController */
-    public /* synthetic */ void mo47414xa2b4e465(ActivityStarter activityStarter, ActivityLaunchAnimator.Controller controller, boolean z, PendingIntent pendingIntent) {
+    public /* synthetic */ void mo47423xa2b4e465(ActivityStarter activityStarter, ActivityLaunchAnimator.Controller controller, boolean z, PendingIntent pendingIntent) {
         if (pendingIntent != null) {
             startQuickAccessViaPendingIntent(pendingIntent, activityStarter, controller);
             return;
@@ -158,7 +158,7 @@ public class QuickAccessWalletController {
 
                 /* access modifiers changed from: package-private */
                 /* renamed from: lambda$onChange$0$com-android-systemui-wallet-controller-QuickAccessWalletController$1 */
-                public /* synthetic */ void mo47421x63cc18a2(QuickAccessWalletClient.OnWalletCardsRetrievedCallback onWalletCardsRetrievedCallback) {
+                public /* synthetic */ void mo47430x63cc18a2(QuickAccessWalletClient.OnWalletCardsRetrievedCallback onWalletCardsRetrievedCallback) {
                     QuickAccessWalletController.this.reCreateWalletClient();
                     QuickAccessWalletController.this.updateWalletPreference();
                     QuickAccessWalletController.this.queryWalletCards(onWalletCardsRetrievedCallback);
@@ -178,7 +178,7 @@ public class QuickAccessWalletController {
 
                 /* access modifiers changed from: package-private */
                 /* renamed from: lambda$onChange$0$com-android-systemui-wallet-controller-QuickAccessWalletController$2 */
-                public /* synthetic */ void mo47423x63cc18a3() {
+                public /* synthetic */ void mo47432x63cc18a3() {
                     QuickAccessWalletController.this.updateWalletPreference();
                 }
             };

@@ -9,6 +9,6 @@ public final /* synthetic */ class AccessPoint$$ExternalSyntheticLambda2 impleme
     }
 
     public final void run() {
-        this.f$0.m2506lambda$setScanResults$1$comandroidsettingslibwifiAccessPoint();
+        this.f$0.m2512lambda$setScanResults$1$comandroidsettingslibwifiAccessPoint();
     }
 }

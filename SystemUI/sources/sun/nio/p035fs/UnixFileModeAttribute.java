@@ -18,7 +18,7 @@ class UnixFileModeAttribute {
         int i2 = 0;
         for (PosixFilePermission next : set) {
             next.getClass();
-            switch (C47921.$SwitchMap$java$nio$file$attribute$PosixFilePermission[next.ordinal()]) {
+            switch (C48041.$SwitchMap$java$nio$file$attribute$PosixFilePermission[next.ordinal()]) {
                 case 1:
                     i = UnixConstants.S_IRUSR;
                     break;
@@ -53,7 +53,7 @@ class UnixFileModeAttribute {
     }
 
     /* renamed from: sun.nio.fs.UnixFileModeAttribute$1 */
-    static /* synthetic */ class C47921 {
+    static /* synthetic */ class C48041 {
         static final /* synthetic */ int[] $SwitchMap$java$nio$file$attribute$PosixFilePermission;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(18:0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|(3:17|18|20)) */
@@ -127,7 +127,7 @@ class UnixFileModeAttribute {
             L_0x006c:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: sun.nio.p035fs.UnixFileModeAttribute.C47921.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: sun.nio.p035fs.UnixFileModeAttribute.C48041.<clinit>():void");
         }
     }
 

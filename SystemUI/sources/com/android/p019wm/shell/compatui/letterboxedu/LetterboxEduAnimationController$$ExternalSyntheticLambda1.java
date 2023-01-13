@@ -16,6 +16,6 @@ public final /* synthetic */ class LetterboxEduAnimationController$$ExternalSynt
     }
 
     public final void run() {
-        this.f$0.mo49434xbcf86834(this.f$1, this.f$2);
+        this.f$0.mo49443xbcf86834(this.f$1, this.f$2);
     }
 }

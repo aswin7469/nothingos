@@ -77,7 +77,7 @@ public class KidsModeTaskOrganizer extends ShellTaskOrganizer {
     private final SyncTransactionQueue mSyncQueue;
     private final BroadcastReceiver mUserSwitchIntentReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
-            KidsModeTaskOrganizer.this.mo49593xd6c5359c();
+            KidsModeTaskOrganizer.this.mo49602xd6c5359c();
         }
     };
 
@@ -106,7 +106,7 @@ public class KidsModeTaskOrganizer extends ShellTaskOrganizer {
             this.mKidsModeSettingsObserver = new KidsModeSettingsObserver(this.mMainHandler, this.mContext);
         }
         this.mKidsModeSettingsObserver.setOnChangeRunnable(new KidsModeTaskOrganizer$$ExternalSyntheticLambda1(this));
-        mo49593xd6c5359c();
+        mo49602xd6c5359c();
         this.mKidsModeSettingsObserver.register();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.intent.action.USER_SWITCHED");
@@ -141,7 +141,7 @@ public class KidsModeTaskOrganizer extends ShellTaskOrganizer {
 
     /* access modifiers changed from: package-private */
     /* renamed from: updateKidsModeState */
-    public void mo49593xd6c5359c() {
+    public void mo49602xd6c5359c() {
         boolean isEnabled = this.mKidsModeSettingsObserver.isEnabled();
         if (this.mEnabled != isEnabled) {
             this.mEnabled = isEnabled;

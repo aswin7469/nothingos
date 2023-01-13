@@ -11,6 +11,6 @@ public final /* synthetic */ class AuthController$$ExternalSyntheticLambda3 impl
     }
 
     public final void run() {
-        this.f$0.mo30612x1f6803c1(this.f$1);
+        this.f$0.mo30623x1f6803c1(this.f$1);
     }
 }

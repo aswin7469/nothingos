@@ -13,6 +13,6 @@ public final /* synthetic */ class PipController$IPipImpl$$ExternalSyntheticLamb
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo50327xe4c4d869((PipController) obj);
+        this.f$0.mo50336xe4c4d869((PipController) obj);
     }
 }

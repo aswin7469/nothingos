@@ -15,6 +15,6 @@ public final /* synthetic */ class MagnificationModeSwitch$$ExternalSyntheticLam
     }
 
     public final void doFrame(long j) {
-        this.f$0.mo29906xa03e7f8f(this.f$1, this.f$2, j);
+        this.f$0.mo29916xa03e7f8f(this.f$1, this.f$2, j);
     }
 }

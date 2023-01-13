@@ -11,6 +11,6 @@ public final /* synthetic */ class UdfpsController$$ExternalSyntheticLambda2 imp
     }
 
     public final void run() {
-        this.f$0.mo30820x41374633(this.f$1);
+        this.f$0.mo30830x41374633(this.f$1);
     }
 }

@@ -19,7 +19,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import com.android.internal.logging.UiEventLogger;
 import com.android.keyguard.KeyguardUpdateMonitor;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.plugins.FalsingManager;
 import com.android.systemui.settings.UserTracker;
@@ -89,7 +89,7 @@ public class WalletScreenController implements WalletCardCarousel.OnSelectionLis
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onWalletCardsRetrieved$0$com-android-systemui-wallet-ui-WalletScreenController */
-    public /* synthetic */ void mo47466xe1b09808(List list, GetWalletCardsResponse getWalletCardsResponse) {
+    public /* synthetic */ void mo47475xe1b09808(List list, GetWalletCardsResponse getWalletCardsResponse) {
         if (!this.mIsDismissed) {
             if (list.isEmpty()) {
                 showEmptyStateView();
@@ -113,7 +113,7 @@ public class WalletScreenController implements WalletCardCarousel.OnSelectionLis
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onWalletCardRetrievalError$1$com-android-systemui-wallet-ui-WalletScreenController */
-    public /* synthetic */ void mo47465xfa1098a8(GetWalletCardsError getWalletCardsError) {
+    public /* synthetic */ void mo47474xfa1098a8(GetWalletCardsError getWalletCardsError) {
         if (!this.mIsDismissed) {
             this.mWalletView.showErrorMessage(getWalletCardsError.getMessage());
         }
@@ -174,7 +174,7 @@ public class WalletScreenController implements WalletCardCarousel.OnSelectionLis
             if (cardWidthPx != 0 && cardHeightPx != 0) {
                 this.mWalletView.show();
                 this.mWalletView.hideErrorMessage();
-                this.mWalletClient.getWalletCards(this.mExecutor, new GetWalletCardsRequest(cardWidthPx, cardHeightPx, this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.wallet_screen_header_icon_size), 10), this);
+                this.mWalletClient.getWalletCards(this.mExecutor, new GetWalletCardsRequest(cardWidthPx, cardHeightPx, this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.wallet_screen_header_icon_size), 10), this);
             }
         }
     }
@@ -207,13 +207,13 @@ public class WalletScreenController implements WalletCardCarousel.OnSelectionLis
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$showEmptyStateView$2$com-android-systemui-wallet-ui-WalletScreenController */
-    public /* synthetic */ void mo47467xc1231213(Intent intent, View view) {
+    public /* synthetic */ void mo47476xc1231213(Intent intent, View view) {
         this.mActivityStarter.startActivity(intent, true);
     }
 
     private int getExpectedMinHeight() {
         int i = this.mPrefs.getInt(PREFS_WALLET_VIEW_HEIGHT, -1);
-        return i == -1 ? this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.min_wallet_empty_height) : i;
+        return i == -1 ? this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.min_wallet_empty_height) : i;
     }
 
     private void removeMinHeightAndRecordHeightOnLayout() {

@@ -12,7 +12,7 @@ import android.view.WindowInsets;
 import android.view.WindowManager;
 import android.view.WindowMetrics;
 import android.widget.FrameLayout;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.biometrics.AuthDialog;
 
 public class UdfpsDialogMeasureAdapter {
@@ -55,7 +55,7 @@ public class UdfpsDialogMeasureAdapter {
     private AuthDialog.LayoutParams onMeasureInternalPortrait(int i, int i2) {
         int i3 = i;
         WindowMetrics maximumWindowMetrics = this.mWindowManager.getMaximumWindowMetrics();
-        int viewHeightPx = getViewHeightPx(C1893R.C1897id.button_bar);
+        int viewHeightPx = getViewHeightPx(C1894R.C1898id.button_bar);
         int dialogMarginPx = getDialogMarginPx();
         int height = getMaximumWindowBounds(maximumWindowMetrics).height();
         this.mBottomSpacerHeight = calculateBottomSpacerHeightForPortrait(this.mSensorProps, height, 0, viewHeightPx, dialogMarginPx, getNavbarInsets(maximumWindowMetrics).bottom);
@@ -64,26 +64,26 @@ public class UdfpsDialogMeasureAdapter {
         int i5 = 0;
         for (int i6 = 0; i6 < childCount; i6++) {
             View childAt = this.mView.getChildAt(i6);
-            if (childAt.getId() == C1893R.C1897id.biometric_icon_frame) {
+            if (childAt.getId() == C1894R.C1898id.biometric_icon_frame) {
                 FrameLayout frameLayout = (FrameLayout) childAt;
                 View childAt2 = frameLayout.getChildAt(0);
                 frameLayout.measure(View.MeasureSpec.makeMeasureSpec(childAt.getLayoutParams().width, 1073741824), View.MeasureSpec.makeMeasureSpec(i4, 1073741824));
                 childAt2.getLayoutParams().width = i4;
                 childAt2.getLayoutParams().height = i4;
                 childAt2.measure(View.MeasureSpec.makeMeasureSpec(i4, Integer.MIN_VALUE), View.MeasureSpec.makeMeasureSpec(i4, Integer.MIN_VALUE));
-                int dimensionPixelSize = this.mView.getResources().getDimensionPixelSize(C1893R.dimen.nt_biometric_dialog_fp_icon_padding);
+                int dimensionPixelSize = this.mView.getResources().getDimensionPixelSize(C1894R.dimen.nt_biometric_dialog_fp_icon_padding);
                 childAt2.setPadding(dimensionPixelSize, dimensionPixelSize, dimensionPixelSize, dimensionPixelSize);
-            } else if (childAt.getId() == C1893R.C1897id.space_above_icon || childAt.getId() == C1893R.C1897id.space_above_title || childAt.getId() == C1893R.C1897id.indicator) {
+            } else if (childAt.getId() == C1894R.C1898id.space_above_icon || childAt.getId() == C1894R.C1898id.space_above_title || childAt.getId() == C1894R.C1898id.indicator) {
                 int i7 = i2;
                 childAt.measure(View.MeasureSpec.makeMeasureSpec(i3, 1073741824), View.MeasureSpec.makeMeasureSpec(childAt.getLayoutParams().height, 1073741824));
-                if (!(childAt.getVisibility() == 8 || childAt.getId() == C1893R.C1897id.indicator)) {
+                if (!(childAt.getVisibility() == 8 || childAt.getId() == C1894R.C1898id.indicator)) {
                     i5 += childAt.getMeasuredHeight();
                 }
-            } else if (childAt.getId() == C1893R.C1897id.button_bar) {
+            } else if (childAt.getId() == C1894R.C1898id.button_bar) {
                 childAt.measure(View.MeasureSpec.makeMeasureSpec(i3, 1073741824), View.MeasureSpec.makeMeasureSpec(childAt.getLayoutParams().height, 1073741824));
-            } else if (childAt.getId() == C1893R.C1897id.space_below_icon) {
+            } else if (childAt.getId() == C1894R.C1898id.space_below_icon) {
                 childAt.measure(View.MeasureSpec.makeMeasureSpec(i3, 1073741824), View.MeasureSpec.makeMeasureSpec(Math.max(this.mBottomSpacerHeight, 0), 1073741824));
-            } else if (childAt.getId() == C1893R.C1897id.description) {
+            } else if (childAt.getId() == C1894R.C1898id.description) {
                 int i8 = i2;
             } else {
                 childAt.measure(View.MeasureSpec.makeMeasureSpec(i3, 1073741824), View.MeasureSpec.makeMeasureSpec(i2, Integer.MIN_VALUE));
@@ -92,7 +92,7 @@ public class UdfpsDialogMeasureAdapter {
             int i9 = i2;
             i5 += childAt.getMeasuredHeight();
         }
-        View findViewById = this.mView.findViewById(C1893R.C1897id.description);
+        View findViewById = this.mView.findViewById(C1894R.C1898id.description);
         if (!(findViewById == null || findViewById.getVisibility() == 8)) {
             i5 += measureDescription(findViewById, height, i3, i5);
         }
@@ -116,13 +116,13 @@ public class UdfpsDialogMeasureAdapter {
             r0 = r16
             android.view.WindowManager r1 = r0.mWindowManager
             android.view.WindowMetrics r1 = r1.getMaximumWindowMetrics()
-            r2 = 2131429048(0x7f0b06b8, float:1.8479758E38)
+            r2 = 2131429065(0x7f0b06c9, float:1.8479792E38)
             int r3 = r0.getViewHeightPx(r2)
-            r2 = 2131428931(0x7f0b0643, float:1.847952E38)
+            r2 = 2131428948(0x7f0b0654, float:1.8479555E38)
             int r4 = r0.getViewHeightPx(r2)
             r2 = 2131427826(0x7f0b01f2, float:1.847728E38)
             int r5 = r0.getViewHeightPx(r2)
-            r2 = 2131428877(0x7f0b060d, float:1.847941E38)
+            r2 = 2131428894(0x7f0b061e, float:1.8479445E38)
             int r6 = r0.getViewHeightPx(r2)
             r7 = 2131428092(0x7f0b02fc, float:1.8477819E38)
             int r7 = r0.getViewHeightPx(r7)
@@ -170,7 +170,7 @@ public class UdfpsDialogMeasureAdapter {
             r12.measure(r11, r13)
             android.view.ViewGroup r11 = r0.mView
             android.content.res.Resources r11 = r11.getResources()
-            r13 = 2131166643(0x7f0705b3, float:1.7947537E38)
+            r13 = 2131166649(0x7f0705b9, float:1.794755E38)
             int r11 = r11.getDimensionPixelSize(r13)
             r12.setPadding(r11, r11, r11, r11)
         L_0x00ab:
@@ -198,7 +198,7 @@ public class UdfpsDialogMeasureAdapter {
             goto L_0x00ab
         L_0x00e3:
             int r11 = r9.getId()
-            r12 = 2131428879(0x7f0b060f, float:1.8479415E38)
+            r12 = 2131428896(0x7f0b0620, float:1.847945E38)
             if (r11 != r12) goto L_0x00fc
             int r11 = java.lang.Math.max((int) r3, (int) r6)
             int r12 = android.view.View.MeasureSpec.makeMeasureSpec(r1, r14)
@@ -236,7 +236,7 @@ public class UdfpsDialogMeasureAdapter {
     }
 
     private int getDialogMarginPx() {
-        return this.mView.getResources().getDimensionPixelSize(C1893R.dimen.biometric_dialog_border_padding);
+        return this.mView.getResources().getDimensionPixelSize(C1894R.dimen.biometric_dialog_border_padding);
     }
 
     private static Insets getNavbarInsets(WindowMetrics windowMetrics) {

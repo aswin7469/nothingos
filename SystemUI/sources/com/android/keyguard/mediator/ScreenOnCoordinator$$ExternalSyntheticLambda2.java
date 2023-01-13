@@ -9,6 +9,6 @@ public final /* synthetic */ class ScreenOnCoordinator$$ExternalSyntheticLambda2
     }
 
     public final void run() {
-        ScreenOnCoordinator.m2316onScreenTurningOn$lambda0(this.f$0);
+        ScreenOnCoordinator.m2322onScreenTurningOn$lambda0(this.f$0);
     }
 }

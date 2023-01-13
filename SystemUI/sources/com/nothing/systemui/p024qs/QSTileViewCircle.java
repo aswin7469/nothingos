@@ -7,7 +7,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.LinearLayout;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.p012qs.tileimpl.QSTileViewImpl;
 import com.android.systemui.plugins.p011qs.QSIconView;
 import java.util.LinkedHashMap;
@@ -15,7 +15,7 @@ import java.util.Map;
 import kotlin.Metadata;
 import kotlin.jvm.internal.Intrinsics;
 
-@Metadata(mo64986d1 = {"\u0000D\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u000b\n\u0002\b\u0007\n\u0002\u0010\u0007\n\u0002\b\u000e\n\u0002\u0010\b\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b\n\n\u0002\u0018\u0002\n\u0002\b\u0006\u0018\u00002\u00020\u0001B\u001d\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\u0006\u0010\u0006\u001a\u00020\u0007¢\u0006\u0002\u0010\bJ\b\u0010#\u001a\u00020$H\u0016J\b\u0010%\u001a\u00020&H\u0014J\u0010\u0010'\u001a\u00020\u001e2\u0006\u0010(\u001a\u00020\u001eH\u0016J\u0010\u0010)\u001a\u00020\u001e2\u0006\u0010(\u001a\u00020\u001eH\u0016J\b\u0010*\u001a\u00020\u001eH\u0016J\b\u0010+\u001a\u00020\u001eH\u0016J\u0018\u0010,\u001a\u00020&2\u0006\u0010-\u001a\u00020\u001e2\u0006\u0010.\u001a\u00020\u001eH\u0014J\u0010\u0010/\u001a\u00020\u00072\u0006\u00100\u001a\u000201H\u0016J\u0006\u00102\u001a\u00020&J\u000e\u00103\u001a\u00020&2\u0006\u00104\u001a\u00020\u000fJ\b\u00105\u001a\u00020\u0007H\u0016J\b\u00106\u001a\u00020&H\u0016R\u001a\u0010\t\u001a\u00020\u0007X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\n\u0010\u000b\"\u0004\b\f\u0010\rR\u001a\u0010\u000e\u001a\u00020\u000fX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0010\u0010\u0011\"\u0004\b\u0012\u0010\u0013R\u001a\u0010\u0014\u001a\u00020\u000fX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0015\u0010\u0011\"\u0004\b\u0016\u0010\u0013R\u001a\u0010\u0017\u001a\u00020\u0007X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0018\u0010\u000b\"\u0004\b\u0019\u0010\rR\u001a\u0010\u001a\u001a\u00020\u000fX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u001b\u0010\u0011\"\u0004\b\u001c\u0010\u0013R\u001a\u0010\u001d\u001a\u00020\u001eX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u001f\u0010 \"\u0004\b!\u0010\"¨\u00067"}, mo64987d2 = {"Lcom/nothing/systemui/qs/QSTileViewCircle;", "Lcom/android/systemui/qs/tileimpl/QSTileViewImpl;", "context", "Landroid/content/Context;", "_icon", "Lcom/android/systemui/plugins/qs/QSIconView;", "collapsed", "", "(Landroid/content/Context;Lcom/android/systemui/plugins/qs/QSIconView;Z)V", "animating", "getAnimating", "()Z", "setAnimating", "(Z)V", "initialX", "", "getInitialX", "()F", "setInitialX", "(F)V", "initialY", "getInitialY", "setInitialY", "interceptClick", "getInterceptClick", "setInterceptClick", "position", "getPosition", "setPosition", "touchSlop", "", "getTouchSlop", "()I", "setTouchSlop", "(I)V", "createTileBackground", "Landroid/graphics/drawable/Drawable;", "dealAndAddIcon", "", "getLabelColorForState", "state", "getSecondaryLabelColorForState", "getTileGravity", "getTileOrientation", "onMeasure", "widthMeasureSpec", "heightMeasureSpec", "onTouchEvent", "ev", "Landroid/view/MotionEvent;", "resetEvent", "setExpansion", "expansion", "shouldInterceptClick", "updateResources", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000D\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u000b\n\u0002\b\u0007\n\u0002\u0010\u0007\n\u0002\b\u000e\n\u0002\u0010\b\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b\n\n\u0002\u0018\u0002\n\u0002\b\u0006\u0018\u00002\u00020\u0001B\u001d\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\u0006\u0010\u0006\u001a\u00020\u0007¢\u0006\u0002\u0010\bJ\b\u0010#\u001a\u00020$H\u0016J\b\u0010%\u001a\u00020&H\u0014J\u0010\u0010'\u001a\u00020\u001e2\u0006\u0010(\u001a\u00020\u001eH\u0016J\u0010\u0010)\u001a\u00020\u001e2\u0006\u0010(\u001a\u00020\u001eH\u0016J\b\u0010*\u001a\u00020\u001eH\u0016J\b\u0010+\u001a\u00020\u001eH\u0016J\u0018\u0010,\u001a\u00020&2\u0006\u0010-\u001a\u00020\u001e2\u0006\u0010.\u001a\u00020\u001eH\u0014J\u0010\u0010/\u001a\u00020\u00072\u0006\u00100\u001a\u000201H\u0016J\u0006\u00102\u001a\u00020&J\u000e\u00103\u001a\u00020&2\u0006\u00104\u001a\u00020\u000fJ\b\u00105\u001a\u00020\u0007H\u0016J\b\u00106\u001a\u00020&H\u0016R\u001a\u0010\t\u001a\u00020\u0007X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\n\u0010\u000b\"\u0004\b\f\u0010\rR\u001a\u0010\u000e\u001a\u00020\u000fX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0010\u0010\u0011\"\u0004\b\u0012\u0010\u0013R\u001a\u0010\u0014\u001a\u00020\u000fX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0015\u0010\u0011\"\u0004\b\u0016\u0010\u0013R\u001a\u0010\u0017\u001a\u00020\u0007X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0018\u0010\u000b\"\u0004\b\u0019\u0010\rR\u001a\u0010\u001a\u001a\u00020\u000fX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u001b\u0010\u0011\"\u0004\b\u001c\u0010\u0013R\u001a\u0010\u001d\u001a\u00020\u001eX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u001f\u0010 \"\u0004\b!\u0010\"¨\u00067"}, mo65043d2 = {"Lcom/nothing/systemui/qs/QSTileViewCircle;", "Lcom/android/systemui/qs/tileimpl/QSTileViewImpl;", "context", "Landroid/content/Context;", "_icon", "Lcom/android/systemui/plugins/qs/QSIconView;", "collapsed", "", "(Landroid/content/Context;Lcom/android/systemui/plugins/qs/QSIconView;Z)V", "animating", "getAnimating", "()Z", "setAnimating", "(Z)V", "initialX", "", "getInitialX", "()F", "setInitialX", "(F)V", "initialY", "getInitialY", "setInitialY", "interceptClick", "getInterceptClick", "setInterceptClick", "position", "getPosition", "setPosition", "touchSlop", "", "getTouchSlop", "()I", "setTouchSlop", "(I)V", "createTileBackground", "Landroid/graphics/drawable/Drawable;", "dealAndAddIcon", "", "getLabelColorForState", "state", "getSecondaryLabelColorForState", "getTileGravity", "getTileOrientation", "onMeasure", "widthMeasureSpec", "heightMeasureSpec", "onTouchEvent", "ev", "Landroid/view/MotionEvent;", "resetEvent", "setExpansion", "expansion", "shouldInterceptClick", "updateResources", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* renamed from: com.nothing.systemui.qs.QSTileViewCircle */
 /* compiled from: QSTileViewCircle.kt */
 public final class QSTileViewCircle extends QSTileViewImpl {
@@ -58,7 +58,7 @@ public final class QSTileViewCircle extends QSTileViewImpl {
         super(context, qSIconView, z);
         Intrinsics.checkNotNullParameter(context, "context");
         Intrinsics.checkNotNullParameter(qSIconView, "_icon");
-        int dimensionPixelSize = getResources().getDimensionPixelSize(C1893R.dimen.circle_qs_tile_padding);
+        int dimensionPixelSize = getResources().getDimensionPixelSize(C1894R.dimen.circle_qs_tile_padding);
         setPaddingRelative(dimensionPixelSize, dimensionPixelSize, dimensionPixelSize, dimensionPixelSize);
         this.touchSlop = ViewConfiguration.get(context).getScaledPagingTouchSlop();
     }
@@ -118,21 +118,21 @@ public final class QSTileViewCircle extends QSTileViewImpl {
 
     /* access modifiers changed from: protected */
     public void dealAndAddIcon() {
-        int dimensionPixelSize = getResources().getDimensionPixelSize(C1893R.dimen.circle_qs_icon_size);
+        int dimensionPixelSize = getResources().getDimensionPixelSize(C1894R.dimen.circle_qs_icon_size);
         addView(get_icon(), new LinearLayout.LayoutParams(dimensionPixelSize, dimensionPixelSize));
     }
 
     public Drawable createTileBackground() {
         RippleDrawable rippleDrawable;
         if (this.animating) {
-            Drawable drawable = this.mContext.getDrawable(C1893R.C1895drawable.circle_qs_tile_background_for_animating);
+            Drawable drawable = this.mContext.getDrawable(C1894R.C1896drawable.circle_qs_tile_background_for_animating);
             if (drawable != null) {
                 rippleDrawable = (RippleDrawable) drawable;
             } else {
                 throw new NullPointerException("null cannot be cast to non-null type android.graphics.drawable.RippleDrawable");
             }
         } else {
-            Drawable drawable2 = this.mContext.getDrawable(C1893R.C1895drawable.circle_qs_tile_background);
+            Drawable drawable2 = this.mContext.getDrawable(C1894R.C1896drawable.circle_qs_tile_background);
             if (drawable2 != null) {
                 rippleDrawable = (RippleDrawable) drawable2;
             } else {
@@ -140,7 +140,7 @@ public final class QSTileViewCircle extends QSTileViewImpl {
             }
         }
         setRipple(rippleDrawable);
-        Drawable findDrawableByLayerId = getRipple().findDrawableByLayerId(C1893R.C1897id.background);
+        Drawable findDrawableByLayerId = getRipple().findDrawableByLayerId(C1894R.C1898id.background);
         Intrinsics.checkNotNullExpressionValue(findDrawableByLayerId, "ripple.findDrawableByLayerId(R.id.background)");
         setColorBackgroundDrawable(findDrawableByLayerId);
         return getColorBackgroundDrawable();
@@ -174,7 +174,7 @@ public final class QSTileViewCircle extends QSTileViewImpl {
 
     public void updateResources() {
         super.updateResources();
-        int dimensionPixelSize = getResources().getDimensionPixelSize(C1893R.dimen.circle_qs_tile_padding);
+        int dimensionPixelSize = getResources().getDimensionPixelSize(C1894R.dimen.circle_qs_tile_padding);
         setPaddingRelative(dimensionPixelSize, dimensionPixelSize, dimensionPixelSize, dimensionPixelSize);
     }
 

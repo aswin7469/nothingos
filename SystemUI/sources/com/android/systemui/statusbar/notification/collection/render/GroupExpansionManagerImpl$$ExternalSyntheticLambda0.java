@@ -12,6 +12,6 @@ public final /* synthetic */ class GroupExpansionManagerImpl$$ExternalSyntheticL
     }
 
     public final void onBeforeRenderList(List list) {
-        this.f$0.mo40590x9a4c005b(list);
+        this.f$0.mo40593x9a4c005b(list);
     }
 }

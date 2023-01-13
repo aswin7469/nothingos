@@ -11,6 +11,6 @@ public final /* synthetic */ class AccessibilityFloatingMenuView$$ExternalSynthe
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        this.f$0.mo30051xa8eaac1a(valueAnimator);
+        this.f$0.mo30061xa8eaac1a(valueAnimator);
     }
 }

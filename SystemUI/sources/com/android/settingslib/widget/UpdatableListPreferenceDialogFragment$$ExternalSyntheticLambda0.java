@@ -11,6 +11,6 @@ public final /* synthetic */ class UpdatableListPreferenceDialogFragment$$Extern
     }
 
     public final void onClick(DialogInterface dialogInterface, int i) {
-        this.f$0.mo29295x10c94463(dialogInterface, i);
+        this.f$0.mo29305x10c94463(dialogInterface, i);
     }
 }

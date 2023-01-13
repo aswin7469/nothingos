@@ -12,6 +12,6 @@ public final /* synthetic */ class ScreenshotController$$ExternalSyntheticLambda
     }
 
     public final boolean onKey(View view, int i, KeyEvent keyEvent) {
-        return this.f$0.mo37427x396f9d66(view, i, keyEvent);
+        return this.f$0.mo37428x396f9d66(view, i, keyEvent);
     }
 }

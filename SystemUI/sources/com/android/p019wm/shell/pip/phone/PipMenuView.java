@@ -32,7 +32,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import com.android.internal.protolog.common.ProtoLog;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.animation.Interpolators;
 import com.android.p019wm.shell.common.ShellExecutor;
 import com.android.p019wm.shell.pip.PipUiEventLogger;
@@ -131,44 +131,44 @@ public class PipMenuView extends FrameLayout {
         this.mSplitScreenControllerOptional = optional;
         this.mPipUiEventLogger = pipUiEventLogger;
         this.mAccessibilityManager = (AccessibilityManager) context.getSystemService(AccessibilityManager.class);
-        inflate(context, C3343R.layout.pip_menu, this);
-        this.mPipForceCloseDelay = context.getResources().getInteger(C3343R.integer.config_pipForceCloseDelay);
-        Drawable drawable = this.mContext.getDrawable(C3343R.C3345drawable.pip_menu_background);
+        inflate(context, C3353R.layout.pip_menu, this);
+        this.mPipForceCloseDelay = context.getResources().getInteger(C3353R.integer.config_pipForceCloseDelay);
+        Drawable drawable = this.mContext.getDrawable(C3353R.C3355drawable.pip_menu_background);
         this.mBackgroundDrawable = drawable;
         drawable.setAlpha(0);
-        View findViewById = findViewById(C3343R.C3346id.background);
+        View findViewById = findViewById(C3353R.C3356id.background);
         this.mViewRoot = findViewById;
         findViewById.setBackground(this.mBackgroundDrawable);
-        View findViewById2 = findViewById(C3343R.C3346id.menu_container);
+        View findViewById2 = findViewById(C3353R.C3356id.menu_container);
         this.mMenuContainer = findViewById2;
         findViewById2.setAlpha(0.0f);
-        this.mTopEndContainer = findViewById(C3343R.C3346id.top_end_container);
-        View findViewById3 = findViewById(C3343R.C3346id.settings);
+        this.mTopEndContainer = findViewById(C3353R.C3356id.top_end_container);
+        View findViewById3 = findViewById(C3353R.C3356id.settings);
         this.mSettingsButton = findViewById3;
         findViewById3.setAlpha(0.0f);
         this.mSettingsButton.setOnClickListener(new PipMenuView$$ExternalSyntheticLambda3(this));
-        View findViewById4 = findViewById(C3343R.C3346id.dismiss);
+        View findViewById4 = findViewById(C3353R.C3356id.dismiss);
         this.mDismissButton = findViewById4;
         findViewById4.setAlpha(0.0f);
         this.mDismissButton.setOnClickListener(new PipMenuView$$ExternalSyntheticLambda4(this));
-        findViewById(C3343R.C3346id.expand_button).setOnClickListener(new PipMenuView$$ExternalSyntheticLambda5(this));
-        View findViewById5 = findViewById(C3343R.C3346id.enter_split);
+        findViewById(C3353R.C3356id.expand_button).setOnClickListener(new PipMenuView$$ExternalSyntheticLambda5(this));
+        View findViewById5 = findViewById(C3353R.C3356id.enter_split);
         this.mEnterSplitButton = findViewById5;
         findViewById5.setAlpha(0.0f);
         this.mEnterSplitButton.setOnClickListener(new PipMenuView$$ExternalSyntheticLambda6(this));
-        findViewById(C3343R.C3346id.resize_handle).setAlpha(0.0f);
-        this.mActionsGroup = (LinearLayout) findViewById(C3343R.C3346id.actions_group);
-        this.mBetweenActionPaddingLand = getResources().getDimensionPixelSize(C3343R.dimen.pip_between_action_padding_land);
+        findViewById(C3353R.C3356id.resize_handle).setAlpha(0.0f);
+        this.mActionsGroup = (LinearLayout) findViewById(C3353R.C3356id.actions_group);
+        this.mBetweenActionPaddingLand = getResources().getDimensionPixelSize(C3353R.dimen.pip_between_action_padding_land);
         PipMenuIconsAlgorithm pipMenuIconsAlgorithm = new PipMenuIconsAlgorithm(this.mContext);
         this.mPipMenuIconsAlgorithm = pipMenuIconsAlgorithm;
-        pipMenuIconsAlgorithm.bindViews((ViewGroup) this.mViewRoot, (ViewGroup) this.mTopEndContainer, findViewById(C3343R.C3346id.resize_handle), this.mEnterSplitButton, this.mSettingsButton, this.mDismissButton);
-        this.mDismissFadeOutDurationMs = context.getResources().getInteger(C3343R.integer.config_pipExitAnimationDuration);
+        pipMenuIconsAlgorithm.bindViews((ViewGroup) this.mViewRoot, (ViewGroup) this.mTopEndContainer, findViewById(C3353R.C3356id.resize_handle), this.mEnterSplitButton, this.mSettingsButton, this.mDismissButton);
+        this.mDismissFadeOutDurationMs = context.getResources().getInteger(C3353R.integer.config_pipExitAnimationDuration);
         initAccessibility();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-wm-shell-pip-phone-PipMenuView  reason: not valid java name */
-    public /* synthetic */ void m3463lambda$new$0$comandroidwmshellpipphonePipMenuView(View view) {
+    public /* synthetic */ void m3467lambda$new$0$comandroidwmshellpipphonePipMenuView(View view) {
         if (view.getAlpha() != 0.0f) {
             showSettings();
         }
@@ -176,13 +176,13 @@ public class PipMenuView extends FrameLayout {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$1$com-android-wm-shell-pip-phone-PipMenuView  reason: not valid java name */
-    public /* synthetic */ void m3464lambda$new$1$comandroidwmshellpipphonePipMenuView(View view) {
+    public /* synthetic */ void m3468lambda$new$1$comandroidwmshellpipphonePipMenuView(View view) {
         dismissPip();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$2$com-android-wm-shell-pip-phone-PipMenuView  reason: not valid java name */
-    public /* synthetic */ void m3465lambda$new$2$comandroidwmshellpipphonePipMenuView(View view) {
+    public /* synthetic */ void m3469lambda$new$2$comandroidwmshellpipphonePipMenuView(View view) {
         if (this.mMenuContainer.getAlpha() != 0.0f) {
             expandPip();
         }
@@ -190,7 +190,7 @@ public class PipMenuView extends FrameLayout {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$3$com-android-wm-shell-pip-phone-PipMenuView  reason: not valid java name */
-    public /* synthetic */ void m3466lambda$new$3$comandroidwmshellpipphonePipMenuView(View view) {
+    public /* synthetic */ void m3470lambda$new$3$comandroidwmshellpipphonePipMenuView(View view) {
         if (this.mEnterSplitButton.getAlpha() != 0.0f) {
             enterSplit();
         }
@@ -200,7 +200,7 @@ public class PipMenuView extends FrameLayout {
         setAccessibilityDelegate(new View.AccessibilityDelegate() {
             public void onInitializeAccessibilityNodeInfo(View view, AccessibilityNodeInfo accessibilityNodeInfo) {
                 super.onInitializeAccessibilityNodeInfo(view, accessibilityNodeInfo);
-                accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(16, PipMenuView.this.getResources().getString(C3343R.string.pip_menu_title)));
+                accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(16, PipMenuView.this.getResources().getString(C3353R.string.pip_menu_title)));
             }
 
             public boolean performAccessibilityAction(View view, int i, Bundle bundle) {
@@ -252,7 +252,7 @@ public class PipMenuView extends FrameLayout {
         boolean z6 = z2;
         this.mAllowMenuTimeout = z5;
         this.mDidLastShowMenuResize = z6;
-        boolean z7 = this.mContext.getResources().getBoolean(C3343R.bool.config_pipEnableEnterSplitButton);
+        boolean z7 = this.mContext.getResources().getBoolean(C3353R.bool.config_pipEnableEnterSplitButton);
         int i3 = this.mMenuState;
         if (i3 != i2) {
             this.mAllowTouches = !(z6 && (i3 == 1 || i2 == 1));
@@ -311,7 +311,7 @@ public class PipMenuView extends FrameLayout {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$showMenu$4$com-android-wm-shell-pip-phone-PipMenuView  reason: not valid java name */
-    public /* synthetic */ void m3467lambda$showMenu$4$comandroidwmshellpipphonePipMenuView() {
+    public /* synthetic */ void m3471lambda$showMenu$4$comandroidwmshellpipphonePipMenuView() {
         AnimatorSet animatorSet = this.mMenuContainerAnimator;
         if (animatorSet != null) {
             animatorSet.setStartDelay(MENU_SHOW_ON_EXPAND_START_DELAY);
@@ -387,7 +387,7 @@ public class PipMenuView extends FrameLayout {
 
     /* access modifiers changed from: package-private */
     public Size getEstimatedMinMenuSize() {
-        return new Size(Math.max(2, this.mActions.size()) * getResources().getDimensionPixelSize(C3343R.dimen.pip_action_size), getResources().getDimensionPixelSize(C3343R.dimen.pip_expand_action_size) + getResources().getDimensionPixelSize(C3343R.dimen.pip_action_padding) + getResources().getDimensionPixelSize(C3343R.dimen.pip_expand_container_edge_margin));
+        return new Size(Math.max(2, this.mActions.size()) * getResources().getDimensionPixelSize(C3353R.dimen.pip_action_size), getResources().getDimensionPixelSize(C3353R.dimen.pip_expand_action_size) + getResources().getDimensionPixelSize(C3353R.dimen.pip_action_padding) + getResources().getDimensionPixelSize(C3353R.dimen.pip_expand_container_edge_margin));
     }
 
     /* access modifiers changed from: package-private */
@@ -404,8 +404,8 @@ public class PipMenuView extends FrameLayout {
     }
 
     private void updateActionViews(int i, Rect rect) {
-        ViewGroup viewGroup = (ViewGroup) findViewById(C3343R.C3346id.expand_container);
-        ViewGroup viewGroup2 = (ViewGroup) findViewById(C3343R.C3346id.actions_container);
+        ViewGroup viewGroup = (ViewGroup) findViewById(C3353R.C3356id.expand_container);
+        ViewGroup viewGroup2 = (ViewGroup) findViewById(C3353R.C3356id.actions_container);
         viewGroup2.setOnTouchListener(new PipMenuView$$ExternalSyntheticLambda7());
         viewGroup.setVisibility(i == 1 ? 0 : 4);
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) viewGroup.getLayoutParams();
@@ -418,7 +418,7 @@ public class PipMenuView extends FrameLayout {
             if (this.mActionsGroup != null) {
                 LayoutInflater from = LayoutInflater.from(this.mContext);
                 while (this.mActionsGroup.getChildCount() < this.mActions.size()) {
-                    this.mActionsGroup.addView((PipMenuActionView) from.inflate(C3343R.layout.pip_menu_action, this.mActionsGroup, false));
+                    this.mActionsGroup.addView((PipMenuActionView) from.inflate(C3353R.layout.pip_menu_action, this.mActionsGroup, false));
                 }
                 int i2 = 0;
                 while (true) {
@@ -452,8 +452,8 @@ public class PipMenuView extends FrameLayout {
                     i4++;
                 }
             }
-            layoutParams.topMargin = getResources().getDimensionPixelSize(C3343R.dimen.pip_action_padding);
-            layoutParams.bottomMargin = getResources().getDimensionPixelSize(C3343R.dimen.pip_expand_container_edge_margin);
+            layoutParams.topMargin = getResources().getDimensionPixelSize(C3353R.dimen.pip_action_padding);
+            layoutParams.bottomMargin = getResources().getDimensionPixelSize(C3353R.dimen.pip_expand_container_edge_margin);
         }
         viewGroup.requestLayout();
     }
@@ -467,7 +467,7 @@ public class PipMenuView extends FrameLayout {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateActionViews$7$com-android-wm-shell-pip-phone-PipMenuView */
-    public /* synthetic */ void mo50397xdc89797b(RemoteAction remoteAction, boolean z, View view) {
+    public /* synthetic */ void mo50406xdc89797b(RemoteAction remoteAction, boolean z, View view) {
         onActionViewClicked(remoteAction.getActionIntent(), z);
     }
 
@@ -510,7 +510,7 @@ public class PipMenuView extends FrameLayout {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onActionViewClicked$8$com-android-wm-shell-pip-phone-PipMenuView */
-    public /* synthetic */ void mo50395x37ac381c() {
+    public /* synthetic */ void mo50404x37ac381c() {
         hideMenu();
         this.mController.onPipDismiss();
         this.mAllowTouches = true;

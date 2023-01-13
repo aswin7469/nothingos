@@ -12,6 +12,6 @@ public final /* synthetic */ class BubbleController$$ExternalSyntheticLambda16 i
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo48352x83f06a52((Bubble) obj);
+        this.f$0.mo48361x83f06a52((Bubble) obj);
     }
 }

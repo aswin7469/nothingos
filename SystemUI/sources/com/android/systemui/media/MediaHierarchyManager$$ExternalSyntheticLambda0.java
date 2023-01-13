@@ -13,6 +13,6 @@ public final /* synthetic */ class MediaHierarchyManager$$ExternalSyntheticLambd
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        MediaHierarchyManager.m2809animator$lambda1$lambda0(this.f$0, this.f$1, valueAnimator);
+        MediaHierarchyManager.m2814animator$lambda1$lambda0(this.f$0, this.f$1, valueAnimator);
     }
 }

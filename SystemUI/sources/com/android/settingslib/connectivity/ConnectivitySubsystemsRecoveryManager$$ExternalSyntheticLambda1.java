@@ -9,6 +9,6 @@ public final /* synthetic */ class ConnectivitySubsystemsRecoveryManager$$Extern
     }
 
     public final void run() {
-        this.f$0.mo28440xcb7cf47b();
+        this.f$0.mo28445xcb7cf47b();
     }
 }

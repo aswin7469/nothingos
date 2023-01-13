@@ -33,35 +33,35 @@ class HeapFloatBuffer extends FloatBuffer {
     }
 
     public FloatBuffer slice() {
-        return new HeapFloatBuffer(this.f569hb, -1, 0, remaining(), remaining(), this.offset + position(), this.isReadOnly);
+        return new HeapFloatBuffer(this.f567hb, -1, 0, remaining(), remaining(), this.offset + position(), this.isReadOnly);
     }
 
     public FloatBuffer duplicate() {
-        return new HeapFloatBuffer(this.f569hb, markValue(), position(), limit(), capacity(), this.offset, this.isReadOnly);
+        return new HeapFloatBuffer(this.f567hb, markValue(), position(), limit(), capacity(), this.offset, this.isReadOnly);
     }
 
     public FloatBuffer asReadOnlyBuffer() {
-        return new HeapFloatBuffer(this.f569hb, markValue(), position(), limit(), capacity(), this.offset, true);
+        return new HeapFloatBuffer(this.f567hb, markValue(), position(), limit(), capacity(), this.offset, true);
     }
 
     /* access modifiers changed from: protected */
     /* renamed from: ix */
-    public int mo60911ix(int i) {
+    public int mo60967ix(int i) {
         return i + this.offset;
     }
 
     public float get() {
-        return this.f569hb[mo60911ix(nextGetIndex())];
+        return this.f567hb[mo60967ix(nextGetIndex())];
     }
 
     public float get(int i) {
-        return this.f569hb[mo60911ix(checkIndex(i))];
+        return this.f567hb[mo60967ix(checkIndex(i))];
     }
 
     public FloatBuffer get(float[] fArr, int i, int i2) {
         checkBounds(i, i2, fArr.length);
         if (i2 <= remaining()) {
-            System.arraycopy((Object) this.f569hb, mo60911ix(position()), (Object) fArr, i, i2);
+            System.arraycopy((Object) this.f567hb, mo60967ix(position()), (Object) fArr, i, i2);
             position(position() + i2);
             return this;
         }
@@ -74,7 +74,7 @@ class HeapFloatBuffer extends FloatBuffer {
 
     public FloatBuffer put(float f) {
         if (!this.isReadOnly) {
-            this.f569hb[mo60911ix(nextPutIndex())] = f;
+            this.f567hb[mo60967ix(nextPutIndex())] = f;
             return this;
         }
         throw new ReadOnlyBufferException();
@@ -82,7 +82,7 @@ class HeapFloatBuffer extends FloatBuffer {
 
     public FloatBuffer put(int i, float f) {
         if (!this.isReadOnly) {
-            this.f569hb[mo60911ix(checkIndex(i))] = f;
+            this.f567hb[mo60967ix(checkIndex(i))] = f;
             return this;
         }
         throw new ReadOnlyBufferException();
@@ -92,7 +92,7 @@ class HeapFloatBuffer extends FloatBuffer {
         if (!this.isReadOnly) {
             checkBounds(i, i2, fArr.length);
             if (i2 <= remaining()) {
-                System.arraycopy((Object) fArr, i, (Object) this.f569hb, mo60911ix(position()), i2);
+                System.arraycopy((Object) fArr, i, (Object) this.f567hb, mo60967ix(position()), i2);
                 position(position() + i2);
                 return this;
             }
@@ -109,7 +109,7 @@ class HeapFloatBuffer extends FloatBuffer {
                 HeapFloatBuffer heapFloatBuffer = (HeapFloatBuffer) floatBuffer;
                 int remaining = heapFloatBuffer.remaining();
                 if (remaining <= remaining()) {
-                    System.arraycopy((Object) heapFloatBuffer.f569hb, heapFloatBuffer.mo60911ix(heapFloatBuffer.position()), (Object) this.f569hb, mo60911ix(position()), remaining);
+                    System.arraycopy((Object) heapFloatBuffer.f567hb, heapFloatBuffer.mo60967ix(heapFloatBuffer.position()), (Object) this.f567hb, mo60967ix(position()), remaining);
                     heapFloatBuffer.position(heapFloatBuffer.position() + remaining);
                     position(position() + remaining);
                 } else {
@@ -118,7 +118,7 @@ class HeapFloatBuffer extends FloatBuffer {
             } else if (floatBuffer.isDirect()) {
                 int remaining2 = floatBuffer.remaining();
                 if (remaining2 <= remaining()) {
-                    floatBuffer.get(this.f569hb, mo60911ix(position()), remaining2);
+                    floatBuffer.get(this.f567hb, mo60967ix(position()), remaining2);
                     position(position() + remaining2);
                 } else {
                     throw new BufferOverflowException();
@@ -134,7 +134,7 @@ class HeapFloatBuffer extends FloatBuffer {
 
     public FloatBuffer compact() {
         if (!this.isReadOnly) {
-            System.arraycopy((Object) this.f569hb, mo60911ix(position()), (Object) this.f569hb, mo60911ix(0), remaining());
+            System.arraycopy((Object) this.f567hb, mo60967ix(position()), (Object) this.f567hb, mo60967ix(0), remaining());
             position(remaining());
             limit(capacity());
             discardMark();

@@ -20,6 +20,6 @@ public final /* synthetic */ class NavBarTuner$$ExternalSyntheticLambda8 impleme
     }
 
     public final boolean onPreferenceChange(Preference preference, Object obj) {
-        return this.f$0.m3256lambda$bindButton$7$comandroidsystemuitunerNavBarTuner(this.f$1, this.f$2, this.f$3, this.f$4, preference, obj);
+        return this.f$0.m3261lambda$bindButton$7$comandroidsystemuitunerNavBarTuner(this.f$1, this.f$2, this.f$3, this.f$4, preference, obj);
     }
 }

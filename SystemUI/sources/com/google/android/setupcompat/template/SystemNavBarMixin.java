@@ -5,7 +5,7 @@ import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.Window;
 import androidx.core.view.ViewCompat;
-import com.google.android.setupcompat.C3931R;
+import com.google.android.setupcompat.C3941R;
 import com.google.android.setupcompat.PartnerCustomizationLayout;
 import com.google.android.setupcompat.internal.TemplateLayout;
 import com.google.android.setupcompat.partnerconfig.PartnerConfig;
@@ -32,13 +32,13 @@ public class SystemNavBarMixin implements Mixin {
     }
 
     public void applyPartnerCustomizations(AttributeSet attributeSet, int i) {
-        TypedArray obtainStyledAttributes = this.templateLayout.getContext().obtainStyledAttributes(attributeSet, C3931R.styleable.SucSystemNavBarMixin, i, 0);
-        int color = obtainStyledAttributes.getColor(C3931R.styleable.SucSystemNavBarMixin_sucSystemNavBarBackgroundColor, 0);
+        TypedArray obtainStyledAttributes = this.templateLayout.getContext().obtainStyledAttributes(attributeSet, C3941R.styleable.SucSystemNavBarMixin, i, 0);
+        int color = obtainStyledAttributes.getColor(C3941R.styleable.SucSystemNavBarMixin_sucSystemNavBarBackgroundColor, 0);
         this.sucSystemNavBarBackgroundColor = color;
         setSystemNavBarBackground(color);
-        setLightSystemNavBar(obtainStyledAttributes.getBoolean(C3931R.styleable.SucSystemNavBarMixin_sucLightSystemNavBar, isLightSystemNavBar()));
+        setLightSystemNavBar(obtainStyledAttributes.getBoolean(C3941R.styleable.SucSystemNavBarMixin_sucLightSystemNavBar, isLightSystemNavBar()));
         TypedArray obtainStyledAttributes2 = this.templateLayout.getContext().obtainStyledAttributes(new int[]{16844141});
-        setSystemNavBarDividerColor(obtainStyledAttributes.getColor(C3931R.styleable.SucSystemNavBarMixin_sucSystemNavBarDividerColor, obtainStyledAttributes2.getColor(0, 0)));
+        setSystemNavBarDividerColor(obtainStyledAttributes.getColor(C3941R.styleable.SucSystemNavBarMixin_sucSystemNavBarDividerColor, obtainStyledAttributes2.getColor(0, 0)));
         obtainStyledAttributes2.recycle();
         obtainStyledAttributes.recycle();
     }

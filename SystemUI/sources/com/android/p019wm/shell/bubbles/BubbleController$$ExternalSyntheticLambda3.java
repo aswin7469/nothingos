@@ -10,6 +10,6 @@ public final /* synthetic */ class BubbleController$$ExternalSyntheticLambda3 im
     }
 
     public final void run() {
-        this.f$0.mo48353xa95b691a();
+        this.f$0.mo48362xa95b691a();
     }
 }

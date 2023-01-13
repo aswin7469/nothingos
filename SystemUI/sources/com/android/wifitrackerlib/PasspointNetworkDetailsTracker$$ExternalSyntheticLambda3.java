@@ -12,6 +12,6 @@ public final /* synthetic */ class PasspointNetworkDetailsTracker$$ExternalSynth
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo47820x48bc5b32((PasspointConfiguration) obj);
+        this.f$0.mo47829x48bc5b32((PasspointConfiguration) obj);
     }
 }

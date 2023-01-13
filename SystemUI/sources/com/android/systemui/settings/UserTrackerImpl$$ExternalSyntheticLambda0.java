@@ -12,6 +12,6 @@ public final /* synthetic */ class UserTrackerImpl$$ExternalSyntheticLambda0 imp
     }
 
     public final boolean test(Object obj) {
-        return UserTrackerImpl.m3021removeCallback$lambda11$lambda10(this.f$0, (DataItem) obj);
+        return UserTrackerImpl.m3025removeCallback$lambda11$lambda10(this.f$0, (DataItem) obj);
     }
 }

@@ -13,6 +13,6 @@ public final /* synthetic */ class ExpandableNotificationRowController$$External
     }
 
     public final boolean onLongPress(View view, int i, int i2, NotificationMenuRowPlugin.MenuItem menuItem) {
-        return this.f$0.mo41255x51dbc3a3(view, i, i2, menuItem);
+        return this.f$0.mo41261x51dbc3a3(view, i, i2, menuItem);
     }
 }

@@ -138,7 +138,7 @@ public final class DozeServiceHost implements DozeHost {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$fireNotificationPulse$0$com-android-systemui-statusbar-phone-DozeServiceHost */
-    public /* synthetic */ void mo44034x85b51859(NotificationEntry notificationEntry) {
+    public /* synthetic */ void mo44044x85b51859(NotificationEntry notificationEntry) {
         notificationEntry.setPulseSuppressed(true);
         this.mNotificationIconAreaController.updateAodNotificationIcons();
     }

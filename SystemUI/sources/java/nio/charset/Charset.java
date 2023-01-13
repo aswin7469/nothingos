@@ -21,7 +21,7 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import sun.misc.ASCIICaseInsensitiveComparator;
-import sun.misc.C4740VM;
+import sun.misc.C4752VM;
 import sun.nio.p034cs.ThreadLocalCoders;
 import sun.security.action.GetPropertyAction;
 
@@ -48,7 +48,7 @@ public abstract class Charset implements Comparable<Charset> {
     static boolean atBugLevel(String str) {
         String str2 = bugLevel;
         if (str2 == null) {
-            if (!C4740VM.isBooted()) {
+            if (!C4752VM.isBooted()) {
                 return false;
             }
             str2 = (String) AccessController.doPrivileged(new GetPropertyAction("sun.nio.cs.bugLevel", ""));
@@ -94,25 +94,25 @@ public abstract class Charset implements Comparable<Charset> {
         return new Iterator<CharsetProvider>() {
 
             /* renamed from: i */
-            Iterator<CharsetProvider> f584i;
+            Iterator<CharsetProvider> f582i;
             CharsetProvider next = null;
 
             /* renamed from: sl */
-            ServiceLoader<CharsetProvider> f585sl;
+            ServiceLoader<CharsetProvider> f583sl;
 
             {
                 ServiceLoader<CharsetProvider> load = ServiceLoader.load(CharsetProvider.class);
-                this.f585sl = load;
-                this.f584i = load.iterator();
+                this.f583sl = load;
+                this.f582i = load.iterator();
             }
 
             private boolean getNext() {
                 while (this.next == null) {
                     try {
-                        if (!this.f584i.hasNext()) {
+                        if (!this.f582i.hasNext()) {
                             return false;
                         }
-                        this.next = this.f584i.next();
+                        this.next = this.f582i.next();
                     } catch (ServiceConfigurationError e) {
                         if (!(e.getCause() instanceof SecurityException)) {
                             throw e;
@@ -143,7 +143,7 @@ public abstract class Charset implements Comparable<Charset> {
 
     /* JADX INFO: finally extract failed */
     private static Charset lookupViaProviders(final String str) {
-        if (!C4740VM.isBooted() || gate.get() != null) {
+        if (!C4752VM.isBooted() || gate.get() != null) {
             return null;
         }
         try {

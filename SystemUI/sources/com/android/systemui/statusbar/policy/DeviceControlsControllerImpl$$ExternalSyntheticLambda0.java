@@ -12,6 +12,6 @@ public final /* synthetic */ class DeviceControlsControllerImpl$$ExternalSynthet
     }
 
     public final void accept(Object obj) {
-        DeviceControlsControllerImpl.m3235seedFavorites$lambda5$lambda4(this.f$0, (ControlsListingController) obj);
+        DeviceControlsControllerImpl.m3240seedFavorites$lambda5$lambda4(this.f$0, (ControlsListingController) obj);
     }
 }

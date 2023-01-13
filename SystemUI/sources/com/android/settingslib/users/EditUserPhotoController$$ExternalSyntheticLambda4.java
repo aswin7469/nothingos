@@ -13,6 +13,6 @@ public final /* synthetic */ class EditUserPhotoController$$ExternalSyntheticLam
     }
 
     public final void run() {
-        this.f$0.mo29240xb760733(this.f$1);
+        this.f$0.mo29245xb760733(this.f$1);
     }
 }

@@ -10,6 +10,6 @@ public final /* synthetic */ class ControlsActivity$$ExternalSyntheticLambda0 im
     }
 
     public final void run() {
-        ControlsActivity.m2702onStart$lambda3(this.f$0);
+        ControlsActivity.m2707onStart$lambda3(this.f$0);
     }
 }

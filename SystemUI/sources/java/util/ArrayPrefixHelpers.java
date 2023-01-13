@@ -23,14 +23,14 @@ class ArrayPrefixHelpers {
         final BinaryOperator<T> function;
 
         /* renamed from: hi */
-        final int f589hi;
+        final int f587hi;
 
         /* renamed from: in */
-        T f590in;
+        T f588in;
         CumulateTask<T> left;
 
         /* renamed from: lo */
-        final int f591lo;
+        final int f589lo;
         final int origin;
         T out;
         CumulateTask<T> right;
@@ -41,9 +41,9 @@ class ArrayPrefixHelpers {
             this.function = binaryOperator;
             this.array = tArr;
             this.origin = i;
-            this.f591lo = i;
+            this.f589lo = i;
             this.fence = i2;
-            this.f589hi = i2;
+            this.f587hi = i2;
             int commonPoolParallelism = (i2 - i) / (ForkJoinPool.getCommonPoolParallelism() << 3);
             this.threshold = commonPoolParallelism <= 16 ? 16 : commonPoolParallelism;
         }
@@ -55,8 +55,8 @@ class ArrayPrefixHelpers {
             this.origin = i;
             this.fence = i2;
             this.threshold = i3;
-            this.f591lo = i4;
-            this.f589hi = i5;
+            this.f589lo = i4;
+            this.f587hi = i5;
         }
 
         public final void compute() {
@@ -77,8 +77,8 @@ class ArrayPrefixHelpers {
             int i6 = this.fence;
             CumulateTask<T> cumulateTask3 = this;
             while (true) {
-                int i7 = cumulateTask3.f591lo;
-                if (i7 >= 0 && (i = cumulateTask3.f589hi) <= tArr.length) {
+                int i7 = cumulateTask3.f589lo;
+                if (i7 >= 0 && (i = cumulateTask3.f587hi) <= tArr.length) {
                     if (i - i7 > i4) {
                         CumulateTask<T> cumulateTask4 = cumulateTask3.left;
                         CumulateTask<T> cumulateTask5 = cumulateTask3.right;
@@ -101,14 +101,14 @@ class ArrayPrefixHelpers {
                             cumulateTask2 = cumulateTask9;
                         } else {
                             int i12 = i7;
-                            T t2 = cumulateTask3.f590in;
-                            cumulateTask4.f590in = t2;
+                            T t2 = cumulateTask3.f588in;
+                            cumulateTask4.f588in = t2;
                             if (cumulateTask5 != null) {
                                 T t3 = cumulateTask4.out;
                                 if (i12 != i5) {
                                     t3 = binaryOperator.apply(t2, t3);
                                 }
-                                cumulateTask5.f590in = t3;
+                                cumulateTask5.f588in = t3;
                                 while (true) {
                                     int pendingCount2 = cumulateTask5.getPendingCount();
                                     if ((pendingCount2 & 1) == 0) {
@@ -159,7 +159,7 @@ class ArrayPrefixHelpers {
                                 t = tArr[i5];
                                 i3 = i5 + 1;
                             } else {
-                                t = cumulateTask3.f590in;
+                                t = cumulateTask3.f588in;
                                 i3 = i14;
                             }
                             int i15 = i13;
@@ -176,7 +176,7 @@ class ArrayPrefixHelpers {
                                     t4 = binaryOperator.apply(t, tArr[i17]);
                                 }
                             } else {
-                                t = cumulateTask3.f590in;
+                                t = cumulateTask3.f588in;
                             }
                         }
                         cumulateTask3.out = t;
@@ -191,12 +191,12 @@ class ArrayPrefixHelpers {
                                     CumulateTask<T> cumulateTask13 = cumulateTask12.left;
                                     if (!(cumulateTask13 == null || (cumulateTask = cumulateTask12.right) == null)) {
                                         T t5 = cumulateTask13.out;
-                                        if (cumulateTask.f589hi != i6) {
+                                        if (cumulateTask.f587hi != i6) {
                                             t5 = binaryOperator.apply(t5, cumulateTask.out);
                                         }
                                         cumulateTask12.out = t5;
                                     }
-                                    int i19 = ((pendingCount4 & 1) == 0 && cumulateTask12.f591lo == i5) ? 1 : 0;
+                                    int i19 = ((pendingCount4 & 1) == 0 && cumulateTask12.f589lo == i5) ? 1 : 0;
                                     int i20 = pendingCount4 | i2 | i19;
                                     if (i20 == pendingCount4 || cumulateTask12.compareAndSetPendingCount(pendingCount4, i20)) {
                                         if (i19 != 0) {
@@ -230,14 +230,14 @@ class ArrayPrefixHelpers {
         final LongBinaryOperator function;
 
         /* renamed from: hi */
-        final int f598hi;
+        final int f596hi;
 
         /* renamed from: in */
-        long f599in;
+        long f597in;
         LongCumulateTask left;
 
         /* renamed from: lo */
-        final int f600lo;
+        final int f598lo;
         final int origin;
         long out;
         LongCumulateTask right;
@@ -248,9 +248,9 @@ class ArrayPrefixHelpers {
             this.function = longBinaryOperator;
             this.array = jArr;
             this.origin = i;
-            this.f600lo = i;
+            this.f598lo = i;
             this.fence = i2;
-            this.f598hi = i2;
+            this.f596hi = i2;
             int commonPoolParallelism = (i2 - i) / (ForkJoinPool.getCommonPoolParallelism() << 3);
             this.threshold = commonPoolParallelism <= 16 ? 16 : commonPoolParallelism;
         }
@@ -262,8 +262,8 @@ class ArrayPrefixHelpers {
             this.origin = i;
             this.fence = i2;
             this.threshold = i3;
-            this.f600lo = i4;
-            this.f598hi = i5;
+            this.f598lo = i4;
+            this.f596hi = i5;
         }
 
         public final void compute() {
@@ -284,8 +284,8 @@ class ArrayPrefixHelpers {
             int i6 = this.fence;
             LongCumulateTask longCumulateTask3 = this;
             while (true) {
-                int i7 = longCumulateTask3.f600lo;
-                if (i7 >= 0 && (i = longCumulateTask3.f598hi) <= jArr.length) {
+                int i7 = longCumulateTask3.f598lo;
+                if (i7 >= 0 && (i = longCumulateTask3.f596hi) <= jArr.length) {
                     if (i - i7 > i4) {
                         LongCumulateTask longCumulateTask4 = longCumulateTask3.left;
                         LongCumulateTask longCumulateTask5 = longCumulateTask3.right;
@@ -308,14 +308,14 @@ class ArrayPrefixHelpers {
                             longCumulateTask2 = longCumulateTask9;
                         } else {
                             int i12 = i7;
-                            long j2 = longCumulateTask3.f599in;
-                            longCumulateTask4.f599in = j2;
+                            long j2 = longCumulateTask3.f597in;
+                            longCumulateTask4.f597in = j2;
                             if (longCumulateTask5 != null) {
                                 long j3 = longCumulateTask4.out;
                                 if (i12 != i5) {
                                     j3 = longBinaryOperator.applyAsLong(j2, j3);
                                 }
-                                longCumulateTask5.f599in = j3;
+                                longCumulateTask5.f597in = j3;
                                 while (true) {
                                     int pendingCount2 = longCumulateTask5.getPendingCount();
                                     if ((pendingCount2 & 1) == 0) {
@@ -366,7 +366,7 @@ class ArrayPrefixHelpers {
                                 j = jArr[i5];
                                 i3 = i5 + 1;
                             } else {
-                                j = longCumulateTask3.f599in;
+                                j = longCumulateTask3.f597in;
                                 i3 = i14;
                             }
                             int i15 = i13;
@@ -383,7 +383,7 @@ class ArrayPrefixHelpers {
                                     j4 = longBinaryOperator.applyAsLong(j, jArr[i17]);
                                 }
                             } else {
-                                j = longCumulateTask3.f599in;
+                                j = longCumulateTask3.f597in;
                             }
                         }
                         longCumulateTask3.out = j;
@@ -398,12 +398,12 @@ class ArrayPrefixHelpers {
                                     LongCumulateTask longCumulateTask13 = longCumulateTask12.left;
                                     if (!(longCumulateTask13 == null || (longCumulateTask = longCumulateTask12.right) == null)) {
                                         long j5 = longCumulateTask13.out;
-                                        if (longCumulateTask.f598hi != i6) {
+                                        if (longCumulateTask.f596hi != i6) {
                                             j5 = longBinaryOperator.applyAsLong(j5, longCumulateTask.out);
                                         }
                                         longCumulateTask12.out = j5;
                                     }
-                                    int i19 = ((pendingCount4 & 1) == 0 && longCumulateTask12.f600lo == i5) ? 1 : 0;
+                                    int i19 = ((pendingCount4 & 1) == 0 && longCumulateTask12.f598lo == i5) ? 1 : 0;
                                     int i20 = pendingCount4 | i2 | i19;
                                     if (i20 == pendingCount4 || longCumulateTask12.compareAndSetPendingCount(pendingCount4, i20)) {
                                         if (i19 != 0) {
@@ -437,14 +437,14 @@ class ArrayPrefixHelpers {
         final DoubleBinaryOperator function;
 
         /* renamed from: hi */
-        final int f592hi;
+        final int f590hi;
 
         /* renamed from: in */
-        double f593in;
+        double f591in;
         DoubleCumulateTask left;
 
         /* renamed from: lo */
-        final int f594lo;
+        final int f592lo;
         final int origin;
         double out;
         DoubleCumulateTask right;
@@ -455,9 +455,9 @@ class ArrayPrefixHelpers {
             this.function = doubleBinaryOperator;
             this.array = dArr;
             this.origin = i;
-            this.f594lo = i;
+            this.f592lo = i;
             this.fence = i2;
-            this.f592hi = i2;
+            this.f590hi = i2;
             int commonPoolParallelism = (i2 - i) / (ForkJoinPool.getCommonPoolParallelism() << 3);
             this.threshold = commonPoolParallelism <= 16 ? 16 : commonPoolParallelism;
         }
@@ -469,8 +469,8 @@ class ArrayPrefixHelpers {
             this.origin = i;
             this.fence = i2;
             this.threshold = i3;
-            this.f594lo = i4;
-            this.f592hi = i5;
+            this.f592lo = i4;
+            this.f590hi = i5;
         }
 
         public final void compute() {
@@ -491,8 +491,8 @@ class ArrayPrefixHelpers {
             int i6 = this.fence;
             DoubleCumulateTask doubleCumulateTask3 = this;
             while (true) {
-                int i7 = doubleCumulateTask3.f594lo;
-                if (i7 >= 0 && (i = doubleCumulateTask3.f592hi) <= dArr.length) {
+                int i7 = doubleCumulateTask3.f592lo;
+                if (i7 >= 0 && (i = doubleCumulateTask3.f590hi) <= dArr.length) {
                     if (i - i7 > i4) {
                         DoubleCumulateTask doubleCumulateTask4 = doubleCumulateTask3.left;
                         DoubleCumulateTask doubleCumulateTask5 = doubleCumulateTask3.right;
@@ -515,14 +515,14 @@ class ArrayPrefixHelpers {
                             doubleCumulateTask2 = doubleCumulateTask9;
                         } else {
                             int i12 = i7;
-                            double d2 = doubleCumulateTask3.f593in;
-                            doubleCumulateTask4.f593in = d2;
+                            double d2 = doubleCumulateTask3.f591in;
+                            doubleCumulateTask4.f591in = d2;
                             if (doubleCumulateTask5 != null) {
                                 double d3 = doubleCumulateTask4.out;
                                 if (i12 != i5) {
                                     d3 = doubleBinaryOperator.applyAsDouble(d2, d3);
                                 }
-                                doubleCumulateTask5.f593in = d3;
+                                doubleCumulateTask5.f591in = d3;
                                 while (true) {
                                     int pendingCount2 = doubleCumulateTask5.getPendingCount();
                                     if ((pendingCount2 & 1) == 0) {
@@ -573,7 +573,7 @@ class ArrayPrefixHelpers {
                                 d = dArr[i5];
                                 i3 = i5 + 1;
                             } else {
-                                d = doubleCumulateTask3.f593in;
+                                d = doubleCumulateTask3.f591in;
                                 i3 = i14;
                             }
                             int i15 = i13;
@@ -590,7 +590,7 @@ class ArrayPrefixHelpers {
                                     d4 = doubleBinaryOperator.applyAsDouble(d, dArr[i17]);
                                 }
                             } else {
-                                d = doubleCumulateTask3.f593in;
+                                d = doubleCumulateTask3.f591in;
                             }
                         }
                         doubleCumulateTask3.out = d;
@@ -605,12 +605,12 @@ class ArrayPrefixHelpers {
                                     DoubleCumulateTask doubleCumulateTask13 = doubleCumulateTask12.left;
                                     if (!(doubleCumulateTask13 == null || (doubleCumulateTask = doubleCumulateTask12.right) == null)) {
                                         double d5 = doubleCumulateTask13.out;
-                                        if (doubleCumulateTask.f592hi != i6) {
+                                        if (doubleCumulateTask.f590hi != i6) {
                                             d5 = doubleBinaryOperator.applyAsDouble(d5, doubleCumulateTask.out);
                                         }
                                         doubleCumulateTask12.out = d5;
                                     }
-                                    int i19 = ((pendingCount4 & 1) == 0 && doubleCumulateTask12.f594lo == i5) ? 1 : 0;
+                                    int i19 = ((pendingCount4 & 1) == 0 && doubleCumulateTask12.f592lo == i5) ? 1 : 0;
                                     int i20 = pendingCount4 | i2 | i19;
                                     if (i20 == pendingCount4 || doubleCumulateTask12.compareAndSetPendingCount(pendingCount4, i20)) {
                                         if (i19 != 0) {
@@ -644,14 +644,14 @@ class ArrayPrefixHelpers {
         final IntBinaryOperator function;
 
         /* renamed from: hi */
-        final int f595hi;
+        final int f593hi;
 
         /* renamed from: in */
-        int f596in;
+        int f594in;
         IntCumulateTask left;
 
         /* renamed from: lo */
-        final int f597lo;
+        final int f595lo;
         final int origin;
         int out;
         IntCumulateTask right;
@@ -662,9 +662,9 @@ class ArrayPrefixHelpers {
             this.function = intBinaryOperator;
             this.array = iArr;
             this.origin = i;
-            this.f597lo = i;
+            this.f595lo = i;
             this.fence = i2;
-            this.f595hi = i2;
+            this.f593hi = i2;
             int commonPoolParallelism = (i2 - i) / (ForkJoinPool.getCommonPoolParallelism() << 3);
             this.threshold = commonPoolParallelism <= 16 ? 16 : commonPoolParallelism;
         }
@@ -676,8 +676,8 @@ class ArrayPrefixHelpers {
             this.origin = i;
             this.fence = i2;
             this.threshold = i3;
-            this.f597lo = i4;
-            this.f595hi = i5;
+            this.f595lo = i4;
+            this.f593hi = i5;
         }
 
         public final void compute() {
@@ -698,8 +698,8 @@ class ArrayPrefixHelpers {
             int i7 = this.fence;
             IntCumulateTask intCumulateTask3 = this;
             while (true) {
-                int i8 = intCumulateTask3.f597lo;
-                if (i8 >= 0 && (i = intCumulateTask3.f595hi) <= iArr.length) {
+                int i8 = intCumulateTask3.f595lo;
+                if (i8 >= 0 && (i = intCumulateTask3.f593hi) <= iArr.length) {
                     if (i - i8 > i5) {
                         IntCumulateTask intCumulateTask4 = intCumulateTask3.left;
                         IntCumulateTask intCumulateTask5 = intCumulateTask3.right;
@@ -722,14 +722,14 @@ class ArrayPrefixHelpers {
                             intCumulateTask2 = intCumulateTask9;
                         } else {
                             int i13 = i8;
-                            int i14 = intCumulateTask3.f596in;
-                            intCumulateTask4.f596in = i14;
+                            int i14 = intCumulateTask3.f594in;
+                            intCumulateTask4.f594in = i14;
                             if (intCumulateTask5 != null) {
                                 int i15 = intCumulateTask4.out;
                                 if (i13 != i6) {
                                     i15 = intBinaryOperator.applyAsInt(i14, i15);
                                 }
-                                intCumulateTask5.f596in = i15;
+                                intCumulateTask5.f594in = i15;
                                 while (true) {
                                     int pendingCount2 = intCumulateTask5.getPendingCount();
                                     if ((pendingCount2 & 1) == 0) {
@@ -780,7 +780,7 @@ class ArrayPrefixHelpers {
                                 i3 = iArr[i6];
                                 i4 = i6 + 1;
                             } else {
-                                i3 = intCumulateTask3.f596in;
+                                i3 = intCumulateTask3.f594in;
                                 i4 = i17;
                             }
                             int i18 = i16;
@@ -797,7 +797,7 @@ class ArrayPrefixHelpers {
                                     i20 = intBinaryOperator.applyAsInt(i3, iArr[i21]);
                                 }
                             } else {
-                                i3 = intCumulateTask3.f596in;
+                                i3 = intCumulateTask3.f594in;
                             }
                         }
                         intCumulateTask3.out = i3;
@@ -812,12 +812,12 @@ class ArrayPrefixHelpers {
                                     IntCumulateTask intCumulateTask13 = intCumulateTask12.left;
                                     if (!(intCumulateTask13 == null || (intCumulateTask = intCumulateTask12.right) == null)) {
                                         int i23 = intCumulateTask13.out;
-                                        if (intCumulateTask.f595hi != i7) {
+                                        if (intCumulateTask.f593hi != i7) {
                                             i23 = intBinaryOperator.applyAsInt(i23, intCumulateTask.out);
                                         }
                                         intCumulateTask12.out = i23;
                                     }
-                                    int i24 = ((pendingCount4 & 1) == 0 && intCumulateTask12.f597lo == i6) ? 1 : 0;
+                                    int i24 = ((pendingCount4 & 1) == 0 && intCumulateTask12.f595lo == i6) ? 1 : 0;
                                     int i25 = pendingCount4 | i2 | i24;
                                     if (i25 == pendingCount4 || intCumulateTask12.compareAndSetPendingCount(pendingCount4, i25)) {
                                         if (i24 != 0) {

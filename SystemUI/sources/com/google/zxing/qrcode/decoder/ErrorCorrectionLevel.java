@@ -4,7 +4,7 @@ public enum ErrorCorrectionLevel {
     L(1),
     M(0),
     Q(3),
-    f494H(2);
+    f493H(2);
     
     private static final ErrorCorrectionLevel[] FOR_BITS = null;
     private final int bits;

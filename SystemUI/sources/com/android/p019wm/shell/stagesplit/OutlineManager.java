@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.WindowlessWindowManager;
 import android.widget.FrameLayout;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 
 /* renamed from: com.android.wm.shell.stagesplit.OutlineManager */
 class OutlineManager extends WindowlessWindowManager {
@@ -51,8 +51,8 @@ class OutlineManager extends WindowlessWindowManager {
             this.mRootBounds.set(rect);
             Context context = this.mContext;
             this.mViewHost = new SurfaceControlViewHost(context, context.getDisplay(), this);
-            FrameLayout frameLayout = (FrameLayout) LayoutInflater.from(this.mContext).inflate(C3343R.layout.split_outline, (ViewGroup) null);
-            this.mOutlineView = (OutlineView) frameLayout.findViewById(C3343R.C3346id.split_outline);
+            FrameLayout frameLayout = (FrameLayout) LayoutInflater.from(this.mContext).inflate(C3353R.layout.split_outline, (ViewGroup) null);
+            this.mOutlineView = (OutlineView) frameLayout.findViewById(C3353R.C3356id.split_outline);
             WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(0, 0, 2038, 24, -3);
             layoutParams.width = this.mRootBounds.width();
             layoutParams.height = this.mRootBounds.height();

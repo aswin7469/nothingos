@@ -10,6 +10,6 @@ public final /* synthetic */ class CastTile$$ExternalSyntheticLambda1 implements
     }
 
     public final void run() {
-        this.f$0.m2968lambda$handleClick$0$comandroidsystemuiqstilesCastTile();
+        this.f$0.m2973lambda$handleClick$0$comandroidsystemuiqstilesCastTile();
     }
 }

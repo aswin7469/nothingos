@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.qualifiers.Background;
 import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.p012qs.FgsManagerController;
@@ -37,12 +37,12 @@ public class QSFgsManagerFooter implements View.OnClickListener, FgsManagerContr
     @Inject
     QSFgsManagerFooter(@Named("qs_fgs_manager_footer") View view, @Main Executor executor, @Background Executor executor2, FgsManagerController fgsManagerController) {
         this.mRootView = view;
-        this.mFooterText = (TextView) view.findViewById(C1893R.C1897id.footer_text);
-        this.mTextContainer = view.findViewById(C1893R.C1897id.fgs_text_container);
-        this.mNumberContainer = view.findViewById(C1893R.C1897id.fgs_number_container);
-        this.mNumberView = (TextView) view.findViewById(C1893R.C1897id.fgs_number);
-        this.mDotView = (ImageView) view.findViewById(C1893R.C1897id.fgs_new);
-        this.mCollapsedDotView = (ImageView) view.findViewById(C1893R.C1897id.fgs_collapsed_new);
+        this.mFooterText = (TextView) view.findViewById(C1894R.C1898id.footer_text);
+        this.mTextContainer = view.findViewById(C1894R.C1898id.fgs_text_container);
+        this.mNumberContainer = view.findViewById(C1894R.C1898id.fgs_number_container);
+        this.mNumberView = (TextView) view.findViewById(C1894R.C1898id.fgs_number);
+        this.mDotView = (ImageView) view.findViewById(C1894R.C1898id.fgs_new);
+        this.mCollapsedDotView = (ImageView) view.findViewById(C1894R.C1898id.fgs_collapsed_new);
         this.mContext = view.getContext();
         this.mMainExecutor = executor;
         this.mExecutor = executor2;
@@ -109,11 +109,11 @@ public class QSFgsManagerFooter implements View.OnClickListener, FgsManagerContr
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$handleRefreshState$0$com-android-systemui-qs-QSFgsManagerFooter */
-    public /* synthetic */ void mo36051xc39012a0() {
+    public /* synthetic */ void mo36055xc39012a0() {
         Resources resources = this.mContext.getResources();
         int i = this.mNumPackages;
         int i2 = 0;
-        String quantityString = resources.getQuantityString(C1893R.plurals.fgs_manager_footer_label, i, new Object[]{Integer.valueOf(i)});
+        String quantityString = resources.getQuantityString(C1894R.plurals.fgs_manager_footer_label, i, new Object[]{Integer.valueOf(i)});
         this.mFooterText.setText(quantityString);
         this.mNumberView.setText(Integer.toString(this.mNumPackages));
         this.mNumberView.setContentDescription(quantityString);

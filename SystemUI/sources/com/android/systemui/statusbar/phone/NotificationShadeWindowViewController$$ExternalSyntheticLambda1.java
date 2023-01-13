@@ -12,6 +12,6 @@ public final /* synthetic */ class NotificationShadeWindowViewController$$Extern
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo44837x10ac3b7((LowLightClockController) obj);
+        this.f$0.mo44852x10ac3b7((LowLightClockController) obj);
     }
 }

@@ -14,6 +14,6 @@ public final /* synthetic */ class QSPanelController$$ExternalSyntheticLambda0 i
     }
 
     public final void run() {
-        this.f$0.m2914lambda$showEdit$0$comandroidsystemuiqsQSPanelController(this.f$1);
+        this.f$0.m2919lambda$showEdit$0$comandroidsystemuiqsQSPanelController(this.f$1);
     }
 }

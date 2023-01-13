@@ -17,7 +17,7 @@ import kotlin.collections.MapsKt;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 
-@Metadata(mo64986d1 = {"\u0000\f\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0005\u0018\u0000 \u00042\u00020\u0001:\u0003\u0003\u0004\u0005B\u0005¢\u0006\u0002\u0010\u0002¨\u0006\u0006"}, mo64987d2 = {"Lcom/android/systemui/animation/ViewHierarchyAnimator;", "", "()V", "Bound", "Companion", "Hotspot", "animation_release"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000\f\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0005\u0018\u0000 \u00042\u00020\u0001:\u0003\u0003\u0004\u0005B\u0005¢\u0006\u0002\u0010\u0002¨\u0006\u0006"}, mo65043d2 = {"Lcom/android/systemui/animation/ViewHierarchyAnimator;", "", "()V", "Bound", "Companion", "Hotspot", "animation_release"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* compiled from: ViewHierarchyAnimator.kt */
 public final class ViewHierarchyAnimator {
     public static final Companion Companion;
@@ -31,7 +31,7 @@ public final class ViewHierarchyAnimator {
     /* access modifiers changed from: private */
     public static final Map<Bound, IntProperty<View>> PROPERTIES;
 
-    @Metadata(mo64986d1 = {"\u0000\f\n\u0002\u0018\u0002\n\u0002\u0010\u0010\n\u0002\b\u000b\b\u0001\u0018\u00002\b\u0012\u0004\u0012\u00020\u00000\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002j\u0002\b\u0003j\u0002\b\u0004j\u0002\b\u0005j\u0002\b\u0006j\u0002\b\u0007j\u0002\b\bj\u0002\b\tj\u0002\b\nj\u0002\b\u000b¨\u0006\f"}, mo64987d2 = {"Lcom/android/systemui/animation/ViewHierarchyAnimator$Hotspot;", "", "(Ljava/lang/String;I)V", "CENTER", "LEFT", "TOP_LEFT", "TOP", "TOP_RIGHT", "RIGHT", "BOTTOM_RIGHT", "BOTTOM", "BOTTOM_LEFT", "animation_release"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u0000\f\n\u0002\u0018\u0002\n\u0002\u0010\u0010\n\u0002\b\u000b\b\u0001\u0018\u00002\b\u0012\u0004\u0012\u00020\u00000\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002j\u0002\b\u0003j\u0002\b\u0004j\u0002\b\u0005j\u0002\b\u0006j\u0002\b\u0007j\u0002\b\bj\u0002\b\tj\u0002\b\nj\u0002\b\u000b¨\u0006\f"}, mo65043d2 = {"Lcom/android/systemui/animation/ViewHierarchyAnimator$Hotspot;", "", "(Ljava/lang/String;I)V", "CENTER", "LEFT", "TOP_LEFT", "TOP", "TOP_RIGHT", "RIGHT", "BOTTOM_RIGHT", "BOTTOM", "BOTTOM_LEFT", "animation_release"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* compiled from: ViewHierarchyAnimator.kt */
     public enum Hotspot {
         CENTER,
@@ -45,11 +45,11 @@ public final class ViewHierarchyAnimator {
         BOTTOM_LEFT
     }
 
-    @Metadata(mo64986d1 = {"\u0000d\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\t\n\u0002\b\u0003\n\u0002\u0010$\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u000b\n\u0002\b\u0007\n\u0002\u0018\u0002\n\u0002\b\u000b\n\u0002\u0010\b\n\u0002\b\u0018\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0010\"\n\u0002\b\u0003\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002J\"\u0010\u000f\u001a\u00020\u00102\u0006\u0010\u0011\u001a\u00020\u000e2\u0006\u0010\u0012\u001a\u00020\u00132\b\b\u0002\u0010\u0014\u001a\u00020\u0015H\u0002J$\u0010\u0016\u001a\u00020\u00152\u0006\u0010\u0017\u001a\u00020\u000e2\b\b\u0002\u0010\u0018\u001a\u00020\u00042\b\b\u0002\u0010\u0019\u001a\u00020\u0007H\u0007J(\u0010\u0016\u001a\u00020\u00152\u0006\u0010\u0017\u001a\u00020\u000e2\u0006\u0010\u0018\u001a\u00020\u00042\u0006\u0010\u0019\u001a\u00020\u00072\u0006\u0010\u001a\u001a\u00020\u0015H\u0002J8\u0010\u001b\u001a\u00020\u00152\u0006\u0010\u0017\u001a\u00020\u000e2\b\b\u0002\u0010\u001c\u001a\u00020\u001d2\b\b\u0002\u0010\u0018\u001a\u00020\u00042\b\b\u0002\u0010\u0019\u001a\u00020\u00072\b\b\u0002\u0010\u001e\u001a\u00020\u0015H\u0007J$\u0010\u001f\u001a\u00020\u00152\u0006\u0010\u0017\u001a\u00020\u000e2\b\b\u0002\u0010\u0018\u001a\u00020\u00042\b\b\u0002\u0010\u0019\u001a\u00020\u0007H\u0007J.\u0010 \u001a\u00020\u00152\u0006\u0010\u0017\u001a\u00020\u000e2\b\b\u0002\u0010!\u001a\u00020\u001d2\b\b\u0002\u0010\u0018\u001a\u00020\u00042\b\b\u0002\u0010\u0019\u001a\u00020\u0007H\u0007J(\u0010\"\u001a\u00020\u00132\u0006\u0010\u001c\u001a\u00020\u001d2\u0006\u0010\u0018\u001a\u00020\u00042\u0006\u0010\u0019\u001a\u00020\u00072\u0006\u0010#\u001a\u00020\u0015H\u0002J6\u0010$\u001a\u00020\u00132\u0006\u0010\u0018\u001a\u00020\u00042\u0006\u0010\u0019\u001a\u00020\u00072\u0006\u0010\u001a\u001a\u00020\u00152\n\b\u0002\u0010\u001c\u001a\u0004\u0018\u00010\u001d2\b\b\u0002\u0010#\u001a\u00020\u0015H\u0002J \u0010%\u001a\u00020\u00132\u0006\u0010\u0018\u001a\u00020\u00042\u0006\u0010\u0019\u001a\u00020\u00072\u0006\u0010\u001a\u001a\u00020\u0015H\u0002J\u0016\u0010&\u001a\b\u0012\u0004\u0012\u00020\u000e0\r2\u0006\u0010'\u001a\u00020\fH\u0002J\u001f\u0010(\u001a\u0004\u0018\u00010)2\u0006\u0010\u0011\u001a\u00020\u000e2\u0006\u0010'\u001a\u00020\fH\u0002¢\u0006\u0002\u0010*J0\u0010+\u001a\u00020\u00152\u0006\u0010,\u001a\u00020)2\u0006\u0010-\u001a\u00020)2\u0006\u0010.\u001a\u00020)2\u0006\u0010/\u001a\u00020)2\u0006\u00100\u001a\u00020)H\u0002JL\u00101\u001a\u000e\u0012\u0004\u0012\u00020\f\u0012\u0004\u0012\u00020)0\u000b2\u0006\u0010!\u001a\u00020\u001d2\u0006\u0010-\u001a\u00020)2\u0006\u0010.\u001a\u00020)2\u0006\u0010/\u001a\u00020)2\u0006\u00100\u001a\u00020)2\u0006\u00102\u001a\u00020)2\u0006\u00103\u001a\u00020)H\u0002J<\u00104\u001a\u000e\u0012\u0004\u0012\u00020\f\u0012\u0004\u0012\u00020)0\u000b2\u0006\u0010!\u001a\u00020\u001d2\u0006\u0010-\u001a\u00020)2\u0006\u0010.\u001a\u00020)2\u0006\u0010/\u001a\u00020)2\u0006\u00100\u001a\u00020)H\u0002Jf\u00105\u001a\u000e\u0012\u0004\u0012\u00020\f\u0012\u0004\u0012\u00020)0\u000b2\b\u0010\u001c\u001a\u0004\u0018\u00010\u001d2\u0006\u00106\u001a\u00020)2\u0006\u00107\u001a\u00020)2\u0006\u00108\u001a\u00020)2\u0006\u00109\u001a\u00020)2\u0006\u0010:\u001a\u00020)2\u0006\u0010;\u001a\u00020)2\u0006\u0010<\u001a\u00020)2\u0006\u0010=\u001a\u00020)2\u0006\u0010#\u001a\u00020\u0015H\u0002J\u0010\u0010>\u001a\u00020\u00102\u0006\u0010\u0011\u001a\u00020\u000eH\u0002J \u0010?\u001a\u00020\u00102\u0006\u0010\u0011\u001a\u00020\u000e2\u0006\u0010'\u001a\u00020\f2\u0006\u0010@\u001a\u00020)H\u0002J<\u0010A\u001a\u00020\u00102\u0006\u0010\u0017\u001a\u00020B2\u0006\u0010!\u001a\u00020\u001d2\u0012\u0010C\u001a\u000e\u0012\u0004\u0012\u00020\f\u0012\u0004\u0012\u00020)0\u000b2\u0006\u0010\u0018\u001a\u00020\u00042\u0006\u0010\u0019\u001a\u00020\u0007H\u0002J^\u0010D\u001a\u00020\u00102\u0006\u0010\u0011\u001a\u00020\u000e2\f\u0010E\u001a\b\u0012\u0004\u0012\u00020\f0F2\u0012\u0010G\u001a\u000e\u0012\u0004\u0012\u00020\f\u0012\u0004\u0012\u00020)0\u000b2\u0012\u0010C\u001a\u000e\u0012\u0004\u0012\u00020\f\u0012\u0004\u0012\u00020)0\u000b2\u0006\u0010\u0018\u001a\u00020\u00042\u0006\u0010\u0019\u001a\u00020\u00072\u0006\u0010\u001a\u001a\u00020\u0015H\u0002J\u000e\u0010H\u001a\u00020\u00102\u0006\u0010\u0017\u001a\u00020\u000eR\u0016\u0010\u0003\u001a\n \u0005*\u0004\u0018\u00010\u00040\u0004X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0006\u001a\u00020\u0007XT¢\u0006\u0002\n\u0000R\u0016\u0010\b\u001a\n \u0005*\u0004\u0018\u00010\u00040\u0004X\u0004¢\u0006\u0002\n\u0000R\u0016\u0010\t\u001a\n \u0005*\u0004\u0018\u00010\u00040\u0004X\u0004¢\u0006\u0002\n\u0000R \u0010\n\u001a\u0014\u0012\u0004\u0012\u00020\f\u0012\n\u0012\b\u0012\u0004\u0012\u00020\u000e0\r0\u000bX\u0004¢\u0006\u0002\n\u0000¨\u0006I"}, mo64987d2 = {"Lcom/android/systemui/animation/ViewHierarchyAnimator$Companion;", "", "()V", "DEFAULT_ADDITION_INTERPOLATOR", "Landroid/view/animation/Interpolator;", "kotlin.jvm.PlatformType", "DEFAULT_DURATION", "", "DEFAULT_INTERPOLATOR", "DEFAULT_REMOVAL_INTERPOLATOR", "PROPERTIES", "", "Lcom/android/systemui/animation/ViewHierarchyAnimator$Bound;", "Landroid/util/IntProperty;", "Landroid/view/View;", "addListener", "", "view", "listener", "Landroid/view/View$OnLayoutChangeListener;", "recursive", "", "animate", "rootView", "interpolator", "duration", "ephemeral", "animateAddition", "origin", "Lcom/android/systemui/animation/ViewHierarchyAnimator$Hotspot;", "includeMargins", "animateNextUpdate", "animateRemoval", "destination", "createAdditionListener", "ignorePreviousValues", "createListener", "createUpdateListener", "createViewProperty", "bound", "getBound", "", "(Landroid/view/View;Lcom/android/systemui/animation/ViewHierarchyAnimator$Bound;)Ljava/lang/Integer;", "isVisible", "visibility", "left", "top", "right", "bottom", "processChildEndValuesForRemoval", "parentWidth", "parentHeight", "processEndValuesForRemoval", "processStartValues", "newLeft", "newTop", "newRight", "newBottom", "previousLeft", "previousTop", "previousRight", "previousBottom", "recursivelyRemoveListener", "setBound", "value", "shiftChildrenForRemoval", "Landroid/view/ViewGroup;", "endValues", "startAnimation", "bounds", "", "startValues", "stopAnimating", "animation_release"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u0000d\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\t\n\u0002\b\u0003\n\u0002\u0010$\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u000b\n\u0002\b\u0007\n\u0002\u0018\u0002\n\u0002\b\u000b\n\u0002\u0010\b\n\u0002\b\u0018\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0010\"\n\u0002\b\u0003\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002J\"\u0010\u000f\u001a\u00020\u00102\u0006\u0010\u0011\u001a\u00020\u000e2\u0006\u0010\u0012\u001a\u00020\u00132\b\b\u0002\u0010\u0014\u001a\u00020\u0015H\u0002J$\u0010\u0016\u001a\u00020\u00152\u0006\u0010\u0017\u001a\u00020\u000e2\b\b\u0002\u0010\u0018\u001a\u00020\u00042\b\b\u0002\u0010\u0019\u001a\u00020\u0007H\u0007J(\u0010\u0016\u001a\u00020\u00152\u0006\u0010\u0017\u001a\u00020\u000e2\u0006\u0010\u0018\u001a\u00020\u00042\u0006\u0010\u0019\u001a\u00020\u00072\u0006\u0010\u001a\u001a\u00020\u0015H\u0002J8\u0010\u001b\u001a\u00020\u00152\u0006\u0010\u0017\u001a\u00020\u000e2\b\b\u0002\u0010\u001c\u001a\u00020\u001d2\b\b\u0002\u0010\u0018\u001a\u00020\u00042\b\b\u0002\u0010\u0019\u001a\u00020\u00072\b\b\u0002\u0010\u001e\u001a\u00020\u0015H\u0007J$\u0010\u001f\u001a\u00020\u00152\u0006\u0010\u0017\u001a\u00020\u000e2\b\b\u0002\u0010\u0018\u001a\u00020\u00042\b\b\u0002\u0010\u0019\u001a\u00020\u0007H\u0007J.\u0010 \u001a\u00020\u00152\u0006\u0010\u0017\u001a\u00020\u000e2\b\b\u0002\u0010!\u001a\u00020\u001d2\b\b\u0002\u0010\u0018\u001a\u00020\u00042\b\b\u0002\u0010\u0019\u001a\u00020\u0007H\u0007J(\u0010\"\u001a\u00020\u00132\u0006\u0010\u001c\u001a\u00020\u001d2\u0006\u0010\u0018\u001a\u00020\u00042\u0006\u0010\u0019\u001a\u00020\u00072\u0006\u0010#\u001a\u00020\u0015H\u0002J6\u0010$\u001a\u00020\u00132\u0006\u0010\u0018\u001a\u00020\u00042\u0006\u0010\u0019\u001a\u00020\u00072\u0006\u0010\u001a\u001a\u00020\u00152\n\b\u0002\u0010\u001c\u001a\u0004\u0018\u00010\u001d2\b\b\u0002\u0010#\u001a\u00020\u0015H\u0002J \u0010%\u001a\u00020\u00132\u0006\u0010\u0018\u001a\u00020\u00042\u0006\u0010\u0019\u001a\u00020\u00072\u0006\u0010\u001a\u001a\u00020\u0015H\u0002J\u0016\u0010&\u001a\b\u0012\u0004\u0012\u00020\u000e0\r2\u0006\u0010'\u001a\u00020\fH\u0002J\u001f\u0010(\u001a\u0004\u0018\u00010)2\u0006\u0010\u0011\u001a\u00020\u000e2\u0006\u0010'\u001a\u00020\fH\u0002¢\u0006\u0002\u0010*J0\u0010+\u001a\u00020\u00152\u0006\u0010,\u001a\u00020)2\u0006\u0010-\u001a\u00020)2\u0006\u0010.\u001a\u00020)2\u0006\u0010/\u001a\u00020)2\u0006\u00100\u001a\u00020)H\u0002JL\u00101\u001a\u000e\u0012\u0004\u0012\u00020\f\u0012\u0004\u0012\u00020)0\u000b2\u0006\u0010!\u001a\u00020\u001d2\u0006\u0010-\u001a\u00020)2\u0006\u0010.\u001a\u00020)2\u0006\u0010/\u001a\u00020)2\u0006\u00100\u001a\u00020)2\u0006\u00102\u001a\u00020)2\u0006\u00103\u001a\u00020)H\u0002J<\u00104\u001a\u000e\u0012\u0004\u0012\u00020\f\u0012\u0004\u0012\u00020)0\u000b2\u0006\u0010!\u001a\u00020\u001d2\u0006\u0010-\u001a\u00020)2\u0006\u0010.\u001a\u00020)2\u0006\u0010/\u001a\u00020)2\u0006\u00100\u001a\u00020)H\u0002Jf\u00105\u001a\u000e\u0012\u0004\u0012\u00020\f\u0012\u0004\u0012\u00020)0\u000b2\b\u0010\u001c\u001a\u0004\u0018\u00010\u001d2\u0006\u00106\u001a\u00020)2\u0006\u00107\u001a\u00020)2\u0006\u00108\u001a\u00020)2\u0006\u00109\u001a\u00020)2\u0006\u0010:\u001a\u00020)2\u0006\u0010;\u001a\u00020)2\u0006\u0010<\u001a\u00020)2\u0006\u0010=\u001a\u00020)2\u0006\u0010#\u001a\u00020\u0015H\u0002J\u0010\u0010>\u001a\u00020\u00102\u0006\u0010\u0011\u001a\u00020\u000eH\u0002J \u0010?\u001a\u00020\u00102\u0006\u0010\u0011\u001a\u00020\u000e2\u0006\u0010'\u001a\u00020\f2\u0006\u0010@\u001a\u00020)H\u0002J<\u0010A\u001a\u00020\u00102\u0006\u0010\u0017\u001a\u00020B2\u0006\u0010!\u001a\u00020\u001d2\u0012\u0010C\u001a\u000e\u0012\u0004\u0012\u00020\f\u0012\u0004\u0012\u00020)0\u000b2\u0006\u0010\u0018\u001a\u00020\u00042\u0006\u0010\u0019\u001a\u00020\u0007H\u0002J^\u0010D\u001a\u00020\u00102\u0006\u0010\u0011\u001a\u00020\u000e2\f\u0010E\u001a\b\u0012\u0004\u0012\u00020\f0F2\u0012\u0010G\u001a\u000e\u0012\u0004\u0012\u00020\f\u0012\u0004\u0012\u00020)0\u000b2\u0012\u0010C\u001a\u000e\u0012\u0004\u0012\u00020\f\u0012\u0004\u0012\u00020)0\u000b2\u0006\u0010\u0018\u001a\u00020\u00042\u0006\u0010\u0019\u001a\u00020\u00072\u0006\u0010\u001a\u001a\u00020\u0015H\u0002J\u000e\u0010H\u001a\u00020\u00102\u0006\u0010\u0017\u001a\u00020\u000eR\u0016\u0010\u0003\u001a\n \u0005*\u0004\u0018\u00010\u00040\u0004X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0006\u001a\u00020\u0007XT¢\u0006\u0002\n\u0000R\u0016\u0010\b\u001a\n \u0005*\u0004\u0018\u00010\u00040\u0004X\u0004¢\u0006\u0002\n\u0000R\u0016\u0010\t\u001a\n \u0005*\u0004\u0018\u00010\u00040\u0004X\u0004¢\u0006\u0002\n\u0000R \u0010\n\u001a\u0014\u0012\u0004\u0012\u00020\f\u0012\n\u0012\b\u0012\u0004\u0012\u00020\u000e0\r0\u000bX\u0004¢\u0006\u0002\n\u0000¨\u0006I"}, mo65043d2 = {"Lcom/android/systemui/animation/ViewHierarchyAnimator$Companion;", "", "()V", "DEFAULT_ADDITION_INTERPOLATOR", "Landroid/view/animation/Interpolator;", "kotlin.jvm.PlatformType", "DEFAULT_DURATION", "", "DEFAULT_INTERPOLATOR", "DEFAULT_REMOVAL_INTERPOLATOR", "PROPERTIES", "", "Lcom/android/systemui/animation/ViewHierarchyAnimator$Bound;", "Landroid/util/IntProperty;", "Landroid/view/View;", "addListener", "", "view", "listener", "Landroid/view/View$OnLayoutChangeListener;", "recursive", "", "animate", "rootView", "interpolator", "duration", "ephemeral", "animateAddition", "origin", "Lcom/android/systemui/animation/ViewHierarchyAnimator$Hotspot;", "includeMargins", "animateNextUpdate", "animateRemoval", "destination", "createAdditionListener", "ignorePreviousValues", "createListener", "createUpdateListener", "createViewProperty", "bound", "getBound", "", "(Landroid/view/View;Lcom/android/systemui/animation/ViewHierarchyAnimator$Bound;)Ljava/lang/Integer;", "isVisible", "visibility", "left", "top", "right", "bottom", "processChildEndValuesForRemoval", "parentWidth", "parentHeight", "processEndValuesForRemoval", "processStartValues", "newLeft", "newTop", "newRight", "newBottom", "previousLeft", "previousTop", "previousRight", "previousBottom", "recursivelyRemoveListener", "setBound", "value", "shiftChildrenForRemoval", "Landroid/view/ViewGroup;", "endValues", "startAnimation", "bounds", "", "startValues", "stopAnimating", "animation_release"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* compiled from: ViewHierarchyAnimator.kt */
     public static final class Companion {
 
-        @Metadata(mo64988k = 3, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+        @Metadata(mo65044k = 3, mo65045mv = {1, 6, 0}, mo65047xi = 48)
         /* compiled from: ViewHierarchyAnimator.kt */
         public /* synthetic */ class WhenMappings {
             public static final /* synthetic */ int[] $EnumSwitchMapping$0;
@@ -292,7 +292,7 @@ public final class ViewHierarchyAnimator {
                 }
                 viewGroup.removeView(view2);
                 viewGroup.getOverlay().add(view2);
-                Map mapOf = MapsKt.mapOf(TuplesKt.m1796to(Bound.LEFT, Integer.valueOf(view.getLeft())), TuplesKt.m1796to(Bound.TOP, Integer.valueOf(view.getTop())), TuplesKt.m1796to(Bound.RIGHT, Integer.valueOf(view.getRight())), TuplesKt.m1796to(Bound.BOTTOM, Integer.valueOf(view.getBottom())));
+                Map mapOf = MapsKt.mapOf(TuplesKt.m1802to(Bound.LEFT, Integer.valueOf(view.getLeft())), TuplesKt.m1802to(Bound.TOP, Integer.valueOf(view.getTop())), TuplesKt.m1802to(Bound.RIGHT, Integer.valueOf(view.getRight())), TuplesKt.m1802to(Bound.BOTTOM, Integer.valueOf(view.getBottom())));
                 Map processEndValuesForRemoval = processEndValuesForRemoval(hotspot, view.getLeft(), view.getTop(), view.getRight(), view.getBottom());
                 Set linkedHashSet = new LinkedHashSet();
                 if (view.getLeft() != ((Number) MapsKt.getValue(processEndValuesForRemoval, Bound.LEFT)).intValue()) {
@@ -335,7 +335,7 @@ public final class ViewHierarchyAnimator {
 
         /* access modifiers changed from: private */
         /* renamed from: animateRemoval$lambda-0  reason: not valid java name */
-        public static final void m2546animateRemoval$lambda0(View view, float[] fArr, ValueAnimator valueAnimator) {
+        public static final void m2552animateRemoval$lambda0(View view, float[] fArr, ValueAnimator valueAnimator) {
             Intrinsics.checkNotNullParameter(view, "$rootView");
             Intrinsics.checkNotNullParameter(fArr, "$startAlphas");
             ViewGroup viewGroup = (ViewGroup) view;
@@ -355,7 +355,7 @@ public final class ViewHierarchyAnimator {
 
         /* access modifiers changed from: private */
         /* renamed from: animateRemoval$lambda-1  reason: not valid java name */
-        public static final void m2547animateRemoval$lambda1(ViewGroup viewGroup, View view) {
+        public static final void m2553animateRemoval$lambda1(ViewGroup viewGroup, View view) {
             Intrinsics.checkNotNullParameter(viewGroup, "$parent");
             Intrinsics.checkNotNullParameter(view, "$rootView");
             viewGroup.getOverlay().remove(view);
@@ -366,7 +366,7 @@ public final class ViewHierarchyAnimator {
             int childCount = viewGroup.getChildCount();
             for (int i = 0; i < childCount; i++) {
                 View childAt = viewGroup.getChildAt(i);
-                Map mapOf = MapsKt.mapOf(TuplesKt.m1796to(Bound.LEFT, Integer.valueOf(childAt.getLeft())), TuplesKt.m1796to(Bound.TOP, Integer.valueOf(childAt.getTop())), TuplesKt.m1796to(Bound.RIGHT, Integer.valueOf(childAt.getRight())), TuplesKt.m1796to(Bound.BOTTOM, Integer.valueOf(childAt.getBottom())));
+                Map mapOf = MapsKt.mapOf(TuplesKt.m1802to(Bound.LEFT, Integer.valueOf(childAt.getLeft())), TuplesKt.m1802to(Bound.TOP, Integer.valueOf(childAt.getTop())), TuplesKt.m1802to(Bound.RIGHT, Integer.valueOf(childAt.getRight())), TuplesKt.m1802to(Bound.BOTTOM, Integer.valueOf(childAt.getBottom())));
                 Map<Bound, Integer> processChildEndValuesForRemoval = processChildEndValuesForRemoval(hotspot, childAt.getLeft(), childAt.getTop(), childAt.getRight(), childAt.getBottom(), ((Number) MapsKt.getValue(map2, Bound.RIGHT)).intValue() - ((Number) MapsKt.getValue(map2, Bound.LEFT)).intValue(), ((Number) MapsKt.getValue(map2, Bound.BOTTOM)).intValue() - ((Number) MapsKt.getValue(map2, Bound.TOP)).intValue());
                 Set linkedHashSet = new LinkedHashSet();
                 if (childAt.getLeft() != ((Number) MapsKt.getValue(map2, Bound.LEFT)).intValue()) {
@@ -490,7 +490,7 @@ public final class ViewHierarchyAnimator {
                 i5 = i9;
                 i6 = i10;
             }
-            return MapsKt.mapOf(TuplesKt.m1796to(Bound.LEFT, Integer.valueOf(i5)), TuplesKt.m1796to(Bound.TOP, Integer.valueOf(i6)), TuplesKt.m1796to(Bound.RIGHT, Integer.valueOf(i7)), TuplesKt.m1796to(Bound.BOTTOM, Integer.valueOf(i8)));
+            return MapsKt.mapOf(TuplesKt.m1802to(Bound.LEFT, Integer.valueOf(i5)), TuplesKt.m1802to(Bound.TOP, Integer.valueOf(i6)), TuplesKt.m1802to(Bound.RIGHT, Integer.valueOf(i7)), TuplesKt.m1802to(Bound.BOTTOM, Integer.valueOf(i8)));
         }
 
         private final Map<Bound, Integer> processEndValuesForRemoval(Hotspot hotspot, int i, int i2, int i3, int i4) {
@@ -570,7 +570,7 @@ public final class ViewHierarchyAnimator {
                 default:
                     throw new NoWhenBranchMatchedException();
             }
-            return MapsKt.mapOf(TuplesKt.m1796to(Bound.LEFT, Integer.valueOf(i5)), TuplesKt.m1796to(Bound.TOP, Integer.valueOf(i6)), TuplesKt.m1796to(Bound.RIGHT, Integer.valueOf(i)), TuplesKt.m1796to(Bound.BOTTOM, Integer.valueOf(i2)));
+            return MapsKt.mapOf(TuplesKt.m1802to(Bound.LEFT, Integer.valueOf(i5)), TuplesKt.m1802to(Bound.TOP, Integer.valueOf(i6)), TuplesKt.m1802to(Bound.RIGHT, Integer.valueOf(i)), TuplesKt.m1802to(Bound.BOTTOM, Integer.valueOf(i2)));
         }
 
         private final Map<Bound, Integer> processChildEndValuesForRemoval(Hotspot hotspot, int i, int i2, int i3, int i4, int i5, int i6) {
@@ -656,7 +656,7 @@ public final class ViewHierarchyAnimator {
                     throw new NoWhenBranchMatchedException();
             }
             i4 = i6 + i8;
-            return MapsKt.mapOf(TuplesKt.m1796to(Bound.LEFT, Integer.valueOf(i)), TuplesKt.m1796to(Bound.TOP, Integer.valueOf(i2)), TuplesKt.m1796to(Bound.RIGHT, Integer.valueOf(i3)), TuplesKt.m1796to(Bound.BOTTOM, Integer.valueOf(i4)));
+            return MapsKt.mapOf(TuplesKt.m1802to(Bound.LEFT, Integer.valueOf(i)), TuplesKt.m1802to(Bound.TOP, Integer.valueOf(i2)), TuplesKt.m1802to(Bound.RIGHT, Integer.valueOf(i3)), TuplesKt.m1802to(Bound.BOTTOM, Integer.valueOf(i4)));
         }
 
         static /* synthetic */ void addListener$default(Companion companion, View view, View.OnLayoutChangeListener onLayoutChangeListener, boolean z, int i, Object obj) {
@@ -667,12 +667,12 @@ public final class ViewHierarchyAnimator {
         }
 
         private final void addListener(View view, View.OnLayoutChangeListener onLayoutChangeListener, boolean z) {
-            Object tag = view.getTag(C1937R.C1938id.tag_layout_listener);
+            Object tag = view.getTag(C1938R.C1939id.tag_layout_listener);
             if (tag != null && (tag instanceof View.OnLayoutChangeListener)) {
                 view.removeOnLayoutChangeListener((View.OnLayoutChangeListener) tag);
             }
             view.addOnLayoutChangeListener(onLayoutChangeListener);
-            view.setTag(C1937R.C1938id.tag_layout_listener, onLayoutChangeListener);
+            view.setTag(C1938R.C1939id.tag_layout_listener, onLayoutChangeListener);
             if ((view instanceof ViewGroup) && z) {
                 ViewGroup viewGroup = (ViewGroup) view;
                 int childCount = viewGroup.getChildCount();
@@ -686,9 +686,9 @@ public final class ViewHierarchyAnimator {
 
         /* access modifiers changed from: private */
         public final void recursivelyRemoveListener(View view) {
-            Object tag = view.getTag(C1937R.C1938id.tag_layout_listener);
+            Object tag = view.getTag(C1938R.C1939id.tag_layout_listener);
             if (tag != null && (tag instanceof View.OnLayoutChangeListener)) {
-                view.setTag(C1937R.C1938id.tag_layout_listener, (Object) null);
+                view.setTag(C1938R.C1939id.tag_layout_listener, (Object) null);
                 view.removeOnLayoutChangeListener((View.OnLayoutChangeListener) tag);
             }
             if (view instanceof ViewGroup) {
@@ -759,7 +759,7 @@ public final class ViewHierarchyAnimator {
                 java.lang.Object[] r7 = r7.toArray((T[]) r11)
                 if (r7 == 0) goto L_0x00af
                 android.animation.PropertyValuesHolder[] r7 = (android.animation.PropertyValuesHolder[]) r7
-                int r11 = com.android.systemui.animation.C1937R.C1938id.tag_animator
+                int r11 = com.android.systemui.animation.C1938R.C1939id.tag_animator
                 java.lang.Object r11 = r8.getTag(r11)
                 boolean r1 = r11 instanceof android.animation.ObjectAnimator
                 if (r1 == 0) goto L_0x0063
@@ -795,7 +795,7 @@ public final class ViewHierarchyAnimator {
                 r12.setBound(r8, r11, r13)
                 goto L_0x008a
             L_0x00a6:
-                int r9 = com.android.systemui.animation.C1937R.C1938id.tag_animator
+                int r9 = com.android.systemui.animation.C1938R.C1939id.tag_animator
                 r8.setTag(r9, r7)
                 r7.start()
                 return
@@ -812,10 +812,10 @@ public final class ViewHierarchyAnimator {
     static {
         Companion companion = new Companion((DefaultConstructorMarker) null);
         Companion = companion;
-        PROPERTIES = MapsKt.mapOf(TuplesKt.m1796to(Bound.LEFT, companion.createViewProperty(Bound.LEFT)), TuplesKt.m1796to(Bound.TOP, companion.createViewProperty(Bound.TOP)), TuplesKt.m1796to(Bound.RIGHT, companion.createViewProperty(Bound.RIGHT)), TuplesKt.m1796to(Bound.BOTTOM, companion.createViewProperty(Bound.BOTTOM)));
+        PROPERTIES = MapsKt.mapOf(TuplesKt.m1802to(Bound.LEFT, companion.createViewProperty(Bound.LEFT)), TuplesKt.m1802to(Bound.TOP, companion.createViewProperty(Bound.TOP)), TuplesKt.m1802to(Bound.RIGHT, companion.createViewProperty(Bound.RIGHT)), TuplesKt.m1802to(Bound.BOTTOM, companion.createViewProperty(Bound.BOTTOM)));
     }
 
-    @Metadata(mo64986d1 = {"\u0000&\n\u0002\u0018\u0002\n\u0002\u0010\u0010\n\u0000\n\u0002\u0010\u000e\n\u0000\n\u0002\u0010\b\n\u0002\b\u0007\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0006\b\u0001\u0018\u00002\b\u0012\u0004\u0012\u00020\u00000\u0001B\u0017\b\u0002\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005¢\u0006\u0002\u0010\u0006J\u0010\u0010\u000b\u001a\u00020\u00052\u0006\u0010\f\u001a\u00020\rH&J\u0018\u0010\u000e\u001a\u00020\u000f2\u0006\u0010\f\u001a\u00020\r2\u0006\u0010\u0010\u001a\u00020\u0005H&R\u0011\u0010\u0002\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\u0007\u0010\bR\u0011\u0010\u0004\u001a\u00020\u0005¢\u0006\b\n\u0000\u001a\u0004\b\t\u0010\nj\u0002\b\u0011j\u0002\b\u0012j\u0002\b\u0013j\u0002\b\u0014¨\u0006\u0015"}, mo64987d2 = {"Lcom/android/systemui/animation/ViewHierarchyAnimator$Bound;", "", "label", "", "overrideTag", "", "(Ljava/lang/String;ILjava/lang/String;I)V", "getLabel", "()Ljava/lang/String;", "getOverrideTag", "()I", "getValue", "view", "Landroid/view/View;", "setValue", "", "value", "LEFT", "TOP", "RIGHT", "BOTTOM", "animation_release"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u0000&\n\u0002\u0018\u0002\n\u0002\u0010\u0010\n\u0000\n\u0002\u0010\u000e\n\u0000\n\u0002\u0010\b\n\u0002\b\u0007\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0006\b\u0001\u0018\u00002\b\u0012\u0004\u0012\u00020\u00000\u0001B\u0017\b\u0002\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005¢\u0006\u0002\u0010\u0006J\u0010\u0010\u000b\u001a\u00020\u00052\u0006\u0010\f\u001a\u00020\rH&J\u0018\u0010\u000e\u001a\u00020\u000f2\u0006\u0010\f\u001a\u00020\r2\u0006\u0010\u0010\u001a\u00020\u0005H&R\u0011\u0010\u0002\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\u0007\u0010\bR\u0011\u0010\u0004\u001a\u00020\u0005¢\u0006\b\n\u0000\u001a\u0004\b\t\u0010\nj\u0002\b\u0011j\u0002\b\u0012j\u0002\b\u0013j\u0002\b\u0014¨\u0006\u0015"}, mo65043d2 = {"Lcom/android/systemui/animation/ViewHierarchyAnimator$Bound;", "", "label", "", "overrideTag", "", "(Ljava/lang/String;ILjava/lang/String;I)V", "getLabel", "()Ljava/lang/String;", "getOverrideTag", "()I", "getValue", "view", "Landroid/view/View;", "setValue", "", "value", "LEFT", "TOP", "RIGHT", "BOTTOM", "animation_release"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* compiled from: ViewHierarchyAnimator.kt */
     private enum Bound {
         ;
@@ -827,11 +827,11 @@ public final class ViewHierarchyAnimator {
 
         public abstract void setValue(View view, int i);
 
-        @Metadata(mo64986d1 = {"\u0000\u001e\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0002\bÆ\u0001\u0018\u00002\u00020\u0001J\u0010\u0010\u0002\u001a\u00020\u00032\u0006\u0010\u0004\u001a\u00020\u0005H\u0016J\u0018\u0010\u0006\u001a\u00020\u00072\u0006\u0010\u0004\u001a\u00020\u00052\u0006\u0010\b\u001a\u00020\u0003H\u0016¨\u0006\t"}, mo64987d2 = {"Lcom/android/systemui/animation/ViewHierarchyAnimator$Bound$LEFT;", "Lcom/android/systemui/animation/ViewHierarchyAnimator$Bound;", "getValue", "", "view", "Landroid/view/View;", "setValue", "", "value", "animation_release"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+        @Metadata(mo65042d1 = {"\u0000\u001e\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0002\bÆ\u0001\u0018\u00002\u00020\u0001J\u0010\u0010\u0002\u001a\u00020\u00032\u0006\u0010\u0004\u001a\u00020\u0005H\u0016J\u0018\u0010\u0006\u001a\u00020\u00072\u0006\u0010\u0004\u001a\u00020\u00052\u0006\u0010\b\u001a\u00020\u0003H\u0016¨\u0006\t"}, mo65043d2 = {"Lcom/android/systemui/animation/ViewHierarchyAnimator$Bound$LEFT;", "Lcom/android/systemui/animation/ViewHierarchyAnimator$Bound;", "getValue", "", "view", "Landroid/view/View;", "setValue", "", "value", "animation_release"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
         /* compiled from: ViewHierarchyAnimator.kt */
         static final class LEFT extends Bound {
             LEFT(String str, int i) {
-                super(str, i, NavigationBarInflaterView.LEFT, C1937R.C1938id.tag_override_left, (DefaultConstructorMarker) null);
+                super(str, i, NavigationBarInflaterView.LEFT, C1938R.C1939id.tag_override_left, (DefaultConstructorMarker) null);
             }
 
             public void setValue(View view, int i) {
@@ -858,11 +858,11 @@ public final class ViewHierarchyAnimator {
             return this.overrideTag;
         }
 
-        @Metadata(mo64986d1 = {"\u0000\u001e\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0002\bÆ\u0001\u0018\u00002\u00020\u0001J\u0010\u0010\u0002\u001a\u00020\u00032\u0006\u0010\u0004\u001a\u00020\u0005H\u0016J\u0018\u0010\u0006\u001a\u00020\u00072\u0006\u0010\u0004\u001a\u00020\u00052\u0006\u0010\b\u001a\u00020\u0003H\u0016¨\u0006\t"}, mo64987d2 = {"Lcom/android/systemui/animation/ViewHierarchyAnimator$Bound$TOP;", "Lcom/android/systemui/animation/ViewHierarchyAnimator$Bound;", "getValue", "", "view", "Landroid/view/View;", "setValue", "", "value", "animation_release"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+        @Metadata(mo65042d1 = {"\u0000\u001e\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0002\bÆ\u0001\u0018\u00002\u00020\u0001J\u0010\u0010\u0002\u001a\u00020\u00032\u0006\u0010\u0004\u001a\u00020\u0005H\u0016J\u0018\u0010\u0006\u001a\u00020\u00072\u0006\u0010\u0004\u001a\u00020\u00052\u0006\u0010\b\u001a\u00020\u0003H\u0016¨\u0006\t"}, mo65043d2 = {"Lcom/android/systemui/animation/ViewHierarchyAnimator$Bound$TOP;", "Lcom/android/systemui/animation/ViewHierarchyAnimator$Bound;", "getValue", "", "view", "Landroid/view/View;", "setValue", "", "value", "animation_release"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
         /* compiled from: ViewHierarchyAnimator.kt */
         static final class TOP extends Bound {
             TOP(String str, int i) {
-                super(str, i, "top", C1937R.C1938id.tag_override_top, (DefaultConstructorMarker) null);
+                super(str, i, "top", C1938R.C1939id.tag_override_top, (DefaultConstructorMarker) null);
             }
 
             public void setValue(View view, int i) {
@@ -876,11 +876,11 @@ public final class ViewHierarchyAnimator {
             }
         }
 
-        @Metadata(mo64986d1 = {"\u0000\u001e\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0002\bÆ\u0001\u0018\u00002\u00020\u0001J\u0010\u0010\u0002\u001a\u00020\u00032\u0006\u0010\u0004\u001a\u00020\u0005H\u0016J\u0018\u0010\u0006\u001a\u00020\u00072\u0006\u0010\u0004\u001a\u00020\u00052\u0006\u0010\b\u001a\u00020\u0003H\u0016¨\u0006\t"}, mo64987d2 = {"Lcom/android/systemui/animation/ViewHierarchyAnimator$Bound$RIGHT;", "Lcom/android/systemui/animation/ViewHierarchyAnimator$Bound;", "getValue", "", "view", "Landroid/view/View;", "setValue", "", "value", "animation_release"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+        @Metadata(mo65042d1 = {"\u0000\u001e\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0002\bÆ\u0001\u0018\u00002\u00020\u0001J\u0010\u0010\u0002\u001a\u00020\u00032\u0006\u0010\u0004\u001a\u00020\u0005H\u0016J\u0018\u0010\u0006\u001a\u00020\u00072\u0006\u0010\u0004\u001a\u00020\u00052\u0006\u0010\b\u001a\u00020\u0003H\u0016¨\u0006\t"}, mo65043d2 = {"Lcom/android/systemui/animation/ViewHierarchyAnimator$Bound$RIGHT;", "Lcom/android/systemui/animation/ViewHierarchyAnimator$Bound;", "getValue", "", "view", "Landroid/view/View;", "setValue", "", "value", "animation_release"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
         /* compiled from: ViewHierarchyAnimator.kt */
         static final class RIGHT extends Bound {
             RIGHT(String str, int i) {
-                super(str, i, NavigationBarInflaterView.RIGHT, C1937R.C1938id.tag_override_right, (DefaultConstructorMarker) null);
+                super(str, i, NavigationBarInflaterView.RIGHT, C1938R.C1939id.tag_override_right, (DefaultConstructorMarker) null);
             }
 
             public void setValue(View view, int i) {
@@ -894,11 +894,11 @@ public final class ViewHierarchyAnimator {
             }
         }
 
-        @Metadata(mo64986d1 = {"\u0000\u001e\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0002\bÆ\u0001\u0018\u00002\u00020\u0001J\u0010\u0010\u0002\u001a\u00020\u00032\u0006\u0010\u0004\u001a\u00020\u0005H\u0016J\u0018\u0010\u0006\u001a\u00020\u00072\u0006\u0010\u0004\u001a\u00020\u00052\u0006\u0010\b\u001a\u00020\u0003H\u0016¨\u0006\t"}, mo64987d2 = {"Lcom/android/systemui/animation/ViewHierarchyAnimator$Bound$BOTTOM;", "Lcom/android/systemui/animation/ViewHierarchyAnimator$Bound;", "getValue", "", "view", "Landroid/view/View;", "setValue", "", "value", "animation_release"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+        @Metadata(mo65042d1 = {"\u0000\u001e\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0002\bÆ\u0001\u0018\u00002\u00020\u0001J\u0010\u0010\u0002\u001a\u00020\u00032\u0006\u0010\u0004\u001a\u00020\u0005H\u0016J\u0018\u0010\u0006\u001a\u00020\u00072\u0006\u0010\u0004\u001a\u00020\u00052\u0006\u0010\b\u001a\u00020\u0003H\u0016¨\u0006\t"}, mo65043d2 = {"Lcom/android/systemui/animation/ViewHierarchyAnimator$Bound$BOTTOM;", "Lcom/android/systemui/animation/ViewHierarchyAnimator$Bound;", "getValue", "", "view", "Landroid/view/View;", "setValue", "", "value", "animation_release"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
         /* compiled from: ViewHierarchyAnimator.kt */
         static final class BOTTOM extends Bound {
             BOTTOM(String str, int i) {
-                super(str, i, "bottom", C1937R.C1938id.tag_override_bottom, (DefaultConstructorMarker) null);
+                super(str, i, "bottom", C1938R.C1939id.tag_override_bottom, (DefaultConstructorMarker) null);
             }
 
             public void setValue(View view, int i) {

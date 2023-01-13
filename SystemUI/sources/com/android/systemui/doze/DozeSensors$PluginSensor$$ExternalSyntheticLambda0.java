@@ -14,6 +14,6 @@ public final /* synthetic */ class DozeSensors$PluginSensor$$ExternalSyntheticLa
     }
 
     public final void run() {
-        this.f$0.mo32443x4d4cfd3f(this.f$1);
+        this.f$0.mo32454x4d4cfd3f(this.f$1);
     }
 }

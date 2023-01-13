@@ -13,6 +13,6 @@ public final /* synthetic */ class WindowMagnificationConnectionImpl$$ExternalSy
     }
 
     public final void run() {
-        this.f$0.mo29982x9bca648a(this.f$1, this.f$2);
+        this.f$0.mo29992x9bca648a(this.f$1, this.f$2);
     }
 }

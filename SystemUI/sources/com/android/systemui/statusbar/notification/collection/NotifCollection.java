@@ -231,7 +231,7 @@ public class NotifCollection implements Dumpable {
     }
 
     public void dismissNotification(NotificationEntry notificationEntry, DismissedByUserStats dismissedByUserStats) {
-        dismissNotifications(List.m1723of(new Pair(notificationEntry, dismissedByUserStats)));
+        dismissNotifications(List.m1729of(new Pair(notificationEntry, dismissedByUserStats)));
     }
 
     public void dismissAllNotifications(int i) {
@@ -586,13 +586,13 @@ public class NotifCollection implements Dumpable {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$getInternalNotifUpdater$5$com-android-systemui-statusbar-notification-collection-NotifCollection */
-    public /* synthetic */ void mo39958x181d259(String str, StatusBarNotification statusBarNotification, String str2) {
+    public /* synthetic */ void mo39960x181d259(String str, StatusBarNotification statusBarNotification, String str2) {
         this.mMainHandler.post(new NotifCollection$$ExternalSyntheticLambda0(this, statusBarNotification, str, str2));
     }
 
     /* access modifiers changed from: private */
     /* renamed from: updateNotificationInternally */
-    public void mo39957x7f371d7a(StatusBarNotification statusBarNotification, String str, String str2) {
+    public void mo39959x7f371d7a(StatusBarNotification statusBarNotification, String str, String str2) {
         Assert.isMainThread();
         checkForReentrantCall();
         NotificationEntry notificationEntry = this.mNotificationSet.get(statusBarNotification.getKey());

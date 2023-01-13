@@ -14,7 +14,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 
 public class UdfpsEnrollDrawable extends UdfpsDrawable {
     private static final float SCALE_MAX = 0.25f;
@@ -40,18 +40,18 @@ public class UdfpsEnrollDrawable extends UdfpsDrawable {
         Paint paint = new Paint(0);
         this.mSensorOutlinePaint = paint;
         paint.setAntiAlias(true);
-        paint.setColor(context.getColor(C1893R.C1894color.udfps_moving_target_fill));
+        paint.setColor(context.getColor(C1894R.C1895color.udfps_moving_target_fill));
         paint.setStyle(Paint.Style.FILL);
         Paint paint2 = new Paint(0);
         this.mBlueFill = paint2;
         paint2.setAntiAlias(true);
-        paint2.setColor(context.getColor(C1893R.C1894color.udfps_moving_target_fill));
+        paint2.setColor(context.getColor(C1894R.C1895color.udfps_moving_target_fill));
         paint2.setStyle(Paint.Style.FILL);
-        Drawable drawable = context.getResources().getDrawable(C1893R.C1895drawable.ic_kg_fingerprint, (Resources.Theme) null);
+        Drawable drawable = context.getResources().getDrawable(C1894R.C1896drawable.ic_kg_fingerprint, (Resources.Theme) null);
         this.mMovingTargetFpIcon = drawable;
-        drawable.setTint(context.getColor(C1893R.C1894color.udfps_enroll_icon));
+        drawable.setTint(context.getColor(C1894R.C1895color.udfps_enroll_icon));
         drawable.mutate();
-        getFingerprintDrawable().setTint(context.getColor(C1893R.C1894color.udfps_enroll_icon));
+        getFingerprintDrawable().setTint(context.getColor(C1894R.C1895color.udfps_enroll_icon));
         this.mTargetAnimListener = new Animator.AnimatorListener() {
             public void onAnimationCancel(Animator animator) {
             }
@@ -123,21 +123,21 @@ public class UdfpsEnrollDrawable extends UdfpsDrawable {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onEnrollmentProgress$0$com-android-systemui-biometrics-UdfpsEnrollDrawable */
-    public /* synthetic */ void mo30893x1e33c2a1(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo30903x1e33c2a1(ValueAnimator valueAnimator) {
         this.mCurrentX = ((Float) valueAnimator.getAnimatedValue()).floatValue();
         invalidateSelf();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onEnrollmentProgress$1$com-android-systemui-biometrics-UdfpsEnrollDrawable */
-    public /* synthetic */ void mo30894xab6e7422(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo30904xab6e7422(ValueAnimator valueAnimator) {
         this.mCurrentY = ((Float) valueAnimator.getAnimatedValue()).floatValue();
         invalidateSelf();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onEnrollmentProgress$2$com-android-systemui-biometrics-UdfpsEnrollDrawable */
-    public /* synthetic */ void mo30895x38a925a3(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo30905x38a925a3(ValueAnimator valueAnimator) {
         this.mCurrentScale = (((float) Math.sin((double) ((Float) valueAnimator.getAnimatedValue()).floatValue())) * 0.25f) + 1.0f;
         invalidateSelf();
     }

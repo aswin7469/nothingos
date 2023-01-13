@@ -12,6 +12,6 @@ public final /* synthetic */ class CirclePagedTileLayout$$ExternalSyntheticLambd
     }
 
     public final void run() {
-        this.f$0.mo57592xeb001256(this.f$1);
+        this.f$0.mo57613xeb001256(this.f$1);
     }
 }

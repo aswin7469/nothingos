@@ -12,6 +12,6 @@ public final /* synthetic */ class ControlsListingControllerImpl$$ExternalSynthe
     }
 
     public final void onServicesReloaded(List list) {
-        ControlsListingControllerImpl.m2654serviceListingCallback$lambda3(this.f$0, list);
+        ControlsListingControllerImpl.m2659serviceListingCallback$lambda3(this.f$0, list);
     }
 }

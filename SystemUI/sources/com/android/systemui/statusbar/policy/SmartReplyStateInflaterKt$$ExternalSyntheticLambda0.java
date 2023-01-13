@@ -12,6 +12,6 @@ public final /* synthetic */ class SmartReplyStateInflaterKt$$ExternalSyntheticL
     }
 
     public final boolean onDismiss() {
-        return SmartReplyStateInflaterKt.m3245executeWhenUnlocked$lambda0(this.f$0);
+        return SmartReplyStateInflaterKt.m3250executeWhenUnlocked$lambda0(this.f$0);
     }
 }

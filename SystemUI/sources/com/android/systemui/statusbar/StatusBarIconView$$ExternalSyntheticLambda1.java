@@ -11,6 +11,6 @@ public final /* synthetic */ class StatusBarIconView$$ExternalSyntheticLambda1 i
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo39074x56d089d2((Float) obj);
+        this.f$0.mo39075x56d089d2((Float) obj);
     }
 }

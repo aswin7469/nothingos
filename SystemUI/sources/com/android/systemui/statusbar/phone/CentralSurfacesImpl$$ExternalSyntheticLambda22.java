@@ -11,6 +11,6 @@ public final /* synthetic */ class CentralSurfacesImpl$$ExternalSyntheticLambda2
     }
 
     public final void onColorsChanged(ColorExtractor colorExtractor, int i) {
-        this.f$0.mo43889xebb0e365(colorExtractor, i);
+        this.f$0.mo43898xebb0e365(colorExtractor, i);
     }
 }

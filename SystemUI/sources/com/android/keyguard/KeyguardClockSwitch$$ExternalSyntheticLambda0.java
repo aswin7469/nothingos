@@ -9,6 +9,6 @@ public final /* synthetic */ class KeyguardClockSwitch$$ExternalSyntheticLambda0
     }
 
     public final void run() {
-        this.f$0.m2282lambda$onLayout$0$comandroidkeyguardKeyguardClockSwitch();
+        this.f$0.m2288lambda$onLayout$0$comandroidkeyguardKeyguardClockSwitch();
     }
 }

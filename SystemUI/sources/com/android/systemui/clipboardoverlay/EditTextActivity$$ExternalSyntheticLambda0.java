@@ -11,6 +11,6 @@ public final /* synthetic */ class EditTextActivity$$ExternalSyntheticLambda0 im
     }
 
     public final void onClick(View view) {
-        this.f$0.mo31343xa3388fd9(view);
+        this.f$0.mo31354xa3388fd9(view);
     }
 }

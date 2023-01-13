@@ -71,7 +71,7 @@ public class ZenModeControllerImpl extends CurrentUserTracker implements ZenMode
     public ZenModeControllerImpl(Context context, @Main Handler handler, BroadcastDispatcher broadcastDispatcher, DumpManager dumpManager, GlobalSettings globalSettings) {
         super(broadcastDispatcher);
         this.mContext = context;
-        C32021 r5 = new SettingObserver(globalSettings, handler, "zen_mode") {
+        C32121 r5 = new SettingObserver(globalSettings, handler, "zen_mode") {
             /* access modifiers changed from: protected */
             public void handleValueChanged(int i, boolean z) {
                 ZenModeControllerImpl.this.updateZenMode(i);
@@ -79,7 +79,7 @@ public class ZenModeControllerImpl extends CurrentUserTracker implements ZenMode
             }
         };
         this.mModeSetting = r5;
-        C32032 r0 = new SettingObserver(globalSettings, handler, "zen_mode_config_etag") {
+        C32132 r0 = new SettingObserver(globalSettings, handler, "zen_mode_config_etag") {
             /* access modifiers changed from: protected */
             public void handleValueChanged(int i, boolean z) {
                 ZenModeControllerImpl.this.updateZenModeConfig();

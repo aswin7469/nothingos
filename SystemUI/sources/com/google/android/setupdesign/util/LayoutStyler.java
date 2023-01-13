@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.google.android.setupcompat.partnerconfig.PartnerConfig;
 import com.google.android.setupcompat.partnerconfig.PartnerConfigHelper;
-import com.google.android.setupdesign.C3953R;
+import com.google.android.setupdesign.C3963R;
 
 public final class LayoutStyler {
     public static void applyPartnerCustomizationLayoutPaddingStyle(View view) {
@@ -49,7 +49,7 @@ public final class LayoutStyler {
                 return;
             }
             if (isPartnerConfigAvailable || isPartnerConfigAvailable2) {
-                TypedArray obtainStyledAttributes = context.obtainStyledAttributes(new int[]{C3953R.attr.sudMarginStart, C3953R.attr.sudMarginEnd});
+                TypedArray obtainStyledAttributes = context.obtainStyledAttributes(new int[]{C3963R.attr.sudMarginStart, C3963R.attr.sudMarginEnd});
                 int dimensionPixelSize = obtainStyledAttributes.getDimensionPixelSize(0, 0);
                 int dimensionPixelSize2 = obtainStyledAttributes.getDimensionPixelSize(1, 0);
                 obtainStyledAttributes.recycle();
@@ -60,17 +60,17 @@ public final class LayoutStyler {
                 }
                 if (isPartnerConfigAvailable2) {
                     i2 = ((int) PartnerConfigHelper.get(context).getDimension(context, PartnerConfig.CONFIG_LAYOUT_MARGIN_END)) - dimensionPixelSize2;
-                    if (view.getId() == C3953R.C3956id.sud_layout_content) {
+                    if (view.getId() == C3963R.C3966id.sud_layout_content) {
                         i2 = ((int) PartnerConfigHelper.get(context).getDimension(context, PartnerConfig.CONFIG_LAYOUT_MARGIN_START)) - dimensionPixelSize2;
                     }
                 } else {
                     i2 = view.getPaddingEnd();
-                    if (view.getId() == C3953R.C3956id.sud_layout_content) {
+                    if (view.getId() == C3963R.C3966id.sud_layout_content) {
                         i2 = view.getPaddingStart();
                     }
                 }
                 if (i != view.getPaddingStart() || i2 != view.getPaddingEnd()) {
-                    if (view.getId() == C3953R.C3956id.sud_layout_content) {
+                    if (view.getId() == C3963R.C3966id.sud_layout_content) {
                         ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
                         if (layoutParams instanceof ViewGroup.MarginLayoutParams) {
                             marginLayoutParams = (ViewGroup.MarginLayoutParams) layoutParams;

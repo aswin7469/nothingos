@@ -15,6 +15,6 @@ public final /* synthetic */ class DreamOverlayStatusBarViewController$$External
     }
 
     public final void run() {
-        this.f$0.mo32545x9a9bfdf6(this.f$1, this.f$2, this.f$3);
+        this.f$0.mo32556x9a9bfdf6(this.f$1, this.f$2, this.f$3);
     }
 }

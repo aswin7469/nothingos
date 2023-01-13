@@ -83,6 +83,6 @@ public final class HashingSource extends ForwardingSource {
 
     public final ByteString hash() {
         MessageDigest messageDigest2 = this.messageDigest;
-        return ByteString.m1815of(messageDigest2 != null ? messageDigest2.digest() : this.mac.doFinal());
+        return ByteString.m1821of(messageDigest2 != null ? messageDigest2.digest() : this.mac.doFinal());
     }
 }

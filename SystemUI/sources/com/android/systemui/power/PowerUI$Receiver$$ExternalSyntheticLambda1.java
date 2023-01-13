@@ -15,6 +15,6 @@ public final /* synthetic */ class PowerUI$Receiver$$ExternalSyntheticLambda1 im
     }
 
     public final void run() {
-        this.f$0.m2861lambda$onReceive$1$comandroidsystemuipowerPowerUI$Receiver(this.f$1, this.f$2);
+        this.f$0.m2866lambda$onReceive$1$comandroidsystemuipowerPowerUI$Receiver(this.f$1, this.f$2);
     }
 }

@@ -11,6 +11,6 @@ public final /* synthetic */ class KeyguardClockSwitchController$$ExternalSynthe
     }
 
     public final void onColorsChanged(ColorExtractor colorExtractor, int i) {
-        this.f$0.m2284lambda$new$0$comandroidkeyguardKeyguardClockSwitchController(colorExtractor, i);
+        this.f$0.m2290lambda$new$0$comandroidkeyguardKeyguardClockSwitchController(colorExtractor, i);
     }
 }

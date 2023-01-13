@@ -11,6 +11,6 @@ public final /* synthetic */ class AbstractPipeline$$ExternalSyntheticLambda2 im
     }
 
     public final Object get() {
-        return this.f$0.m3866lambda$spliterator$0$javautilstreamAbstractPipeline();
+        return this.f$0.m3884lambda$spliterator$0$javautilstreamAbstractPipeline();
     }
 }

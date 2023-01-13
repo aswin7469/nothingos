@@ -22,7 +22,7 @@ public abstract class SafetyWarningDialog extends SystemUIDialog implements Dial
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             if ("android.intent.action.CLOSE_SYSTEM_DIALOGS".equals(intent.getAction())) {
-                if (C3265D.BUG) {
+                if (C3275D.BUG) {
                     Log.d(SafetyWarningDialog.TAG, "Received ACTION_CLOSE_SYSTEM_DIALOGS");
                 }
                 SafetyWarningDialog.this.cancel();
@@ -63,7 +63,7 @@ public abstract class SafetyWarningDialog extends SystemUIDialog implements Dial
 
     public boolean onKeyUp(int i, KeyEvent keyEvent) {
         if (i == 24 && this.mNewVolumeUp && System.currentTimeMillis() - this.mShowTime > 1000) {
-            if (C3265D.BUG) {
+            if (C3275D.BUG) {
                 Log.d(TAG, "Confirmed warning via VOLUME_UP");
             }
             this.mAudioManager.disableSafeMediaVolume();

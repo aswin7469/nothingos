@@ -20,7 +20,7 @@ import android.widget.ImageView;
 import androidx.constraintlayout.motion.widget.Key;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.ViewCompat;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.animation.AnimationUtils;
 import com.google.android.material.animation.AnimatorSetCompat;
 import com.google.android.material.animation.ArgbEvaluatorCompat;
@@ -449,7 +449,7 @@ public abstract class FabTransformationBehavior extends ExpandableTransformation
     }
 
     private ViewGroup calculateChildContentContainer(View view) {
-        View findViewById = view.findViewById(C3621R.C3624id.mtrl_child_content_container);
+        View findViewById = view.findViewById(C3631R.C3634id.mtrl_child_content_container);
         if (findViewById != null) {
             return toViewGroupOrNull(findViewById);
         }

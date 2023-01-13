@@ -27,7 +27,7 @@ public class DozeWallpaperState implements DozeMachine.Part {
     }
 
     /* renamed from: com.android.systemui.doze.DozeWallpaperState$1 */
-    static /* synthetic */ class C20731 {
+    static /* synthetic */ class C20751 {
         static final /* synthetic */ int[] $SwitchMap$com$android$systemui$doze$DozeMachine$State;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(18:0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|(3:17|18|20)) */
@@ -101,7 +101,7 @@ public class DozeWallpaperState implements DozeMachine.Part {
             L_0x006c:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.doze.DozeWallpaperState.C20731.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.doze.DozeWallpaperState.C20751.<clinit>():void");
         }
     }
 
@@ -109,7 +109,7 @@ public class DozeWallpaperState implements DozeMachine.Part {
         boolean z;
         boolean z2;
         boolean z3 = false;
-        switch (C20731.$SwitchMap$com$android$systemui$doze$DozeMachine$State[state2.ordinal()]) {
+        switch (C20751.$SwitchMap$com$android$systemui$doze$DozeMachine$State[state2.ordinal()]) {
             case 1:
             case 2:
             case 3:

@@ -13,13 +13,13 @@ public class CertificateVersion implements CertAttrSet<String> {
     public static final String NAME = "version";
 
     /* renamed from: V1 */
-    public static final int f930V1 = 0;
+    public static final int f928V1 = 0;
 
     /* renamed from: V2 */
-    public static final int f931V2 = 1;
+    public static final int f929V2 = 1;
 
     /* renamed from: V3 */
-    public static final int f932V3 = 2;
+    public static final int f930V3 = 2;
     public static final String VERSION = "number";
     int version = 0;
 

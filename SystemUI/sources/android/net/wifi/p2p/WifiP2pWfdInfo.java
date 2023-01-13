@@ -197,11 +197,11 @@ public final class WifiP2pWfdInfo implements Parcelable {
     }
 
     public String getDeviceInfoHex() {
-        return String.format(Locale.f700US, "%04x%04x%04x", Integer.valueOf(this.mDeviceInfo), Integer.valueOf(this.mCtrlPort), Integer.valueOf(this.mMaxThroughput));
+        return String.format(Locale.f698US, "%04x%04x%04x", Integer.valueOf(this.mDeviceInfo), Integer.valueOf(this.mCtrlPort), Integer.valueOf(this.mMaxThroughput));
     }
 
     public String getR2DeviceInfoHex() {
-        return String.format(Locale.f700US, "%04x%04x", 2, Integer.valueOf(this.mR2DeviceInfo));
+        return String.format(Locale.f698US, "%04x%04x", 2, Integer.valueOf(this.mR2DeviceInfo));
     }
 
     public String toString() {

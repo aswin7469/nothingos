@@ -11,6 +11,6 @@ public final /* synthetic */ class ThreadPoolDispatcher$$ExternalSyntheticLambda
     }
 
     public final Thread newThread(Runnable runnable) {
-        return ThreadPoolDispatcher.m5419executor$lambda0(this.f$0, runnable);
+        return ThreadPoolDispatcher.m5437executor$lambda0(this.f$0, runnable);
     }
 }

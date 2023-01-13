@@ -11,6 +11,6 @@ public final /* synthetic */ class WifiEntry$ForgetActionListener$$ExternalSynth
     }
 
     public final void run() {
-        this.f$0.mo47893x9651724e();
+        this.f$0.mo47902x9651724e();
     }
 }

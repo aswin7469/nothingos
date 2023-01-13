@@ -14,7 +14,7 @@ public class LinkSpan extends ClickableSpan {
     private static final String TAG = "LinkSpan";
 
     /* renamed from: id */
-    private final String f458id;
+    private final String f457id;
 
     @Deprecated
     public interface OnClickListener {
@@ -26,7 +26,7 @@ public class LinkSpan extends ClickableSpan {
     }
 
     public LinkSpan(String str) {
-        this.f458id = str;
+        this.f457id = str;
     }
 
     public void onClick(View view) {
@@ -70,6 +70,6 @@ public class LinkSpan extends ClickableSpan {
     }
 
     public String getId() {
-        return this.f458id;
+        return this.f457id;
     }
 }

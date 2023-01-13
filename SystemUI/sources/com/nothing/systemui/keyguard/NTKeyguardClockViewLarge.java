@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.view.ViewOverlay;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import dalvik.bytecode.Opcodes;
 import java.util.Calendar;
 import java.util.Locale;
@@ -75,10 +75,10 @@ public class NTKeyguardClockViewLarge extends RelativeLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mHour1 = (TextView) findViewById(C1893R.C1897id.nothing_clock_view_hour1);
-        this.mHour2 = (TextView) findViewById(C1893R.C1897id.nothing_clock_view_hour2);
-        this.mMinute1 = (TextView) findViewById(C1893R.C1897id.nothing_clock_view_minute1);
-        this.mMinute2 = (TextView) findViewById(C1893R.C1897id.nothing_clock_view_minute2);
+        this.mHour1 = (TextView) findViewById(C1894R.C1898id.nothing_clock_view_hour1);
+        this.mHour2 = (TextView) findViewById(C1894R.C1898id.nothing_clock_view_hour2);
+        this.mMinute1 = (TextView) findViewById(C1894R.C1898id.nothing_clock_view_minute1);
+        this.mMinute2 = (TextView) findViewById(C1894R.C1898id.nothing_clock_view_minute2);
     }
 
     public void setTextSize(int i, float f) {
@@ -160,8 +160,8 @@ public class NTKeyguardClockViewLarge extends RelativeLayout {
         static void update(Context context) {
             Locale locale = Locale.getDefault();
             Resources resources = context.getResources();
-            String string = resources.getString(C1893R.string.clock_12hr_format);
-            String string2 = resources.getString(C1893R.string.clock_24hr_format);
+            String string = resources.getString(C1894R.string.clock_12hr_format);
+            String string2 = resources.getString(C1894R.string.clock_24hr_format);
             String str = locale.toString() + string + string2;
             if (!str.equals(sCacheKey)) {
                 sClockView12 = DateFormat.getBestDateTimePattern(locale, string);

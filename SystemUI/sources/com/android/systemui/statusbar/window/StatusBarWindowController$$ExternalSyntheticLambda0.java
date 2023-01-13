@@ -12,6 +12,6 @@ public final /* synthetic */ class StatusBarWindowController$$ExternalSyntheticL
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo46272xe1f6d108((UnfoldTransitionProgressProvider) obj);
+        this.f$0.mo46284xe1f6d108((UnfoldTransitionProgressProvider) obj);
     }
 }

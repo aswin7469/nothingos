@@ -16,16 +16,16 @@ import android.widget.ListAdapter;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.core.view.ViewCompat;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.resources.MaterialAttributes;
 import com.google.android.material.shape.MaterialShapeDrawable;
 import com.google.android.material.theme.overlay.MaterialThemeOverlay;
 
 public class MaterialAlertDialogBuilder extends AlertDialog.Builder {
-    private static final int DEF_STYLE_ATTR = C3621R.attr.alertDialogStyle;
-    private static final int DEF_STYLE_RES = C3621R.style.MaterialAlertDialog_MaterialComponents;
-    private static final int MATERIAL_ALERT_DIALOG_THEME_OVERLAY = C3621R.attr.materialAlertDialogTheme;
+    private static final int DEF_STYLE_ATTR = C3631R.attr.alertDialogStyle;
+    private static final int DEF_STYLE_RES = C3631R.style.MaterialAlertDialog_MaterialComponents;
+    private static final int MATERIAL_ALERT_DIALOG_THEME_OVERLAY = C3631R.attr.materialAlertDialogTheme;
     private Drawable background;
     private final Rect backgroundInsets;
 
@@ -61,7 +61,7 @@ public class MaterialAlertDialogBuilder extends AlertDialog.Builder {
         int i2 = DEF_STYLE_ATTR;
         int i3 = DEF_STYLE_RES;
         this.backgroundInsets = MaterialDialogs.getDialogBackgroundInsets(context2, i2, i3);
-        int color = MaterialColors.getColor(context2, C3621R.attr.colorSurface, getClass().getCanonicalName());
+        int color = MaterialColors.getColor(context2, C3631R.attr.colorSurface, getClass().getCanonicalName());
         MaterialShapeDrawable materialShapeDrawable = new MaterialShapeDrawable(context2, (AttributeSet) null, i2, i3);
         materialShapeDrawable.initializeElevationOverlay(context2);
         materialShapeDrawable.setFillColor(ColorStateList.valueOf(color));

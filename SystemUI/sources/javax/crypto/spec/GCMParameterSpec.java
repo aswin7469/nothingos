@@ -5,7 +5,7 @@ import java.security.spec.AlgorithmParameterSpec;
 public class GCMParameterSpec implements AlgorithmParameterSpec {
 
     /* renamed from: iv */
-    private byte[] f822iv;
+    private byte[] f820iv;
     private int tLen;
 
     public GCMParameterSpec(int i, byte[] bArr) {
@@ -27,7 +27,7 @@ public class GCMParameterSpec implements AlgorithmParameterSpec {
                 throw new IllegalArgumentException("Invalid buffer arguments");
             }
             byte[] bArr2 = new byte[i3];
-            this.f822iv = bArr2;
+            this.f820iv = bArr2;
             System.arraycopy((Object) bArr, i2, (Object) bArr2, 0, i3);
             return;
         }
@@ -39,6 +39,6 @@ public class GCMParameterSpec implements AlgorithmParameterSpec {
     }
 
     public byte[] getIV() {
-        return (byte[]) this.f822iv.clone();
+        return (byte[]) this.f820iv.clone();
     }
 }

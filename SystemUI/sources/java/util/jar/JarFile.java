@@ -29,7 +29,7 @@ public class JarFile extends ZipFile {
     /* access modifiers changed from: private */
 
     /* renamed from: jv */
-    public JarVerifier f770jv;
+    public JarVerifier f768jv;
     private boolean jvInitialized;
     private JarEntry manEntry;
     private Manifest manifest;
@@ -71,7 +71,7 @@ public class JarFile extends ZipFile {
                 byte[] bytes = getBytes(manEntry2);
                 Manifest manifest3 = new Manifest((InputStream) new ByteArrayInputStream(bytes));
                 if (!this.jvInitialized) {
-                    this.f770jv = new JarVerifier(bytes);
+                    this.f768jv = new JarVerifier(bytes);
                 }
                 manifest2 = manifest3;
             } else {
@@ -97,18 +97,18 @@ public class JarFile extends ZipFile {
     private class JarEntryIterator implements Enumeration<JarEntry>, Iterator<JarEntry> {
 
         /* renamed from: e */
-        final Enumeration<? extends ZipEntry> f771e;
+        final Enumeration<? extends ZipEntry> f769e;
 
         private JarEntryIterator() {
-            this.f771e = JarFile.super.entries();
+            this.f769e = JarFile.super.entries();
         }
 
         public boolean hasNext() {
-            return this.f771e.hasMoreElements();
+            return this.f769e.hasMoreElements();
         }
 
         public JarEntry next() {
-            return new JarFileEntry((ZipEntry) this.f771e.nextElement());
+            return new JarFileEntry((ZipEntry) this.f769e.nextElement());
         }
 
         public boolean hasMoreElements() {
@@ -144,8 +144,8 @@ public class JarFile extends ZipFile {
         public Certificate[] getCertificates() {
             try {
                 JarFile.this.maybeInstantiateVerifier();
-                if (this.certs == null && JarFile.this.f770jv != null) {
-                    this.certs = JarFile.this.f770jv.getCerts(JarFile.this, this);
+                if (this.certs == null && JarFile.this.f768jv != null) {
+                    this.certs = JarFile.this.f768jv.getCerts(JarFile.this, this);
                 }
                 if (this.certs == null) {
                     return null;
@@ -159,8 +159,8 @@ public class JarFile extends ZipFile {
         public CodeSigner[] getCodeSigners() {
             try {
                 JarFile.this.maybeInstantiateVerifier();
-                if (this.signers == null && JarFile.this.f770jv != null) {
-                    this.signers = JarFile.this.f770jv.getCodeSigners(JarFile.this, this);
+                if (this.signers == null && JarFile.this.f768jv != null) {
+                    this.signers = JarFile.this.f768jv.getCodeSigners(JarFile.this, this);
                 }
                 if (this.signers == null) {
                     return null;
@@ -174,7 +174,7 @@ public class JarFile extends ZipFile {
 
     /* access modifiers changed from: private */
     public void maybeInstantiateVerifier() throws IOException {
-        if (this.f770jv == null && this.verify) {
+        if (this.f768jv == null && this.verify) {
             String[] metaInfEntryNames = getMetaInfEntryNames();
             if (metaInfEntryNames != null) {
                 for (String upperCase : metaInfEntryNames) {
@@ -205,9 +205,9 @@ public class JarFile extends ZipFile {
                             ManifestEntryVerifier manifestEntryVerifier2 = manifestEntryVerifier;
                             byte[] bytes = getBytes(jarEntry);
                             if (bytes != null && bytes.length > 0) {
-                                this.f770jv.beginEntry(jarEntry, manifestEntryVerifier2);
-                                this.f770jv.update(bytes.length, bytes, 0, bytes.length, manifestEntryVerifier2);
-                                this.f770jv.update(-1, (byte[]) null, 0, 0, manifestEntryVerifier2);
+                                this.f768jv.beginEntry(jarEntry, manifestEntryVerifier2);
+                                this.f768jv.update(bytes.length, bytes, 0, bytes.length, manifestEntryVerifier2);
+                                this.f768jv.update(-1, (byte[]) null, 0, 0, manifestEntryVerifier2);
                             }
                             manifestEntryVerifier = manifestEntryVerifier2;
                         } else {
@@ -217,24 +217,24 @@ public class JarFile extends ZipFile {
                 }
             }
         } catch (IOException e) {
-            this.f770jv = null;
+            this.f768jv = null;
             this.verify = false;
             if (JarVerifier.debug != null) {
                 JarVerifier.debug.println("jarfile parsing error!");
                 e.printStackTrace();
             }
         }
-        JarVerifier jarVerifier = this.f770jv;
+        JarVerifier jarVerifier = this.f768jv;
         if (jarVerifier != null) {
             jarVerifier.doneWithMeta();
             if (JarVerifier.debug != null) {
                 JarVerifier.debug.println("done with meta!");
             }
-            if (this.f770jv.nothingToVerify()) {
+            if (this.f768jv.nothingToVerify()) {
                 if (JarVerifier.debug != null) {
                     JarVerifier.debug.println("nothing to verify!");
                 }
-                this.f770jv = null;
+                this.f768jv = null;
                 this.verify = false;
             }
         }
@@ -256,17 +256,17 @@ public class JarFile extends ZipFile {
 
     public synchronized InputStream getInputStream(ZipEntry zipEntry) throws IOException {
         maybeInstantiateVerifier();
-        if (this.f770jv == null) {
+        if (this.f768jv == null) {
             return super.getInputStream(zipEntry);
         }
         if (!this.jvInitialized) {
             initializeVerifier();
             this.jvInitialized = true;
-            if (this.f770jv == null) {
+            if (this.f768jv == null) {
                 return super.getInputStream(zipEntry);
             }
         }
-        return new JarVerifier.VerifierStream(getManifestFromReference(), zipEntry instanceof JarFileEntry ? (JarEntry) zipEntry : getJarEntry(zipEntry.getName()), super.getInputStream(zipEntry), this.f770jv);
+        return new JarVerifier.VerifierStream(getManifestFromReference(), zipEntry instanceof JarFileEntry ? (JarEntry) zipEntry : getJarEntry(zipEntry.getName()), super.getInputStream(zipEntry), this.f768jv);
     }
 
     static {

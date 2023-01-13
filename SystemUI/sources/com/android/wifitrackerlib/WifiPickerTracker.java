@@ -329,7 +329,7 @@ public class WifiPickerTracker extends BaseWifiTracker {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateWifiEntries$3$com-android-wifitrackerlib-WifiPickerTracker */
-    public /* synthetic */ boolean mo47907x5928e5d4(StandardWifiEntry standardWifiEntry) {
+    public /* synthetic */ boolean mo47916x5928e5d4(StandardWifiEntry standardWifiEntry) {
         return standardWifiEntry.isUserShareable() || standardWifiEntry == this.mConnectedWifiEntry;
     }
 
@@ -477,7 +477,7 @@ public class WifiPickerTracker extends BaseWifiTracker {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateOsuWifiEntryScans$16$com-android-wifitrackerlib-WifiPickerTracker */
-    public /* synthetic */ void mo47903x190d5293(Map map, OsuWifiEntry osuWifiEntry) {
+    public /* synthetic */ void mo47912x190d5293(Map map, OsuWifiEntry osuWifiEntry) {
         PasspointConfiguration passpointConfiguration = (PasspointConfiguration) map.get(osuWifiEntry.getOsuProvider());
         if (passpointConfiguration == null) {
             osuWifiEntry.setAlreadyProvisioned(false);
@@ -572,13 +572,13 @@ public class WifiPickerTracker extends BaseWifiTracker {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateWifiConfigurations$21$com-android-wifitrackerlib-WifiPickerTracker */
-    public /* synthetic */ void mo47905x20a4ed4d(StandardWifiEntry standardWifiEntry) {
+    public /* synthetic */ void mo47914x20a4ed4d(StandardWifiEntry standardWifiEntry) {
         standardWifiEntry.updateConfig(this.mStandardWifiConfigCache.get(standardWifiEntry.getStandardWifiEntryKey()));
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateWifiConfigurations$22$com-android-wifitrackerlib-WifiPickerTracker */
-    public /* synthetic */ boolean mo47906xda1c7aec(StandardWifiEntry standardWifiEntry) {
+    public /* synthetic */ boolean mo47915xda1c7aec(StandardWifiEntry standardWifiEntry) {
         standardWifiEntry.updateConfig(this.mSuggestedConfigCache.get(standardWifiEntry.getStandardWifiEntryKey()));
         return !standardWifiEntry.isSuggestion();
     }
@@ -592,7 +592,7 @@ public class WifiPickerTracker extends BaseWifiTracker {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updatePasspointConfigurations$24$com-android-wifitrackerlib-WifiPickerTracker */
-    public /* synthetic */ boolean mo47904x2fa767a8(Map.Entry entry) {
+    public /* synthetic */ boolean mo47913x2fa767a8(Map.Entry entry) {
         PasspointWifiEntry passpointWifiEntry = (PasspointWifiEntry) entry.getValue();
         passpointWifiEntry.updatePasspointConfig(this.mPasspointConfigCache.get(passpointWifiEntry.getKey()));
         return !passpointWifiEntry.isSubscription() && !passpointWifiEntry.isSuggestion();

@@ -20,19 +20,19 @@ public final class MemoryMappedFile implements AutoCloseable {
     }
 
     public static MemoryMappedFile mmapRO(String str) throws ErrnoException {
-        FileDescriptor open = Libcore.f857os.open(str, OsConstants.O_RDONLY, 0);
+        FileDescriptor open = Libcore.f855os.open(str, OsConstants.O_RDONLY, 0);
         try {
-            long j = Libcore.f857os.fstat(open).st_size;
-            return new MemoryMappedFile(Libcore.f857os.mmap(0, j, OsConstants.PROT_READ, OsConstants.MAP_SHARED, open, 0), j);
+            long j = Libcore.f855os.fstat(open).st_size;
+            return new MemoryMappedFile(Libcore.f855os.mmap(0, j, OsConstants.PROT_READ, OsConstants.MAP_SHARED, open, 0), j);
         } finally {
-            Libcore.f857os.close(open);
+            Libcore.f855os.close(open);
         }
     }
 
     public void close() throws ErrnoException {
         if (!this.closed) {
             this.closed = true;
-            Libcore.f857os.munmap(this.address, (long) this.size);
+            Libcore.f855os.munmap(this.address, (long) this.size);
         }
     }
 

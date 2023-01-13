@@ -4,7 +4,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.android.internal.util.Preconditions;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dreams.complication.ComplicationLayoutParams;
 import com.android.systemui.dreams.complication.DreamWeatherComplication;
 import dagger.Module;
@@ -43,7 +43,7 @@ public interface DreamWeatherComplicationComponent {
         @Provides
         @Named("weather_complication_view")
         static TextView provideComplicationView(LayoutInflater layoutInflater) {
-            return (TextView) Preconditions.checkNotNull((TextView) layoutInflater.inflate(C1893R.layout.dream_overlay_complication_weather, (ViewGroup) null, false), "R.layout.dream_overlay_complication_weather did not properly inflated");
+            return (TextView) Preconditions.checkNotNull((TextView) layoutInflater.inflate(C1894R.layout.dream_overlay_complication_weather, (ViewGroup) null, false), "R.layout.dream_overlay_complication_weather did not properly inflated");
         }
 
         @DreamWeatherComplicationScope

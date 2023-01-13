@@ -71,7 +71,7 @@ public class PipInputConsumer {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setRegistrationListener$0$com-android-wm-shell-pip-phone-PipInputConsumer */
-    public /* synthetic */ void mo50365x5df529e2() {
+    public /* synthetic */ void mo50374x5df529e2() {
         RegistrationListener registrationListener = this.mRegistrationListener;
         if (registrationListener != null) {
             registrationListener.onRegistrationChanged(this.mInputEventReceiver != null);
@@ -97,7 +97,7 @@ public class PipInputConsumer {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$registerInputConsumer$1$com-android-wm-shell-pip-phone-PipInputConsumer */
-    public /* synthetic */ void mo50364x1da7ed11(InputChannel inputChannel) {
+    public /* synthetic */ void mo50373x1da7ed11(InputChannel inputChannel) {
         this.mInputEventReceiver = new InputEventReceiver(inputChannel, Looper.myLooper(), Choreographer.getSfInstance());
         RegistrationListener registrationListener = this.mRegistrationListener;
         if (registrationListener != null) {
@@ -120,7 +120,7 @@ public class PipInputConsumer {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$unregisterInputConsumer$2$com-android-wm-shell-pip-phone-PipInputConsumer */
-    public /* synthetic */ void mo50366xa3f75599() {
+    public /* synthetic */ void mo50375xa3f75599() {
         RegistrationListener registrationListener = this.mRegistrationListener;
         if (registrationListener != null) {
             registrationListener.onRegistrationChanged(false);

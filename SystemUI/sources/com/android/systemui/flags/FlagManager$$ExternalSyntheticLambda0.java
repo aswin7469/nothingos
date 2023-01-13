@@ -14,6 +14,6 @@ public final /* synthetic */ class FlagManager$$ExternalSyntheticLambda0 impleme
     }
 
     public final Object attachCompleter(CallbackToFutureAdapter.Completer completer) {
-        return FlagManager.m2752getFlagsFuture$lambda0(this.f$0, this.f$1, completer);
+        return FlagManager.m2757getFlagsFuture$lambda0(this.f$0, this.f$1, completer);
     }
 }

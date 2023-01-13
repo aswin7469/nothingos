@@ -32,7 +32,7 @@ class NonSdkApiWrapper {
         for (Annotation annotation : (Annotation[]) spannableString.getSpans(0, spannableString.length(), Annotation.class)) {
             if (TextUtils.equals(annotation.getValue(), str)) {
                 SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(spannableString);
-                C33401 r8 = new ClickableSpan() {
+                C33501 r8 = new ClickableSpan() {
                     public void onClick(View view) {
                         view.startActivityForResult(HelpUtils.getHelpIntent(context, str2, view.getClass().getName()), 0);
                     }

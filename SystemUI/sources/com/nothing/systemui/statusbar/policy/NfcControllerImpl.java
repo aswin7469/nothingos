@@ -18,7 +18,7 @@ public class NfcControllerImpl implements NfcController {
 
     @Inject
     public NfcControllerImpl(Context context, BatteryController batteryController) {
-        C42281 r0 = new BatteryController.BatteryStateChangeCallback() {
+        C42391 r0 = new BatteryController.BatteryStateChangeCallback() {
             public void onWirelessChargingChanged(boolean z) {
                 boolean unused = NfcControllerImpl.this.mIsWirelessCharging = z;
                 NfcControllerImpl.this.fireBatteryWirelessChange();

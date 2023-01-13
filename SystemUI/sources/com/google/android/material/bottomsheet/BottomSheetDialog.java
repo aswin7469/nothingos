@@ -20,7 +20,7 @@ import androidx.core.view.OnApplyWindowInsetsListener;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.shape.MaterialShapeDrawable;
@@ -43,7 +43,7 @@ public class BottomSheetDialog extends AppCompatDialog {
 
     public BottomSheetDialog(Context context) {
         this(context, 0);
-        this.edgeToEdgeEnabled = getContext().getTheme().obtainStyledAttributes(new int[]{C3621R.attr.enableEdgeToEdge}).getBoolean(0, false);
+        this.edgeToEdgeEnabled = getContext().getTheme().obtainStyledAttributes(new int[]{C3631R.attr.enableEdgeToEdge}).getBoolean(0, false);
     }
 
     public BottomSheetDialog(Context context, int i) {
@@ -61,7 +61,7 @@ public class BottomSheetDialog extends AppCompatDialog {
             }
         };
         supportRequestWindowFeature(1);
-        this.edgeToEdgeEnabled = getContext().getTheme().obtainStyledAttributes(new int[]{C3621R.attr.enableEdgeToEdge}).getBoolean(0, false);
+        this.edgeToEdgeEnabled = getContext().getTheme().obtainStyledAttributes(new int[]{C3631R.attr.enableEdgeToEdge}).getBoolean(0, false);
     }
 
     protected BottomSheetDialog(Context context, boolean z, DialogInterface.OnCancelListener onCancelListener) {
@@ -80,7 +80,7 @@ public class BottomSheetDialog extends AppCompatDialog {
         };
         supportRequestWindowFeature(1);
         this.cancelable = z;
-        this.edgeToEdgeEnabled = getContext().getTheme().obtainStyledAttributes(new int[]{C3621R.attr.enableEdgeToEdge}).getBoolean(0, false);
+        this.edgeToEdgeEnabled = getContext().getTheme().obtainStyledAttributes(new int[]{C3631R.attr.enableEdgeToEdge}).getBoolean(0, false);
     }
 
     public void setContentView(int i) {
@@ -184,10 +184,10 @@ public class BottomSheetDialog extends AppCompatDialog {
 
     private FrameLayout ensureContainerAndBehavior() {
         if (this.container == null) {
-            FrameLayout frameLayout = (FrameLayout) View.inflate(getContext(), C3621R.layout.design_bottom_sheet_dialog, (ViewGroup) null);
+            FrameLayout frameLayout = (FrameLayout) View.inflate(getContext(), C3631R.layout.design_bottom_sheet_dialog, (ViewGroup) null);
             this.container = frameLayout;
-            this.coordinator = (CoordinatorLayout) frameLayout.findViewById(C3621R.C3624id.coordinator);
-            FrameLayout frameLayout2 = (FrameLayout) this.container.findViewById(C3621R.C3624id.design_bottom_sheet);
+            this.coordinator = (CoordinatorLayout) frameLayout.findViewById(C3631R.C3634id.coordinator);
+            FrameLayout frameLayout2 = (FrameLayout) this.container.findViewById(C3631R.C3634id.design_bottom_sheet);
             this.bottomSheet = frameLayout2;
             BottomSheetBehavior<FrameLayout> from = BottomSheetBehavior.from(frameLayout2);
             this.behavior = from;
@@ -199,7 +199,7 @@ public class BottomSheetDialog extends AppCompatDialog {
 
     private View wrapInBottomSheet(int i, View view, ViewGroup.LayoutParams layoutParams) {
         ensureContainerAndBehavior();
-        CoordinatorLayout coordinatorLayout = (CoordinatorLayout) this.container.findViewById(C3621R.C3624id.coordinator);
+        CoordinatorLayout coordinatorLayout = (CoordinatorLayout) this.container.findViewById(C3631R.C3634id.coordinator);
         if (i != 0 && view == null) {
             view = getLayoutInflater().inflate(i, coordinatorLayout, false);
         }
@@ -223,7 +223,7 @@ public class BottomSheetDialog extends AppCompatDialog {
         } else {
             this.bottomSheet.addView(view, layoutParams);
         }
-        coordinatorLayout.findViewById(C3621R.C3624id.touch_outside).setOnClickListener(new View.OnClickListener() {
+        coordinatorLayout.findViewById(C3631R.C3634id.touch_outside).setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 if (BottomSheetDialog.this.cancelable && BottomSheetDialog.this.isShowing() && BottomSheetDialog.this.shouldWindowCloseOnTouchOutside()) {
                     BottomSheetDialog.this.cancel();
@@ -273,10 +273,10 @@ public class BottomSheetDialog extends AppCompatDialog {
             return i;
         }
         TypedValue typedValue = new TypedValue();
-        if (context.getTheme().resolveAttribute(C3621R.attr.bottomSheetDialogTheme, typedValue, true)) {
+        if (context.getTheme().resolveAttribute(C3631R.attr.bottomSheetDialogTheme, typedValue, true)) {
             return typedValue.resourceId;
         }
-        return C3621R.style.Theme_Design_Light_BottomSheetDialog;
+        return C3631R.style.Theme_Design_Light_BottomSheetDialog;
     }
 
     /* access modifiers changed from: package-private */

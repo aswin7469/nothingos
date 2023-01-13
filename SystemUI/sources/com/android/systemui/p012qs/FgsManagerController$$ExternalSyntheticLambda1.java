@@ -12,6 +12,6 @@ public final /* synthetic */ class FgsManagerController$$ExternalSyntheticLambda
     }
 
     public final void onDismiss(DialogInterface dialogInterface) {
-        FgsManagerController.m2888showDialog$lambda22$lambda17(this.f$0, dialogInterface);
+        FgsManagerController.m2893showDialog$lambda22$lambda17(this.f$0, dialogInterface);
     }
 }

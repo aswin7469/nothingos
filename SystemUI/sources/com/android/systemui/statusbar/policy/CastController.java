@@ -16,7 +16,7 @@ public interface CastController extends CallbackController<Callback>, Dumpable {
         public String description;
 
         /* renamed from: id */
-        public String f395id;
+        public String f394id;
         public String name;
         public int state = 0;
         public Object tag;

@@ -9,6 +9,6 @@ public final /* synthetic */ class NavigationBarEdgePanel$$ExternalSyntheticLamb
     }
 
     public final void run() {
-        this.f$0.mo35077xd9d95ff3();
+        this.f$0.mo35081xd9d95ff3();
     }
 }

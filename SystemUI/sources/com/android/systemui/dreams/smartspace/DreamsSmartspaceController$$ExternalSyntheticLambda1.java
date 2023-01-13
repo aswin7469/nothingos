@@ -12,6 +12,6 @@ public final /* synthetic */ class DreamsSmartspaceController$$ExternalSynthetic
     }
 
     public final void onTargetsAvailable(List list) {
-        DreamsSmartspaceController.m2745sessionListener$lambda1(this.f$0, list);
+        DreamsSmartspaceController.m2750sessionListener$lambda1(this.f$0, list);
     }
 }

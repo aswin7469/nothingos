@@ -249,7 +249,7 @@ public class SplitScreenController implements DragAndDropPolicy.Starter, RemoteC
     private void startIntentLegacy(final PendingIntent pendingIntent, Intent intent, final int i, Bundle bundle) {
         final WindowContainerTransaction windowContainerTransaction = new WindowContainerTransaction();
         this.mStageCoordinator.prepareEvictChildTasks(i, windowContainerTransaction);
-        C35511 r1 = new LegacyTransitions.ILegacyTransition() {
+        C35611 r1 = new LegacyTransitions.ILegacyTransition() {
             public void onAnimationStart(int i, RemoteAnimationTarget[] remoteAnimationTargetArr, RemoteAnimationTarget[] remoteAnimationTargetArr2, RemoteAnimationTarget[] remoteAnimationTargetArr3, IRemoteAnimationFinishedCallback iRemoteAnimationFinishedCallback, SurfaceControl.Transaction transaction) {
                 ComponentName componentName = null;
                 if (remoteAnimationTargetArr == null || remoteAnimationTargetArr.length == 0) {
@@ -398,37 +398,37 @@ public class SplitScreenController implements DragAndDropPolicy.Starter, RemoteC
             this.mListener = new SplitScreen.SplitScreenListener() {
                 public void onStagePositionChanged(int i, int i2) {
                     for (int i3 = 0; i3 < SplitScreenImpl.this.mExecutors.size(); i3++) {
-                        ((Executor) SplitScreenImpl.this.mExecutors.valueAt(i3)).execute(new C3563xcb46d402(this, i3, i, i2));
+                        ((Executor) SplitScreenImpl.this.mExecutors.valueAt(i3)).execute(new C3573xcb46d402(this, i3, i, i2));
                     }
                 }
 
                 /* access modifiers changed from: package-private */
                 /* renamed from: lambda$onStagePositionChanged$0$com-android-wm-shell-splitscreen-SplitScreenController$SplitScreenImpl$1 */
-                public /* synthetic */ void mo50794x866440cf(int i, int i2, int i3) {
+                public /* synthetic */ void mo50803x866440cf(int i, int i2, int i3) {
                     ((SplitScreen.SplitScreenListener) SplitScreenImpl.this.mExecutors.keyAt(i)).onStagePositionChanged(i2, i3);
                 }
 
                 public void onTaskStageChanged(int i, int i2, boolean z) {
                     for (int i3 = 0; i3 < SplitScreenImpl.this.mExecutors.size(); i3++) {
-                        ((Executor) SplitScreenImpl.this.mExecutors.valueAt(i3)).execute(new C3562xcb46d401(this, i3, i, i2, z));
+                        ((Executor) SplitScreenImpl.this.mExecutors.valueAt(i3)).execute(new C3572xcb46d401(this, i3, i, i2, z));
                     }
                 }
 
                 /* access modifiers changed from: package-private */
                 /* renamed from: lambda$onTaskStageChanged$1$com-android-wm-shell-splitscreen-SplitScreenController$SplitScreenImpl$1 */
-                public /* synthetic */ void mo50795x26ca89a0(int i, int i2, int i3, boolean z) {
+                public /* synthetic */ void mo50804x26ca89a0(int i, int i2, int i3, boolean z) {
                     ((SplitScreen.SplitScreenListener) SplitScreenImpl.this.mExecutors.keyAt(i)).onTaskStageChanged(i2, i3, z);
                 }
 
                 public void onSplitVisibilityChanged(boolean z) {
                     for (int i = 0; i < SplitScreenImpl.this.mExecutors.size(); i++) {
-                        ((Executor) SplitScreenImpl.this.mExecutors.valueAt(i)).execute(new C3561xcb46d400(this, i, z));
+                        ((Executor) SplitScreenImpl.this.mExecutors.valueAt(i)).execute(new C3571xcb46d400(this, i, z));
                     }
                 }
 
                 /* access modifiers changed from: package-private */
                 /* renamed from: lambda$onSplitVisibilityChanged$2$com-android-wm-shell-splitscreen-SplitScreenController$SplitScreenImpl$1 */
-                public /* synthetic */ void mo50793x35076252(int i, boolean z) {
+                public /* synthetic */ void mo50802x35076252(int i, boolean z) {
                     ((SplitScreen.SplitScreenListener) SplitScreenImpl.this.mExecutors.keyAt(i)).onSplitVisibilityChanged(z);
                 }
             };
@@ -453,7 +453,7 @@ public class SplitScreenController implements DragAndDropPolicy.Starter, RemoteC
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$registerSplitScreenListener$0$com-android-wm-shell-splitscreen-SplitScreenController$SplitScreenImpl */
-        public /* synthetic */ void mo50790x486dac51(SplitScreen.SplitScreenListener splitScreenListener, Executor executor) {
+        public /* synthetic */ void mo50799x486dac51(SplitScreen.SplitScreenListener splitScreenListener, Executor executor) {
             if (this.mExecutors.size() == 0) {
                 SplitScreenController.this.registerSplitScreenListener(this.mListener);
             }
@@ -462,7 +462,7 @@ public class SplitScreenController implements DragAndDropPolicy.Starter, RemoteC
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$registerSplitScreenListener$1$com-android-wm-shell-splitscreen-SplitScreenController$SplitScreenImpl */
-        public /* synthetic */ void mo50791xcab86130(SplitScreen.SplitScreenListener splitScreenListener) {
+        public /* synthetic */ void mo50800xcab86130(SplitScreen.SplitScreenListener splitScreenListener) {
             SplitScreenController.this.mStageCoordinator.sendStatusToListener(splitScreenListener);
         }
 
@@ -472,7 +472,7 @@ public class SplitScreenController implements DragAndDropPolicy.Starter, RemoteC
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$unregisterSplitScreenListener$2$com-android-wm-shell-splitscreen-SplitScreenController$SplitScreenImpl */
-        public /* synthetic */ void mo50792xe58688e8(SplitScreen.SplitScreenListener splitScreenListener) {
+        public /* synthetic */ void mo50801xe58688e8(SplitScreen.SplitScreenListener splitScreenListener) {
             this.mExecutors.remove(splitScreenListener);
             if (this.mExecutors.size() == 0) {
                 SplitScreenController.this.unregisterSplitScreenListener(this.mListener);
@@ -485,7 +485,7 @@ public class SplitScreenController implements DragAndDropPolicy.Starter, RemoteC
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onKeyguardVisibilityChanged$3$com-android-wm-shell-splitscreen-SplitScreenController$SplitScreenImpl */
-        public /* synthetic */ void mo50789x206d89e8(boolean z) {
+        public /* synthetic */ void mo50798x206d89e8(boolean z) {
             SplitScreenController.this.onKeyguardVisibilityChanged(z);
         }
 
@@ -495,7 +495,7 @@ public class SplitScreenController implements DragAndDropPolicy.Starter, RemoteC
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onFinishedWakingUp$4$com-android-wm-shell-splitscreen-SplitScreenController$SplitScreenImpl */
-        public /* synthetic */ void mo50788x8e66bf5d() {
+        public /* synthetic */ void mo50797x8e66bf5d() {
             SplitScreenController.this.onFinishedWakingUp();
         }
     }
@@ -507,11 +507,11 @@ public class SplitScreenController implements DragAndDropPolicy.Starter, RemoteC
         public final SingleInstanceRemoteListener<SplitScreenController, ISplitScreenListener> mListener;
         private final SplitScreen.SplitScreenListener mSplitScreenListener = new SplitScreen.SplitScreenListener() {
             public void onStagePositionChanged(int i, int i2) {
-                ISplitScreenImpl.this.mListener.call(new C3559xc118fe9b(i, i2));
+                ISplitScreenImpl.this.mListener.call(new C3569xc118fe9b(i, i2));
             }
 
             public void onTaskStageChanged(int i, int i2, boolean z) {
-                ISplitScreenImpl.this.mListener.call(new C3560xc118fe9c(i, i2, z));
+                ISplitScreenImpl.this.mListener.call(new C3570xc118fe9c(i, i2, z));
             }
         };
 
@@ -522,13 +522,13 @@ public class SplitScreenController implements DragAndDropPolicy.Starter, RemoteC
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$new$0$com-android-wm-shell-splitscreen-SplitScreenController$ISplitScreenImpl */
-        public /* synthetic */ void mo50784xd830f43b(SplitScreenController splitScreenController) {
+        public /* synthetic */ void mo50793xd830f43b(SplitScreenController splitScreenController) {
             splitScreenController.registerSplitScreenListener(this.mSplitScreenListener);
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$new$1$com-android-wm-shell-splitscreen-SplitScreenController$ISplitScreenImpl */
-        public /* synthetic */ void mo50785x9f3cdb3c(SplitScreenController splitScreenController) {
+        public /* synthetic */ void mo50794x9f3cdb3c(SplitScreenController splitScreenController) {
             splitScreenController.unregisterSplitScreenListener(this.mSplitScreenListener);
         }
 
@@ -538,12 +538,12 @@ public class SplitScreenController implements DragAndDropPolicy.Starter, RemoteC
         }
 
         public void registerSplitScreenListener(ISplitScreenListener iSplitScreenListener) {
-            ExecutorUtils.executeRemoteCallWithTaskPermission(this.mController, "registerSplitScreenListener", new C3556xeaa4ee03(this, iSplitScreenListener));
+            ExecutorUtils.executeRemoteCallWithTaskPermission(this.mController, "registerSplitScreenListener", new C3566xeaa4ee03(this, iSplitScreenListener));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$registerSplitScreenListener$2$com-android-wm-shell-splitscreen-SplitScreenController$ISplitScreenImpl */
-        public /* synthetic */ void mo50786xca1e3634(ISplitScreenListener iSplitScreenListener, SplitScreenController splitScreenController) {
+        public /* synthetic */ void mo50795xca1e3634(ISplitScreenListener iSplitScreenListener, SplitScreenController splitScreenController) {
             this.mListener.register(iSplitScreenListener);
         }
 
@@ -553,12 +553,12 @@ public class SplitScreenController implements DragAndDropPolicy.Starter, RemoteC
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$unregisterSplitScreenListener$3$com-android-wm-shell-splitscreen-SplitScreenController$ISplitScreenImpl */
-        public /* synthetic */ void mo50787x915057c(SplitScreenController splitScreenController) {
+        public /* synthetic */ void mo50796x915057c(SplitScreenController splitScreenController) {
             this.mListener.unregister();
         }
 
         public void exitSplitScreen(int i) {
-            ExecutorUtils.executeRemoteCallWithTaskPermission(this.mController, "exitSplitScreen", new C3554xeaa4ee01(i));
+            ExecutorUtils.executeRemoteCallWithTaskPermission(this.mController, "exitSplitScreen", new C3564xeaa4ee01(i));
         }
 
         public void exitSplitScreenOnHide(boolean z) {
@@ -574,7 +574,7 @@ public class SplitScreenController implements DragAndDropPolicy.Starter, RemoteC
         }
 
         public void startTasksWithLegacyTransition(int i, Bundle bundle, int i2, Bundle bundle2, int i3, float f, RemoteAnimationAdapter remoteAnimationAdapter) {
-            ExecutorUtils.executeRemoteCallWithTaskPermission(this.mController, "startTasks", new C3555xeaa4ee02(i, bundle, i2, bundle2, i3, f, remoteAnimationAdapter));
+            ExecutorUtils.executeRemoteCallWithTaskPermission(this.mController, "startTasks", new C3565xeaa4ee02(i, bundle, i2, bundle2, i3, f, remoteAnimationAdapter));
         }
 
         public void startIntentAndTaskWithLegacyTransition(PendingIntent pendingIntent, Intent intent, int i, Bundle bundle, Bundle bundle2, int i2, float f, RemoteAnimationAdapter remoteAnimationAdapter) {
@@ -586,11 +586,11 @@ public class SplitScreenController implements DragAndDropPolicy.Starter, RemoteC
         }
 
         public void startShortcut(String str, String str2, int i, Bundle bundle, UserHandle userHandle) {
-            ExecutorUtils.executeRemoteCallWithTaskPermission(this.mController, "startShortcut", new C3557xeaa4ee04(str, str2, i, bundle, userHandle));
+            ExecutorUtils.executeRemoteCallWithTaskPermission(this.mController, "startShortcut", new C3567xeaa4ee04(str, str2, i, bundle, userHandle));
         }
 
         public void startIntent(PendingIntent pendingIntent, Intent intent, int i, Bundle bundle) {
-            ExecutorUtils.executeRemoteCallWithTaskPermission(this.mController, "startIntent", new C3558xeaa4ee05(pendingIntent, intent, i, bundle));
+            ExecutorUtils.executeRemoteCallWithTaskPermission(this.mController, "startIntent", new C3568xeaa4ee05(pendingIntent, intent, i, bundle));
         }
 
         public RemoteAnimationTarget[] onGoingToRecentsLegacy(RemoteAnimationTarget[] remoteAnimationTargetArr) {

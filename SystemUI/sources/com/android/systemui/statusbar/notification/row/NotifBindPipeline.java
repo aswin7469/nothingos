@@ -36,7 +36,7 @@ public final class NotifBindPipeline {
 
     @Inject
     NotifBindPipeline(CommonNotifCollection commonNotifCollection, NotifBindPipelineLogger notifBindPipelineLogger, @Main Looper looper) {
-        C27521 r0 = new NotifCollectionListener() {
+        C27581 r0 = new NotifCollectionListener() {
             public void onEntryInit(NotificationEntry notificationEntry) {
                 NotifBindPipeline.this.mBindEntries.put(notificationEntry, new BindEntry());
                 NotifBindPipeline.this.mStage.createStageParams(notificationEntry);
@@ -113,7 +113,7 @@ public final class NotifBindPipeline {
 
     /* access modifiers changed from: private */
     /* renamed from: onPipelineComplete */
-    public void mo41359x69f9c096(NotificationEntry notificationEntry) {
+    public void mo41365x69f9c096(NotificationEntry notificationEntry) {
         BindEntry bindEntry = getBindEntry(notificationEntry);
         Set<BindCallback> set = bindEntry.callbacks;
         this.mLogger.logFinishedPipeline(notificationEntry.getKey(), set.size());

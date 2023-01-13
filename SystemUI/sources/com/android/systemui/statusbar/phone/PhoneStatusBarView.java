@@ -16,7 +16,7 @@ import android.view.accessibility.AccessibilityEvent;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import com.android.internal.policy.SystemBarUtils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.DarkIconDispatcher;
 import com.android.systemui.util.leak.RotationUtils;
@@ -67,9 +67,9 @@ public class PhoneStatusBarView extends FrameLayout {
 
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mBattery = (DarkIconDispatcher.DarkReceiver) findViewById(C1893R.C1897id.battery);
-        this.mClock = (DarkIconDispatcher.DarkReceiver) findViewById(C1893R.C1897id.clock);
-        this.mCutoutSpace = findViewById(C1893R.C1897id.cutout_space_view);
+        this.mBattery = (DarkIconDispatcher.DarkReceiver) findViewById(C1894R.C1898id.battery);
+        this.mClock = (DarkIconDispatcher.DarkReceiver) findViewById(C1894R.C1898id.clock);
+        this.mCutoutSpace = findViewById(C1894R.C1898id.cutout_space_view);
         updateResources();
     }
 
@@ -161,7 +161,7 @@ public class PhoneStatusBarView extends FrameLayout {
     }
 
     public void updateResources() {
-        this.mCutoutSideNudge = getResources().getDimensionPixelSize(C1893R.dimen.display_cutout_margin_consumption);
+        this.mCutoutSideNudge = getResources().getDimensionPixelSize(C1894R.dimen.display_cutout_margin_consumption);
         updateStatusBarHeight();
     }
 
@@ -172,10 +172,10 @@ public class PhoneStatusBarView extends FrameLayout {
         int statusBarHeight = SystemBarUtils.getStatusBarHeight(this.mContext);
         this.mStatusBarHeight = statusBarHeight;
         layoutParams.height = statusBarHeight - i;
-        int dimensionPixelSize = getResources().getDimensionPixelSize(C1893R.dimen.status_bar_padding_top);
-        int dimensionPixelSize2 = getResources().getDimensionPixelSize(C1893R.dimen.status_bar_padding_start);
-        PhoneStatusBarViewEx.updateSbContentPadding(this.mContext, findViewById(C1893R.C1897id.status_bar_contents), dimensionPixelSize2, dimensionPixelSize, getResources().getDimensionPixelSize(C1893R.dimen.status_bar_padding_end));
-        findViewById(C1893R.C1897id.notification_lights_out).setPaddingRelative(0, dimensionPixelSize2, 0, 0);
+        int dimensionPixelSize = getResources().getDimensionPixelSize(C1894R.dimen.status_bar_padding_top);
+        int dimensionPixelSize2 = getResources().getDimensionPixelSize(C1894R.dimen.status_bar_padding_start);
+        PhoneStatusBarViewEx.updateSbContentPadding(this.mContext, findViewById(C1894R.C1898id.status_bar_contents), dimensionPixelSize2, dimensionPixelSize, getResources().getDimensionPixelSize(C1894R.dimen.status_bar_padding_end));
+        findViewById(C1894R.C1898id.notification_lights_out).setPaddingRelative(0, dimensionPixelSize2, 0, 0);
         setLayoutParams(layoutParams);
     }
 

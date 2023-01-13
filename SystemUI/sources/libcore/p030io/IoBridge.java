@@ -52,7 +52,7 @@ public final class IoBridge {
 
     public static int available(FileDescriptor fileDescriptor) throws IOException {
         try {
-            int ioctlInt = Libcore.f857os.ioctlInt(fileDescriptor, OsConstants.FIONREAD);
+            int ioctlInt = Libcore.f855os.ioctlInt(fileDescriptor, OsConstants.FIONREAD);
             if (ioctlInt < 0) {
                 return 0;
             }
@@ -82,7 +82,7 @@ public final class IoBridge {
             }
         }
         try {
-            Libcore.f857os.bind(fileDescriptor, inetAddress, i);
+            Libcore.f855os.bind(fileDescriptor, inetAddress, i);
         } catch (ErrnoException e2) {
             if (e2.errno == OsConstants.EADDRINUSE || e2.errno == OsConstants.EADDRNOTAVAIL || e2.errno == OsConstants.EPERM || e2.errno == OsConstants.EACCES) {
                 throw new BindException(e2.getMessage(), e2);
@@ -122,13 +122,13 @@ public final class IoBridge {
     private static void connectErrno(FileDescriptor fileDescriptor, InetAddress inetAddress, int i, int i2) throws ErrnoException, IOException {
         int millis;
         if (i2 <= 0) {
-            Libcore.f857os.connect(fileDescriptor, inetAddress, i);
+            Libcore.f855os.connect(fileDescriptor, inetAddress, i);
             return;
         }
         IoUtils.setBlocking(fileDescriptor, false);
         long nanoTime = System.nanoTime() + TimeUnit.MILLISECONDS.toNanos((long) i2);
         try {
-            Libcore.f857os.connect(fileDescriptor, inetAddress, i);
+            Libcore.f855os.connect(fileDescriptor, inetAddress, i);
             IoUtils.setBlocking(fileDescriptor, true);
         } catch (ErrnoException e) {
             if (e.errno == OsConstants.EINPROGRESS) {
@@ -183,7 +183,7 @@ public final class IoBridge {
             if (release$.valid()) {
                 AsynchronousCloseMonitor.signalBlockedThreads(release$);
                 try {
-                    Libcore.f857os.close(release$);
+                    Libcore.f855os.close(release$);
                 } catch (ErrnoException e) {
                     throw e.rethrowAsIOException();
                 }
@@ -197,10 +197,10 @@ public final class IoBridge {
             StructPollfd[] structPollfdArr = {structPollfd};
             structPollfd.f59fd = fileDescriptor;
             structPollfdArr[0].events = (short) OsConstants.POLLOUT;
-            if (Libcore.f857os.poll(structPollfdArr, i3) == 0) {
+            if (Libcore.f855os.poll(structPollfdArr, i3) == 0) {
                 return false;
             }
-            int i4 = Libcore.f857os.getsockoptInt(fileDescriptor, OsConstants.SOL_SOCKET, OsConstants.SO_ERROR);
+            int i4 = Libcore.f855os.getsockoptInt(fileDescriptor, OsConstants.SOL_SOCKET, OsConstants.SO_ERROR);
             if (i4 == 0) {
                 return true;
             }
@@ -229,56 +229,56 @@ public final class IoBridge {
 
     private static Object getSocketOptionErrno(FileDescriptor fileDescriptor, int i) throws ErrnoException, SocketException {
         if (i == 1) {
-            return Boolean.valueOf(booleanFromInt(Libcore.f857os.getsockoptInt(fileDescriptor, OsConstants.IPPROTO_TCP, OsConstants.TCP_NODELAY)));
+            return Boolean.valueOf(booleanFromInt(Libcore.f855os.getsockoptInt(fileDescriptor, OsConstants.IPPROTO_TCP, OsConstants.TCP_NODELAY)));
         }
         if (i == 8) {
-            return Boolean.valueOf(booleanFromInt(Libcore.f857os.getsockoptInt(fileDescriptor, OsConstants.SOL_SOCKET, OsConstants.SO_KEEPALIVE)));
+            return Boolean.valueOf(booleanFromInt(Libcore.f855os.getsockoptInt(fileDescriptor, OsConstants.SOL_SOCKET, OsConstants.SO_KEEPALIVE)));
         }
         if (i == 25) {
-            return Integer.valueOf(Libcore.f857os.getsockoptInt(fileDescriptor, OsConstants.IPPROTO_IPV6, OsConstants.IPV6_UNICAST_HOPS));
+            return Integer.valueOf(Libcore.f855os.getsockoptInt(fileDescriptor, OsConstants.IPPROTO_IPV6, OsConstants.IPV6_UNICAST_HOPS));
         }
         if (i == 128) {
-            StructLinger structLinger = Libcore.f857os.getsockoptLinger(fileDescriptor, OsConstants.SOL_SOCKET, OsConstants.SO_LINGER);
+            StructLinger structLinger = Libcore.f855os.getsockoptLinger(fileDescriptor, OsConstants.SOL_SOCKET, OsConstants.SO_LINGER);
             if (!structLinger.isOn()) {
                 return false;
             }
             return Integer.valueOf(structLinger.l_linger);
         } else if (i == 4102) {
-            return Integer.valueOf((int) Libcore.f857os.getsockoptTimeval(fileDescriptor, OsConstants.SOL_SOCKET, OsConstants.SO_RCVTIMEO).toMillis());
+            return Integer.valueOf((int) Libcore.f855os.getsockoptTimeval(fileDescriptor, OsConstants.SOL_SOCKET, OsConstants.SO_RCVTIMEO).toMillis());
         } else {
             if (i == 3) {
-                return Integer.valueOf(Libcore.f857os.getsockoptInt(fileDescriptor, OsConstants.IPPROTO_IPV6, OsConstants.IPV6_TCLASS));
+                return Integer.valueOf(Libcore.f855os.getsockoptInt(fileDescriptor, OsConstants.IPPROTO_IPV6, OsConstants.IPV6_TCLASS));
             }
             if (i == 4) {
-                return Boolean.valueOf(booleanFromInt(Libcore.f857os.getsockoptInt(fileDescriptor, OsConstants.SOL_SOCKET, OsConstants.SO_REUSEADDR)));
+                return Boolean.valueOf(booleanFromInt(Libcore.f855os.getsockoptInt(fileDescriptor, OsConstants.SOL_SOCKET, OsConstants.SO_REUSEADDR)));
             }
             if (i != 31) {
                 if (i == 32) {
-                    return Boolean.valueOf(booleanFromInt(Libcore.f857os.getsockoptInt(fileDescriptor, OsConstants.SOL_SOCKET, OsConstants.SO_BROADCAST)));
+                    return Boolean.valueOf(booleanFromInt(Libcore.f855os.getsockoptInt(fileDescriptor, OsConstants.SOL_SOCKET, OsConstants.SO_BROADCAST)));
                 }
                 switch (i) {
                     case 15:
-                        return ((InetSocketAddress) Libcore.f857os.getsockname(fileDescriptor)).getAddress();
+                        return ((InetSocketAddress) Libcore.f855os.getsockname(fileDescriptor)).getAddress();
                     case 16:
                         break;
                     case 17:
-                        return Integer.valueOf(Libcore.f857os.getsockoptInt(fileDescriptor, OsConstants.IPPROTO_IPV6, OsConstants.IPV6_MULTICAST_HOPS));
+                        return Integer.valueOf(Libcore.f855os.getsockoptInt(fileDescriptor, OsConstants.IPPROTO_IPV6, OsConstants.IPV6_MULTICAST_HOPS));
                     case 18:
-                        return Boolean.valueOf(!booleanFromInt(Libcore.f857os.getsockoptInt(fileDescriptor, OsConstants.IPPROTO_IPV6, OsConstants.IPV6_MULTICAST_LOOP)));
+                        return Boolean.valueOf(!booleanFromInt(Libcore.f855os.getsockoptInt(fileDescriptor, OsConstants.IPPROTO_IPV6, OsConstants.IPV6_MULTICAST_LOOP)));
                     default:
                         switch (i) {
                             case 4097:
-                                return Integer.valueOf(Libcore.f857os.getsockoptInt(fileDescriptor, OsConstants.SOL_SOCKET, OsConstants.SO_SNDBUF));
+                                return Integer.valueOf(Libcore.f855os.getsockoptInt(fileDescriptor, OsConstants.SOL_SOCKET, OsConstants.SO_SNDBUF));
                             case 4098:
-                                return Integer.valueOf(Libcore.f857os.getsockoptInt(fileDescriptor, OsConstants.SOL_SOCKET, OsConstants.SO_RCVBUF));
+                                return Integer.valueOf(Libcore.f855os.getsockoptInt(fileDescriptor, OsConstants.SOL_SOCKET, OsConstants.SO_RCVBUF));
                             case 4099:
-                                return Boolean.valueOf(booleanFromInt(Libcore.f857os.getsockoptInt(fileDescriptor, OsConstants.SOL_SOCKET, OsConstants.SO_OOBINLINE)));
+                                return Boolean.valueOf(booleanFromInt(Libcore.f855os.getsockoptInt(fileDescriptor, OsConstants.SOL_SOCKET, OsConstants.SO_OOBINLINE)));
                             default:
                                 throw new SocketException("Unknown socket option: " + i);
                         }
                 }
             }
-            return Integer.valueOf(Libcore.f857os.getsockoptInt(fileDescriptor, OsConstants.IPPROTO_IPV6, OsConstants.IPV6_MULTICAST_IF));
+            return Integer.valueOf(Libcore.f855os.getsockoptInt(fileDescriptor, OsConstants.IPPROTO_IPV6, OsConstants.IPV6_MULTICAST_IF));
         }
     }
 
@@ -294,13 +294,13 @@ public final class IoBridge {
         int i2;
         boolean z = true;
         if (i == 1) {
-            Libcore.f857os.setsockoptInt(fileDescriptor, OsConstants.IPPROTO_TCP, OsConstants.TCP_NODELAY, booleanToInt(((Boolean) obj).booleanValue()));
+            Libcore.f855os.setsockoptInt(fileDescriptor, OsConstants.IPPROTO_TCP, OsConstants.TCP_NODELAY, booleanToInt(((Boolean) obj).booleanValue()));
         } else if (i == 8) {
-            Libcore.f857os.setsockoptInt(fileDescriptor, OsConstants.SOL_SOCKET, OsConstants.SO_KEEPALIVE, booleanToInt(((Boolean) obj).booleanValue()));
+            Libcore.f855os.setsockoptInt(fileDescriptor, OsConstants.SOL_SOCKET, OsConstants.SO_KEEPALIVE, booleanToInt(((Boolean) obj).booleanValue()));
         } else if (i == 25) {
             Integer num = (Integer) obj;
-            Libcore.f857os.setsockoptInt(fileDescriptor, OsConstants.IPPROTO_IP, OsConstants.IP_TTL, num.intValue());
-            Libcore.f857os.setsockoptInt(fileDescriptor, OsConstants.IPPROTO_IPV6, OsConstants.IPV6_UNICAST_HOPS, num.intValue());
+            Libcore.f855os.setsockoptInt(fileDescriptor, OsConstants.IPPROTO_IP, OsConstants.IP_TTL, num.intValue());
+            Libcore.f855os.setsockoptInt(fileDescriptor, OsConstants.IPPROTO_IPV6, OsConstants.IPV6_UNICAST_HOPS, num.intValue());
         } else if (i == 128) {
             if (obj instanceof Integer) {
                 i2 = Math.min(((Integer) obj).intValue(), 65535);
@@ -308,69 +308,69 @@ public final class IoBridge {
                 z = false;
                 i2 = 0;
             }
-            Libcore.f857os.setsockoptLinger(fileDescriptor, OsConstants.SOL_SOCKET, OsConstants.SO_LINGER, new StructLinger(booleanToInt(z), i2));
+            Libcore.f855os.setsockoptLinger(fileDescriptor, OsConstants.SOL_SOCKET, OsConstants.SO_LINGER, new StructLinger(booleanToInt(z), i2));
         } else if (i == 4102) {
-            Libcore.f857os.setsockoptTimeval(fileDescriptor, OsConstants.SOL_SOCKET, OsConstants.SO_RCVTIMEO, StructTimeval.fromMillis((long) ((Integer) obj).intValue()));
+            Libcore.f855os.setsockoptTimeval(fileDescriptor, OsConstants.SOL_SOCKET, OsConstants.SO_RCVTIMEO, StructTimeval.fromMillis((long) ((Integer) obj).intValue()));
         } else if (i == 3) {
             Integer num2 = (Integer) obj;
-            Libcore.f857os.setsockoptInt(fileDescriptor, OsConstants.IPPROTO_IP, OsConstants.IP_TOS, num2.intValue());
-            Libcore.f857os.setsockoptInt(fileDescriptor, OsConstants.IPPROTO_IPV6, OsConstants.IPV6_TCLASS, num2.intValue());
+            Libcore.f855os.setsockoptInt(fileDescriptor, OsConstants.IPPROTO_IP, OsConstants.IP_TOS, num2.intValue());
+            Libcore.f855os.setsockoptInt(fileDescriptor, OsConstants.IPPROTO_IPV6, OsConstants.IPV6_TCLASS, num2.intValue());
         } else if (i == 4) {
-            Libcore.f857os.setsockoptInt(fileDescriptor, OsConstants.SOL_SOCKET, OsConstants.SO_REUSEADDR, booleanToInt(((Boolean) obj).booleanValue()));
+            Libcore.f855os.setsockoptInt(fileDescriptor, OsConstants.SOL_SOCKET, OsConstants.SO_REUSEADDR, booleanToInt(((Boolean) obj).booleanValue()));
         } else if (i == 31) {
             Integer num3 = (Integer) obj;
-            Libcore.f857os.setsockoptIpMreqn(fileDescriptor, OsConstants.IPPROTO_IP, OsConstants.IP_MULTICAST_IF, num3.intValue());
-            Libcore.f857os.setsockoptInt(fileDescriptor, OsConstants.IPPROTO_IPV6, OsConstants.IPV6_MULTICAST_IF, num3.intValue());
+            Libcore.f855os.setsockoptIpMreqn(fileDescriptor, OsConstants.IPPROTO_IP, OsConstants.IP_MULTICAST_IF, num3.intValue());
+            Libcore.f855os.setsockoptInt(fileDescriptor, OsConstants.IPPROTO_IPV6, OsConstants.IPV6_MULTICAST_IF, num3.intValue());
         } else if (i != 32) {
             switch (i) {
                 case 16:
                     NetworkInterface byInetAddress = NetworkInterface.getByInetAddress((InetAddress) obj);
                     if (byInetAddress != null) {
-                        Libcore.f857os.setsockoptIpMreqn(fileDescriptor, OsConstants.IPPROTO_IP, OsConstants.IP_MULTICAST_IF, byInetAddress.getIndex());
-                        Libcore.f857os.setsockoptInt(fileDescriptor, OsConstants.IPPROTO_IPV6, OsConstants.IPV6_MULTICAST_IF, byInetAddress.getIndex());
+                        Libcore.f855os.setsockoptIpMreqn(fileDescriptor, OsConstants.IPPROTO_IP, OsConstants.IP_MULTICAST_IF, byInetAddress.getIndex());
+                        Libcore.f855os.setsockoptInt(fileDescriptor, OsConstants.IPPROTO_IPV6, OsConstants.IPV6_MULTICAST_IF, byInetAddress.getIndex());
                         return;
                     }
                     throw new SocketException("bad argument for IP_MULTICAST_IF : address not bound to any interface");
                 case 17:
                     Integer num4 = (Integer) obj;
-                    Libcore.f857os.setsockoptByte(fileDescriptor, OsConstants.IPPROTO_IP, OsConstants.IP_MULTICAST_TTL, num4.intValue());
-                    Libcore.f857os.setsockoptInt(fileDescriptor, OsConstants.IPPROTO_IPV6, OsConstants.IPV6_MULTICAST_HOPS, num4.intValue());
+                    Libcore.f855os.setsockoptByte(fileDescriptor, OsConstants.IPPROTO_IP, OsConstants.IP_MULTICAST_TTL, num4.intValue());
+                    Libcore.f855os.setsockoptInt(fileDescriptor, OsConstants.IPPROTO_IPV6, OsConstants.IPV6_MULTICAST_HOPS, num4.intValue());
                     return;
                 case 18:
                     int booleanToInt = booleanToInt(!((Boolean) obj).booleanValue());
-                    Libcore.f857os.setsockoptByte(fileDescriptor, OsConstants.IPPROTO_IP, OsConstants.IP_MULTICAST_LOOP, booleanToInt);
-                    Libcore.f857os.setsockoptInt(fileDescriptor, OsConstants.IPPROTO_IPV6, OsConstants.IPV6_MULTICAST_LOOP, booleanToInt);
+                    Libcore.f855os.setsockoptByte(fileDescriptor, OsConstants.IPPROTO_IP, OsConstants.IP_MULTICAST_LOOP, booleanToInt);
+                    Libcore.f855os.setsockoptInt(fileDescriptor, OsConstants.IPPROTO_IPV6, OsConstants.IPV6_MULTICAST_LOOP, booleanToInt);
                     return;
                 case 19:
                 case 20:
                     StructGroupReq structGroupReq = (StructGroupReq) obj;
-                    Libcore.f857os.setsockoptGroupReq(fileDescriptor, structGroupReq.gr_group instanceof Inet4Address ? OsConstants.IPPROTO_IP : OsConstants.IPPROTO_IPV6, i == 19 ? OsConstants.MCAST_JOIN_GROUP : OsConstants.MCAST_LEAVE_GROUP, structGroupReq);
+                    Libcore.f855os.setsockoptGroupReq(fileDescriptor, structGroupReq.gr_group instanceof Inet4Address ? OsConstants.IPPROTO_IP : OsConstants.IPPROTO_IPV6, i == 19 ? OsConstants.MCAST_JOIN_GROUP : OsConstants.MCAST_LEAVE_GROUP, structGroupReq);
                     return;
                 default:
                     switch (i) {
                         case 4097:
-                            Libcore.f857os.setsockoptInt(fileDescriptor, OsConstants.SOL_SOCKET, OsConstants.SO_SNDBUF, ((Integer) obj).intValue());
+                            Libcore.f855os.setsockoptInt(fileDescriptor, OsConstants.SOL_SOCKET, OsConstants.SO_SNDBUF, ((Integer) obj).intValue());
                             return;
                         case 4098:
-                            Libcore.f857os.setsockoptInt(fileDescriptor, OsConstants.SOL_SOCKET, OsConstants.SO_RCVBUF, ((Integer) obj).intValue());
+                            Libcore.f855os.setsockoptInt(fileDescriptor, OsConstants.SOL_SOCKET, OsConstants.SO_RCVBUF, ((Integer) obj).intValue());
                             return;
                         case 4099:
-                            Libcore.f857os.setsockoptInt(fileDescriptor, OsConstants.SOL_SOCKET, OsConstants.SO_OOBINLINE, booleanToInt(((Boolean) obj).booleanValue()));
+                            Libcore.f855os.setsockoptInt(fileDescriptor, OsConstants.SOL_SOCKET, OsConstants.SO_OOBINLINE, booleanToInt(((Boolean) obj).booleanValue()));
                             return;
                         default:
                             throw new SocketException("Unknown socket option: " + i);
                     }
             }
         } else {
-            Libcore.f857os.setsockoptInt(fileDescriptor, OsConstants.SOL_SOCKET, OsConstants.SO_BROADCAST, booleanToInt(((Boolean) obj).booleanValue()));
+            Libcore.f855os.setsockoptInt(fileDescriptor, OsConstants.SOL_SOCKET, OsConstants.SO_BROADCAST, booleanToInt(((Boolean) obj).booleanValue()));
         }
     }
 
     @SystemApi(client = SystemApi.Client.MODULE_LIBRARIES)
     public static FileDescriptor open(String str, int i) throws FileNotFoundException {
         try {
-            FileDescriptor open = Libcore.f857os.open(str, i, 438);
-            if (!OsConstants.S_ISDIR(Libcore.f857os.fstat(open).st_mode)) {
+            FileDescriptor open = Libcore.f855os.open(str, i, 438);
+            if (!OsConstants.S_ISDIR(Libcore.f855os.fstat(open).st_mode)) {
                 return open;
             }
             throw new ErrnoException("open", OsConstants.EISDIR);
@@ -394,7 +394,7 @@ public final class IoBridge {
             return 0;
         }
         try {
-            int read = Libcore.f857os.read(fileDescriptor, bArr, i, i2);
+            int read = Libcore.f855os.read(fileDescriptor, bArr, i, i2);
             if (read == 0) {
                 return -1;
             }
@@ -413,7 +413,7 @@ public final class IoBridge {
         if (i2 != 0) {
             while (i2 > 0) {
                 try {
-                    int write = Libcore.f857os.write(fileDescriptor, bArr, i, i2);
+                    int write = Libcore.f855os.write(fileDescriptor, bArr, i, i2);
                     i2 -= write;
                     i += write;
                 } catch (ErrnoException e) {
@@ -429,7 +429,7 @@ public final class IoBridge {
             return 0;
         }
         try {
-            return Libcore.f857os.sendto(fileDescriptor, bArr, i, i2, i3, inetAddress, i4);
+            return Libcore.f855os.sendto(fileDescriptor, bArr, i, i2, i3, inetAddress, i4);
         } catch (ErrnoException e) {
             return maybeThrowAfterSendto(z, e);
         }
@@ -441,7 +441,7 @@ public final class IoBridge {
             return 0;
         }
         try {
-            return Libcore.f857os.sendto(fileDescriptor, byteBuffer, i, inetAddress, i2);
+            return Libcore.f855os.sendto(fileDescriptor, byteBuffer, i, inetAddress, i2);
         } catch (ErrnoException e) {
             return maybeThrowAfterSendto(z, e);
         }
@@ -469,7 +469,7 @@ public final class IoBridge {
         } else {
             inetSocketAddress = null;
         }
-        return postRecvfrom(z, datagramPacket, inetSocketAddress, Libcore.f857os.recvfrom(fileDescriptor, bArr, i, i2, i3, inetSocketAddress));
+        return postRecvfrom(z, datagramPacket, inetSocketAddress, Libcore.f855os.recvfrom(fileDescriptor, bArr, i, i2, i3, inetSocketAddress));
     }
 
     public static int recvfrom(boolean z, FileDescriptor fileDescriptor, ByteBuffer byteBuffer, int i, DatagramPacket datagramPacket, boolean z2) throws IOException {
@@ -483,7 +483,7 @@ public final class IoBridge {
         } else {
             inetSocketAddress = null;
         }
-        return postRecvfrom(z, datagramPacket, inetSocketAddress, Libcore.f857os.recvfrom(fileDescriptor, byteBuffer, i, inetSocketAddress));
+        return postRecvfrom(z, datagramPacket, inetSocketAddress, Libcore.f855os.recvfrom(fileDescriptor, byteBuffer, i, inetSocketAddress));
     }
 
     private static int postRecvfrom(boolean z, DatagramPacket datagramPacket, InetSocketAddress inetSocketAddress, int i) {
@@ -519,7 +519,7 @@ public final class IoBridge {
 
     public static FileDescriptor socket(int i, int i2, int i3) throws SocketException {
         try {
-            return Libcore.f857os.socket(i, i2, i3);
+            return Libcore.f855os.socket(i, i2, i3);
         } catch (ErrnoException e) {
             throw e.rethrowAsSocketException();
         }
@@ -541,7 +541,7 @@ public final class IoBridge {
 
     public static InetSocketAddress getLocalInetSocketAddress(FileDescriptor fileDescriptor) throws SocketException {
         try {
-            SocketAddress socketAddress = Libcore.f857os.getsockname(fileDescriptor);
+            SocketAddress socketAddress = Libcore.f855os.getsockname(fileDescriptor);
             if (socketAddress != null) {
                 if (!(socketAddress instanceof InetSocketAddress)) {
                     throw new SocketException("Socket assumed to be pending closure: Expected sockname to be an InetSocketAddress, got " + socketAddress.getClass());

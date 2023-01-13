@@ -22,7 +22,7 @@ import sun.nio.p033ch.Port;
 class UnixAsynchronousServerSocketChannelImpl extends AsynchronousServerSocketChannelImpl implements Port.PollableChannel {
 
     /* renamed from: nd */
-    private static final NativeDispatcher f898nd = new SocketDispatcher();
+    private static final NativeDispatcher f896nd = new SocketDispatcher();
     private AccessControlContext acceptAcc;
     private Object acceptAttachment;
     private PendingFuture<AsynchronousSocketChannel, Object> acceptFuture;
@@ -51,14 +51,14 @@ class UnixAsynchronousServerSocketChannelImpl extends AsynchronousServerSocketCh
         CloseGuard closeGuard = CloseGuard.get();
         this.guard = closeGuard;
         try {
-            IOUtil.configureBlocking(this.f873fd, false);
+            IOUtil.configureBlocking(this.f871fd, false);
             this.port = port2;
-            int fdVal2 = IOUtil.fdVal(this.f873fd);
+            int fdVal2 = IOUtil.fdVal(this.f871fd);
             this.fdVal = fdVal2;
             port2.register(fdVal2, this);
             closeGuard.open("close");
         } catch (IOException e) {
-            f898nd.close(this.f873fd);
+            f896nd.close(this.f871fd);
             throw e;
         }
     }
@@ -92,8 +92,8 @@ class UnixAsynchronousServerSocketChannelImpl extends AsynchronousServerSocketCh
             sun.nio.ch.Port r0 = r5.port
             int r1 = r5.fdVal
             r0.unregister(r1)
-            sun.nio.ch.NativeDispatcher r0 = f898nd
-            java.io.FileDescriptor r1 = r5.f873fd
+            sun.nio.ch.NativeDispatcher r0 = f896nd
+            java.io.FileDescriptor r1 = r5.f871fd
             r0.close(r1)
             java.lang.Object r0 = r5.updateLock
             monitor-enter(r0)
@@ -149,7 +149,7 @@ class UnixAsynchronousServerSocketChannelImpl extends AsynchronousServerSocketCh
         begin();
      */
     /* JADX WARNING: Code restructure failed: missing block: B:12:0x0020, code lost:
-        if (accept(r8.f873fd, r0, r3) != -2) goto L_0x0044;
+        if (accept(r8.f871fd, r0, r3) != -2) goto L_0x0044;
      */
     /* JADX WARNING: Code restructure failed: missing block: B:13:0x0022, code lost:
         r6 = r8.updateLock;
@@ -220,7 +220,7 @@ class UnixAsynchronousServerSocketChannelImpl extends AsynchronousServerSocketCh
             java.net.InetSocketAddress[] r3 = new java.net.InetSocketAddress[r2]
             r4 = 0
             r8.begin()     // Catch:{ all -> 0x0038 }
-            java.io.FileDescriptor r5 = r8.f873fd     // Catch:{ all -> 0x0038 }
+            java.io.FileDescriptor r5 = r8.f871fd     // Catch:{ all -> 0x0038 }
             int r5 = r8.accept(r5, r0, r3)     // Catch:{ all -> 0x0038 }
             r6 = -2
             if (r5 != r6) goto L_0x0044
@@ -330,7 +330,7 @@ class UnixAsynchronousServerSocketChannelImpl extends AsynchronousServerSocketCh
             return unixAsynchronousSocketChannelImpl;
             throw e;
         } catch (IOException e2) {
-            f898nd.close(newfd);
+            f896nd.close(newfd);
             throw e2;
         }
     }
@@ -355,7 +355,7 @@ class UnixAsynchronousServerSocketChannelImpl extends AsynchronousServerSocketCh
             AsynchronousCloseException asynchronousCloseException = null;
             try {
                 begin();
-                if (accept(this.f873fd, fileDescriptor, inetSocketAddressArr) == -2) {
+                if (accept(this.f871fd, fileDescriptor, inetSocketAddressArr) == -2) {
                     PendingFuture<AsynchronousSocketChannel, Object> pendingFuture = null;
                     synchronized (this.updateLock) {
                         if (completionHandler == null) {

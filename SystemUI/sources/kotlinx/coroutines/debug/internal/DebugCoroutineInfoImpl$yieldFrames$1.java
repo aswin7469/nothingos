@@ -7,8 +7,8 @@ import kotlin.coroutines.jvm.internal.CoroutineStackFrame;
 import kotlin.coroutines.jvm.internal.DebugMetadata;
 import kotlin.sequences.SequenceScope;
 
-@Metadata(mo64988k = 3, mo64989mv = {1, 5, 1}, mo64991xi = 48)
-@DebugMetadata(mo65240c = "kotlinx.coroutines.debug.internal.DebugCoroutineInfoImpl", mo65241f = "DebugCoroutineInfoImpl.kt", mo65242i = {}, mo65243l = {80}, mo65244m = "yieldFrames", mo65245n = {}, mo65246s = {})
+@Metadata(mo65044k = 3, mo65045mv = {1, 5, 1}, mo65047xi = 48)
+@DebugMetadata(mo65296c = "kotlinx.coroutines.debug.internal.DebugCoroutineInfoImpl", mo65297f = "DebugCoroutineInfoImpl.kt", mo65298i = {}, mo65299l = {80}, mo65300m = "yieldFrames", mo65301n = {}, mo65302s = {})
 /* compiled from: DebugCoroutineInfoImpl.kt */
 final class DebugCoroutineInfoImpl$yieldFrames$1 extends ContinuationImpl {
     Object L$0;

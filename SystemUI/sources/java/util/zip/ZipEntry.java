@@ -118,7 +118,7 @@ public class ZipEntry implements ZipConstants, Cloneable {
 
     public ZipEntry setLastModifiedTime(FileTime fileTime) {
         this.mtime = (FileTime) Objects.requireNonNull(fileTime, "lastModifiedTime");
-        this.xdostime = ZipUtils.javaToExtendedDosTime(fileTime.mo61298to(TimeUnit.MILLISECONDS));
+        this.xdostime = ZipUtils.javaToExtendedDosTime(fileTime.mo61354to(TimeUnit.MILLISECONDS));
         return this;
     }
 

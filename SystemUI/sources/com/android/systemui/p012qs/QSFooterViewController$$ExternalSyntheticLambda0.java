@@ -14,6 +14,6 @@ public final /* synthetic */ class QSFooterViewController$$ExternalSyntheticLamb
     }
 
     public final void run() {
-        this.f$0.mo36078xee59e1bb(this.f$1);
+        this.f$0.mo36082xee59e1bb(this.f$1);
     }
 }

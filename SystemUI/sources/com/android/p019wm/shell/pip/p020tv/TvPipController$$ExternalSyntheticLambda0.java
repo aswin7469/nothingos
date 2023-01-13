@@ -13,6 +13,6 @@ public final /* synthetic */ class TvPipController$$ExternalSyntheticLambda0 imp
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo50565x7753947f((Rect) obj);
+        this.f$0.mo50574x7753947f((Rect) obj);
     }
 }

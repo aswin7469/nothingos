@@ -10,6 +10,6 @@ public final /* synthetic */ class StageCoordinator$$ExternalSyntheticLambda0 im
     }
 
     public final void run() {
-        this.f$0.m3485lambda$new$0$comandroidwmshellstagesplitStageCoordinator();
+        this.f$0.m3489lambda$new$0$comandroidwmshellstagesplitStageCoordinator();
     }
 }

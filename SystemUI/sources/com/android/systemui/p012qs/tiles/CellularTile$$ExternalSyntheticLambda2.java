@@ -12,6 +12,6 @@ public final /* synthetic */ class CellularTile$$ExternalSyntheticLambda2 implem
     }
 
     public final void onClick(DialogInterface dialogInterface, int i) {
-        this.f$0.mo36861x40d52059(dialogInterface, i);
+        this.f$0.mo36858x40d52059(dialogInterface, i);
     }
 }

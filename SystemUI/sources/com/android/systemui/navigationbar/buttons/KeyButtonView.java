@@ -26,7 +26,7 @@ import android.widget.ImageView;
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.logging.UiEventLogger;
 import com.android.internal.logging.UiEventLoggerImpl;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dependency;
 import com.android.systemui.navigationbar.buttons.KeyButtonRipple;
 import com.android.systemui.recents.OverviewProxyService;
@@ -114,7 +114,7 @@ public class KeyButtonView extends ImageView implements ButtonInterface {
             }
         };
         this.mUiEventLogger = uiEventLogger;
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C1893R.styleable.KeyButtonView, i, 0);
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C1894R.styleable.KeyButtonView, i, 0);
         this.mCode = obtainStyledAttributes.getInteger(1, 0);
         this.mPlaySounds = obtainStyledAttributes.getBoolean(2, true);
         TypedValue typedValue = new TypedValue();
@@ -124,7 +124,7 @@ public class KeyButtonView extends ImageView implements ButtonInterface {
         obtainStyledAttributes.recycle();
         setClickable(true);
         this.mAudioManager = (AudioManager) context.getSystemService("audio");
-        KeyButtonRipple keyButtonRipple = new KeyButtonRipple(context, this, C1893R.dimen.key_button_ripple_max_width);
+        KeyButtonRipple keyButtonRipple = new KeyButtonRipple(context, this, C1894R.dimen.key_button_ripple_max_width);
         this.mRipple = keyButtonRipple;
         this.mOverviewProxyService = (OverviewProxyService) Dependency.get(OverviewProxyService.class);
         this.mInputManager = inputManager;

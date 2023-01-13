@@ -33,7 +33,7 @@ import kotlin.sequences.Sequence;
 import kotlin.sequences.SequencesKt;
 
 @SysUISingleton
-@Metadata(mo64986d1 = {"\u0000n\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u000b\n\u0000\n\u0002\u0018\u0002\n\u0002\u0010\u000e\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0002\b\u0005\b\u0007\u0018\u0000 *2\u00020\u0001:\u0002*+B9\b\u0007\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\u0006\u0010\u0006\u001a\u00020\u0007\u0012\u0006\u0010\b\u001a\u00020\t\u0012\u0006\u0010\n\u001a\u00020\u000b\u0012\b\b\u0001\u0010\f\u001a\u00020\r¢\u0006\u0002\u0010\u000eJ\u0016\u0010\u0015\u001a\u00020\u00162\u0006\u0010\u0017\u001a\u00020\u00182\u0006\u0010\u0019\u001a\u00020\u001aJ\u000e\u0010\u001b\u001a\u00020\u001c2\u0006\u0010\u0017\u001a\u00020\u0018J\u000e\u0010\u001d\u001a\u00020\u001c2\u0006\u0010\u001e\u001a\u00020\u0010J\u0010\u0010\u001f\u001a\u00020\u001c2\u0006\u0010\u0017\u001a\u00020\u0018H\u0002J\u0010\u0010 \u001a\u00020\u001c2\u0006\u0010!\u001a\u00020\"H\u0002J\u0010\u0010#\u001a\u00020\u001c2\u0006\u0010$\u001a\u00020\u0013H\u0002J\u0010\u0010%\u001a\u00020\u001c2\u0006\u0010&\u001a\u00020'H\u0002J\u0014\u0010(\u001a\u00020\u0010*\u00020\u00142\u0006\u0010)\u001a\u00020\u001aH\u0002R\u000e\u0010\u0002\u001a\u00020\u0003X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0006\u001a\u00020\u0007X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\n\u001a\u00020\u000bX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\f\u001a\u00020\rX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\b\u001a\u00020\tX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u000f\u001a\u00020\u0010X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0004\u001a\u00020\u0005X\u0004¢\u0006\u0002\n\u0000R\u001a\u0010\u0011\u001a\u000e\u0012\u0004\u0012\u00020\u0013\u0012\u0004\u0012\u00020\u00140\u0012X\u0004¢\u0006\u0002\n\u0000¨\u0006,"}, mo64987d2 = {"Lcom/android/systemui/statusbar/notification/ConversationNotificationManager;", "", "bindEventManager", "Lcom/android/systemui/statusbar/notification/collection/inflation/BindEventManager;", "notificationGroupManager", "Lcom/android/systemui/statusbar/notification/collection/legacy/NotificationGroupManagerLegacy;", "context", "Landroid/content/Context;", "notifCollection", "Lcom/android/systemui/statusbar/notification/collection/notifcollection/CommonNotifCollection;", "featureFlags", "Lcom/android/systemui/statusbar/notification/NotifPipelineFlags;", "mainHandler", "Landroid/os/Handler;", "(Lcom/android/systemui/statusbar/notification/collection/inflation/BindEventManager;Lcom/android/systemui/statusbar/notification/collection/legacy/NotificationGroupManagerLegacy;Landroid/content/Context;Lcom/android/systemui/statusbar/notification/collection/notifcollection/CommonNotifCollection;Lcom/android/systemui/statusbar/notification/NotifPipelineFlags;Landroid/os/Handler;)V", "notifPanelCollapsed", "", "states", "Ljava/util/concurrent/ConcurrentHashMap;", "", "Lcom/android/systemui/statusbar/notification/ConversationNotificationManager$ConversationState;", "getUnreadCount", "", "entry", "Lcom/android/systemui/statusbar/notification/collection/NotificationEntry;", "recoveredBuilder", "Landroid/app/Notification$Builder;", "onEntryViewBound", "", "onNotificationPanelExpandStateChanged", "isCollapsed", "removeTrackedEntry", "resetBadgeUi", "row", "Lcom/android/systemui/statusbar/notification/row/ExpandableNotificationRow;", "resetCount", "key", "updateNotificationRanking", "rankingMap", "Landroid/service/notification/NotificationListenerService$RankingMap;", "shouldIncrementUnread", "newBuilder", "Companion", "ConversationState", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000n\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u000b\n\u0000\n\u0002\u0018\u0002\n\u0002\u0010\u000e\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0002\b\u0005\b\u0007\u0018\u0000 *2\u00020\u0001:\u0002*+B9\b\u0007\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\u0006\u0010\u0006\u001a\u00020\u0007\u0012\u0006\u0010\b\u001a\u00020\t\u0012\u0006\u0010\n\u001a\u00020\u000b\u0012\b\b\u0001\u0010\f\u001a\u00020\r¢\u0006\u0002\u0010\u000eJ\u0016\u0010\u0015\u001a\u00020\u00162\u0006\u0010\u0017\u001a\u00020\u00182\u0006\u0010\u0019\u001a\u00020\u001aJ\u000e\u0010\u001b\u001a\u00020\u001c2\u0006\u0010\u0017\u001a\u00020\u0018J\u000e\u0010\u001d\u001a\u00020\u001c2\u0006\u0010\u001e\u001a\u00020\u0010J\u0010\u0010\u001f\u001a\u00020\u001c2\u0006\u0010\u0017\u001a\u00020\u0018H\u0002J\u0010\u0010 \u001a\u00020\u001c2\u0006\u0010!\u001a\u00020\"H\u0002J\u0010\u0010#\u001a\u00020\u001c2\u0006\u0010$\u001a\u00020\u0013H\u0002J\u0010\u0010%\u001a\u00020\u001c2\u0006\u0010&\u001a\u00020'H\u0002J\u0014\u0010(\u001a\u00020\u0010*\u00020\u00142\u0006\u0010)\u001a\u00020\u001aH\u0002R\u000e\u0010\u0002\u001a\u00020\u0003X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0006\u001a\u00020\u0007X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\n\u001a\u00020\u000bX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\f\u001a\u00020\rX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\b\u001a\u00020\tX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u000f\u001a\u00020\u0010X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0004\u001a\u00020\u0005X\u0004¢\u0006\u0002\n\u0000R\u001a\u0010\u0011\u001a\u000e\u0012\u0004\u0012\u00020\u0013\u0012\u0004\u0012\u00020\u00140\u0012X\u0004¢\u0006\u0002\n\u0000¨\u0006,"}, mo65043d2 = {"Lcom/android/systemui/statusbar/notification/ConversationNotificationManager;", "", "bindEventManager", "Lcom/android/systemui/statusbar/notification/collection/inflation/BindEventManager;", "notificationGroupManager", "Lcom/android/systemui/statusbar/notification/collection/legacy/NotificationGroupManagerLegacy;", "context", "Landroid/content/Context;", "notifCollection", "Lcom/android/systemui/statusbar/notification/collection/notifcollection/CommonNotifCollection;", "featureFlags", "Lcom/android/systemui/statusbar/notification/NotifPipelineFlags;", "mainHandler", "Landroid/os/Handler;", "(Lcom/android/systemui/statusbar/notification/collection/inflation/BindEventManager;Lcom/android/systemui/statusbar/notification/collection/legacy/NotificationGroupManagerLegacy;Landroid/content/Context;Lcom/android/systemui/statusbar/notification/collection/notifcollection/CommonNotifCollection;Lcom/android/systemui/statusbar/notification/NotifPipelineFlags;Landroid/os/Handler;)V", "notifPanelCollapsed", "", "states", "Ljava/util/concurrent/ConcurrentHashMap;", "", "Lcom/android/systemui/statusbar/notification/ConversationNotificationManager$ConversationState;", "getUnreadCount", "", "entry", "Lcom/android/systemui/statusbar/notification/collection/NotificationEntry;", "recoveredBuilder", "Landroid/app/Notification$Builder;", "onEntryViewBound", "", "onNotificationPanelExpandStateChanged", "isCollapsed", "removeTrackedEntry", "resetBadgeUi", "row", "Lcom/android/systemui/statusbar/notification/row/ExpandableNotificationRow;", "resetCount", "key", "updateNotificationRanking", "rankingMap", "Landroid/service/notification/NotificationListenerService$RankingMap;", "shouldIncrementUnread", "newBuilder", "Companion", "ConversationState", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* compiled from: ConversationNotifications.kt */
 public final class ConversationNotificationManager {
     public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
@@ -117,7 +117,7 @@ public final class ConversationNotificationManager {
         NotificationListenerService.Ranking ranking = new NotificationListenerService.Ranking();
         Set<String> keySet = this.states.keySet();
         Intrinsics.checkNotNullExpressionValue(keySet, "states.keys");
-        for (NotificationEntry notificationEntry : SequencesKt.mapNotNull(CollectionsKt.asSequence(keySet), new C2650x2916e3cd(this))) {
+        for (NotificationEntry notificationEntry : SequencesKt.mapNotNull(CollectionsKt.asSequence(keySet), new C2656x2916e3cd(this))) {
             if (rankingMap.getRanking(notificationEntry.getSbn().getKey(), ranking) && ranking.isConversation()) {
                 boolean isImportantConversation = ranking.getChannel().isImportantConversation();
                 ExpandableNotificationRow row = notificationEntry.getRow();
@@ -143,7 +143,7 @@ public final class ConversationNotificationManager {
 
     /* access modifiers changed from: private */
     /* renamed from: updateNotificationRanking$lambda-1$lambda-0  reason: not valid java name */
-    public static final void m3091updateNotificationRanking$lambda1$lambda0(ConversationLayout conversationLayout, boolean z) {
+    public static final void m3095updateNotificationRanking$lambda1$lambda0(ConversationLayout conversationLayout, boolean z) {
         Intrinsics.checkNotNullParameter(conversationLayout, "$layout");
         conversationLayout.setIsImportantConversation(z, true);
     }
@@ -181,7 +181,7 @@ public final class ConversationNotificationManager {
 
     /* access modifiers changed from: private */
     /* renamed from: onEntryViewBound$lambda-3  reason: not valid java name */
-    public static final void m3087onEntryViewBound$lambda3(NotificationEntry notificationEntry, ConversationNotificationManager conversationNotificationManager, boolean z) {
+    public static final void m3091onEntryViewBound$lambda3(NotificationEntry notificationEntry, ConversationNotificationManager conversationNotificationManager, boolean z) {
         Intrinsics.checkNotNullParameter(notificationEntry, "$entry");
         Intrinsics.checkNotNullParameter(conversationNotificationManager, "this$0");
         ExpandableNotificationRow row = notificationEntry.getRow();
@@ -198,7 +198,7 @@ public final class ConversationNotificationManager {
 
     /* access modifiers changed from: private */
     /* renamed from: onEntryViewBound$lambda-3$lambda-2  reason: not valid java name */
-    public static final void m3088onEntryViewBound$lambda3$lambda2(boolean z, ConversationNotificationManager conversationNotificationManager, NotificationEntry notificationEntry) {
+    public static final void m3092onEntryViewBound$lambda3$lambda2(boolean z, ConversationNotificationManager conversationNotificationManager, NotificationEntry notificationEntry) {
         Intrinsics.checkNotNullParameter(conversationNotificationManager, "this$0");
         Intrinsics.checkNotNullParameter(notificationEntry, "$entry");
         onEntryViewBound$updateCount(conversationNotificationManager, notificationEntry, z);
@@ -221,7 +221,7 @@ public final class ConversationNotificationManager {
 
     /* access modifiers changed from: private */
     /* renamed from: getUnreadCount$lambda-5  reason: not valid java name */
-    public static final ConversationState m3086getUnreadCount$lambda5(NotificationEntry notificationEntry, ConversationNotificationManager conversationNotificationManager, Notification.Builder builder, String str, ConversationState conversationState) {
+    public static final ConversationState m3090getUnreadCount$lambda5(NotificationEntry notificationEntry, ConversationNotificationManager conversationNotificationManager, Notification.Builder builder, String str, ConversationState conversationState) {
         Intrinsics.checkNotNullParameter(notificationEntry, "$entry");
         Intrinsics.checkNotNullParameter(conversationNotificationManager, "this$0");
         Intrinsics.checkNotNullParameter(builder, "$recoveredBuilder");
@@ -238,9 +238,9 @@ public final class ConversationNotificationManager {
     public final void onNotificationPanelExpandStateChanged(boolean z) {
         this.notifPanelCollapsed = z;
         if (!z) {
-            Map map = MapsKt.toMap(SequencesKt.mapNotNull(MapsKt.asSequence(this.states), new C2649x7388b338(this)));
+            Map map = MapsKt.toMap(SequencesKt.mapNotNull(MapsKt.asSequence(this.states), new C2655x7388b338(this)));
             this.states.replaceAll(new ConversationNotificationManager$$ExternalSyntheticLambda0(map));
-            for (ExpandableNotificationRow resetBadgeUi : SequencesKt.mapNotNull(CollectionsKt.asSequence(map.values()), C2648x5e24d3c0.INSTANCE)) {
+            for (ExpandableNotificationRow resetBadgeUi : SequencesKt.mapNotNull(CollectionsKt.asSequence(map.values()), C2654x5e24d3c0.INSTANCE)) {
                 resetBadgeUi(resetBadgeUi);
             }
         }
@@ -248,7 +248,7 @@ public final class ConversationNotificationManager {
 
     /* access modifiers changed from: private */
     /* renamed from: onNotificationPanelExpandStateChanged$lambda-6  reason: not valid java name */
-    public static final ConversationState m3089onNotificationPanelExpandStateChanged$lambda6(Map map, String str, ConversationState conversationState) {
+    public static final ConversationState m3093onNotificationPanelExpandStateChanged$lambda6(Map map, String str, ConversationState conversationState) {
         Intrinsics.checkNotNullParameter(map, "$expanded");
         Intrinsics.checkNotNullParameter(str, "key");
         Intrinsics.checkNotNullParameter(conversationState, AuthDialog.KEY_BIOMETRIC_STATE);
@@ -261,7 +261,7 @@ public final class ConversationNotificationManager {
 
     /* access modifiers changed from: private */
     /* renamed from: resetCount$lambda-8  reason: not valid java name */
-    public static final ConversationState m3090resetCount$lambda8(String str, ConversationState conversationState) {
+    public static final ConversationState m3094resetCount$lambda8(String str, ConversationState conversationState) {
         Intrinsics.checkNotNullParameter(str, "<anonymous parameter 0>");
         if (conversationState != null) {
             return ConversationState.copy$default(conversationState, 0, (Notification) null, 2, (Object) null);
@@ -285,7 +285,7 @@ public final class ConversationNotificationManager {
         }
     }
 
-    @Metadata(mo64986d1 = {"\u0000&\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0018\u0002\n\u0002\b\t\n\u0002\u0010\u000b\n\u0002\b\u0003\n\u0002\u0010\u000e\n\u0000\b\b\u0018\u00002\u00020\u0001B\u0015\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005¢\u0006\u0002\u0010\u0006J\t\u0010\u000b\u001a\u00020\u0003HÆ\u0003J\t\u0010\f\u001a\u00020\u0005HÆ\u0003J\u001d\u0010\r\u001a\u00020\u00002\b\b\u0002\u0010\u0002\u001a\u00020\u00032\b\b\u0002\u0010\u0004\u001a\u00020\u0005HÆ\u0001J\u0013\u0010\u000e\u001a\u00020\u000f2\b\u0010\u0010\u001a\u0004\u0018\u00010\u0001HÖ\u0003J\t\u0010\u0011\u001a\u00020\u0003HÖ\u0001J\t\u0010\u0012\u001a\u00020\u0013HÖ\u0001R\u0011\u0010\u0004\u001a\u00020\u0005¢\u0006\b\n\u0000\u001a\u0004\b\u0007\u0010\bR\u0011\u0010\u0002\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\t\u0010\n¨\u0006\u0014"}, mo64987d2 = {"Lcom/android/systemui/statusbar/notification/ConversationNotificationManager$ConversationState;", "", "unreadCount", "", "notification", "Landroid/app/Notification;", "(ILandroid/app/Notification;)V", "getNotification", "()Landroid/app/Notification;", "getUnreadCount", "()I", "component1", "component2", "copy", "equals", "", "other", "hashCode", "toString", "", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u0000&\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0018\u0002\n\u0002\b\t\n\u0002\u0010\u000b\n\u0002\b\u0003\n\u0002\u0010\u000e\n\u0000\b\b\u0018\u00002\u00020\u0001B\u0015\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005¢\u0006\u0002\u0010\u0006J\t\u0010\u000b\u001a\u00020\u0003HÆ\u0003J\t\u0010\f\u001a\u00020\u0005HÆ\u0003J\u001d\u0010\r\u001a\u00020\u00002\b\b\u0002\u0010\u0002\u001a\u00020\u00032\b\b\u0002\u0010\u0004\u001a\u00020\u0005HÆ\u0001J\u0013\u0010\u000e\u001a\u00020\u000f2\b\u0010\u0010\u001a\u0004\u0018\u00010\u0001HÖ\u0003J\t\u0010\u0011\u001a\u00020\u0003HÖ\u0001J\t\u0010\u0012\u001a\u00020\u0013HÖ\u0001R\u0011\u0010\u0004\u001a\u00020\u0005¢\u0006\b\n\u0000\u001a\u0004\b\u0007\u0010\bR\u0011\u0010\u0002\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\t\u0010\n¨\u0006\u0014"}, mo65043d2 = {"Lcom/android/systemui/statusbar/notification/ConversationNotificationManager$ConversationState;", "", "unreadCount", "", "notification", "Landroid/app/Notification;", "(ILandroid/app/Notification;)V", "getNotification", "()Landroid/app/Notification;", "getUnreadCount", "()I", "component1", "component2", "copy", "equals", "", "other", "hashCode", "toString", "", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* compiled from: ConversationNotifications.kt */
     private static final class ConversationState {
         private final Notification notification;
@@ -348,7 +348,7 @@ public final class ConversationNotificationManager {
         }
     }
 
-    @Metadata(mo64986d1 = {"\u0000\u0012\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\b\n\u0000\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u000e\u0010\u0003\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000¨\u0006\u0005"}, mo64987d2 = {"Lcom/android/systemui/statusbar/notification/ConversationNotificationManager$Companion;", "", "()V", "IMPORTANCE_ANIMATION_DELAY", "", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u0000\u0012\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\b\n\u0000\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u000e\u0010\u0003\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000¨\u0006\u0005"}, mo65043d2 = {"Lcom/android/systemui/statusbar/notification/ConversationNotificationManager$Companion;", "", "()V", "IMPORTANCE_ANIMATION_DELAY", "", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* compiled from: ConversationNotifications.kt */
     public static final class Companion {
         public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {

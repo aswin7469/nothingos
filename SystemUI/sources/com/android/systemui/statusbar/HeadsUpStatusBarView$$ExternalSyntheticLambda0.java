@@ -11,6 +11,6 @@ public final /* synthetic */ class HeadsUpStatusBarView$$ExternalSyntheticLambda
     }
 
     public final void onSensitivityChanged(NotificationEntry notificationEntry) {
-        this.f$0.m3024lambda$new$0$comandroidsystemuistatusbarHeadsUpStatusBarView(notificationEntry);
+        this.f$0.m3028lambda$new$0$comandroidsystemuistatusbarHeadsUpStatusBarView(notificationEntry);
     }
 }

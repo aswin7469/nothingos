@@ -9,6 +9,6 @@ public final /* synthetic */ class CentralSurfacesImpl$$ExternalSyntheticLambda2
     }
 
     public final void run() {
-        this.f$0.mo43875x12cb8a1();
+        this.f$0.mo43884x12cb8a1();
     }
 }

@@ -10,6 +10,6 @@ public final /* synthetic */ class FgsManagerController$$ExternalSyntheticLambda
     }
 
     public final void run() {
-        FgsManagerController.m2890showDialog$lambda22$lambda21(this.f$0);
+        FgsManagerController.m2895showDialog$lambda22$lambda21(this.f$0);
     }
 }

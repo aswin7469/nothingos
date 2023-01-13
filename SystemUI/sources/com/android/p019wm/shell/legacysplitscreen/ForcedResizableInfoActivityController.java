@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.UserHandle;
 import android.util.ArraySet;
 import android.widget.Toast;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.common.ShellExecutor;
 import com.android.p019wm.shell.legacysplitscreen.DividerView;
 import java.util.function.Consumer;
@@ -25,7 +25,7 @@ final class ForcedResizableInfoActivityController implements DividerView.Divider
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-wm-shell-legacysplitscreen-ForcedResizableInfoActivityController */
-    public /* synthetic */ void mo49662xa8212b06(Boolean bool) {
+    public /* synthetic */ void mo49671xa8212b06(Boolean bool) {
         if (!bool.booleanValue()) {
             this.mPackagesShownInSession.clear();
         }
@@ -77,12 +77,12 @@ final class ForcedResizableInfoActivityController implements DividerView.Divider
 
     /* access modifiers changed from: package-private */
     public void activityDismissingSplitScreen() {
-        Toast.makeText(this.mContext, C3343R.string.dock_non_resizeble_failed_to_dock_text, 0).show();
+        Toast.makeText(this.mContext, C3353R.string.dock_non_resizeble_failed_to_dock_text, 0).show();
     }
 
     /* access modifiers changed from: package-private */
     public void activityLaunchOnSecondaryDisplayFailed() {
-        Toast.makeText(this.mContext, C3343R.string.activity_launch_on_secondary_display_failed_text, 0).show();
+        Toast.makeText(this.mContext, C3353R.string.activity_launch_on_secondary_display_failed_text, 0).show();
     }
 
     /* access modifiers changed from: private */

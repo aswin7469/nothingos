@@ -16,6 +16,6 @@ public final /* synthetic */ class ThumbnailBehavior$$ExternalSyntheticLambda0 i
     }
 
     public final void run() {
-        ThumbnailBehavior.m2727bind$lambda2(this.f$0, this.f$1, this.f$2);
+        ThumbnailBehavior.m2732bind$lambda2(this.f$0, this.f$1, this.f$2);
     }
 }

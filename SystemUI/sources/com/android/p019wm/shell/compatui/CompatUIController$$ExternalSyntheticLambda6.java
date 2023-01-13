@@ -12,6 +12,6 @@ public final /* synthetic */ class CompatUIController$$ExternalSyntheticLambda6 
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo49362x34f84603((CompatUIWindowManagerAbstract) obj);
+        this.f$0.mo49371x34f84603((CompatUIWindowManagerAbstract) obj);
     }
 }

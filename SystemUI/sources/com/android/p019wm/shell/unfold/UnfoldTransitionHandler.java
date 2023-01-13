@@ -53,7 +53,7 @@ public class UnfoldTransitionHandler implements Transitions.TransitionHandler, S
      */
     /* renamed from: lambda$startAnimation$0$com-android-wm-shell-unfold-UnfoldTransitionHandler */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    public /* synthetic */ void mo51311xcc7846f9(android.window.TransitionInfo.Change r4) {
+    public /* synthetic */ void mo51322xcc7846f9(android.window.TransitionInfo.Change r4) {
         /*
             r3 = this;
             android.app.ActivityManager$RunningTaskInfo r0 = r4.getTaskInfo()
@@ -79,7 +79,7 @@ public class UnfoldTransitionHandler implements Transitions.TransitionHandler, S
         L_0x002c:
             return
         */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.p019wm.shell.unfold.UnfoldTransitionHandler.mo51311xcc7846f9(android.window.TransitionInfo$Change):void");
+        throw new UnsupportedOperationException("Method not decompiled: com.android.p019wm.shell.unfold.UnfoldTransitionHandler.mo51322xcc7846f9(android.window.TransitionInfo$Change):void");
     }
 
     public void onStateChangeProgress(float f) {
@@ -88,7 +88,7 @@ public class UnfoldTransitionHandler implements Transitions.TransitionHandler, S
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onStateChangeProgress$1$com-android-wm-shell-unfold-UnfoldTransitionHandler */
-    public /* synthetic */ void mo51310x2f816bed(float f, TransitionInfo.Change change) {
+    public /* synthetic */ void mo51321x2f816bed(float f, TransitionInfo.Change change) {
         SurfaceControl.Transaction acquire = this.mTransactionPool.acquire();
         float f2 = (f * 0.2f) + 0.8f;
         acquire.setScale(change.getLeash(), f2, f2);

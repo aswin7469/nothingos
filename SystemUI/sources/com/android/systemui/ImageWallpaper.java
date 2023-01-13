@@ -111,7 +111,7 @@ public class ImageWallpaper extends WallpaperService {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onCreate$0$com-android-systemui-ImageWallpaper$GLEngine  reason: not valid java name */
-        public /* synthetic */ void m2519lambda$onCreate$0$comandroidsystemuiImageWallpaper$GLEngine(Bitmap bitmap) {
+        public /* synthetic */ void m2525lambda$onCreate$0$comandroidsystemuiImageWallpaper$GLEngine(Bitmap bitmap) {
             ImageWallpaper.this.mLocalColorsToAdd.addAll(ImageWallpaper.this.mColorAreas);
             if (ImageWallpaper.this.mLocalColorsToAdd.size() > 0) {
                 updateMiniBitmapAndNotify(bitmap);
@@ -149,7 +149,7 @@ public class ImageWallpaper extends WallpaperService {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onOffsetsChanged$1$com-android-systemui-ImageWallpaper$GLEngine */
-        public /* synthetic */ void mo29690x2aa9b98b() {
+        public /* synthetic */ void mo29700x2aa9b98b() {
             computeAndNotifyLocalColors(new ArrayList(ImageWallpaper.this.mColorAreas), ImageWallpaper.this.mMiniBitmap);
         }
 
@@ -182,7 +182,7 @@ public class ImageWallpaper extends WallpaperService {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onDestroy$2$com-android-systemui-ImageWallpaper$GLEngine  reason: not valid java name */
-        public /* synthetic */ void m2520lambda$onDestroy$2$comandroidsystemuiImageWallpaper$GLEngine() {
+        public /* synthetic */ void m2526lambda$onDestroy$2$comandroidsystemuiImageWallpaper$GLEngine() {
             this.mRenderer.finish();
             this.mRenderer = null;
             this.mEglHelper.finish();
@@ -195,7 +195,7 @@ public class ImageWallpaper extends WallpaperService {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$addLocalColorsAreas$3$com-android-systemui-ImageWallpaper$GLEngine */
-        public /* synthetic */ void mo29687x2b06aa4a(List list) {
+        public /* synthetic */ void mo29697x2b06aa4a(List list) {
             if (ImageWallpaper.this.mColorAreas.size() + ImageWallpaper.this.mLocalColorsToAdd.size() == 0) {
                 setOffsetNotificationsEnabled(true);
             }
@@ -228,7 +228,7 @@ public class ImageWallpaper extends WallpaperService {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$removeLocalColorsAreas$4$com-android-systemui-ImageWallpaper$GLEngine */
-        public /* synthetic */ void mo29693x42de68c(List list) {
+        public /* synthetic */ void mo29703x42de68c(List list) {
             ImageWallpaper.this.mColorAreas.removeAll(list);
             ImageWallpaper.this.mLocalColorsToAdd.removeAll(list);
             if (ImageWallpaper.this.mColorAreas.size() + ImageWallpaper.this.mLocalColorsToAdd.size() == 0) {
@@ -291,7 +291,7 @@ public class ImageWallpaper extends WallpaperService {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onSurfaceCreated$5$com-android-systemui-ImageWallpaper$GLEngine */
-        public /* synthetic */ void mo29692x1ac4c000(SurfaceHolder surfaceHolder) {
+        public /* synthetic */ void mo29702x1ac4c000(SurfaceHolder surfaceHolder) {
             Trace.beginSection("ImageWallpaper#onSurfaceCreated");
             this.mEglHelper.init(surfaceHolder, needSupportWideColorGamut());
             this.mRenderer.onSurfaceCreated();
@@ -306,7 +306,7 @@ public class ImageWallpaper extends WallpaperService {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onSurfaceChanged$6$com-android-systemui-ImageWallpaper$GLEngine */
-        public /* synthetic */ void mo29691xc1020853(int i, int i2) {
+        public /* synthetic */ void mo29701xc1020853(int i, int i2) {
             this.mRenderer.onSurfaceChanged(i, i2);
         }
 

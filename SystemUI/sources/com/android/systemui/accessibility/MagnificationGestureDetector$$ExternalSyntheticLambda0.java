@@ -9,6 +9,6 @@ public final /* synthetic */ class MagnificationGestureDetector$$ExternalSynthet
     }
 
     public final void run() {
-        this.f$0.mo29900xa262ed76();
+        this.f$0.mo29910xa262ed76();
     }
 }

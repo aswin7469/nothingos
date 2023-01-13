@@ -11,6 +11,6 @@ public final /* synthetic */ class GutsViewHolder$$ExternalSyntheticLambda0 impl
     }
 
     public final void run() {
-        GutsViewHolder.m2761marquee$lambda0(this.f$0, this.f$1);
+        GutsViewHolder.m2766marquee$lambda0(this.f$0, this.f$1);
     }
 }

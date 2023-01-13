@@ -4,13 +4,13 @@ import com.android.systemui.recents.OverviewProxyService;
 
 /* compiled from: D8$$SyntheticClass */
 public final /* synthetic */ class OverviewProxyService$1$$ExternalSyntheticLambda22 implements Runnable {
-    public final /* synthetic */ OverviewProxyService.C24161 f$0;
+    public final /* synthetic */ OverviewProxyService.C24211 f$0;
 
-    public /* synthetic */ OverviewProxyService$1$$ExternalSyntheticLambda22(OverviewProxyService.C24161 r1) {
+    public /* synthetic */ OverviewProxyService$1$$ExternalSyntheticLambda22(OverviewProxyService.C24211 r1) {
         this.f$0 = r1;
     }
 
     public final void run() {
-        this.f$0.mo37171xeea721bb();
+        this.f$0.mo37170xeea721bb();
     }
 }

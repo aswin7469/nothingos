@@ -14,7 +14,7 @@ class SmoothCalendarLayoutManager extends LinearLayoutManager {
     }
 
     public void smoothScrollToPosition(RecyclerView recyclerView, RecyclerView.State state, int i) {
-        C37201 r2 = new LinearSmoothScroller(recyclerView.getContext()) {
+        C37301 r2 = new LinearSmoothScroller(recyclerView.getContext()) {
             /* access modifiers changed from: protected */
             public float calculateSpeedPerPixel(DisplayMetrics displayMetrics) {
                 return SmoothCalendarLayoutManager.MILLISECONDS_PER_INCH / ((float) displayMetrics.densityDpi);

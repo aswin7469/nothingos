@@ -6,8 +6,8 @@ public final class C1154R {
     /* renamed from: androidx.media.R$color */
     public static final class C1155color {
         public static final int notification_material_background_media_default_color = 2131100468;
-        public static final int primary_text_default_material_dark = 2131100496;
-        public static final int secondary_text_default_material_dark = 2131100530;
+        public static final int primary_text_default_material_dark = 2131100500;
+        public static final int secondary_text_default_material_dark = 2131100534;
 
         private C1155color() {
         }
@@ -26,14 +26,14 @@ public final class C1154R {
         public static final int line3 = 2131428228;
         public static final int media_actions = 2131428298;
         public static final int media_controller_compat_view_tag = 2131428301;
-        public static final int notification_main_column = 2131428502;
-        public static final int notification_main_column_container = 2131428503;
-        public static final int right_side = 2131428705;
-        public static final int status_bar_latest_event_content = 2131428910;
-        public static final int text = 2131429016;
-        public static final int text2 = 2131429018;
-        public static final int time = 2131429045;
-        public static final int title = 2131429048;
+        public static final int notification_main_column = 2131428503;
+        public static final int notification_main_column_container = 2131428504;
+        public static final int right_side = 2131428708;
+        public static final int status_bar_latest_event_content = 2131428927;
+        public static final int text = 2131429033;
+        public static final int text2 = 2131429035;
+        public static final int time = 2131429062;
+        public static final int title = 2131429065;
 
         private C1156id() {
         }

@@ -13,7 +13,7 @@ public class XMLFormatter extends Formatter {
     }
 
     /* renamed from: a2 */
-    private void m1771a2(StringBuilder sb, int i) {
+    private void m1777a2(StringBuilder sb, int i) {
         if (i < 10) {
             sb.append('0');
         }
@@ -25,15 +25,15 @@ public class XMLFormatter extends Formatter {
         gregorianCalendar.setTimeInMillis(j);
         sb.append(gregorianCalendar.get(1));
         sb.append('-');
-        m1771a2(sb, gregorianCalendar.get(2) + 1);
+        m1777a2(sb, gregorianCalendar.get(2) + 1);
         sb.append('-');
-        m1771a2(sb, gregorianCalendar.get(5));
+        m1777a2(sb, gregorianCalendar.get(5));
         sb.append('T');
-        m1771a2(sb, gregorianCalendar.get(11));
+        m1777a2(sb, gregorianCalendar.get(11));
         sb.append((char) AccessibilityUtils.ENABLED_ACCESSIBILITY_SERVICES_SEPARATOR);
-        m1771a2(sb, gregorianCalendar.get(12));
+        m1777a2(sb, gregorianCalendar.get(12));
         sb.append((char) AccessibilityUtils.ENABLED_ACCESSIBILITY_SERVICES_SEPARATOR);
-        m1771a2(sb, gregorianCalendar.get(13));
+        m1777a2(sb, gregorianCalendar.get(13));
     }
 
     private void escape(StringBuilder sb, String str) {

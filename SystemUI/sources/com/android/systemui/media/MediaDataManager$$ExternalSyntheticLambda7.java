@@ -11,6 +11,6 @@ public final /* synthetic */ class MediaDataManager$$ExternalSyntheticLambda7 im
     }
 
     public final void run() {
-        MediaDataManager.m2791dismissMediaData$lambda19(this.f$0, this.f$1);
+        MediaDataManager.m2796dismissMediaData$lambda19(this.f$0, this.f$1);
     }
 }

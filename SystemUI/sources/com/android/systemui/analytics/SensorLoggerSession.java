@@ -101,11 +101,11 @@ public class SensorLoggerSession {
         touchEvent.pointers = new TouchAnalyticsProto.Session.TouchEvent.Pointer[pointerCount];
         for (int i = 0; i < pointerCount; i++) {
             TouchAnalyticsProto.Session.TouchEvent.Pointer pointer = new TouchAnalyticsProto.Session.TouchEvent.Pointer();
-            pointer.f390x = motionEvent.getX(i);
-            pointer.f391y = motionEvent.getY(i);
+            pointer.f389x = motionEvent.getX(i);
+            pointer.f390y = motionEvent.getY(i);
             pointer.size = motionEvent.getSize(i);
             pointer.pressure = motionEvent.getPressure(i);
-            pointer.f389id = motionEvent.getPointerId(i);
+            pointer.f388id = motionEvent.getPointerId(i);
             touchEvent.pointers[i] = pointer;
         }
         return touchEvent;

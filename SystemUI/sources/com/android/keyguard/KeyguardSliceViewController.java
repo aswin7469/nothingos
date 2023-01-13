@@ -71,7 +71,7 @@ public class KeyguardSliceViewController extends ViewController<KeyguardSliceVie
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-keyguard-KeyguardSliceViewController  reason: not valid java name */
-    public /* synthetic */ void m2291lambda$new$0$comandroidkeyguardKeyguardSliceViewController(String str, String str2) {
+    public /* synthetic */ void m2297lambda$new$0$comandroidkeyguardKeyguardSliceViewController(String str, String str2) {
         setupUri(str2);
     }
 

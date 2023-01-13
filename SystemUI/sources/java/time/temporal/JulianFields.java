@@ -41,7 +41,7 @@ public final class JulianFields {
             this.name = str;
             this.baseUnit = temporalUnit;
             this.rangeUnit = temporalUnit2;
-            this.range = ValueRange.m955of(-365243219162L + j, 365241780471L + j);
+            this.range = ValueRange.m953of(-365243219162L + j, 365241780471L + j);
             this.offset = j;
         }
 

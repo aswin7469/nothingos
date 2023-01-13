@@ -9,6 +9,6 @@ public final /* synthetic */ class AppOpsControllerImpl$$ExternalSyntheticLambda
     }
 
     public final void run() {
-        this.f$0.mo30325x442deb4b();
+        this.f$0.mo30335x442deb4b();
     }
 }

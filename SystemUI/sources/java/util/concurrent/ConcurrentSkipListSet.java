@@ -20,34 +20,34 @@ public class ConcurrentSkipListSet<E> extends AbstractSet<E> implements Navigabl
     private static final long serialVersionUID = -2479143111061671589L;
 
     /* renamed from: m */
-    private final ConcurrentNavigableMap<E, Object> f748m;
+    private final ConcurrentNavigableMap<E, Object> f746m;
 
     public ConcurrentSkipListSet() {
-        this.f748m = new ConcurrentSkipListMap();
+        this.f746m = new ConcurrentSkipListMap();
     }
 
     public ConcurrentSkipListSet(Comparator<? super E> comparator) {
-        this.f748m = new ConcurrentSkipListMap(comparator);
+        this.f746m = new ConcurrentSkipListMap(comparator);
     }
 
     public ConcurrentSkipListSet(Collection<? extends E> collection) {
-        this.f748m = new ConcurrentSkipListMap();
+        this.f746m = new ConcurrentSkipListMap();
         addAll(collection);
     }
 
     public ConcurrentSkipListSet(SortedSet<E> sortedSet) {
-        this.f748m = new ConcurrentSkipListMap(sortedSet.comparator());
+        this.f746m = new ConcurrentSkipListMap(sortedSet.comparator());
         addAll(sortedSet);
     }
 
     ConcurrentSkipListSet(ConcurrentNavigableMap<E, Object> concurrentNavigableMap) {
-        this.f748m = concurrentNavigableMap;
+        this.f746m = concurrentNavigableMap;
     }
 
     public ConcurrentSkipListSet<E> clone() {
         try {
             ConcurrentSkipListSet<E> concurrentSkipListSet = (ConcurrentSkipListSet) super.clone();
-            concurrentSkipListSet.setMap(new ConcurrentSkipListMap(this.f748m));
+            concurrentSkipListSet.setMap(new ConcurrentSkipListMap(this.f746m));
             return concurrentSkipListSet;
         } catch (CloneNotSupportedException unused) {
             throw new InternalError();
@@ -55,35 +55,35 @@ public class ConcurrentSkipListSet<E> extends AbstractSet<E> implements Navigabl
     }
 
     public int size() {
-        return this.f748m.size();
+        return this.f746m.size();
     }
 
     public boolean isEmpty() {
-        return this.f748m.isEmpty();
+        return this.f746m.isEmpty();
     }
 
     public boolean contains(Object obj) {
-        return this.f748m.containsKey(obj);
+        return this.f746m.containsKey(obj);
     }
 
     public boolean add(E e) {
-        return this.f748m.putIfAbsent(e, Boolean.TRUE) == null;
+        return this.f746m.putIfAbsent(e, Boolean.TRUE) == null;
     }
 
     public boolean remove(Object obj) {
-        return this.f748m.remove(obj, Boolean.TRUE);
+        return this.f746m.remove(obj, Boolean.TRUE);
     }
 
     public void clear() {
-        this.f748m.clear();
+        this.f746m.clear();
     }
 
     public Iterator<E> iterator() {
-        return this.f748m.navigableKeySet().iterator();
+        return this.f746m.navigableKeySet().iterator();
     }
 
     public Iterator<E> descendingIterator() {
-        return this.f748m.descendingKeySet().iterator();
+        return this.f746m.descendingKeySet().iterator();
     }
 
     public boolean equals(Object obj) {
@@ -115,23 +115,23 @@ public class ConcurrentSkipListSet<E> extends AbstractSet<E> implements Navigabl
     }
 
     public E lower(E e) {
-        return this.f748m.lowerKey(e);
+        return this.f746m.lowerKey(e);
     }
 
     public E floor(E e) {
-        return this.f748m.floorKey(e);
+        return this.f746m.floorKey(e);
     }
 
     public E ceiling(E e) {
-        return this.f748m.ceilingKey(e);
+        return this.f746m.ceilingKey(e);
     }
 
     public E higher(E e) {
-        return this.f748m.higherKey(e);
+        return this.f746m.higherKey(e);
     }
 
     public E pollFirst() {
-        Map.Entry<E, Object> pollFirstEntry = this.f748m.pollFirstEntry();
+        Map.Entry<E, Object> pollFirstEntry = this.f746m.pollFirstEntry();
         if (pollFirstEntry == null) {
             return null;
         }
@@ -139,7 +139,7 @@ public class ConcurrentSkipListSet<E> extends AbstractSet<E> implements Navigabl
     }
 
     public E pollLast() {
-        Map.Entry<E, Object> pollLastEntry = this.f748m.pollLastEntry();
+        Map.Entry<E, Object> pollLastEntry = this.f746m.pollLastEntry();
         if (pollLastEntry == null) {
             return null;
         }
@@ -147,27 +147,27 @@ public class ConcurrentSkipListSet<E> extends AbstractSet<E> implements Navigabl
     }
 
     public Comparator<? super E> comparator() {
-        return this.f748m.comparator();
+        return this.f746m.comparator();
     }
 
     public E first() {
-        return this.f748m.firstKey();
+        return this.f746m.firstKey();
     }
 
     public E last() {
-        return this.f748m.lastKey();
+        return this.f746m.lastKey();
     }
 
     public NavigableSet<E> subSet(E e, boolean z, E e2, boolean z2) {
-        return new ConcurrentSkipListSet(this.f748m.subMap((Object) e, z, (Object) e2, z2));
+        return new ConcurrentSkipListSet(this.f746m.subMap((Object) e, z, (Object) e2, z2));
     }
 
     public NavigableSet<E> headSet(E e, boolean z) {
-        return new ConcurrentSkipListSet(this.f748m.headMap((Object) e, z));
+        return new ConcurrentSkipListSet(this.f746m.headMap((Object) e, z));
     }
 
     public NavigableSet<E> tailSet(E e, boolean z) {
-        return new ConcurrentSkipListSet(this.f748m.tailMap((Object) e, z));
+        return new ConcurrentSkipListSet(this.f746m.tailMap((Object) e, z));
     }
 
     public NavigableSet<E> subSet(E e, E e2) {
@@ -183,11 +183,11 @@ public class ConcurrentSkipListSet<E> extends AbstractSet<E> implements Navigabl
     }
 
     public NavigableSet<E> descendingSet() {
-        return new ConcurrentSkipListSet(this.f748m.descendingMap());
+        return new ConcurrentSkipListSet(this.f746m.descendingMap());
     }
 
     public Spliterator<E> spliterator() {
-        ConcurrentNavigableMap<E, Object> concurrentNavigableMap = this.f748m;
+        ConcurrentNavigableMap<E, Object> concurrentNavigableMap = this.f746m;
         if (concurrentNavigableMap instanceof ConcurrentSkipListMap) {
             return ((ConcurrentSkipListMap) concurrentNavigableMap).keySpliterator();
         }

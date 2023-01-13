@@ -29,7 +29,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import androidx.core.view.accessibility.AccessibilityViewCommand;
 import androidx.customview.view.AbsSavedState;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.animation.AnimationUtils;
 import com.google.android.material.shape.MaterialShapeDrawable;
 import com.google.android.material.shape.MaterialShapeUtils;
@@ -40,7 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AppBarLayout extends LinearLayout implements CoordinatorLayout.AttachedBehavior {
-    private static final int DEF_STYLE_RES = C3621R.style.Widget_Design_AppBarLayout;
+    private static final int DEF_STYLE_RES = C3631R.style.Widget_Design_AppBarLayout;
     private static final int INVALID_SCROLL_RANGE = -1;
     static final int PENDING_ACTION_ANIMATE_ENABLED = 4;
     static final int PENDING_ACTION_COLLAPSED = 2;
@@ -95,7 +95,7 @@ public class AppBarLayout extends LinearLayout implements CoordinatorLayout.Atta
     }
 
     public AppBarLayout(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, C3621R.attr.appBarLayoutStyle);
+        this(context, attributeSet, C3631R.attr.appBarLayoutStyle);
     }
 
     /* JADX WARNING: Illegal instructions before constructor call */
@@ -124,13 +124,13 @@ public class AppBarLayout extends LinearLayout implements CoordinatorLayout.Atta
             com.google.android.material.appbar.ViewUtilsLollipop.setBoundsViewOutlineProvider(r8)
         L_0x002d:
             com.google.android.material.appbar.ViewUtilsLollipop.setStateListAnimatorFromAttrs(r8, r10, r11, r4)
-            int[] r2 = com.google.android.material.C3621R.styleable.AppBarLayout
+            int[] r2 = com.google.android.material.C3631R.styleable.AppBarLayout
             int[] r5 = new int[r6]
             r0 = r7
             r1 = r10
             r3 = r11
             android.content.res.TypedArray r10 = com.google.android.material.internal.ThemeEnforcement.obtainStyledAttributes(r0, r1, r2, r3, r4, r5)
-            int r11 = com.google.android.material.C3621R.styleable.AppBarLayout_android_background
+            int r11 = com.google.android.material.C3631R.styleable.AppBarLayout_android_background
             android.graphics.drawable.Drawable r11 = r10.getDrawable(r11)
             androidx.core.view.ViewCompat.setBackground(r8, r11)
             android.graphics.drawable.Drawable r11 = r8.getBackground()
@@ -146,42 +146,42 @@ public class AppBarLayout extends LinearLayout implements CoordinatorLayout.Atta
             r0.initializeElevationOverlay(r7)
             androidx.core.view.ViewCompat.setBackground(r8, r0)
         L_0x0068:
-            int r11 = com.google.android.material.C3621R.styleable.AppBarLayout_expanded
+            int r11 = com.google.android.material.C3631R.styleable.AppBarLayout_expanded
             boolean r11 = r10.hasValue(r11)
             if (r11 == 0) goto L_0x0079
-            int r11 = com.google.android.material.C3621R.styleable.AppBarLayout_expanded
+            int r11 = com.google.android.material.C3631R.styleable.AppBarLayout_expanded
             boolean r11 = r10.getBoolean(r11, r6)
             r8.setExpanded(r11, r6, r6)
         L_0x0079:
-            int r11 = com.google.android.material.C3621R.styleable.AppBarLayout_elevation
+            int r11 = com.google.android.material.C3631R.styleable.AppBarLayout_elevation
             boolean r11 = r10.hasValue(r11)
             if (r11 == 0) goto L_0x008b
-            int r11 = com.google.android.material.C3621R.styleable.AppBarLayout_elevation
+            int r11 = com.google.android.material.C3631R.styleable.AppBarLayout_elevation
             int r11 = r10.getDimensionPixelSize(r11, r6)
             float r11 = (float) r11
             com.google.android.material.appbar.ViewUtilsLollipop.setDefaultAppBarLayoutStateListAnimator(r8, r11)
         L_0x008b:
-            int r11 = com.google.android.material.C3621R.styleable.AppBarLayout_android_keyboardNavigationCluster
+            int r11 = com.google.android.material.C3631R.styleable.AppBarLayout_android_keyboardNavigationCluster
             boolean r11 = r10.hasValue(r11)
             if (r11 == 0) goto L_0x009c
-            int r11 = com.google.android.material.C3621R.styleable.AppBarLayout_android_keyboardNavigationCluster
+            int r11 = com.google.android.material.C3631R.styleable.AppBarLayout_android_keyboardNavigationCluster
             boolean r11 = r10.getBoolean(r11, r6)
             r8.setKeyboardNavigationCluster(r11)
         L_0x009c:
-            int r11 = com.google.android.material.C3621R.styleable.AppBarLayout_android_touchscreenBlocksFocus
+            int r11 = com.google.android.material.C3631R.styleable.AppBarLayout_android_touchscreenBlocksFocus
             boolean r11 = r10.hasValue(r11)
             if (r11 == 0) goto L_0x00ad
-            int r11 = com.google.android.material.C3621R.styleable.AppBarLayout_android_touchscreenBlocksFocus
+            int r11 = com.google.android.material.C3631R.styleable.AppBarLayout_android_touchscreenBlocksFocus
             boolean r11 = r10.getBoolean(r11, r6)
             r8.setTouchscreenBlocksFocus(r11)
         L_0x00ad:
-            int r11 = com.google.android.material.C3621R.styleable.AppBarLayout_liftOnScroll
+            int r11 = com.google.android.material.C3631R.styleable.AppBarLayout_liftOnScroll
             boolean r11 = r10.getBoolean(r11, r6)
             r8.liftOnScroll = r11
-            int r11 = com.google.android.material.C3621R.styleable.AppBarLayout_liftOnScrollTargetViewId
+            int r11 = com.google.android.material.C3631R.styleable.AppBarLayout_liftOnScrollTargetViewId
             int r9 = r10.getResourceId(r11, r9)
             r8.liftOnScrollTargetViewId = r9
-            int r9 = com.google.android.material.C3621R.styleable.AppBarLayout_statusBarForeground
+            int r9 = com.google.android.material.C3631R.styleable.AppBarLayout_statusBarForeground
             android.graphics.drawable.Drawable r9 = r10.getDrawable(r9)
             r8.setStatusBarForeground(r9)
             r10.recycle()
@@ -612,10 +612,10 @@ public class AppBarLayout extends LinearLayout implements CoordinatorLayout.Atta
         }
         int[] iArr = this.tmpStatesArray;
         int[] onCreateDrawableState = super.onCreateDrawableState(i + iArr.length);
-        iArr[0] = this.liftable ? C3621R.attr.state_liftable : -C3621R.attr.state_liftable;
-        iArr[1] = (!this.liftable || !this.lifted) ? -C3621R.attr.state_lifted : C3621R.attr.state_lifted;
-        iArr[2] = this.liftable ? C3621R.attr.state_collapsible : -C3621R.attr.state_collapsible;
-        iArr[3] = (!this.liftable || !this.lifted) ? -C3621R.attr.state_collapsed : C3621R.attr.state_collapsed;
+        iArr[0] = this.liftable ? C3631R.attr.state_liftable : -C3631R.attr.state_liftable;
+        iArr[1] = (!this.liftable || !this.lifted) ? -C3631R.attr.state_lifted : C3631R.attr.state_lifted;
+        iArr[2] = this.liftable ? C3631R.attr.state_collapsible : -C3631R.attr.state_collapsible;
+        iArr[3] = (!this.liftable || !this.lifted) ? -C3631R.attr.state_collapsed : C3631R.attr.state_collapsed;
         return mergeDrawableStates(onCreateDrawableState, iArr);
     }
 
@@ -665,7 +665,7 @@ public class AppBarLayout extends LinearLayout implements CoordinatorLayout.Atta
     }
 
     private void startLiftOnScrollElevationOverlayAnimation(final MaterialShapeDrawable materialShapeDrawable, boolean z) {
-        float dimension = getResources().getDimension(C3621R.dimen.design_appbar_elevation);
+        float dimension = getResources().getDimension(C3631R.dimen.design_appbar_elevation);
         float f = z ? 0.0f : dimension;
         if (!z) {
             dimension = 0.0f;
@@ -676,7 +676,7 @@ public class AppBarLayout extends LinearLayout implements CoordinatorLayout.Atta
         }
         ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{f, dimension});
         this.elevationOverlayAnimator = ofFloat;
-        ofFloat.setDuration((long) getResources().getInteger(C3621R.integer.app_bar_elevation_anim_duration));
+        ofFloat.setDuration((long) getResources().getInteger(C3631R.integer.app_bar_elevation_anim_duration));
         this.elevationOverlayAnimator.setInterpolator(AnimationUtils.LINEAR_INTERPOLATOR);
         this.elevationOverlayAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
@@ -814,11 +814,11 @@ public class AppBarLayout extends LinearLayout implements CoordinatorLayout.Atta
 
         public LayoutParams(Context context, AttributeSet attributeSet) {
             super(context, attributeSet);
-            TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C3621R.styleable.AppBarLayout_Layout);
-            this.scrollFlags = obtainStyledAttributes.getInt(C3621R.styleable.AppBarLayout_Layout_layout_scrollFlags, 0);
-            setScrollEffect(createScrollEffectFromInt(obtainStyledAttributes.getInt(C3621R.styleable.AppBarLayout_Layout_layout_scrollEffect, 0)));
-            if (obtainStyledAttributes.hasValue(C3621R.styleable.AppBarLayout_Layout_layout_scrollInterpolator)) {
-                this.scrollInterpolator = android.view.animation.AnimationUtils.loadInterpolator(context, obtainStyledAttributes.getResourceId(C3621R.styleable.AppBarLayout_Layout_layout_scrollInterpolator, 0));
+            TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C3631R.styleable.AppBarLayout_Layout);
+            this.scrollFlags = obtainStyledAttributes.getInt(C3631R.styleable.AppBarLayout_Layout_layout_scrollFlags, 0);
+            setScrollEffect(createScrollEffectFromInt(obtainStyledAttributes.getInt(C3631R.styleable.AppBarLayout_Layout_layout_scrollEffect, 0)));
+            if (obtainStyledAttributes.hasValue(C3631R.styleable.AppBarLayout_Layout_layout_scrollInterpolator)) {
+                this.scrollInterpolator = android.view.animation.AnimationUtils.loadInterpolator(context, obtainStyledAttributes.getResourceId(C3631R.styleable.AppBarLayout_Layout_layout_scrollInterpolator, 0));
             }
             obtainStyledAttributes.recycle();
         }
@@ -1614,8 +1614,8 @@ public class AppBarLayout extends LinearLayout implements CoordinatorLayout.Atta
 
         public ScrollingViewBehavior(Context context, AttributeSet attributeSet) {
             super(context, attributeSet);
-            TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C3621R.styleable.ScrollingViewBehavior_Layout);
-            setOverlayTop(obtainStyledAttributes.getDimensionPixelSize(C3621R.styleable.ScrollingViewBehavior_Layout_behavior_overlapTop, 0));
+            TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C3631R.styleable.ScrollingViewBehavior_Layout);
+            setOverlayTop(obtainStyledAttributes.getDimensionPixelSize(C3631R.styleable.ScrollingViewBehavior_Layout_behavior_overlapTop, 0));
             obtainStyledAttributes.recycle();
         }
 

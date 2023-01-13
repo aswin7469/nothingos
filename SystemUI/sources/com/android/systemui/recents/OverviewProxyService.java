@@ -158,7 +158,7 @@ public class OverviewProxyService extends CurrentUserTracker implements Callback
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$startScreenPinning$1$com-android-systemui-recents-OverviewProxyService$1 */
-        public /* synthetic */ void mo37170xb5c1a563(int i) {
+        public /* synthetic */ void mo37169xb5c1a563(int i) {
             ((Optional) OverviewProxyService.this.mCentralSurfacesOptionalLazy.get()).ifPresent(new OverviewProxyService$1$$ExternalSyntheticLambda11(i));
         }
 
@@ -180,13 +180,13 @@ public class OverviewProxyService extends CurrentUserTracker implements Callback
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onStatusBarMotionEvent$5$com-android-systemui-recents-OverviewProxyService$1 */
-        public /* synthetic */ void mo37165x68b640ae(MotionEvent motionEvent) {
+        public /* synthetic */ void mo37164x68b640ae(MotionEvent motionEvent) {
             ((Optional) OverviewProxyService.this.mCentralSurfacesOptionalLazy.get()).ifPresent(new OverviewProxyService$1$$ExternalSyntheticLambda10(this, motionEvent));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onStatusBarMotionEvent$4$com-android-systemui-recents-OverviewProxyService$1 */
-        public /* synthetic */ void mo37164xdb7b8f2d(MotionEvent motionEvent, CentralSurfaces centralSurfaces) {
+        public /* synthetic */ void mo37163xdb7b8f2d(MotionEvent motionEvent, CentralSurfaces centralSurfaces) {
             if (motionEvent.getActionMasked() == 0) {
                 centralSurfaces.getPanelController().startExpandLatencyTracking();
             }
@@ -195,7 +195,7 @@ public class OverviewProxyService extends CurrentUserTracker implements Callback
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onStatusBarMotionEvent$3$com-android-systemui-recents-OverviewProxyService$1 */
-        public /* synthetic */ void mo37163x4e40ddac(MotionEvent motionEvent, CentralSurfaces centralSurfaces) {
+        public /* synthetic */ void mo37162x4e40ddac(MotionEvent motionEvent, CentralSurfaces centralSurfaces) {
             int actionMasked = motionEvent.getActionMasked();
             boolean z = false;
             if (actionMasked == 0) {
@@ -222,7 +222,7 @@ public class OverviewProxyService extends CurrentUserTracker implements Callback
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onBackPressed$6$com-android-systemui-recents-OverviewProxyService$1 */
-        public /* synthetic */ void mo37161x293ac4ef() {
+        public /* synthetic */ void mo37160x293ac4ef() {
             sendEvent(0, 4);
             sendEvent(1, 4);
             OverviewProxyService.this.notifyBackAction(true, -1, -1, true, false);
@@ -239,13 +239,13 @@ public class OverviewProxyService extends CurrentUserTracker implements Callback
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$setHomeRotationEnabled$7$com-android-systemui-recents-OverviewProxyService$1 */
-        public /* synthetic */ void mo37166x950f4370(boolean z) {
+        public /* synthetic */ void mo37165x950f4370(boolean z) {
             OverviewProxyService.this.notifyHomeRotationEnabled(z);
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$setHomeRotationEnabled$8$com-android-systemui-recents-OverviewProxyService$1 */
-        public /* synthetic */ void mo37167x2249f4f1(boolean z) {
+        public /* synthetic */ void mo37166x2249f4f1(boolean z) {
             OverviewProxyService.this.mHandler.post(new OverviewProxyService$1$$ExternalSyntheticLambda19(this, z));
         }
 
@@ -255,7 +255,7 @@ public class OverviewProxyService extends CurrentUserTracker implements Callback
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$notifyTaskbarStatus$9$com-android-systemui-recents-OverviewProxyService$1 */
-        public /* synthetic */ void mo37158x3368604d(boolean z, boolean z2) {
+        public /* synthetic */ void mo37157x3368604d(boolean z, boolean z2) {
             OverviewProxyService.this.onTaskbarStatusUpdated(z, z2);
         }
 
@@ -265,7 +265,7 @@ public class OverviewProxyService extends CurrentUserTracker implements Callback
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$notifyTaskbarAutohideSuspend$10$com-android-systemui-recents-OverviewProxyService$1 */
-        public /* synthetic */ void mo37157xe976299e(boolean z) {
+        public /* synthetic */ void mo37156xe976299e(boolean z) {
             OverviewProxyService.this.onTaskbarAutohideSuspend(z);
         }
 
@@ -282,7 +282,7 @@ public class OverviewProxyService extends CurrentUserTracker implements Callback
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onOverviewShown$11$com-android-systemui-recents-OverviewProxyService$1 */
-        public /* synthetic */ void mo37162xafd5ea06(boolean z) {
+        public /* synthetic */ void mo37161xafd5ea06(boolean z) {
             for (int size = OverviewProxyService.this.mConnectionCallbacks.size() - 1; size >= 0; size--) {
                 ((OverviewProxyListener) OverviewProxyService.this.mConnectionCallbacks.get(size)).onOverviewShown(z);
             }
@@ -294,7 +294,7 @@ public class OverviewProxyService extends CurrentUserTracker implements Callback
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$setNavBarButtonAlpha$12$com-android-systemui-recents-OverviewProxyService$1 */
-        public /* synthetic */ void mo37168x84a9720c(float f, boolean z) {
+        public /* synthetic */ void mo37167x84a9720c(float f, boolean z) {
             OverviewProxyService.this.notifyNavBarButtonAlphaChanged(f, z);
         }
 
@@ -304,7 +304,7 @@ public class OverviewProxyService extends CurrentUserTracker implements Callback
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onAssistantProgress$13$com-android-systemui-recents-OverviewProxyService$1 */
-        public /* synthetic */ void mo37160xf2976595(float f) {
+        public /* synthetic */ void mo37159xf2976595(float f) {
             OverviewProxyService.this.notifyAssistantProgress(f);
         }
 
@@ -314,7 +314,7 @@ public class OverviewProxyService extends CurrentUserTracker implements Callback
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onAssistantGestureCompletion$14$com-android-systemui-recents-OverviewProxyService$1 */
-        public /* synthetic */ void mo37159x6c2f5382(float f) {
+        public /* synthetic */ void mo37158x6c2f5382(float f) {
             OverviewProxyService.this.notifyAssistantGestureCompletion(f);
         }
 
@@ -324,7 +324,7 @@ public class OverviewProxyService extends CurrentUserTracker implements Callback
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$startAssistant$15$com-android-systemui-recents-OverviewProxyService$1 */
-        public /* synthetic */ void mo37169xa2e9bced(Bundle bundle) {
+        public /* synthetic */ void mo37168xa2e9bced(Bundle bundle) {
             OverviewProxyService.this.notifyStartAssistant(bundle);
         }
 
@@ -334,7 +334,7 @@ public class OverviewProxyService extends CurrentUserTracker implements Callback
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$notifyAccessibilityButtonClicked$16$com-android-systemui-recents-OverviewProxyService$1 */
-        public /* synthetic */ void mo37152x64c7c9ba(int i) {
+        public /* synthetic */ void mo37151x64c7c9ba(int i) {
             AccessibilityManager.getInstance(OverviewProxyService.this.mContext).notifyAccessibilityButtonClicked(i);
         }
 
@@ -344,7 +344,7 @@ public class OverviewProxyService extends CurrentUserTracker implements Callback
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$notifyAccessibilityButtonLongClicked$17$com-android-systemui-recents-OverviewProxyService$1 */
-        public /* synthetic */ void mo37153x794b3fd7() {
+        public /* synthetic */ void mo37152x794b3fd7() {
             Intent intent = new Intent("com.android.internal.intent.action.CHOOSE_ACCESSIBILITY_BUTTON");
             intent.setClassName("android", AccessibilityButtonChooserActivity.class.getName());
             intent.addFlags(268468224);
@@ -357,7 +357,7 @@ public class OverviewProxyService extends CurrentUserTracker implements Callback
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$notifySwipeToHomeFinished$19$com-android-systemui-recents-OverviewProxyService$1 */
-        public /* synthetic */ void mo37155xa379406a() {
+        public /* synthetic */ void mo37154xa379406a() {
             OverviewProxyService.this.mPipOptional.ifPresent(new OverviewProxyService$1$$ExternalSyntheticLambda3());
         }
 
@@ -367,7 +367,7 @@ public class OverviewProxyService extends CurrentUserTracker implements Callback
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$notifySwipeUpGestureStarted$20$com-android-systemui-recents-OverviewProxyService$1 */
-        public /* synthetic */ void mo37156x34743cb9() {
+        public /* synthetic */ void mo37155x34743cb9() {
             OverviewProxyService.this.notifySwipeUpGestureStartedInternal();
         }
 
@@ -377,12 +377,12 @@ public class OverviewProxyService extends CurrentUserTracker implements Callback
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$notifyPrioritizedRotation$21$com-android-systemui-recents-OverviewProxyService$1 */
-        public /* synthetic */ void mo37154x273e69a4(int i) {
+        public /* synthetic */ void mo37153x273e69a4(int i) {
             OverviewProxyService.this.notifyPrioritizedRotationInternal(i);
         }
 
         public void handleImageBundleAsScreenshot(Bundle bundle, Rect rect, Insets insets, Task.TaskKey taskKey) {
-            OverviewProxyService.this.mScreenshotHelper.provideScreenshot(bundle, rect, insets, taskKey.f344id, taskKey.userId, taskKey.sourceComponent, 3, OverviewProxyService.this.mHandler, (Consumer) null);
+            OverviewProxyService.this.mScreenshotHelper.provideScreenshot(bundle, rect, insets, taskKey.f343id, taskKey.userId, taskKey.sourceComponent, 3, OverviewProxyService.this.mHandler, (Consumer) null);
         }
 
         public void expandNotificationPanel() {
@@ -391,7 +391,7 @@ public class OverviewProxyService extends CurrentUserTracker implements Callback
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$expandNotificationPanel$22$com-android-systemui-recents-OverviewProxyService$1 */
-        public /* synthetic */ void mo37151x7c2cbd80() {
+        public /* synthetic */ void mo37150x7c2cbd80() {
             OverviewProxyService.this.mCommandQueue.handleSystemKey(281);
         }
 
@@ -401,7 +401,7 @@ public class OverviewProxyService extends CurrentUserTracker implements Callback
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$toggleNotificationPanel$23$com-android-systemui-recents-OverviewProxyService$1 */
-        public /* synthetic */ void mo37171xeea721bb() {
+        public /* synthetic */ void mo37170xeea721bb() {
             ((Optional) OverviewProxyService.this.mCentralSurfacesOptionalLazy.get()).ifPresent(new OverviewProxyService$1$$ExternalSyntheticLambda17());
         }
 
@@ -440,7 +440,7 @@ public class OverviewProxyService extends CurrentUserTracker implements Callback
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$verifyCallerAndClearCallingIdentityPostMain$25$com-android-systemui-recents-OverviewProxyService$1 */
-        public /* synthetic */ Boolean mo37172x171701(Runnable runnable) {
+        public /* synthetic */ Boolean mo37171x171701(Runnable runnable) {
             return Boolean.valueOf(OverviewProxyService.this.mHandler.post(runnable));
         }
     };
@@ -503,7 +503,7 @@ public class OverviewProxyService extends CurrentUserTracker implements Callback
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-recents-OverviewProxyService  reason: not valid java name */
-    public /* synthetic */ void m2994lambda$new$0$comandroidsystemuirecentsOverviewProxyService() {
+    public /* synthetic */ void m2998lambda$new$0$comandroidsystemuirecentsOverviewProxyService() {
         Log.w(TAG_OPS, "Binder supposed established connection but actual connection to service timed out, trying again");
         retryConnectionWithBackoff();
     }
@@ -514,7 +514,7 @@ public class OverviewProxyService extends CurrentUserTracker implements Callback
         super(broadcastDispatcher);
         NotificationShadeWindowController notificationShadeWindowController2 = notificationShadeWindowController;
         SysUiState sysUiState2 = sysUiState;
-        C24172 r6 = new BroadcastReceiver() {
+        C24222 r6 = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
                 OverviewProxyService.this.updateEnabledState();
                 OverviewProxyService.this.startConnectionToCurrentUser();
@@ -582,7 +582,7 @@ public class OverviewProxyService extends CurrentUserTracker implements Callback
         this.mStatusBarWindowCallback = overviewProxyService$$ExternalSyntheticLambda4;
         this.mSplitScreenBoundsChangeListener = new OverviewProxyService$$ExternalSyntheticLambda5(this);
         this.mOverviewServiceDeathRcpt = new OverviewProxyService$$ExternalSyntheticLambda6(this);
-        C24194 r8 = new IVoiceInteractionSessionListener.Stub() {
+        C24244 r8 = new IVoiceInteractionSessionListener.Stub() {
             public void onSetUiHints(Bundle bundle) {
             }
 
@@ -598,7 +598,7 @@ public class OverviewProxyService extends CurrentUserTracker implements Callback
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onVoiceSessionWindowVisibilityChanged$0$com-android-systemui-recents-OverviewProxyService$4 */
-            public /* synthetic */ void mo37199x763fedff(boolean z) {
+            public /* synthetic */ void mo37198x763fedff(boolean z) {
                 OverviewProxyService.this.onVoiceSessionWindowVisibilityChanged(z);
             }
         };
@@ -741,13 +741,13 @@ public class OverviewProxyService extends CurrentUserTracker implements Callback
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$cleanupAfterDeath$2$com-android-systemui-recents-OverviewProxyService */
-    public /* synthetic */ void mo37130x273a363e() {
+    public /* synthetic */ void mo37129x273a363e() {
         this.mCentralSurfacesOptionalLazy.get().ifPresent(new OverviewProxyService$$ExternalSyntheticLambda1(this));
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$cleanupAfterDeath$1$com-android-systemui-recents-OverviewProxyService */
-    public /* synthetic */ void mo37129xe3af187d(CentralSurfaces centralSurfaces) {
+    public /* synthetic */ void mo37128xe3af187d(CentralSurfaces centralSurfaces) {
         this.mInputFocusTransferStarted = false;
         centralSurfaces.onInputFocusTransfer(false, true, 0.0f);
     }

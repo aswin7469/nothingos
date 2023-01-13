@@ -16,6 +16,6 @@ public final /* synthetic */ class CommandRegistry$$ExternalSyntheticLambda0 imp
     }
 
     public final Object call() {
-        return CommandRegistry.m3053onShellCommand$lambda0(this.f$0, this.f$1, this.f$2);
+        return CommandRegistry.m3057onShellCommand$lambda0(this.f$0, this.f$1, this.f$2);
     }
 }

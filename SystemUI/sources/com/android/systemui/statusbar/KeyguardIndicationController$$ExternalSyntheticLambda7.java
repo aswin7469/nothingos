@@ -1,7 +1,7 @@
 package com.android.systemui.statusbar;
 
 import android.content.res.Resources;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import java.util.function.Supplier;
 
 /* compiled from: D8$$SyntheticClass */
@@ -13,6 +13,6 @@ public final /* synthetic */ class KeyguardIndicationController$$ExternalSynthet
     }
 
     public final Object get() {
-        return this.f$0.getString(C1893R.string.do_disclosure_generic);
+        return this.f$0.getString(C1894R.string.do_disclosure_generic);
     }
 }

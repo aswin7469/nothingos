@@ -24,7 +24,7 @@ public class DigestInputStream extends FilterInputStream {
     }
 
     public int read() throws IOException {
-        int read = this.f521in.read();
+        int read = this.f519in.read();
         if (this.f197on && read != -1) {
             this.digest.update((byte) read);
         }
@@ -32,7 +32,7 @@ public class DigestInputStream extends FilterInputStream {
     }
 
     public int read(byte[] bArr, int i, int i2) throws IOException {
-        int read = this.f521in.read(bArr, i, i2);
+        int read = this.f519in.read(bArr, i, i2);
         if (this.f197on && read != -1) {
             this.digest.update(bArr, i, read);
         }

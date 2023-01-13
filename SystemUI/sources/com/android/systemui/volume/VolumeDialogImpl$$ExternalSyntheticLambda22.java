@@ -1,20 +1,21 @@
 package com.android.systemui.volume;
 
-import java.util.function.Consumer;
+import android.view.View;
+import com.android.systemui.volume.VolumeDialogImpl;
 
 /* compiled from: D8$$SyntheticClass */
-public final /* synthetic */ class VolumeDialogImpl$$ExternalSyntheticLambda22 implements Consumer {
+public final /* synthetic */ class VolumeDialogImpl$$ExternalSyntheticLambda22 implements View.OnClickListener {
     public final /* synthetic */ VolumeDialogImpl f$0;
-    public final /* synthetic */ int f$1;
+    public final /* synthetic */ VolumeDialogImpl.VolumeRow f$1;
     public final /* synthetic */ int f$2;
 
-    public /* synthetic */ VolumeDialogImpl$$ExternalSyntheticLambda22(VolumeDialogImpl volumeDialogImpl, int i, int i2) {
+    public /* synthetic */ VolumeDialogImpl$$ExternalSyntheticLambda22(VolumeDialogImpl volumeDialogImpl, VolumeDialogImpl.VolumeRow volumeRow, int i) {
         this.f$0 = volumeDialogImpl;
-        this.f$1 = i;
-        this.f$2 = i2;
+        this.f$1 = volumeRow;
+        this.f$2 = i;
     }
 
-    public final void accept(Object obj) {
-        this.f$0.m3320lambda$new$0$comandroidsystemuivolumeVolumeDialogImpl(this.f$1, this.f$2, (Boolean) obj);
+    public final void onClick(View view) {
+        this.f$0.m3323lambda$initRow$6$comandroidsystemuivolumeVolumeDialogImpl(this.f$1, this.f$2, view);
     }
 }

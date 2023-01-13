@@ -33,35 +33,35 @@ class HeapLongBuffer extends LongBuffer {
     }
 
     public LongBuffer slice() {
-        return new HeapLongBuffer(this.f571hb, -1, 0, remaining(), remaining(), this.offset + position(), this.isReadOnly);
+        return new HeapLongBuffer(this.f569hb, -1, 0, remaining(), remaining(), this.offset + position(), this.isReadOnly);
     }
 
     public LongBuffer duplicate() {
-        return new HeapLongBuffer(this.f571hb, markValue(), position(), limit(), capacity(), this.offset, this.isReadOnly);
+        return new HeapLongBuffer(this.f569hb, markValue(), position(), limit(), capacity(), this.offset, this.isReadOnly);
     }
 
     public LongBuffer asReadOnlyBuffer() {
-        return new HeapLongBuffer(this.f571hb, markValue(), position(), limit(), capacity(), this.offset, true);
+        return new HeapLongBuffer(this.f569hb, markValue(), position(), limit(), capacity(), this.offset, true);
     }
 
     /* access modifiers changed from: protected */
     /* renamed from: ix */
-    public int mo60914ix(int i) {
+    public int mo60970ix(int i) {
         return i + this.offset;
     }
 
     public long get() {
-        return this.f571hb[mo60914ix(nextGetIndex())];
+        return this.f569hb[mo60970ix(nextGetIndex())];
     }
 
     public long get(int i) {
-        return this.f571hb[mo60914ix(checkIndex(i))];
+        return this.f569hb[mo60970ix(checkIndex(i))];
     }
 
     public LongBuffer get(long[] jArr, int i, int i2) {
         checkBounds(i, i2, jArr.length);
         if (i2 <= remaining()) {
-            System.arraycopy((Object) this.f571hb, mo60914ix(position()), (Object) jArr, i, i2);
+            System.arraycopy((Object) this.f569hb, mo60970ix(position()), (Object) jArr, i, i2);
             position(position() + i2);
             return this;
         }
@@ -74,7 +74,7 @@ class HeapLongBuffer extends LongBuffer {
 
     public LongBuffer put(long j) {
         if (!this.isReadOnly) {
-            this.f571hb[mo60914ix(nextPutIndex())] = j;
+            this.f569hb[mo60970ix(nextPutIndex())] = j;
             return this;
         }
         throw new ReadOnlyBufferException();
@@ -82,7 +82,7 @@ class HeapLongBuffer extends LongBuffer {
 
     public LongBuffer put(int i, long j) {
         if (!this.isReadOnly) {
-            this.f571hb[mo60914ix(checkIndex(i))] = j;
+            this.f569hb[mo60970ix(checkIndex(i))] = j;
             return this;
         }
         throw new ReadOnlyBufferException();
@@ -92,7 +92,7 @@ class HeapLongBuffer extends LongBuffer {
         if (!this.isReadOnly) {
             checkBounds(i, i2, jArr.length);
             if (i2 <= remaining()) {
-                System.arraycopy((Object) jArr, i, (Object) this.f571hb, mo60914ix(position()), i2);
+                System.arraycopy((Object) jArr, i, (Object) this.f569hb, mo60970ix(position()), i2);
                 position(position() + i2);
                 return this;
             }
@@ -109,7 +109,7 @@ class HeapLongBuffer extends LongBuffer {
                 HeapLongBuffer heapLongBuffer = (HeapLongBuffer) longBuffer;
                 int remaining = heapLongBuffer.remaining();
                 if (remaining <= remaining()) {
-                    System.arraycopy((Object) heapLongBuffer.f571hb, heapLongBuffer.mo60914ix(heapLongBuffer.position()), (Object) this.f571hb, mo60914ix(position()), remaining);
+                    System.arraycopy((Object) heapLongBuffer.f569hb, heapLongBuffer.mo60970ix(heapLongBuffer.position()), (Object) this.f569hb, mo60970ix(position()), remaining);
                     heapLongBuffer.position(heapLongBuffer.position() + remaining);
                     position(position() + remaining);
                 } else {
@@ -118,7 +118,7 @@ class HeapLongBuffer extends LongBuffer {
             } else if (longBuffer.isDirect()) {
                 int remaining2 = longBuffer.remaining();
                 if (remaining2 <= remaining()) {
-                    longBuffer.get(this.f571hb, mo60914ix(position()), remaining2);
+                    longBuffer.get(this.f569hb, mo60970ix(position()), remaining2);
                     position(position() + remaining2);
                 } else {
                     throw new BufferOverflowException();
@@ -134,7 +134,7 @@ class HeapLongBuffer extends LongBuffer {
 
     public LongBuffer compact() {
         if (!this.isReadOnly) {
-            System.arraycopy((Object) this.f571hb, mo60914ix(position()), (Object) this.f571hb, mo60914ix(0), remaining());
+            System.arraycopy((Object) this.f569hb, mo60970ix(position()), (Object) this.f569hb, mo60970ix(0), remaining());
             position(remaining());
             limit(capacity());
             discardMark();

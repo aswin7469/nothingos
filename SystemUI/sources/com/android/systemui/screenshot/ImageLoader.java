@@ -46,7 +46,7 @@ public class ImageLoader {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$load$0$com-android-systemui-screenshot-ImageLoader  reason: not valid java name */
-    public /* synthetic */ Object m2997lambda$load$0$comandroidsystemuiscreenshotImageLoader(Uri uri, CallbackToFutureAdapter.Completer completer) throws Exception {
+    public /* synthetic */ Object m3001lambda$load$0$comandroidsystemuiscreenshotImageLoader(Uri uri, CallbackToFutureAdapter.Completer completer) throws Exception {
         InputStream openInputStream;
         Result result = new Result();
         try {

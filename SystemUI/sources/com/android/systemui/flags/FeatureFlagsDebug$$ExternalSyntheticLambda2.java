@@ -11,6 +11,6 @@ public final /* synthetic */ class FeatureFlagsDebug$$ExternalSyntheticLambda2 i
     }
 
     public final Object invoke() {
-        return this.f$0.m2750lambda$new$0$comandroidsystemuiflagsFeatureFlagsDebug();
+        return this.f$0.m2755lambda$new$0$comandroidsystemuiflagsFeatureFlagsDebug();
     }
 }

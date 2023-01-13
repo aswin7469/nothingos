@@ -14,6 +14,6 @@ public final /* synthetic */ class ControlsFavoritingActivity$$ExternalSynthetic
     }
 
     public final void accept(Object obj) {
-        ControlsFavoritingActivity.m2643loadControls$lambda9$lambda7(this.f$0, this.f$1, (ControlsController.LoadData) obj);
+        ControlsFavoritingActivity.m2648loadControls$lambda9$lambda7(this.f$0, this.f$1, (ControlsController.LoadData) obj);
     }
 }

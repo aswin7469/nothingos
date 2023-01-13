@@ -11,6 +11,6 @@ public final /* synthetic */ class ChannelRow$$ExternalSyntheticLambda1 implemen
     }
 
     public final void onCheckedChanged(CompoundButton compoundButton, boolean z) {
-        ChannelRow.m3142onFinishInflate$lambda1(this.f$0, compoundButton, z);
+        ChannelRow.m3146onFinishInflate$lambda1(this.f$0, compoundButton, z);
     }
 }

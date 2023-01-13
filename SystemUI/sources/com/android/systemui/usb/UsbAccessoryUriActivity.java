@@ -11,7 +11,7 @@ import android.util.Log;
 import com.android.internal.app.AlertActivity;
 import com.android.internal.app.AlertController;
 import com.android.settingslib.SliceBroadcastRelay;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 
 public class UsbAccessoryUriActivity extends AlertActivity implements DialogInterface.OnClickListener {
     private static final String TAG = "UsbAccessoryUriActivity";
@@ -41,10 +41,10 @@ public class UsbAccessoryUriActivity extends AlertActivity implements DialogInte
             AlertController.AlertParams alertParams = this.mAlertParams;
             alertParams.mTitle = this.mAccessory.getDescription();
             if (alertParams.mTitle == null || alertParams.mTitle.length() == 0) {
-                alertParams.mTitle = getString(C1893R.string.title_usb_accessory);
+                alertParams.mTitle = getString(C1894R.string.title_usb_accessory);
             }
-            alertParams.mMessage = getString(C1893R.string.usb_accessory_uri_prompt, new Object[]{this.mUri});
-            alertParams.mPositiveButtonText = getString(C1893R.string.label_view);
+            alertParams.mMessage = getString(C1894R.string.usb_accessory_uri_prompt, new Object[]{this.mUri});
+            alertParams.mPositiveButtonText = getString(C1894R.string.label_view);
             alertParams.mNegativeButtonText = getString(17039360);
             alertParams.mPositiveButtonListener = this;
             alertParams.mNegativeButtonListener = this;

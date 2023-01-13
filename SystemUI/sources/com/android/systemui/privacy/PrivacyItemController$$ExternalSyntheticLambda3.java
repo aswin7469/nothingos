@@ -9,6 +9,6 @@ public final /* synthetic */ class PrivacyItemController$$ExternalSyntheticLambd
     }
 
     public final void run() {
-        PrivacyItemController.m2878update$lambda3(this.f$0);
+        PrivacyItemController.m2883update$lambda3(this.f$0);
     }
 }

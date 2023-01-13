@@ -6,7 +6,7 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import com.android.internal.logging.MetricsLogger;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.animation.ActivityLaunchAnimator;
 import com.android.systemui.dagger.qualifiers.Background;
 import com.android.systemui.dagger.qualifiers.Main;
@@ -24,7 +24,7 @@ import javax.inject.Inject;
 public class QRCodeScannerTile extends QSTileImpl<QSTile.State> {
     private static final String TAG = "QRCodeScanner";
     private final QRCodeScannerController.Callback mCallback;
-    private final CharSequence mLabel = this.mContext.getString(C1893R.string.qr_code_scanner_title);
+    private final CharSequence mLabel = this.mContext.getString(C1894R.string.qr_code_scanner_title);
     private final QRCodeScannerController mQRCodeScannerController;
 
     public Intent getLongClickIntent() {
@@ -38,7 +38,7 @@ public class QRCodeScannerTile extends QSTileImpl<QSTile.State> {
     @Inject
     public QRCodeScannerTile(QSHost qSHost, @Background Looper looper, @Main Handler handler, FalsingManager falsingManager, MetricsLogger metricsLogger, StatusBarStateController statusBarStateController, ActivityStarter activityStarter, QSLogger qSLogger, QRCodeScannerController qRCodeScannerController) {
         super(qSHost, looper, handler, falsingManager, metricsLogger, statusBarStateController, activityStarter, qSLogger);
-        C24041 r1 = new QRCodeScannerController.Callback() {
+        C24091 r1 = new QRCodeScannerController.Callback() {
             public void onQRCodeScannerActivityChanged() {
                 QRCodeScannerTile.this.refreshState();
             }
@@ -83,9 +83,9 @@ public class QRCodeScannerTile extends QSTileImpl<QSTile.State> {
 
     /* access modifiers changed from: protected */
     public void handleUpdateState(QSTile.State state, Object obj) {
-        state.label = this.mContext.getString(C1893R.string.qr_code_scanner_title);
+        state.label = this.mContext.getString(C1894R.string.qr_code_scanner_title);
         state.contentDescription = state.label;
-        state.icon = QSTileImpl.ResourceIcon.get(C1893R.C1895drawable.ic_qr_code_scanner);
+        state.icon = QSTileImpl.ResourceIcon.get(C1894R.C1896drawable.ic_qr_code_scanner);
         state.state = this.mQRCodeScannerController.isEnabledForQuickSettings() ? 2 : 0;
     }
 

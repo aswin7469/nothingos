@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewParent;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.ViewCompat;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.animation.MotionSpec;
 import com.google.android.material.animation.Positioning;
 import com.google.android.material.transformation.FabTransformationBehavior;
@@ -28,9 +28,9 @@ public class FabTransformationSheetBehavior extends FabTransformationBehavior {
     public FabTransformationBehavior.FabTransformationSpec onCreateMotionSpec(Context context, boolean z) {
         int i;
         if (z) {
-            i = C3621R.animator.mtrl_fab_transformation_sheet_expand_spec;
+            i = C3631R.animator.mtrl_fab_transformation_sheet_expand_spec;
         } else {
-            i = C3621R.animator.mtrl_fab_transformation_sheet_collapse_spec;
+            i = C3631R.animator.mtrl_fab_transformation_sheet_collapse_spec;
         }
         FabTransformationBehavior.FabTransformationSpec fabTransformationSpec = new FabTransformationBehavior.FabTransformationSpec();
         fabTransformationSpec.timings = MotionSpec.createFromResource(context, i);

@@ -233,7 +233,7 @@ public class BatteryControllerImpl extends BroadcastReceiver implements BatteryC
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$fireWirelessChargingChanged$0$com-android-systemui-statusbar-policy-BatteryControllerImpl */
-    public /* synthetic */ void mo45591x56786e14(BatteryController.BatteryStateChangeCallback batteryStateChangeCallback) {
+    public /* synthetic */ void mo45603x56786e14(BatteryController.BatteryStateChangeCallback batteryStateChangeCallback) {
         batteryStateChangeCallback.onWirelessChargingChanged(this.mWirelessCharging);
     }
 
@@ -284,7 +284,7 @@ public class BatteryControllerImpl extends BroadcastReceiver implements BatteryC
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateEstimateInBackground$1$com-android-systemui-statusbar-policy-BatteryControllerImpl */
-    public /* synthetic */ void mo45592x36c6f824() {
+    public /* synthetic */ void mo45604x36c6f824() {
         synchronized (this.mFetchCallbacks) {
             this.mEstimate = null;
             if (this.mEstimates.isHybridNotificationEnabled()) {

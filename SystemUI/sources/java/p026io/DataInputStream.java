@@ -17,11 +17,11 @@ public class DataInputStream extends FilterInputStream implements DataInput {
     }
 
     public final int read(byte[] bArr) throws IOException {
-        return this.f521in.read(bArr, 0, bArr.length);
+        return this.f519in.read(bArr, 0, bArr.length);
     }
 
     public final int read(byte[] bArr, int i, int i2) throws IOException {
-        return this.f521in.read(bArr, i, i2);
+        return this.f519in.read(bArr, i, i2);
     }
 
     public final void readFully(byte[] bArr) throws IOException {
@@ -32,7 +32,7 @@ public class DataInputStream extends FilterInputStream implements DataInput {
         if (i2 >= 0) {
             int i3 = 0;
             while (i3 < i2) {
-                int read = this.f521in.read(bArr, i + i3, i2 - i3);
+                int read = this.f519in.read(bArr, i + i3, i2 - i3);
                 if (read >= 0) {
                     i3 += read;
                 } else {
@@ -47,7 +47,7 @@ public class DataInputStream extends FilterInputStream implements DataInput {
     public final int skipBytes(int i) throws IOException {
         int i2 = 0;
         while (i2 < i) {
-            int skip = (int) this.f521in.skip((long) (i - i2));
+            int skip = (int) this.f519in.skip((long) (i - i2));
             if (skip <= 0) {
                 break;
             }
@@ -57,7 +57,7 @@ public class DataInputStream extends FilterInputStream implements DataInput {
     }
 
     public final boolean readBoolean() throws IOException {
-        int read = this.f521in.read();
+        int read = this.f519in.read();
         if (read >= 0) {
             return read != 0;
         }
@@ -65,7 +65,7 @@ public class DataInputStream extends FilterInputStream implements DataInput {
     }
 
     public final byte readByte() throws IOException {
-        int read = this.f521in.read();
+        int read = this.f519in.read();
         if (read >= 0) {
             return (byte) read;
         }
@@ -73,7 +73,7 @@ public class DataInputStream extends FilterInputStream implements DataInput {
     }
 
     public final int readUnsignedByte() throws IOException {
-        int read = this.f521in.read();
+        int read = this.f519in.read();
         if (read >= 0) {
             return read;
         }
@@ -125,7 +125,7 @@ public class DataInputStream extends FilterInputStream implements DataInput {
         int length = cArr.length;
         int i = 0;
         while (true) {
-            read = this.f521in.read();
+            read = this.f519in.read();
             if (read == -1 || read == 10) {
                 break;
             } else if (read != 13) {
@@ -142,12 +142,12 @@ public class DataInputStream extends FilterInputStream implements DataInput {
                 cArr[i] = (char) read;
                 i++;
             } else {
-                int read2 = this.f521in.read();
+                int read2 = this.f519in.read();
                 if (read2 != 10 && read2 != -1) {
-                    if (!(this.f521in instanceof PushbackInputStream)) {
-                        this.f521in = new PushbackInputStream(this.f521in);
+                    if (!(this.f519in instanceof PushbackInputStream)) {
+                        this.f519in = new PushbackInputStream(this.f519in);
                     }
-                    ((PushbackInputStream) this.f521in).unread(read2);
+                    ((PushbackInputStream) this.f519in).unread(read2);
                 }
             }
         }

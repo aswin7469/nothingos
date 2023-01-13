@@ -11,6 +11,6 @@ public final /* synthetic */ class AssistManager$$ExternalSyntheticLambda0 imple
     }
 
     public final Object get() {
-        return this.f$0.mo30358xbc9ad335();
+        return this.f$0.mo30368xbc9ad335();
     }
 }

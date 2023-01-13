@@ -14,6 +14,6 @@ public final /* synthetic */ class QSTileImplEx$$ExternalSyntheticLambda2 implem
     }
 
     public final void run() {
-        QSTileImplEx.m3513createBluetoothDialog$lambda3(this.f$0, this.f$1);
+        QSTileImplEx.m3519createBluetoothDialog$lambda3(this.f$0, this.f$1);
     }
 }

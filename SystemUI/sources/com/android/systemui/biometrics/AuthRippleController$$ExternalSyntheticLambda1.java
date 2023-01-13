@@ -9,6 +9,6 @@ public final /* synthetic */ class AuthRippleController$$ExternalSyntheticLambda
     }
 
     public final void run() {
-        AuthRippleController.m2561showUnlockedRipple$lambda1(this.f$0);
+        AuthRippleController.m2567showUnlockedRipple$lambda1(this.f$0);
     }
 }

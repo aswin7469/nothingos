@@ -6,7 +6,7 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.util.AttributeSet;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 
 public class NotificationPanelView extends PanelView {
     static final String COUNTER_PANEL_OPEN = "panel_open";
@@ -77,6 +77,6 @@ public class NotificationPanelView extends PanelView {
     }
 
     public TapAgainView getTapAgainView() {
-        return (TapAgainView) findViewById(C1893R.C1897id.shade_falsing_tap_again);
+        return (TapAgainView) findViewById(C1894R.C1898id.shade_falsing_tap_again);
     }
 }

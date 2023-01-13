@@ -14,6 +14,6 @@ public final /* synthetic */ class LockscreenFragment$Adapter$$ExternalSynthetic
     }
 
     public final void onClick(View view) {
-        this.f$0.mo46399xd258dbf8(this.f$1, view);
+        this.f$0.mo46411xd258dbf8(this.f$1, view);
     }
 }

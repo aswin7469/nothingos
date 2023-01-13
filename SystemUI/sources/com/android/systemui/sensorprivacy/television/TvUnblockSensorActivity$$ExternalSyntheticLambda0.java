@@ -11,6 +11,6 @@ public final /* synthetic */ class TvUnblockSensorActivity$$ExternalSyntheticLam
     }
 
     public final void onClick(View view) {
-        this.f$0.mo37694x873fca73(view);
+        this.f$0.mo37695x873fca73(view);
     }
 }

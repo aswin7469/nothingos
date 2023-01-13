@@ -61,8 +61,8 @@ public class KeyguardVisibilityHelper {
                 long j = (long) 125;
                 long j2 = (long) 0;
                 this.mAnimationProperties.setDuration(j).setDelay(j2);
-                PropertyAnimator.cancelAnimation(this.mView, AnimatableProperty.f376Y);
-                PropertyAnimator.setProperty(this.mView, AnimatableProperty.f376Y, y, this.mAnimationProperties, true);
+                PropertyAnimator.cancelAnimation(this.mView, AnimatableProperty.f375Y);
+                PropertyAnimator.setProperty(this.mView, AnimatableProperty.f375Y, y, this.mAnimationProperties, true);
                 withEndAction.setDuration(j).setStartDelay(j2);
             }
             withEndAction.start();
@@ -82,21 +82,21 @@ public class KeyguardVisibilityHelper {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-keyguard-KeyguardVisibilityHelper  reason: not valid java name */
-    public /* synthetic */ void m2299lambda$new$0$comandroidkeyguardKeyguardVisibilityHelper() {
+    public /* synthetic */ void m2305lambda$new$0$comandroidkeyguardKeyguardVisibilityHelper() {
         this.mKeyguardViewVisibilityAnimating = false;
         this.mView.setVisibility(4);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$1$com-android-keyguard-KeyguardVisibilityHelper  reason: not valid java name */
-    public /* synthetic */ void m2300lambda$new$1$comandroidkeyguardKeyguardVisibilityHelper() {
+    public /* synthetic */ void m2306lambda$new$1$comandroidkeyguardKeyguardVisibilityHelper() {
         this.mKeyguardViewVisibilityAnimating = false;
         this.mView.setVisibility(8);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$2$com-android-keyguard-KeyguardVisibilityHelper  reason: not valid java name */
-    public /* synthetic */ void m2301lambda$new$2$comandroidkeyguardKeyguardVisibilityHelper() {
+    public /* synthetic */ void m2307lambda$new$2$comandroidkeyguardKeyguardVisibilityHelper() {
         this.mKeyguardViewVisibilityAnimating = false;
     }
 }

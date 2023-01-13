@@ -11,6 +11,6 @@ public final /* synthetic */ class KeyguardViewMediator$$ExternalSyntheticLambda
     }
 
     public final void run() {
-        this.f$0.mo33252x7dc6aa5c(this.f$1);
+        this.f$0.mo33263x7dc6aa5c(this.f$1);
     }
 }

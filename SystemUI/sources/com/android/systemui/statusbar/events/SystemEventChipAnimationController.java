@@ -13,17 +13,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.FrameLayout;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.statusbar.phone.StatusBarContentInsetsProvider;
 import com.android.systemui.statusbar.window.StatusBarWindowController;
 import com.android.systemui.util.animation.AnimationUtil;
+import com.nothing.systemui.util.NTLogUtil;
 import javax.inject.Inject;
 import kotlin.Metadata;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.math.MathKt;
 
-@Metadata(mo64986d1 = {"\u0000p\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u000b\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0006\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\t\u0018\u00002\u00020\u0001B\u001f\b\u0007\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\u0006\u0010\u0006\u001a\u00020\u0007¢\u0006\u0002\u0010\bJ\b\u0010\u001a\u001a\u00020\u001bH\u0002J\b\u0010\u001c\u001a\u00020\u001bH\u0002J\b\u0010\u001d\u001a\u00020\u001eH\u0002J\b\u0010\u001f\u001a\u00020\u001eH\u0002J\u0010\u0010 \u001a\u00020!2\u0006\u0010\"\u001a\u00020\fH\u0002J\b\u0010#\u001a\u00020\u001bH\u0016J\u0010\u0010$\u001a\u00020\u001b2\u0006\u0010%\u001a\u00020\u0017H\u0016J-\u0010&\u001a\u00020\u001e2%\u0010'\u001a!\u0012\u0013\u0012\u00110\u0003¢\u0006\f\b)\u0012\b\b*\u0012\u0004\b\b(\u0002\u0012\u0004\u0012\u00020\u00140(j\u0002`+J\u0010\u0010,\u001a\u00020\u001e2\u0006\u0010-\u001a\u00020\fH\u0002J\u0018\u0010.\u001a\u00020\u001e2\u0006\u0010/\u001a\u00020\f2\u0006\u00100\u001a\u00020\fH\u0002J\u0010\u00101\u001a\u00020\u001e2\u0006\u00102\u001a\u00020\fH\u0002J\b\u00103\u001a\u00020\u001eH\u0002R\u000e\u0010\t\u001a\u00020\nX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u000b\u001a\u00020\fX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\r\u001a\u00020\u000eX.¢\u0006\u0002\n\u0000R\u000e\u0010\u000f\u001a\u00020\fX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0010\u001a\u00020\fX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0011\u001a\u00020\fX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0012\u001a\u00020\fX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0006\u001a\u00020\u0007X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0002\u001a\u00020\u0003X\u0004¢\u0006\u0002\n\u0000R\u0010\u0010\u0013\u001a\u0004\u0018\u00010\u0014X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0015\u001a\u00020\fX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0016\u001a\u00020\u0017X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0004\u001a\u00020\u0005X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0018\u001a\u00020\u0019X.¢\u0006\u0002\n\u0000¨\u00064"}, mo64987d2 = {"Lcom/android/systemui/statusbar/events/SystemEventChipAnimationController;", "Lcom/android/systemui/statusbar/events/SystemStatusAnimationCallback;", "context", "Landroid/content/Context;", "statusBarWindowController", "Lcom/android/systemui/statusbar/window/StatusBarWindowController;", "contentInsetsProvider", "Lcom/android/systemui/statusbar/phone/StatusBarContentInsetsProvider;", "(Landroid/content/Context;Lcom/android/systemui/statusbar/window/StatusBarWindowController;Lcom/android/systemui/statusbar/phone/StatusBarContentInsetsProvider;)V", "animRect", "Landroid/graphics/Rect;", "animationDirection", "", "animationWindowView", "Landroid/widget/FrameLayout;", "chipLeft", "chipMinWidth", "chipRight", "chipWidth", "currentAnimatedView", "Lcom/android/systemui/statusbar/events/BackgroundAnimatableView;", "dotSize", "initialized", "", "themedContext", "Landroid/view/ContextThemeWrapper;", "createMoveOutAnimationDefault", "Landroid/animation/Animator;", "createMoveOutAnimationForDot", "init", "", "initializeAnimRect", "layoutParamsDefault", "Landroid/widget/FrameLayout$LayoutParams;", "marginEnd", "onSystemEventAnimationBegin", "onSystemEventAnimationFinish", "hasPersistentDot", "prepareChipAnimation", "viewCreator", "Lkotlin/Function1;", "Lkotlin/ParameterName;", "name", "Lcom/android/systemui/statusbar/events/ViewCreator;", "updateAnimatedBoundsX", "translation", "updateAnimatedViewBoundsHeight", "height", "verticalCenter", "updateAnimatedViewBoundsWidth", "width", "updateCurrentAnimatedView", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000p\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u000b\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0006\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\t\u0018\u00002\u00020\u0001B\u001f\b\u0007\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\u0006\u0010\u0006\u001a\u00020\u0007¢\u0006\u0002\u0010\bJ\b\u0010\u001a\u001a\u00020\u001bH\u0002J\b\u0010\u001c\u001a\u00020\u001bH\u0002J\b\u0010\u001d\u001a\u00020\u001eH\u0002J\b\u0010\u001f\u001a\u00020\u001eH\u0002J\u0010\u0010 \u001a\u00020!2\u0006\u0010\"\u001a\u00020\fH\u0002J\b\u0010#\u001a\u00020\u001bH\u0016J\u0010\u0010$\u001a\u00020\u001b2\u0006\u0010%\u001a\u00020\u0017H\u0016J-\u0010&\u001a\u00020\u001e2%\u0010'\u001a!\u0012\u0013\u0012\u00110\u0003¢\u0006\f\b)\u0012\b\b*\u0012\u0004\b\b(\u0002\u0012\u0004\u0012\u00020\u00140(j\u0002`+J\u0010\u0010,\u001a\u00020\u001e2\u0006\u0010-\u001a\u00020\fH\u0002J\u0018\u0010.\u001a\u00020\u001e2\u0006\u0010/\u001a\u00020\f2\u0006\u00100\u001a\u00020\fH\u0002J\u0010\u00101\u001a\u00020\u001e2\u0006\u00102\u001a\u00020\fH\u0002J\b\u00103\u001a\u00020\u001eH\u0002R\u000e\u0010\t\u001a\u00020\nX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u000b\u001a\u00020\fX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\r\u001a\u00020\u000eX.¢\u0006\u0002\n\u0000R\u000e\u0010\u000f\u001a\u00020\fX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0010\u001a\u00020\fX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0011\u001a\u00020\fX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0012\u001a\u00020\fX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0006\u001a\u00020\u0007X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0002\u001a\u00020\u0003X\u0004¢\u0006\u0002\n\u0000R\u0010\u0010\u0013\u001a\u0004\u0018\u00010\u0014X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0015\u001a\u00020\fX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0016\u001a\u00020\u0017X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0004\u001a\u00020\u0005X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0018\u001a\u00020\u0019X.¢\u0006\u0002\n\u0000¨\u00064"}, mo65043d2 = {"Lcom/android/systemui/statusbar/events/SystemEventChipAnimationController;", "Lcom/android/systemui/statusbar/events/SystemStatusAnimationCallback;", "context", "Landroid/content/Context;", "statusBarWindowController", "Lcom/android/systemui/statusbar/window/StatusBarWindowController;", "contentInsetsProvider", "Lcom/android/systemui/statusbar/phone/StatusBarContentInsetsProvider;", "(Landroid/content/Context;Lcom/android/systemui/statusbar/window/StatusBarWindowController;Lcom/android/systemui/statusbar/phone/StatusBarContentInsetsProvider;)V", "animRect", "Landroid/graphics/Rect;", "animationDirection", "", "animationWindowView", "Landroid/widget/FrameLayout;", "chipLeft", "chipMinWidth", "chipRight", "chipWidth", "currentAnimatedView", "Lcom/android/systemui/statusbar/events/BackgroundAnimatableView;", "dotSize", "initialized", "", "themedContext", "Landroid/view/ContextThemeWrapper;", "createMoveOutAnimationDefault", "Landroid/animation/Animator;", "createMoveOutAnimationForDot", "init", "", "initializeAnimRect", "layoutParamsDefault", "Landroid/widget/FrameLayout$LayoutParams;", "marginEnd", "onSystemEventAnimationBegin", "onSystemEventAnimationFinish", "hasPersistentDot", "prepareChipAnimation", "viewCreator", "Lkotlin/Function1;", "Lkotlin/ParameterName;", "name", "Lcom/android/systemui/statusbar/events/ViewCreator;", "updateAnimatedBoundsX", "translation", "updateAnimatedViewBoundsHeight", "height", "verticalCenter", "updateAnimatedViewBoundsWidth", "width", "updateCurrentAnimatedView", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* compiled from: SystemEventChipAnimationController.kt */
 public final class SystemEventChipAnimationController implements SystemStatusAnimationCallback {
     private Rect animRect;
@@ -51,8 +52,8 @@ public final class SystemEventChipAnimationController implements SystemStatusAni
         this.context = context2;
         this.statusBarWindowController = statusBarWindowController2;
         this.contentInsetsProvider = statusBarContentInsetsProvider;
-        this.chipMinWidth = context2.getResources().getDimensionPixelSize(C1893R.dimen.ongoing_appops_chip_min_animation_width);
-        this.dotSize = context2.getResources().getDimensionPixelSize(C1893R.dimen.ongoing_appops_dot_diameter);
+        this.chipMinWidth = context2.getResources().getDimensionPixelSize(C1894R.dimen.ongoing_appops_chip_min_animation_width);
+        this.dotSize = context2.getResources().getDimensionPixelSize(C1894R.dimen.ongoing_appops_dot_diameter);
         this.animRect = new Rect();
     }
 
@@ -128,6 +129,7 @@ public final class SystemEventChipAnimationController implements SystemStatusAni
 
     public Animator onSystemEventAnimationBegin() {
         initializeAnimRect();
+        NTLogUtil.m1686d("SystemEventChipAnimationController", "onSystemEventAnimationBegin");
         ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
         ofFloat.setStartDelay(AnimationUtil.Companion.getFrames(7));
         ofFloat.setDuration(AnimationUtil.Companion.getFrames(5));
@@ -145,7 +147,7 @@ public final class SystemEventChipAnimationController implements SystemStatusAni
 
     /* access modifiers changed from: private */
     /* renamed from: onSystemEventAnimationBegin$lambda-2$lambda-1  reason: not valid java name */
-    public static final void m3071onSystemEventAnimationBegin$lambda2$lambda1(SystemEventChipAnimationController systemEventChipAnimationController, ValueAnimator valueAnimator, ValueAnimator valueAnimator2) {
+    public static final void m3075onSystemEventAnimationBegin$lambda2$lambda1(SystemEventChipAnimationController systemEventChipAnimationController, ValueAnimator valueAnimator, ValueAnimator valueAnimator2) {
         Intrinsics.checkNotNullParameter(systemEventChipAnimationController, "this$0");
         BackgroundAnimatableView backgroundAnimatableView = systemEventChipAnimationController.currentAnimatedView;
         View view = backgroundAnimatableView != null ? backgroundAnimatableView.getView() : null;
@@ -161,7 +163,7 @@ public final class SystemEventChipAnimationController implements SystemStatusAni
 
     /* access modifiers changed from: private */
     /* renamed from: onSystemEventAnimationBegin$lambda-4$lambda-3  reason: not valid java name */
-    public static final void m3072onSystemEventAnimationBegin$lambda4$lambda3(SystemEventChipAnimationController systemEventChipAnimationController, ValueAnimator valueAnimator, ValueAnimator valueAnimator2) {
+    public static final void m3076onSystemEventAnimationBegin$lambda4$lambda3(SystemEventChipAnimationController systemEventChipAnimationController, ValueAnimator valueAnimator, ValueAnimator valueAnimator2) {
         Intrinsics.checkNotNullParameter(systemEventChipAnimationController, "this$0");
         Object animatedValue = valueAnimator.getAnimatedValue();
         if (animatedValue != null) {
@@ -174,12 +176,13 @@ public final class SystemEventChipAnimationController implements SystemStatusAni
     public Animator onSystemEventAnimationFinish(boolean z) {
         Animator animator;
         initializeAnimRect();
+        NTLogUtil.m1686d("SystemEventChipAnimationController", "onSystemEventAnimationFinish, hasPersistentDot: " + z);
         if (z) {
             animator = createMoveOutAnimationForDot();
         } else {
             animator = createMoveOutAnimationDefault();
         }
-        animator.addListener(new C2635xd070aad3(this));
+        animator.addListener(new C2641xd070aad3(this));
         return animator;
     }
 
@@ -222,7 +225,7 @@ public final class SystemEventChipAnimationController implements SystemStatusAni
 
     /* access modifiers changed from: private */
     /* renamed from: createMoveOutAnimationForDot$lambda-6$lambda-5  reason: not valid java name */
-    public static final void m3069createMoveOutAnimationForDot$lambda6$lambda5(SystemEventChipAnimationController systemEventChipAnimationController, ValueAnimator valueAnimator) {
+    public static final void m3073createMoveOutAnimationForDot$lambda6$lambda5(SystemEventChipAnimationController systemEventChipAnimationController, ValueAnimator valueAnimator) {
         Intrinsics.checkNotNullParameter(systemEventChipAnimationController, "this$0");
         Object animatedValue = valueAnimator.getAnimatedValue();
         if (animatedValue != null) {
@@ -234,7 +237,7 @@ public final class SystemEventChipAnimationController implements SystemStatusAni
 
     /* access modifiers changed from: private */
     /* renamed from: createMoveOutAnimationForDot$lambda-8$lambda-7  reason: not valid java name */
-    public static final void m3070createMoveOutAnimationForDot$lambda8$lambda7(SystemEventChipAnimationController systemEventChipAnimationController, ValueAnimator valueAnimator) {
+    public static final void m3074createMoveOutAnimationForDot$lambda8$lambda7(SystemEventChipAnimationController systemEventChipAnimationController, ValueAnimator valueAnimator) {
         Intrinsics.checkNotNullParameter(systemEventChipAnimationController, "this$0");
         Object animatedValue = valueAnimator.getAnimatedValue();
         if (animatedValue != null) {
@@ -246,7 +249,7 @@ public final class SystemEventChipAnimationController implements SystemStatusAni
 
     /* access modifiers changed from: private */
     /* renamed from: createMoveOutAnimationForDot$lambda-10$lambda-9  reason: not valid java name */
-    public static final void m3066createMoveOutAnimationForDot$lambda10$lambda9(SystemEventChipAnimationController systemEventChipAnimationController, int i, ValueAnimator valueAnimator) {
+    public static final void m3070createMoveOutAnimationForDot$lambda10$lambda9(SystemEventChipAnimationController systemEventChipAnimationController, int i, ValueAnimator valueAnimator) {
         Intrinsics.checkNotNullParameter(systemEventChipAnimationController, "this$0");
         Object animatedValue = valueAnimator.getAnimatedValue();
         if (animatedValue != null) {
@@ -258,7 +261,7 @@ public final class SystemEventChipAnimationController implements SystemStatusAni
 
     /* access modifiers changed from: private */
     /* renamed from: createMoveOutAnimationForDot$lambda-12$lambda-11  reason: not valid java name */
-    public static final void m3067createMoveOutAnimationForDot$lambda12$lambda11(SystemEventChipAnimationController systemEventChipAnimationController, int i, ValueAnimator valueAnimator) {
+    public static final void m3071createMoveOutAnimationForDot$lambda12$lambda11(SystemEventChipAnimationController systemEventChipAnimationController, int i, ValueAnimator valueAnimator) {
         Intrinsics.checkNotNullParameter(systemEventChipAnimationController, "this$0");
         Object animatedValue = valueAnimator.getAnimatedValue();
         if (animatedValue != null) {
@@ -270,7 +273,7 @@ public final class SystemEventChipAnimationController implements SystemStatusAni
 
     /* access modifiers changed from: private */
     /* renamed from: createMoveOutAnimationForDot$lambda-14$lambda-13  reason: not valid java name */
-    public static final void m3068createMoveOutAnimationForDot$lambda14$lambda13(SystemEventChipAnimationController systemEventChipAnimationController, ValueAnimator valueAnimator, ValueAnimator valueAnimator2) {
+    public static final void m3072createMoveOutAnimationForDot$lambda14$lambda13(SystemEventChipAnimationController systemEventChipAnimationController, ValueAnimator valueAnimator, ValueAnimator valueAnimator2) {
         int i;
         Intrinsics.checkNotNullParameter(systemEventChipAnimationController, "this$0");
         if (systemEventChipAnimationController.animationDirection == 1) {
@@ -301,7 +304,7 @@ public final class SystemEventChipAnimationController implements SystemStatusAni
 
     /* access modifiers changed from: private */
     /* renamed from: createMoveOutAnimationDefault$lambda-17$lambda-16  reason: not valid java name */
-    public static final void m3065createMoveOutAnimationDefault$lambda17$lambda16(SystemEventChipAnimationController systemEventChipAnimationController, ValueAnimator valueAnimator) {
+    public static final void m3069createMoveOutAnimationDefault$lambda17$lambda16(SystemEventChipAnimationController systemEventChipAnimationController, ValueAnimator valueAnimator) {
         Intrinsics.checkNotNullParameter(systemEventChipAnimationController, "this$0");
         if (systemEventChipAnimationController.currentAnimatedView != null) {
             Object animatedValue = valueAnimator.getAnimatedValue();
@@ -315,10 +318,10 @@ public final class SystemEventChipAnimationController implements SystemStatusAni
 
     private final void init() {
         this.initialized = true;
-        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(this.context, C1893R.style.Theme_SystemUI_QuickSettings);
+        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(this.context, C1894R.style.Theme_SystemUI_QuickSettings);
         this.themedContext = contextThemeWrapper;
         FrameLayout frameLayout = null;
-        View inflate = LayoutInflater.from(contextThemeWrapper).inflate(C1893R.layout.system_event_animation_window, (ViewGroup) null);
+        View inflate = LayoutInflater.from(contextThemeWrapper).inflate(C1894R.layout.system_event_animation_window, (ViewGroup) null);
         if (inflate != null) {
             this.animationWindowView = (FrameLayout) inflate;
             FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(-1, -1);

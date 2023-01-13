@@ -64,7 +64,7 @@ public enum TimeUnit {
     }
 
     public long convert(long j, TimeUnit timeUnit) {
-        int i = C44111.$SwitchMap$java$util$concurrent$TimeUnit[ordinal()];
+        int i = C44231.$SwitchMap$java$util$concurrent$TimeUnit[ordinal()];
         if (i == 1) {
             return timeUnit.toNanos(j);
         }
@@ -219,7 +219,7 @@ public enum TimeUnit {
     }
 
     public ChronoUnit toChronoUnit() {
-        switch (C44111.$SwitchMap$java$util$concurrent$TimeUnit[ordinal()]) {
+        switch (C44231.$SwitchMap$java$util$concurrent$TimeUnit[ordinal()]) {
             case 1:
                 return ChronoUnit.NANOS;
             case 2:
@@ -240,7 +240,7 @@ public enum TimeUnit {
     }
 
     /* renamed from: java.util.concurrent.TimeUnit$1 */
-    static /* synthetic */ class C44111 {
+    static /* synthetic */ class C44231 {
         static final /* synthetic */ int[] $SwitchMap$java$time$temporal$ChronoUnit = null;
         static final /* synthetic */ int[] $SwitchMap$java$util$concurrent$TimeUnit = null;
 
@@ -341,13 +341,13 @@ public enum TimeUnit {
             L_0x00a1:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: java.util.concurrent.TimeUnit.C44111.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: java.util.concurrent.TimeUnit.C44231.<clinit>():void");
         }
     }
 
     /* renamed from: of */
-    public static TimeUnit m1763of(ChronoUnit chronoUnit) {
-        switch (C44111.$SwitchMap$java$time$temporal$ChronoUnit[((ChronoUnit) Objects.requireNonNull(chronoUnit, "chronoUnit")).ordinal()]) {
+    public static TimeUnit m1769of(ChronoUnit chronoUnit) {
+        switch (C44231.$SwitchMap$java$time$temporal$ChronoUnit[((ChronoUnit) Objects.requireNonNull(chronoUnit, "chronoUnit")).ordinal()]) {
             case 1:
                 return NANOSECONDS;
             case 2:

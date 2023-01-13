@@ -6,7 +6,7 @@ import android.graphics.Path;
 import android.graphics.RectF;
 import android.util.Log;
 import android.util.PathParser;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.assist.p009ui.CornerPathRenderer;
 
 /* renamed from: com.android.systemui.assist.ui.PathSpecCornerPathRenderer */
@@ -26,7 +26,7 @@ public final class PathSpecCornerPathRenderer extends CornerPathRenderer {
         this.mHeight = DisplayUtils.getHeight(context);
         this.mBottomCornerRadius = DisplayUtils.getCornerRadiusBottom(context);
         this.mTopCornerRadius = DisplayUtils.getCornerRadiusTop(context);
-        Path createPathFromPathData = PathParser.createPathFromPathData(context.getResources().getString(C1893R.string.config_rounded_mask));
+        Path createPathFromPathData = PathParser.createPathFromPathData(context.getResources().getString(C1894R.string.config_rounded_mask));
         if (createPathFromPathData == null) {
             Log.e(TAG, "No rounded corner path found!");
             this.mRoundedPath = new Path();
@@ -48,7 +48,7 @@ public final class PathSpecCornerPathRenderer extends CornerPathRenderer {
         if (this.mRoundedPath.isEmpty()) {
             return this.mRoundedPath;
         }
-        int i7 = C19541.f295x853e7b3e[corner.ordinal()];
+        int i7 = C19551.f294x853e7b3e[corner.ordinal()];
         int i8 = 0;
         if (i7 != 1) {
             if (i7 != 2) {
@@ -91,10 +91,10 @@ public final class PathSpecCornerPathRenderer extends CornerPathRenderer {
     }
 
     /* renamed from: com.android.systemui.assist.ui.PathSpecCornerPathRenderer$1 */
-    static /* synthetic */ class C19541 {
+    static /* synthetic */ class C19551 {
 
         /* renamed from: $SwitchMap$com$android$systemui$assist$ui$CornerPathRenderer$Corner */
-        static final /* synthetic */ int[] f295x853e7b3e;
+        static final /* synthetic */ int[] f294x853e7b3e;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(8:0|1|2|3|4|5|6|(3:7|8|10)) */
         /* JADX WARNING: Failed to process nested try/catch */
@@ -106,25 +106,25 @@ public final class PathSpecCornerPathRenderer extends CornerPathRenderer {
                 com.android.systemui.assist.ui.CornerPathRenderer$Corner[] r0 = com.android.systemui.assist.p009ui.CornerPathRenderer.Corner.values()
                 int r0 = r0.length
                 int[] r0 = new int[r0]
-                f295x853e7b3e = r0
+                f294x853e7b3e = r0
                 com.android.systemui.assist.ui.CornerPathRenderer$Corner r1 = com.android.systemui.assist.p009ui.CornerPathRenderer.Corner.TOP_LEFT     // Catch:{ NoSuchFieldError -> 0x0012 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
                 r2 = 1
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0012 }
             L_0x0012:
-                int[] r0 = f295x853e7b3e     // Catch:{ NoSuchFieldError -> 0x001d }
+                int[] r0 = f294x853e7b3e     // Catch:{ NoSuchFieldError -> 0x001d }
                 com.android.systemui.assist.ui.CornerPathRenderer$Corner r1 = com.android.systemui.assist.p009ui.CornerPathRenderer.Corner.TOP_RIGHT     // Catch:{ NoSuchFieldError -> 0x001d }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
                 r2 = 2
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x001d }
             L_0x001d:
-                int[] r0 = f295x853e7b3e     // Catch:{ NoSuchFieldError -> 0x0028 }
+                int[] r0 = f294x853e7b3e     // Catch:{ NoSuchFieldError -> 0x0028 }
                 com.android.systemui.assist.ui.CornerPathRenderer$Corner r1 = com.android.systemui.assist.p009ui.CornerPathRenderer.Corner.BOTTOM_RIGHT     // Catch:{ NoSuchFieldError -> 0x0028 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0028 }
                 r2 = 3
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0028 }
             L_0x0028:
-                int[] r0 = f295x853e7b3e     // Catch:{ NoSuchFieldError -> 0x0033 }
+                int[] r0 = f294x853e7b3e     // Catch:{ NoSuchFieldError -> 0x0033 }
                 com.android.systemui.assist.ui.CornerPathRenderer$Corner r1 = com.android.systemui.assist.p009ui.CornerPathRenderer.Corner.BOTTOM_LEFT     // Catch:{ NoSuchFieldError -> 0x0033 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0033 }
                 r2 = 4
@@ -132,7 +132,7 @@ public final class PathSpecCornerPathRenderer extends CornerPathRenderer {
             L_0x0033:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.assist.p009ui.PathSpecCornerPathRenderer.C19541.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.assist.p009ui.PathSpecCornerPathRenderer.C19551.<clinit>():void");
         }
     }
 }

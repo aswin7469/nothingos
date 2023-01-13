@@ -708,9 +708,15 @@
     <string name="force_rtl_layout_all_locales_summary">Застосовувати макет письма справа наліво для всіх мов</string>
     <string name="forced_resizable_secondary_display">Додаток може не працювати на додатковому екрані.</string>
     <string name="game_status">Граю в гру</string>
+    <string name="gamemode_description">Режим гри визначить, чи ви граєте, і автоматично ввімкнеться</string>
+    <string name="gamemode_gamedashboard_title">Ігрова панель</string>
+    <string name="gamemode_notification_content">Торкніться, щоб перейти в Налаштування</string>
+    <string name="gamemode_notification_title">Режим гри зараз увімкнено</string>
     <string name="global_action_lock_message">Розблокуйте телефон, щоб переглянути інші параметри</string>
     <string name="global_action_screenshot">Знімок екрана</string>
     <string name="global_action_smart_lock_disabled">Smart Lock вимкнено</string>
+    <string name="gm_guide_status_on">УВІМК.</string>
+    <string name="gm_notification_title">Режим гри</string>
     <string name="go_to_web">Веб-переглядач</string>
     <string name="got_it">OK</string>
     <string name="guest_exit_guest">Видалити гостя</string>

@@ -112,7 +112,7 @@ class FileTreeWalker implements Closeable {
     FileTreeWalker(Collection<FileVisitOption> collection, int i) {
         boolean z = false;
         for (FileVisitOption ordinal : collection) {
-            if (C43591.$SwitchMap$java$nio$file$FileVisitOption[ordinal.ordinal()] == 1) {
+            if (C43711.$SwitchMap$java$nio$file$FileVisitOption[ordinal.ordinal()] == 1) {
                 z = true;
             } else {
                 throw new AssertionError((Object) "Should not get here");
@@ -128,7 +128,7 @@ class FileTreeWalker implements Closeable {
     }
 
     /* renamed from: java.nio.file.FileTreeWalker$1 */
-    static /* synthetic */ class C43591 {
+    static /* synthetic */ class C43711 {
         static final /* synthetic */ int[] $SwitchMap$java$nio$file$FileVisitOption;
 
         static {

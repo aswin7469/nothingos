@@ -11,6 +11,6 @@ public final /* synthetic */ class ControlsControllerImpl$$ExternalSyntheticLamb
     }
 
     public final void run() {
-        ControlsControllerImpl.m2616replaceFavoritesForStructure$lambda9(this.f$0, this.f$1);
+        ControlsControllerImpl.m2621replaceFavoritesForStructure$lambda9(this.f$0, this.f$1);
     }
 }

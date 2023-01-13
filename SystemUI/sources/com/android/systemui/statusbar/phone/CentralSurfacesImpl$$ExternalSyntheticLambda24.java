@@ -11,6 +11,6 @@ public final /* synthetic */ class CentralSurfacesImpl$$ExternalSyntheticLambda2
     }
 
     public final void onStatusBarViewUpdated(PhoneStatusBarView phoneStatusBarView, PhoneStatusBarViewController phoneStatusBarViewController, PhoneStatusBarTransitions phoneStatusBarTransitions) {
-        this.f$0.mo43881xdbef998a(phoneStatusBarView, phoneStatusBarViewController, phoneStatusBarTransitions);
+        this.f$0.mo43890xdbef998a(phoneStatusBarView, phoneStatusBarViewController, phoneStatusBarTransitions);
     }
 }

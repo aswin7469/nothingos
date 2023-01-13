@@ -120,7 +120,7 @@ public class Bubble implements BubbleViewProvider {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$1$com-android-wm-shell-bubbles-Bubble  reason: not valid java name */
-    public /* synthetic */ void m3409lambda$new$1$comandroidwmshellbubblesBubble(Executor executor, Bubbles.PendingIntentCanceledListener pendingIntentCanceledListener, PendingIntent pendingIntent) {
+    public /* synthetic */ void m3413lambda$new$1$comandroidwmshellbubblesBubble(Executor executor, Bubbles.PendingIntentCanceledListener pendingIntentCanceledListener, PendingIntent pendingIntent) {
         PendingIntent pendingIntent2 = this.mIntent;
         if (pendingIntent2 != null) {
             pendingIntent2.unregisterCancelListener(this.mIntentCancelListener);
@@ -130,7 +130,7 @@ public class Bubble implements BubbleViewProvider {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-wm-shell-bubbles-Bubble  reason: not valid java name */
-    public /* synthetic */ void m3408lambda$new$0$comandroidwmshellbubblesBubble(Bubbles.PendingIntentCanceledListener pendingIntentCanceledListener) {
+    public /* synthetic */ void m3412lambda$new$0$comandroidwmshellbubblesBubble(Bubbles.PendingIntentCanceledListener pendingIntentCanceledListener) {
         pendingIntentCanceledListener.onPendingIntentCanceled(this);
     }
 

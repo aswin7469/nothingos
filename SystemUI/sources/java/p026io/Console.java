@@ -13,12 +13,12 @@ public final class Console implements Flushable {
     private static boolean echoOff;
 
     /* renamed from: cs */
-    private Charset f513cs;
+    private Charset f511cs;
     private Formatter formatter;
     private Writer out;
 
     /* renamed from: pw */
-    private PrintWriter f514pw;
+    private PrintWriter f512pw;
     /* access modifiers changed from: private */
     public char[] rcb;
     /* access modifiers changed from: private */
@@ -33,7 +33,7 @@ public final class Console implements Flushable {
     private static native boolean istty();
 
     public PrintWriter writer() {
-        return this.f514pw;
+        return this.f512pw;
     }
 
     public Reader reader() {
@@ -54,7 +54,7 @@ public final class Console implements Flushable {
         synchronized (this.writeLock) {
             synchronized (this.readLock) {
                 if (str.length() != 0) {
-                    this.f514pw.format(str, objArr);
+                    this.f512pw.format(str, objArr);
                 }
                 try {
                     char[] readline = readline(false);
@@ -80,7 +80,7 @@ public final class Console implements Flushable {
                     echoOff = echo(false);
                     iOError = null;
                     if (str.length() != 0) {
-                        this.f514pw.format(str, objArr);
+                        this.f512pw.format(str, objArr);
                     }
                     readline = readline(true);
                     echoOff = echo(true);
@@ -100,7 +100,7 @@ public final class Console implements Flushable {
                     throw th;
                 }
                 if (iOError == null) {
-                    this.f514pw.println();
+                    this.f512pw.println();
                 } else {
                     throw iOError;
                 }
@@ -114,7 +114,7 @@ public final class Console implements Flushable {
     }
 
     public void flush() {
-        this.f514pw.flush();
+        this.f512pw.flush();
     }
 
     private char[] readline(boolean z) throws IOException {
@@ -152,10 +152,10 @@ public final class Console implements Flushable {
     class LineReader extends Reader {
 
         /* renamed from: cb */
-        private char[] f515cb = new char[1024];
+        private char[] f513cb = new char[1024];
 
         /* renamed from: in */
-        private Reader f516in;
+        private Reader f514in;
         boolean leftoverLF = false;
         private int nChars = 0;
         private int nextChar = 0;
@@ -164,11 +164,11 @@ public final class Console implements Flushable {
         }
 
         LineReader(Reader reader) {
-            this.f516in = reader;
+            this.f514in = reader;
         }
 
         public boolean ready() throws IOException {
-            return this.f516in.ready();
+            return this.f514in.ready();
         }
 
         public int read(char[] cArr, int i, int i2) throws IOException {
@@ -184,14 +184,14 @@ public final class Console implements Flushable {
                 do {
                     if (this.nextChar >= this.nChars) {
                         do {
-                            Reader reader = this.f516in;
-                            char[] cArr2 = this.f515cb;
+                            Reader reader = this.f514in;
+                            char[] cArr2 = this.f513cb;
                             read = reader.read(cArr2, 0, cArr2.length);
                         } while (read == 0);
                         if (read > 0) {
                             this.nChars = read;
                             this.nextChar = 0;
-                            char[] cArr3 = this.f515cb;
+                            char[] cArr3 = this.f513cb;
                             if (!(read >= cArr3.length || (c = cArr3[read - 1]) == 10 || c == 13)) {
                                 z = true;
                             }
@@ -204,7 +204,7 @@ public final class Console implements Flushable {
                         }
                     }
                     if (this.leftoverLF && cArr == Console.this.rcb) {
-                        char[] cArr4 = this.f515cb;
+                        char[] cArr4 = this.f513cb;
                         int i6 = this.nextChar;
                         if (cArr4[i6] == 10) {
                             this.nextChar = i6 + 1;
@@ -215,7 +215,7 @@ public final class Console implements Flushable {
                         int i7 = this.nextChar;
                         if (i7 < this.nChars) {
                             int i8 = i4 + 1;
-                            char[] cArr5 = this.f515cb;
+                            char[] cArr5 = this.f513cb;
                             char c2 = cArr5[i7];
                             cArr[i4] = c2;
                             this.nextChar = i7 + 1;
@@ -234,14 +234,14 @@ public final class Console implements Flushable {
                                         return i10;
                                     }
                                 }
-                                if (this.nextChar == this.nChars && this.f516in.ready()) {
-                                    Reader reader2 = this.f516in;
-                                    char[] cArr6 = this.f515cb;
+                                if (this.nextChar == this.nChars && this.f514in.ready()) {
+                                    Reader reader2 = this.f514in;
+                                    char[] cArr6 = this.f513cb;
                                     this.nChars = reader2.read(cArr6, 0, cArr6.length);
                                     this.nextChar = 0;
                                 }
                                 int i11 = this.nextChar;
-                                if (i11 < this.nChars && this.f515cb[i11] == 10) {
+                                if (i11 < this.nChars && this.f513cb[i11] == 10) {
                                     cArr[i8] = 10;
                                     this.nextChar = i11 + 1;
                                     i8++;
@@ -280,7 +280,7 @@ public final class Console implements Flushable {
     }
 
     private Console() {
-        this(new FileInputStream(FileDescriptor.f518in), new FileOutputStream(FileDescriptor.out));
+        this(new FileInputStream(FileDescriptor.f516in), new FileOutputStream(FileDescriptor.out));
     }
 
     private Console(InputStream inputStream, OutputStream outputStream) {
@@ -289,21 +289,21 @@ public final class Console implements Flushable {
         String encoding = encoding();
         if (encoding != null) {
             try {
-                this.f513cs = Charset.forName(encoding);
+                this.f511cs = Charset.forName(encoding);
             } catch (Exception unused) {
             }
         }
-        if (this.f513cs == null) {
-            this.f513cs = Charset.defaultCharset();
+        if (this.f511cs == null) {
+            this.f511cs = Charset.defaultCharset();
         }
-        StreamEncoder forOutputStreamWriter = StreamEncoder.forOutputStreamWriter(outputStream, this.writeLock, this.f513cs);
+        StreamEncoder forOutputStreamWriter = StreamEncoder.forOutputStreamWriter(outputStream, this.writeLock, this.f511cs);
         this.out = forOutputStreamWriter;
-        this.f514pw = new PrintWriter(forOutputStreamWriter, true) {
+        this.f512pw = new PrintWriter(forOutputStreamWriter, true) {
             public void close() {
             }
         };
         this.formatter = new Formatter((Appendable) this.out);
-        this.reader = new LineReader(StreamDecoder.forInputStreamReader(inputStream, this.readLock, this.f513cs));
+        this.reader = new LineReader(StreamDecoder.forInputStreamReader(inputStream, this.readLock, this.f511cs));
         this.rcb = new char[1024];
     }
 }

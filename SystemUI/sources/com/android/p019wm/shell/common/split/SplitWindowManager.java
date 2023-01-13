@@ -16,7 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.WindowlessWindowManager;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 
 /* renamed from: com.android.wm.shell.common.split.SplitWindowManager */
 public final class SplitWindowManager extends WindowlessWindowManager {
@@ -75,7 +75,7 @@ public final class SplitWindowManager extends WindowlessWindowManager {
         if (this.mDividerView == null && this.mViewHost == null) {
             Context context = this.mContext;
             this.mViewHost = new SurfaceControlViewHost(context, context.getDisplay(), this);
-            this.mDividerView = (DividerView) LayoutInflater.from(this.mContext).inflate(C3343R.layout.split_divider, (ViewGroup) null);
+            this.mDividerView = (DividerView) LayoutInflater.from(this.mContext).inflate(C3353R.layout.split_divider, (ViewGroup) null);
             Rect dividerBounds = splitLayout.getDividerBounds();
             WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(dividerBounds.width(), dividerBounds.height(), 2034, 545521704, -3);
             layoutParams.token = new Binder();

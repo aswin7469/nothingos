@@ -78,7 +78,7 @@ public class RecordingController implements CallbackController<RecordingStateCha
         this.mIsStarting = true;
         this.mStopIntent = pendingIntent2;
         final PendingIntent pendingIntent3 = pendingIntent;
-        C24283 r1 = new CountDownTimer(j, j2) {
+        C24333 r1 = new CountDownTimer(j, j2) {
             public void onTick(long j) {
                 Iterator it = RecordingController.this.mListeners.iterator();
                 while (it.hasNext()) {

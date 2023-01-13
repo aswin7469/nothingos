@@ -34,7 +34,7 @@ public final class ZoneOffsetTransitionRule implements Serializable {
     private final boolean timeEndOfDay;
 
     /* renamed from: of */
-    public static ZoneOffsetTransitionRule m961of(Month month2, int i, DayOfWeek dayOfWeek, LocalTime localTime, boolean z, TimeDefinition timeDefinition2, ZoneOffset zoneOffset, ZoneOffset zoneOffset2, ZoneOffset zoneOffset3) {
+    public static ZoneOffsetTransitionRule m959of(Month month2, int i, DayOfWeek dayOfWeek, LocalTime localTime, boolean z, TimeDefinition timeDefinition2, ZoneOffset zoneOffset, ZoneOffset zoneOffset2, ZoneOffset zoneOffset3) {
         int i2 = i;
         LocalTime localTime2 = localTime;
         Month month3 = month2;
@@ -114,13 +114,13 @@ public final class ZoneOffsetTransitionRule implements Serializable {
     static ZoneOffsetTransitionRule readExternal(DataInput dataInput) throws IOException {
         DayOfWeek dayOfWeek;
         int readInt = dataInput.readInt();
-        Month of = Month.m920of(readInt >>> 28);
+        Month of = Month.m918of(readInt >>> 28);
         int i = ((264241152 & readInt) >>> 22) - 32;
         int i2 = (3670016 & readInt) >>> 19;
         if (i2 == 0) {
             dayOfWeek = null;
         } else {
-            dayOfWeek = DayOfWeek.m906of(i2);
+            dayOfWeek = DayOfWeek.m904of(i2);
         }
         DayOfWeek dayOfWeek2 = dayOfWeek;
         int i3 = (507904 & readInt) >>> 14;
@@ -128,9 +128,9 @@ public final class ZoneOffsetTransitionRule implements Serializable {
         int i4 = (readInt & 4080) >>> 4;
         int i5 = (readInt & 12) >>> 2;
         int i6 = readInt & 3;
-        LocalTime ofSecondOfDay = i3 == 31 ? LocalTime.ofSecondOfDay((long) dataInput.readInt()) : LocalTime.m917of(i3 % 24, 0);
+        LocalTime ofSecondOfDay = i3 == 31 ? LocalTime.ofSecondOfDay((long) dataInput.readInt()) : LocalTime.m915of(i3 % 24, 0);
         ZoneOffset ofTotalSeconds = ZoneOffset.ofTotalSeconds(i4 == 255 ? dataInput.readInt() : (i4 + TrafficStats.TAG_NETWORK_STACK_IMPERSONATION_RANGE_START) * 900);
-        return m961of(of, i, dayOfWeek2, ofSecondOfDay, i3 == 24, timeDefinition2, ofTotalSeconds, ZoneOffset.ofTotalSeconds(i5 == 3 ? dataInput.readInt() : ofTotalSeconds.getTotalSeconds() + (i5 * 1800)), ZoneOffset.ofTotalSeconds(i6 == 3 ? dataInput.readInt() : ofTotalSeconds.getTotalSeconds() + (i6 * 1800)));
+        return m959of(of, i, dayOfWeek2, ofSecondOfDay, i3 == 24, timeDefinition2, ofTotalSeconds, ZoneOffset.ofTotalSeconds(i5 == 3 ? dataInput.readInt() : ofTotalSeconds.getTotalSeconds() + (i5 * 1800)), ZoneOffset.ofTotalSeconds(i6 == 3 ? dataInput.readInt() : ofTotalSeconds.getTotalSeconds() + (i6 * 1800)));
     }
 
     public Month getMonth() {
@@ -174,13 +174,13 @@ public final class ZoneOffsetTransitionRule implements Serializable {
         byte b = this.dom;
         if (b < 0) {
             Month month2 = this.month;
-            localDate = LocalDate.m909of(i, month2, month2.length(IsoChronology.INSTANCE.isLeapYear((long) i)) + 1 + this.dom);
+            localDate = LocalDate.m907of(i, month2, month2.length(IsoChronology.INSTANCE.isLeapYear((long) i)) + 1 + this.dom);
             DayOfWeek dayOfWeek = this.dow;
             if (dayOfWeek != null) {
                 localDate = localDate.with(TemporalAdjusters.previousOrSame(dayOfWeek));
             }
         } else {
-            localDate = LocalDate.m909of(i, this.month, (int) b);
+            localDate = LocalDate.m907of(i, this.month, (int) b);
             DayOfWeek dayOfWeek2 = this.dow;
             if (dayOfWeek2 != null) {
                 localDate = localDate.with(TemporalAdjusters.nextOrSame(dayOfWeek2));
@@ -189,7 +189,7 @@ public final class ZoneOffsetTransitionRule implements Serializable {
         if (this.timeEndOfDay) {
             localDate = localDate.plusDays(1);
         }
-        return new ZoneOffsetTransition(this.timeDefinition.createDateTime(LocalDateTime.m916of(localDate, this.time), this.standardOffset, this.offsetBefore), this.offsetBefore, this.offsetAfter);
+        return new ZoneOffsetTransition(this.timeDefinition.createDateTime(LocalDateTime.m914of(localDate, this.time), this.standardOffset, this.offsetBefore), this.offsetBefore, this.offsetAfter);
     }
 
     public boolean equals(Object obj) {
@@ -255,10 +255,10 @@ public final class ZoneOffsetTransitionRule implements Serializable {
     }
 
     /* renamed from: java.time.zone.ZoneOffsetTransitionRule$1 */
-    static /* synthetic */ class C28971 {
+    static /* synthetic */ class C29031 {
 
         /* renamed from: $SwitchMap$java$time$zone$ZoneOffsetTransitionRule$TimeDefinition */
-        static final /* synthetic */ int[] f384xb4fff451;
+        static final /* synthetic */ int[] f383xb4fff451;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(6:0|1|2|3|4|6) */
         /* JADX WARNING: Code restructure failed: missing block: B:7:?, code lost:
@@ -271,13 +271,13 @@ public final class ZoneOffsetTransitionRule implements Serializable {
                 java.time.zone.ZoneOffsetTransitionRule$TimeDefinition[] r0 = java.time.zone.ZoneOffsetTransitionRule.TimeDefinition.values()
                 int r0 = r0.length
                 int[] r0 = new int[r0]
-                f384xb4fff451 = r0
+                f383xb4fff451 = r0
                 java.time.zone.ZoneOffsetTransitionRule$TimeDefinition r1 = java.time.zone.ZoneOffsetTransitionRule.TimeDefinition.UTC     // Catch:{ NoSuchFieldError -> 0x0012 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
                 r2 = 1
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0012 }
             L_0x0012:
-                int[] r0 = f384xb4fff451     // Catch:{ NoSuchFieldError -> 0x001d }
+                int[] r0 = f383xb4fff451     // Catch:{ NoSuchFieldError -> 0x001d }
                 java.time.zone.ZoneOffsetTransitionRule$TimeDefinition r1 = java.time.zone.ZoneOffsetTransitionRule.TimeDefinition.STANDARD     // Catch:{ NoSuchFieldError -> 0x001d }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
                 r2 = 2
@@ -285,7 +285,7 @@ public final class ZoneOffsetTransitionRule implements Serializable {
             L_0x001d:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: java.time.zone.ZoneOffsetTransitionRule.C28971.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: java.time.zone.ZoneOffsetTransitionRule.C29031.<clinit>():void");
         }
     }
 
@@ -295,7 +295,7 @@ public final class ZoneOffsetTransitionRule implements Serializable {
         STANDARD;
 
         public LocalDateTime createDateTime(LocalDateTime localDateTime, ZoneOffset zoneOffset, ZoneOffset zoneOffset2) {
-            int i = C28971.f384xb4fff451[ordinal()];
+            int i = C29031.f383xb4fff451[ordinal()];
             if (i == 1) {
                 return localDateTime.plusSeconds((long) (zoneOffset2.getTotalSeconds() - ZoneOffset.UTC.getTotalSeconds()));
             }

@@ -29,7 +29,7 @@ import android.view.WindowInsetsController;
 import android.widget.FrameLayout;
 import com.android.internal.view.FloatingActionMode;
 import com.android.internal.widget.floatingtoolbar.FloatingToolbar;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 
 public class NotificationShadeWindowView extends FrameLayout {
     public static final boolean DEBUG = false;
@@ -256,7 +256,7 @@ public class NotificationShadeWindowView extends FrameLayout {
     }
 
     public NotificationPanelView getNotificationPanelView() {
-        return (NotificationPanelView) findViewById(C1893R.C1897id.notification_panel);
+        return (NotificationPanelView) findViewById(C1894R.C1898id.notification_panel);
     }
 
     public WindowInsets onApplyWindowInsets(WindowInsets windowInsets) {
@@ -378,7 +378,7 @@ public class NotificationShadeWindowView extends FrameLayout {
 
         LayoutParams(Context context, AttributeSet attributeSet) {
             super(context, attributeSet);
-            TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C1893R.styleable.StatusBarWindowView_Layout);
+            TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C1894R.styleable.StatusBarWindowView_Layout);
             this.ignoreRightInset = obtainStyledAttributes.getBoolean(0, false);
             obtainStyledAttributes.recycle();
         }

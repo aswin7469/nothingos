@@ -81,7 +81,7 @@ final class ReduceOps {
                     }
 
                     public Optional<T> get() {
-                        return this.empty ? Optional.empty() : Optional.m1745of(this.state);
+                        return this.empty ? Optional.empty() : Optional.m1751of(this.state);
                     }
 
                     public void combine(AnonymousClass2ReducingSink r2) {
@@ -221,7 +221,7 @@ final class ReduceOps {
                     }
 
                     public OptionalInt get() {
-                        return this.empty ? OptionalInt.empty() : OptionalInt.m1748of(this.state);
+                        return this.empty ? OptionalInt.empty() : OptionalInt.m1754of(this.state);
                     }
 
                     public void combine(AnonymousClass6ReducingSink r2) {
@@ -322,7 +322,7 @@ final class ReduceOps {
                     }
 
                     public OptionalLong get() {
-                        return this.empty ? OptionalLong.empty() : OptionalLong.m1749of(this.state);
+                        return this.empty ? OptionalLong.empty() : OptionalLong.m1755of(this.state);
                     }
 
                     public void combine(AnonymousClass9ReducingSink r3) {
@@ -423,7 +423,7 @@ final class ReduceOps {
                     }
 
                     public OptionalDouble get() {
-                        return this.empty ? OptionalDouble.empty() : OptionalDouble.m1747of(this.state);
+                        return this.empty ? OptionalDouble.empty() : OptionalDouble.m1753of(this.state);
                     }
 
                     public void combine(AnonymousClass12ReducingSink r3) {
@@ -503,16 +503,16 @@ final class ReduceOps {
     private static final class ReduceTask<P_IN, P_OUT, R, S extends AccumulatingSink<P_OUT, R, S>> extends AbstractTask<P_IN, P_OUT, S, ReduceTask<P_IN, P_OUT, R, S>> {
 
         /* renamed from: op */
-        private final ReduceOp<P_OUT, R, S> f782op;
+        private final ReduceOp<P_OUT, R, S> f780op;
 
         ReduceTask(ReduceOp<P_OUT, R, S> reduceOp, PipelineHelper<P_OUT> pipelineHelper, Spliterator<P_IN> spliterator) {
             super(pipelineHelper, spliterator);
-            this.f782op = reduceOp;
+            this.f780op = reduceOp;
         }
 
         ReduceTask(ReduceTask<P_IN, P_OUT, R, S> reduceTask, Spliterator<P_IN> spliterator) {
             super(reduceTask, spliterator);
-            this.f782op = reduceTask.f782op;
+            this.f780op = reduceTask.f780op;
         }
 
         /* access modifiers changed from: protected */
@@ -522,7 +522,7 @@ final class ReduceOps {
 
         /* access modifiers changed from: protected */
         public S doLeaf() {
-            return (AccumulatingSink) this.helper.wrapAndCopyInto(this.f782op.makeSink(), this.spliterator);
+            return (AccumulatingSink) this.helper.wrapAndCopyInto(this.f780op.makeSink(), this.spliterator);
         }
 
         public void onCompletion(CountedCompleter<?> countedCompleter) {

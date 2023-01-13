@@ -15,6 +15,6 @@ public final /* synthetic */ class ControlActionCoordinatorImpl$$ExternalSynthet
     }
 
     public final void onClick(DialogInterface dialogInterface, int i) {
-        ControlActionCoordinatorImpl.m2683showSettingsDialogIfNeeded$lambda9(this.f$0, this.f$1, dialogInterface, i);
+        ControlActionCoordinatorImpl.m2688showSettingsDialogIfNeeded$lambda9(this.f$0, this.f$1, dialogInterface, i);
     }
 }

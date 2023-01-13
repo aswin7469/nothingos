@@ -22,6 +22,6 @@ public final /* synthetic */ class NotificationRemoteInputManager$$ExternalSynth
     }
 
     public final boolean showBouncerIfNecessary() {
-        return this.f$0.mo38816x6cd9e75e(this.f$1, this.f$2, this.f$3, this.f$4);
+        return this.f$0.mo38817x6cd9e75e(this.f$1, this.f$2, this.f$3, this.f$4);
     }
 }

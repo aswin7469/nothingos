@@ -16,7 +16,7 @@ import android.media.session.PlaybackState;
 import android.os.Handler;
 import android.os.HandlerExecutor;
 import android.os.UserHandle;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -69,7 +69,7 @@ public class PipMediaController {
     }
 
     public PipMediaController(Context context, Handler handler) {
-        C35101 r1 = new BroadcastReceiver() {
+        C35201 r1 = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
                 if (PipMediaController.this.mMediaController != null && PipMediaController.this.mMediaController.getTransportControls() != null) {
                     String action = intent.getAction();
@@ -130,10 +130,10 @@ public class PipMediaController {
         intentFilter.addAction(ACTION_NEXT);
         intentFilter.addAction(ACTION_PREV);
         context.registerReceiverForAllUsers(r1, intentFilter, "com.android.systemui.permission.SELF", handler, 2);
-        this.mPauseAction = getDefaultRemoteAction(C3343R.string.pip_pause, C3343R.C3345drawable.pip_ic_pause_white, ACTION_PAUSE);
-        this.mPlayAction = getDefaultRemoteAction(C3343R.string.pip_play, C3343R.C3345drawable.pip_ic_play_arrow_white, ACTION_PLAY);
-        this.mNextAction = getDefaultRemoteAction(C3343R.string.pip_skip_to_next, C3343R.C3345drawable.pip_ic_skip_next_white, ACTION_NEXT);
-        this.mPrevAction = getDefaultRemoteAction(C3343R.string.pip_skip_to_prev, C3343R.C3345drawable.pip_ic_skip_previous_white, ACTION_PREV);
+        this.mPauseAction = getDefaultRemoteAction(C3353R.string.pip_pause, C3353R.C3355drawable.pip_ic_pause_white, ACTION_PAUSE);
+        this.mPlayAction = getDefaultRemoteAction(C3353R.string.pip_play, C3353R.C3355drawable.pip_ic_play_arrow_white, ACTION_PLAY);
+        this.mNextAction = getDefaultRemoteAction(C3353R.string.pip_skip_to_next, C3353R.C3355drawable.pip_ic_skip_next_white, ACTION_NEXT);
+        this.mPrevAction = getDefaultRemoteAction(C3353R.string.pip_skip_to_prev, C3353R.C3355drawable.pip_ic_skip_previous_white, ACTION_PREV);
         this.mMediaSessionManager = (MediaSessionManager) context.getSystemService(MediaSessionManager.class);
     }
 

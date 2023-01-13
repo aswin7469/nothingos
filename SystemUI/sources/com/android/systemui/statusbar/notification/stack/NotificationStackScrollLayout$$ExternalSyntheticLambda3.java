@@ -14,6 +14,6 @@ public final /* synthetic */ class NotificationStackScrollLayout$$ExternalSynthe
     }
 
     public final void onClick(View view) {
-        this.f$0.mo42209xd3a192b4(this.f$1, view);
+        this.f$0.mo42217xd3a192b4(this.f$1, view);
     }
 }

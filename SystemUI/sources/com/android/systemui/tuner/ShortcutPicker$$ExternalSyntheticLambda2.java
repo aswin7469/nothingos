@@ -21,6 +21,6 @@ public final /* synthetic */ class ShortcutPicker$$ExternalSyntheticLambda2 impl
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo46438x56ec3030(this.f$1, this.f$2, this.f$3, (LauncherActivityInfo) obj);
+        this.f$0.mo46450x56ec3030(this.f$1, this.f$2, this.f$3, (LauncherActivityInfo) obj);
     }
 }

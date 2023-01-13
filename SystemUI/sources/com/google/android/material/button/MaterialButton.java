@@ -23,7 +23,7 @@ import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.widget.TextViewCompat;
 import androidx.customview.view.AbsSavedState;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.shape.MaterialShapeUtils;
 import com.google.android.material.shape.ShapeAppearanceModel;
 import com.google.android.material.shape.Shapeable;
@@ -35,7 +35,7 @@ import java.util.LinkedHashSet;
 public class MaterialButton extends AppCompatButton implements Checkable, Shapeable {
     private static final int[] CHECKABLE_STATE_SET = {16842911};
     private static final int[] CHECKED_STATE_SET = {16842912};
-    private static final int DEF_STYLE_RES = C3621R.style.Widget_MaterialComponents_Button;
+    private static final int DEF_STYLE_RES = C3631R.style.Widget_MaterialComponents_Button;
     public static final int ICON_GRAVITY_END = 3;
     public static final int ICON_GRAVITY_START = 1;
     public static final int ICON_GRAVITY_TEXT_END = 4;
@@ -74,7 +74,7 @@ public class MaterialButton extends AppCompatButton implements Checkable, Shapea
     }
 
     public MaterialButton(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, C3621R.attr.materialButtonStyle);
+        this(context, attributeSet, C3631R.attr.materialButtonStyle);
     }
 
     /* JADX WARNING: Illegal instructions before constructor call */
@@ -92,35 +92,35 @@ public class MaterialButton extends AppCompatButton implements Checkable, Shapea
             r8.checked = r9
             r8.broadcasting = r9
             android.content.Context r7 = r8.getContext()
-            int[] r2 = com.google.android.material.C3621R.styleable.MaterialButton
+            int[] r2 = com.google.android.material.C3631R.styleable.MaterialButton
             int[] r5 = new int[r9]
             r0 = r7
             r1 = r10
             r3 = r11
             r4 = r6
             android.content.res.TypedArray r0 = com.google.android.material.internal.ThemeEnforcement.obtainStyledAttributes(r0, r1, r2, r3, r4, r5)
-            int r1 = com.google.android.material.C3621R.styleable.MaterialButton_iconPadding
+            int r1 = com.google.android.material.C3631R.styleable.MaterialButton_iconPadding
             int r1 = r0.getDimensionPixelSize(r1, r9)
             r8.iconPadding = r1
-            int r1 = com.google.android.material.C3621R.styleable.MaterialButton_iconTintMode
+            int r1 = com.google.android.material.C3631R.styleable.MaterialButton_iconTintMode
             r2 = -1
             int r1 = r0.getInt(r1, r2)
             android.graphics.PorterDuff$Mode r2 = android.graphics.PorterDuff.Mode.SRC_IN
             android.graphics.PorterDuff$Mode r1 = com.google.android.material.internal.ViewUtils.parseTintMode(r1, r2)
             r8.iconTintMode = r1
             android.content.Context r1 = r8.getContext()
-            int r2 = com.google.android.material.C3621R.styleable.MaterialButton_iconTint
+            int r2 = com.google.android.material.C3631R.styleable.MaterialButton_iconTint
             android.content.res.ColorStateList r1 = com.google.android.material.resources.MaterialResources.getColorStateList((android.content.Context) r1, (android.content.res.TypedArray) r0, (int) r2)
             r8.iconTint = r1
             android.content.Context r1 = r8.getContext()
-            int r2 = com.google.android.material.C3621R.styleable.MaterialButton_icon
+            int r2 = com.google.android.material.C3631R.styleable.MaterialButton_icon
             android.graphics.drawable.Drawable r1 = com.google.android.material.resources.MaterialResources.getDrawable(r1, r0, r2)
             r8.icon = r1
-            int r1 = com.google.android.material.C3621R.styleable.MaterialButton_iconGravity
+            int r1 = com.google.android.material.C3631R.styleable.MaterialButton_iconGravity
             r2 = 1
             int r1 = r0.getInteger(r1, r2)
             r8.iconGravity = r1
-            int r1 = com.google.android.material.C3621R.styleable.MaterialButton_iconSize
+            int r1 = com.google.android.material.C3631R.styleable.MaterialButton_iconSize
             int r1 = r0.getDimensionPixelSize(r1, r9)
             r8.iconSize = r1
             com.google.android.material.shape.ShapeAppearanceModel$Builder r10 = com.google.android.material.shape.ShapeAppearanceModel.builder((android.content.Context) r7, (android.util.AttributeSet) r10, (int) r11, (int) r6)

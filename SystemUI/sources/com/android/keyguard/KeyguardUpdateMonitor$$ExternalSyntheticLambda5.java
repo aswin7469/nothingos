@@ -11,6 +11,6 @@ public final /* synthetic */ class KeyguardUpdateMonitor$$ExternalSyntheticLambd
     }
 
     public final void onFingerprintDetected(int i, int i2, boolean z) {
-        this.f$0.m2294lambda$new$5$comandroidkeyguardKeyguardUpdateMonitor(i, i2, z);
+        this.f$0.m2300lambda$new$5$comandroidkeyguardKeyguardUpdateMonitor(i, i2, z);
     }
 }

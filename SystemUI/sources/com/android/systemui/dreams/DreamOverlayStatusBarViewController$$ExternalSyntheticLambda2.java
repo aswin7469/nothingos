@@ -11,6 +11,6 @@ public final /* synthetic */ class DreamOverlayStatusBarViewController$$External
     }
 
     public final void onNotificationCountChanged(int i) {
-        this.f$0.mo32543x140f0be5(i);
+        this.f$0.mo32554x140f0be5(i);
     }
 }

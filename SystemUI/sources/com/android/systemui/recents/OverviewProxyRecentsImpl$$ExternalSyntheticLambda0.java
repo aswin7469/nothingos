@@ -9,6 +9,6 @@ public final /* synthetic */ class OverviewProxyRecentsImpl$$ExternalSyntheticLa
     }
 
     public final void run() {
-        this.f$0.mo37119xd8f0a03e();
+        this.f$0.mo37118xd8f0a03e();
     }
 }

@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.core.view.ViewCompat;
 import com.android.internal.util.ContrastColorUtil;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.animation.Interpolators;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -19,7 +19,7 @@ import kotlin.LazyKt;
 import kotlin.Metadata;
 import kotlin.jvm.internal.Intrinsics;
 
-@Metadata(mo64986d1 = {"\u0000Z\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\t\n\u0002\b\u0002\n\u0002\u0010\u000e\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0006\n\u0002\u0010\u000b\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0002\b\u0004\n\u0002\u0010\u0002\n\u0002\b\u0007\n\u0002\u0010\b\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0000\u0018\u00002\u00020\u0001B\u001d\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\u0006\u0010\u0006\u001a\u00020\u0007¢\u0006\u0002\u0010\bJ\u000e\u0010\u001f\u001a\u00020 2\u0006\u0010!\u001a\u00020\u0016J\b\u0010\"\u001a\u00020 H\u0014J\b\u0010#\u001a\u00020 H\u0014J\b\u0010$\u001a\u00020 H\u0014J\b\u0010%\u001a\u00020 H\u0002J\u0010\u0010&\u001a\u00020 2\u0006\u0010'\u001a\u00020(H\u0016J\u0010\u0010)\u001a\u00020 2\u0006\u0010*\u001a\u00020\u0016H\u0002J\b\u0010+\u001a\u00020 H\u0002J\u000e\u0010,\u001a\u00020\u00162\u0006\u0010-\u001a\u00020.R\u000e\u0010\t\u001a\u00020\nXD¢\u0006\u0002\n\u0000R\u000e\u0010\u000b\u001a\u00020\nXD¢\u0006\u0002\n\u0000R\u000e\u0010\f\u001a\u00020\rX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0006\u001a\u00020\u0007X\u0004¢\u0006\u0002\n\u0000R#\u0010\u000e\u001a\n \u0010*\u0004\u0018\u00010\u000f0\u000f8BX\u0002¢\u0006\f\n\u0004\b\u0013\u0010\u0014\u001a\u0004\b\u0011\u0010\u0012R\u000e\u0010\u0015\u001a\u00020\u0016X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0004\u001a\u00020\u0005X\u0004¢\u0006\u0002\n\u0000R#\u0010\u0017\u001a\n \u0010*\u0004\u0018\u00010\u000f0\u000f8BX\u0002¢\u0006\f\n\u0004\b\u0019\u0010\u0014\u001a\u0004\b\u0018\u0010\u0012R#\u0010\u001a\u001a\n \u0010*\u0004\u0018\u00010\u001b0\u001b8BX\u0002¢\u0006\f\n\u0004\b\u001e\u0010\u0014\u001a\u0004\b\u001c\u0010\u001d¨\u0006/"}, mo64987d2 = {"Lcom/android/wm/shell/bubbles/StackEducationView;", "Landroid/widget/LinearLayout;", "context", "Landroid/content/Context;", "positioner", "Lcom/android/wm/shell/bubbles/BubblePositioner;", "controller", "Lcom/android/wm/shell/bubbles/BubbleController;", "(Landroid/content/Context;Lcom/android/wm/shell/bubbles/BubblePositioner;Lcom/android/wm/shell/bubbles/BubbleController;)V", "ANIMATE_DURATION", "", "ANIMATE_DURATION_SHORT", "TAG", "", "descTextView", "Landroid/widget/TextView;", "kotlin.jvm.PlatformType", "getDescTextView", "()Landroid/widget/TextView;", "descTextView$delegate", "Lkotlin/Lazy;", "isHiding", "", "titleTextView", "getTitleTextView", "titleTextView$delegate", "view", "Landroid/view/View;", "getView", "()Landroid/view/View;", "view$delegate", "hide", "", "isExpanding", "onAttachedToWindow", "onDetachedFromWindow", "onFinishInflate", "setDrawableDirection", "setLayoutDirection", "layoutDirection", "", "setShouldShow", "shouldShow", "setTextColor", "show", "stackPosition", "Landroid/graphics/PointF;", "WMShell_release"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000Z\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\t\n\u0002\b\u0002\n\u0002\u0010\u000e\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0006\n\u0002\u0010\u000b\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0002\b\u0004\n\u0002\u0010\u0002\n\u0002\b\u0007\n\u0002\u0010\b\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0000\u0018\u00002\u00020\u0001B\u001d\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\u0006\u0010\u0006\u001a\u00020\u0007¢\u0006\u0002\u0010\bJ\u000e\u0010\u001f\u001a\u00020 2\u0006\u0010!\u001a\u00020\u0016J\b\u0010\"\u001a\u00020 H\u0014J\b\u0010#\u001a\u00020 H\u0014J\b\u0010$\u001a\u00020 H\u0014J\b\u0010%\u001a\u00020 H\u0002J\u0010\u0010&\u001a\u00020 2\u0006\u0010'\u001a\u00020(H\u0016J\u0010\u0010)\u001a\u00020 2\u0006\u0010*\u001a\u00020\u0016H\u0002J\b\u0010+\u001a\u00020 H\u0002J\u000e\u0010,\u001a\u00020\u00162\u0006\u0010-\u001a\u00020.R\u000e\u0010\t\u001a\u00020\nXD¢\u0006\u0002\n\u0000R\u000e\u0010\u000b\u001a\u00020\nXD¢\u0006\u0002\n\u0000R\u000e\u0010\f\u001a\u00020\rX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0006\u001a\u00020\u0007X\u0004¢\u0006\u0002\n\u0000R#\u0010\u000e\u001a\n \u0010*\u0004\u0018\u00010\u000f0\u000f8BX\u0002¢\u0006\f\n\u0004\b\u0013\u0010\u0014\u001a\u0004\b\u0011\u0010\u0012R\u000e\u0010\u0015\u001a\u00020\u0016X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0004\u001a\u00020\u0005X\u0004¢\u0006\u0002\n\u0000R#\u0010\u0017\u001a\n \u0010*\u0004\u0018\u00010\u000f0\u000f8BX\u0002¢\u0006\f\n\u0004\b\u0019\u0010\u0014\u001a\u0004\b\u0018\u0010\u0012R#\u0010\u001a\u001a\n \u0010*\u0004\u0018\u00010\u001b0\u001b8BX\u0002¢\u0006\f\n\u0004\b\u001e\u0010\u0014\u001a\u0004\b\u001c\u0010\u001d¨\u0006/"}, mo65043d2 = {"Lcom/android/wm/shell/bubbles/StackEducationView;", "Landroid/widget/LinearLayout;", "context", "Landroid/content/Context;", "positioner", "Lcom/android/wm/shell/bubbles/BubblePositioner;", "controller", "Lcom/android/wm/shell/bubbles/BubbleController;", "(Landroid/content/Context;Lcom/android/wm/shell/bubbles/BubblePositioner;Lcom/android/wm/shell/bubbles/BubbleController;)V", "ANIMATE_DURATION", "", "ANIMATE_DURATION_SHORT", "TAG", "", "descTextView", "Landroid/widget/TextView;", "kotlin.jvm.PlatformType", "getDescTextView", "()Landroid/widget/TextView;", "descTextView$delegate", "Lkotlin/Lazy;", "isHiding", "", "titleTextView", "getTitleTextView", "titleTextView$delegate", "view", "Landroid/view/View;", "getView", "()Landroid/view/View;", "view$delegate", "hide", "", "isExpanding", "onAttachedToWindow", "onDetachedFromWindow", "onFinishInflate", "setDrawableDirection", "setLayoutDirection", "layoutDirection", "", "setShouldShow", "shouldShow", "setTextColor", "show", "stackPosition", "Landroid/graphics/PointF;", "WMShell_release"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* renamed from: com.android.wm.shell.bubbles.StackEducationView */
 /* compiled from: StackEducationView.kt */
 public final class StackEducationView extends LinearLayout {
@@ -67,9 +67,9 @@ public final class StackEducationView extends LinearLayout {
         this.view$delegate = LazyKt.lazy(new StackEducationView$view$2(this));
         this.titleTextView$delegate = LazyKt.lazy(new StackEducationView$titleTextView$2(this));
         this.descTextView$delegate = LazyKt.lazy(new StackEducationView$descTextView$2(this));
-        LayoutInflater.from(context).inflate(C3343R.layout.bubble_stack_user_education, this);
+        LayoutInflater.from(context).inflate(C3353R.layout.bubble_stack_user_education, this);
         setVisibility(8);
-        setElevation((float) getResources().getDimensionPixelSize(C3343R.dimen.bubble_elevation));
+        setElevation((float) getResources().getDimensionPixelSize(C3353R.dimen.bubble_elevation));
         setLayoutDirection(3);
     }
 
@@ -125,9 +125,9 @@ public final class StackEducationView extends LinearLayout {
         int i;
         View view = getView();
         if (getResources().getConfiguration().getLayoutDirection() == 0) {
-            i = C3343R.C3345drawable.bubble_stack_user_education_bg;
+            i = C3353R.C3355drawable.bubble_stack_user_education_bg;
         } else {
-            i = C3343R.C3345drawable.bubble_stack_user_education_bg_rtl;
+            i = C3353R.C3355drawable.bubble_stack_user_education_bg_rtl;
         }
         view.setBackgroundResource(i);
     }
@@ -142,12 +142,12 @@ public final class StackEducationView extends LinearLayout {
         this.controller.updateWindowFlagsForBackpress(true);
         ViewGroup.LayoutParams layoutParams = getLayoutParams();
         if (this.positioner.isLargeScreen() || this.positioner.isLandscape()) {
-            i = getContext().getResources().getDimensionPixelSize(C3343R.dimen.bubbles_user_education_width);
+            i = getContext().getResources().getDimensionPixelSize(C3353R.dimen.bubbles_user_education_width);
         } else {
             i = -1;
         }
         layoutParams.width = i;
-        int dimensionPixelSize = getContext().getResources().getDimensionPixelSize(C3343R.dimen.bubble_user_education_stack_padding);
+        int dimensionPixelSize = getContext().getResources().getDimensionPixelSize(C3353R.dimen.bubble_user_education_stack_padding);
         setAlpha(0.0f);
         setVisibility(0);
         post(new StackEducationView$$ExternalSyntheticLambda0(this, dimensionPixelSize, pointF));
@@ -157,7 +157,7 @@ public final class StackEducationView extends LinearLayout {
 
     /* access modifiers changed from: private */
     /* renamed from: show$lambda-1  reason: not valid java name */
-    public static final void m3438show$lambda1(StackEducationView stackEducationView, int i, PointF pointF) {
+    public static final void m3442show$lambda1(StackEducationView stackEducationView, int i, PointF pointF) {
         Intrinsics.checkNotNullParameter(stackEducationView, "this$0");
         Intrinsics.checkNotNullParameter(pointF, "$stackPosition");
         stackEducationView.requestFocus();
@@ -186,7 +186,7 @@ public final class StackEducationView extends LinearLayout {
 
     /* access modifiers changed from: private */
     /* renamed from: hide$lambda-2  reason: not valid java name */
-    public static final void m3437hide$lambda2(StackEducationView stackEducationView) {
+    public static final void m3441hide$lambda2(StackEducationView stackEducationView) {
         Intrinsics.checkNotNullParameter(stackEducationView, "this$0");
         stackEducationView.setVisibility(8);
     }

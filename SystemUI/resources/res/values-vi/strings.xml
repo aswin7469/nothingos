@@ -708,9 +708,15 @@
     <string name="force_rtl_layout_all_locales_summary">Buộc hướng bố cục màn hình phải sang trái cho tất cả ngôn ngữ</string>
     <string name="forced_resizable_secondary_display">Ứng dụng có thể không hoạt động trên màn hình phụ.</string>
     <string name="game_status">Đang chơi</string>
+    <string name="gamemode_description">Chế độ trò chơi sẽ xác định xem bạn có đang chơi trò chơi hay không và sẽ tự động bật cho bạn</string>
+    <string name="gamemode_gamedashboard_title">Bảng điều khiển trò chơi</string>
+    <string name="gamemode_notification_content">Nhấp để vào Cài đặt</string>
+    <string name="gamemode_notification_title">Chế độ trò chơi hiện đang bật</string>
     <string name="global_action_lock_message">Mở khóa điện thoại của bạn để xem thêm tùy chọn</string>
     <string name="global_action_screenshot">Chụp ảnh màn hình</string>
     <string name="global_action_smart_lock_disabled">Tính năng Smart Lock đã tắt</string>
+    <string name="gm_guide_status_on">BẬT</string>
+    <string name="gm_notification_title">Chế độ trò chơi</string>
     <string name="go_to_web">Đi tới trình duyệt</string>
     <string name="got_it">OK</string>
     <string name="guest_exit_guest">Xóa khách</string>

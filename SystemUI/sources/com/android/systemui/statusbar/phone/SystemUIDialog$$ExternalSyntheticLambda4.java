@@ -15,6 +15,6 @@ public final /* synthetic */ class SystemUIDialog$$ExternalSyntheticLambda4 impl
     }
 
     public final void run() {
-        this.f$0.mo45372x5d25f216(this.f$1, this.f$2);
+        this.f$0.mo45384x5d25f216(this.f$1, this.f$2);
     }
 }

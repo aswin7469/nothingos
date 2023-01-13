@@ -10,7 +10,7 @@ import android.widget.Switch;
 import androidx.lifecycle.LifecycleOwner;
 import com.android.internal.logging.MetricsLogger;
 import com.android.settingslib.wifi.WifiEnterpriseRestrictionUtils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.qualifiers.Background;
 import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.p012qs.QSHost;
@@ -28,12 +28,12 @@ import javax.inject.Inject;
 public class HotspotTile extends QSTileImpl<QSTile.BooleanState> {
     private final HotspotAndDataSaverCallbacks mCallbacks;
     private final DataSaverController mDataSaverController;
-    private final QSTile.Icon mEnabledStatic = QSTileImpl.ResourceIcon.get(C1893R.C1895drawable.ic_hotspot);
+    private final QSTile.Icon mEnabledStatic = QSTileImpl.ResourceIcon.get(C1894R.C1896drawable.ic_hotspot);
     private final HotspotController mHotspotController;
     private boolean mListening;
-    private final QSTile.Icon mWifi4EnabledStatic = QSTileImpl.ResourceIcon.get(C1893R.C1895drawable.ic_wifi_4_hotspot);
-    private final QSTile.Icon mWifi5EnabledStatic = QSTileImpl.ResourceIcon.get(C1893R.C1895drawable.ic_wifi_5_hotspot);
-    private final QSTile.Icon mWifi6EnabledStatic = QSTileImpl.ResourceIcon.get(C1893R.C1895drawable.ic_wifi_6_hotspot);
+    private final QSTile.Icon mWifi4EnabledStatic = QSTileImpl.ResourceIcon.get(C1894R.C1896drawable.ic_wifi_4_hotspot);
+    private final QSTile.Icon mWifi5EnabledStatic = QSTileImpl.ResourceIcon.get(C1894R.C1896drawable.ic_wifi_5_hotspot);
+    private final QSTile.Icon mWifi6EnabledStatic = QSTileImpl.ResourceIcon.get(C1894R.C1896drawable.ic_wifi_6_hotspot);
     private WifiManager mWifiManager;
 
     public int getMetricsCategory() {
@@ -95,7 +95,7 @@ public class HotspotTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     public CharSequence getTileLabel() {
-        return this.mContext.getString(C1893R.string.quick_settings_hotspot_label);
+        return this.mContext.getString(C1894R.string.quick_settings_hotspot_label);
     }
 
     /* access modifiers changed from: protected */
@@ -121,7 +121,7 @@ public class HotspotTile extends QSTileImpl<QSTile.BooleanState> {
             z = this.mDataSaverController.isDataSaverEnabled();
         }
         booleanState.icon = this.mEnabledStatic;
-        booleanState.label = this.mContext.getString(C1893R.string.quick_settings_hotspot_label);
+        booleanState.label = this.mContext.getString(C1894R.string.quick_settings_hotspot_label);
         booleanState.isTransient = z3;
         booleanState.slash.isSlashed = !booleanState.value && !booleanState.isTransient;
         if (booleanState.isTransient) {
@@ -146,18 +146,18 @@ public class HotspotTile extends QSTileImpl<QSTile.BooleanState> {
 
     private String getSecondaryLabel(boolean z, boolean z2, boolean z3, int i, boolean z4) {
         if (!z4) {
-            return this.mContext.getString(C1893R.string.wifitrackerlib_admin_restricted_network);
+            return this.mContext.getString(C1894R.string.wifitrackerlib_admin_restricted_network);
         }
         if (z2) {
-            return this.mContext.getString(C1893R.string.quick_settings_hotspot_secondary_label_transient);
+            return this.mContext.getString(C1894R.string.quick_settings_hotspot_secondary_label_transient);
         }
         if (z3) {
-            return this.mContext.getString(C1893R.string.quick_settings_hotspot_secondary_label_data_saver_enabled);
+            return this.mContext.getString(C1894R.string.quick_settings_hotspot_secondary_label_data_saver_enabled);
         }
         if (i <= 0 || !z) {
             return null;
         }
-        return this.mContext.getResources().getQuantityString(C1893R.plurals.quick_settings_hotspot_secondary_label_num_devices, i, new Object[]{Integer.valueOf(i)});
+        return this.mContext.getResources().getQuantityString(C1894R.plurals.quick_settings_hotspot_secondary_label_num_devices, i, new Object[]{Integer.valueOf(i)});
     }
 
     /* renamed from: com.android.systemui.qs.tiles.HotspotTile$HotspotAndDataSaverCallbacks */

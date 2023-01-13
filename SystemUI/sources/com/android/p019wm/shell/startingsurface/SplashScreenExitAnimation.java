@@ -21,7 +21,7 @@ import android.view.animation.Interpolator;
 import android.view.animation.PathInterpolator;
 import android.window.SplashScreenView;
 import com.android.internal.jank.InteractionJankMonitor;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.animation.Interpolators;
 import com.android.p019wm.shell.common.TransactionPool;
 import java.util.Objects;
@@ -82,11 +82,11 @@ public class SplashScreenExitAnimation implements Animator.AnimatorListener {
             } else {
                 this.mBrandingStartAlpha = 0.0f;
             }
-            this.mIconFadeOutDuration = context.getResources().getInteger(C3343R.integer.starting_window_app_reveal_icon_fade_out_duration);
-            this.mAppRevealDelay = context.getResources().getInteger(C3343R.integer.starting_window_app_reveal_anim_delay);
+            this.mIconFadeOutDuration = context.getResources().getInteger(C3353R.integer.starting_window_app_reveal_icon_fade_out_duration);
+            this.mAppRevealDelay = context.getResources().getInteger(C3353R.integer.starting_window_app_reveal_anim_delay);
             this.mIconStartAlpha = iconView.getAlpha();
         }
-        int integer = context.getResources().getInteger(C3343R.integer.starting_window_app_reveal_anim_duration);
+        int integer = context.getResources().getInteger(C3353R.integer.starting_window_app_reveal_anim_duration);
         this.mAppRevealDuration = integer;
         this.mAnimationDuration = Math.max(this.mIconFadeOutDuration, this.mAppRevealDelay + integer);
         this.mMainWindowShiftLength = i;
@@ -127,7 +127,7 @@ public class SplashScreenExitAnimation implements Animator.AnimatorListener {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$createAnimator$0$com-android-wm-shell-startingsurface-SplashScreenExitAnimation */
-    public /* synthetic */ void mo51087x2b507fc1(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo51098x2b507fc1(ValueAnimator valueAnimator) {
         onAnimationProgress(((Float) valueAnimator.getAnimatedValue()).floatValue());
     }
 
@@ -236,7 +236,7 @@ public class SplashScreenExitAnimation implements Animator.AnimatorListener {
                 Choreographer sfInstance = Choreographer.getSfInstance();
                 SurfaceControl access$100 = SplashScreenExitAnimation.this.mFirstWindowSurface;
                 Objects.requireNonNull(access$100);
-                sfInstance.postCallback(4, new C3586x713783c7(access$100), (Object) null);
+                sfInstance.postCallback(4, new C3596x713783c7(access$100), (Object) null);
             }
         }
     }

@@ -8,7 +8,7 @@ import android.view.InsetsFlags;
 import android.view.ViewDebug;
 import com.android.internal.colorextraction.ColorExtractor;
 import com.android.internal.view.AppearanceRegion;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dumpable;
 import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.dump.DumpManager;
@@ -47,7 +47,7 @@ public class LightBarController implements BatteryController.BatteryStateChangeC
 
     @Inject
     public LightBarController(Context context, DarkIconDispatcher darkIconDispatcher, BatteryController batteryController, NavigationModeController navigationModeController, DumpManager dumpManager) {
-        this.mDarkModeColor = Color.valueOf(context.getColor(C1893R.C1894color.dark_mode_icon_color_single_tone));
+        this.mDarkModeColor = Color.valueOf(context.getColor(C1894R.C1895color.dark_mode_icon_color_single_tone));
         this.mStatusBarIconController = (SysuiDarkIconDispatcher) darkIconDispatcher;
         this.mBatteryController = batteryController;
         batteryController.addCallback(this);
@@ -60,7 +60,7 @@ public class LightBarController implements BatteryController.BatteryStateChangeC
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-statusbar-phone-LightBarController */
-    public /* synthetic */ void mo44370x3a2764af(int i) {
+    public /* synthetic */ void mo44385x3a2764af(int i) {
         this.mNavigationMode = i;
     }
 

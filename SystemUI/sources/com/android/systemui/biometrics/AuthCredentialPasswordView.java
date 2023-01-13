@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.android.internal.widget.LockPatternChecker;
 import com.android.internal.widget.LockscreenCredential;
 import com.android.internal.widget.VerifyCredentialResponse;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 
 public class AuthCredentialPasswordView extends AuthCredentialView implements TextView.OnEditorActionListener {
     private static final String TAG = "BiometricPrompt/AuthCredentialPasswordView";
@@ -25,7 +25,7 @@ public class AuthCredentialPasswordView extends AuthCredentialView implements Te
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        ImeAwareEditText findViewById = findViewById(C1893R.C1897id.lockPassword);
+        ImeAwareEditText findViewById = findViewById(C1894R.C1898id.lockPassword);
         this.mPasswordField = findViewById;
         findViewById.setOnEditorActionListener(this);
         this.mPasswordField.setOnKeyListener(new AuthCredentialPasswordView$$ExternalSyntheticLambda0(this));
@@ -33,7 +33,7 @@ public class AuthCredentialPasswordView extends AuthCredentialView implements Te
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onFinishInflate$0$com-android-systemui-biometrics-AuthCredentialPasswordView */
-    public /* synthetic */ boolean mo30639xb42b1a51(View view, int i, KeyEvent keyEvent) {
+    public /* synthetic */ boolean mo30650xb42b1a51(View view, int i, KeyEvent keyEvent) {
         if (i != 4) {
             return false;
         }

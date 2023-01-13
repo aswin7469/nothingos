@@ -3,7 +3,7 @@ package com.android.systemui.p012qs;
 import android.content.res.Configuration;
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.logging.UiEventLogger;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dump.DumpManager;
 import com.android.systemui.media.MediaHost;
 import com.android.systemui.p012qs.QSPanel;
@@ -25,8 +25,8 @@ public class QuickQSPanelController extends QSPanelControllerBase<QuickQSPanel> 
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-qs-QuickQSPanelController  reason: not valid java name */
-    public /* synthetic */ void m2943lambda$new$0$comandroidsystemuiqsQuickQSPanelController(Configuration configuration) {
-        int integer = getResources().getInteger(C1893R.integer.quick_qs_panel_max_tiles);
+    public /* synthetic */ void m2948lambda$new$0$comandroidsystemuiqsQuickQSPanelController(Configuration configuration) {
+        int integer = getResources().getInteger(C1894R.integer.quick_qs_panel_max_tiles);
         if (integer != ((QuickQSPanel) this.mView).getNumQuickTiles()) {
             setMaxTiles(integer);
         }

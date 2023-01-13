@@ -7,6 +7,6 @@ import android.view.WindowInsets;
 /* compiled from: D8$$SyntheticClass */
 public final /* synthetic */ class ControlsActivity$$ExternalSyntheticLambda1 implements View.OnApplyWindowInsetsListener {
     public final WindowInsets onApplyWindowInsets(View view, WindowInsets windowInsets) {
-        return ControlsActivity.m2701onCreate$lambda2$lambda1(view, windowInsets);
+        return ControlsActivity.m2706onCreate$lambda2$lambda1(view, windowInsets);
     }
 }

@@ -9,7 +9,7 @@ import android.util.Property;
 import android.view.animation.Interpolator;
 import androidx.vectordrawable.graphics.drawable.Animatable2Compat;
 import androidx.vectordrawable.graphics.drawable.AnimationUtilsCompat;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.color.MaterialColors;
 import java.util.Arrays;
 
@@ -41,7 +41,7 @@ final class LinearIndeterminateDisjointAnimatorDelegate extends IndeterminateAni
     public LinearIndeterminateDisjointAnimatorDelegate(Context context, LinearProgressIndicatorSpec linearProgressIndicatorSpec) {
         super(2);
         this.baseSpec = linearProgressIndicatorSpec;
-        this.interpolatorArray = new Interpolator[]{AnimationUtilsCompat.loadInterpolator(context, C3621R.animator.linear_indeterminate_line1_head_interpolator), AnimationUtilsCompat.loadInterpolator(context, C3621R.animator.linear_indeterminate_line1_tail_interpolator), AnimationUtilsCompat.loadInterpolator(context, C3621R.animator.linear_indeterminate_line2_head_interpolator), AnimationUtilsCompat.loadInterpolator(context, C3621R.animator.linear_indeterminate_line2_tail_interpolator)};
+        this.interpolatorArray = new Interpolator[]{AnimationUtilsCompat.loadInterpolator(context, C3631R.animator.linear_indeterminate_line1_head_interpolator), AnimationUtilsCompat.loadInterpolator(context, C3631R.animator.linear_indeterminate_line1_tail_interpolator), AnimationUtilsCompat.loadInterpolator(context, C3631R.animator.linear_indeterminate_line2_head_interpolator), AnimationUtilsCompat.loadInterpolator(context, C3631R.animator.linear_indeterminate_line2_tail_interpolator)};
     }
 
     public void startAnimator() {

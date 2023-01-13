@@ -12,6 +12,6 @@ public final /* synthetic */ class NotificationPanelViewController$$ExternalSynt
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo44619xc61bec88((KeyguardUnfoldTransition) obj);
+        this.f$0.mo44634xc61bec88((KeyguardUnfoldTransition) obj);
     }
 }

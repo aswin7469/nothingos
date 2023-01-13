@@ -183,7 +183,7 @@ public class QRCodeScannerController implements CallbackController<Callback> {
 
     /* access modifiers changed from: private */
     /* renamed from: updateQRCodeScannerActivityDetails */
-    public void mo35803x5f47bf08() {
+    public void mo35807x5f47bf08() {
         ComponentName componentName;
         String string = this.mDeviceConfigProxy.getString("systemui", "default_qr_code_scanner", "");
         if (Objects.equals(string, "")) {
@@ -242,7 +242,7 @@ public class QRCodeScannerController implements CallbackController<Callback> {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$unregisterQRCodePreferenceObserver$0$com-android-systemui-qrcodescanner-controller-QRCodeScannerController */
-    public /* synthetic */ void mo35806xd44db0d8(Integer num, ContentObserver contentObserver) {
+    public /* synthetic */ void mo35810xd44db0d8(Integer num, ContentObserver contentObserver) {
         this.mSecureSettings.unregisterContentObserver(contentObserver);
     }
 
@@ -281,9 +281,9 @@ public class QRCodeScannerController implements CallbackController<Callback> {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$registerDefaultQRCodeScannerObserver$4$com-android-systemui-qrcodescanner-controller-QRCodeScannerController */
-    public /* synthetic */ void mo35804x42737249(DeviceConfig.Properties properties) {
+    public /* synthetic */ void mo35808x42737249(DeviceConfig.Properties properties) {
         if ("systemui".equals(properties.getNamespace()) && properties.getKeyset().contains("default_qr_code_scanner")) {
-            mo35803x5f47bf08();
+            mo35807x5f47bf08();
             updateQRCodeScannerPreferenceDetails(true);
         }
     }
@@ -301,7 +301,7 @@ public class QRCodeScannerController implements CallbackController<Callback> {
 
                     /* access modifiers changed from: package-private */
                     /* renamed from: lambda$onChange$0$com-android-systemui-qrcodescanner-controller-QRCodeScannerController$1 */
-                    public /* synthetic */ void mo35810x4f8469b9() {
+                    public /* synthetic */ void mo35814x4f8469b9() {
                         QRCodeScannerController.this.updateQRCodeScannerPreferenceDetails(false);
                     }
                 });
@@ -313,13 +313,13 @@ public class QRCodeScannerController implements CallbackController<Callback> {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$registerQRCodePreferenceObserver$5$com-android-systemui-qrcodescanner-controller-QRCodeScannerController */
-    public /* synthetic */ void mo35805x52bbd2c4() {
+    public /* synthetic */ void mo35809x52bbd2c4() {
         updateQRCodeScannerPreferenceDetails(true);
     }
 
     private void registerUserChangeObservers() {
         if (this.mUserChangedListener == null) {
-            C23182 r0 = new UserTracker.Callback() {
+            C23212 r0 = new UserTracker.Callback() {
                 public void onUserChanged(int i, Context context) {
                     QRCodeScannerController.this.registerQRCodePreferenceObserver();
                     QRCodeScannerController.this.updateQRCodeScannerPreferenceDetails(true);

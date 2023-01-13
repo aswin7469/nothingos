@@ -11,6 +11,6 @@ public final /* synthetic */ class CommandRegistry$$ExternalSyntheticLambda1 imp
     }
 
     public final void run() {
-        CommandRegistry.m3054onShellCommand$lambda1(this.f$0);
+        CommandRegistry.m3058onShellCommand$lambda1(this.f$0);
     }
 }

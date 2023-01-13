@@ -30,7 +30,7 @@ import android.widget.TextView;
 import androidx.core.graphics.drawable.IconCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.broadcast.BroadcastSender;
 import com.android.systemui.media.dialog.MediaOutputController;
 import com.android.systemui.statusbar.phone.SystemUIDialog;
@@ -61,7 +61,7 @@ public abstract class MediaOutputBaseDialog extends SystemUIDialog implements Me
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onBroadcastStarted$0$com-android-systemui-media-dialog-MediaOutputBaseDialog$1 */
-        public /* synthetic */ void mo34345x4a886a93() {
+        public /* synthetic */ void mo34349x4a886a93() {
             MediaOutputBaseDialog.this.handleLeBroadcastStarted();
         }
 
@@ -72,7 +72,7 @@ public abstract class MediaOutputBaseDialog extends SystemUIDialog implements Me
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onBroadcastStartFailed$1$com-android-systemui-media-dialog-MediaOutputBaseDialog$1 */
-        public /* synthetic */ void mo34344x3d9d392() {
+        public /* synthetic */ void mo34348x3d9d392() {
             MediaOutputBaseDialog.this.handleLeBroadcastStartFailed();
         }
 
@@ -83,7 +83,7 @@ public abstract class MediaOutputBaseDialog extends SystemUIDialog implements Me
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onBroadcastMetadataChanged$2$com-android-systemui-media-dialog-MediaOutputBaseDialog$1 */
-        public /* synthetic */ void mo34343x5e96f719() {
+        public /* synthetic */ void mo34347x5e96f719() {
             MediaOutputBaseDialog.this.handleLeBroadcastMetadataChanged();
         }
 
@@ -94,7 +94,7 @@ public abstract class MediaOutputBaseDialog extends SystemUIDialog implements Me
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onBroadcastStopped$3$com-android-systemui-media-dialog-MediaOutputBaseDialog$1 */
-        public /* synthetic */ void mo34347xf2224822() {
+        public /* synthetic */ void mo34351xf2224822() {
             MediaOutputBaseDialog.this.handleLeBroadcastStopped();
         }
 
@@ -105,7 +105,7 @@ public abstract class MediaOutputBaseDialog extends SystemUIDialog implements Me
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onBroadcastStopFailed$4$com-android-systemui-media-dialog-MediaOutputBaseDialog$1 */
-        public /* synthetic */ void mo34346x51758a1f() {
+        public /* synthetic */ void mo34350x51758a1f() {
             MediaOutputBaseDialog.this.handleLeBroadcastStopFailed();
         }
 
@@ -116,7 +116,7 @@ public abstract class MediaOutputBaseDialog extends SystemUIDialog implements Me
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onBroadcastUpdated$5$com-android-systemui-media-dialog-MediaOutputBaseDialog$1 */
-        public /* synthetic */ void mo34349x31a76792() {
+        public /* synthetic */ void mo34353x31a76792() {
             MediaOutputBaseDialog.this.handleLeBroadcastUpdated();
         }
 
@@ -127,7 +127,7 @@ public abstract class MediaOutputBaseDialog extends SystemUIDialog implements Me
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onBroadcastUpdateFailed$6$com-android-systemui-media-dialog-MediaOutputBaseDialog$1 */
-        public /* synthetic */ void mo34348x38f7f168() {
+        public /* synthetic */ void mo34352x38f7f168() {
             MediaOutputBaseDialog.this.handleLeBroadcastUpdateFailed();
         }
     };
@@ -191,7 +191,7 @@ public abstract class MediaOutputBaseDialog extends SystemUIDialog implements Me
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-media-dialog-MediaOutputBaseDialog */
-    public /* synthetic */ void mo34318xccc14f8d() {
+    public /* synthetic */ void mo34322xccc14f8d() {
         if (this.mDeviceListLayout.getHeight() > this.mListMaxHeight) {
             ViewGroup.LayoutParams layoutParams = this.mDeviceListLayout.getLayoutParams();
             layoutParams.height = this.mListMaxHeight;
@@ -212,19 +212,19 @@ public abstract class MediaOutputBaseDialog extends SystemUIDialog implements Me
     }
 
     public MediaOutputBaseDialog(Context context, BroadcastSender broadcastSender, MediaOutputController mediaOutputController) {
-        super(context, (int) C1893R.style.Theme_SystemUI_Dialog_Media);
+        super(context, (int) C1894R.style.Theme_SystemUI_Dialog_Media);
         Context context2 = getContext();
         this.mContext = context2;
         this.mBroadcastSender = broadcastSender;
         this.mMediaOutputController = mediaOutputController;
         this.mLayoutManager = new LayoutManagerWrapper(context2);
-        this.mListMaxHeight = context.getResources().getDimensionPixelSize(C1893R.dimen.media_output_dialog_list_max_height);
+        this.mListMaxHeight = context.getResources().getDimensionPixelSize(C1894R.dimen.media_output_dialog_list_max_height);
         this.mExecutor = Executors.newSingleThreadExecutor();
     }
 
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        this.mDialogView = LayoutInflater.from(this.mContext).inflate(C1893R.layout.media_output_dialog, (ViewGroup) null);
+        this.mDialogView = LayoutInflater.from(this.mContext).inflate(C1894R.layout.media_output_dialog, (ViewGroup) null);
         Window window = getWindow();
         WindowManager.LayoutParams attributes = window.getAttributes();
         attributes.gravity = 17;
@@ -233,18 +233,18 @@ public abstract class MediaOutputBaseDialog extends SystemUIDialog implements Me
         attributes.setFitInsetsIgnoringVisibility(true);
         window.setAttributes(attributes);
         window.setContentView(this.mDialogView);
-        window.setTitle(this.mContext.getString(C1893R.string.media_output_dialog_accessibility_title));
-        this.mHeaderTitle = (TextView) this.mDialogView.requireViewById(C1893R.C1897id.header_title);
-        this.mHeaderSubtitle = (TextView) this.mDialogView.requireViewById(C1893R.C1897id.header_subtitle);
-        this.mHeaderIcon = (ImageView) this.mDialogView.requireViewById(C1893R.C1897id.header_icon);
-        this.mDevicesRecyclerView = (RecyclerView) this.mDialogView.requireViewById(C1893R.C1897id.list_result);
-        this.mDeviceListLayout = (LinearLayout) this.mDialogView.requireViewById(C1893R.C1897id.device_list);
-        this.mDoneButton = (Button) this.mDialogView.requireViewById(C1893R.C1897id.done);
-        this.mStopButton = (Button) this.mDialogView.requireViewById(C1893R.C1897id.stop);
-        this.mAppButton = (Button) this.mDialogView.requireViewById(C1893R.C1897id.launch_app_button);
-        this.mAppResourceIcon = (ImageView) this.mDialogView.requireViewById(C1893R.C1897id.app_source_icon);
-        this.mCastAppLayout = (LinearLayout) this.mDialogView.requireViewById(C1893R.C1897id.cast_app_section);
-        this.mBroadcastIcon = (ImageView) this.mDialogView.requireViewById(C1893R.C1897id.broadcast_icon);
+        window.setTitle(this.mContext.getString(C1894R.string.media_output_dialog_accessibility_title));
+        this.mHeaderTitle = (TextView) this.mDialogView.requireViewById(C1894R.C1898id.header_title);
+        this.mHeaderSubtitle = (TextView) this.mDialogView.requireViewById(C1894R.C1898id.header_subtitle);
+        this.mHeaderIcon = (ImageView) this.mDialogView.requireViewById(C1894R.C1898id.header_icon);
+        this.mDevicesRecyclerView = (RecyclerView) this.mDialogView.requireViewById(C1894R.C1898id.list_result);
+        this.mDeviceListLayout = (LinearLayout) this.mDialogView.requireViewById(C1894R.C1898id.device_list);
+        this.mDoneButton = (Button) this.mDialogView.requireViewById(C1894R.C1898id.done);
+        this.mStopButton = (Button) this.mDialogView.requireViewById(C1894R.C1898id.stop);
+        this.mAppButton = (Button) this.mDialogView.requireViewById(C1894R.C1898id.launch_app_button);
+        this.mAppResourceIcon = (ImageView) this.mDialogView.requireViewById(C1894R.C1898id.app_source_icon);
+        this.mCastAppLayout = (LinearLayout) this.mDialogView.requireViewById(C1894R.C1898id.cast_app_section);
+        this.mBroadcastIcon = (ImageView) this.mDialogView.requireViewById(C1894R.C1898id.broadcast_icon);
         this.mDeviceListLayout.getViewTreeObserver().addOnGlobalLayoutListener(this.mDeviceListLayoutListener);
         this.mDevicesRecyclerView.setLayoutManager(this.mLayoutManager);
         this.mDevicesRecyclerView.setAdapter(this.mAdapter);
@@ -256,26 +256,26 @@ public abstract class MediaOutputBaseDialog extends SystemUIDialog implements Me
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onCreate$1$com-android-systemui-media-dialog-MediaOutputBaseDialog */
-    public /* synthetic */ void mo34319xabe20d03(View view) {
+    public /* synthetic */ void mo34323xabe20d03(View view) {
         onHeaderIconClick();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onCreate$2$com-android-systemui-media-dialog-MediaOutputBaseDialog */
-    public /* synthetic */ void mo34320xd1761604(View view) {
+    public /* synthetic */ void mo34324xd1761604(View view) {
         dismiss();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onCreate$3$com-android-systemui-media-dialog-MediaOutputBaseDialog */
-    public /* synthetic */ void mo34321xf70a1f05(View view) {
+    public /* synthetic */ void mo34325xf70a1f05(View view) {
         this.mMediaOutputController.releaseSession();
         dismiss();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onCreate$4$com-android-systemui-media-dialog-MediaOutputBaseDialog */
-    public /* synthetic */ void mo34322x1c9e2806(View view) {
+    public /* synthetic */ void mo34326x1c9e2806(View view) {
         this.mBroadcastSender.closeSystemDialogs();
         if (this.mMediaOutputController.getAppLaunchIntent() != null) {
             this.mContext.startActivity(this.mMediaOutputController.getAppLaunchIntent());
@@ -301,7 +301,7 @@ public abstract class MediaOutputBaseDialog extends SystemUIDialog implements Me
 
     /* access modifiers changed from: package-private */
     /* renamed from: refresh */
-    public void mo34329x86da2bdb() {
+    public void mo34333x86da2bdb() {
         refresh(false);
     }
 
@@ -343,7 +343,7 @@ public abstract class MediaOutputBaseDialog extends SystemUIDialog implements Me
             android.widget.Button r4 = r9.mAppButton
             android.content.Context r5 = r9.mContext
             android.content.res.Resources r5 = r5.getResources()
-            r8 = 2131166303(0x7f07045f, float:1.7946848E38)
+            r8 = 2131166305(0x7f070461, float:1.7946852E38)
             int r5 = r5.getDimensionPixelSize(r8)
             android.graphics.drawable.Drawable r3 = r9.resizeDrawable(r3, r5)
             r5 = 0
@@ -411,7 +411,7 @@ public abstract class MediaOutputBaseDialog extends SystemUIDialog implements Me
             int r0 = r9.getHeaderIconSize()
             android.content.Context r2 = r9.mContext
             android.content.res.Resources r2 = r2.getResources()
-            r3 = 2131166307(0x7f070463, float:1.7946856E38)
+            r3 = 2131166309(0x7f070465, float:1.794686E38)
             int r2 = r2.getDimensionPixelSize(r3)
             android.widget.ImageView r3 = r9.mHeaderIcon
             android.widget.LinearLayout$LayoutParams r5 = new android.widget.LinearLayout$LayoutParams
@@ -487,13 +487,13 @@ public abstract class MediaOutputBaseDialog extends SystemUIDialog implements Me
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$refresh$5$com-android-systemui-media-dialog-MediaOutputBaseDialog */
-    public /* synthetic */ void mo34326x1414ac8d(View view) {
+    public /* synthetic */ void mo34330x1414ac8d(View view) {
         onStopButtonClick();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$refresh$6$com-android-systemui-media-dialog-MediaOutputBaseDialog */
-    public /* synthetic */ void mo34327x39a8b58e(View view) {
+    public /* synthetic */ void mo34331x39a8b58e(View view) {
         onBroadcastIconClick();
     }
 
@@ -528,9 +528,9 @@ public abstract class MediaOutputBaseDialog extends SystemUIDialog implements Me
     }
 
     public void handleLeBroadcastStartFailed() {
-        this.mStopButton.setText(C1893R.string.media_output_broadcast_start_failed);
+        this.mStopButton.setText(C1894R.string.media_output_broadcast_start_failed);
         this.mStopButton.setEnabled(false);
-        mo34329x86da2bdb();
+        mo34333x86da2bdb();
     }
 
     public void handleLeBroadcastMetadataChanged() {
@@ -538,29 +538,29 @@ public abstract class MediaOutputBaseDialog extends SystemUIDialog implements Me
             startLeBroadcastDialog();
             this.mShouldLaunchLeBroadcastDialog = false;
         }
-        mo34329x86da2bdb();
+        mo34333x86da2bdb();
     }
 
     public void handleLeBroadcastStopped() {
         this.mShouldLaunchLeBroadcastDialog = false;
-        mo34329x86da2bdb();
+        mo34333x86da2bdb();
     }
 
     public void handleLeBroadcastStopFailed() {
-        mo34329x86da2bdb();
+        mo34333x86da2bdb();
     }
 
     public void handleLeBroadcastUpdated() {
-        mo34329x86da2bdb();
+        mo34333x86da2bdb();
     }
 
     public void handleLeBroadcastUpdateFailed() {
-        mo34329x86da2bdb();
+        mo34333x86da2bdb();
     }
 
     /* access modifiers changed from: protected */
     public void startLeBroadcast() {
-        this.mStopButton.setText(C1893R.string.media_output_broadcast_starting);
+        this.mStopButton.setText(C1894R.string.media_output_broadcast_starting);
         this.mStopButton.setEnabled(false);
         if (!this.mMediaOutputController.startBluetoothLeBroadcast()) {
             handleLeBroadcastStartFailed();
@@ -583,14 +583,14 @@ public abstract class MediaOutputBaseDialog extends SystemUIDialog implements Me
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startLeBroadcastDialogForFirstTime$7$com-android-systemui-media-dialog-MediaOutputBaseDialog */
-    public /* synthetic */ void mo34328x490262b0(DialogInterface dialogInterface, int i) {
+    public /* synthetic */ void mo34332x490262b0(DialogInterface dialogInterface, int i) {
         startLeBroadcast();
     }
 
     /* access modifiers changed from: protected */
     public void startLeBroadcastDialog() {
         this.mMediaOutputController.launchMediaOutputBroadcastDialog(this.mDialogView, this.mBroadcastSender);
-        mo34329x86da2bdb();
+        mo34333x86da2bdb();
     }
 
     /* access modifiers changed from: protected */
@@ -602,7 +602,7 @@ public abstract class MediaOutputBaseDialog extends SystemUIDialog implements Me
     }
 
     public CharSequence getStopButtonText() {
-        return this.mContext.getText(C1893R.string.media_output_dialog_button_stop_casting);
+        return this.mContext.getText(C1894R.string.media_output_dialog_button_stop_casting);
     }
 
     public void onStopButtonClick() {
@@ -626,7 +626,7 @@ public abstract class MediaOutputBaseDialog extends SystemUIDialog implements Me
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onDeviceListChanged$11$com-android-systemui-media-dialog-MediaOutputBaseDialog */
-    public /* synthetic */ void mo34323x77ace8be() {
+    public /* synthetic */ void mo34327x77ace8be() {
         refresh(true);
     }
 

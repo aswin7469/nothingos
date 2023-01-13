@@ -11,23 +11,23 @@ final class DecodedBitStreamParser {
     private static final char ECI = '￺';
 
     /* renamed from: FS */
-    private static final char f468FS = '\u001c';
+    private static final char f467FS = '\u001c';
 
     /* renamed from: GS */
-    private static final char f469GS = '\u001d';
+    private static final char f468GS = '\u001d';
     private static final char LATCHA = '￷';
     private static final char LATCHB = '￸';
     private static final char LOCK = '￹';
 
     /* renamed from: NS */
-    private static final char f470NS = '￻';
+    private static final char f469NS = '￻';
     private static final char PAD = '￼';
     private static final byte[] POSTCODE_2_BYTES = {33, 34, 35, 36, 25, 26, 27, 28, 29, 30, 19, 20, 21, 22, 23, 24, 13, 14, 15, 16, 17, 18, 7, 8, 9, 10, 11, 12, 1, 2};
     private static final byte[] POSTCODE_2_LENGTH_BYTES = {39, 40, 41, 42, 31, NetworkStackConstants.TCPHDR_URG};
     private static final byte[][] POSTCODE_3_BYTES = {new byte[]{39, 40, 41, 42, 31, NetworkStackConstants.TCPHDR_URG}, new byte[]{33, 34, 35, 36, 25, 26}, new byte[]{27, 28, 29, 30, 19, 20}, new byte[]{21, 22, 23, 24, 13, 14}, new byte[]{15, 16, 17, 18, 7, 8}, new byte[]{9, 10, 11, 12, 1, 2}};
 
     /* renamed from: RS */
-    private static final char f471RS = '\u001e';
+    private static final char f470RS = '\u001e';
     private static final byte[] SERVICE_CLASS_BYTES = {55, 56, 57, 58, 59, 60, 49, 50, 51, 52};
     private static final String[] SETS = {"\nABCDEFGHIJKLMNOPQRSTUVWXYZ￺\u001c\u001d\u001e￻ ￼\"#$%&'()*+,-./0123456789:￱￲￳￴￸", "`abcdefghijklmnopqrstuvwxyz￺\u001c\u001d\u001e￻{￼}~;<=>?[\\]^_ ,./:@!|￼￵￶￼￰￲￳￴￷", "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚ￺\u001c\u001d\u001e￻ÛÜÝÞßª¬±²³µ¹º¼½¾￷ ￹￳￴￸", "àáâãäåæçèéêëìíîïðñòóôõö÷øùú￺\u001c\u001d\u001e￻ûüýþÿ¡¨«¯°´·¸»¿￷ ￲￹￴￸", "\u0000\u0001\u0002\u0003\u0004\u0005\u0006\u0007\b\t\n\u000b\f\r\u000e\u000f\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001a￺￼￼\u001b￻\u001c\u001d\u001e\u001f ¢£¤¥¦§©­®¶￷ ￲￳￹￸"};
     private static final char SHIFTA = '￰';
@@ -61,9 +61,9 @@ final class DecodedBitStreamParser {
             String format2 = decimalFormat.format((long) getServiceClass(bArr));
             sb.append(getMessage(bArr, 10, 84));
             if (sb.toString().startsWith("[)>\u001e01\u001d")) {
-                sb.insert(9, str + f469GS + format + f469GS + format2 + f469GS);
+                sb.insert(9, str + f468GS + format + f468GS + format2 + f468GS);
             } else {
-                sb.insert(0, str + f469GS + format + f469GS + format2 + f469GS);
+                sb.insert(0, str + f468GS + format + f468GS + format2 + f468GS);
             }
         } else if (i == 4) {
             sb.append(getMessage(bArr, 1, 93));

@@ -14,6 +14,6 @@ public final /* synthetic */ class TextInterpolator$$ExternalSyntheticLambda0 im
     }
 
     public final void accept(int i, int i2, PositionedGlyphs positionedGlyphs, TextPaint textPaint) {
-        TextInterpolator.m2313shapeText$lambda24(this.f$0, i, i2, positionedGlyphs, textPaint);
+        TextInterpolator.m2319shapeText$lambda24(this.f$0, i, i2, positionedGlyphs, textPaint);
     }
 }

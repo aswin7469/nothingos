@@ -121,13 +121,13 @@ public interface CentralSurfacesDependenciesModule {
         Optional optional2;
         boolean isInImmersiveEnabled = ongoingCallFlags.isInImmersiveEnabled();
         if (isInImmersiveEnabled) {
-            optional = Optional.m1745of(statusBarWindowController);
+            optional = Optional.m1751of(statusBarWindowController);
         } else {
             optional = Optional.empty();
         }
         Optional optional3 = optional;
         if (isInImmersiveEnabled) {
-            optional2 = Optional.m1745of(swipeStatusBarAwayGestureHandler);
+            optional2 = Optional.m1751of(swipeStatusBarAwayGestureHandler);
         } else {
             optional2 = Optional.empty();
         }

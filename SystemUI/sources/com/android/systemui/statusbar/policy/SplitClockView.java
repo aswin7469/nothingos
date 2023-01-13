@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.view.ViewOverlay;
 import android.widget.LinearLayout;
 import android.widget.TextClock;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 
 public class SplitClockView extends LinearLayout {
     private TextClock mAmPmView;
@@ -52,8 +52,8 @@ public class SplitClockView extends LinearLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mTimeView = (TextClock) findViewById(C1893R.C1897id.time_view);
-        this.mAmPmView = (TextClock) findViewById(C1893R.C1897id.am_pm_view);
+        this.mTimeView = (TextClock) findViewById(C1894R.C1898id.time_view);
+        this.mAmPmView = (TextClock) findViewById(C1894R.C1898id.am_pm_view);
         this.mTimeView.setShowCurrentUserTime(true);
         this.mAmPmView.setShowCurrentUserTime(true);
     }

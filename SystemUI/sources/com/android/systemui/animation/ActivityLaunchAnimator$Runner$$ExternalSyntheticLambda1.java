@@ -11,6 +11,6 @@ public final /* synthetic */ class ActivityLaunchAnimator$Runner$$ExternalSynthe
     }
 
     public final void run() {
-        ActivityLaunchAnimator.Runner.m2536onTimeout$lambda0(this.f$0);
+        ActivityLaunchAnimator.Runner.m2542onTimeout$lambda0(this.f$0);
     }
 }

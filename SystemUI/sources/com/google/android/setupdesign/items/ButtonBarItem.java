@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import com.google.android.setupdesign.C3953R;
+import com.google.android.setupdesign.C3963R;
 import com.google.android.setupdesign.items.ItemInflater;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -30,7 +30,7 @@ public class ButtonBarItem extends AbstractItem implements ItemInflater.ItemPare
     }
 
     public int getLayoutResource() {
-        return C3953R.layout.sud_items_button_bar;
+        return C3963R.layout.sud_items_button_bar;
     }
 
     public void setVisible(boolean z) {

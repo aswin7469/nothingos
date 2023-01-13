@@ -13,6 +13,6 @@ public final /* synthetic */ class AnimatableClockView$$ExternalSyntheticLambda0
     }
 
     public final void run() {
-        AnimatableClockView.m2277animateCharge$lambda0(this.f$0, this.f$1);
+        AnimatableClockView.m2283animateCharge$lambda0(this.f$0, this.f$1);
     }
 }

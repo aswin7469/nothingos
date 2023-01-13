@@ -16,7 +16,7 @@ public class DelayQueue<E extends Delayed> extends AbstractQueue<E> implements B
     private final transient ReentrantLock lock;
 
     /* renamed from: q */
-    private final PriorityQueue<E> f751q = new PriorityQueue<>();
+    private final PriorityQueue<E> f749q = new PriorityQueue<>();
 
     public int remainingCapacity() {
         return Integer.MAX_VALUE;
@@ -44,8 +44,8 @@ public class DelayQueue<E extends Delayed> extends AbstractQueue<E> implements B
         ReentrantLock reentrantLock = this.lock;
         reentrantLock.lock();
         try {
-            this.f751q.offer(e);
-            if (this.f751q.peek() == e) {
+            this.f749q.offer(e);
+            if (this.f749q.peek() == e) {
                 this.leader = null;
                 this.available.signal();
             }
@@ -70,10 +70,10 @@ public class DelayQueue<E extends Delayed> extends AbstractQueue<E> implements B
         ReentrantLock reentrantLock = this.lock;
         reentrantLock.lock();
         try {
-            Delayed delayed = (Delayed) this.f751q.peek();
+            Delayed delayed = (Delayed) this.f749q.peek();
             if (delayed != null) {
                 if (delayed.getDelay(TimeUnit.NANOSECONDS) <= 0) {
-                    e = (Delayed) this.f751q.poll();
+                    e = (Delayed) this.f749q.poll();
                     return e;
                 }
             }
@@ -90,7 +90,7 @@ public class DelayQueue<E extends Delayed> extends AbstractQueue<E> implements B
         reentrantLock.lockInterruptibly();
         while (true) {
             try {
-                Delayed delayed = (Delayed) this.f751q.peek();
+                Delayed delayed = (Delayed) this.f749q.peek();
                 if (delayed == null) {
                     this.available.await();
                 } else {
@@ -109,15 +109,15 @@ public class DelayQueue<E extends Delayed> extends AbstractQueue<E> implements B
                     }
                 }
             } catch (Throwable th) {
-                if (this.leader == null && this.f751q.peek() != null) {
+                if (this.leader == null && this.f749q.peek() != null) {
                     this.available.signal();
                 }
                 reentrantLock.unlock();
                 throw th;
             }
         }
-        E e = (Delayed) this.f751q.poll();
-        if (this.leader == null && this.f751q.peek() != null) {
+        E e = (Delayed) this.f749q.poll();
+        if (this.leader == null && this.f749q.peek() != null) {
             this.available.signal();
         }
         reentrantLock.unlock();
@@ -131,18 +131,18 @@ public class DelayQueue<E extends Delayed> extends AbstractQueue<E> implements B
         reentrantLock.lockInterruptibly();
         while (true) {
             try {
-                Delayed delayed = (Delayed) this.f751q.peek();
+                Delayed delayed = (Delayed) this.f749q.peek();
                 if (delayed != null) {
                     long delay = delayed.getDelay(TimeUnit.NANOSECONDS);
                     if (delay <= 0) {
-                        E e = (Delayed) this.f751q.poll();
-                        if (this.leader == null && this.f751q.peek() != null) {
+                        E e = (Delayed) this.f749q.poll();
+                        if (this.leader == null && this.f749q.peek() != null) {
                             this.available.signal();
                         }
                         reentrantLock.unlock();
                         return e;
                     } else if (nanos <= 0) {
-                        if (this.leader == null && this.f751q.peek() != null) {
+                        if (this.leader == null && this.f749q.peek() != null) {
                             this.available.signal();
                         }
                         reentrantLock.unlock();
@@ -161,7 +161,7 @@ public class DelayQueue<E extends Delayed> extends AbstractQueue<E> implements B
                         nanos = this.available.awaitNanos(nanos);
                     }
                 } else if (nanos <= 0) {
-                    if (this.leader == null && this.f751q.peek() != null) {
+                    if (this.leader == null && this.f749q.peek() != null) {
                         this.available.signal();
                     }
                     reentrantLock.unlock();
@@ -170,7 +170,7 @@ public class DelayQueue<E extends Delayed> extends AbstractQueue<E> implements B
                     nanos = this.available.awaitNanos(nanos);
                 }
             } catch (Throwable th) {
-                if (this.leader == null && this.f751q.peek() != null) {
+                if (this.leader == null && this.f749q.peek() != null) {
                     this.available.signal();
                 }
                 reentrantLock.unlock();
@@ -183,7 +183,7 @@ public class DelayQueue<E extends Delayed> extends AbstractQueue<E> implements B
         ReentrantLock reentrantLock = this.lock;
         reentrantLock.lock();
         try {
-            return (Delayed) this.f751q.peek();
+            return (Delayed) this.f749q.peek();
         } finally {
             reentrantLock.unlock();
         }
@@ -193,7 +193,7 @@ public class DelayQueue<E extends Delayed> extends AbstractQueue<E> implements B
         ReentrantLock reentrantLock = this.lock;
         reentrantLock.lock();
         try {
-            return this.f751q.size();
+            return this.f749q.size();
         } finally {
             reentrantLock.unlock();
         }
@@ -214,12 +214,12 @@ public class DelayQueue<E extends Delayed> extends AbstractQueue<E> implements B
             reentrantLock.lock();
             while (i2 < i) {
                 try {
-                    Delayed delayed = (Delayed) this.f751q.peek();
+                    Delayed delayed = (Delayed) this.f749q.peek();
                     if (delayed == null || delayed.getDelay(TimeUnit.NANOSECONDS) > 0) {
                         break;
                     }
                     collection.add(delayed);
-                    this.f751q.poll();
+                    this.f749q.poll();
                     i2++;
                 } catch (Throwable th) {
                     reentrantLock.unlock();
@@ -236,7 +236,7 @@ public class DelayQueue<E extends Delayed> extends AbstractQueue<E> implements B
         ReentrantLock reentrantLock = this.lock;
         reentrantLock.lock();
         try {
-            this.f751q.clear();
+            this.f749q.clear();
         } finally {
             reentrantLock.unlock();
         }
@@ -246,7 +246,7 @@ public class DelayQueue<E extends Delayed> extends AbstractQueue<E> implements B
         ReentrantLock reentrantLock = this.lock;
         reentrantLock.lock();
         try {
-            return this.f751q.toArray();
+            return this.f749q.toArray();
         } finally {
             reentrantLock.unlock();
         }
@@ -256,7 +256,7 @@ public class DelayQueue<E extends Delayed> extends AbstractQueue<E> implements B
         ReentrantLock reentrantLock = this.lock;
         reentrantLock.lock();
         try {
-            return this.f751q.toArray(tArr);
+            return this.f749q.toArray(tArr);
         } finally {
             reentrantLock.unlock();
         }
@@ -266,7 +266,7 @@ public class DelayQueue<E extends Delayed> extends AbstractQueue<E> implements B
         ReentrantLock reentrantLock = this.lock;
         reentrantLock.lock();
         try {
-            return this.f751q.remove(obj);
+            return this.f749q.remove(obj);
         } finally {
             reentrantLock.unlock();
         }
@@ -277,7 +277,7 @@ public class DelayQueue<E extends Delayed> extends AbstractQueue<E> implements B
         ReentrantLock reentrantLock = this.lock;
         reentrantLock.lock();
         try {
-            Iterator<E> it = this.f751q.iterator();
+            Iterator<E> it = this.f749q.iterator();
             while (true) {
                 if (it.hasNext()) {
                     if (obj == it.next()) {

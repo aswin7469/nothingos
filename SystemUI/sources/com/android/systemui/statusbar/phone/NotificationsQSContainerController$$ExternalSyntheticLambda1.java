@@ -1,6 +1,6 @@
 package com.android.systemui.statusbar.phone;
 
-import com.android.systemui.plugins.p011qs.C2301QS;
+import com.android.systemui.plugins.p011qs.C2304QS;
 import java.util.function.Consumer;
 
 /* compiled from: D8$$SyntheticClass */
@@ -12,6 +12,6 @@ public final /* synthetic */ class NotificationsQSContainerController$$ExternalS
     }
 
     public final void accept(Object obj) {
-        NotificationsQSContainerController.m3185onViewAttached$lambda1(this.f$0, (C2301QS) obj);
+        NotificationsQSContainerController.m3190onViewAttached$lambda1(this.f$0, (C2304QS) obj);
     }
 }

@@ -12,6 +12,6 @@ public final /* synthetic */ class CalendarManager$$ExternalSyntheticLambda2 imp
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo57446x9aec6e50((CalendarManager.Callback) obj);
+        this.f$0.mo57467x9aec6e50((CalendarManager.Callback) obj);
     }
 }

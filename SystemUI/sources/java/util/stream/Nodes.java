@@ -38,7 +38,7 @@ final class Nodes {
     }
 
     /* renamed from: java.util.stream.Nodes$1 */
-    static /* synthetic */ class C44971 {
+    static /* synthetic */ class C45091 {
         static final /* synthetic */ int[] $SwitchMap$java$util$stream$StreamShape;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(8:0|1|2|3|4|5|6|(3:7|8|10)) */
@@ -77,12 +77,12 @@ final class Nodes {
             L_0x0033:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: java.util.stream.Nodes.C44971.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: java.util.stream.Nodes.C45091.<clinit>():void");
         }
     }
 
     static <T> Node<T> emptyNode(StreamShape streamShape) {
-        int i = C44971.$SwitchMap$java$util$stream$StreamShape[streamShape.ordinal()];
+        int i = C45091.$SwitchMap$java$util$stream$StreamShape[streamShape.ordinal()];
         if (i == 1) {
             return EMPTY_NODE;
         }
@@ -99,7 +99,7 @@ final class Nodes {
     }
 
     static <T> Node<T> conc(StreamShape streamShape, Node<T> node, Node<T> node2) {
-        int i = C44971.$SwitchMap$java$util$stream$StreamShape[streamShape.ordinal()];
+        int i = C45091.$SwitchMap$java$util$stream$StreamShape[streamShape.ordinal()];
         if (i == 1) {
             return new ConcNode(node, node2);
         }
@@ -415,38 +415,38 @@ final class Nodes {
     private static final class CollectionNode<T> implements Node<T> {
 
         /* renamed from: c */
-        private final Collection<T> f781c;
+        private final Collection<T> f779c;
 
         CollectionNode(Collection<T> collection) {
-            this.f781c = collection;
+            this.f779c = collection;
         }
 
         public Spliterator<T> spliterator() {
-            return this.f781c.stream().spliterator();
+            return this.f779c.stream().spliterator();
         }
 
         public void copyInto(T[] tArr, int i) {
-            for (T t : this.f781c) {
+            for (T t : this.f779c) {
                 tArr[i] = t;
                 i++;
             }
         }
 
         public T[] asArray(IntFunction<T[]> intFunction) {
-            Collection<T> collection = this.f781c;
+            Collection<T> collection = this.f779c;
             return collection.toArray((T[]) (Object[]) intFunction.apply(collection.size()));
         }
 
         public long count() {
-            return (long) this.f781c.size();
+            return (long) this.f779c.size();
         }
 
         public void forEach(Consumer<? super T> consumer) {
-            this.f781c.forEach(consumer);
+            this.f779c.forEach(consumer);
         }
 
         public String toString() {
-            return String.format("CollectionNode[%d][%s]", Integer.valueOf(this.f781c.size()), this.f781c);
+            return String.format("CollectionNode[%d][%s]", Integer.valueOf(this.f779c.size()), this.f779c);
         }
     }
 

@@ -11,6 +11,6 @@ public final /* synthetic */ class BatteryStateNotifier$$ExternalSyntheticLambda
     }
 
     public final void run() {
-        BatteryStateNotifier.m3224scheduleNotificationCancel$lambda0(this.f$0);
+        BatteryStateNotifier.m3229scheduleNotificationCancel$lambda0(this.f$0);
     }
 }

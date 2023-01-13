@@ -2,7 +2,7 @@ package com.google.android.material.navigationrail;
 
 import android.content.Context;
 import android.view.View;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.navigation.NavigationBarItemView;
 
 final class NavigationRailItemView extends NavigationBarItemView {
@@ -20,11 +20,11 @@ final class NavigationRailItemView extends NavigationBarItemView {
 
     /* access modifiers changed from: protected */
     public int getItemLayoutResId() {
-        return C3621R.layout.mtrl_navigation_rail_item;
+        return C3631R.layout.mtrl_navigation_rail_item;
     }
 
     /* access modifiers changed from: protected */
     public int getItemDefaultMarginResId() {
-        return C3621R.dimen.mtrl_navigation_rail_icon_margin;
+        return C3631R.dimen.mtrl_navigation_rail_icon_margin;
     }
 }

@@ -13,6 +13,6 @@ public final /* synthetic */ class MediaDeviceManager$Entry$$ExternalSyntheticLa
     }
 
     public final void run() {
-        MediaDeviceManager.Entry.m2808stop$lambda2(this.f$0, this.f$1);
+        MediaDeviceManager.Entry.m2813stop$lambda2(this.f$0, this.f$1);
     }
 }

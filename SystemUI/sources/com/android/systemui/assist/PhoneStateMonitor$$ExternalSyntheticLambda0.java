@@ -11,6 +11,6 @@ public final /* synthetic */ class PhoneStateMonitor$$ExternalSyntheticLambda0 i
     }
 
     public final void onBootComplete() {
-        this.f$0.m2551lambda$new$0$comandroidsystemuiassistPhoneStateMonitor();
+        this.f$0.m2557lambda$new$0$comandroidsystemuiassistPhoneStateMonitor();
     }
 }

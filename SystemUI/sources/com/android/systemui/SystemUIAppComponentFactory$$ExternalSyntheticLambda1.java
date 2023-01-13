@@ -12,6 +12,6 @@ public final /* synthetic */ class SystemUIAppComponentFactory$$ExternalSyntheti
     }
 
     public final void onContextAvailable(Context context) {
-        this.f$0.mo29850x6aa5651e(context);
+        this.f$0.mo29860x6aa5651e(context);
     }
 }

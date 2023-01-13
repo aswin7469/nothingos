@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.p019wm.shell.bubbles.Bubbles;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.flags.FeatureFlags;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
@@ -73,7 +73,7 @@ public class NotificationViewHierarchyManager implements DynamicPrivacyControlle
         this.mStatusBarStateController = (SysuiStatusBarStateController) statusBarStateController;
         this.mEntryManager = notificationEntryManager;
         this.mNotifPipelineFlags = notifPipelineFlags;
-        this.mAlwaysExpandNonGroupedNotification = context.getResources().getBoolean(C1893R.bool.config_alwaysExpandNonGroupedNotifications);
+        this.mAlwaysExpandNonGroupedNotification = context.getResources().getBoolean(C1894R.bool.config_alwaysExpandNonGroupedNotifications);
         this.mBubblesOptional = optional;
         this.mDynamicPrivacyController = dynamicPrivacyController;
         this.mDynamicChildBindController = dynamicChildBindController;

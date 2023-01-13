@@ -12,7 +12,7 @@ public enum MinguoEra implements Era {
     ROC;
 
     /* renamed from: of */
-    public static MinguoEra m950of(int i) {
+    public static MinguoEra m948of(int i) {
         if (i == 0) {
             return BEFORE_ROC;
         }
@@ -27,6 +27,6 @@ public enum MinguoEra implements Era {
     }
 
     public String getDisplayName(TextStyle textStyle, Locale locale) {
-        return new DateTimeFormatterBuilder().appendText((TemporalField) ChronoField.ERA, textStyle).toFormatter(locale).withChronology(MinguoChronology.INSTANCE).format(this == ROC ? MinguoDate.m949of(1, 1, 1) : MinguoDate.m949of(0, 1, 1));
+        return new DateTimeFormatterBuilder().appendText((TemporalField) ChronoField.ERA, textStyle).toFormatter(locale).withChronology(MinguoChronology.INSTANCE).format(this == ROC ? MinguoDate.m947of(1, 1, 1) : MinguoDate.m947of(0, 1, 1));
     }
 }

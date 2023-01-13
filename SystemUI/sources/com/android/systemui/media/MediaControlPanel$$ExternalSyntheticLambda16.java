@@ -21,6 +21,6 @@ public final /* synthetic */ class MediaControlPanel$$ExternalSyntheticLambda16 
     }
 
     public final void onClick(View view) {
-        this.f$0.mo33651xc7b836f7(this.f$1, this.f$2, this.f$3, this.f$4, view);
+        this.f$0.mo33655xc7b836f7(this.f$1, this.f$2, this.f$3, this.f$4, view);
     }
 }

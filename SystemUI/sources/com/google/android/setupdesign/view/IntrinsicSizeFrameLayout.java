@@ -14,7 +14,7 @@ import android.widget.FrameLayout;
 import com.google.android.setupcompat.partnerconfig.PartnerConfig;
 import com.google.android.setupcompat.partnerconfig.PartnerConfigHelper;
 import com.google.android.setupcompat.util.BuildCompatUtils;
-import com.google.android.setupdesign.C3953R;
+import com.google.android.setupdesign.C3963R;
 
 public class IntrinsicSizeFrameLayout extends FrameLayout {
     private int intrinsicHeight = 0;
@@ -39,9 +39,9 @@ public class IntrinsicSizeFrameLayout extends FrameLayout {
 
     private void init(Context context, AttributeSet attributeSet, int i) {
         if (!isInEditMode()) {
-            TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C3953R.styleable.SudIntrinsicSizeFrameLayout, i, 0);
-            this.intrinsicHeight = obtainStyledAttributes.getDimensionPixelSize(C3953R.styleable.SudIntrinsicSizeFrameLayout_android_height, 0);
-            this.intrinsicWidth = obtainStyledAttributes.getDimensionPixelSize(C3953R.styleable.SudIntrinsicSizeFrameLayout_android_width, 0);
+            TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C3963R.styleable.SudIntrinsicSizeFrameLayout, i, 0);
+            this.intrinsicHeight = obtainStyledAttributes.getDimensionPixelSize(C3963R.styleable.SudIntrinsicSizeFrameLayout_android_height, 0);
+            this.intrinsicWidth = obtainStyledAttributes.getDimensionPixelSize(C3963R.styleable.SudIntrinsicSizeFrameLayout_android_width, 0);
             obtainStyledAttributes.recycle();
             if (BuildCompatUtils.isAtLeastS()) {
                 if (PartnerConfigHelper.get(context).isPartnerConfigAvailable(PartnerConfig.CONFIG_CARD_VIEW_INTRINSIC_HEIGHT)) {

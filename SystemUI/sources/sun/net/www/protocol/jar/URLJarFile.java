@@ -161,11 +161,11 @@ public class URLJarFile extends JarFile {
     private class URLJarFileEntry extends JarEntry {
 
         /* renamed from: je */
-        private JarEntry f872je;
+        private JarEntry f870je;
 
         URLJarFileEntry(JarEntry jarEntry) {
             super(jarEntry);
-            this.f872je = jarEntry;
+            this.f870je = jarEntry;
         }
 
         public Attributes getAttributes() throws IOException {
@@ -178,7 +178,7 @@ public class URLJarFile extends JarFile {
         }
 
         public Certificate[] getCertificates() {
-            Certificate[] certificates = this.f872je.getCertificates();
+            Certificate[] certificates = this.f870je.getCertificates();
             if (certificates == null) {
                 return null;
             }
@@ -186,7 +186,7 @@ public class URLJarFile extends JarFile {
         }
 
         public CodeSigner[] getCodeSigners() {
-            CodeSigner[] codeSigners = this.f872je.getCodeSigners();
+            CodeSigner[] codeSigners = this.f870je.getCodeSigners();
             if (codeSigners == null) {
                 return null;
             }

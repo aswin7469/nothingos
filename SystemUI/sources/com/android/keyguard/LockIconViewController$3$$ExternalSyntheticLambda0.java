@@ -11,6 +11,6 @@ public final /* synthetic */ class LockIconViewController$3$$ExternalSyntheticLa
     }
 
     public final void run() {
-        this.f$0.mo26437x8e76945f();
+        this.f$0.mo26438x8e76945f();
     }
 }

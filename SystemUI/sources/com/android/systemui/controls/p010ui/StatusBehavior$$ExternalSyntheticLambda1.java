@@ -6,6 +6,6 @@ import android.content.DialogInterface;
 /* compiled from: D8$$SyntheticClass */
 public final /* synthetic */ class StatusBehavior$$ExternalSyntheticLambda1 implements DialogInterface.OnClickListener {
     public final void onClick(DialogInterface dialogInterface, int i) {
-        StatusBehavior.m2721showNotFoundDialog$lambda4$lambda3(dialogInterface, i);
+        StatusBehavior.m2726showNotFoundDialog$lambda4$lambda3(dialogInterface, i);
     }
 }

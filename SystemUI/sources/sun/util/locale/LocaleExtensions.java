@@ -16,10 +16,10 @@ public class LocaleExtensions {
     private final Map<Character, Extension> extensionMap;
 
     /* renamed from: id */
-    private final String f940id;
+    private final String f938id;
 
     private LocaleExtensions(String str, Character ch, Extension extension) {
-        this.f940id = str;
+        this.f938id = str;
         this.extensionMap = Collections.singletonMap(ch, extension);
     }
 
@@ -58,15 +58,15 @@ public class LocaleExtensions {
                 treeMap.put('u', new UnicodeLocaleExtension((SortedSet<String>) treeSet, (SortedMap<String, String>) treeMap2));
             }
             if (treeMap.isEmpty()) {
-                this.f940id = "";
+                this.f938id = "";
                 this.extensionMap = Collections.emptyMap();
                 return;
             }
-            this.f940id = toID(treeMap);
+            this.f938id = toID(treeMap);
             this.extensionMap = treeMap;
             return;
         }
-        this.f940id = "";
+        this.f938id = "";
         this.extensionMap = Collections.emptyMap();
     }
 
@@ -150,15 +150,15 @@ public class LocaleExtensions {
     }
 
     public String toString() {
-        return this.f940id;
+        return this.f938id;
     }
 
     public String getID() {
-        return this.f940id;
+        return this.f938id;
     }
 
     public int hashCode() {
-        return this.f940id.hashCode();
+        return this.f938id.hashCode();
     }
 
     public boolean equals(Object obj) {
@@ -168,6 +168,6 @@ public class LocaleExtensions {
         if (!(obj instanceof LocaleExtensions)) {
             return false;
         }
-        return this.f940id.equals(((LocaleExtensions) obj).f940id);
+        return this.f938id.equals(((LocaleExtensions) obj).f938id);
     }
 }

@@ -9,6 +9,6 @@ public final /* synthetic */ class CollapsedStatusBarFragment$$ExternalSynthetic
     }
 
     public final void run() {
-        this.f$0.mo45438x91f80fd0();
+        this.f$0.mo45450x91f80fd0();
     }
 }

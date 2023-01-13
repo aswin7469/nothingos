@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import com.android.internal.logging.UiEventLogger;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.media.MediaDataUtils;
 import com.android.systemui.media.dialog.MediaOutputDialogFactory;
 import com.android.systemui.statusbar.phone.SystemUIDialog;
@@ -42,26 +42,26 @@ public class BroadcastDialog extends SystemUIDialog {
             Log.d(TAG, "onCreate");
         }
         this.mUiEventLogger.log(BroadcastDialogEvent.BROADCAST_DIALOG_SHOW);
-        this.mDialogView = LayoutInflater.from(this.mContext).inflate(C1893R.layout.broadcast_dialog, (ViewGroup) null);
+        this.mDialogView = LayoutInflater.from(this.mContext).inflate(C1894R.layout.broadcast_dialog, (ViewGroup) null);
         getWindow().setContentView(this.mDialogView);
         Context context = this.mContext;
-        ((TextView) this.mDialogView.requireViewById(C1893R.C1897id.dialog_title)).setText(context.getString(C1893R.string.bt_le_audio_broadcast_dialog_title, new Object[]{MediaDataUtils.getAppLabel(context, this.mOutputPackageName, context.getString(C1893R.string.bt_le_audio_broadcast_dialog_unknown_name))}));
-        ((TextView) this.mDialogView.requireViewById(C1893R.C1897id.dialog_subtitle)).setText(this.mContext.getString(C1893R.string.bt_le_audio_broadcast_dialog_sub_title, new Object[]{this.mSwitchBroadcastApp}));
-        ((Button) this.mDialogView.requireViewById(C1893R.C1897id.switch_broadcast)).setText(this.mContext.getString(C1893R.string.bt_le_audio_broadcast_dialog_switch_app, new Object[]{this.mSwitchBroadcastApp}), (TextView.BufferType) null);
-        ((Button) this.mDialogView.requireViewById(C1893R.C1897id.change_output)).setOnClickListener(new BroadcastDialog$$ExternalSyntheticLambda0(this));
-        ((Button) this.mDialogView.requireViewById(C1893R.C1897id.cancel)).setOnClickListener(new BroadcastDialog$$ExternalSyntheticLambda1(this));
+        ((TextView) this.mDialogView.requireViewById(C1894R.C1898id.dialog_title)).setText(context.getString(C1894R.string.bt_le_audio_broadcast_dialog_title, new Object[]{MediaDataUtils.getAppLabel(context, this.mOutputPackageName, context.getString(C1894R.string.bt_le_audio_broadcast_dialog_unknown_name))}));
+        ((TextView) this.mDialogView.requireViewById(C1894R.C1898id.dialog_subtitle)).setText(this.mContext.getString(C1894R.string.bt_le_audio_broadcast_dialog_sub_title, new Object[]{this.mSwitchBroadcastApp}));
+        ((Button) this.mDialogView.requireViewById(C1894R.C1898id.switch_broadcast)).setText(this.mContext.getString(C1894R.string.bt_le_audio_broadcast_dialog_switch_app, new Object[]{this.mSwitchBroadcastApp}), (TextView.BufferType) null);
+        ((Button) this.mDialogView.requireViewById(C1894R.C1898id.change_output)).setOnClickListener(new BroadcastDialog$$ExternalSyntheticLambda0(this));
+        ((Button) this.mDialogView.requireViewById(C1894R.C1898id.cancel)).setOnClickListener(new BroadcastDialog$$ExternalSyntheticLambda1(this));
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onCreate$0$com-android-systemui-bluetooth-BroadcastDialog  reason: not valid java name */
-    public /* synthetic */ void m2589lambda$onCreate$0$comandroidsystemuibluetoothBroadcastDialog(View view) {
+    public /* synthetic */ void m2595lambda$onCreate$0$comandroidsystemuibluetoothBroadcastDialog(View view) {
         this.mMediaOutputDialogFactory.create(this.mOutputPackageName, true, (View) null);
         dismiss();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onCreate$1$com-android-systemui-bluetooth-BroadcastDialog  reason: not valid java name */
-    public /* synthetic */ void m2590lambda$onCreate$1$comandroidsystemuibluetoothBroadcastDialog(View view) {
+    public /* synthetic */ void m2596lambda$onCreate$1$comandroidsystemuibluetoothBroadcastDialog(View view) {
         if (DEBUG) {
             Log.d(TAG, "BroadcastDialog dismiss.");
         }

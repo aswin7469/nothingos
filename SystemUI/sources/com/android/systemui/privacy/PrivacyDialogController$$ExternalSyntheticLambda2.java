@@ -11,6 +11,6 @@ public final /* synthetic */ class PrivacyDialogController$$ExternalSyntheticLam
     }
 
     public final void onActivityStarted(int i) {
-        PrivacyDialogController.m2874startActivity$lambda0(this.f$0, i);
+        PrivacyDialogController.m2879startActivity$lambda0(this.f$0, i);
     }
 }

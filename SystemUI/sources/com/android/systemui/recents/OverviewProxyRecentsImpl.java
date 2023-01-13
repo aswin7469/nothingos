@@ -5,7 +5,7 @@ import android.os.Handler;
 import android.os.RemoteException;
 import android.util.Log;
 import com.android.systemui.dagger.SysUISingleton;
-import com.android.systemui.globalactions.C2137x58d1e4b7;
+import com.android.systemui.globalactions.C2139x58d1e4b7;
 import com.android.systemui.shared.recents.IOverviewProxy;
 import com.android.systemui.statusbar.phone.CentralSurfaces;
 import dagger.Lazy;
@@ -55,7 +55,7 @@ public class OverviewProxyRecentsImpl implements RecentsImplementation {
         if (this.mOverviewProxyService.getProxy() != null) {
             OverviewProxyRecentsImpl$$ExternalSyntheticLambda0 overviewProxyRecentsImpl$$ExternalSyntheticLambda0 = new OverviewProxyRecentsImpl$$ExternalSyntheticLambda0(this);
             Optional optional = this.mCentralSurfacesOptionalLazy.get();
-            if (((Boolean) optional.map(new C2137x58d1e4b7()).orElse(false)).booleanValue()) {
+            if (((Boolean) optional.map(new C2139x58d1e4b7()).orElse(false)).booleanValue()) {
                 ((CentralSurfaces) optional.get()).executeRunnableDismissingKeyguard(new OverviewProxyRecentsImpl$$ExternalSyntheticLambda1(this, overviewProxyRecentsImpl$$ExternalSyntheticLambda0), (Runnable) null, true, false, true);
             } else {
                 overviewProxyRecentsImpl$$ExternalSyntheticLambda0.run();
@@ -65,7 +65,7 @@ public class OverviewProxyRecentsImpl implements RecentsImplementation {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$toggleRecentApps$0$com-android-systemui-recents-OverviewProxyRecentsImpl */
-    public /* synthetic */ void mo37119xd8f0a03e() {
+    public /* synthetic */ void mo37118xd8f0a03e() {
         try {
             if (this.mOverviewProxyService.getProxy() != null) {
                 this.mOverviewProxyService.getProxy().onOverviewToggle();
@@ -78,7 +78,7 @@ public class OverviewProxyRecentsImpl implements RecentsImplementation {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$toggleRecentApps$1$com-android-systemui-recents-OverviewProxyRecentsImpl */
-    public /* synthetic */ void mo37120x244f57f(Runnable runnable) {
+    public /* synthetic */ void mo37119x244f57f(Runnable runnable) {
         this.mHandler.post(runnable);
     }
 }

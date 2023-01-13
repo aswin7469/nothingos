@@ -172,7 +172,7 @@ public class ScreenDecorations extends CoreStartable implements TunerService.Tun
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setOverlayWindowVisibilityIfViewExist$0$com-android-systemui-ScreenDecorations */
-    public /* synthetic */ void mo29768x356650a7(View view, int i) {
+    public /* synthetic */ void mo29778x356650a7(View view, int i) {
         if (this.mOverlays != null && isOnlyPrivacyDotInSwLayer()) {
             OverlayWindow[] overlayWindowArr = this.mOverlays;
             int length = overlayWindowArr.length;
@@ -278,7 +278,7 @@ public class ScreenDecorations extends CoreStartable implements TunerService.Tun
         updateHwLayerRoundedCornerDrawable();
         setupDecorations();
         setupCameraListener();
-        C19043 r0 = new DisplayManager.DisplayListener() {
+        C19053 r0 = new DisplayManager.DisplayListener() {
             public void onDisplayAdded(int i) {
             }
 
@@ -420,8 +420,8 @@ public class ScreenDecorations extends CoreStartable implements TunerService.Tun
             } else {
                 this.mDotViewController.setShowingListener((PrivacyDotViewController.ShowingListener) null);
             }
-            View overlayView4 = getOverlayView(C1893R.C1897id.privacy_dot_top_left_container);
-            if (!(overlayView4 == null || (overlayView = getOverlayView(C1893R.C1897id.privacy_dot_top_right_container)) == null || (overlayView2 = getOverlayView(C1893R.C1897id.privacy_dot_bottom_left_container)) == null || (overlayView3 = getOverlayView(C1893R.C1897id.privacy_dot_bottom_right_container)) == null)) {
+            View overlayView4 = getOverlayView(C1894R.C1898id.privacy_dot_top_left_container);
+            if (!(overlayView4 == null || (overlayView = getOverlayView(C1894R.C1898id.privacy_dot_top_right_container)) == null || (overlayView2 = getOverlayView(C1894R.C1898id.privacy_dot_bottom_left_container)) == null || (overlayView3 = getOverlayView(C1894R.C1898id.privacy_dot_bottom_right_container)) == null)) {
                 this.mDotViewController.initialize(overlayView4, overlayView, overlayView2, overlayView3);
             }
         } else {
@@ -457,13 +457,13 @@ public class ScreenDecorations extends CoreStartable implements TunerService.Tun
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setupDecorations$1$com-android-systemui-ScreenDecorations  reason: not valid java name */
-    public /* synthetic */ void m2526lambda$setupDecorations$1$comandroidsystemuiScreenDecorations() {
+    public /* synthetic */ void m2532lambda$setupDecorations$1$comandroidsystemuiScreenDecorations() {
         this.mTunerService.addTunable(this, SIZE);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setupDecorations$2$com-android-systemui-ScreenDecorations  reason: not valid java name */
-    public /* synthetic */ void m2527lambda$setupDecorations$2$comandroidsystemuiScreenDecorations() {
+    public /* synthetic */ void m2533lambda$setupDecorations$2$comandroidsystemuiScreenDecorations() {
         this.mTunerService.removeTunable(this);
     }
 
@@ -511,7 +511,7 @@ public class ScreenDecorations extends CoreStartable implements TunerService.Tun
         if (!z) {
             return 0;
         }
-        int[] iArr = {C1893R.C1897id.privacy_dot_top_left_container, C1893R.C1897id.privacy_dot_top_right_container, C1893R.C1897id.privacy_dot_bottom_left_container, C1893R.C1897id.privacy_dot_bottom_right_container};
+        int[] iArr = {C1894R.C1898id.privacy_dot_top_left_container, C1894R.C1898id.privacy_dot_top_right_container, C1894R.C1898id.privacy_dot_bottom_left_container, C1894R.C1898id.privacy_dot_bottom_right_container};
         for (int i = 0; i < 4; i++) {
             View view = overlayWindow.getView(iArr[i]);
             if (view != null && view.getVisibility() == 0) {
@@ -571,7 +571,7 @@ public class ScreenDecorations extends CoreStartable implements TunerService.Tun
 
     private void createHwcOverlay() {
         if (this.mScreenDecorHwcWindow == null) {
-            this.mScreenDecorHwcWindow = (ViewGroup) LayoutInflater.from(this.mContext).inflate(C1893R.layout.screen_decor_hwc_layer, (ViewGroup) null);
+            this.mScreenDecorHwcWindow = (ViewGroup) LayoutInflater.from(this.mContext).inflate(C1894R.layout.screen_decor_hwc_layer, (ViewGroup) null);
             ScreenDecorHwcLayer screenDecorHwcLayer = new ScreenDecorHwcLayer(this.mContext, this.mHwcScreenDecorationSupport);
             this.mScreenDecorHwcLayer = screenDecorHwcLayer;
             this.mScreenDecorHwcWindow.addView(screenDecorHwcLayer, new FrameLayout.LayoutParams(-1, -1, 8388659));
@@ -591,7 +591,7 @@ public class ScreenDecorations extends CoreStartable implements TunerService.Tun
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$initOverlay$3$com-android-systemui-ScreenDecorations  reason: not valid java name */
-    public /* synthetic */ void m2524lambda$initOverlay$3$comandroidsystemuiScreenDecorations(OverlayWindow overlayWindow, DecorProvider decorProvider) {
+    public /* synthetic */ void m2530lambda$initOverlay$3$comandroidsystemuiScreenDecorations(OverlayWindow overlayWindow, DecorProvider decorProvider) {
         if (overlayWindow.getView(decorProvider.getViewId()) == null) {
             removeOverlayView(decorProvider.getViewId());
             overlayWindow.addDecorProvider(decorProvider, this.mRotation);
@@ -686,7 +686,7 @@ public class ScreenDecorations extends CoreStartable implements TunerService.Tun
     }
 
     private void setupCameraListener() {
-        if (this.mContext.getResources().getBoolean(C1893R.bool.config_enableDisplayCutoutProtection)) {
+        if (this.mContext.getResources().getBoolean(C1894R.bool.config_enableDisplayCutoutProtection)) {
             CameraAvailabilityListener build = CameraAvailabilityListener.Factory.build(this.mContext, this.mExecutor);
             this.mCameraListener = build;
             build.addTransitionCallback(this.mCameraTransitionCallback);
@@ -702,7 +702,7 @@ public class ScreenDecorations extends CoreStartable implements TunerService.Tun
         }
         if (this.mOverlays != null && this.mHwcScreenDecorationSupport == null) {
             this.mRoundedCornerResDelegate.setColorTintList(ColorStateList.valueOf(this.mTintColor));
-            Integer[] numArr = {Integer.valueOf((int) C1893R.C1897id.rounded_corner_top_left), Integer.valueOf((int) C1893R.C1897id.rounded_corner_top_right), Integer.valueOf((int) C1893R.C1897id.rounded_corner_bottom_left), Integer.valueOf((int) C1893R.C1897id.rounded_corner_bottom_right)};
+            Integer[] numArr = {Integer.valueOf((int) C1894R.C1898id.rounded_corner_top_left), Integer.valueOf((int) C1894R.C1898id.rounded_corner_top_right), Integer.valueOf((int) C1894R.C1898id.rounded_corner_bottom_left), Integer.valueOf((int) C1894R.C1898id.rounded_corner_bottom_right)};
             for (int i2 = 0; i2 < 4; i2++) {
                 OverlayWindow overlayWindow = this.mOverlays[i2];
                 if (overlayWindow != null) {
@@ -741,7 +741,7 @@ public class ScreenDecorations extends CoreStartable implements TunerService.Tun
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onConfigurationChanged$4$com-android-systemui-ScreenDecorations */
-    public /* synthetic */ void mo29766xa0b75a31() {
+    public /* synthetic */ void mo29776xa0b75a31() {
         this.mPendingConfigChange = false;
         updateConfiguration();
         setupDecorations();
@@ -916,14 +916,14 @@ public class ScreenDecorations extends CoreStartable implements TunerService.Tun
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onTuningChanged$5$com-android-systemui-ScreenDecorations  reason: not valid java name */
-    public /* synthetic */ void m2525lambda$onTuningChanged$5$comandroidsystemuiScreenDecorations(String str, String str2) {
+    public /* synthetic */ void m2531lambda$onTuningChanged$5$comandroidsystemuiScreenDecorations(String str, String str2) {
         if (this.mOverlays != null && SIZE.equals(str)) {
             try {
                 this.mRoundedCornerResDelegate.setTuningSizeFactor(Integer.valueOf(Integer.parseInt(str2)));
             } catch (NumberFormatException unused) {
                 this.mRoundedCornerResDelegate.setTuningSizeFactor((Integer) null);
             }
-            Integer[] numArr = {Integer.valueOf((int) C1893R.C1897id.rounded_corner_top_left), Integer.valueOf((int) C1893R.C1897id.rounded_corner_top_right), Integer.valueOf((int) C1893R.C1897id.rounded_corner_bottom_left), Integer.valueOf((int) C1893R.C1897id.rounded_corner_bottom_right)};
+            Integer[] numArr = {Integer.valueOf((int) C1894R.C1898id.rounded_corner_top_left), Integer.valueOf((int) C1894R.C1898id.rounded_corner_top_right), Integer.valueOf((int) C1894R.C1898id.rounded_corner_bottom_left), Integer.valueOf((int) C1894R.C1898id.rounded_corner_bottom_right)};
             for (OverlayWindow overlayWindow : this.mOverlays) {
                 if (overlayWindow != null) {
                     overlayWindow.onReloadResAndMeasure(numArr, this.mProviderRefreshToken, this.mRotation, this.mDisplayUniqueId);
@@ -974,7 +974,7 @@ public class ScreenDecorations extends CoreStartable implements TunerService.Tun
             this.mInitialPosition = i;
             this.paint.setColor(this.mColor);
             this.paint.setStyle(Paint.Style.FILL);
-            setId(C1893R.C1897id.display_cutout);
+            setId(C1894R.C1898id.display_cutout);
         }
 
         private /* synthetic */ void lambda$new$0(int i) {

@@ -31,7 +31,7 @@ public final class ZoneOffset extends ZoneId implements TemporalAccessor, Tempor
     private static final long serialVersionUID = 2357656521762053153L;
 
     /* renamed from: id */
-    private final transient String f378id;
+    private final transient String f377id;
     private final int totalSeconds;
 
     private static int totalSeconds(int i, int i2, int i3) {
@@ -43,7 +43,7 @@ public final class ZoneOffset extends ZoneId implements TemporalAccessor, Tempor
     /* JADX WARNING: Removed duplicated region for block: B:32:0x00b9  */
     /* renamed from: of */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    public static java.time.ZoneOffset m935of(java.lang.String r7) {
+    public static java.time.ZoneOffset m933of(java.lang.String r7) {
         /*
             java.lang.String r0 = "offsetId"
             java.util.Objects.requireNonNull(r7, (java.lang.String) r0)
@@ -138,7 +138,7 @@ public final class ZoneOffset extends ZoneId implements TemporalAccessor, Tempor
             java.time.ZoneOffset r7 = ofHoursMinutesSeconds(r0, r1, r2)
             return r7
         */
-        throw new UnsupportedOperationException("Method not decompiled: java.time.ZoneOffset.m935of(java.lang.String):java.time.ZoneOffset");
+        throw new UnsupportedOperationException("Method not decompiled: java.time.ZoneOffset.m933of(java.lang.String):java.time.ZoneOffset");
     }
 
     private static int parseNumber(CharSequence charSequence, int i, boolean z) {
@@ -220,7 +220,7 @@ public final class ZoneOffset extends ZoneId implements TemporalAccessor, Tempor
 
     private ZoneOffset(int i) {
         this.totalSeconds = i;
-        this.f378id = buildId(i);
+        this.f377id = buildId(i);
     }
 
     private static String buildId(int i) {
@@ -253,11 +253,11 @@ public final class ZoneOffset extends ZoneId implements TemporalAccessor, Tempor
     }
 
     public String getId() {
-        return this.f378id;
+        return this.f377id;
     }
 
     public ZoneRules getRules() {
-        return ZoneRules.m962of(this);
+        return ZoneRules.m960of(this);
     }
 
     public boolean isSupported(TemporalField temporalField) {
@@ -327,7 +327,7 @@ public final class ZoneOffset extends ZoneId implements TemporalAccessor, Tempor
     }
 
     public String toString() {
-        return this.f378id;
+        return this.f377id;
     }
 
     private Object writeReplace() {

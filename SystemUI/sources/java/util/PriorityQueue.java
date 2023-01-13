@@ -457,14 +457,14 @@ public class PriorityQueue<E> extends AbstractQueue<E> implements Serializable {
         private int index;
 
         /* renamed from: pq */
-        private final PriorityQueue<E> f703pq;
+        private final PriorityQueue<E> f701pq;
 
         public int characteristics() {
             return 16704;
         }
 
         PriorityQueueSpliterator(PriorityQueue<E> priorityQueue, int i, int i2, int i3) {
-            this.f703pq = priorityQueue;
+            this.f701pq = priorityQueue;
             this.index = i;
             this.fence = i2;
             this.expectedModCount = i3;
@@ -475,8 +475,8 @@ public class PriorityQueue<E> extends AbstractQueue<E> implements Serializable {
             if (i >= 0) {
                 return i;
             }
-            this.expectedModCount = this.f703pq.modCount;
-            int i2 = this.f703pq.size;
+            this.expectedModCount = this.f701pq.modCount;
+            int i2 = this.f701pq.size;
             this.fence = i2;
             return i2;
         }
@@ -488,7 +488,7 @@ public class PriorityQueue<E> extends AbstractQueue<E> implements Serializable {
             if (i >= i2) {
                 return null;
             }
-            PriorityQueue<E> priorityQueue = this.f703pq;
+            PriorityQueue<E> priorityQueue = this.f701pq;
             this.index = i2;
             return new PriorityQueueSpliterator<>(priorityQueue, i, i2, this.expectedModCount);
         }
@@ -497,7 +497,7 @@ public class PriorityQueue<E> extends AbstractQueue<E> implements Serializable {
             Object[] objArr;
             int i;
             consumer.getClass();
-            PriorityQueue<E> priorityQueue = this.f703pq;
+            PriorityQueue<E> priorityQueue = this.f701pq;
             if (priorityQueue != null && (objArr = priorityQueue.queue) != null) {
                 int i2 = this.fence;
                 if (i2 < 0) {
@@ -537,10 +537,10 @@ public class PriorityQueue<E> extends AbstractQueue<E> implements Serializable {
                 return false;
             }
             this.index = i + 1;
-            Object obj = this.f703pq.queue[i];
+            Object obj = this.f701pq.queue[i];
             if (obj != null) {
                 consumer.accept(obj);
-                if (this.f703pq.modCount == this.expectedModCount) {
+                if (this.f701pq.modCount == this.expectedModCount) {
                     return true;
                 }
                 throw new ConcurrentModificationException();

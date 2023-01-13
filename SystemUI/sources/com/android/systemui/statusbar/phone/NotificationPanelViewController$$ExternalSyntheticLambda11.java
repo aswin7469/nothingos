@@ -11,6 +11,6 @@ public final /* synthetic */ class NotificationPanelViewController$$ExternalSynt
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo44621x8dd9d247((NotificationPanelUnfoldAnimationController) obj);
+        this.f$0.mo44636x8dd9d247((NotificationPanelUnfoldAnimationController) obj);
     }
 }

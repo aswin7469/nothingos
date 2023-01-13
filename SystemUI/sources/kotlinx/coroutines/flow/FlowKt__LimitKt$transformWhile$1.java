@@ -12,8 +12,8 @@ import kotlin.jvm.functions.Function3;
 import kotlinx.coroutines.flow.internal.AbortFlowException;
 import kotlinx.coroutines.flow.internal.FlowExceptions_commonKt;
 
-@Metadata(mo64986d1 = {"\u0000\u000e\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\u0010\u0000\u001a\u00020\u0001\"\u0004\b\u0000\u0010\u0002\"\u0004\b\u0001\u0010\u0003*\b\u0012\u0004\u0012\u0002H\u00030\u0004H@"}, mo64987d2 = {"<anonymous>", "", "T", "R", "Lkotlinx/coroutines/flow/FlowCollector;"}, mo64988k = 3, mo64989mv = {1, 5, 1}, mo64991xi = 48)
-@DebugMetadata(mo65240c = "kotlinx.coroutines.flow.FlowKt__LimitKt$transformWhile$1", mo65241f = "Limit.kt", mo65242i = {0}, mo65243l = {154}, mo65244m = "invokeSuspend", mo65245n = {"collector$iv"}, mo65246s = {"L$0"})
+@Metadata(mo65042d1 = {"\u0000\u000e\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\u0010\u0000\u001a\u00020\u0001\"\u0004\b\u0000\u0010\u0002\"\u0004\b\u0001\u0010\u0003*\b\u0012\u0004\u0012\u0002H\u00030\u0004H@"}, mo65043d2 = {"<anonymous>", "", "T", "R", "Lkotlinx/coroutines/flow/FlowCollector;"}, mo65044k = 3, mo65045mv = {1, 5, 1}, mo65047xi = 48)
+@DebugMetadata(mo65296c = "kotlinx.coroutines.flow.FlowKt__LimitKt$transformWhile$1", mo65297f = "Limit.kt", mo65298i = {0}, mo65299l = {154}, mo65300m = "invokeSuspend", mo65301n = {"collector$iv"}, mo65302s = {"L$0"})
 /* compiled from: Limit.kt */
 final class FlowKt__LimitKt$transformWhile$1 extends SuspendLambda implements Function2<FlowCollector<? super R>, Continuation<? super Unit>, Object> {
     final /* synthetic */ Flow<T> $this_transformWhile;
@@ -39,13 +39,13 @@ final class FlowKt__LimitKt$transformWhile$1 extends SuspendLambda implements Fu
     }
 
     public final Object invokeSuspend(Object obj) {
-        C4629xdf1aa1b6 flowKt__LimitKt$transformWhile$1$invokeSuspend$$inlined$collectWhile$1;
+        C4641xdf1aa1b6 flowKt__LimitKt$transformWhile$1$invokeSuspend$$inlined$collectWhile$1;
         Object coroutine_suspended = IntrinsicsKt.getCOROUTINE_SUSPENDED();
         int i = this.label;
         if (i == 0) {
             ResultKt.throwOnFailure(obj);
             Flow<T> flow = this.$this_transformWhile;
-            C4629xdf1aa1b6 flowKt__LimitKt$transformWhile$1$invokeSuspend$$inlined$collectWhile$12 = new C4629xdf1aa1b6(this.$transform, (FlowCollector) this.L$0);
+            C4641xdf1aa1b6 flowKt__LimitKt$transformWhile$1$invokeSuspend$$inlined$collectWhile$12 = new C4641xdf1aa1b6(this.$transform, (FlowCollector) this.L$0);
             try {
                 this.L$0 = flowKt__LimitKt$transformWhile$1$invokeSuspend$$inlined$collectWhile$12;
                 this.label = 1;
@@ -59,7 +59,7 @@ final class FlowKt__LimitKt$transformWhile$1 extends SuspendLambda implements Fu
                 return Unit.INSTANCE;
             }
         } else if (i == 1) {
-            flowKt__LimitKt$transformWhile$1$invokeSuspend$$inlined$collectWhile$1 = (C4629xdf1aa1b6) this.L$0;
+            flowKt__LimitKt$transformWhile$1$invokeSuspend$$inlined$collectWhile$1 = (C4641xdf1aa1b6) this.L$0;
             try {
                 ResultKt.throwOnFailure(obj);
             } catch (AbortFlowException e2) {

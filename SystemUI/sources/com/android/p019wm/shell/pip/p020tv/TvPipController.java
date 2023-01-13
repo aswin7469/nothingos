@@ -11,7 +11,7 @@ import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.RemoteException;
 import com.android.internal.protolog.common.ProtoLog;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.WindowManagerShellWrapper;
 import com.android.p019wm.shell.common.DisplayController;
 import com.android.p019wm.shell.common.DisplayLayout;
@@ -204,7 +204,7 @@ public class TvPipController implements PipTransitionController.PipTransitionCal
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onPipTargetBoundsChange$0$com-android-wm-shell-pip-tv-TvPipController */
-    public /* synthetic */ void mo50565x7753947f(Rect rect) {
+    public /* synthetic */ void mo50574x7753947f(Rect rect) {
         this.mTvPipMenuController.updateExpansionState();
     }
 
@@ -224,7 +224,7 @@ public class TvPipController implements PipTransitionController.PipTransitionCal
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$closePip$1$com-android-wm-shell-pip-tv-TvPipController  reason: not valid java name */
-    public /* synthetic */ void m3479lambda$closePip$1$comandroidwmshellpiptvTvPipController() {
+    public /* synthetic */ void m3483lambda$closePip$1$comandroidwmshellpiptvTvPipController() {
         closeCurrentPiP(this.mPinnedTaskId);
     }
 
@@ -295,9 +295,9 @@ public class TvPipController implements PipTransitionController.PipTransitionCal
 
     private void loadConfigurations() {
         Resources resources = this.mContext.getResources();
-        this.mResizeAnimationDuration = resources.getInteger(C3343R.integer.config_pipResizeAnimationDuration);
-        this.mPipForceCloseDelay = resources.getInteger(C3343R.integer.config_pipForceCloseDelay);
-        this.mEduTextWindowExitAnimationDurationMs = resources.getInteger(C3343R.integer.pip_edu_text_window_exit_animation_duration_ms);
+        this.mResizeAnimationDuration = resources.getInteger(C3353R.integer.config_pipResizeAnimationDuration);
+        this.mPipForceCloseDelay = resources.getInteger(C3353R.integer.config_pipForceCloseDelay);
+        this.mEduTextWindowExitAnimationDurationMs = resources.getInteger(C3353R.integer.pip_edu_text_window_exit_animation_duration_ms);
     }
 
     private void registerTaskStackListenerCallback(TaskStackListenerImpl taskStackListenerImpl) {
@@ -426,7 +426,7 @@ public class TvPipController implements PipTransitionController.PipTransitionCal
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onConfigurationChanged$0$com-android-wm-shell-pip-tv-TvPipController$TvPipImpl */
-        public /* synthetic */ void mo50572xe58cbed9(Configuration configuration) {
+        public /* synthetic */ void mo50581xe58cbed9(Configuration configuration) {
             TvPipController.this.onConfigurationChanged(configuration);
         }
 
@@ -436,7 +436,7 @@ public class TvPipController implements PipTransitionController.PipTransitionCal
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$registerSessionListenerForCurrentUser$1$com-android-wm-shell-pip-tv-TvPipController$TvPipImpl */
-        public /* synthetic */ void mo50573xe10ecda5() {
+        public /* synthetic */ void mo50582xe10ecda5() {
             TvPipController.this.registerSessionListenerForCurrentUser();
         }
     }

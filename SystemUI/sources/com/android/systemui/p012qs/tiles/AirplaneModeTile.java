@@ -11,7 +11,7 @@ import android.sysprop.TelephonyProperties;
 import android.view.View;
 import android.widget.Switch;
 import com.android.internal.logging.MetricsLogger;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.dagger.qualifiers.Background;
 import com.android.systemui.dagger.qualifiers.Main;
@@ -85,7 +85,7 @@ public class AirplaneModeTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     public CharSequence getTileLabel() {
-        return this.mContext.getString(C1893R.string.airplane_mode);
+        return this.mContext.getString(C1894R.string.airplane_mode);
     }
 
     /* access modifiers changed from: protected */
@@ -94,7 +94,7 @@ public class AirplaneModeTile extends QSTileImpl<QSTile.BooleanState> {
         int i = 1;
         boolean z = (obj instanceof Integer ? ((Integer) obj).intValue() : this.mSetting.getValue()) != 0;
         booleanState.value = z;
-        booleanState.label = this.mContext.getString(C1893R.string.airplane_mode);
+        booleanState.label = this.mContext.getString(C1894R.string.airplane_mode);
         booleanState.icon = this.mIcon;
         if (booleanState.slash == null) {
             booleanState.slash = new QSTile.SlashState();

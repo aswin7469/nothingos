@@ -73,7 +73,7 @@ public class HistoryTracker {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$addResults$3$com-android-systemui-classifier-HistoryTracker */
-    public /* synthetic */ void mo31266xdeda9ad3(BeliefListener beliefListener) {
+    public /* synthetic */ void mo31277xdeda9ad3(BeliefListener beliefListener) {
         beliefListener.onBeliefChanged(falseBelief());
     }
 

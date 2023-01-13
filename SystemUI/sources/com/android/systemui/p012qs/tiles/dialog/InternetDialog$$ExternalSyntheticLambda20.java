@@ -12,6 +12,6 @@ public final /* synthetic */ class InternetDialog$$ExternalSyntheticLambda20 imp
     }
 
     public final void onClick(View view) {
-        this.f$0.onClickSeeMoreButton(view);
+        this.f$0.mo36991x6a340580(view);
     }
 }

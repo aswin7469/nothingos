@@ -11,6 +11,6 @@ public final /* synthetic */ class PendingTasksContainer$$ExternalSyntheticLambd
     }
 
     public final void run() {
-        PendingTasksContainer.m3307registerTask$lambda0(this.f$0, this.f$1);
+        PendingTasksContainer.m3312registerTask$lambda0(this.f$0, this.f$1);
     }
 }

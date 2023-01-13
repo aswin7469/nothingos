@@ -69,7 +69,7 @@ public abstract class AbstractInterruptibleChannel implements Channel, Interrupt
                         monitor-exit(r0)     // Catch:{ all -> 0x0023 }
                         throw r3
                     */
-                    throw new UnsupportedOperationException("Method not decompiled: java.nio.channels.spi.AbstractInterruptibleChannel.C43491.interrupt(java.lang.Thread):void");
+                    throw new UnsupportedOperationException("Method not decompiled: java.nio.channels.spi.AbstractInterruptibleChannel.C43611.interrupt(java.lang.Thread):void");
                 }
             };
         }

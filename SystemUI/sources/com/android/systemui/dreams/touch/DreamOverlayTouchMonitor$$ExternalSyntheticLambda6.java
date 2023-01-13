@@ -14,6 +14,6 @@ public final /* synthetic */ class DreamOverlayTouchMonitor$$ExternalSyntheticLa
     }
 
     public final Object attachCompleter(CallbackToFutureAdapter.Completer completer) {
-        return this.f$0.mo32636x8724b574(this.f$1, completer);
+        return this.f$0.mo32647x8724b574(this.f$1, completer);
     }
 }

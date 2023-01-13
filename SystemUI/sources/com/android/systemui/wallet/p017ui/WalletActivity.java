@@ -16,7 +16,7 @@ import com.android.internal.logging.UiEventLogger;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardUpdateMonitorCallback;
 import com.android.settingslib.Utils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.classifier.FalsingCollector;
 import com.android.systemui.dagger.qualifiers.Background;
 import com.android.systemui.dagger.qualifiers.Main;
@@ -74,16 +74,16 @@ public class WalletActivity extends LifecycleActivity implements QuickAccessWall
         super.onCreate(bundle);
         getWindow().addFlags(Integer.MIN_VALUE);
         requestWindowFeature(1);
-        setContentView(C1893R.layout.quick_access_wallet);
-        Toolbar toolbar = (Toolbar) findViewById(C1893R.C1897id.action_bar);
+        setContentView(C1894R.layout.quick_access_wallet);
+        Toolbar toolbar = (Toolbar) findViewById(C1894R.C1898id.action_bar);
         if (toolbar != null) {
             setActionBar(toolbar);
         }
         getActionBar().setDisplayShowTitleEnabled(false);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeAsUpIndicator(getHomeIndicatorDrawable());
-        getActionBar().setHomeActionContentDescription(C1893R.string.accessibility_desc_close);
-        WalletView walletView = (WalletView) requireViewById(C1893R.C1897id.wallet_view);
+        getActionBar().setHomeActionContentDescription(C1894R.string.accessibility_desc_close);
+        WalletView walletView = (WalletView) requireViewById(C1894R.C1898id.wallet_view);
         this.mWalletClient = QuickAccessWalletClient.create(this, this.mExecutor);
         this.mWalletScreenController = new WalletScreenController(this, walletView, this.mWalletClient, this.mActivityStarter, this.mExecutor, this.mHandler, this.mUserTracker, this.mFalsingManager, this.mKeyguardUpdateMonitor, this.mKeyguardStateController, this.mUiEventLogger);
         this.mKeyguardUpdateMonitorCallback = new KeyguardUpdateMonitorCallback() {
@@ -99,7 +99,7 @@ public class WalletActivity extends LifecycleActivity implements QuickAccessWall
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onCreate$1$com-android-systemui-wallet-ui-WalletActivity  reason: not valid java name */
-    public /* synthetic */ void m3322lambda$onCreate$1$comandroidsystemuiwalletuiWalletActivity(View view) {
+    public /* synthetic */ void m3326lambda$onCreate$1$comandroidsystemuiwalletuiWalletActivity(View view) {
         if (this.mWalletClient.createWalletIntent() == null) {
             Log.w(TAG, "Unable to create wallet app intent.");
         } else if (!this.mFalsingManager.isFalseTap(1)) {
@@ -116,7 +116,7 @@ public class WalletActivity extends LifecycleActivity implements QuickAccessWall
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onCreate$0$com-android-systemui-wallet-ui-WalletActivity  reason: not valid java name */
-    public /* synthetic */ boolean m3321lambda$onCreate$0$comandroidsystemuiwalletuiWalletActivity() {
+    public /* synthetic */ boolean m3325lambda$onCreate$0$comandroidsystemuiwalletuiWalletActivity() {
         this.mUiEventLogger.log(WalletUiEvent.QAW_SHOW_ALL);
         this.mActivityStarter.startActivity(this.mWalletClient.createWalletIntent(), true);
         finish();
@@ -125,7 +125,7 @@ public class WalletActivity extends LifecycleActivity implements QuickAccessWall
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onCreate$3$com-android-systemui-wallet-ui-WalletActivity  reason: not valid java name */
-    public /* synthetic */ void m3323lambda$onCreate$3$comandroidsystemuiwalletuiWalletActivity(View view) {
+    public /* synthetic */ void m3327lambda$onCreate$3$comandroidsystemuiwalletuiWalletActivity(View view) {
         Log.d(TAG, "Wallet action button is clicked.");
         if (this.mFalsingManager.isFalseTap(1)) {
             Log.d(TAG, "False tap detected on wallet action button.");
@@ -168,7 +168,7 @@ public class WalletActivity extends LifecycleActivity implements QuickAccessWall
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(C1893R.C1899menu.wallet_activity_options_menu, menu);
+        getMenuInflater().inflate(C1894R.C1900menu.wallet_activity_options_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -189,7 +189,7 @@ public class WalletActivity extends LifecycleActivity implements QuickAccessWall
         if (itemId == 16908332) {
             finish();
             return true;
-        } else if (itemId != C1893R.C1897id.wallet_lockscreen_settings) {
+        } else if (itemId != C1894R.C1898id.wallet_lockscreen_settings) {
             return super.onOptionsItemSelected(menuItem);
         } else {
             this.mActivityStarter.startActivity(new Intent("android.settings.LOCK_SCREEN_SETTINGS").addFlags(335544320), true);
@@ -211,8 +211,8 @@ public class WalletActivity extends LifecycleActivity implements QuickAccessWall
     }
 
     private Drawable getHomeIndicatorDrawable() {
-        Drawable drawable = getDrawable(C1893R.C1895drawable.ic_close);
-        drawable.setTint(getColor(C1893R.C1894color.material_dynamic_neutral70));
+        Drawable drawable = getDrawable(C1894R.C1896drawable.ic_close);
+        drawable.setTint(getColor(C1894R.C1895color.material_dynamic_neutral70));
         return drawable;
     }
 }

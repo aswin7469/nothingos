@@ -12,6 +12,6 @@ public final /* synthetic */ class LockscreenSmartspaceController$$ExternalSynth
     }
 
     public final void notifySmartspaceEvent(SmartspaceTargetEvent smartspaceTargetEvent) {
-        LockscreenSmartspaceController.m3080connectSession$lambda2(this.f$0, smartspaceTargetEvent);
+        LockscreenSmartspaceController.m3084connectSession$lambda2(this.f$0, smartspaceTargetEvent);
     }
 }

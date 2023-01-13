@@ -13,8 +13,8 @@ import kotlin.jvm.functions.Function3;
 import kotlin.jvm.internal.InlineMarker;
 import kotlinx.coroutines.flow.internal.CombineKt;
 
-@Metadata(mo64986d1 = {"\u0000\u000e\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\u0010\u0000\u001a\u00020\u0001\"\u0006\b\u0000\u0010\u0002\u0018\u0001\"\u0004\b\u0001\u0010\u0003*\b\u0012\u0004\u0012\u0002H\u00030\u0004H@"}, mo64987d2 = {"<anonymous>", "", "T", "R", "Lkotlinx/coroutines/flow/FlowCollector;"}, mo64988k = 3, mo64989mv = {1, 5, 1}, mo64991xi = 48)
-@DebugMetadata(mo65240c = "kotlinx.coroutines.flow.FlowKt__ZipKt$combineTransformUnsafe$1", mo65241f = "Zip.kt", mo65242i = {}, mo65243l = {273}, mo65244m = "invokeSuspend", mo65245n = {}, mo65246s = {})
+@Metadata(mo65042d1 = {"\u0000\u000e\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\u0010\u0000\u001a\u00020\u0001\"\u0006\b\u0000\u0010\u0002\u0018\u0001\"\u0004\b\u0001\u0010\u0003*\b\u0012\u0004\u0012\u0002H\u00030\u0004H@"}, mo65043d2 = {"<anonymous>", "", "T", "R", "Lkotlinx/coroutines/flow/FlowCollector;"}, mo65044k = 3, mo65045mv = {1, 5, 1}, mo65047xi = 48)
+@DebugMetadata(mo65296c = "kotlinx.coroutines.flow.FlowKt__ZipKt$combineTransformUnsafe$1", mo65297f = "Zip.kt", mo65298i = {}, mo65299l = {273}, mo65300m = "invokeSuspend", mo65301n = {}, mo65302s = {})
 /* compiled from: Zip.kt */
 public final class FlowKt__ZipKt$combineTransformUnsafe$1 extends SuspendLambda implements Function2<FlowCollector<? super R>, Continuation<? super Unit>, Object> {
     final /* synthetic */ Flow<T>[] $flows;
@@ -39,17 +39,17 @@ public final class FlowKt__ZipKt$combineTransformUnsafe$1 extends SuspendLambda 
         return ((FlowKt__ZipKt$combineTransformUnsafe$1) create(flowCollector, continuation)).invokeSuspend(Unit.INSTANCE);
     }
 
-    @Metadata(mo64986d1 = {"\u0000\u0014\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0011\u0010\u0000\u001a\u00020\u0001\"\u0006\b\u0000\u0010\u0002\u0018\u0001\"\u0004\b\u0001\u0010\u0003*\b\u0012\u0004\u0012\u0002H\u00030\u00042\f\u0010\u0005\u001a\b\u0012\u0004\u0012\u0002H\u00020\u0006H@"}, mo64987d2 = {"<anonymous>", "", "T", "R", "Lkotlinx/coroutines/flow/FlowCollector;", "it", ""}, mo64988k = 3, mo64989mv = {1, 5, 1}, mo64991xi = 48)
-    @DebugMetadata(mo65240c = "kotlinx.coroutines.flow.FlowKt__ZipKt$combineTransformUnsafe$1$1", mo65241f = "Zip.kt", mo65242i = {}, mo65243l = {273}, mo65244m = "invokeSuspend", mo65245n = {}, mo65246s = {})
+    @Metadata(mo65042d1 = {"\u0000\u0014\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0011\u0010\u0000\u001a\u00020\u0001\"\u0006\b\u0000\u0010\u0002\u0018\u0001\"\u0004\b\u0001\u0010\u0003*\b\u0012\u0004\u0012\u0002H\u00030\u00042\f\u0010\u0005\u001a\b\u0012\u0004\u0012\u0002H\u00020\u0006H@"}, mo65043d2 = {"<anonymous>", "", "T", "R", "Lkotlinx/coroutines/flow/FlowCollector;", "it", ""}, mo65044k = 3, mo65045mv = {1, 5, 1}, mo65047xi = 48)
+    @DebugMetadata(mo65296c = "kotlinx.coroutines.flow.FlowKt__ZipKt$combineTransformUnsafe$1$1", mo65297f = "Zip.kt", mo65298i = {}, mo65299l = {273}, mo65300m = "invokeSuspend", mo65301n = {}, mo65302s = {})
     /* renamed from: kotlinx.coroutines.flow.FlowKt__ZipKt$combineTransformUnsafe$1$1 */
     /* compiled from: Zip.kt */
-    public static final class C46841 extends SuspendLambda implements Function3<FlowCollector<? super R>, T[], Continuation<? super Unit>, Object> {
+    public static final class C46961 extends SuspendLambda implements Function3<FlowCollector<? super R>, T[], Continuation<? super Unit>, Object> {
         private /* synthetic */ Object L$0;
         /* synthetic */ Object L$1;
         int label;
 
         public final Object invoke(FlowCollector<? super R> flowCollector, T[] tArr, Continuation<? super Unit> continuation) {
-            C46841 r0 = new C46841(r3, continuation);
+            C46961 r0 = new C46961(r3, continuation);
             r0.L$0 = flowCollector;
             r0.L$1 = tArr;
             return r0.invokeSuspend(Unit.INSTANCE);
@@ -89,7 +89,7 @@ public final class FlowKt__ZipKt$combineTransformUnsafe$1 extends SuspendLambda 
             Function0 access$nullArrayFactory = FlowKt__ZipKt.nullArrayFactory$FlowKt__ZipKt();
             final Function3<FlowCollector<? super R>, T[], Continuation<? super Unit>, Object> function3 = this.$transform;
             this.label = 1;
-            if (CombineKt.combineInternal((FlowCollector) this.L$0, flowArr, access$nullArrayFactory, new C46841((Continuation<? super C46841>) null), this) == coroutine_suspended) {
+            if (CombineKt.combineInternal((FlowCollector) this.L$0, flowArr, access$nullArrayFactory, new C46961((Continuation<? super C46961>) null), this) == coroutine_suspended) {
                 return coroutine_suspended;
             }
         } else if (i == 1) {
@@ -105,7 +105,7 @@ public final class FlowKt__ZipKt$combineTransformUnsafe$1 extends SuspendLambda 
         Function0 access$nullArrayFactory = FlowKt__ZipKt.nullArrayFactory$FlowKt__ZipKt();
         final Function3<FlowCollector<? super R>, T[], Continuation<? super Unit>, Object> function3 = this.$transform;
         InlineMarker.mark(0);
-        CombineKt.combineInternal((FlowCollector) this.L$0, flowArr, access$nullArrayFactory, new C46841((Continuation<? super C46841>) null), this);
+        CombineKt.combineInternal((FlowCollector) this.L$0, flowArr, access$nullArrayFactory, new C46961((Continuation<? super C46961>) null), this);
         InlineMarker.mark(1);
         return Unit.INSTANCE;
     }

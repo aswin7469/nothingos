@@ -8,7 +8,7 @@ import android.view.ViewOverlay;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 
 public class KeyboardShortcutAppItemLayout extends RelativeLayout {
     private static final double MAX_WIDTH_PERCENT_FOR_KEYWORDS = 0.7d;
@@ -32,8 +32,8 @@ public class KeyboardShortcutAppItemLayout extends RelativeLayout {
     /* access modifiers changed from: protected */
     public void onMeasure(int i, int i2) {
         if (View.MeasureSpec.getMode(i) == 1073741824) {
-            ImageView imageView = (ImageView) findViewById(C1893R.C1897id.keyboard_shortcuts_icon);
-            TextView textView = (TextView) findViewById(C1893R.C1897id.keyboard_shortcuts_keyword);
+            ImageView imageView = (ImageView) findViewById(C1894R.C1898id.keyboard_shortcuts_icon);
+            TextView textView = (TextView) findViewById(C1894R.C1898id.keyboard_shortcuts_keyword);
             int size = View.MeasureSpec.getSize(i) - (getPaddingLeft() + getPaddingRight());
             if (imageView.getVisibility() == 0) {
                 size -= imageView.getMeasuredWidth();

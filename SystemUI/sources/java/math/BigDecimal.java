@@ -1202,7 +1202,7 @@ public class BigDecimal extends Number implements Comparable<BigDecimal> {
             r4 = r0
             goto L_0x0086
         L_0x0069:
-            int[] r0 = java.math.BigDecimal.C43162.$SwitchMap$java$math$RoundingMode
+            int[] r0 = java.math.BigDecimal.C43282.$SwitchMap$java$math$RoundingMode
             java.math.RoundingMode r2 = r15.getRoundingMode()
             int r2 = r2.ordinal()
             r0 = r0[r2]
@@ -1243,7 +1243,7 @@ public class BigDecimal extends Number implements Comparable<BigDecimal> {
             int r2 = r2 / r3
             java.math.BigDecimal r2 = r1.scaleByPowerOfTen(r2)
             java.math.BigDecimal r15 = r2.round(r15)
-            int[] r2 = java.math.BigDecimal.C43162.$SwitchMap$java$math$RoundingMode
+            int[] r2 = java.math.BigDecimal.C43282.$SwitchMap$java$math$RoundingMode
             int r0 = r0.ordinal()
             r0 = r2[r0]
             r2 = 4
@@ -1329,7 +1329,7 @@ public class BigDecimal extends Number implements Comparable<BigDecimal> {
     }
 
     /* renamed from: java.math.BigDecimal$2 */
-    static /* synthetic */ class C43162 {
+    static /* synthetic */ class C43282 {
         static final /* synthetic */ int[] $SwitchMap$java$math$RoundingMode;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(14:0|1|2|3|4|5|6|7|8|9|10|11|12|(3:13|14|16)) */
@@ -1390,7 +1390,7 @@ public class BigDecimal extends Number implements Comparable<BigDecimal> {
             L_0x0054:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: java.math.BigDecimal.C43162.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: java.math.BigDecimal.C43282.<clinit>():void");
         }
     }
 
@@ -1413,7 +1413,7 @@ public class BigDecimal extends Number implements Comparable<BigDecimal> {
             ulp = ulp.divide(TEN);
         }
         BigDecimal subtract = bigDecimal.subtract(ulp);
-        switch (C43162.$SwitchMap$java$math$RoundingMode[roundingMode.ordinal()]) {
+        switch (C43282.$SwitchMap$java$math$RoundingMode[roundingMode.ordinal()]) {
             case 1:
             case 2:
             case 3:
@@ -2077,7 +2077,7 @@ public class BigDecimal extends Number implements Comparable<BigDecimal> {
         final char[] cmpCharArray = new char[19];
 
         /* renamed from: sb */
-        final StringBuilder f553sb = new StringBuilder();
+        final StringBuilder f551sb = new StringBuilder();
 
         static {
             Class<BigDecimal> cls = BigDecimal.class;
@@ -2088,8 +2088,8 @@ public class BigDecimal extends Number implements Comparable<BigDecimal> {
 
         /* access modifiers changed from: package-private */
         public StringBuilder getStringBuilder() {
-            this.f553sb.setLength(0);
-            return this.f553sb;
+            this.f551sb.setLength(0);
+            return this.f551sb;
         }
 
         /* access modifiers changed from: package-private */

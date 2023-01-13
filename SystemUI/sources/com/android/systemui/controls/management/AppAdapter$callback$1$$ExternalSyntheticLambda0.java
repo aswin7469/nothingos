@@ -16,6 +16,6 @@ public final /* synthetic */ class AppAdapter$callback$1$$ExternalSyntheticLambd
     }
 
     public final void run() {
-        AppAdapter$callback$1.m2634onServicesUpdated$lambda1(this.f$0, this.f$1, this.f$2);
+        AppAdapter$callback$1.m2639onServicesUpdated$lambda1(this.f$0, this.f$1, this.f$2);
     }
 }

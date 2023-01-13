@@ -26,7 +26,7 @@ public class WorkLockActivityController {
     }
 
     WorkLockActivityController(Context context, TaskStackChangeListeners taskStackChangeListeners, IActivityTaskManager iActivityTaskManager) {
-        C21751 r0 = new TaskStackChangeListener() {
+        C21781 r0 = new TaskStackChangeListener() {
             public void onTaskProfileLocked(ActivityManager.RunningTaskInfo runningTaskInfo) {
                 WorkLockActivityController.this.startWorkChallengeInTask(runningTaskInfo);
             }

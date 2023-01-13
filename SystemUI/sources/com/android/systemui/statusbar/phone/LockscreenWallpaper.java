@@ -41,7 +41,7 @@ public class LockscreenWallpaper extends IWallpaperManagerCallback.Stub implemen
     private int mCurrentUserId = ActivityManager.getCurrentUser();
 
     /* renamed from: mH */
-    private final Handler f385mH;
+    private final Handler f384mH;
     /* access modifiers changed from: private */
     public AsyncTask<Void, Void, LoaderResult> mLoader;
     /* access modifiers changed from: private */
@@ -59,7 +59,7 @@ public class LockscreenWallpaper extends IWallpaperManagerCallback.Stub implemen
         this.mWallpaperManager = wallpaperManager;
         this.mUpdateMonitor = keyguardUpdateMonitor;
         this.mMediaManager = notificationMediaManager;
-        this.f385mH = handler;
+        this.f384mH = handler;
         if (iWallpaperManager != null) {
             try {
                 iWallpaperManager.setLockWallpaperCallback(this);
@@ -134,13 +134,13 @@ public class LockscreenWallpaper extends IWallpaperManagerCallback.Stub implemen
     }
 
     private void postUpdateWallpaper() {
-        Handler handler = this.f385mH;
+        Handler handler = this.f384mH;
         if (handler == null) {
             Log.wtfStack(TAG, "Trying to use LockscreenWallpaper before initialization.");
             return;
         }
         handler.removeCallbacks(this);
-        this.f385mH.post(this);
+        this.f384mH.post(this);
     }
 
     public void run() {

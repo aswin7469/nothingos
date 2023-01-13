@@ -10,7 +10,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import com.google.android.setupcompat.internal.TemplateLayout;
 import com.google.android.setupcompat.template.Mixin;
-import com.google.android.setupdesign.C3953R;
+import com.google.android.setupdesign.C3963R;
 import com.google.android.setupdesign.util.HeaderAreaStyler;
 import com.google.android.setupdesign.util.PartnerStyleHelper;
 
@@ -32,13 +32,13 @@ public class IconMixin implements Mixin {
             this.originalHeight = 0;
             this.originalScaleType = null;
         }
-        TypedArray obtainStyledAttributes = context2.obtainStyledAttributes(attributeSet, C3953R.styleable.SudIconMixin, i, 0);
-        int resourceId = obtainStyledAttributes.getResourceId(C3953R.styleable.SudIconMixin_android_icon, 0);
+        TypedArray obtainStyledAttributes = context2.obtainStyledAttributes(attributeSet, C3963R.styleable.SudIconMixin, i, 0);
+        int resourceId = obtainStyledAttributes.getResourceId(C3963R.styleable.SudIconMixin_android_icon, 0);
         if (resourceId != 0) {
             setIcon(resourceId);
         }
-        setUpscaleIcon(obtainStyledAttributes.getBoolean(C3953R.styleable.SudIconMixin_sudUpscaleIcon, false));
-        int color = obtainStyledAttributes.getColor(C3953R.styleable.SudIconMixin_sudIconTint, 0);
+        setUpscaleIcon(obtainStyledAttributes.getBoolean(C3963R.styleable.SudIconMixin_sudUpscaleIcon, false));
+        int color = obtainStyledAttributes.getColor(C3963R.styleable.SudIconMixin_sudIconTint, 0);
         if (color != 0) {
             setIconTint(color);
         }
@@ -127,12 +127,12 @@ public class IconMixin implements Mixin {
 
     /* access modifiers changed from: protected */
     public ImageView getView() {
-        return (ImageView) this.templateLayout.findManagedViewById(C3953R.C3956id.sud_layout_icon);
+        return (ImageView) this.templateLayout.findManagedViewById(C3963R.C3966id.sud_layout_icon);
     }
 
     /* access modifiers changed from: protected */
     public FrameLayout getContainerView() {
-        return (FrameLayout) this.templateLayout.findManagedViewById(C3953R.C3956id.sud_layout_icon_container);
+        return (FrameLayout) this.templateLayout.findManagedViewById(C3963R.C3966id.sud_layout_icon_container);
     }
 
     private void setIconContainerVisibility(int i) {

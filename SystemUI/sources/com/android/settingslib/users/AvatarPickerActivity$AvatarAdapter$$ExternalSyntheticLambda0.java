@@ -12,6 +12,6 @@ public final /* synthetic */ class AvatarPickerActivity$AvatarAdapter$$ExternalS
     }
 
     public final void onClick(View view) {
-        this.f$0.mo29208xbac58150(view);
+        this.f$0.mo29213xbac58150(view);
     }
 }

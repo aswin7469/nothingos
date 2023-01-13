@@ -13,6 +13,6 @@ public final /* synthetic */ class PipMotionHelper$$ExternalSyntheticLambda3 imp
     }
 
     public final void accept(Object obj) {
-        this.f$0.m3470lambda$new$1$comandroidwmshellpipphonePipMotionHelper((Rect) obj);
+        this.f$0.m3474lambda$new$1$comandroidwmshellpipphonePipMotionHelper((Rect) obj);
     }
 }

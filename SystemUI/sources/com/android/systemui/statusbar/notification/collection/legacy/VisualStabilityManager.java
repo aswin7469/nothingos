@@ -48,7 +48,7 @@ public class VisualStabilityManager implements OnHeadsUpChangedListener, Dumpabl
     }
 
     public VisualStabilityManager(NotificationEntryManager notificationEntryManager, VisualStabilityProvider visualStabilityProvider, @Main Handler handler, StatusBarStateController statusBarStateController, WakefulnessLifecycle wakefulnessLifecycle, DumpManager dumpManager) {
-        C27043 r0 = new WakefulnessLifecycle.Observer() {
+        C27103 r0 = new WakefulnessLifecycle.Observer() {
             public void onFinishedGoingToSleep() {
                 VisualStabilityManager.this.setScreenOn(false);
             }
@@ -203,7 +203,7 @@ public class VisualStabilityManager implements OnHeadsUpChangedListener, Dumpabl
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-statusbar-notification-collection-legacy-VisualStabilityManager */
-    public /* synthetic */ void mo40399x506571a4() {
+    public /* synthetic */ void mo40402x506571a4() {
         this.mIsTemporaryReorderingAllowed = false;
         updateAllowedStates();
     }

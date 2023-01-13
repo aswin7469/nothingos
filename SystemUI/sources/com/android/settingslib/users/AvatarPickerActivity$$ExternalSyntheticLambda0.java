@@ -11,6 +11,6 @@ public final /* synthetic */ class AvatarPickerActivity$$ExternalSyntheticLambda
     }
 
     public final void onClick(View view) {
-        this.f$0.mo29200x54065827(view);
+        this.f$0.mo29205x54065827(view);
     }
 }

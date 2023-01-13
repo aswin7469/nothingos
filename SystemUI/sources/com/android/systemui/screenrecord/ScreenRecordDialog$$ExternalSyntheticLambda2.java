@@ -12,6 +12,6 @@ public final /* synthetic */ class ScreenRecordDialog$$ExternalSyntheticLambda2 
     }
 
     public final void onItemClick(AdapterView adapterView, View view, int i, long j) {
-        this.f$0.mo37273x4f38bab3(adapterView, view, i, j);
+        this.f$0.mo37274x4f38bab3(adapterView, view, i, j);
     }
 }

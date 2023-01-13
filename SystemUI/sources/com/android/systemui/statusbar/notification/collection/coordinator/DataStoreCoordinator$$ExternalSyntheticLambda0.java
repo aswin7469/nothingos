@@ -13,6 +13,6 @@ public final /* synthetic */ class DataStoreCoordinator$$ExternalSyntheticLambda
     }
 
     public final void onAfterRenderList(List list, NotifStackController notifStackController) {
-        DataStoreCoordinator.m3102attach$lambda0(this.f$0, list, notifStackController);
+        DataStoreCoordinator.m3106attach$lambda0(this.f$0, list, notifStackController);
     }
 }

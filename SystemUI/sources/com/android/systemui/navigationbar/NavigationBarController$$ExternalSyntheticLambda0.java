@@ -11,6 +11,6 @@ public final /* synthetic */ class NavigationBarController$$ExternalSyntheticLam
     }
 
     public final void run() {
-        this.f$0.mo34703xf469dbe4(this.f$1);
+        this.f$0.mo34707xf469dbe4(this.f$1);
     }
 }

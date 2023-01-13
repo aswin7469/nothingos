@@ -50,12 +50,12 @@ public final class Locale implements Cloneable, Serializable {
     public static final Locale TRADITIONAL_CHINESE;
 
     /* renamed from: UK */
-    public static final Locale f699UK = createConstant("en", "GB");
+    public static final Locale f697UK = createConstant("en", "GB");
     private static final String UNDETERMINED_LANGUAGE = "und";
     public static final char UNICODE_LOCALE_EXTENSION = 'u';
 
     /* renamed from: US */
-    public static final Locale f700US = createConstant("en", "US");
+    public static final Locale f698US = createConstant("en", "US");
     private static volatile Locale defaultDisplayLocale = null;
     private static volatile Locale defaultFormatLocale = null;
     private static volatile String[] isoCountries = null;
@@ -191,7 +191,7 @@ public final class Locale implements Cloneable, Serializable {
     }
 
     /* renamed from: java.util.Locale$1 */
-    static /* synthetic */ class C43901 {
+    static /* synthetic */ class C44021 {
         static final /* synthetic */ int[] $SwitchMap$java$util$Locale$Category;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(6:0|1|2|3|4|6) */
@@ -219,12 +219,12 @@ public final class Locale implements Cloneable, Serializable {
             L_0x001d:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: java.util.Locale.C43901.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: java.util.Locale.C44021.<clinit>():void");
         }
     }
 
     public static Locale getDefault(Category category) {
-        int i = C43901.$SwitchMap$java$util$Locale$Category[category.ordinal()];
+        int i = C44021.$SwitchMap$java$util$Locale$Category[category.ordinal()];
         if (i == 1) {
             if (defaultDisplayLocale == null) {
                 synchronized (Locale.class) {
@@ -299,7 +299,7 @@ public final class Locale implements Cloneable, Serializable {
                 if (securityManager != null) {
                     securityManager.checkPermission(new PropertyPermission("user.language", "write"));
                 }
-                int i = C43901.$SwitchMap$java$util$Locale$Category[category.ordinal()];
+                int i = C44021.$SwitchMap$java$util$Locale$Category[category.ordinal()];
                 if (i == 1) {
                     defaultDisplayLocale = locale;
                 } else if (i == 2) {

@@ -11,6 +11,6 @@ public final /* synthetic */ class CalendarPermissionActivity$$ExternalSynthetic
     }
 
     public final void onClick(DialogInterface dialogInterface, int i) {
-        this.f$0.mo58259x71977780(dialogInterface, i);
+        this.f$0.mo58315x71977780(dialogInterface, i);
     }
 }

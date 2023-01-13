@@ -14,6 +14,6 @@ public final /* synthetic */ class BubbleStackView$$ExternalSyntheticLambda18 im
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo48702x3b4521d6(this.f$1, (Boolean) obj);
+        this.f$0.mo48711x3b4521d6(this.f$1, (Boolean) obj);
     }
 }

@@ -11,6 +11,6 @@ public final /* synthetic */ class MediaProjectionPrivacyItemMonitor$$ExternalSy
     }
 
     public final void run() {
-        MediaProjectionPrivacyItemMonitor.m2864dispatchOnPrivacyItemsChanged$lambda6(this.f$0);
+        MediaProjectionPrivacyItemMonitor.m2869dispatchOnPrivacyItemsChanged$lambda6(this.f$0);
     }
 }

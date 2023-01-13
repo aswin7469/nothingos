@@ -10,6 +10,6 @@ public final /* synthetic */ class OneHandedTouchHandler$$ExternalSyntheticLambd
     }
 
     public final void run() {
-        this.f$0.mo49945x59cb9e83();
+        this.f$0.mo49954x59cb9e83();
     }
 }

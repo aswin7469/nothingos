@@ -6,7 +6,7 @@ import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Lambda;
 import kotlin.ranges.IntRange;
 
-@Metadata(mo64986d1 = {"\u0000\u000e\n\u0000\n\u0002\u0010\u000e\n\u0000\n\u0002\u0018\u0002\n\u0000\u0010\u0000\u001a\u00020\u00012\u0006\u0010\u0002\u001a\u00020\u0003H\n¢\u0006\u0002\b\u0004"}, mo64987d2 = {"<anonymous>", "", "it", "Lkotlin/ranges/IntRange;", "invoke"}, mo64988k = 3, mo64989mv = {1, 7, 1}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000\u000e\n\u0000\n\u0002\u0010\u000e\n\u0000\n\u0002\u0018\u0002\n\u0000\u0010\u0000\u001a\u00020\u00012\u0006\u0010\u0002\u001a\u00020\u0003H\n¢\u0006\u0002\b\u0004"}, mo65043d2 = {"<anonymous>", "", "it", "Lkotlin/ranges/IntRange;", "invoke"}, mo65044k = 3, mo65045mv = {1, 7, 1}, mo65047xi = 48)
 /* compiled from: Strings.kt */
 final class StringsKt__StringsKt$splitToSequence$1 extends Lambda implements Function1<IntRange, String> {
     final /* synthetic */ CharSequence $this_splitToSequence;

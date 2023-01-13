@@ -6,6 +6,6 @@ import java.util.function.Consumer;
 /* compiled from: D8$$SyntheticClass */
 public final /* synthetic */ class OngoingCallController$$ExternalSyntheticLambda7 implements Consumer {
     public final void accept(Object obj) {
-        OngoingCallController.m3206onSwipeAwayGestureDetected$lambda11((SwipeStatusBarAwayGestureHandler) obj);
+        OngoingCallController.m3211onSwipeAwayGestureDetected$lambda11((SwipeStatusBarAwayGestureHandler) obj);
     }
 }

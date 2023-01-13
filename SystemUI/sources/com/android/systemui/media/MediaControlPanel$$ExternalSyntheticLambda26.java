@@ -11,6 +11,6 @@ public final /* synthetic */ class MediaControlPanel$$ExternalSyntheticLambda26 
     }
 
     public final boolean onLongClick(View view) {
-        return this.f$0.mo33648xbc201cfc(view);
+        return this.f$0.mo33652xbc201cfc(view);
     }
 }

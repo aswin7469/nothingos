@@ -17,6 +17,6 @@ public final /* synthetic */ class RecordingService$$ExternalSyntheticLambda0 im
     }
 
     public final boolean onDismiss() {
-        return this.f$0.mo37256x29197d07(this.f$1, this.f$2);
+        return this.f$0.mo37255x29197d07(this.f$1, this.f$2);
     }
 }

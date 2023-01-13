@@ -19,7 +19,7 @@ import androidx.exifinterface.media.ExifInterface;
 import com.android.internal.jank.InteractionJankMonitor;
 import com.android.internal.util.LatencyTracker;
 import com.android.p019wm.shell.animation.FlingAnimationUtils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.DejankUtils;
 import com.android.systemui.animation.Interpolators;
 import com.android.systemui.doze.DozeLog;
@@ -290,9 +290,9 @@ public abstract class PanelViewController {
         this.mBounceInterpolator = new BounceInterpolator();
         this.mFalsingManager = falsingManager;
         this.mDozeLog = dozeLog;
-        this.mNotificationsDragEnabled = resources.getBoolean(C1893R.bool.config_enableNotificationShadeDrag);
+        this.mNotificationsDragEnabled = resources.getBoolean(C1894R.bool.config_enableNotificationShadeDrag);
         this.mVibratorHelper = vibratorHelper;
-        this.mVibrateOnOpening = resources.getBoolean(C1893R.bool.config_vibrateOnIconAnimation);
+        this.mVibrateOnOpening = resources.getBoolean(C1894R.bool.config_vibrateOnIconAnimation);
         this.mStatusBarTouchableRegionManager = statusBarTouchableRegionManager;
         this.mInteractionJankMonitor = interactionJankMonitor;
         this.mSystemClock = systemClock;
@@ -304,10 +304,10 @@ public abstract class PanelViewController {
         ViewConfiguration viewConfiguration = ViewConfiguration.get(this.mView.getContext());
         this.mTouchSlop = viewConfiguration.getScaledTouchSlop();
         this.mSlopMultiplier = viewConfiguration.getScaledAmbiguousGestureMultiplier();
-        this.mHintDistance = this.mResources.getDimension(C1893R.dimen.hint_move_distance);
-        this.mPanelFlingOvershootAmount = this.mResources.getDimension(C1893R.dimen.panel_overshoot_amount);
-        this.mUnlockFalsingThreshold = this.mResources.getDimensionPixelSize(C1893R.dimen.unlock_falsing_threshold);
-        this.mInSplitShade = this.mResources.getBoolean(C1893R.bool.config_use_split_notification_shade);
+        this.mHintDistance = this.mResources.getDimension(C1894R.dimen.hint_move_distance);
+        this.mPanelFlingOvershootAmount = this.mResources.getDimension(C1894R.dimen.panel_overshoot_amount);
+        this.mUnlockFalsingThreshold = this.mResources.getDimensionPixelSize(C1894R.dimen.unlock_falsing_threshold);
+        this.mInSplitShade = this.mResources.getBoolean(C1894R.bool.config_use_split_notification_shade);
     }
 
     /* access modifiers changed from: protected */
@@ -474,7 +474,7 @@ public abstract class PanelViewController {
                 this.mPanelUpdateWhenAnimatorEnds = false;
             }
             this.mHeightAnimator.cancel();
-            NTLogUtil.m1680d(TAG, "cancelHeightAnimator");
+            NTLogUtil.m1686d(TAG, "cancelHeightAnimator");
         }
         endClosing();
     }
@@ -574,7 +574,7 @@ public abstract class PanelViewController {
         ValueAnimator createHeightAnimator = createHeightAnimator(f5, lerp);
         if (this.mEx.shouldIgnoreStartFlingAnimavor(createHeightAnimator, this.mHeightAnimator, f4, z3)) {
             this.mIsFlinging = z4;
-            NTLogUtil.m1680d(TAG, "skip flingToHeight because exist a similar animator vel = " + f4 + ", expand = " + z3);
+            NTLogUtil.m1686d(TAG, "skip flingToHeight because exist a similar animator vel = " + f4 + ", expand = " + z3);
             return;
         }
         if (z3) {
@@ -644,7 +644,7 @@ public abstract class PanelViewController {
                 }
             }
         });
-        NTLogUtil.m1680d(TAG, "PanelViewController start fling animator vel = " + f4 + str + z3);
+        NTLogUtil.m1686d(TAG, "PanelViewController start fling animator vel = " + f4 + str + z3);
         setAnimator(valueAnimator);
         valueAnimator.start();
     }
@@ -679,7 +679,7 @@ public abstract class PanelViewController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$springBack$0$com-android-systemui-statusbar-phone-PanelViewController */
-    public /* synthetic */ void mo44932x8909a8e1(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo44947x8909a8e1(ValueAnimator valueAnimator) {
         setOverExpansionInternal(((Float) valueAnimator.getAnimatedValue()).floatValue(), false);
     }
 
@@ -735,7 +735,7 @@ public abstract class PanelViewController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setExpandedHeightInternal$2$com-android-systemui-statusbar-phone-PanelViewController */
-    public /* synthetic */ void mo44931x7186338e(float f) {
+    public /* synthetic */ void mo44946x7186338e(float f) {
         float f2 = 0.0f;
         if (this.mExpandLatencyTracking && f != 0.0f) {
             DejankUtils.postAfterTraversal(new PanelViewController$$ExternalSyntheticLambda5(this));
@@ -769,7 +769,7 @@ public abstract class PanelViewController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setExpandedHeightInternal$1$com-android-systemui-statusbar-phone-PanelViewController */
-    public /* synthetic */ void mo44930xe4991c6f() {
+    public /* synthetic */ void mo44945xe4991c6f() {
         this.mLatencyTracker.onActionEnd(0);
     }
 
@@ -902,7 +902,7 @@ public abstract class PanelViewController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startUnlockHintAnimation$3$com-android-systemui-statusbar-phone-PanelViewController */
-    public /* synthetic */ void mo44933x15a26b9b() {
+    public /* synthetic */ void mo44948x15a26b9b() {
         notifyExpandingFinished();
         onUnlockHintFinished();
         this.mHintAnimationRunning = false;
@@ -955,7 +955,7 @@ public abstract class PanelViewController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startUnlockHintAnimationPhase1$4$com-android-systemui-statusbar-phone-PanelViewController */
-    public /* synthetic */ void mo44934xb73085c4(View view) {
+    public /* synthetic */ void mo44949xb73085c4(View view) {
         view.animate().translationY(0.0f).setDuration(450).setInterpolator(this.mBounceInterpolator).start();
     }
 
@@ -997,7 +997,7 @@ public abstract class PanelViewController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$createHeightAnimator$5$com-android-systemui-statusbar-phone-PanelViewController */
-    public /* synthetic */ void mo44929x3aa4d246(float f, float f2, float f3, ValueAnimator valueAnimator, ValueAnimator valueAnimator2) {
+    public /* synthetic */ void mo44944x3aa4d246(float f, float f2, float f3, ValueAnimator valueAnimator, ValueAnimator valueAnimator2) {
         if (f > 0.0f || (f2 == 0.0f && f3 != 0.0f)) {
             setOverExpansionInternal(MathUtils.lerp(f3, this.mPanelFlingOvershootAmount * f, Interpolators.FAST_OUT_SLOW_IN.getInterpolation(valueAnimator.getAnimatedFraction())), false);
         }

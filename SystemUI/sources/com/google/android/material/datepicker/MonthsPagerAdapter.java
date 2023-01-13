@@ -10,7 +10,7 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.datepicker.MaterialCalendar;
 
 class MonthsPagerAdapter extends RecyclerView.Adapter<ViewHolder> {
@@ -43,10 +43,10 @@ class MonthsPagerAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         ViewHolder(LinearLayout linearLayout, boolean z) {
             super(linearLayout);
-            TextView textView = (TextView) linearLayout.findViewById(C3621R.C3624id.month_title);
+            TextView textView = (TextView) linearLayout.findViewById(C3631R.C3634id.month_title);
             this.monthTitle = textView;
             ViewCompat.setAccessibilityHeading(textView, true);
-            this.monthGrid = (MaterialCalendarGridView) linearLayout.findViewById(C3621R.C3624id.month_grid);
+            this.monthGrid = (MaterialCalendarGridView) linearLayout.findViewById(C3631R.C3634id.month_grid);
             if (!z) {
                 textView.setVisibility(8);
             }
@@ -54,7 +54,7 @@ class MonthsPagerAdapter extends RecyclerView.Adapter<ViewHolder> {
     }
 
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(viewGroup.getContext()).inflate(C3621R.layout.mtrl_calendar_month_labeled, viewGroup, false);
+        LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(viewGroup.getContext()).inflate(C3631R.layout.mtrl_calendar_month_labeled, viewGroup, false);
         if (!MaterialDatePicker.isFullscreen(viewGroup.getContext())) {
             return new ViewHolder(linearLayout, false);
         }
@@ -65,7 +65,7 @@ class MonthsPagerAdapter extends RecyclerView.Adapter<ViewHolder> {
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
         Month monthsLater = this.calendarConstraints.getStart().monthsLater(i);
         viewHolder.monthTitle.setText(monthsLater.getLongName());
-        final MaterialCalendarGridView materialCalendarGridView = (MaterialCalendarGridView) viewHolder.monthGrid.findViewById(C3621R.C3624id.month_grid);
+        final MaterialCalendarGridView materialCalendarGridView = (MaterialCalendarGridView) viewHolder.monthGrid.findViewById(C3631R.C3634id.month_grid);
         if (materialCalendarGridView.getAdapter() == null || !monthsLater.equals(materialCalendarGridView.getAdapter().month)) {
             MonthAdapter monthAdapter = new MonthAdapter(monthsLater, this.dateSelector, this.calendarConstraints);
             materialCalendarGridView.setNumColumns(monthsLater.daysInWeek);

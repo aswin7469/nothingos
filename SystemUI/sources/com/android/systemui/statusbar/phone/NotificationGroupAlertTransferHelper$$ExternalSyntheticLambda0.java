@@ -16,6 +16,6 @@ public final /* synthetic */ class NotificationGroupAlertTransferHelper$$Externa
     }
 
     public final void onBindFinished(NotificationEntry notificationEntry) {
-        this.f$0.mo44456xd966a209(this.f$1, this.f$2, notificationEntry);
+        this.f$0.mo44471xd966a209(this.f$1, this.f$2, notificationEntry);
     }
 }

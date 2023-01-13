@@ -146,7 +146,7 @@ public class QSPanelController extends QSPanelControllerBase<QSPanel> {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$showEdit$0$com-android-systemui-qs-QSPanelController  reason: not valid java name */
-    public /* synthetic */ void m2914lambda$showEdit$0$comandroidsystemuiqsQSPanelController(View view) {
+    public /* synthetic */ void m2919lambda$showEdit$0$comandroidsystemuiqsQSPanelController(View view) {
         if (!this.mQsCustomizerController.isCustomizing()) {
             int[] locationOnScreen = view.getLocationOnScreen();
             this.mQsCustomizerController.show(locationOnScreen[0] + (view.getWidth() / 2), locationOnScreen[1] + (view.getHeight() / 2), false);

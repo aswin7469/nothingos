@@ -52,7 +52,7 @@ public class RemoteInputNotificationRebuilder {
                 remoteInputHistoryItem = new RemoteInputHistoryItem(charSequence2);
             }
             Parcelable[] parcelableArray = sbn.getNotification().extras.getParcelableArray("android.remoteInputHistoryItems");
-            recoverBuilder.setRemoteInputHistory(parcelableArray != null ? (RemoteInputHistoryItem[]) Stream.concat(Stream.m1780of(remoteInputHistoryItem), Arrays.stream((T[]) parcelableArray).map(new RemoteInputNotificationRebuilder$$ExternalSyntheticLambda0())).toArray(new RemoteInputNotificationRebuilder$$ExternalSyntheticLambda1()) : new RemoteInputHistoryItem[]{remoteInputHistoryItem});
+            recoverBuilder.setRemoteInputHistory(parcelableArray != null ? (RemoteInputHistoryItem[]) Stream.concat(Stream.m1786of(remoteInputHistoryItem), Arrays.stream((T[]) parcelableArray).map(new RemoteInputNotificationRebuilder$$ExternalSyntheticLambda0())).toArray(new RemoteInputNotificationRebuilder$$ExternalSyntheticLambda1()) : new RemoteInputHistoryItem[]{remoteInputHistoryItem});
         }
         recoverBuilder.setShowRemoteInputSpinner(z);
         recoverBuilder.setHideSmartReplies(true);

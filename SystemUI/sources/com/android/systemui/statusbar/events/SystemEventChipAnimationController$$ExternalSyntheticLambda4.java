@@ -13,6 +13,6 @@ public final /* synthetic */ class SystemEventChipAnimationController$$ExternalS
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        SystemEventChipAnimationController.m3066createMoveOutAnimationForDot$lambda10$lambda9(this.f$0, this.f$1, valueAnimator);
+        SystemEventChipAnimationController.m3070createMoveOutAnimationForDot$lambda10$lambda9(this.f$0, this.f$1, valueAnimator);
     }
 }

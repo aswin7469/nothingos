@@ -9,6 +9,6 @@ public final /* synthetic */ class AutoHideController$$ExternalSyntheticLambda1 
     }
 
     public final void run() {
-        this.f$0.mo43644x3377612a();
+        this.f$0.mo43652x3377612a();
     }
 }

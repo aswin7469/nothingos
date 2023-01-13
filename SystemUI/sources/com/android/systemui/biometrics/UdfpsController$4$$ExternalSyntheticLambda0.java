@@ -12,6 +12,6 @@ public final /* synthetic */ class UdfpsController$4$$ExternalSyntheticLambda0 i
     }
 
     public final void onVisibilityChanged(int i) {
-        this.f$0.m2584lambda$run$0$comandroidsystemuibiometricsUdfpsController$4(i);
+        this.f$0.m2590lambda$run$0$comandroidsystemuibiometricsUdfpsController$4(i);
     }
 }

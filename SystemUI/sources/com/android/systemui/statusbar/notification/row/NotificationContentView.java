@@ -20,7 +20,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import com.android.launcher3.icons.cache.BaseIconCache;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.statusbar.RemoteInputController;
 import com.android.systemui.statusbar.SmartReplyController;
 import com.android.systemui.statusbar.TransformableView;
@@ -169,7 +169,7 @@ public class NotificationContentView extends FrameLayout implements Notification
     }
 
     public void reinflate() {
-        this.mMinContractedHeight = getResources().getDimensionPixelSize(C1893R.dimen.min_notification_layout_height);
+        this.mMinContractedHeight = getResources().getDimensionPixelSize(C1894R.dimen.min_notification_layout_height);
     }
 
     public void setHeights(int i, int i2, int i3) {
@@ -445,7 +445,7 @@ public class NotificationContentView extends FrameLayout implements Notification
 
     public void onViewAdded(View view) {
         super.onViewAdded(view);
-        view.setTag(C1893R.C1897id.row_tag_for_content_view, this.mContainingNotification);
+        view.setTag(C1894R.C1898id.row_tag_for_content_view, this.mContainingNotification);
     }
 
     /* access modifiers changed from: protected */
@@ -1170,8 +1170,8 @@ public class NotificationContentView extends FrameLayout implements Notification
                     z = false;
                 }
                 if (z) {
-                    Drawable drawable = this.mContext.getDrawable(notificationEntry.isBubble() ? C1893R.C1895drawable.bubble_ic_stop_bubble : C1893R.C1895drawable.bubble_ic_create_bubble);
-                    imageView.setContentDescription(this.mContext.getResources().getString(notificationEntry.isBubble() ? C1893R.string.notification_conversation_unbubble : C1893R.string.notification_conversation_bubble));
+                    Drawable drawable = this.mContext.getDrawable(notificationEntry.isBubble() ? C1894R.C1896drawable.bubble_ic_stop_bubble : C1894R.C1896drawable.bubble_ic_create_bubble);
+                    imageView.setContentDescription(this.mContext.getResources().getString(notificationEntry.isBubble() ? C1894R.string.notification_conversation_unbubble : C1894R.string.notification_conversation_bubble));
                     imageView.setImageDrawable(drawable);
                     imageView.setOnClickListener(this.mContainingNotification.getBubbleClickListener());
                     imageView.setVisibility(0);
@@ -1194,9 +1194,9 @@ public class NotificationContentView extends FrameLayout implements Notification
                     imageView.setVisibility(8);
                     return;
                 }
-                imageView.setImageDrawable(this.mContext.getDrawable(C1893R.C1895drawable.ic_snooze));
-                NotificationMenuRow.NotificationMenuItem notificationMenuItem = new NotificationMenuRow.NotificationMenuItem(this.mContext, this.mContext.getString(C1893R.string.notification_menu_snooze_description), (NotificationSnooze) LayoutInflater.from(this.mContext).inflate(C1893R.layout.notification_snooze, (ViewGroup) null, false), C1893R.C1895drawable.ic_snooze);
-                imageView.setContentDescription(this.mContext.getResources().getString(C1893R.string.notification_menu_snooze_description));
+                imageView.setImageDrawable(this.mContext.getDrawable(C1894R.C1896drawable.ic_snooze));
+                NotificationMenuRow.NotificationMenuItem notificationMenuItem = new NotificationMenuRow.NotificationMenuItem(this.mContext, this.mContext.getString(C1894R.string.notification_menu_snooze_description), (NotificationSnooze) LayoutInflater.from(this.mContext).inflate(C1894R.layout.notification_snooze, (ViewGroup) null, false), C1894R.C1896drawable.ic_snooze);
+                imageView.setContentDescription(this.mContext.getResources().getString(C1894R.string.notification_menu_snooze_description));
                 imageView.setOnClickListener(this.mContainingNotification.getSnoozeClickListener(notificationMenuItem));
                 imageView.setVisibility(0);
                 findViewById.setVisibility(0);
@@ -1297,7 +1297,7 @@ public class NotificationContentView extends FrameLayout implements Notification
         int i = 0;
         while (i < childCount) {
             View childAt = linearLayout.getChildAt(i);
-            if (childAt.getId() == C1893R.C1897id.smart_reply_view && (childAt instanceof SmartReplyView)) {
+            if (childAt.getId() == C1894R.C1898id.smart_reply_view && (childAt instanceof SmartReplyView)) {
                 break;
             }
             i++;

@@ -9,6 +9,6 @@ public final /* synthetic */ class LockIconViewController$$ExternalSyntheticLamb
     }
 
     public final void run() {
-        this.f$0.mo26430x13946920();
+        this.f$0.mo26431x13946920();
     }
 }

@@ -9,6 +9,6 @@ public final /* synthetic */ class AvatarPhotoController$$ExternalSyntheticLambd
     }
 
     public final void run() {
-        this.f$0.mo29188x4a2fbd27();
+        this.f$0.mo29193x4a2fbd27();
     }
 }

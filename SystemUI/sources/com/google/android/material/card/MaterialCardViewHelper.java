@@ -12,7 +12,7 @@ import android.util.AttributeSet;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.resources.MaterialResources;
 import com.google.android.material.ripple.RippleUtils;
@@ -56,9 +56,9 @@ class MaterialCardViewHelper {
         materialShapeDrawable.initializeElevationOverlay(materialCardView2.getContext());
         materialShapeDrawable.setShadowColor(-12303292);
         ShapeAppearanceModel.Builder builder = materialShapeDrawable.getShapeAppearanceModel().toBuilder();
-        TypedArray obtainStyledAttributes = materialCardView2.getContext().obtainStyledAttributes(attributeSet, C3621R.styleable.CardView, i, C3621R.style.CardView);
-        if (obtainStyledAttributes.hasValue(C3621R.styleable.CardView_cardCornerRadius)) {
-            builder.setAllCornerSizes(obtainStyledAttributes.getDimension(C3621R.styleable.CardView_cardCornerRadius, 0.0f));
+        TypedArray obtainStyledAttributes = materialCardView2.getContext().obtainStyledAttributes(attributeSet, C3631R.styleable.CardView, i, C3631R.style.CardView);
+        if (obtainStyledAttributes.hasValue(C3631R.styleable.CardView_cardCornerRadius)) {
+            builder.setAllCornerSizes(obtainStyledAttributes.getDimension(C3631R.styleable.CardView_cardCornerRadius, 0.0f));
         }
         this.foregroundContentDrawable = new MaterialShapeDrawable();
         setShapeAppearanceModel(builder.build());
@@ -67,26 +67,26 @@ class MaterialCardViewHelper {
 
     /* access modifiers changed from: package-private */
     public void loadFromAttributes(TypedArray typedArray) {
-        ColorStateList colorStateList = MaterialResources.getColorStateList(this.materialCardView.getContext(), typedArray, C3621R.styleable.MaterialCardView_strokeColor);
+        ColorStateList colorStateList = MaterialResources.getColorStateList(this.materialCardView.getContext(), typedArray, C3631R.styleable.MaterialCardView_strokeColor);
         this.strokeColor = colorStateList;
         if (colorStateList == null) {
             this.strokeColor = ColorStateList.valueOf(-1);
         }
-        this.strokeWidth = typedArray.getDimensionPixelSize(C3621R.styleable.MaterialCardView_strokeWidth, 0);
-        boolean z = typedArray.getBoolean(C3621R.styleable.MaterialCardView_android_checkable, false);
+        this.strokeWidth = typedArray.getDimensionPixelSize(C3631R.styleable.MaterialCardView_strokeWidth, 0);
+        boolean z = typedArray.getBoolean(C3631R.styleable.MaterialCardView_android_checkable, false);
         this.checkable = z;
         this.materialCardView.setLongClickable(z);
-        this.checkedIconTint = MaterialResources.getColorStateList(this.materialCardView.getContext(), typedArray, C3621R.styleable.MaterialCardView_checkedIconTint);
-        setCheckedIcon(MaterialResources.getDrawable(this.materialCardView.getContext(), typedArray, C3621R.styleable.MaterialCardView_checkedIcon));
-        setCheckedIconSize(typedArray.getDimensionPixelSize(C3621R.styleable.MaterialCardView_checkedIconSize, 0));
-        setCheckedIconMargin(typedArray.getDimensionPixelSize(C3621R.styleable.MaterialCardView_checkedIconMargin, 0));
-        this.checkedIconGravity = typedArray.getInteger(C3621R.styleable.MaterialCardView_checkedIconGravity, 8388661);
-        ColorStateList colorStateList2 = MaterialResources.getColorStateList(this.materialCardView.getContext(), typedArray, C3621R.styleable.MaterialCardView_rippleColor);
+        this.checkedIconTint = MaterialResources.getColorStateList(this.materialCardView.getContext(), typedArray, C3631R.styleable.MaterialCardView_checkedIconTint);
+        setCheckedIcon(MaterialResources.getDrawable(this.materialCardView.getContext(), typedArray, C3631R.styleable.MaterialCardView_checkedIcon));
+        setCheckedIconSize(typedArray.getDimensionPixelSize(C3631R.styleable.MaterialCardView_checkedIconSize, 0));
+        setCheckedIconMargin(typedArray.getDimensionPixelSize(C3631R.styleable.MaterialCardView_checkedIconMargin, 0));
+        this.checkedIconGravity = typedArray.getInteger(C3631R.styleable.MaterialCardView_checkedIconGravity, 8388661);
+        ColorStateList colorStateList2 = MaterialResources.getColorStateList(this.materialCardView.getContext(), typedArray, C3631R.styleable.MaterialCardView_rippleColor);
         this.rippleColor = colorStateList2;
         if (colorStateList2 == null) {
-            this.rippleColor = ColorStateList.valueOf(MaterialColors.getColor(this.materialCardView, C3621R.attr.colorControlHighlight));
+            this.rippleColor = ColorStateList.valueOf(MaterialColors.getColor(this.materialCardView, C3631R.attr.colorControlHighlight));
         }
-        setCardForegroundColor(MaterialResources.getColorStateList(this.materialCardView.getContext(), typedArray, C3621R.styleable.MaterialCardView_cardForegroundColor));
+        setCardForegroundColor(MaterialResources.getColorStateList(this.materialCardView.getContext(), typedArray, C3631R.styleable.MaterialCardView_cardForegroundColor));
         updateRippleColor();
         updateElevation();
         updateStroke();
@@ -302,7 +302,7 @@ class MaterialCardViewHelper {
         }
         LayerDrawable layerDrawable = this.clickableForegroundDrawable;
         if (layerDrawable != null) {
-            layerDrawable.setDrawableByLayerId(C3621R.C3624id.mtrl_card_checked_layer_id, this.checkedIcon);
+            layerDrawable.setDrawableByLayerId(C3631R.C3634id.mtrl_card_checked_layer_id, this.checkedIcon);
         }
     }
 
@@ -494,7 +494,7 @@ class MaterialCardViewHelper {
         if (this.clickableForegroundDrawable == null) {
             LayerDrawable layerDrawable = new LayerDrawable(new Drawable[]{this.rippleDrawable, this.foregroundContentDrawable, this.checkedIcon});
             this.clickableForegroundDrawable = layerDrawable;
-            layerDrawable.setId(2, C3621R.C3624id.mtrl_card_checked_layer_id);
+            layerDrawable.setId(2, C3631R.C3634id.mtrl_card_checked_layer_id);
         }
         return this.clickableForegroundDrawable;
     }

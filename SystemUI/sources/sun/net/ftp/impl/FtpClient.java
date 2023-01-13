@@ -70,10 +70,10 @@ public class FtpClient extends sun.net.ftp.FtpClient {
     /* access modifiers changed from: private */
 
     /* renamed from: df */
-    public DateFormat f864df = DateFormat.getDateInstance(2, Locale.f700US);
+    public DateFormat f862df = DateFormat.getDateInstance(2, Locale.f698US);
 
     /* renamed from: in */
-    private InputStream f865in;
+    private InputStream f863in;
     private String lastFileName;
     private FtpReplyCode lastReplyCode = null;
     private long lastTransSize = -1;
@@ -303,7 +303,7 @@ public class FtpClient extends sun.net.ftp.FtpClient {
                 if (r7 == 0) goto L_0x01c3
                 r2 = r18
                 sun.net.ftp.impl.FtpClient r2 = sun.net.ftp.impl.FtpClient.this     // Catch:{ Exception -> 0x0122 }
-                java.text.DateFormat r2 = r2.f864df     // Catch:{ Exception -> 0x0122 }
+                java.text.DateFormat r2 = r2.f862df     // Catch:{ Exception -> 0x0122 }
                 java.util.Date r2 = r2.parse(r8)     // Catch:{ Exception -> 0x0122 }
                 goto L_0x0123
             L_0x0122:
@@ -401,10 +401,10 @@ public class FtpClient extends sun.net.ftp.FtpClient {
     private class MLSxParser implements FtpDirParser {
 
         /* renamed from: df */
-        private SimpleDateFormat f867df;
+        private SimpleDateFormat f865df;
 
         private MLSxParser() {
-            this.f867df = new SimpleDateFormat("yyyyMMddhhmmss");
+            this.f865df = new SimpleDateFormat("yyyyMMddhhmmss");
         }
 
         public FtpDirEntry parseLine(String str) {
@@ -444,7 +444,7 @@ public class FtpClient extends sun.net.ftp.FtpClient {
             Date date2 = null;
             if (fact2 != null) {
                 try {
-                    date = this.f867df.parse(fact2);
+                    date = this.f865df.parse(fact2);
                 } catch (ParseException unused) {
                     date = null;
                 }
@@ -455,7 +455,7 @@ public class FtpClient extends sun.net.ftp.FtpClient {
             String fact3 = ftpDirEntry.getFact("Create");
             if (fact3 != null) {
                 try {
-                    date2 = this.f867df.parse(fact3);
+                    date2 = this.f865df.parse(fact3);
                 } catch (ParseException unused2) {
                 }
                 if (date2 != null) {
@@ -518,13 +518,13 @@ public class FtpClient extends sun.net.ftp.FtpClient {
             r1 = -1
             r3 = r1
         L_0x000f:
-            java.io.InputStream r4 = r10.f865in
+            java.io.InputStream r4 = r10.f863in
             int r4 = r4.read()
             if (r4 == r1) goto L_0x002e
             r5 = 10
             r6 = 13
             if (r4 != r6) goto L_0x0028
-            java.io.InputStream r4 = r10.f865in
+            java.io.InputStream r4 = r10.f863in
             int r4 = r4.read()
             if (r4 == r5) goto L_0x0028
             r0.append((char) r6)
@@ -849,7 +849,7 @@ public class FtpClient extends sun.net.ftp.FtpClient {
         this.server = doConnect;
         try {
             this.out = new PrintStream((OutputStream) new BufferedOutputStream(doConnect.getOutputStream()), true, encoding);
-            this.f865in = new BufferedInputStream(this.server.getInputStream());
+            this.f863in = new BufferedInputStream(this.server.getInputStream());
         } catch (UnsupportedEncodingException e) {
             throw new InternalError(encoding + "encoding not found", e);
         }
@@ -901,7 +901,7 @@ public class FtpClient extends sun.net.ftp.FtpClient {
             this.server.close();
         }
         this.server = null;
-        this.f865in = null;
+        this.f863in = null;
         this.out = null;
         this.lastTransSize = -1;
         this.lastFileName = null;
@@ -1231,7 +1231,7 @@ public class FtpClient extends sun.net.ftp.FtpClient {
                 this.oldSocket = null;
                 try {
                     this.out = new PrintStream((OutputStream) new BufferedOutputStream(socket2.getOutputStream()), true, encoding);
-                    this.f865in = new BufferedInputStream(this.server.getInputStream());
+                    this.f863in = new BufferedInputStream(this.server.getInputStream());
                 } catch (UnsupportedEncodingException e) {
                     throw new InternalError(encoding + "encoding not found", e);
                 }
@@ -1322,11 +1322,11 @@ public class FtpClient extends sun.net.ftp.FtpClient {
         private FtpDirParser fparser;
 
         /* renamed from: in */
-        private BufferedReader f866in;
+        private BufferedReader f864in;
         private FtpDirEntry nextFile = null;
 
         public FtpFileIterator(FtpDirParser ftpDirParser, BufferedReader bufferedReader) {
-            this.f866in = bufferedReader;
+            this.f864in = bufferedReader;
             this.fparser = ftpDirParser;
             readNext();
         }
@@ -1337,7 +1337,7 @@ public class FtpClient extends sun.net.ftp.FtpClient {
             if (!this.eof) {
                 do {
                     try {
-                        readLine = this.f866in.readLine();
+                        readLine = this.f864in.readLine();
                         if (readLine != null) {
                             FtpDirEntry parseLine = this.fparser.parseLine(readLine);
                             this.nextFile = parseLine;
@@ -1348,7 +1348,7 @@ public class FtpClient extends sun.net.ftp.FtpClient {
                     } catch (IOException unused) {
                     }
                 } while (readLine != null);
-                this.f866in.close();
+                this.f864in.close();
                 this.eof = true;
             }
         }
@@ -1368,7 +1368,7 @@ public class FtpClient extends sun.net.ftp.FtpClient {
         }
 
         public void close() throws IOException {
-            BufferedReader bufferedReader = this.f866in;
+            BufferedReader bufferedReader = this.f864in;
             if (bufferedReader != null && !this.eof) {
                 bufferedReader.close();
             }
@@ -1470,7 +1470,7 @@ public class FtpClient extends sun.net.ftp.FtpClient {
                 this.server = createSocket;
                 try {
                     this.out = new PrintStream((OutputStream) new BufferedOutputStream(createSocket.getOutputStream()), true, encoding);
-                    this.f865in = new BufferedInputStream(this.server.getInputStream());
+                    this.f863in = new BufferedInputStream(this.server.getInputStream());
                     issueCommandCheck("PBSZ 0");
                     issueCommandCheck("PROT P");
                     this.useCrypto = true;
@@ -1502,7 +1502,7 @@ public class FtpClient extends sun.net.ftp.FtpClient {
         this.oldSocket = null;
         try {
             this.out = new PrintStream((OutputStream) new BufferedOutputStream(socket.getOutputStream()), true, encoding);
-            this.f865in = new BufferedInputStream(this.server.getInputStream());
+            this.f863in = new BufferedInputStream(this.server.getInputStream());
             return this;
         } catch (UnsupportedEncodingException e) {
             throw new InternalError(encoding + "encoding not found", e);

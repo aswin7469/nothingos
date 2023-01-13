@@ -274,7 +274,7 @@ public class LocalBluetoothLeBroadcast implements LocalBluetoothProfile {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$getLatestBluetoothLeBroadcastMetadata$0$com-android-settingslib-bluetooth-LocalBluetoothLeBroadcast */
-    public /* synthetic */ boolean mo28333xac3c3202(BluetoothLeBroadcastMetadata bluetoothLeBroadcastMetadata) {
+    public /* synthetic */ boolean mo28338xac3c3202(BluetoothLeBroadcastMetadata bluetoothLeBroadcastMetadata) {
         return bluetoothLeBroadcastMetadata.getBroadcastId() == this.mBroadcastId;
     }
 

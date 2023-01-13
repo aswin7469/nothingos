@@ -96,7 +96,7 @@ public class NotificationRowBinderImpl implements NotificationRowBinder {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$inflateViews$0$com-android-systemui-statusbar-notification-collection-inflation-NotificationRowBinderImpl */
-    public /* synthetic */ void mo40342x21e5a191(NotificationEntry notificationEntry, NotifInflater.Params params, NotificationRowContentBinder.InflationCallback inflationCallback, ExpandableNotificationRow expandableNotificationRow) {
+    public /* synthetic */ void mo40345x21e5a191(NotificationEntry notificationEntry, NotifInflater.Params params, NotificationRowContentBinder.InflationCallback inflationCallback, ExpandableNotificationRow expandableNotificationRow) {
         ExpandableNotificationRowController expandableNotificationRowController = this.mExpandableNotificationRowComponentBuilder.expandableNotificationRow(expandableNotificationRow).notificationEntry(notificationEntry).onExpandClickListener(this.mPresenter).listContainer(this.mListContainer).build().getExpandableNotificationRowController();
         expandableNotificationRowController.init(notificationEntry);
         notificationEntry.setRowController(expandableNotificationRowController);

@@ -11,6 +11,6 @@ public final /* synthetic */ class SeekBarViewModel$$ExternalSyntheticLambda6 im
     }
 
     public final void run() {
-        SeekBarViewModel.m2838onSeekProgress$lambda3(this.f$0, this.f$1);
+        SeekBarViewModel.m2843onSeekProgress$lambda3(this.f$0, this.f$1);
     }
 }

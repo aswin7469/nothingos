@@ -16,6 +16,6 @@ public final /* synthetic */ class AsyncSensorManager$$ExternalSyntheticLambda5 
     }
 
     public final void run() {
-        this.f$0.mo47043x22e43dcf(this.f$1, this.f$2);
+        this.f$0.mo47055x22e43dcf(this.f$1, this.f$2);
     }
 }

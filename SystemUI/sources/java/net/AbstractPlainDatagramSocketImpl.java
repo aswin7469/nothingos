@@ -15,7 +15,7 @@ abstract class AbstractPlainDatagramSocketImpl extends DatagramSocketImpl {
     private static final boolean connectDisabled;
 
     /* renamed from: os */
-    private static final String f555os;
+    private static final String f553os;
     boolean connected = false;
     protected InetAddress connectedAddress = null;
     private int connectedPort = -1;
@@ -81,23 +81,23 @@ abstract class AbstractPlainDatagramSocketImpl extends DatagramSocketImpl {
 
     static {
         String str = (String) AccessController.doPrivileged(new GetPropertyAction("os.name"));
-        f555os = str;
+        f553os = str;
         connectDisabled = str.contains("OS X");
     }
 
     /* access modifiers changed from: protected */
     public synchronized void create() throws SocketException {
         ResourceManager.beforeUdpCreate();
-        this.f556fd = new FileDescriptor();
+        this.f554fd = new FileDescriptor();
         try {
             datagramSocketCreate();
-            if (this.f556fd != null && this.f556fd.valid()) {
+            if (this.f554fd != null && this.f554fd.valid()) {
                 this.guard.open("close");
-                IoUtils.setFdOwner(this.f556fd, this);
+                IoUtils.setFdOwner(this.f554fd, this);
             }
         } catch (SocketException e) {
             ResourceManager.afterUdpClose();
-            this.f556fd = null;
+            this.f554fd = null;
             throw e;
         }
     }
@@ -158,16 +158,16 @@ abstract class AbstractPlainDatagramSocketImpl extends DatagramSocketImpl {
     /* access modifiers changed from: protected */
     public void close() {
         this.guard.close();
-        if (this.f556fd != null) {
+        if (this.f554fd != null) {
             datagramSocketClose();
             ResourceManager.afterUdpClose();
-            this.f556fd = null;
+            this.f554fd = null;
         }
     }
 
     /* access modifiers changed from: protected */
     public boolean isClosed() {
-        return this.f556fd == null;
+        return this.f554fd == null;
     }
 
     /* access modifiers changed from: protected */
@@ -271,7 +271,7 @@ abstract class AbstractPlainDatagramSocketImpl extends DatagramSocketImpl {
     /* access modifiers changed from: package-private */
     public int dataAvailable() {
         try {
-            return IoBridge.available(this.f556fd);
+            return IoBridge.available(this.f554fd);
         } catch (IOException unused) {
             return -1;
         }

@@ -16,6 +16,6 @@ public final /* synthetic */ class ChallengeDialogs$$ExternalSyntheticLambda2 im
     }
 
     public final void onClick(View view) {
-        ChallengeDialogs.m2669createPinDialog$lambda5$lambda4$lambda3(this.f$0, this.f$1, view);
+        ChallengeDialogs.m2674createPinDialog$lambda5$lambda4$lambda3(this.f$0, this.f$1, view);
     }
 }

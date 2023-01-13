@@ -9,6 +9,6 @@ public final /* synthetic */ class LogBufferFreezer$$ExternalSyntheticLambda0 im
     }
 
     public final void run() {
-        LogBufferFreezer.m2749onBugreportStarted$lambda0(this.f$0);
+        LogBufferFreezer.m2754onBugreportStarted$lambda0(this.f$0);
     }
 }

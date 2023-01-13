@@ -59,7 +59,7 @@ import com.android.keyguard.dagger.KeyguardStatusBarViewComponent;
 import com.android.keyguard.dagger.KeyguardStatusViewComponent;
 import com.android.keyguard.dagger.KeyguardUserSwitcherComponent;
 import com.android.p019wm.shell.animation.FlingAnimationUtils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.DejankUtils;
 import com.android.systemui.animation.ActivityLaunchAnimator;
 import com.android.systemui.animation.Interpolators;
@@ -79,7 +79,7 @@ import com.android.systemui.media.MediaHierarchyManager;
 import com.android.systemui.model.SysUiState;
 import com.android.systemui.navigationbar.NavigationBarInflaterView;
 import com.android.systemui.plugins.FalsingManager;
-import com.android.systemui.plugins.p011qs.C2301QS;
+import com.android.systemui.plugins.p011qs.C2304QS;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.qrcodescanner.controller.QRCodeScannerController;
 import com.android.systemui.screenrecord.RecordingController;
@@ -401,7 +401,7 @@ public class NotificationPanelViewController extends PanelViewController {
     private final QRCodeScannerController mQRCodeScannerController;
     /* access modifiers changed from: private */
     public boolean mQSAnimatingHiddenFromCollapsed;
-    C2301QS mQs;
+    C2304QS mQs;
     private boolean mQsAnimatorExpand;
     private int mQsClipBottom;
     private int mQsClipTop;
@@ -449,7 +449,7 @@ public class NotificationPanelViewController extends PanelViewController {
     public ScreenOffAnimationController mScreenOffAnimationController;
     private final ScrimController mScrimController;
     private int mScrimCornerRadius;
-    public final C2301QS.ScrollListener mScrollListener;
+    public final C2304QS.ScrollListener mScrollListener;
     private final SecureSettings mSecureSettings;
     private final SettingsChangeObserver mSettingsChangeObserver;
     /* access modifiers changed from: private */
@@ -508,14 +508,14 @@ public class NotificationPanelViewController extends PanelViewController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-statusbar-phone-NotificationPanelViewController */
-    public /* synthetic */ void mo44613xf1de5604() {
+    public /* synthetic */ void mo44628xf1de5604() {
         setHeadsUpAnimatingAway(false);
         updatePanelExpansionAndVisibility();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$1$com-android-systemui-statusbar-phone-NotificationPanelViewController */
-    public /* synthetic */ void mo44614x2abeb6a3(Property property) {
+    public /* synthetic */ void mo44629x2abeb6a3(Property property) {
         Runnable runnable = this.mPanelAlphaEndAction;
         if (runnable != null) {
             runnable.run();
@@ -615,9 +615,9 @@ public class NotificationPanelViewController extends PanelViewController {
             r6.<init>()
             com.android.systemui.statusbar.phone.NotificationPanelViewController$$ExternalSyntheticLambda17 r7 = new com.android.systemui.statusbar.phone.NotificationPanelViewController$$ExternalSyntheticLambda17
             r7.<init>()
-            r8 = 2131428553(0x7f0b04c9, float:1.8478754E38)
-            r9 = 2131428552(0x7f0b04c8, float:1.8478752E38)
-            r10 = 2131428551(0x7f0b04c7, float:1.847875E38)
+            r8 = 2131428556(0x7f0b04cc, float:1.847876E38)
+            r9 = 2131428555(0x7f0b04cb, float:1.8478758E38)
+            r10 = 2131428554(0x7f0b04ca, float:1.8478756E38)
             com.android.systemui.statusbar.notification.AnimatableProperty r4 = com.android.systemui.statusbar.notification.AnimatableProperty.from(r5, r6, r7, r8, r9, r10)
             r2.mPanelAlphaAnimator = r4
             com.android.systemui.statusbar.notification.stack.AnimationProperties r5 = new com.android.systemui.statusbar.notification.stack.AnimationProperties
@@ -903,8 +903,8 @@ public class NotificationPanelViewController extends PanelViewController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$2$com-android-systemui-statusbar-phone-NotificationPanelViewController */
-    public /* synthetic */ void mo44615x639f1742() {
-        C2301QS qs = this.mQs;
+    public /* synthetic */ void mo44630x639f1742() {
+        C2304QS qs = this.mQs;
         if (qs != null) {
             qs.animateHeaderSlidingOut();
         }
@@ -912,14 +912,14 @@ public class NotificationPanelViewController extends PanelViewController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$3$com-android-systemui-statusbar-phone-NotificationPanelViewController */
-    public /* synthetic */ void mo44616x9c7f77e1(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo44631x9c7f77e1(ValueAnimator valueAnimator) {
         this.mBottomAreaShadeAlpha = ((Float) valueAnimator.getAnimatedValue()).floatValue();
         updateKeyguardBottomAreaAlpha();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$4$com-android-systemui-statusbar-phone-NotificationPanelViewController */
-    public /* synthetic */ void mo44617xd55fd880(int i) {
+    public /* synthetic */ void mo44632xd55fd880(int i) {
         this.mIsGestureNavigation = QuickStepContract.isGesturalMode(i);
     }
 
@@ -927,22 +927,22 @@ public class NotificationPanelViewController extends PanelViewController {
     public void onFinishInflate() {
         KeyguardUserSwitcherView keyguardUserSwitcherView;
         loadDimens();
-        this.mKeyguardStatusBar = (KeyguardStatusBarView) this.mView.findViewById(C1893R.C1897id.keyguard_header);
+        this.mKeyguardStatusBar = (KeyguardStatusBarView) this.mView.findViewById(C1894R.C1898id.keyguard_header);
         FrameLayout frameLayout = null;
-        if (!this.mKeyguardUserSwitcherEnabled || !this.mUserManager.isUserSwitcherEnabled(this.mResources.getBoolean(C1893R.bool.qs_show_user_switcher_for_single_user))) {
+        if (!this.mKeyguardUserSwitcherEnabled || !this.mUserManager.isUserSwitcherEnabled(this.mResources.getBoolean(C1894R.bool.qs_show_user_switcher_for_single_user))) {
             keyguardUserSwitcherView = null;
         } else if (this.mKeyguardQsUserSwitchEnabled) {
-            frameLayout = (FrameLayout) ((ViewStub) this.mView.findViewById(C1893R.C1897id.keyguard_qs_user_switch_stub)).inflate();
+            frameLayout = (FrameLayout) ((ViewStub) this.mView.findViewById(C1894R.C1898id.keyguard_qs_user_switch_stub)).inflate();
             keyguardUserSwitcherView = null;
         } else {
-            keyguardUserSwitcherView = (KeyguardUserSwitcherView) ((ViewStub) this.mView.findViewById(C1893R.C1897id.keyguard_user_switcher_stub)).inflate();
+            keyguardUserSwitcherView = (KeyguardUserSwitcherView) ((ViewStub) this.mView.findViewById(C1894R.C1898id.keyguard_user_switcher_stub)).inflate();
         }
         KeyguardStatusBarViewController keyguardStatusBarViewController = this.mKeyguardStatusBarViewComponentFactory.build(this.mKeyguardStatusBar, this.mNotificationPanelViewStateProvider).getKeyguardStatusBarViewController();
         this.mKeyguardStatusBarViewController = keyguardStatusBarViewController;
         keyguardStatusBarViewController.init();
-        this.mNotificationContainerParent = (NotificationsQuickSettingsContainer) this.mView.findViewById(C1893R.C1897id.notification_container_parent);
-        updateViewControllers((KeyguardStatusView) this.mView.findViewById(C1893R.C1897id.keyguard_status_view), frameLayout, keyguardUserSwitcherView);
-        this.mNotificationStackScrollLayoutController.attach((NotificationStackScrollLayout) this.mView.findViewById(C1893R.C1897id.notification_stack_scroller));
+        this.mNotificationContainerParent = (NotificationsQuickSettingsContainer) this.mView.findViewById(C1894R.C1898id.notification_container_parent);
+        updateViewControllers((KeyguardStatusView) this.mView.findViewById(C1894R.C1898id.keyguard_status_view), frameLayout, keyguardUserSwitcherView);
+        this.mNotificationStackScrollLayoutController.attach((NotificationStackScrollLayout) this.mView.findViewById(C1894R.C1898id.notification_stack_scroller));
         this.mNotificationStackScrollLayoutController.setOnHeightChangedListener(this.mOnHeightChangedListener);
         this.mNotificationStackScrollLayoutController.setOverscrollTopChangedListener(this.mOnOverscrollTopChangedListener);
         this.mNotificationStackScrollLayoutController.setOnScrollListener(new NotificationPanelViewController$$ExternalSyntheticLambda6(this));
@@ -951,12 +951,12 @@ public class NotificationPanelViewController extends PanelViewController {
         NotificationStackScrollLayoutController notificationStackScrollLayoutController = this.mNotificationStackScrollLayoutController;
         Objects.requireNonNull(notificationStackScrollLayoutController);
         addTrackingHeadsUpListener(new NotificationPanelViewController$$ExternalSyntheticLambda8(notificationStackScrollLayoutController));
-        this.mKeyguardBottomArea = (KeyguardBottomAreaView) this.mView.findViewById(C1893R.C1897id.keyguard_bottom_area);
-        this.mPreviewContainer = (ViewGroup) this.mView.findViewById(C1893R.C1897id.preview_container);
+        this.mKeyguardBottomArea = (KeyguardBottomAreaView) this.mView.findViewById(C1894R.C1898id.keyguard_bottom_area);
+        this.mPreviewContainer = (ViewGroup) this.mView.findViewById(C1894R.C1898id.preview_container);
         this.mKeyguardBottomArea.setPreviewContainer(this.mPreviewContainer);
         initBottomArea();
         this.mWakeUpCoordinator.setStackScroller(this.mNotificationStackScrollLayoutController);
-        this.mQsFrame = (FrameLayout) this.mView.findViewById(C1893R.C1897id.qs_frame);
+        this.mQsFrame = (FrameLayout) this.mView.findViewById(C1894R.C1898id.qs_frame);
         this.mPulseExpansionHandler.setUp(this.mNotificationStackScrollLayoutController);
         this.mWakeUpCoordinator.addListener(new NotificationWakeUpCoordinator.WakeUpListener() {
             public void onFullyHiddenChanged(boolean z) {
@@ -981,7 +981,7 @@ public class NotificationPanelViewController extends PanelViewController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onFinishInflate$6$com-android-systemui-statusbar-phone-NotificationPanelViewController */
-    public /* synthetic */ void mo44618x8d3b8be9(int i) {
+    public /* synthetic */ void mo44633x8d3b8be9(int i) {
         if (i != this.mOldLayoutDirection) {
             this.mAffordanceHelper.onRtlPropertiesChanged();
             this.mOldLayoutDirection = i;
@@ -990,13 +990,13 @@ public class NotificationPanelViewController extends PanelViewController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onFinishInflate$7$com-android-systemui-statusbar-phone-NotificationPanelViewController */
-    public /* synthetic */ void mo44619xc61bec88(KeyguardUnfoldTransition keyguardUnfoldTransition) {
+    public /* synthetic */ void mo44634xc61bec88(KeyguardUnfoldTransition keyguardUnfoldTransition) {
         keyguardUnfoldTransition.setup(this.mView);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onFinishInflate$8$com-android-systemui-statusbar-phone-NotificationPanelViewController */
-    public /* synthetic */ void mo44620xfefc4d27(NotificationPanelUnfoldAnimationController notificationPanelUnfoldAnimationController) {
+    public /* synthetic */ void mo44635xfefc4d27(NotificationPanelUnfoldAnimationController notificationPanelUnfoldAnimationController) {
         notificationPanelUnfoldAnimationController.setup(this.mNotificationContainerParent);
     }
 
@@ -1006,20 +1006,20 @@ public class NotificationPanelViewController extends PanelViewController {
         this.mFlingAnimationUtils = this.mFlingAnimationUtilsBuilder.get().setMaxLengthSeconds(0.4f).build();
         this.mStatusBarMinHeight = SystemBarUtils.getStatusBarHeight(this.mView.getContext());
         this.mStatusBarHeaderHeightKeyguard = Utils.getStatusBarHeaderHeightKeyguard(this.mView.getContext());
-        this.mQsPeekHeight = this.mResources.getDimensionPixelSize(C1893R.dimen.qs_peek_height);
+        this.mQsPeekHeight = this.mResources.getDimensionPixelSize(C1894R.dimen.qs_peek_height);
         this.mClockPositionAlgorithm.loadDimens(this.mResources);
-        this.mQsFalsingThreshold = this.mResources.getDimensionPixelSize(C1893R.dimen.qs_falsing_threshold);
-        this.mPositionMinSideMargin = this.mResources.getDimensionPixelSize(C1893R.dimen.notification_panel_min_side_margin);
-        this.mIndicationBottomPadding = this.mResources.getDimensionPixelSize(C1893R.dimen.keyguard_indication_bottom_padding);
-        this.mShelfHeight = this.mResources.getDimensionPixelSize(C1893R.dimen.notification_shelf_height);
-        this.mDarkIconSize = this.mResources.getDimensionPixelSize(C1893R.dimen.status_bar_icon_drawing_size_dark);
-        this.mHeadsUpInset = SystemBarUtils.getStatusBarHeight(this.mView.getContext()) + this.mResources.getDimensionPixelSize(C1893R.dimen.heads_up_status_bar_padding);
-        this.mDistanceForQSFullShadeTransition = this.mResources.getDimensionPixelSize(C1893R.dimen.lockscreen_shade_qs_transition_distance);
-        this.mMaxOverscrollAmountForPulse = this.mResources.getDimensionPixelSize(C1893R.dimen.pulse_expansion_max_top_overshoot);
-        this.mScrimCornerRadius = this.mResources.getDimensionPixelSize(C1893R.dimen.notification_scrim_corner_radius);
+        this.mQsFalsingThreshold = this.mResources.getDimensionPixelSize(C1894R.dimen.qs_falsing_threshold);
+        this.mPositionMinSideMargin = this.mResources.getDimensionPixelSize(C1894R.dimen.notification_panel_min_side_margin);
+        this.mIndicationBottomPadding = this.mResources.getDimensionPixelSize(C1894R.dimen.keyguard_indication_bottom_padding);
+        this.mShelfHeight = this.mResources.getDimensionPixelSize(C1894R.dimen.notification_shelf_height);
+        this.mDarkIconSize = this.mResources.getDimensionPixelSize(C1894R.dimen.status_bar_icon_drawing_size_dark);
+        this.mHeadsUpInset = SystemBarUtils.getStatusBarHeight(this.mView.getContext()) + this.mResources.getDimensionPixelSize(C1894R.dimen.heads_up_status_bar_padding);
+        this.mDistanceForQSFullShadeTransition = this.mResources.getDimensionPixelSize(C1894R.dimen.lockscreen_shade_qs_transition_distance);
+        this.mMaxOverscrollAmountForPulse = this.mResources.getDimensionPixelSize(C1894R.dimen.pulse_expansion_max_top_overshoot);
+        this.mScrimCornerRadius = this.mResources.getDimensionPixelSize(C1894R.dimen.notification_scrim_corner_radius);
         this.mScreenCornerRadius = (int) ScreenDecorationsUtils.getWindowCornerRadius(this.mView.getContext());
-        this.mLockscreenNotificationQSPadding = this.mResources.getDimensionPixelSize(C1893R.dimen.notification_side_paddings);
-        this.mUdfpsMaxYBurnInOffset = (float) this.mResources.getDimensionPixelSize(C1893R.dimen.udfps_burn_in_offset_y);
+        this.mLockscreenNotificationQSPadding = this.mResources.getDimensionPixelSize(C1894R.dimen.notification_side_paddings);
+        this.mUdfpsMaxYBurnInOffset = (float) this.mResources.getDimensionPixelSize(C1894R.dimen.udfps_burn_in_offset_y);
     }
 
     private void updateViewControllers(KeyguardStatusView keyguardStatusView, FrameLayout frameLayout, KeyguardUserSwitcherView keyguardUserSwitcherView) {
@@ -1058,8 +1058,8 @@ public class NotificationPanelViewController extends PanelViewController {
 
     public void updateResources() {
         int i;
-        this.mSplitShadeNotificationsScrimMarginBottom = this.mResources.getDimensionPixelSize(C1893R.dimen.split_shade_notifications_scrim_margin_bottom);
-        this.mShelfAndLockIconOverlap = this.mResources.getDimensionPixelSize(C1893R.dimen.shelf_and_lock_icon_overlap);
+        this.mSplitShadeNotificationsScrimMarginBottom = this.mResources.getDimensionPixelSize(C1894R.dimen.split_shade_notifications_scrim_margin_bottom);
+        this.mShelfAndLockIconOverlap = this.mResources.getDimensionPixelSize(C1894R.dimen.shelf_and_lock_icon_overlap);
         boolean shouldUseSplitNotificationShade = LargeScreenUtils.shouldUseSplitNotificationShade(this.mResources);
         boolean z = this.mSplitShadeEnabled != shouldUseSplitNotificationShade;
         this.mSplitShadeEnabled = shouldUseSplitNotificationShade;
@@ -1069,11 +1069,11 @@ public class NotificationPanelViewController extends PanelViewController {
         }
         this.mEx.setHasQSLayout(false);
         this.mEx.setCanQsCollapseForLand(true);
-        C2301QS qs = this.mQs;
+        C2304QS qs = this.mQs;
         if (qs != null) {
             qs.setInSplitShade(this.mSplitShadeEnabled);
         }
-        int dimensionPixelSize = this.mResources.getDimensionPixelSize(C1893R.dimen.large_screen_shade_header_height);
+        int dimensionPixelSize = this.mResources.getDimensionPixelSize(C1894R.dimen.large_screen_shade_header_height);
         this.mLargeScreenShadeHeaderHeight = dimensionPixelSize;
         if (!shouldUseLargeScreenShadeHeader) {
             dimensionPixelSize = SystemBarUtils.getQuickQsOffsetHeight(this.mView.getContext());
@@ -1082,7 +1082,7 @@ public class NotificationPanelViewController extends PanelViewController {
         if (shouldUseLargeScreenShadeHeader) {
             i = this.mLargeScreenShadeHeaderHeight;
         } else {
-            i = this.mResources.getDimensionPixelSize(C1893R.dimen.notification_panel_margin_top);
+            i = this.mResources.getDimensionPixelSize(C1894R.dimen.notification_panel_margin_top);
         }
         this.mLargeScreenShadeHeaderController.setActive(false);
         this.mAmbientState.setStackTopMargin(i);
@@ -1124,27 +1124,27 @@ public class NotificationPanelViewController extends PanelViewController {
         if (DEBUG_LOGCAT) {
             Log.d(TAG, "reInflateViews");
         }
-        KeyguardStatusView keyguardStatusView = (KeyguardStatusView) this.mNotificationContainerParent.findViewById(C1893R.C1897id.keyguard_status_view);
+        KeyguardStatusView keyguardStatusView = (KeyguardStatusView) this.mNotificationContainerParent.findViewById(C1894R.C1898id.keyguard_status_view);
         int indexOfChild = this.mNotificationContainerParent.indexOfChild(keyguardStatusView);
         this.mNotificationContainerParent.removeView(keyguardStatusView);
-        KeyguardStatusView keyguardStatusView2 = (KeyguardStatusView) this.mLayoutInflater.inflate(C1893R.layout.keyguard_status_view, this.mNotificationContainerParent, false);
+        KeyguardStatusView keyguardStatusView2 = (KeyguardStatusView) this.mLayoutInflater.inflate(C1894R.layout.keyguard_status_view, this.mNotificationContainerParent, false);
         this.mNotificationContainerParent.addView(keyguardStatusView2, indexOfChild);
         boolean z = true;
         this.mStatusViewCentered = true;
-        attachSplitShadeMediaPlayerContainer((FrameLayout) keyguardStatusView2.findViewById(C1893R.C1897id.status_view_media_container));
+        attachSplitShadeMediaPlayerContainer((FrameLayout) keyguardStatusView2.findViewById(C1894R.C1898id.status_view_media_container));
         updateResources();
         updateUserSwitcherFlags();
-        boolean isUserSwitcherEnabled = this.mUserManager.isUserSwitcherEnabled(this.mResources.getBoolean(C1893R.bool.qs_show_user_switcher_for_single_user));
+        boolean isUserSwitcherEnabled = this.mUserManager.isUserSwitcherEnabled(this.mResources.getBoolean(C1894R.bool.qs_show_user_switcher_for_single_user));
         boolean z2 = this.mKeyguardQsUserSwitchEnabled;
         boolean z3 = z2 && isUserSwitcherEnabled;
         if (z2 || !this.mKeyguardUserSwitcherEnabled || !isUserSwitcherEnabled) {
             z = false;
         }
-        updateViewControllers((KeyguardStatusView) this.mView.findViewById(C1893R.C1897id.keyguard_status_view), (FrameLayout) reInflateStub(C1893R.C1897id.keyguard_qs_user_switch_view, C1893R.C1897id.keyguard_qs_user_switch_stub, C1893R.layout.keyguard_qs_user_switch, z3), (KeyguardUserSwitcherView) reInflateStub(C1893R.C1897id.keyguard_user_switcher_view, C1893R.C1897id.keyguard_user_switcher_stub, C1893R.layout.keyguard_user_switcher, z));
+        updateViewControllers((KeyguardStatusView) this.mView.findViewById(C1894R.C1898id.keyguard_status_view), (FrameLayout) reInflateStub(C1894R.C1898id.keyguard_qs_user_switch_view, C1894R.C1898id.keyguard_qs_user_switch_stub, C1894R.layout.keyguard_qs_user_switch, z3), (KeyguardUserSwitcherView) reInflateStub(C1894R.C1898id.keyguard_user_switcher_view, C1894R.C1898id.keyguard_user_switcher_stub, C1894R.layout.keyguard_user_switcher, z));
         int indexOfChild2 = this.mView.indexOfChild(this.mKeyguardBottomArea);
         this.mView.removeView(this.mKeyguardBottomArea);
         KeyguardBottomAreaView keyguardBottomAreaView = this.mKeyguardBottomArea;
-        this.mKeyguardBottomArea = (KeyguardBottomAreaView) this.mLayoutInflater.inflate(C1893R.layout.keyguard_bottom_area, this.mView, false);
+        this.mKeyguardBottomArea = (KeyguardBottomAreaView) this.mLayoutInflater.inflate(C1894R.layout.keyguard_bottom_area, this.mView, false);
         this.mKeyguardBottomArea.initFrom(keyguardBottomAreaView);
         this.mKeyguardBottomArea.setPreviewContainer(this.mPreviewContainer);
         this.mView.addView(this.mKeyguardBottomArea, indexOfChild2);
@@ -1171,13 +1171,13 @@ public class NotificationPanelViewController extends PanelViewController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$reInflateViews$9$com-android-systemui-statusbar-phone-NotificationPanelViewController */
-    public /* synthetic */ void mo44622xbdee7f67(KeyguardUnfoldTransition keyguardUnfoldTransition) {
+    public /* synthetic */ void mo44637xbdee7f67(KeyguardUnfoldTransition keyguardUnfoldTransition) {
         keyguardUnfoldTransition.setup(this.mView);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$reInflateViews$10$com-android-systemui-statusbar-phone-NotificationPanelViewController */
-    public /* synthetic */ void mo44621x8dd9d247(NotificationPanelUnfoldAnimationController notificationPanelUnfoldAnimationController) {
+    public /* synthetic */ void mo44636x8dd9d247(NotificationPanelUnfoldAnimationController notificationPanelUnfoldAnimationController) {
         notificationPanelUnfoldAnimationController.setup(this.mView);
     }
 
@@ -1194,7 +1194,7 @@ public class NotificationPanelViewController extends PanelViewController {
         this.mKeyguardBottomArea.initWallet(this.mQuickAccessWalletController);
         this.mKeyguardBottomArea.initControls(this.mControlsComponent);
         this.mKeyguardBottomArea.initQRCodeScanner(this.mQRCodeScannerController);
-        EmergencyButtonController create = this.mEmergencyButtonControllerFactory.create((EmergencyButton) this.mKeyguardBottomArea.findViewById(C1893R.C1897id.emergency_call_button));
+        EmergencyButtonController create = this.mEmergencyButtonControllerFactory.create((EmergencyButton) this.mKeyguardBottomArea.findViewById(C1894R.C1898id.emergency_call_button));
         this.mEmergencyButtonController = create;
         create.init();
     }
@@ -1377,13 +1377,13 @@ public class NotificationPanelViewController extends PanelViewController {
             ConstraintSet constraintSet = new ConstraintSet();
             constraintSet.clone((ConstraintLayout) this.mNotificationContainerParent);
             if (!z2) {
-                i = C1893R.C1897id.qs_edge_guideline;
+                i = C1894R.C1898id.qs_edge_guideline;
             }
-            constraintSet.connect(C1893R.C1897id.keyguard_status_view, 7, i, 7);
+            constraintSet.connect(C1894R.C1898id.keyguard_status_view, 7, i, 7);
             if (z) {
                 ChangeBounds changeBounds = new ChangeBounds();
                 if (this.mSplitShadeEnabled) {
-                    changeBounds.excludeTarget(C1893R.C1897id.status_view_media_container, true);
+                    changeBounds.excludeTarget(C1894R.C1898id.status_view_media_container, true);
                 }
                 changeBounds.setInterpolator(Interpolators.FAST_OUT_SLOW_IN);
                 changeBounds.setDuration(360);
@@ -1396,12 +1396,12 @@ public class NotificationPanelViewController extends PanelViewController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateKeyguardStatusViewAlignment$11$com-android-systemui-statusbar-phone-NotificationPanelViewController */
-    public /* synthetic */ void mo44623x450ea92f(KeyguardUnfoldTransition keyguardUnfoldTransition) {
+    public /* synthetic */ void mo44638x450ea92f(KeyguardUnfoldTransition keyguardUnfoldTransition) {
         keyguardUnfoldTransition.setStatusViewCentered(this.mStatusViewCentered);
     }
 
     private int getUnlockedStackScrollerPadding() {
-        C2301QS qs = this.mQs;
+        C2304QS qs = this.mQs;
         return (qs != null ? qs.getHeader().getHeight() : 0) + this.mQsPeekHeight;
     }
 
@@ -1470,7 +1470,7 @@ public class NotificationPanelViewController extends PanelViewController {
     }
 
     private void setQsExpansionEnabled() {
-        C2301QS qs = this.mQs;
+        C2304QS qs = this.mQs;
         if (qs != null) {
             qs.setHeaderClickable(isQsExpansionEnabled());
         }
@@ -1494,7 +1494,7 @@ public class NotificationPanelViewController extends PanelViewController {
         if (!z || isFullyCollapsed()) {
             closeQs();
         } else {
-            animateCloseQs(!this.mDozing);
+            animateCloseQs(true);
         }
         this.mNotificationStackScrollLayoutController.setOverScrollAmount(0.0f, true, z, !z);
         this.mNotificationStackScrollLayoutController.resetScrollPosition();
@@ -1729,7 +1729,7 @@ public class NotificationPanelViewController extends PanelViewController {
         if (this.mCollapsedOnDown || this.mKeyguardShowing || this.mQsExpanded) {
             return false;
         }
-        C2301QS qs = this.mQs;
+        C2304QS qs = this.mQs;
         View header = qs == null ? this.mKeyguardStatusBar : qs.getHeader();
         if (f < this.mQsFrame.getX() || f > this.mQsFrame.getX() + ((float) this.mQsFrame.getWidth()) || f2 > ((float) header.getBottom())) {
             return false;
@@ -1897,7 +1897,7 @@ public class NotificationPanelViewController extends PanelViewController {
 
     public void startWaitingForOpenPanelGesture() {
         if (isFullyCollapsed()) {
-            NTLogUtil.m1680d(TAG, "startWaitingForOpenPanelGesture");
+            NTLogUtil.m1686d(TAG, "startWaitingForOpenPanelGesture");
             this.mExpectingSynthesizedDown = true;
             onTrackingStarted();
             updatePanelExpanded();
@@ -1906,7 +1906,7 @@ public class NotificationPanelViewController extends PanelViewController {
 
     public void stopWaitingForOpenPanelGesture(boolean z, float f) {
         if (this.mExpectingSynthesizedDown) {
-            NTLogUtil.m1680d(TAG, "stopWaitingForOpenPanelGesture");
+            NTLogUtil.m1686d(TAG, "stopWaitingForOpenPanelGesture");
             this.mExpectingSynthesizedDown = false;
             if (z) {
                 collapse(false, 1.0f);
@@ -2024,7 +2024,7 @@ public class NotificationPanelViewController extends PanelViewController {
     /* access modifiers changed from: private */
     public void setOverScrolling(boolean z) {
         this.mStackScrollerOverscrolling = z;
-        C2301QS qs = this.mQs;
+        C2304QS qs = this.mQs;
         if (qs != null) {
             qs.setOverscrolling(z);
         }
@@ -2102,7 +2102,7 @@ public class NotificationPanelViewController extends PanelViewController {
         if (keyguardUserSwitcherController != null && this.mQsExpanded && !this.mStackScrollerOverscrolling) {
             keyguardUserSwitcherController.closeSwitcherIfOpenAndNotSimple(true);
         }
-        C2301QS qs = this.mQs;
+        C2304QS qs = this.mQs;
         if (qs != null) {
             qs.setExpanded(this.mQsExpanded);
         }
@@ -2286,7 +2286,7 @@ public class NotificationPanelViewController extends PanelViewController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$applyQSClippingBounds$12$com-android-systemui-statusbar-phone-NotificationPanelViewController */
-    public /* synthetic */ void mo44611xdd0cc2b8(int i, int i2, int i3, int i4, boolean z, ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo44626xdd0cc2b8(int i, int i2, int i3, int i4, boolean z, ValueAnimator valueAnimator) {
         float animatedFraction = valueAnimator.getAnimatedFraction();
         applyQSClippingImmediately((int) MathUtils.lerp(i, this.mQsClippingAnimationEndBounds.left, animatedFraction), (int) MathUtils.lerp(i2, this.mQsClippingAnimationEndBounds.top, animatedFraction), (int) MathUtils.lerp(i3, this.mQsClippingAnimationEndBounds.right, animatedFraction), (int) MathUtils.lerp(i4, this.mQsClippingAnimationEndBounds.bottom, animatedFraction), z);
     }
@@ -2500,17 +2500,17 @@ public class NotificationPanelViewController extends PanelViewController {
 
     /* access modifiers changed from: private */
     public String determineAccessibilityPaneTitle() {
-        C2301QS qs = this.mQs;
+        C2304QS qs = this.mQs;
         if (qs != null && qs.isCustomizing()) {
-            return this.mResources.getString(C1893R.string.accessibility_desc_quick_settings_edit);
+            return this.mResources.getString(C1894R.string.accessibility_desc_quick_settings_edit);
         }
         if (this.mQsExpansionHeight != 0.0f && this.mQsFullyExpanded) {
-            return this.mResources.getString(C1893R.string.accessibility_desc_quick_settings);
+            return this.mResources.getString(C1894R.string.accessibility_desc_quick_settings);
         }
         if (this.mBarState == 1) {
-            return this.mResources.getString(C1893R.string.accessibility_desc_lock_screen);
+            return this.mResources.getString(C1894R.string.accessibility_desc_lock_screen);
         }
-        return this.mResources.getString(C1893R.string.accessibility_desc_notification_shade);
+        return this.mResources.getString(C1894R.string.accessibility_desc_notification_shade);
     }
 
     /* access modifiers changed from: private */
@@ -2541,14 +2541,17 @@ public class NotificationPanelViewController extends PanelViewController {
         if (!this.mKeyguardShowing) {
             return 0;
         }
-        if (!this.mKeyguardBypassController.getBypassEnabled()) {
+        if (this.mKeyguardBypassController.getBypassEnabled()) {
+            int i = this.mHeadsUpInset;
+            if (!this.mNotificationStackScrollLayoutController.isPulseExpanding()) {
+                return i;
+            }
+            return (int) MathUtils.lerp(i, this.mClockPositionResult.stackScrollerPadding, this.mNotificationStackScrollLayoutController.calculateAppearFractionBypass());
+        } else if (this.mQs == null) {
+            return this.mClockPositionResult.stackScrollerPadding;
+        } else {
             return this.mEx.getKeyguardNotificationStaticPaddingForNotBypassEnableCase(this.mClockPositionResult.stackScrollerPadding, this.mQs.getQsMinExpansionHeight(), this.mQsClipTop);
         }
-        int i = this.mHeadsUpInset;
-        if (!this.mNotificationStackScrollLayoutController.isPulseExpanding()) {
-            return i;
-        }
-        return (int) MathUtils.lerp(i, this.mClockPositionResult.stackScrollerPadding, this.mNotificationStackScrollLayoutController.calculateAppearFractionBypass());
     }
 
     public void requestScrollerTopPaddingUpdate(boolean z) {
@@ -2802,7 +2805,7 @@ public class NotificationPanelViewController extends PanelViewController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$flingSettings$13$com-android-systemui-statusbar-phone-NotificationPanelViewController */
-    public /* synthetic */ void mo44612x647b0faf(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo44627x647b0faf(ValueAnimator valueAnimator) {
         setQsExpansion(((Float) valueAnimator.getAnimatedValue()).floatValue());
     }
 
@@ -2969,7 +2972,7 @@ public class NotificationPanelViewController extends PanelViewController {
     }
 
     private void updatePanelExpanded() {
-        C2301QS qs;
+        C2304QS qs;
         boolean z = !isFullyCollapsed() || this.mExpectingSynthesizedDown;
         if (this.mPanelExpanded != z) {
             this.mPanelExpanded = z;
@@ -3074,7 +3077,7 @@ public class NotificationPanelViewController extends PanelViewController {
         if (this.mQsExpanded) {
             onQsExpansionStarted();
         }
-        C2301QS qs = this.mQs;
+        C2304QS qs = this.mQs;
         if (qs != null) {
             qs.setHeaderListening(true);
         }
@@ -3126,7 +3129,7 @@ public class NotificationPanelViewController extends PanelViewController {
     /* access modifiers changed from: private */
     public void setListening(boolean z) {
         this.mKeyguardStatusBarViewController.setBatteryListening(z);
-        C2301QS qs = this.mQs;
+        C2304QS qs = this.mQs;
         if (qs != null) {
             qs.setListening(z);
         }
@@ -3608,7 +3611,7 @@ public class NotificationPanelViewController extends PanelViewController {
 
     public void prepareFoldToAodAnimation() {
         showAodUi();
-        this.mView.setTranslationX((float) (-this.mView.getResources().getDimensionPixelSize(C1893R.dimen.below_clock_padding_start)));
+        this.mView.setTranslationX((float) (-this.mView.getResources().getDimensionPixelSize(C1894R.dimen.below_clock_padding_start)));
         this.mView.setAlpha(0.0f);
     }
 
@@ -3709,7 +3712,7 @@ public class NotificationPanelViewController extends PanelViewController {
     }
 
     public void setAlpha(float f) {
-        NTLogUtil.m1680d(TAG, "alpha: " + f + ", cb: " + Debug.getCallers(2));
+        NTLogUtil.m1686d(TAG, "alpha: " + f + ", cb: " + Debug.getCallers(2));
         this.mView.setAlpha(f);
     }
 
@@ -3994,7 +3997,7 @@ public class NotificationPanelViewController extends PanelViewController {
                 L_0x01b6:
                     return r2
                 */
-                throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.NotificationPanelViewController.C302016.onTouch(android.view.View, android.view.MotionEvent):boolean");
+                throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.NotificationPanelViewController.C303016.onTouch(android.view.View, android.view.MotionEvent):boolean");
             }
         };
     }
@@ -4128,12 +4131,12 @@ public class NotificationPanelViewController extends PanelViewController {
             if (!access$3900 && z) {
                 f = 0.0f;
             }
-            notificationPanelViewController3.flingSettings(f, (!z || !access$3900) ? 1 : 0, new C3034x5c9cd5cc(this), false);
+            notificationPanelViewController3.flingSettings(f, (!z || !access$3900) ? 1 : 0, new C3044x5c9cd5cc(this), false);
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$flingTopOverscroll$0$com-android-systemui-statusbar-phone-NotificationPanelViewController$OnOverscrollTopChangedListener */
-        public /* synthetic */ void mo44738xe753d5c7() {
+        public /* synthetic */ void mo44753xe753d5c7() {
             NotificationPanelViewController.this.setOverScrolling(false);
             NotificationPanelViewController.this.updateQsState();
         }
@@ -4168,7 +4171,7 @@ public class NotificationPanelViewController extends PanelViewController {
                 NotificationPanelViewController.this.mLockscreenGestureLogger.log(LockscreenGestureLogger.LockscreenUiEvent.LOCKSCREEN_DIALER);
                 NotificationPanelViewController.this.mFalsingCollector.onLeftAffordanceOn();
                 if (NotificationPanelViewController.this.mFalsingCollector.shouldEnforceBouncer()) {
-                    NotificationPanelViewController.this.mCentralSurfaces.executeRunnableDismissingKeyguard(new C3031xe911bb01(this), (Runnable) null, true, false, true);
+                    NotificationPanelViewController.this.mCentralSurfaces.executeRunnableDismissingKeyguard(new C3041xe911bb01(this), (Runnable) null, true, false, true);
                 } else {
                     NotificationPanelViewController.this.mKeyguardBottomArea.launchLeftAffordance();
                 }
@@ -4179,7 +4182,7 @@ public class NotificationPanelViewController extends PanelViewController {
                 }
                 NotificationPanelViewController.this.mFalsingCollector.onCameraOn();
                 if (NotificationPanelViewController.this.mFalsingCollector.shouldEnforceBouncer()) {
-                    NotificationPanelViewController.this.mCentralSurfaces.executeRunnableDismissingKeyguard(new C3032xe911bb02(this), (Runnable) null, true, false, true);
+                    NotificationPanelViewController.this.mCentralSurfaces.executeRunnableDismissingKeyguard(new C3042xe911bb02(this), (Runnable) null, true, false, true);
                 } else {
                     NotificationPanelViewController.this.mKeyguardBottomArea.launchCamera(NotificationPanelViewController.this.mLastCameraLaunchSource);
                 }
@@ -4190,13 +4193,13 @@ public class NotificationPanelViewController extends PanelViewController {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onAnimationToSideStarted$0$com-android-systemui-statusbar-phone-NotificationPanelViewController$KeyguardAffordanceHelperCallback */
-        public /* synthetic */ void mo44730xf71ae06c() {
+        public /* synthetic */ void mo44745xf71ae06c() {
             NotificationPanelViewController.this.mKeyguardBottomArea.launchLeftAffordance();
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onAnimationToSideStarted$1$com-android-systemui-statusbar-phone-NotificationPanelViewController$KeyguardAffordanceHelperCallback */
-        public /* synthetic */ void mo44731x3a814fad() {
+        public /* synthetic */ void mo44746x3a814fad() {
             NotificationPanelViewController.this.mKeyguardBottomArea.launchCamera(NotificationPanelViewController.this.mLastCameraLaunchSource);
         }
 
@@ -4235,7 +4238,7 @@ public class NotificationPanelViewController extends PanelViewController {
         public void onIconClicked(boolean z) {
             if (!NotificationPanelViewController.this.mHintAnimationRunning) {
                 NotificationPanelViewController.this.mHintAnimationRunning = true;
-                NotificationPanelViewController.this.mAffordanceHelper.startHintAnimation(z, new C3033xe911bb03(this));
+                NotificationPanelViewController.this.mAffordanceHelper.startHintAnimation(z, new C3043xe911bb03(this));
                 if (NotificationPanelViewController.this.mView.getLayoutDirection() == 1) {
                     z = !z;
                 }
@@ -4251,7 +4254,7 @@ public class NotificationPanelViewController extends PanelViewController {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onIconClicked$2$com-android-systemui-statusbar-phone-NotificationPanelViewController$KeyguardAffordanceHelperCallback */
-        public /* synthetic */ void mo44732x2cad4459() {
+        public /* synthetic */ void mo44747x2cad4459() {
             NotificationPanelViewController.this.mHintAnimationRunning = false;
             NotificationPanelViewController.this.mCentralSurfaces.onHintFinished();
         }
@@ -4322,7 +4325,7 @@ public class NotificationPanelViewController extends PanelViewController {
         }
     }
 
-    private class HeightListener implements C2301QS.HeightListener {
+    private class HeightListener implements C2304QS.HeightListener {
         private HeightListener() {
         }
 
@@ -4485,7 +4488,7 @@ public class NotificationPanelViewController extends PanelViewController {
         }
 
         public void onViewAttachedToWindow(View view) {
-            NotificationPanelViewController.this.mFragmentService.getFragmentHostManager(NotificationPanelViewController.this.mView).addTagListener(C2301QS.TAG, NotificationPanelViewController.this.mFragmentListener);
+            NotificationPanelViewController.this.mFragmentService.getFragmentHostManager(NotificationPanelViewController.this.mView).addTagListener(C2304QS.TAG, NotificationPanelViewController.this.mFragmentListener);
             NotificationPanelViewController.this.mStatusBarStateController.addCallback(NotificationPanelViewController.this.mStatusBarStateListener);
             NotificationPanelViewController.this.mStatusBarStateListener.onStateChanged(NotificationPanelViewController.this.mStatusBarStateController.getState());
             NotificationPanelViewController.this.mConfigurationController.addCallback(NotificationPanelViewController.this.mConfigurationListener);
@@ -4497,7 +4500,7 @@ public class NotificationPanelViewController extends PanelViewController {
 
         public void onViewDetachedFromWindow(View view) {
             NotificationPanelViewController.this.unregisterSettingsChangeListener();
-            NotificationPanelViewController.this.mFragmentService.getFragmentHostManager(NotificationPanelViewController.this.mView).removeTagListener(C2301QS.TAG, NotificationPanelViewController.this.mFragmentListener);
+            NotificationPanelViewController.this.mFragmentService.getFragmentHostManager(NotificationPanelViewController.this.mView).removeTagListener(C2304QS.TAG, NotificationPanelViewController.this.mFragmentListener);
             NotificationPanelViewController.this.mStatusBarStateController.removeCallback(NotificationPanelViewController.this.mStatusBarStateListener);
             NotificationPanelViewController.this.mConfigurationController.removeCallback(NotificationPanelViewController.this.mConfigurationListener);
             NotificationPanelViewController.this.mFalsingManager.removeTapListener(NotificationPanelViewController.this.mFalsingTapListener);
@@ -4661,6 +4664,8 @@ public class NotificationPanelViewController extends PanelViewController {
 
     public void cancelPendingPanelCollapse() {
         this.mView.removeCallbacks(this.mMaybeHideExpandedRunnable);
+        this.mView.removeCallbacks(this.mHideExpandedRunnable);
+        NTLogUtil.m1686d(TAG, "cancelPendingPanelCollapse");
     }
 
     /* access modifiers changed from: private */
@@ -4674,6 +4679,8 @@ public class NotificationPanelViewController extends PanelViewController {
                 this.mQsExpandImmediate = true;
             }
             this.mCentralSurfaces.makeExpandedVisible(false);
+            cancelPendingPanelCollapse();
+            NTLogUtil.m1686d(TAG, "cancel HideExpandedRunnable");
         }
         if (i == 0) {
             this.mView.post(this.mMaybeHideExpandedRunnable);
@@ -4725,7 +4732,7 @@ public class NotificationPanelViewController extends PanelViewController {
         }
     }
 
-    public C2301QS getQs() {
+    public C2304QS getQs() {
         return this.mQs;
     }
 
@@ -4765,7 +4772,9 @@ public class NotificationPanelViewController extends PanelViewController {
         this.mPostCollapseRunnables.clear();
         int size = arrayList.size();
         for (int i = 0; i < size; i++) {
-            ((Runnable) arrayList.get(i)).run();
+            if (arrayList.get(i) != null) {
+                ((Runnable) arrayList.get(i)).run();
+            }
         }
     }
 
@@ -4781,11 +4790,18 @@ public class NotificationPanelViewController extends PanelViewController {
     }
 
     public boolean isLandscapeScreenOff() {
-        return this.mUnlockedScreenOffAnimationController.isLandscapeScreenOff();
+        UnlockedScreenOffAnimationController unlockedScreenOffAnimationController = this.mUnlockedScreenOffAnimationController;
+        if (unlockedScreenOffAnimationController != null) {
+            return unlockedScreenOffAnimationController.isLandscapeScreenOff();
+        }
+        return false;
     }
 
     public void setIsLandscapeOff(boolean z) {
-        this.mUnlockedScreenOffAnimationController.setIsLandscapeOff(z);
+        UnlockedScreenOffAnimationController unlockedScreenOffAnimationController = this.mUnlockedScreenOffAnimationController;
+        if (unlockedScreenOffAnimationController != null) {
+            unlockedScreenOffAnimationController.setIsLandscapeOff(z);
+        }
     }
 
     public boolean isBouncerShowing() {

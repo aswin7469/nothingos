@@ -47,13 +47,13 @@ public final class OffsetTime implements Temporal, TemporalAdjuster, Comparable<
     }
 
     /* renamed from: of */
-    public static OffsetTime m927of(LocalTime localTime, ZoneOffset zoneOffset) {
+    public static OffsetTime m925of(LocalTime localTime, ZoneOffset zoneOffset) {
         return new OffsetTime(localTime, zoneOffset);
     }
 
     /* renamed from: of */
-    public static OffsetTime m926of(int i, int i2, int i3, int i4, ZoneOffset zoneOffset) {
-        return new OffsetTime(LocalTime.m919of(i, i2, i3, i4), zoneOffset);
+    public static OffsetTime m924of(int i, int i2, int i3, int i4, ZoneOffset zoneOffset) {
+        return new OffsetTime(LocalTime.m917of(i, i2, i3, i4), zoneOffset);
     }
 
     public static OffsetTime ofInstant(Instant instant, ZoneId zoneId) {
@@ -306,7 +306,7 @@ public final class OffsetTime implements Temporal, TemporalAdjuster, Comparable<
             return temporalUnit.between(this, from);
         }
         long epochNano = from.toEpochNano() - toEpochNano();
-        switch (C28571.$SwitchMap$java$time$temporal$ChronoUnit[((ChronoUnit) temporalUnit).ordinal()]) {
+        switch (C28631.$SwitchMap$java$time$temporal$ChronoUnit[((ChronoUnit) temporalUnit).ordinal()]) {
             case 1:
                 return epochNano;
             case 2:
@@ -327,7 +327,7 @@ public final class OffsetTime implements Temporal, TemporalAdjuster, Comparable<
     }
 
     /* renamed from: java.time.OffsetTime$1 */
-    static /* synthetic */ class C28571 {
+    static /* synthetic */ class C28631 {
         static final /* synthetic */ int[] $SwitchMap$java$time$temporal$ChronoUnit;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(14:0|1|2|3|4|5|6|7|8|9|10|11|12|(3:13|14|16)) */
@@ -388,7 +388,7 @@ public final class OffsetTime implements Temporal, TemporalAdjuster, Comparable<
             L_0x0054:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: java.time.OffsetTime.C28571.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: java.time.OffsetTime.C28631.<clinit>():void");
         }
     }
 
@@ -398,7 +398,7 @@ public final class OffsetTime implements Temporal, TemporalAdjuster, Comparable<
     }
 
     public OffsetDateTime atDate(LocalDate localDate) {
-        return OffsetDateTime.m924of(localDate, this.time, this.offset);
+        return OffsetDateTime.m922of(localDate, this.time, this.offset);
     }
 
     private long toEpochNano() {
@@ -467,6 +467,6 @@ public final class OffsetTime implements Temporal, TemporalAdjuster, Comparable<
     }
 
     static OffsetTime readExternal(ObjectInput objectInput) throws IOException, ClassNotFoundException {
-        return m927of(LocalTime.readExternal(objectInput), ZoneOffset.readExternal(objectInput));
+        return m925of(LocalTime.readExternal(objectInput), ZoneOffset.readExternal(objectInput));
     }
 }

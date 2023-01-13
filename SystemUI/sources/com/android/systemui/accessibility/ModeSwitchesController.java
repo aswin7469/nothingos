@@ -34,7 +34,7 @@ public class ModeSwitchesController implements MagnificationModeSwitch.SwitchLis
     public void removeButton(int i) {
         MagnificationModeSwitch magnificationModeSwitch = this.mSwitchSupplier.get(i);
         if (magnificationModeSwitch != null) {
-            magnificationModeSwitch.mo29909xbe988fce();
+            magnificationModeSwitch.mo29919xbe988fce();
         }
     }
 

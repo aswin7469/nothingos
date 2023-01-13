@@ -9,7 +9,7 @@ import android.view.RemotableViewMethod;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RemoteViews;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 
 @RemoteViews.RemoteView
 public class AnimatedImageView extends ImageView {
@@ -26,7 +26,7 @@ public class AnimatedImageView extends ImageView {
     public AnimatedImageView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         this.mAllowAnimation = true;
-        TypedArray obtainStyledAttributes = context.getTheme().obtainStyledAttributes(attributeSet, C1893R.styleable.AnimatedImageView, 0, 0);
+        TypedArray obtainStyledAttributes = context.getTheme().obtainStyledAttributes(attributeSet, C1894R.styleable.AnimatedImageView, 0, 0);
         try {
             this.mHasOverlappingRendering = obtainStyledAttributes.getBoolean(0, true);
         } finally {

@@ -13,6 +13,6 @@ public final /* synthetic */ class RecordingService$$ExternalSyntheticLambda1 im
     }
 
     public final void run() {
-        this.f$0.mo37257xdb858a54(this.f$1);
+        this.f$0.mo37256xdb858a54(this.f$1);
     }
 }

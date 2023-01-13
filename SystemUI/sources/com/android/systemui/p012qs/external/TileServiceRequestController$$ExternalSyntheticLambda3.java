@@ -22,6 +22,6 @@ public final /* synthetic */ class TileServiceRequestController$$ExternalSynthet
     }
 
     public final void accept(Object obj) {
-        TileServiceRequestController.m2953requestTileAdd$lambda0(this.f$0, this.f$1, this.f$2, this.f$3, this.f$4, (Integer) obj);
+        TileServiceRequestController.m2958requestTileAdd$lambda0(this.f$0, this.f$1, this.f$2, this.f$3, this.f$4, (Integer) obj);
     }
 }

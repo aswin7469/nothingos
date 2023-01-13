@@ -21,7 +21,7 @@ import com.android.internal.jank.InteractionJankMonitor;
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.logging.UiEventLogger;
 import com.android.internal.statusbar.IStatusBarService;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.ExpandHelper;
 import com.android.systemui.Gefingerpoken;
 import com.android.systemui.classifier.FalsingCollector;
@@ -147,7 +147,7 @@ public class NotificationStackScrollLayoutController {
         }
     };
     private final DynamicPrivacyController mDynamicPrivacyController;
-    private final DynamicPrivacyController.Listener mDynamicPrivacyControllerListener = new C2827xbae1b0c5(this);
+    private final DynamicPrivacyController.Listener mDynamicPrivacyControllerListener = new C2833xbae1b0c5(this);
     /* access modifiers changed from: private */
     public boolean mFadeNotificationsOnDismiss;
     /* access modifiers changed from: private */
@@ -373,12 +373,12 @@ public class NotificationStackScrollLayoutController {
 
         public void onHeadsUpUnPinned(NotificationEntry notificationEntry) {
             ExpandableNotificationRow row = notificationEntry.getRow();
-            row.post(new C2831x71902853(this, row));
+            row.post(new C2837x71902853(this, row));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onHeadsUpUnPinned$0$com-android-systemui-statusbar-notification-stack-NotificationStackScrollLayoutController$8 */
-        public /* synthetic */ void mo42532x85482e14(ExpandableNotificationRow expandableNotificationRow) {
+        public /* synthetic */ void mo42540x85482e14(ExpandableNotificationRow expandableNotificationRow) {
             NotificationStackScrollLayoutController.this.mNotificationRoundnessManager.updateView(expandableNotificationRow, true);
         }
 
@@ -446,16 +446,16 @@ public class NotificationStackScrollLayoutController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$1$com-android-systemui-statusbar-notification-stack-NotificationStackScrollLayoutController */
-    public /* synthetic */ void mo42462x2d911681() {
+    public /* synthetic */ void mo42470x2d911681() {
         if (this.mView.isExpanded()) {
             this.mView.setAnimateBottomOnLayout(true);
         }
-        this.mView.post(new C2828xbae1b0c6(this));
+        this.mView.post(new C2834xbae1b0c6(this));
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-statusbar-notification-stack-NotificationStackScrollLayoutController */
-    public /* synthetic */ void mo42461x67668dc0() {
+    public /* synthetic */ void mo42469x67668dc0() {
         updateFooter();
         updateSectionBoundaries("dynamic privacy changed");
     }
@@ -529,9 +529,9 @@ public class NotificationStackScrollLayoutController {
         this.mView.setLogger(this.mLogger);
         this.mView.setTouchHandler(new TouchHandler());
         this.mView.setCentralSurfaces(this.mCentralSurfaces);
-        this.mView.setClearAllAnimationListener(new C2814xbae1b0bf(this));
-        this.mView.setClearAllListener(new C2819xa1546773(this));
-        this.mView.setFooterClearAllListener(new C2820xa1546774(this));
+        this.mView.setClearAllAnimationListener(new C2820xbae1b0bf(this));
+        this.mView.setClearAllListener(new C2825xa1546773(this));
+        this.mView.setFooterClearAllListener(new C2826xa1546774(this));
         this.mView.setIsRemoteInputActive(this.mRemoteInputManager.isRemoteInputActive());
         this.mRemoteInputManager.addControllerCallback(new RemoteInputController.Callback() {
             public void onRemoteInputActive(boolean z) {
@@ -539,7 +539,7 @@ public class NotificationStackScrollLayoutController {
             }
         });
         this.mView.setShadeController(this.mShadeController);
-        this.mKeyguardBypassController.registerOnBypassStateChangedListener(new C2821xa1546775(this));
+        this.mKeyguardBypassController.registerOnBypassStateChangedListener(new C2827xa1546775(this));
         this.mNotificationRoundnessManager.setShouldRoundPulsingViews(!this.mKeyguardBypassController.getBypassEnabled());
         this.mSwipeHelper = this.mNotificationSwipeHelperBuilder.setSwipeDirection(0).setNotificationCallback(this.mNotificationCallback).setOnMenuEventListener(this.mMenuEventListener).build();
         if (this.mNotifPipelineFlags.isNewPipelineEnabled()) {
@@ -561,64 +561,64 @@ public class NotificationStackScrollLayoutController {
         KeyguardBypassController keyguardBypassController = this.mKeyguardBypassController;
         NotificationStackScrollLayout notificationStackScrollLayout3 = this.mView;
         Objects.requireNonNull(notificationStackScrollLayout3);
-        keyguardBypassController.registerOnBypassStateChangedListener(new C2822xa1546776(notificationStackScrollLayout3));
-        this.mView.setManageButtonClickListener(new C2815xbae1b0c0(this));
+        keyguardBypassController.registerOnBypassStateChangedListener(new C2828xa1546776(notificationStackScrollLayout3));
+        this.mView.setManageButtonClickListener(new C2821xbae1b0c0(this));
         this.mHeadsUpManager.addListener(this.mOnHeadsUpChangedListener);
         HeadsUpManagerPhone headsUpManagerPhone = this.mHeadsUpManager;
         NotificationStackScrollLayout notificationStackScrollLayout4 = this.mView;
         Objects.requireNonNull(notificationStackScrollLayout4);
-        headsUpManagerPhone.setAnimationStateHandler(new C2823xbae1b0c1(notificationStackScrollLayout4));
+        headsUpManagerPhone.setAnimationStateHandler(new C2829xbae1b0c1(notificationStackScrollLayout4));
         this.mDynamicPrivacyController.addListener(this.mDynamicPrivacyControllerListener);
         ScrimController scrimController = this.mScrimController;
         NotificationStackScrollLayout notificationStackScrollLayout5 = this.mView;
         Objects.requireNonNull(notificationStackScrollLayout5);
-        scrimController.setScrimBehindChangeRunnable(new C2824xbae1b0c2(notificationStackScrollLayout5));
+        scrimController.setScrimBehindChangeRunnable(new C2830xbae1b0c2(notificationStackScrollLayout5));
         this.mLockscreenShadeTransitionController.setStackScroller(this);
         this.mShadeTransitionController.setNotificationStackScrollLayoutController(this);
         this.mLockscreenUserManager.addUserChangedListener(this.mLockscreenUserChangeListener);
-        this.mFadeNotificationsOnDismiss = this.mResources.getBoolean(C1893R.bool.config_fadeNotificationsOnDismiss);
+        this.mFadeNotificationsOnDismiss = this.mResources.getBoolean(C1894R.bool.config_fadeNotificationsOnDismiss);
         NotificationRoundnessManager notificationRoundnessManager = this.mNotificationRoundnessManager;
         NotificationStackScrollLayout notificationStackScrollLayout6 = this.mView;
         Objects.requireNonNull(notificationStackScrollLayout6);
-        notificationRoundnessManager.setOnRoundingChangedCallback(new C2825xbae1b0c3(notificationStackScrollLayout6));
+        notificationRoundnessManager.setOnRoundingChangedCallback(new C2831xbae1b0c3(notificationStackScrollLayout6));
         NotificationStackScrollLayout notificationStackScrollLayout7 = this.mView;
         NotificationRoundnessManager notificationRoundnessManager2 = this.mNotificationRoundnessManager;
         Objects.requireNonNull(notificationRoundnessManager2);
-        notificationStackScrollLayout7.addOnExpandedHeightChangedListener(new C2826xbae1b0c4(notificationRoundnessManager2));
-        this.mVisualStabilityManager.setVisibilityLocationProvider(new C2829xbae1b0c7(this));
-        this.mTunerService.addTunable(new C2830xbae1b0c8(this), NotificationIconAreaController.HIGH_PRIORITY, "notification_history_enabled");
-        this.mKeyguardMediaController.setVisibilityChangedListener(new C2816xa1546770(this));
+        notificationStackScrollLayout7.addOnExpandedHeightChangedListener(new C2832xbae1b0c4(notificationRoundnessManager2));
+        this.mVisualStabilityManager.setVisibilityLocationProvider(new C2835xbae1b0c7(this));
+        this.mTunerService.addTunable(new C2836xbae1b0c8(this), NotificationIconAreaController.HIGH_PRIORITY, "notification_history_enabled");
+        this.mKeyguardMediaController.setVisibilityChangedListener(new C2822xa1546770(this));
         this.mDeviceProvisionedController.addCallback(this.mDeviceProvisionedListener);
         this.mDeviceProvisionedListener.onDeviceProvisionedChanged();
         if (this.mView.isAttachedToWindow()) {
             this.mOnAttachStateChangeListener.onViewAttachedToWindow(this.mView);
         }
         this.mView.addOnAttachStateChangeListener(this.mOnAttachStateChangeListener);
-        this.mSilentHeaderController.setOnClearSectionClickListener(new C2817xa1546771(this));
-        this.mGroupExpansionManager.registerGroupExpansionChangeListener(new C2818xa1546772(this));
+        this.mSilentHeaderController.setOnClearSectionClickListener(new C2823xa1546771(this));
+        this.mGroupExpansionManager.registerGroupExpansionChangeListener(new C2824xa1546772(this));
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$attach$2$com-android-systemui-statusbar-notification-stack-NotificationStackScrollLayoutController */
-    public /* synthetic */ void mo42453x3105d541(int i) {
+    public /* synthetic */ void mo42461x3105d541(int i) {
         this.mUiEventLogger.log(NotificationPanelEvent.fromSelection(i));
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$attach$3$com-android-systemui-statusbar-notification-stack-NotificationStackScrollLayoutController */
-    public /* synthetic */ void mo42454xf7305e02() {
+    public /* synthetic */ void mo42462xf7305e02() {
         this.mMetricsLogger.action(148);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$attach$4$com-android-systemui-statusbar-notification-stack-NotificationStackScrollLayoutController */
-    public /* synthetic */ void mo42455xbd5ae6c3(boolean z) {
+    public /* synthetic */ void mo42463xbd5ae6c3(boolean z) {
         this.mNotificationRoundnessManager.setShouldRoundPulsingViews(!z);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$attach$5$com-android-systemui-statusbar-notification-stack-NotificationStackScrollLayoutController */
-    public /* synthetic */ void mo42456x83856f84(View view) {
+    public /* synthetic */ void mo42464x83856f84(View view) {
         NotificationActivityStarter notificationActivityStarter = this.mNotificationActivityStarter;
         if (notificationActivityStarter != null) {
             notificationActivityStarter.startHistoryIntent(view, this.mView.isHistoryShown());
@@ -627,7 +627,7 @@ public class NotificationStackScrollLayoutController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$attach$6$com-android-systemui-statusbar-notification-stack-NotificationStackScrollLayoutController */
-    public /* synthetic */ void mo42457x49aff845(String str, String str2) {
+    public /* synthetic */ void mo42465x49aff845(String str, String str2) {
         str.hashCode();
         if (str.equals(NotificationIconAreaController.HIGH_PRIORITY)) {
             this.mView.setHighPriorityBeforeSpeedBump("1".equals(str2));
@@ -639,7 +639,7 @@ public class NotificationStackScrollLayoutController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$attach$7$com-android-systemui-statusbar-notification-stack-NotificationStackScrollLayoutController */
-    public /* synthetic */ Unit mo42458xfda8106(Boolean bool) {
+    public /* synthetic */ Unit mo42466xfda8106(Boolean bool) {
         if (bool.booleanValue()) {
             this.mView.generateAddAnimation(this.mKeyguardMediaController.getSinglePaneContainer(), false);
         } else {
@@ -651,13 +651,13 @@ public class NotificationStackScrollLayoutController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$attach$8$com-android-systemui-statusbar-notification-stack-NotificationStackScrollLayoutController */
-    public /* synthetic */ void mo42459xd60509c7(View view) {
+    public /* synthetic */ void mo42467xd60509c7(View view) {
         clearSilentNotifications();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$attach$9$com-android-systemui-statusbar-notification-stack-NotificationStackScrollLayoutController */
-    public /* synthetic */ void mo42460x9c2f9288(ExpandableNotificationRow expandableNotificationRow, boolean z) {
+    public /* synthetic */ void mo42468x9c2f9288(ExpandableNotificationRow expandableNotificationRow, boolean z) {
         this.mView.onGroupExpandChanged(expandableNotificationRow, z);
     }
 
@@ -1486,14 +1486,14 @@ public class NotificationStackScrollLayoutController {
         }
 
         public void bindRow(ExpandableNotificationRow expandableNotificationRow) {
-            expandableNotificationRow.setHeadsUpAnimatingAwayListener(new C2832xbe435293(this, expandableNotificationRow));
+            expandableNotificationRow.setHeadsUpAnimatingAwayListener(new C2838xbe435293(this, expandableNotificationRow));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$bindRow$0$com-android-systemui-statusbar-notification-stack-NotificationStackScrollLayoutController$NotificationListContainerImpl */
-        public /* synthetic */ void mo42536x67c20b91(ExpandableNotificationRow expandableNotificationRow, Boolean bool) {
+        public /* synthetic */ void mo42544x67c20b91(ExpandableNotificationRow expandableNotificationRow, Boolean bool) {
             NotificationStackScrollLayoutController.this.mNotificationRoundnessManager.updateView(expandableNotificationRow, false);
-            NotificationStackScrollLayoutController.this.mHeadsUpAppearanceController.mo44046x1d186c59(expandableNotificationRow.getEntry());
+            NotificationStackScrollLayoutController.this.mHeadsUpAppearanceController.mo44056x1d186c59(expandableNotificationRow.getEntry());
         }
 
         public void applyLaunchAnimationParams(LaunchAnimationParameters launchAnimationParameters) {

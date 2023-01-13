@@ -121,7 +121,7 @@ public class InputMethodAndSubtypeEnablerManager implements Preference.OnPrefere
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$addInputMethodSubtypePreferences$0$com-android-settingslib-inputmethod-InputMethodAndSubtypeEnablerManager */
-    public /* synthetic */ int mo28796x42551b22(Preference preference, Preference preference2) {
+    public /* synthetic */ int mo28801x42551b22(Preference preference, Preference preference2) {
         if (preference instanceof InputMethodSubtypePreference) {
             return ((InputMethodSubtypePreference) preference).compareTo(preference2, this.mCollator);
         }

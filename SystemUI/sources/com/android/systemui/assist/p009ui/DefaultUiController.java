@@ -13,7 +13,7 @@ import android.view.WindowManager;
 import android.view.animation.PathInterpolator;
 import android.widget.FrameLayout;
 import com.android.internal.logging.MetricsLogger;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.assist.AssistLogger;
 import com.android.systemui.assist.AssistManager;
 import com.android.systemui.assist.AssistantSessionEvent;
@@ -57,7 +57,7 @@ public class DefaultUiController implements AssistManager.UiController {
         layoutParams.gravity = 80;
         layoutParams.setFitInsetsTypes(0);
         layoutParams.setTitle("Assist");
-        InvocationLightsView invocationLightsView = (InvocationLightsView) LayoutInflater.from(context).inflate(C1893R.layout.invocation_lights, frameLayout, false);
+        InvocationLightsView invocationLightsView = (InvocationLightsView) LayoutInflater.from(context).inflate(C1894R.layout.invocation_lights, frameLayout, false);
         this.mInvocationLightsView = invocationLightsView;
         frameLayout.addView(invocationLightsView);
     }
@@ -152,7 +152,7 @@ public class DefaultUiController implements AssistManager.UiController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$animateInvocationCompletion$0$com-android-systemui-assist-ui-DefaultUiController */
-    public /* synthetic */ void mo30400x59df1844(int i, ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo30410x59df1844(int i, ValueAnimator valueAnimator) {
         setProgressInternal(i, ((Float) valueAnimator.getAnimatedValue()).floatValue());
     }
 }

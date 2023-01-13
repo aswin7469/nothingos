@@ -14,7 +14,7 @@ import androidx.dynamicanimation.animation.FlingAnimation;
 import androidx.dynamicanimation.animation.FloatPropertyCompat;
 import androidx.dynamicanimation.animation.SpringAnimation;
 import androidx.dynamicanimation.animation.SpringForce;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.animation.PhysicsAnimator;
 import com.android.p019wm.shell.bubbles.BadgedImageView;
 import com.android.p019wm.shell.bubbles.BubblePositioner;
@@ -230,7 +230,7 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$flingThenSpringFirstBubbleWithStackFollowing$0$com-android-wm-shell-bubbles-animation-StackAnimationController */
-    public /* synthetic */ void mo48954xd424bbb(DynamicAnimation.ViewProperty viewProperty, SpringForce springForce, Float f, float f2, float f3, DynamicAnimation dynamicAnimation, boolean z, float f4, float f5) {
+    public /* synthetic */ void mo48963xd424bbb(DynamicAnimation.ViewProperty viewProperty, SpringForce springForce, Float f, float f2, float f3, DynamicAnimation dynamicAnimation, boolean z, float f4, float f5) {
         float f6;
         if (!z) {
             this.mPositioner.setRestingPosition(this.mStackPosition);
@@ -349,7 +349,7 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$animateStackDismissal$1$com-android-wm-shell-bubbles-animation-StackAnimationController */
-    public /* synthetic */ void mo48952xc7b6588b(float f, int i, PhysicsAnimationLayout.PhysicsPropertyAnimator physicsPropertyAnimator) {
+    public /* synthetic */ void mo48961xc7b6588b(float f, int i, PhysicsAnimationLayout.PhysicsPropertyAnimator physicsPropertyAnimator) {
         physicsPropertyAnimator.scaleX(0.0f, new Runnable[0]).scaleY(0.0f, new Runnable[0]).alpha(0.0f, new Runnable[0]).translationY(this.mLayout.getChildAt(i).getTranslationY() + f, new Runnable[0]).withStiffness(10000.0f);
     }
 
@@ -366,7 +366,7 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$springFirstBubbleWithStackFollowing$2$com-android-wm-shell-bubbles-animation-StackAnimationController */
-    public /* synthetic */ void mo48956xe9c3843c(boolean z, Runnable[] runnableArr, DynamicAnimation dynamicAnimation, boolean z2, float f, float f2) {
+    public /* synthetic */ void mo48965xe9c3843c(boolean z, Runnable[] runnableArr, DynamicAnimation dynamicAnimation, boolean z2, float f, float f2) {
         if (!z) {
             this.mPositioner.setRestingPosition(this.mStackPosition);
         }
@@ -448,7 +448,7 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$animateReorder$3$com-android-wm-shell-bubbles-animation-StackAnimationController */
-    public /* synthetic */ void mo48951xaaa65b3(List list) {
+    public /* synthetic */ void mo48960xaaa65b3(List list) {
         for (int i = 0; i < list.size(); i++) {
             updateBadgesAndZOrder((View) list.get(i), i);
         }
@@ -468,22 +468,22 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
     }
 
     private void animateToFrontThenUpdateIcons(View view, Runnable runnable, Runnable runnable2) {
-        view.setTag(C3343R.C3346id.reorder_animator_tag, view.animate().translationY(getStackPosition().y - this.mSwapAnimationOffset).setDuration(300).withEndAction(new StackAnimationController$$ExternalSyntheticLambda5(this, runnable, view, runnable2)));
+        view.setTag(C3353R.C3356id.reorder_animator_tag, view.animate().translationY(getStackPosition().y - this.mSwapAnimationOffset).setDuration(300).withEndAction(new StackAnimationController$$ExternalSyntheticLambda5(this, runnable, view, runnable2)));
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$animateToFrontThenUpdateIcons$4$com-android-wm-shell-bubbles-animation-StackAnimationController */
-    public /* synthetic */ void mo48953x4a77c6e7(Runnable runnable, View view, Runnable runnable2) {
+    public /* synthetic */ void mo48962x4a77c6e7(Runnable runnable, View view, Runnable runnable2) {
         runnable.run();
         moveToFinalIndex(view, 0, runnable2);
     }
 
     private void moveToFinalIndex(View view, int i, Runnable runnable) {
-        view.setTag(C3343R.C3346id.reorder_animator_tag, view.animate().translationY(getStackPosition().y + (((float) Math.min(i, 1)) * this.mStackOffset)).setDuration(300).withEndAction(new StackAnimationController$$ExternalSyntheticLambda2(view, runnable)));
+        view.setTag(C3353R.C3356id.reorder_animator_tag, view.animate().translationY(getStackPosition().y + (((float) Math.min(i, 1)) * this.mStackOffset)).setDuration(300).withEndAction(new StackAnimationController$$ExternalSyntheticLambda2(view, runnable)));
     }
 
     static /* synthetic */ void lambda$moveToFinalIndex$5(View view, Runnable runnable) {
-        view.setTag(C3343R.C3346id.reorder_animator_tag, (Object) null);
+        view.setTag(C3353R.C3356id.reorder_animator_tag, (Object) null);
         runnable.run();
     }
 
@@ -501,16 +501,16 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
     public void onActiveControllerForLayout(PhysicsAnimationLayout physicsAnimationLayout) {
         Resources resources = physicsAnimationLayout.getResources();
         this.mStackOffset = (float) this.mPositioner.getStackOffset();
-        this.mSwapAnimationOffset = (float) resources.getDimensionPixelSize(C3343R.dimen.bubble_swap_animation_offset);
-        this.mMaxBubbles = resources.getInteger(C3343R.integer.bubbles_max_rendered);
-        this.mElevation = resources.getDimensionPixelSize(C3343R.dimen.bubble_elevation);
+        this.mSwapAnimationOffset = (float) resources.getDimensionPixelSize(C3353R.dimen.bubble_swap_animation_offset);
+        this.mMaxBubbles = resources.getInteger(C3353R.integer.bubbles_max_rendered);
+        this.mElevation = resources.getDimensionPixelSize(C3353R.dimen.bubble_elevation);
         this.mBubbleSize = this.mPositioner.getBubbleSize();
         this.mBubblePaddingTop = this.mPositioner.getBubblePaddingTop();
     }
 
     public void updateResources() {
         if (this.mLayout != null) {
-            this.mBubblePaddingTop = this.mLayout.getContext().getResources().getDimensionPixelSize(C3343R.dimen.bubble_padding_top);
+            this.mBubblePaddingTop = this.mLayout.getContext().getResources().getDimensionPixelSize(C3353R.dimen.bubble_padding_top);
         }
     }
 
@@ -526,7 +526,7 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$moveStackToStartPosition$6$com-android-wm-shell-bubbles-animation-StackAnimationController */
-    public /* synthetic */ void mo48955x4820ad95() {
+    public /* synthetic */ void mo48964x4820ad95() {
         setStackPosition(this.mPositioner.getRestingPosition());
         this.mStackMovedToStartPosition = true;
         this.mLayout.setVisibility(0);
@@ -591,7 +591,7 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
             view.setScaleY(0.5f);
             view.setAlpha(0.0f);
             ViewPropertyAnimator withEndAction = view.animate().scaleX(1.0f).scaleY(1.0f).alpha(1.0f).setDuration(300).withEndAction(new StackAnimationController$$ExternalSyntheticLambda0(view));
-            view.setTag(C3343R.C3346id.reorder_animator_tag, withEndAction);
+            view.setTag(C3353R.C3356id.reorder_animator_tag, withEndAction);
             if (this.mPositioner.showBubblesVertically()) {
                 withEndAction.translationX(f);
             } else {
@@ -608,7 +608,7 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
 
     public MagnetizedObject<StackAnimationController> getMagnetizedStack() {
         if (this.mMagnetizedStack == null) {
-            C34152 r1 = new MagnetizedObject<StackAnimationController>(this.mLayout.getContext(), this, new StackPositionProperty(DynamicAnimation.TRANSLATION_X), new StackPositionProperty(DynamicAnimation.TRANSLATION_Y)) {
+            C34252 r1 = new MagnetizedObject<StackAnimationController>(this.mLayout.getContext(), this, new StackPositionProperty(DynamicAnimation.TRANSLATION_X), new StackPositionProperty(DynamicAnimation.TRANSLATION_Y)) {
                 public float getWidth(StackAnimationController stackAnimationController) {
                     return (float) StackAnimationController.this.mBubbleSize;
                 }

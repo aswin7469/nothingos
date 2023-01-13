@@ -9,6 +9,6 @@ public final /* synthetic */ class RemoteInputViewControllerImpl$$ExternalSynthe
     }
 
     public final void run() {
-        RemoteInputViewControllerImpl.m3240onSendRemoteInputListener$lambda7(this.f$0);
+        RemoteInputViewControllerImpl.m3245onSendRemoteInputListener$lambda7(this.f$0);
     }
 }

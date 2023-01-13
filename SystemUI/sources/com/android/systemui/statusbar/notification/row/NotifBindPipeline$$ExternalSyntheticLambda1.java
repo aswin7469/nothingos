@@ -12,6 +12,6 @@ public final /* synthetic */ class NotifBindPipeline$$ExternalSyntheticLambda1 i
     }
 
     public final void onStageFinished(NotificationEntry notificationEntry) {
-        this.f$0.mo41359x69f9c096(notificationEntry);
+        this.f$0.mo41365x69f9c096(notificationEntry);
     }
 }

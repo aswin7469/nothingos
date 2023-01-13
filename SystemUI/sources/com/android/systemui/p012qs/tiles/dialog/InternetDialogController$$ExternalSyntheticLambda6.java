@@ -12,6 +12,6 @@ public final /* synthetic */ class InternetDialogController$$ExternalSyntheticLa
     }
 
     public final Object get() {
-        return this.f$0.mo37060x30e9102e();
+        return this.f$0.mo37059x30e9102e();
     }
 }

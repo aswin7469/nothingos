@@ -17,6 +17,6 @@ public final /* synthetic */ class NotifCollection$$ExternalSyntheticLambda0 imp
     }
 
     public final void run() {
-        this.f$0.mo39957x7f371d7a(this.f$1, this.f$2, this.f$3);
+        this.f$0.mo39959x7f371d7a(this.f$1, this.f$2, this.f$3);
     }
 }

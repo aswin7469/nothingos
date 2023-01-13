@@ -13,6 +13,6 @@ public final /* synthetic */ class PanelViewController$$ExternalSyntheticLambda2
     }
 
     public final void run() {
-        this.f$0.mo44934xb73085c4(this.f$1);
+        this.f$0.mo44949xb73085c4(this.f$1);
     }
 }

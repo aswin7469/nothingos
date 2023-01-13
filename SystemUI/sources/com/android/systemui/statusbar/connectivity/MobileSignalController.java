@@ -31,7 +31,7 @@ import com.android.settingslib.mobile.MobileMappings;
 import com.android.settingslib.mobile.MobileStatusTracker;
 import com.android.settingslib.mobile.TelephonyIcons;
 import com.android.settingslib.net.SignalStrengthUtil;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.flags.FeatureFlags;
 import com.android.systemui.flags.Flags;
 import com.android.systemui.navigationbar.NavigationBarInflaterView;
@@ -57,7 +57,8 @@ public class MobileSignalController extends SignalController<MobileState, Signal
     public static final SimpleDateFormat SSDF = new SimpleDateFormat("MM-dd HH:mm:ss.SSS");
     private static final int STATUS_HISTORY_SIZE = 64;
     private int mCallState = 0;
-    private ImsMmTelManager.CapabilityCallback mCapabilityCallback;
+    /* access modifiers changed from: private */
+    public ImsMmTelManager.CapabilityCallback mCapabilityCallback;
     private final CarrierConfigTracker mCarrierConfigTracker;
     private FiveGServiceClient mClient;
     /* access modifiers changed from: private */
@@ -72,6 +73,7 @@ public class MobileSignalController extends SignalController<MobileState, Signal
     /* access modifiers changed from: private */
     public int mImsType = 1;
     boolean mInflateSignalStrengths = false;
+    private boolean mIsWifiEnabled;
     private int mLastLevel;
     /* access modifiers changed from: private */
     public int mLastWlanCrossSimLevel;
@@ -87,6 +89,8 @@ public class MobileSignalController extends SignalController<MobileState, Signal
     private final String mNetworkNameDefault;
     private final String mNetworkNameSeparator;
     private Map<String, SignalIcon.MobileIconGroup> mNetworkToIconLookup;
+    /* access modifiers changed from: private */
+    public TryRegisterIms mNothingTryRegisterIms;
     private final ContentObserver mObserver;
     private final TelephonyManager mPhone;
     /* access modifiers changed from: private */
@@ -113,11 +117,11 @@ public class MobileSignalController extends SignalController<MobileState, Signal
         super("MobileSignalController(" + subscriptionInfo.getSubscriptionId() + NavigationBarInflaterView.KEY_CODE_END, context, 0, callbackHandler, networkControllerImpl);
         boolean z2 = z;
         Looper looper2 = looper;
-        C26081 r5 = new MobileStatusTracker.Callback() {
+        C26141 r5 = new MobileStatusTracker.Callback() {
             private String mLastStatus;
 
             public void onMobileStatusChanged(boolean z, MobileStatusTracker.MobileStatus mobileStatus) {
-                NTLogUtil.m1682i(MobileSignalController.this.mTag, "onMobileStatusChanged= updateTelephony=" + z + " mobileStatus=" + mobileStatus.toString());
+                NTLogUtil.m1688i(MobileSignalController.this.mTag, "onMobileStatusChanged= updateTelephony=" + z + " mobileStatus=" + mobileStatus.toString());
                 String mobileStatus2 = mobileStatus.toString();
                 if (!mobileStatus2.equals(this.mLastStatus)) {
                     this.mLastStatus = mobileStatus2;
@@ -209,6 +213,7 @@ public class MobileSignalController extends SignalController<MobileState, Signal
                 }
             }
         };
+        this.mNothingTryRegisterIms = new TryRegisterIms();
         this.mCapabilityCallback = new ImsMmTelManager.CapabilityCallback() {
             public void onCapabilitiesStatusChanged(MmTelFeature.MmTelCapabilities mmTelCapabilities) {
                 ((MobileState) MobileSignalController.this.mCurrentState).voiceCapable = mmTelCapabilities.isCapable(1);
@@ -236,15 +241,17 @@ public class MobileSignalController extends SignalController<MobileState, Signal
                 Log.d(MobileSignalController.this.mTag, "ImsStateCallback.onAvailable");
                 if (!MobileSignalControllerEx.isSubIdChange(MobileSignalController.this.mSubscriptionInfo.getSimSlotIndex(), MobileSignalController.this.mSubscriptionInfo, MobileSignalController.this.mContext)) {
                     MobileSignalController.this.setListeners();
+                    NTLogUtil.m1686d(MobileSignalController.this.mTag, "set ImsListeners");
                     return;
                 }
                 MobileSignalController.this.mMySubscriptionsChangedListener = new MobileSignalControllerEx.MySubscriptionsChangedListener(MobileSignalController.this.mSubscriptionInfo.getSimSlotIndex(), MobileSignalController.this.mSubscriptionInfo, new Runnable() {
                     public void run() {
+                        NTLogUtil.m1686d(MobileSignalController.this.mTag, "delay set ImsListeners");
                         MobileSignalController.this.setListeners();
                         ((MobileSignalControllerEx) NTDependencyEx.get(MobileSignalControllerEx.class)).removeOnSubscriptionsChangedListener(MobileSignalController.this.mMySubscriptionsChangedListener);
                         MobileSignalController.this.mMySubscriptionsChangedListener = null;
                     }
-                }, MobileSignalController.this.mContext);
+                }, MobileSignalController.this.mContext, MobileSignalController.this.mReceiverHandler);
                 ((MobileSignalControllerEx) NTDependencyEx.get(MobileSignalControllerEx.class)).addOnSubscriptionsChangedListener(MobileSignalController.this.mMySubscriptionsChangedListener);
             }
 
@@ -263,7 +270,7 @@ public class MobileSignalController extends SignalController<MobileState, Signal
         this.mSubscriptionInfo = subscriptionInfo;
         this.mFiveGStateListener = new FiveGStateListener();
         this.mFiveGState = new FiveGServiceClient.FiveGServiceState();
-        this.mNetworkNameSeparator = getTextIfExists(C1893R.string.status_bar_network_name_separator).toString();
+        this.mNetworkNameSeparator = getTextIfExists(C1894R.string.status_bar_network_name_separator).toString();
         String charSequence = getTextIfExists(17040605).toString();
         this.mNetworkNameDefault = charSequence;
         this.mReceiverHandler = new Handler(looper2);
@@ -360,6 +367,10 @@ public class MobileSignalController extends SignalController<MobileState, Signal
         if (this.mConfig.showVolteIcon || this.mConfig.showVowifiIcon) {
             this.mImsMmTelManager.unregisterImsStateCallback(this.mImsStateCallback);
         }
+        if (this.mMySubscriptionsChangedListener != null) {
+            ((MobileSignalControllerEx) NTDependencyEx.get(MobileSignalControllerEx.class)).removeOnSubscriptionsChangedListener(this.mMySubscriptionsChangedListener);
+            this.mMySubscriptionsChangedListener = null;
+        }
     }
 
     private void updateInflateSignalStrength() {
@@ -407,7 +418,7 @@ public class MobileSignalController extends SignalController<MobileState, Signal
     private int getVolteResId() {
         int voiceNetworkType = ((MobileState) this.mCurrentState).getVoiceNetworkType();
         if (((MobileState) this.mCurrentState).imsRegistered && ((MobileSignalControllerEx) NTDependencyEx.get(MobileSignalControllerEx.class)).isVoiceOverCellularImsEnabled(this.mSubscriptionInfo.getSimSlotIndex())) {
-            return C1893R.C1895drawable.ic_volte;
+            return C1894R.C1896drawable.ic_volte;
         }
         if (((MobileState) this.mCurrentState).telephonyDisplayInfo.getNetworkType() != 13) {
             int networkType = ((MobileState) this.mCurrentState).telephonyDisplayInfo.getNetworkType();
@@ -417,17 +428,37 @@ public class MobileSignalController extends SignalController<MobileState, Signal
 
     /* access modifiers changed from: private */
     public void setListeners() {
-        try {
-            Log.d(this.mTag, "setListeners: register CapabilitiesCallback and RegistrationCallback");
-            this.mImsMmTelManager.registerMmTelCapabilityCallback(this.mContext.getMainExecutor(), this.mCapabilityCallback);
-            this.mImsMmTelManager.registerImsRegistrationCallback(this.mContext.getMainExecutor(), this.mRegistrationCallback);
-        } catch (ImsException e) {
-            Log.e(this.mTag, "unable to register listeners.", e);
-        }
-        queryImsState();
+        this.mReceiverHandler.post(this.mNothingTryRegisterIms);
     }
 
-    private void queryImsState() {
+    private class TryRegisterIms implements Runnable {
+        public static final int MAX_RETRY = 5;
+        public int mRetryCount;
+
+        private TryRegisterIms() {
+            this.mRetryCount = 0;
+        }
+
+        public void run() {
+            try {
+                this.mRetryCount++;
+                Log.d(MobileSignalController.this.mTag, "setListeners: register CapabilitiesCallback and RegistrationCallback, retry times:" + this.mRetryCount);
+                MobileSignalController.this.mImsMmTelManager.registerMmTelCapabilityCallback(MobileSignalController.this.mContext.getMainExecutor(), MobileSignalController.this.mCapabilityCallback);
+                MobileSignalController.this.mImsMmTelManager.registerImsRegistrationCallback(MobileSignalController.this.mContext.getMainExecutor(), MobileSignalController.this.mRegistrationCallback);
+                MobileSignalController.this.queryImsState();
+            } catch (ImsException e) {
+                if (this.mRetryCount < 5) {
+                    Log.e(MobileSignalController.this.mTag, "unable to register listeners, retry later", e);
+                    MobileSignalController.this.mReceiverHandler.postDelayed(MobileSignalController.this.mNothingTryRegisterIms, 500);
+                    return;
+                }
+                Log.e(MobileSignalController.this.mTag, "unable to register listeners, retry too many times", e);
+            }
+        }
+    }
+
+    /* access modifiers changed from: private */
+    public void queryImsState() {
         TelephonyManager createForSubscriptionId = this.mPhone.createForSubscriptionId(this.mSubscriptionInfo.getSubscriptionId());
         ((MobileState) this.mCurrentState).voiceCapable = createForSubscriptionId.isVolteAvailable();
         ((MobileState) this.mCurrentState).videoCapable = createForSubscriptionId.isVideoTelephonyAvailable();
@@ -451,6 +482,8 @@ public class MobileSignalController extends SignalController<MobileState, Signal
             ((MobileSignalControllerEx) NTDependencyEx.get(MobileSignalControllerEx.class)).removeOnSubscriptionsChangedListener(this.mMySubscriptionsChangedListener);
             this.mMySubscriptionsChangedListener = null;
         }
+        this.mNothingTryRegisterIms.mRetryCount = 0;
+        this.mReceiverHandler.removeCallbacks(this.mNothingTryRegisterIms);
     }
 
     public void notifyListeners(SignalCallback signalCallback) {
@@ -460,7 +493,7 @@ public class MobileSignalController extends SignalController<MobileState, Signal
             CharSequence textIfExists = getTextIfExists(mobileIconGroup.dataContentDescription);
             String obj = Html.fromHtml(textIfExists.toString(), 0).toString();
             if (((MobileState) this.mCurrentState).inetCondition == 0) {
-                obj = this.mContext.getString(C1893R.string.data_connection_no_internet);
+                obj = this.mContext.getString(C1894R.string.data_connection_no_internet);
             }
             String str = obj;
             QsInfo qsInfo = getQsInfo(charSequence, mobileIconGroup.dataType);
@@ -842,14 +875,14 @@ public class MobileSignalController extends SignalController<MobileState, Signal
         int voiceServiceState = ((MobileState) this.mCurrentState).getVoiceServiceState();
         if (i != voiceServiceState) {
             if (i == -1 || i == 0 || voiceServiceState == 0) {
-                notifyCallStateChange(new IconState(((MobileState) this.mCurrentState).isNoCalling() & (!hideNoCalling()), C1893R.C1895drawable.ic_qs_no_calling_sms, getTextIfExists(AccessibilityContentDescriptions.NO_CALLING).toString()), this.mSubscriptionInfo.getSubscriptionId());
+                notifyCallStateChange(new IconState(((MobileState) this.mCurrentState).isNoCalling() & (!hideNoCalling()), C1894R.C1896drawable.ic_qs_no_calling_sms, getTextIfExists(AccessibilityContentDescriptions.NO_CALLING).toString()), this.mSubscriptionInfo.getSubscriptionId());
             }
         }
     }
 
     /* access modifiers changed from: package-private */
     public void updateNoCallingState() {
-        notifyCallStateChange(new IconState((((MobileState) this.mCurrentState).getVoiceServiceState() != 0) & (true ^ hideNoCalling()), C1893R.C1895drawable.ic_qs_no_calling_sms, getTextIfExists(AccessibilityContentDescriptions.NO_CALLING).toString()), this.mSubscriptionInfo.getSubscriptionId());
+        notifyCallStateChange(new IconState((((MobileState) this.mCurrentState).getVoiceServiceState() != 0) & (true ^ hideNoCalling()), C1894R.C1896drawable.ic_qs_no_calling_sms, getTextIfExists(AccessibilityContentDescriptions.NO_CALLING).toString()), this.mSubscriptionInfo.getSubscriptionId());
     }
 
     private boolean hideNoCalling() {
@@ -874,7 +907,7 @@ public class MobileSignalController extends SignalController<MobileState, Signal
 
     /* access modifiers changed from: package-private */
     public void refreshCallIndicator(SignalCallback signalCallback) {
-        IconState iconState = new IconState(((MobileState) this.mCurrentState).isNoCalling() & (!hideNoCalling()), C1893R.C1895drawable.ic_qs_no_calling_sms, getTextIfExists(AccessibilityContentDescriptions.NO_CALLING).toString());
+        IconState iconState = new IconState(((MobileState) this.mCurrentState).isNoCalling() & (!hideNoCalling()), C1894R.C1896drawable.ic_qs_no_calling_sms, getTextIfExists(AccessibilityContentDescriptions.NO_CALLING).toString());
         signalCallback.setCallIndicator(iconState, this.mSubscriptionInfo.getSubscriptionId());
         int i = this.mImsType;
         if (i == 1) {
@@ -936,7 +969,7 @@ public class MobileSignalController extends SignalController<MobileState, Signal
     /* access modifiers changed from: private */
     public void updateTelephony() {
         int voiceNetworkType;
-        NTLogUtil.m1680d(this.mTag, "updateTelephonySignalStrength: hasService=" + ((MobileState) this.mCurrentState).isInService() + " ss=" + ((MobileState) this.mCurrentState).signalStrength + " displayInfo=" + ((MobileState) this.mCurrentState).telephonyDisplayInfo);
+        NTLogUtil.m1686d(this.mTag, "updateTelephonySignalStrength: hasService=" + ((MobileState) this.mCurrentState).isInService() + " ss=" + ((MobileState) this.mCurrentState).signalStrength + " displayInfo=" + ((MobileState) this.mCurrentState).telephonyDisplayInfo);
         checkDefaultData();
         ((MobileState) this.mCurrentState).connected = ((MobileState) this.mCurrentState).isInService();
         if (((MobileState) this.mCurrentState).connected) {
@@ -1142,7 +1175,7 @@ public class MobileSignalController extends SignalController<MobileState, Signal
     }
 
     private boolean isVowifiAvailable() {
-        return ((MobileSignalControllerEx) NTDependencyEx.get(MobileSignalControllerEx.class)).isVowifiEnabled(this.mSubscriptionInfo.getSimSlotIndex());
+        return ((MobileSignalControllerEx) NTDependencyEx.get(MobileSignalControllerEx.class)).isVowifiEnabled(this.mSubscriptionInfo.getSimSlotIndex()) && ((MobileState) this.mCurrentState).imsRegistered && this.mIsWifiEnabled;
     }
 
     private SignalIcon.MobileIconGroup getVowifiIconGroup() {
@@ -1234,5 +1267,10 @@ public class MobileSignalController extends SignalController<MobileState, Signal
     /* access modifiers changed from: package-private */
     public boolean isDirty() {
         return super.isDirty() || ((MobileSignalControllerEx) NTDependencyEx.get(MobileSignalControllerEx.class)).checkExtraDirty();
+    }
+
+    public void updateWifiEnabled(boolean z) {
+        this.mIsWifiEnabled = z;
+        notifyListeners();
     }
 }

@@ -13,7 +13,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.AccessibilityDelegateCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.badge.BadgeState;
 import com.google.android.material.internal.ParcelableSparseArray;
 import com.google.android.material.internal.ToolbarUtils;
@@ -117,8 +117,8 @@ public class BadgeUtils {
     }
 
     static void setToolbarOffset(BadgeDrawable badgeDrawable, Resources resources) {
-        badgeDrawable.setAdditionalHorizontalOffset(resources.getDimensionPixelOffset(C3621R.dimen.mtrl_badge_toolbar_action_menu_item_horizontal_offset));
-        badgeDrawable.setAdditionalVerticalOffset(resources.getDimensionPixelOffset(C3621R.dimen.mtrl_badge_toolbar_action_menu_item_vertical_offset));
+        badgeDrawable.setAdditionalHorizontalOffset(resources.getDimensionPixelOffset(C3631R.dimen.mtrl_badge_toolbar_action_menu_item_horizontal_offset));
+        badgeDrawable.setAdditionalVerticalOffset(resources.getDimensionPixelOffset(C3631R.dimen.mtrl_badge_toolbar_action_menu_item_vertical_offset));
     }
 
     static void removeToolbarOffset(BadgeDrawable badgeDrawable) {

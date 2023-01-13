@@ -11,7 +11,8 @@ import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.android.internal.logging.UiEventLogger;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
+import com.android.systemui.Dependency;
 import com.android.systemui.keyguard.ScreenLifecycle;
 import com.android.systemui.p012qs.QSEditEvent;
 import com.android.systemui.p012qs.QSFragment;
@@ -20,10 +21,13 @@ import com.android.systemui.p012qs.customize.TileQueryHelper;
 import com.android.systemui.p012qs.dagger.QSScope;
 import com.android.systemui.plugins.p011qs.QSContainerController;
 import com.android.systemui.plugins.p011qs.QSTile;
+import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.phone.LightBarController;
 import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
 import com.android.systemui.util.ViewController;
+import com.nothing.systemui.NTDependencyEx;
+import com.nothing.systemui.statusbar.phone.CentralSurfacesImplEx;
 import java.util.ArrayList;
 import javax.inject.Inject;
 
@@ -92,11 +96,11 @@ public class QSCustomizerController extends ViewController<QSCustomizer> {
         ((QSCustomizer) this.mView).updateNavBackDrop(getResources().getConfiguration(), this.mLightBarController);
         this.mConfigurationController.addCallback(this.mConfigurationListener);
         this.mTileQueryHelper.setListener(this.mTileAdapter);
-        this.mTileAdapter.changeHalfMargin(getResources().getDimensionPixelSize(C1893R.dimen.qs_tile_margin_horizontal) / 2);
+        this.mTileAdapter.changeHalfMargin(getResources().getDimensionPixelSize(C1894R.dimen.qs_tile_margin_horizontal) / 2);
         final RecyclerView recyclerView = ((QSCustomizer) this.mView).getRecyclerView();
         recyclerView.setAdapter(this.mTileAdapter);
         this.mTileAdapter.getItemTouchHelper().attachToRecyclerView(recyclerView);
-        C23614 r1 = new GridLayoutManager(getContext(), this.mTileAdapter.getNumColumns()) {
+        C23644 r1 = new GridLayoutManager(getContext(), this.mTileAdapter.getNumColumns()) {
             public void onInitializeAccessibilityNodeInfoForItem(RecyclerView.Recycler recycler, RecyclerView.State state, View view, AccessibilityNodeInfoCompat accessibilityNodeInfoCompat) {
             }
 
@@ -119,7 +123,7 @@ public class QSCustomizerController extends ViewController<QSCustomizer> {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onViewAttached$0$com-android-systemui-qs-customize-QSCustomizerController */
-    public /* synthetic */ void mo36512x148df215(View view) {
+    public /* synthetic */ void mo36516x148df215(View view) {
         hide();
     }
 
@@ -190,7 +194,7 @@ public class QSCustomizerController extends ViewController<QSCustomizer> {
     }
 
     public void hide() {
-        boolean z = this.mScreenLifecycle.getScreenState() != 0;
+        boolean z = this.mScreenLifecycle.getScreenState() != 0 && !((StatusBarStateController) Dependency.get(StatusBarStateController.class)).isDozing() && !((CentralSurfacesImplEx) NTDependencyEx.get(CentralSurfacesImplEx.class)).isPanelCollapsedByDream();
         if (((QSCustomizer) this.mView).isShown()) {
             this.mUiEventLogger.log(QSEditEvent.QS_EDIT_CLOSED);
             this.mToolbar.dismissPopupMenus();

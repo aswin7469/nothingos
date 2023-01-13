@@ -16,14 +16,14 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.MathUtils;
 import com.android.internal.graphics.ColorUtils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.animation.Interpolators;
 import kotlin.Metadata;
 import kotlin.Unit;
 import kotlin.jvm.internal.Intrinsics;
 import org.xmlpull.p032v1.XmlPullParser;
 
-@Metadata(mo64986d1 = {"\u0000\u0001\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u000b\n\u0002\b\u0003\n\u0002\u0010\b\n\u0002\b\u0006\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0015\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\t\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u0007\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0000\b\u0007\u0018\u00002\u00020\u0001B\u0005¢\u0006\u0002\u0010\u0002J\u0014\u0010\u0017\u001a\u00020\u00182\n\u0010\u0019\u001a\u00060\u001aR\u00020\u001bH\u0016J\b\u0010\u001c\u001a\u00020\u0004H\u0016J\u0010\u0010\u001d\u001a\u00020\u00182\u0006\u0010\u001e\u001a\u00020\u001fH\u0016J\b\u0010 \u001a\u00020!H\u0016J\b\u0010\"\u001a\u00020\bH\u0016J\u0010\u0010#\u001a\u00020\u00182\u0006\u0010$\u001a\u00020%H\u0016J\b\u0010&\u001a\u00020\u0004H\u0016J\b\u0010'\u001a\u00020\u0018H\u0002J.\u0010(\u001a\u00020\u00182\u0006\u0010)\u001a\u00020\u001b2\u0006\u0010*\u001a\u00020+2\u0006\u0010,\u001a\u00020-2\f\u0010.\u001a\b\u0018\u00010\u001aR\u00020\u001bH\u0016J\b\u0010/\u001a\u00020\u0004H\u0016J\b\u00100\u001a\u00020\u0004H\u0016J\u0012\u00101\u001a\u00020\u00042\b\u00102\u001a\u0004\u0018\u00010\u0016H\u0014J\u0010\u00103\u001a\u00020\u00182\u0006\u00104\u001a\u00020\bH\u0016J\u0012\u00105\u001a\u00020\u00182\b\u00106\u001a\u0004\u0018\u000107H\u0016J\u0018\u00108\u001a\u00020\u00182\u0006\u00109\u001a\u00020:2\u0006\u0010;\u001a\u00020:H\u0016J\u0010\u0010<\u001a\u00020\u00182\u0006\u0010=\u001a\u00020>H\u0002R\u001e\u0010\u0005\u001a\u00020\u00042\u0006\u0010\u0003\u001a\u00020\u0004@BX\u000e¢\u0006\b\n\u0000\"\u0004\b\u0006\u0010\u0007R$\u0010\t\u001a\u00020\b2\u0006\u0010\u0003\u001a\u00020\b@FX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\n\u0010\u000b\"\u0004\b\f\u0010\rR\u000e\u0010\u000e\u001a\u00020\u000fX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0010\u001a\u00020\u0004X\u000e¢\u0006\u0002\n\u0000R\u0010\u0010\u0011\u001a\u0004\u0018\u00010\u0012X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0013\u001a\u00020\u0014X\u0004¢\u0006\u0002\n\u0000R\u0010\u0010\u0015\u001a\u0004\u0018\u00010\u0016X\u000e¢\u0006\u0002\n\u0000¨\u0006?"}, mo64987d2 = {"Lcom/android/systemui/media/LightSourceDrawable;", "Landroid/graphics/drawable/Drawable;", "()V", "value", "", "active", "setActive", "(Z)V", "", "highlightColor", "getHighlightColor", "()I", "setHighlightColor", "(I)V", "paint", "Landroid/graphics/Paint;", "pressed", "rippleAnimation", "Landroid/animation/Animator;", "rippleData", "Lcom/android/systemui/media/RippleData;", "themeAttrs", "", "applyTheme", "", "t", "Landroid/content/res/Resources$Theme;", "Landroid/content/res/Resources;", "canApplyTheme", "draw", "canvas", "Landroid/graphics/Canvas;", "getDirtyBounds", "Landroid/graphics/Rect;", "getOpacity", "getOutline", "outline", "Landroid/graphics/Outline;", "hasFocusStateSpecified", "illuminate", "inflate", "r", "parser", "Lorg/xmlpull/v1/XmlPullParser;", "attrs", "Landroid/util/AttributeSet;", "theme", "isProjected", "isStateful", "onStateChange", "stateSet", "setAlpha", "alpha", "setColorFilter", "p0", "Landroid/graphics/ColorFilter;", "setHotspot", "x", "", "y", "updateStateFromTypedArray", "a", "Landroid/content/res/TypedArray;", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000\u0001\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u000b\n\u0002\b\u0003\n\u0002\u0010\b\n\u0002\b\u0006\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0015\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\t\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u0007\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0000\b\u0007\u0018\u00002\u00020\u0001B\u0005¢\u0006\u0002\u0010\u0002J\u0014\u0010\u0017\u001a\u00020\u00182\n\u0010\u0019\u001a\u00060\u001aR\u00020\u001bH\u0016J\b\u0010\u001c\u001a\u00020\u0004H\u0016J\u0010\u0010\u001d\u001a\u00020\u00182\u0006\u0010\u001e\u001a\u00020\u001fH\u0016J\b\u0010 \u001a\u00020!H\u0016J\b\u0010\"\u001a\u00020\bH\u0016J\u0010\u0010#\u001a\u00020\u00182\u0006\u0010$\u001a\u00020%H\u0016J\b\u0010&\u001a\u00020\u0004H\u0016J\b\u0010'\u001a\u00020\u0018H\u0002J.\u0010(\u001a\u00020\u00182\u0006\u0010)\u001a\u00020\u001b2\u0006\u0010*\u001a\u00020+2\u0006\u0010,\u001a\u00020-2\f\u0010.\u001a\b\u0018\u00010\u001aR\u00020\u001bH\u0016J\b\u0010/\u001a\u00020\u0004H\u0016J\b\u00100\u001a\u00020\u0004H\u0016J\u0012\u00101\u001a\u00020\u00042\b\u00102\u001a\u0004\u0018\u00010\u0016H\u0014J\u0010\u00103\u001a\u00020\u00182\u0006\u00104\u001a\u00020\bH\u0016J\u0012\u00105\u001a\u00020\u00182\b\u00106\u001a\u0004\u0018\u000107H\u0016J\u0018\u00108\u001a\u00020\u00182\u0006\u00109\u001a\u00020:2\u0006\u0010;\u001a\u00020:H\u0016J\u0010\u0010<\u001a\u00020\u00182\u0006\u0010=\u001a\u00020>H\u0002R\u001e\u0010\u0005\u001a\u00020\u00042\u0006\u0010\u0003\u001a\u00020\u0004@BX\u000e¢\u0006\b\n\u0000\"\u0004\b\u0006\u0010\u0007R$\u0010\t\u001a\u00020\b2\u0006\u0010\u0003\u001a\u00020\b@FX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\n\u0010\u000b\"\u0004\b\f\u0010\rR\u000e\u0010\u000e\u001a\u00020\u000fX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0010\u001a\u00020\u0004X\u000e¢\u0006\u0002\n\u0000R\u0010\u0010\u0011\u001a\u0004\u0018\u00010\u0012X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0013\u001a\u00020\u0014X\u0004¢\u0006\u0002\n\u0000R\u0010\u0010\u0015\u001a\u0004\u0018\u00010\u0016X\u000e¢\u0006\u0002\n\u0000¨\u0006?"}, mo65043d2 = {"Lcom/android/systemui/media/LightSourceDrawable;", "Landroid/graphics/drawable/Drawable;", "()V", "value", "", "active", "setActive", "(Z)V", "", "highlightColor", "getHighlightColor", "()I", "setHighlightColor", "(I)V", "paint", "Landroid/graphics/Paint;", "pressed", "rippleAnimation", "Landroid/animation/Animator;", "rippleData", "Lcom/android/systemui/media/RippleData;", "themeAttrs", "", "applyTheme", "", "t", "Landroid/content/res/Resources$Theme;", "Landroid/content/res/Resources;", "canApplyTheme", "draw", "canvas", "Landroid/graphics/Canvas;", "getDirtyBounds", "Landroid/graphics/Rect;", "getOpacity", "getOutline", "outline", "Landroid/graphics/Outline;", "hasFocusStateSpecified", "illuminate", "inflate", "r", "parser", "Lorg/xmlpull/v1/XmlPullParser;", "attrs", "Landroid/util/AttributeSet;", "theme", "isProjected", "isStateful", "onStateChange", "stateSet", "setAlpha", "alpha", "setColorFilter", "p0", "Landroid/graphics/ColorFilter;", "setHotspot", "x", "", "y", "updateStateFromTypedArray", "a", "Landroid/content/res/TypedArray;", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* compiled from: LightSourceDrawable.kt */
 public final class LightSourceDrawable extends Drawable {
     private boolean active;
@@ -96,7 +96,7 @@ public final class LightSourceDrawable extends Drawable {
 
     /* access modifiers changed from: private */
     /* renamed from: _set_active_$lambda-1$lambda-0  reason: not valid java name */
-    public static final void m2765_set_active_$lambda1$lambda0(LightSourceDrawable lightSourceDrawable, ValueAnimator valueAnimator) {
+    public static final void m2770_set_active_$lambda1$lambda0(LightSourceDrawable lightSourceDrawable, ValueAnimator valueAnimator) {
         Intrinsics.checkNotNullParameter(lightSourceDrawable, "this$0");
         RippleData rippleData2 = lightSourceDrawable.rippleData;
         Object animatedValue = valueAnimator.getAnimatedValue();
@@ -121,7 +121,7 @@ public final class LightSourceDrawable extends Drawable {
         Intrinsics.checkNotNullParameter(resources, "r");
         Intrinsics.checkNotNullParameter(xmlPullParser, "parser");
         Intrinsics.checkNotNullParameter(attributeSet, "attrs");
-        TypedArray obtainAttributes = Drawable.obtainAttributes(resources, theme, attributeSet, C1893R.styleable.IlluminationDrawable);
+        TypedArray obtainAttributes = Drawable.obtainAttributes(resources, theme, attributeSet, C1894R.styleable.IlluminationDrawable);
         this.themeAttrs = obtainAttributes.extractThemeAttrs();
         Intrinsics.checkNotNullExpressionValue(obtainAttributes, "a");
         updateStateFromTypedArray(obtainAttributes);
@@ -171,7 +171,7 @@ public final class LightSourceDrawable extends Drawable {
         super.applyTheme(theme);
         int[] iArr = this.themeAttrs;
         if (iArr != null) {
-            TypedArray resolveAttributes = theme.resolveAttributes(iArr, C1893R.styleable.IlluminationDrawable);
+            TypedArray resolveAttributes = theme.resolveAttributes(iArr, C1894R.styleable.IlluminationDrawable);
             Intrinsics.checkNotNullExpressionValue(resolveAttributes, "a");
             updateStateFromTypedArray(resolveAttributes);
             resolveAttributes.recycle();
@@ -216,7 +216,7 @@ public final class LightSourceDrawable extends Drawable {
 
     /* access modifiers changed from: private */
     /* renamed from: illuminate$lambda-7$lambda-4$lambda-3  reason: not valid java name */
-    public static final void m2766illuminate$lambda7$lambda4$lambda3(LightSourceDrawable lightSourceDrawable, ValueAnimator valueAnimator) {
+    public static final void m2771illuminate$lambda7$lambda4$lambda3(LightSourceDrawable lightSourceDrawable, ValueAnimator valueAnimator) {
         Intrinsics.checkNotNullParameter(lightSourceDrawable, "this$0");
         RippleData rippleData2 = lightSourceDrawable.rippleData;
         Object animatedValue = valueAnimator.getAnimatedValue();
@@ -230,7 +230,7 @@ public final class LightSourceDrawable extends Drawable {
 
     /* access modifiers changed from: private */
     /* renamed from: illuminate$lambda-7$lambda-6$lambda-5  reason: not valid java name */
-    public static final void m2767illuminate$lambda7$lambda6$lambda5(LightSourceDrawable lightSourceDrawable, ValueAnimator valueAnimator) {
+    public static final void m2772illuminate$lambda7$lambda6$lambda5(LightSourceDrawable lightSourceDrawable, ValueAnimator valueAnimator) {
         Intrinsics.checkNotNullParameter(lightSourceDrawable, "this$0");
         RippleData rippleData2 = lightSourceDrawable.rippleData;
         Object animatedValue = valueAnimator.getAnimatedValue();

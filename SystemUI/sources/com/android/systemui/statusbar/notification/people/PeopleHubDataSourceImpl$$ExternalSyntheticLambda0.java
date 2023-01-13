@@ -15,6 +15,6 @@ public final /* synthetic */ class PeopleHubDataSourceImpl$$ExternalSyntheticLam
     }
 
     public final void run() {
-        PeopleHubDataSourceImpl.m3129removeVisibleEntry$lambda3$lambda2$lambda1(this.f$0, this.f$1, this.f$2, this.f$3);
+        PeopleHubDataSourceImpl.m3133removeVisibleEntry$lambda3$lambda2$lambda1(this.f$0, this.f$1, this.f$2, this.f$3);
     }
 }

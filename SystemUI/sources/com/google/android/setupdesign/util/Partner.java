@@ -24,32 +24,32 @@ public class Partner {
 
     public static Set<String> getStringArray(Context context, int i) {
         ResourceEntry resourceEntry = getResourceEntry(context, i);
-        return new HashSet(Arrays.asList(resourceEntry.resources.getStringArray(resourceEntry.f459id)));
+        return new HashSet(Arrays.asList(resourceEntry.resources.getStringArray(resourceEntry.f458id)));
     }
 
     public static boolean getBoolean(Context context, int i) {
         ResourceEntry resourceEntry = getResourceEntry(context, i);
-        return resourceEntry.resources.getBoolean(resourceEntry.f459id);
+        return resourceEntry.resources.getBoolean(resourceEntry.f458id);
     }
 
     public static Drawable getDrawable(Context context, int i) {
         ResourceEntry resourceEntry = getResourceEntry(context, i);
-        return resourceEntry.resources.getDrawable(resourceEntry.f459id);
+        return resourceEntry.resources.getDrawable(resourceEntry.f458id);
     }
 
     public static String getString(Context context, int i) {
         ResourceEntry resourceEntry = getResourceEntry(context, i);
-        return resourceEntry.resources.getString(resourceEntry.f459id);
+        return resourceEntry.resources.getString(resourceEntry.f458id);
     }
 
     public static int getColor(Context context, int i) {
         ResourceEntry resourceEntry = getResourceEntry(context, i);
-        return resourceEntry.resources.getColor(resourceEntry.f459id);
+        return resourceEntry.resources.getColor(resourceEntry.f458id);
     }
 
     public static CharSequence getText(Context context, int i) {
         ResourceEntry resourceEntry = getResourceEntry(context, i);
-        return resourceEntry.resources.getText(resourceEntry.f459id);
+        return resourceEntry.resources.getText(resourceEntry.f458id);
     }
 
     public static Icon getIcon(Context context, int i) {
@@ -57,7 +57,7 @@ public class Partner {
         if (getTypedValue(resourceEntry).data == 0) {
             return null;
         }
-        return Icon.createWithResource(resourceEntry.packageName, resourceEntry.f459id);
+        return Icon.createWithResource(resourceEntry.packageName, resourceEntry.f458id);
     }
 
     public static ResourceEntry getResourceEntry(Context context, int i) {
@@ -75,7 +75,7 @@ public class Partner {
     public static class ResourceEntry {
 
         /* renamed from: id */
-        public int f459id;
+        public int f458id;
         public boolean isOverlay;
         public String packageName;
         public Resources resources;
@@ -83,7 +83,7 @@ public class Partner {
         ResourceEntry(String str, Resources resources2, int i, boolean z) {
             this.packageName = str;
             this.resources = resources2;
-            this.f459id = i;
+            this.f458id = i;
             this.isOverlay = z;
         }
     }
@@ -141,7 +141,7 @@ public class Partner {
 
     private static TypedValue getTypedValue(ResourceEntry resourceEntry) {
         TypedValue typedValue = new TypedValue();
-        resourceEntry.resources.getValue(resourceEntry.f459id, typedValue, true);
+        resourceEntry.resources.getValue(resourceEntry.f458id, typedValue, true);
         return typedValue;
     }
 }

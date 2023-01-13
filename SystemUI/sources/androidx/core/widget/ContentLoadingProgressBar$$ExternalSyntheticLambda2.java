@@ -9,6 +9,6 @@ public final /* synthetic */ class ContentLoadingProgressBar$$ExternalSyntheticL
     }
 
     public final void run() {
-        this.f$0.m2246lambda$new$0$androidxcorewidgetContentLoadingProgressBar();
+        this.f$0.m2252lambda$new$0$androidxcorewidgetContentLoadingProgressBar();
     }
 }

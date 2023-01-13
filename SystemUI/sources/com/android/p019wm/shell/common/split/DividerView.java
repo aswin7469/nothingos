@@ -24,7 +24,7 @@ import android.view.WindowManager;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.FrameLayout;
 import com.android.internal.policy.DividerSnapAlgorithm;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.animation.Interpolators;
 
 /* renamed from: com.android.wm.shell.common.split.DividerView */
@@ -63,45 +63,45 @@ public class DividerView extends FrameLayout implements View.OnTouchListener {
             super.onInitializeAccessibilityNodeInfo(view, accessibilityNodeInfo);
             DividerSnapAlgorithm dividerSnapAlgorithm = DividerView.this.mSplitLayout.mDividerSnapAlgorithm;
             if (DividerView.this.isLandscape()) {
-                accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3343R.C3346id.action_move_tl_full, DividerView.this.mContext.getString(C3343R.string.accessibility_action_divider_left_full)));
+                accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3353R.C3356id.action_move_tl_full, DividerView.this.mContext.getString(C3353R.string.accessibility_action_divider_left_full)));
                 if (dividerSnapAlgorithm.isFirstSplitTargetAvailable()) {
-                    accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3343R.C3346id.action_move_tl_70, DividerView.this.mContext.getString(C3343R.string.accessibility_action_divider_left_70)));
+                    accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3353R.C3356id.action_move_tl_70, DividerView.this.mContext.getString(C3353R.string.accessibility_action_divider_left_70)));
                 }
                 if (dividerSnapAlgorithm.showMiddleSplitTargetForAccessibility()) {
-                    accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3343R.C3346id.action_move_tl_50, DividerView.this.mContext.getString(C3343R.string.accessibility_action_divider_left_50)));
+                    accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3353R.C3356id.action_move_tl_50, DividerView.this.mContext.getString(C3353R.string.accessibility_action_divider_left_50)));
                 }
                 if (dividerSnapAlgorithm.isLastSplitTargetAvailable()) {
-                    accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3343R.C3346id.action_move_tl_30, DividerView.this.mContext.getString(C3343R.string.accessibility_action_divider_left_30)));
+                    accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3353R.C3356id.action_move_tl_30, DividerView.this.mContext.getString(C3353R.string.accessibility_action_divider_left_30)));
                 }
-                accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3343R.C3346id.action_move_rb_full, DividerView.this.mContext.getString(C3343R.string.accessibility_action_divider_right_full)));
+                accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3353R.C3356id.action_move_rb_full, DividerView.this.mContext.getString(C3353R.string.accessibility_action_divider_right_full)));
                 return;
             }
-            accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3343R.C3346id.action_move_tl_full, DividerView.this.mContext.getString(C3343R.string.accessibility_action_divider_top_full)));
+            accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3353R.C3356id.action_move_tl_full, DividerView.this.mContext.getString(C3353R.string.accessibility_action_divider_top_full)));
             if (dividerSnapAlgorithm.isFirstSplitTargetAvailable()) {
-                accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3343R.C3346id.action_move_tl_70, DividerView.this.mContext.getString(C3343R.string.accessibility_action_divider_top_70)));
+                accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3353R.C3356id.action_move_tl_70, DividerView.this.mContext.getString(C3353R.string.accessibility_action_divider_top_70)));
             }
             if (dividerSnapAlgorithm.showMiddleSplitTargetForAccessibility()) {
-                accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3343R.C3346id.action_move_tl_50, DividerView.this.mContext.getString(C3343R.string.accessibility_action_divider_top_50)));
+                accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3353R.C3356id.action_move_tl_50, DividerView.this.mContext.getString(C3353R.string.accessibility_action_divider_top_50)));
             }
             if (dividerSnapAlgorithm.isLastSplitTargetAvailable()) {
-                accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3343R.C3346id.action_move_tl_30, DividerView.this.mContext.getString(C3343R.string.accessibility_action_divider_top_30)));
+                accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3353R.C3356id.action_move_tl_30, DividerView.this.mContext.getString(C3353R.string.accessibility_action_divider_top_30)));
             }
-            accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3343R.C3346id.action_move_rb_full, DividerView.this.mContext.getString(C3343R.string.accessibility_action_divider_bottom_full)));
+            accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3353R.C3356id.action_move_rb_full, DividerView.this.mContext.getString(C3353R.string.accessibility_action_divider_bottom_full)));
         }
 
         public boolean performAccessibilityAction(View view, int i, Bundle bundle) {
             DividerSnapAlgorithm.SnapTarget snapTarget;
             DividerSnapAlgorithm dividerSnapAlgorithm = DividerView.this.mSplitLayout.mDividerSnapAlgorithm;
-            if (i == C3343R.C3346id.action_move_tl_full) {
+            if (i == C3353R.C3356id.action_move_tl_full) {
                 snapTarget = dividerSnapAlgorithm.getDismissEndTarget();
-            } else if (i == C3343R.C3346id.action_move_tl_70) {
+            } else if (i == C3353R.C3356id.action_move_tl_70) {
                 snapTarget = dividerSnapAlgorithm.getLastSplitTarget();
-            } else if (i == C3343R.C3346id.action_move_tl_50) {
+            } else if (i == C3353R.C3356id.action_move_tl_50) {
                 snapTarget = dividerSnapAlgorithm.getMiddleTarget();
-            } else if (i == C3343R.C3346id.action_move_tl_30) {
+            } else if (i == C3353R.C3356id.action_move_tl_30) {
                 snapTarget = dividerSnapAlgorithm.getFirstSplitTarget();
             } else {
-                snapTarget = i == C3343R.C3346id.action_move_rb_full ? dividerSnapAlgorithm.getDismissStartTarget() : null;
+                snapTarget = i == C3353R.C3356id.action_move_rb_full ? dividerSnapAlgorithm.getDismissStartTarget() : null;
             }
             if (snapTarget == null) {
                 return super.performAccessibilityAction(view, i, bundle);
@@ -187,11 +187,11 @@ public class DividerView extends FrameLayout implements View.OnTouchListener {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mDividerBar = (FrameLayout) findViewById(C3343R.C3346id.divider_bar);
-        this.mHandle = (DividerHandleView) findViewById(C3343R.C3346id.docked_divider_handle);
-        this.mBackground = findViewById(C3343R.C3346id.docked_divider_background);
+        this.mDividerBar = (FrameLayout) findViewById(C3353R.C3356id.divider_bar);
+        this.mHandle = (DividerHandleView) findViewById(C3353R.C3356id.docked_divider_handle);
+        this.mBackground = findViewById(C3353R.C3356id.docked_divider_background);
         this.mExpandedTaskBarHeight = (float) getResources().getDimensionPixelSize(17105561);
-        this.mTouchElevation = getResources().getDimensionPixelSize(C3343R.dimen.docked_stack_divider_lift_elevation);
+        this.mTouchElevation = getResources().getDimensionPixelSize(C3353R.dimen.docked_stack_divider_lift_elevation);
         this.mDoubleTapDetector = new GestureDetector(getContext(), new DoubleTapListener());
         this.mInteractive = true;
         setOnTouchListener(this);

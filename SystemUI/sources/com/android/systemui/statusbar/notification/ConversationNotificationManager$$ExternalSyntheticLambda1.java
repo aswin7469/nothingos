@@ -13,6 +13,6 @@ public final /* synthetic */ class ConversationNotificationManager$$ExternalSynt
     }
 
     public final void run() {
-        ConversationNotificationManager.m3091updateNotificationRanking$lambda1$lambda0(this.f$0, this.f$1);
+        ConversationNotificationManager.m3095updateNotificationRanking$lambda1$lambda0(this.f$0, this.f$1);
     }
 }

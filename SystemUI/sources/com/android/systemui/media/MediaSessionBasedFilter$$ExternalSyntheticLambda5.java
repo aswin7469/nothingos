@@ -13,6 +13,6 @@ public final /* synthetic */ class MediaSessionBasedFilter$$ExternalSyntheticLam
     }
 
     public final void run() {
-        MediaSessionBasedFilter.m2821dispatchSmartspaceMediaDataRemoved$lambda17(this.f$0, this.f$1, this.f$2);
+        MediaSessionBasedFilter.m2826dispatchSmartspaceMediaDataRemoved$lambda17(this.f$0, this.f$1, this.f$2);
     }
 }

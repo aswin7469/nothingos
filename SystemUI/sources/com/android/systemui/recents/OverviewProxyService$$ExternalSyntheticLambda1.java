@@ -12,6 +12,6 @@ public final /* synthetic */ class OverviewProxyService$$ExternalSyntheticLambda
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo37129xe3af187d((CentralSurfaces) obj);
+        this.f$0.mo37128xe3af187d((CentralSurfaces) obj);
     }
 }

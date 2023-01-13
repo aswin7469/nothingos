@@ -11,6 +11,6 @@ public final /* synthetic */ class LockscreenShadeTransitionController$$External
     }
 
     public final boolean onDismiss() {
-        return LockscreenShadeTransitionController.m3031onDraggedDown$lambda2(this.f$0);
+        return LockscreenShadeTransitionController.m3035onDraggedDown$lambda2(this.f$0);
     }
 }

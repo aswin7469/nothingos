@@ -15,6 +15,6 @@ public final /* synthetic */ class DreamOverlayTouchMonitor$3$$ExternalSynthetic
     }
 
     public final Object apply(Object obj) {
-        return DreamOverlayTouchMonitor.C20993.lambda$evaluate$2(this.f$0, this.f$1, (DreamOverlayTouchMonitor.TouchSessionImpl) obj);
+        return DreamOverlayTouchMonitor.C21013.lambda$evaluate$2(this.f$0, this.f$1, (DreamOverlayTouchMonitor.TouchSessionImpl) obj);
     }
 }

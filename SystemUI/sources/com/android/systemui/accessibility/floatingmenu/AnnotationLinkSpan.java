@@ -43,7 +43,7 @@ public class AnnotationLinkSpan extends ClickableSpan {
         public final Optional<View.OnClickListener> mListener;
 
         public LinkInfo(String str, View.OnClickListener onClickListener) {
-            this.mAnnotation = Optional.m1745of(str);
+            this.mAnnotation = Optional.m1751of(str);
             this.mListener = Optional.ofNullable(onClickListener);
         }
     }

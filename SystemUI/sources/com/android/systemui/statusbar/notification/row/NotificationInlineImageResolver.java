@@ -98,7 +98,7 @@ public class NotificationInlineImageResolver implements ImageResolver {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$preloadImages$0$com-android-systemui-statusbar-notification-row-NotificationInlineImageResolver */
-    public /* synthetic */ void mo41658xbdc71a00(Uri uri) {
+    public /* synthetic */ void mo41666xbdc71a00(Uri uri) {
         if (!this.mImageCache.hasEntry(uri)) {
             this.mImageCache.preload(uri);
         }

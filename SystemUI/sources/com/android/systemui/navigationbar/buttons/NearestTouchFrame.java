@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewOverlay;
 import android.widget.FrameLayout;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -45,7 +45,7 @@ public class NearestTouchFrame extends FrameLayout {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-navigationbar-buttons-NearestTouchFrame */
-    public /* synthetic */ int mo35019x2049347(View view, View view2) {
+    public /* synthetic */ int mo35023x2049347(View view, View view2) {
         char c = this.mIsVertical;
         view.getLocationInWindow(this.mTmpInt);
         int[] iArr = this.mTmpInt;
@@ -66,7 +66,7 @@ public class NearestTouchFrame extends FrameLayout {
         this.mTouchableRegions = new HashMap();
         this.mChildRegionComparator = new NearestTouchFrame$$ExternalSyntheticLambda3(this);
         this.mIsActive = configuration.smallestScreenWidthDp < 600;
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, new int[]{C1893R.attr.isVertical});
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, new int[]{C1894R.attr.isVertical});
         this.mIsVertical = obtainStyledAttributes.getBoolean(0, false);
         obtainStyledAttributes.recycle();
     }
@@ -184,7 +184,7 @@ public class NearestTouchFrame extends FrameLayout {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onTouchEvent$1$com-android-systemui-navigationbar-buttons-NearestTouchFrame */
-    public /* synthetic */ boolean mo35020x13cd0412(int i, int i2, View view) {
+    public /* synthetic */ boolean mo35024x13cd0412(int i, int i2, View view) {
         return this.mTouchableRegions.get(view).contains(i, i2);
     }
 }

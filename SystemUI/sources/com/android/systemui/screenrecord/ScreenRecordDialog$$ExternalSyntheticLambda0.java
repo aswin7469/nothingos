@@ -11,6 +11,6 @@ public final /* synthetic */ class ScreenRecordDialog$$ExternalSyntheticLambda0 
     }
 
     public final void onClick(View view) {
-        this.f$0.mo37271x1b01bd75(view);
+        this.f$0.mo37272x1b01bd75(view);
     }
 }

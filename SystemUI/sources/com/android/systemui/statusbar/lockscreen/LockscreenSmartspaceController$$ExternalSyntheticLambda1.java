@@ -12,6 +12,6 @@ public final /* synthetic */ class LockscreenSmartspaceController$$ExternalSynth
     }
 
     public final void onTargetsAvailable(List list) {
-        LockscreenSmartspaceController.m3081sessionListener$lambda0(this.f$0, list);
+        LockscreenSmartspaceController.m3085sessionListener$lambda0(this.f$0, list);
     }
 }

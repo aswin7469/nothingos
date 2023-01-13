@@ -18,6 +18,6 @@ public final /* synthetic */ class ControlActionCoordinatorImpl$$ExternalSynthet
     }
 
     public final void accept(Object obj) {
-        ControlActionCoordinatorImpl.m2678showDetail$lambda7$lambda6$lambda5(this.f$0, this.f$1, this.f$2, (TaskView) obj);
+        ControlActionCoordinatorImpl.m2683showDetail$lambda7$lambda6$lambda5(this.f$0, this.f$1, this.f$2, (TaskView) obj);
     }
 }

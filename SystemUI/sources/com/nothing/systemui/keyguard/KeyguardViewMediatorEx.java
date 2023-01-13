@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
+import android.util.Log;
 import com.android.systemui.keyguard.KeyguardViewMediator;
 import com.nothing.systemui.NTDependencyEx;
 import com.nothing.systemui.doze.AODController;
@@ -26,6 +27,7 @@ public class KeyguardViewMediatorEx {
     private Handler mHandler;
     private boolean mHighTemperature;
     private boolean mIsAODAuth = false;
+    private boolean mIsDozing;
     private KeyguardUpdateMonitorEx mKeyguardUpdateMonitorEx;
     private KeyguardViewMediator mMediator;
     private final PowerManager mPM;
@@ -61,7 +63,7 @@ public class KeyguardViewMediatorEx {
     }
 
     public void onSystemKeyPressed(int i) {
-        NTLogUtil.m1680d(TAG, "onSystemKeyPressed: code = " + i);
+        NTLogUtil.m1686d(TAG, "onSystemKeyPressed: code = " + i);
         switch (i) {
             case 1000:
                 onKeyGestureFingerDown();
@@ -73,13 +75,13 @@ public class KeyguardViewMediatorEx {
                 onKeyGestureTapWakeUp();
                 return;
             default:
-                NTLogUtil.m1680d(TAG, "onNTSystemKeyPressed:  unhandled code = " + i);
+                NTLogUtil.m1686d(TAG, "onNTSystemKeyPressed:  unhandled code = " + i);
                 return;
         }
     }
 
     private void onKeyGestureFingerDown() {
-        NTLogUtil.m1680d(TAG, "onKeyGesture: finger down");
+        NTLogUtil.m1686d(TAG, "onKeyGesture: finger down");
         if (this.mAODFpAuthWakeLock == null) {
             PowerManager.WakeLock newWakeLock = this.mPM.newWakeLock(1, TAG);
             this.mAODFpAuthWakeLock = newWakeLock;
@@ -91,37 +93,45 @@ public class KeyguardViewMediatorEx {
     }
 
     private void handleKeyGestureFingerDown() {
-        NTLogUtil.m1680d(TAG, "handleTapGestureDown: = " + this.mIsAODAuth);
+        NTLogUtil.m1686d(TAG, "handleTapGestureDown: " + this.mIsAODAuth + ",mIsDozing " + this.mIsDozing);
+        if (!this.mIsDozing) {
+            Log.d(TAG, "Cancel handleKeyGestureFingerDown because is not in dozing");
+            return;
+        }
         ((CentralSurfacesImplEx) NTDependencyEx.get(CentralSurfacesImplEx.class)).setNotificationPanelViewAlpha(0.0f);
         this.mKeyguardUpdateMonitorEx.handleGestureFingerDown();
     }
 
     private void onKeyGestureFingerUp() {
-        NTLogUtil.m1680d(TAG, "onKeyGesture: finger up");
+        NTLogUtil.m1686d(TAG, "onKeyGesture: finger up");
         this.mHandler.sendEmptyMessage(102);
     }
 
     private void handleKeyGestureFingerUp() {
-        NTLogUtil.m1680d(TAG, "handleTapGestureUp: = " + this.mIsAODAuth + " ~~~~~~" + ((CentralSurfacesImplEx) NTDependencyEx.get(CentralSurfacesImplEx.class)).isWakeAndUnlock() + " ~~~~~~" + ((AODController) NTDependencyEx.get(AODController.class)).shouldShowAODView());
+        NTLogUtil.m1686d(TAG, "handleTapGestureUp: " + this.mIsAODAuth + ",isWakeAndUnlock " + ((CentralSurfacesImplEx) NTDependencyEx.get(CentralSurfacesImplEx.class)).isWakeAndUnlock() + ",shouldShowAODView " + ((AODController) NTDependencyEx.get(AODController.class)).shouldShowAODView() + ",mIsDozing " + this.mIsDozing);
         this.mIsAODAuth = false;
         if (!((CentralSurfacesImplEx) NTDependencyEx.get(CentralSurfacesImplEx.class)).isWakeAndUnlock() && ((AODController) NTDependencyEx.get(AODController.class)).shouldShowAODView()) {
             ((CentralSurfacesImplEx) NTDependencyEx.get(CentralSurfacesImplEx.class)).setNotificationPanelViewAlpha(1.0f);
         }
-        this.mKeyguardUpdateMonitorEx.handleGestureFingerUp();
+        if (!this.mIsDozing) {
+            Log.d(TAG, "Cancel handleKeyGestureFingerUp because is not in dozing");
+        } else {
+            this.mKeyguardUpdateMonitorEx.handleGestureFingerUp();
+        }
     }
 
     private void onKeyGestureTapWakeUp() {
-        NTLogUtil.m1680d(TAG, "onKeyGesture: tap wake up");
+        NTLogUtil.m1686d(TAG, "onKeyGesture: tap wake up");
         this.mHandler.sendEmptyMessage(103);
     }
 
     private void handleKeyGestureTapWakeUp() {
-        NTLogUtil.m1680d(TAG, "handleKeyGestureTapWakeUp: = ");
+        NTLogUtil.m1686d(TAG, "handleKeyGestureTapWakeUp: = ");
         this.mKeyguardUpdateMonitorEx.handleTapWakeUp();
     }
 
     private void aquireAODWakeLock() {
-        NTLogUtil.m1680d(TAG, "aquireAODWakeLock");
+        NTLogUtil.m1686d(TAG, "aquireAODWakeLock");
         PowerManager.WakeLock wakeLock = this.mAODFpAuthWakeLock;
         if (wakeLock != null && wakeLock.isHeld()) {
             this.mAODFpAuthWakeLock.release();
@@ -133,7 +143,7 @@ public class KeyguardViewMediatorEx {
     }
 
     private void releaseAODWakeLock() {
-        NTLogUtil.m1680d(TAG, "releaseAODWakeLock");
+        NTLogUtil.m1686d(TAG, "releaseAODWakeLock");
         PowerManager.WakeLock wakeLock = this.mAODFpAuthWakeLock;
         if (wakeLock != null && wakeLock.isHeld()) {
             this.mAODFpAuthWakeLock.release();
@@ -146,18 +156,18 @@ public class KeyguardViewMediatorEx {
         }
         this.mIsAODAuth = false;
         releaseAODWakeLock();
-        NTLogUtil.m1680d(TAG, "onStartedWakingUp: misAodAuth = " + this.mIsAODAuth);
+        NTLogUtil.m1686d(TAG, "onStartedWakingUp: misAodAuth = " + this.mIsAODAuth);
     }
 
     public void criticalTemperatureStateChange() {
         boolean z = this.mPM.getCurrentThermalStatus() >= 5;
         this.mHighTemperature = z;
         this.mHandler.sendMessage(this.mHandler.obtainMessage(104, Boolean.valueOf(z)));
-        NTLogUtil.m1680d(TAG, "highTemperatureLock: " + z);
+        NTLogUtil.m1686d(TAG, "highTemperatureLock: " + z);
     }
 
     private void handleCriticalTemperatureStateChange(boolean z) {
-        NTLogUtil.m1680d(TAG, "handleCriticalTemperatureStateChange: " + z);
+        NTLogUtil.m1686d(TAG, "handleCriticalTemperatureStateChange: " + z);
         if (z) {
             this.mMediator.doKeyguardLocked((Bundle) null);
         } else {
@@ -168,5 +178,9 @@ public class KeyguardViewMediatorEx {
 
     public boolean isHighTemperature() {
         return this.mHighTemperature;
+    }
+
+    public void setDozing(boolean z) {
+        this.mIsDozing = z;
     }
 }

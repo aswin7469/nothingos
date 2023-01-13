@@ -7,8 +7,8 @@ import kotlin.coroutines.jvm.internal.DebugMetadata;
 import kotlin.coroutines.jvm.internal.SuspendLambda;
 import kotlin.jvm.functions.Function2;
 
-@Metadata(mo64986d1 = {"\u0000\u000e\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\u0010\u0000\u001a\u00020\u0001\"\u0004\b\u0000\u0010\u0002\"\u0004\b\u0001\u0010\u0003*\b\u0012\u0004\u0012\u0002H\u00020\u0004H@"}, mo64987d2 = {"<anonymous>", "", "E", "K", "Lkotlinx/coroutines/channels/ProducerScope;"}, mo64988k = 3, mo64989mv = {1, 5, 1}, mo64991xi = 48)
-@DebugMetadata(mo65240c = "kotlinx.coroutines.channels.ChannelsKt__DeprecatedKt$distinctBy$1", mo65241f = "Deprecated.kt", mo65242i = {0, 0, 1, 1, 1, 2, 2, 2}, mo65243l = {326, 327, 329}, mo65244m = "invokeSuspend", mo65245n = {"$this$produce", "keys", "$this$produce", "keys", "e", "$this$produce", "keys", "k"}, mo65246s = {"L$0", "L$1", "L$0", "L$1", "L$3", "L$0", "L$1", "L$3"})
+@Metadata(mo65042d1 = {"\u0000\u000e\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\u0010\u0000\u001a\u00020\u0001\"\u0004\b\u0000\u0010\u0002\"\u0004\b\u0001\u0010\u0003*\b\u0012\u0004\u0012\u0002H\u00020\u0004H@"}, mo65043d2 = {"<anonymous>", "", "E", "K", "Lkotlinx/coroutines/channels/ProducerScope;"}, mo65044k = 3, mo65045mv = {1, 5, 1}, mo65047xi = 48)
+@DebugMetadata(mo65296c = "kotlinx.coroutines.channels.ChannelsKt__DeprecatedKt$distinctBy$1", mo65297f = "Deprecated.kt", mo65298i = {0, 0, 1, 1, 1, 2, 2, 2}, mo65299l = {326, 327, 329}, mo65300m = "invokeSuspend", mo65301n = {"$this$produce", "keys", "$this$produce", "keys", "e", "$this$produce", "keys", "k"}, mo65302s = {"L$0", "L$1", "L$0", "L$1", "L$3", "L$0", "L$1", "L$3"})
 /* compiled from: Deprecated.kt */
 final class ChannelsKt__DeprecatedKt$distinctBy$1 extends SuspendLambda implements Function2<ProducerScope<? super E>, Continuation<? super Unit>, Object> {
     final /* synthetic */ Function2<E, Continuation<? super K>, Object> $selector;

@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.util.Log;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import java.sql.Types;
 
 public class NetworkOverLimitActivity extends Activity {
@@ -20,9 +20,9 @@ public class NetworkOverLimitActivity extends Activity {
         final NetworkTemplate networkTemplate = (NetworkTemplate) getIntent().getParcelableExtra("android.net.NETWORK_TEMPLATE");
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getLimitedDialogTitleForTemplate(networkTemplate));
-        builder.setMessage(C1893R.string.data_usage_disabled_dialog);
+        builder.setMessage(C1894R.string.data_usage_disabled_dialog);
         builder.setPositiveButton(17039370, (DialogInterface.OnClickListener) null);
-        builder.setNegativeButton(C1893R.string.data_usage_disabled_dialog_enable, new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(C1894R.string.data_usage_disabled_dialog_enable, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogInterface, int i) {
                 NetworkOverLimitActivity.this.snoozePolicy(networkTemplate);
             }
@@ -47,6 +47,6 @@ public class NetworkOverLimitActivity extends Activity {
     }
 
     private static int getLimitedDialogTitleForTemplate(NetworkTemplate networkTemplate) {
-        return networkTemplate.getMatchRule() != 1 ? C1893R.string.data_usage_disabled_dialog_title : C1893R.string.data_usage_disabled_dialog_mobile_title;
+        return networkTemplate.getMatchRule() != 1 ? C1894R.string.data_usage_disabled_dialog_title : C1894R.string.data_usage_disabled_dialog_mobile_title;
     }
 }

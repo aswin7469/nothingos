@@ -31,7 +31,7 @@ public class CommandQueueEx {
     public void setDisableFlagsForSetup(int i, int i2, int i3) {
         synchronized (this.mLock) {
             if (this.mDisplayDisabledIgnoreSetup.contains(Integer.valueOf(i))) {
-                NTLogUtil.m1680d(TAG, "ignore setDisabledFlags for setup, state1: " + i2 + ", state2: " + i3);
+                NTLogUtil.m1686d(TAG, "ignore setDisabledFlags for setup, state1: " + i2 + ", state2: " + i3);
             } else {
                 this.mCommandQueue.disable(i, i2, i3, false);
             }

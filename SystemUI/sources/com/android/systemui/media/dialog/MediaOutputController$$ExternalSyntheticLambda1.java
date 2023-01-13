@@ -13,6 +13,6 @@ public final /* synthetic */ class MediaOutputController$$ExternalSyntheticLambd
     }
 
     public final void run() {
-        this.f$0.mo34431xe5ef5630(this.f$1);
+        this.f$0.mo34435xe5ef5630(this.f$1);
     }
 }

@@ -43,7 +43,7 @@ public class FrameProtoTracer<P, S extends P, T extends P, R> implements Choreog
     }
 
     public FrameProtoTracer(ProtoTraceParams<P, S, T, R> protoTraceParams) {
-        C25241 r0 = new TraceBuffer.ProtoProvider<P, S, T>() {
+        C25301 r0 = new TraceBuffer.ProtoProvider<P, S, T>() {
             public int getItemSize(P p) {
                 return FrameProtoTracer.this.mParams.getProtoSize(p);
             }

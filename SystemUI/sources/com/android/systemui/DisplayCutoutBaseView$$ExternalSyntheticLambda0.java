@@ -11,6 +11,6 @@ public final /* synthetic */ class DisplayCutoutBaseView$$ExternalSyntheticLambd
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        DisplayCutoutBaseView.m2514enableShowProtection$lambda1(this.f$0, valueAnimator);
+        DisplayCutoutBaseView.m2520enableShowProtection$lambda1(this.f$0, valueAnimator);
     }
 }

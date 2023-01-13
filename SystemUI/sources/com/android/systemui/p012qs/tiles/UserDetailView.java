@@ -13,7 +13,7 @@ import com.android.internal.logging.MetricsLogger;
 import com.android.internal.logging.UiEventLogger;
 import com.android.settingslib.RestrictedLockUtils;
 import com.android.settingslib.drawable.CircleFramedDrawable;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.p012qs.PseudoGridView;
 import com.android.systemui.p012qs.QSUserSwitcherEvent;
 import com.android.systemui.p012qs.user.UserSwitchDialogController;
@@ -30,7 +30,7 @@ public class UserDetailView extends PseudoGridView {
     }
 
     public static UserDetailView inflate(Context context, ViewGroup viewGroup, boolean z) {
-        return (UserDetailView) LayoutInflater.from(context).inflate(C1893R.layout.qs_user_detail, viewGroup, z);
+        return (UserDetailView) LayoutInflater.from(context).inflate(C1894R.layout.qs_user_detail, viewGroup, z);
     }
 
     public void setAdapter(Adapter adapter) {
@@ -81,7 +81,7 @@ public class UserDetailView extends PseudoGridView {
             if (userRecord.picture == null) {
                 convertOrInflate.bind(name, getDrawable(this.mContext, userRecord).mutate(), userRecord.resolveId());
             } else {
-                CircleFramedDrawable circleFramedDrawable = new CircleFramedDrawable(userRecord.picture, (int) this.mContext.getResources().getDimension(C1893R.dimen.qs_framed_avatar_size));
+                CircleFramedDrawable circleFramedDrawable = new CircleFramedDrawable(userRecord.picture, (int) this.mContext.getResources().getDimension(C1894R.dimen.qs_framed_avatar_size));
                 if (!userRecord.isSwitchToEnabled) {
                     colorFilter = getDisabledUserAvatarColorFilter();
                 }
@@ -103,12 +103,12 @@ public class UserDetailView extends PseudoGridView {
             int i;
             Drawable iconDrawable = getIconDrawable(context, userRecord);
             if (userRecord.isCurrent) {
-                i = C1893R.C1894color.qs_user_switcher_selected_avatar_icon_color;
+                i = C1894R.C1895color.qs_user_switcher_selected_avatar_icon_color;
             } else {
-                i = !userRecord.isSwitchToEnabled ? C1893R.C1894color.GM2_grey_600 : C1893R.C1894color.qs_user_switcher_avatar_icon_color;
+                i = !userRecord.isSwitchToEnabled ? C1894R.C1895color.GM2_grey_600 : C1894R.C1895color.qs_user_switcher_avatar_icon_color;
             }
             iconDrawable.setTint(context.getResources().getColor(i, context.getTheme()));
-            return new LayerDrawable(new Drawable[]{context.getDrawable(userRecord.isCurrent ? C1893R.C1895drawable.bg_avatar_selected : C1893R.C1895drawable.qs_bg_avatar), iconDrawable});
+            return new LayerDrawable(new Drawable[]{context.getDrawable(userRecord.isCurrent ? C1894R.C1896drawable.bg_avatar_selected : C1894R.C1896drawable.qs_bg_avatar), iconDrawable});
         }
 
         public void onClick(View view) {

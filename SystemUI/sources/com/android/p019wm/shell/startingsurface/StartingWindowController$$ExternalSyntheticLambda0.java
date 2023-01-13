@@ -17,6 +17,6 @@ public final /* synthetic */ class StartingWindowController$$ExternalSyntheticLa
     }
 
     public final void run() {
-        this.f$0.mo51184xac73a8d2(this.f$1, this.f$2);
+        this.f$0.mo51195xac73a8d2(this.f$1, this.f$2);
     }
 }

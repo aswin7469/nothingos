@@ -11,6 +11,6 @@ public final /* synthetic */ class UdfpsController$$ExternalSyntheticLambda4 imp
     }
 
     public final Object invoke() {
-        return this.f$0.m2582lambda$new$1$comandroidsystemuibiometricsUdfpsController();
+        return this.f$0.m2588lambda$new$1$comandroidsystemuibiometricsUdfpsController();
     }
 }

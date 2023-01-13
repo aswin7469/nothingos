@@ -38,63 +38,63 @@ public interface Set<E> extends Collection<E> {
     }
 
     /* renamed from: of */
-    static <E> Set<E> m1750of() {
+    static <E> Set<E> m1756of() {
         return ImmutableCollections.Set0.instance();
     }
 
     /* renamed from: of */
-    static <E> Set<E> m1751of(E e) {
+    static <E> Set<E> m1757of(E e) {
         return new ImmutableCollections.Set1(e);
     }
 
     /* renamed from: of */
-    static <E> Set<E> m1752of(E e, E e2) {
+    static <E> Set<E> m1758of(E e, E e2) {
         return new ImmutableCollections.Set2(e, e2);
     }
 
     /* renamed from: of */
-    static <E> Set<E> m1753of(E e, E e2, E e3) {
+    static <E> Set<E> m1759of(E e, E e2, E e3) {
         return new ImmutableCollections.SetN(e, e2, e3);
     }
 
     /* renamed from: of */
-    static <E> Set<E> m1754of(E e, E e2, E e3, E e4) {
+    static <E> Set<E> m1760of(E e, E e2, E e3, E e4) {
         return new ImmutableCollections.SetN(e, e2, e3, e4);
     }
 
     /* renamed from: of */
-    static <E> Set<E> m1755of(E e, E e2, E e3, E e4, E e5) {
+    static <E> Set<E> m1761of(E e, E e2, E e3, E e4, E e5) {
         return new ImmutableCollections.SetN(e, e2, e3, e4, e5);
     }
 
     /* renamed from: of */
-    static <E> Set<E> m1756of(E e, E e2, E e3, E e4, E e5, E e6) {
+    static <E> Set<E> m1762of(E e, E e2, E e3, E e4, E e5, E e6) {
         return new ImmutableCollections.SetN(e, e2, e3, e4, e5, e6);
     }
 
     /* renamed from: of */
-    static <E> Set<E> m1757of(E e, E e2, E e3, E e4, E e5, E e6, E e7) {
+    static <E> Set<E> m1763of(E e, E e2, E e3, E e4, E e5, E e6, E e7) {
         return new ImmutableCollections.SetN(e, e2, e3, e4, e5, e6, e7);
     }
 
     /* renamed from: of */
-    static <E> Set<E> m1758of(E e, E e2, E e3, E e4, E e5, E e6, E e7, E e8) {
+    static <E> Set<E> m1764of(E e, E e2, E e3, E e4, E e5, E e6, E e7, E e8) {
         return new ImmutableCollections.SetN(e, e2, e3, e4, e5, e6, e7, e8);
     }
 
     /* renamed from: of */
-    static <E> Set<E> m1759of(E e, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9) {
+    static <E> Set<E> m1765of(E e, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9) {
         return new ImmutableCollections.SetN(e, e2, e3, e4, e5, e6, e7, e8, e9);
     }
 
     /* renamed from: of */
-    static <E> Set<E> m1760of(E e, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9, E e10) {
+    static <E> Set<E> m1766of(E e, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9, E e10) {
         return new ImmutableCollections.SetN(e, e2, e3, e4, e5, e6, e7, e8, e9, e10);
     }
 
     @SafeVarargs
     /* renamed from: of */
-    static <E> Set<E> m1761of(E... eArr) {
+    static <E> Set<E> m1767of(E... eArr) {
         int length = eArr.length;
         if (length == 0) {
             return ImmutableCollections.Set0.instance();
@@ -112,6 +112,6 @@ public interface Set<E> extends Collection<E> {
         if (collection instanceof ImmutableCollections.AbstractImmutableSet) {
             return (Set) collection;
         }
-        return m1761of((E[]) new HashSet(collection).toArray());
+        return m1767of((E[]) new HashSet(collection).toArray());
     }
 }

@@ -11,6 +11,6 @@ public final /* synthetic */ class NotificationShadeDepthController$$ExternalSyn
     }
 
     public final void doFrame(long j) {
-        NotificationShadeDepthController.m3038updateBlurCallback$lambda1(this.f$0, j);
+        NotificationShadeDepthController.m3042updateBlurCallback$lambda1(this.f$0, j);
     }
 }

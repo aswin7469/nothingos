@@ -21,7 +21,7 @@ import com.android.systemui.p012qs.TouchAnimator;
 import com.android.systemui.p012qs.dagger.QSScope;
 import com.android.systemui.p012qs.tileimpl.HeightOverrideable;
 import com.android.systemui.p012qs.tileimpl.IgnorableChildLinearLayout;
-import com.android.systemui.plugins.p011qs.C2301QS;
+import com.android.systemui.plugins.p011qs.C2304QS;
 import com.android.systemui.statusbar.CrossFadeHelper;
 import com.android.systemui.tuner.TunerService;
 import com.nothing.systemui.util.NTLogUtil;
@@ -96,7 +96,7 @@ public class NTQSAnimator implements QSHost.Callback, PagedTileLayout.PageListen
     private TouchAnimator mQQSNonFirstAnimator;
     private HeightExpansionAnimator mQQSTileHeightAnimator;
     private QSExpansionPathInterpolator mQSExpansionPathInterpolator;
-    private final C2301QS mQs;
+    private final C2304QS mQs;
     private final QSPanelController mQsPanelController;
     private final QuickQSPanelController mQuickQSPanelController;
     /* access modifiers changed from: private */
@@ -116,7 +116,7 @@ public class NTQSAnimator implements QSHost.Callback, PagedTileLayout.PageListen
     private final Runnable mUpdateAnimators = new NTQSAnimator$$ExternalSyntheticLambda0(this);
 
     @Inject
-    public NTQSAnimator(C2301QS qs, QuickQSPanel quickQSPanel, QuickStatusBarHeader quickStatusBarHeader, QSPanelController qSPanelController, QuickQSPanelController quickQSPanelController, QSTileHost qSTileHost, QSSecurityFooter qSSecurityFooter, @Main Executor executor, TunerService tunerService, QSExpansionPathInterpolator qSExpansionPathInterpolator, @Main Handler handler) {
+    public NTQSAnimator(C2304QS qs, QuickQSPanel quickQSPanel, QuickStatusBarHeader quickStatusBarHeader, QSPanelController qSPanelController, QuickQSPanelController quickQSPanelController, QSTileHost qSTileHost, QSSecurityFooter qSSecurityFooter, @Main Executor executor, TunerService tunerService, QSExpansionPathInterpolator qSExpansionPathInterpolator, @Main Handler handler) {
         this.mQs = qs;
         this.mQuickQsPanel = quickQSPanel;
         this.mQsPanelController = qSPanelController;
@@ -137,7 +137,7 @@ public class NTQSAnimator implements QSHost.Callback, PagedTileLayout.PageListen
         if (tileLayout instanceof PagedTileLayout) {
             this.mPagedLayout = (PagedTileLayout) tileLayout;
         } else {
-            NTLogUtil.m1684w(TAG, "QS Not using page layout");
+            NTLogUtil.m1690w(TAG, "QS Not using page layout");
         }
         qSPanelController.setPageListener(this);
         this.mMainHandler = handler;
@@ -208,7 +208,7 @@ public class NTQSAnimator implements QSHost.Callback, PagedTileLayout.PageListen
     }
 
     public void onPageChanged(boolean z, int i) {
-        NTLogUtil.m1680d(TAG, "onPageChanged: mOnFirstPage " + this.mOnFirstPage + " isFirst " + z);
+        NTLogUtil.m1686d(TAG, "onPageChanged: mOnFirstPage " + this.mOnFirstPage + " isFirst " + z);
         if (this.mOnFirstPage != z) {
             if (!z) {
                 clearAnimationState();
@@ -430,7 +430,7 @@ public class NTQSAnimator implements QSHost.Callback, PagedTileLayout.PageListen
             java.lang.String r0 = r0.getTileSpec()
             java.lang.StringBuilder r0 = r4.append((java.lang.String) r0)
             java.lang.String r0 = r0.toString()
-            com.nothing.systemui.util.NTLogUtil.m1681e(r6, r0)
+            com.nothing.systemui.util.NTLogUtil.m1687e(r6, r0)
             r42 = r1
             r43 = r2
             r35 = r11
@@ -492,7 +492,7 @@ public class NTQSAnimator implements QSHost.Callback, PagedTileLayout.PageListen
             com.android.systemui.plugins.qs.QSTileView r4 = r3.getBtTile(r4)
             if (r4 != 0) goto L_0x01f6
             java.lang.String r0 = "updateAnimators: tileView is null skip "
-            com.nothing.systemui.util.NTLogUtil.m1680d(r6, r0)
+            com.nothing.systemui.util.NTLogUtil.m1686d(r6, r0)
             goto L_0x0204
         L_0x01f6:
             r6 = r4
@@ -1658,7 +1658,7 @@ public class NTQSAnimator implements QSHost.Callback, PagedTileLayout.PageListen
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-nothing-systemui-qs-NTQSAnimator  reason: not valid java name */
-    public /* synthetic */ void m3507lambda$new$0$comnothingsystemuiqsNTQSAnimator() {
+    public /* synthetic */ void m3511lambda$new$0$comnothingsystemuiqsNTQSAnimator() {
         updateAnimators();
         setCurrentPosition();
     }
@@ -1677,7 +1677,7 @@ public class NTQSAnimator implements QSHost.Callback, PagedTileLayout.PageListen
         public final List<View> mViews = new ArrayList();
 
         HeightExpansionAnimator(TouchAnimator.Listener listener, int i, int i2) {
-            C41851 r0 = new ValueAnimator.AnimatorUpdateListener() {
+            C41971 r0 = new ValueAnimator.AnimatorUpdateListener() {
                 float mLastT = -1.0f;
 
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {

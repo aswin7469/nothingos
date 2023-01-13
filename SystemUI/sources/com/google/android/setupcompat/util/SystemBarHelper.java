@@ -175,7 +175,7 @@ public final class SystemBarHelper {
                     if (DecorViewFinder.this.retries >= 0) {
                         DecorViewFinder.this.handler.post(DecorViewFinder.this.checkDecorViewRunnable);
                     } else {
-                        SystemBarHelper.LOG.mo55159e("Cannot get decor view of window: " + DecorViewFinder.this.window);
+                        SystemBarHelper.LOG.mo55170e("Cannot get decor view of window: " + DecorViewFinder.this.window);
                     }
                 }
             };

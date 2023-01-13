@@ -1,18 +1,18 @@
 package com.android.p019wm.shell.splitscreen;
 
-import com.android.p019wm.shell.recents.RecentTasksController;
-import java.util.function.Consumer;
+import android.view.SurfaceControl;
+import com.android.p019wm.shell.common.SyncTransactionQueue;
 
 /* renamed from: com.android.wm.shell.splitscreen.StageCoordinator$$ExternalSyntheticLambda14 */
 /* compiled from: D8$$SyntheticClass */
-public final /* synthetic */ class StageCoordinator$$ExternalSyntheticLambda14 implements Consumer {
+public final /* synthetic */ class StageCoordinator$$ExternalSyntheticLambda14 implements SyncTransactionQueue.TransactionRunnable {
     public final /* synthetic */ StageCoordinator f$0;
 
     public /* synthetic */ StageCoordinator$$ExternalSyntheticLambda14(StageCoordinator stageCoordinator) {
         this.f$0 = stageCoordinator;
     }
 
-    public final void accept(Object obj) {
-        this.f$0.mo50845x5cb4a636((RecentTasksController) obj);
+    public final void runWithTransaction(SurfaceControl.Transaction transaction) {
+        this.f$0.mo50849xab7d7e25(transaction);
     }
 }

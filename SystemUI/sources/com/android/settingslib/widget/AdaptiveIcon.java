@@ -16,7 +16,7 @@ public class AdaptiveIcon extends LayerDrawable {
     int mBackgroundColor;
 
     public AdaptiveIcon(Context context, Drawable drawable) {
-        this(context, drawable, C1860R.dimen.dashboard_tile_foreground_image_inset);
+        this(context, drawable, C1861R.dimen.dashboard_tile_foreground_image_inset);
     }
 
     public AdaptiveIcon(Context context, Drawable drawable, int i) {
@@ -44,7 +44,7 @@ public class AdaptiveIcon extends LayerDrawable {
                 Log.e(TAG, "Failed to set background color for " + tile.getPackageName());
             }
         }
-        setBackgroundColor(context.getColor(C1860R.C1861color.homepage_generic_icon_background));
+        setBackgroundColor(context.getColor(C1861R.C1862color.homepage_generic_icon_background));
     }
 
     public void setBackgroundColor(int i) {

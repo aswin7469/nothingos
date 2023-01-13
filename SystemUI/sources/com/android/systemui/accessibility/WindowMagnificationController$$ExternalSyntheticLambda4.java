@@ -9,6 +9,6 @@ public final /* synthetic */ class WindowMagnificationController$$ExternalSynthe
     }
 
     public final void run() {
-        this.f$0.mo30009x99b9d3e1();
+        this.f$0.mo30019x99b9d3e1();
     }
 }

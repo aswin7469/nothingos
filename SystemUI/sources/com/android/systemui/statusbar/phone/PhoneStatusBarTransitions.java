@@ -5,7 +5,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.view.View;
 import androidx.constraintlayout.motion.widget.Key;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.charging.WirelessChargingAnimation;
 
 public final class PhoneStatusBarTransitions extends BarTransitions {
@@ -23,11 +23,11 @@ public final class PhoneStatusBarTransitions extends BarTransitions {
     }
 
     public PhoneStatusBarTransitions(PhoneStatusBarView phoneStatusBarView, View view) {
-        super(view, C1893R.C1895drawable.status_background);
-        this.mIconAlphaWhenOpaque = phoneStatusBarView.getContext().getResources().getFraction(C1893R.dimen.status_bar_icon_drawing_alpha, 1, 1);
-        this.mLeftSide = phoneStatusBarView.findViewById(C1893R.C1897id.status_bar_left_side);
-        this.mStatusIcons = phoneStatusBarView.findViewById(C1893R.C1897id.statusIcons);
-        this.mBattery = phoneStatusBarView.findViewById(C1893R.C1897id.battery);
+        super(view, C1894R.C1896drawable.status_background);
+        this.mIconAlphaWhenOpaque = phoneStatusBarView.getContext().getResources().getFraction(C1894R.dimen.status_bar_icon_drawing_alpha, 1, 1);
+        this.mLeftSide = phoneStatusBarView.findViewById(C1894R.C1898id.status_bar_left_side);
+        this.mStatusIcons = phoneStatusBarView.findViewById(C1894R.C1898id.statusIcons);
+        this.mBattery = phoneStatusBarView.findViewById(C1894R.C1898id.battery);
         applyModeBackground(-1, getMode(), false);
         applyMode(getMode(), false);
     }

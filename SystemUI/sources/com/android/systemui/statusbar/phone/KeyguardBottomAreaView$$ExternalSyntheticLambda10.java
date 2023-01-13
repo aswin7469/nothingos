@@ -12,6 +12,6 @@ public final /* synthetic */ class KeyguardBottomAreaView$$ExternalSyntheticLamb
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo44133xf28029c6((IntentButtonProvider.IntentButton) obj);
+        this.f$0.mo44143xf28029c6((IntentButtonProvider.IntentButton) obj);
     }
 }

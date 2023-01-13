@@ -3,16 +3,16 @@ package com.google.zxing.qrcode.encoder;
 final class MaskUtil {
 
     /* renamed from: N1 */
-    private static final int f498N1 = 3;
+    private static final int f497N1 = 3;
 
     /* renamed from: N2 */
-    private static final int f499N2 = 3;
+    private static final int f498N2 = 3;
 
     /* renamed from: N3 */
-    private static final int f500N3 = 40;
+    private static final int f499N3 = 40;
 
     /* renamed from: N4 */
-    private static final int f501N4 = 10;
+    private static final int f500N4 = 10;
 
     private MaskUtil() {
     }

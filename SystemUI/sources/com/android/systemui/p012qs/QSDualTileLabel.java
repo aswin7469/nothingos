@@ -11,7 +11,7 @@ import android.view.ViewOverlay;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import java.util.Objects;
 
 /* renamed from: com.android.systemui.qs.QSDualTileLabel */
@@ -50,7 +50,7 @@ public class QSDualTileLabel extends LinearLayout {
         super(context);
         this.mContext = context;
         setOrientation(1);
-        int dimensionPixelSize = context.getResources().getDimensionPixelSize(C1893R.dimen.qs_dual_tile_padding_horizontal);
+        int dimensionPixelSize = context.getResources().getDimensionPixelSize(C1894R.dimen.qs_dual_tile_padding_horizontal);
         this.mHorizontalPaddingPx = dimensionPixelSize;
         TextView initTextView = initTextView();
         this.mFirstLine = initTextView;

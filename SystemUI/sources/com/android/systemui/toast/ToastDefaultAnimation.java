@@ -8,17 +8,17 @@ import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.PathInterpolator;
 import androidx.constraintlayout.motion.widget.Key;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import kotlin.Metadata;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 
-@Metadata(mo64986d1 = {"\u0000\f\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0003\u0018\u0000 \u00032\u00020\u0001:\u0001\u0003B\u0005¢\u0006\u0002\u0010\u0002¨\u0006\u0004"}, mo64987d2 = {"Lcom/android/systemui/toast/ToastDefaultAnimation;", "", "()V", "Companion", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000\f\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0003\u0018\u0000 \u00032\u00020\u0001:\u0001\u0003B\u0005¢\u0006\u0002\u0010\u0002¨\u0006\u0004"}, mo65043d2 = {"Lcom/android/systemui/toast/ToastDefaultAnimation;", "", "()V", "Companion", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* compiled from: ToastDefaultAnimation.kt */
 public final class ToastDefaultAnimation {
     public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
 
-    @Metadata(mo64986d1 = {"\u0000\u001a\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002J\u0010\u0010\u0003\u001a\u0004\u0018\u00010\u00042\u0006\u0010\u0005\u001a\u00020\u0006J\u0010\u0010\u0007\u001a\u0004\u0018\u00010\u00042\u0006\u0010\u0005\u001a\u00020\u0006¨\u0006\b"}, mo64987d2 = {"Lcom/android/systemui/toast/ToastDefaultAnimation$Companion;", "", "()V", "toastIn", "Landroid/animation/AnimatorSet;", "view", "Landroid/view/View;", "toastOut", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u0000\u001a\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002J\u0010\u0010\u0003\u001a\u0004\u0018\u00010\u00042\u0006\u0010\u0005\u001a\u00020\u0006J\u0010\u0010\u0007\u001a\u0004\u0018\u00010\u00042\u0006\u0010\u0005\u001a\u00020\u0006¨\u0006\b"}, mo65043d2 = {"Lcom/android/systemui/toast/ToastDefaultAnimation$Companion;", "", "()V", "toastIn", "Landroid/animation/AnimatorSet;", "view", "Landroid/view/View;", "toastOut", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* compiled from: ToastDefaultAnimation.kt */
     public static final class Companion {
         public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
@@ -30,8 +30,8 @@ public final class ToastDefaultAnimation {
 
         public final AnimatorSet toastIn(View view) {
             Intrinsics.checkNotNullParameter(view, "view");
-            View findViewById = view.findViewById(C1893R.C1897id.icon);
-            View findViewById2 = view.findViewById(C1893R.C1897id.text);
+            View findViewById = view.findViewById(C1894R.C1898id.icon);
+            View findViewById2 = view.findViewById(C1894R.C1898id.text);
             if (findViewById == null || findViewById2 == null) {
                 return null;
             }
@@ -65,8 +65,8 @@ public final class ToastDefaultAnimation {
 
         public final AnimatorSet toastOut(View view) {
             Intrinsics.checkNotNullParameter(view, "view");
-            View findViewById = view.findViewById(C1893R.C1897id.icon);
-            View findViewById2 = view.findViewById(C1893R.C1897id.text);
+            View findViewById = view.findViewById(C1894R.C1898id.icon);
+            View findViewById2 = view.findViewById(C1894R.C1898id.text);
             if (findViewById == null || findViewById2 == null) {
                 return null;
             }

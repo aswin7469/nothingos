@@ -9,7 +9,7 @@ import com.google.android.setupcompat.partnerconfig.PartnerConfig;
 import com.google.android.setupcompat.partnerconfig.PartnerConfigHelper;
 import com.google.android.setupcompat.partnerconfig.ResourceEntry;
 import com.google.android.setupcompat.template.Mixin;
-import com.google.android.setupdesign.C3953R;
+import com.google.android.setupdesign.C3963R;
 import com.google.android.setupdesign.GlifLayout;
 import com.google.android.setupdesign.view.IllustrationVideoView;
 
@@ -38,7 +38,7 @@ public class IllustrationProgressMixin implements Mixin {
         View progressIllustrationLayout = getProgressIllustrationLayout();
         if (progressIllustrationLayout != null) {
             progressIllustrationLayout.setVisibility(0);
-            if (this.progressDescription != null && (textView = (TextView) progressIllustrationLayout.findViewById(C3953R.C3956id.sud_layout_description)) != null) {
+            if (this.progressDescription != null && (textView = (TextView) progressIllustrationLayout.findViewById(C3963R.C3966id.sud_layout_description)) != null) {
                 textView.setVisibility(0);
                 textView.setText(this.progressDescription);
             }
@@ -61,7 +61,7 @@ public class IllustrationProgressMixin implements Mixin {
         View progressIllustrationLayout;
         this.progressDescription = str;
         if (isShown() && (progressIllustrationLayout = getProgressIllustrationLayout()) != null) {
-            TextView textView = (TextView) progressIllustrationLayout.findViewById(C3953R.C3956id.sud_layout_description);
+            TextView textView = (TextView) progressIllustrationLayout.findViewById(C3963R.C3966id.sud_layout_description);
             if (str != null) {
                 textView.setVisibility(0);
                 textView.setText(str);
@@ -74,7 +74,7 @@ public class IllustrationProgressMixin implements Mixin {
 
     private View getProgressIllustrationLayout() {
         ViewStub viewStub;
-        if (peekProgressIllustrationLayout() == null && (viewStub = (ViewStub) this.glifLayout.findManagedViewById(C3953R.C3956id.sud_layout_illustration_progress_stub)) != null) {
+        if (peekProgressIllustrationLayout() == null && (viewStub = (ViewStub) this.glifLayout.findManagedViewById(C3963R.C3966id.sud_layout_illustration_progress_stub)) != null) {
             viewStub.inflate();
             setIllustrationResource();
         }
@@ -82,8 +82,8 @@ public class IllustrationProgressMixin implements Mixin {
     }
 
     private void setIllustrationResource() {
-        IllustrationVideoView illustrationVideoView = (IllustrationVideoView) this.glifLayout.findManagedViewById(C3953R.C3956id.sud_progress_illustration);
-        ProgressBar progressBar = (ProgressBar) this.glifLayout.findManagedViewById(C3953R.C3956id.sud_progress_bar);
+        IllustrationVideoView illustrationVideoView = (IllustrationVideoView) this.glifLayout.findManagedViewById(C3963R.C3966id.sud_progress_illustration);
+        ProgressBar progressBar = (ProgressBar) this.glifLayout.findManagedViewById(C3963R.C3966id.sud_progress_bar);
         ResourceEntry illustrationResourceEntry = PartnerConfigHelper.get(this.context).getIllustrationResourceEntry(this.context, this.progressConfig.getPartnerConfig());
         if (illustrationResourceEntry != null) {
             progressBar.setVisibility(8);
@@ -96,7 +96,7 @@ public class IllustrationProgressMixin implements Mixin {
     }
 
     private View peekProgressIllustrationLayout() {
-        return this.glifLayout.findViewById(C3953R.C3956id.sud_layout_progress_illustration);
+        return this.glifLayout.findViewById(C3963R.C3966id.sud_layout_progress_illustration);
     }
 
     public enum ProgressConfig {

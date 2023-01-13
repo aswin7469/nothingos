@@ -174,7 +174,7 @@ public final class DateTimeFormatter {
             return this;
         }
         Chronology ofLocale = locale2.getUnicodeLocaleType("ca") != null ? Chronology.ofLocale(locale2) : this.chrono;
-        DecimalStyle of = locale2.getUnicodeLocaleType("nu") != null ? DecimalStyle.m954of(locale2) : this.decimalStyle;
+        DecimalStyle of = locale2.getUnicodeLocaleType("nu") != null ? DecimalStyle.m952of(locale2) : this.decimalStyle;
         String unicodeLocaleType = locale2.getUnicodeLocaleType("tz");
         if (unicodeLocaleType != null) {
             zoneId = (ZoneId) Optional.ofNullable(ICU.convertToTzId(unicodeLocaleType)).map(new DateTimeFormatter$$ExternalSyntheticLambda2()).orElse(this.zone);

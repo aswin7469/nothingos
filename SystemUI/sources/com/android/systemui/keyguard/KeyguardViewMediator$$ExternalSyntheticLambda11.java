@@ -9,6 +9,6 @@ public final /* synthetic */ class KeyguardViewMediator$$ExternalSyntheticLambda
     }
 
     public final void run() {
-        this.f$0.m2760lambda$new$5$comandroidsystemuikeyguardKeyguardViewMediator();
+        this.f$0.m2765lambda$new$5$comandroidsystemuikeyguardKeyguardViewMediator();
     }
 }

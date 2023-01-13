@@ -42,7 +42,7 @@ public class ActionProxyReceiver extends BroadcastReceiver {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onReceive$0$com-android-systemui-screenshot-ActionProxyReceiver */
-    public /* synthetic */ void mo37280xa2afb14f(Intent intent, Context context) {
+    public /* synthetic */ void mo37281xa2afb14f(Intent intent, Context context) {
         this.mActivityManagerWrapper.closeSystemWindows(CentralSurfaces.SYSTEM_DIALOG_REASON_SCREENSHOT);
         PendingIntent pendingIntent = (PendingIntent) intent.getParcelableExtra("android:screenshot_action_intent");
         ActivityOptions makeBasic = ActivityOptions.makeBasic();

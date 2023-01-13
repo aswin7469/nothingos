@@ -12,7 +12,7 @@ public final class FileDescriptor {
     public static final FileDescriptor err = new FileDescriptor(2);
 
     /* renamed from: in */
-    public static final FileDescriptor f518in = new FileDescriptor(0);
+    public static final FileDescriptor f516in = new FileDescriptor(0);
     public static final FileDescriptor out = new FileDescriptor(1);
     /* access modifiers changed from: private */
     public int descriptor;

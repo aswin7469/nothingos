@@ -11,6 +11,6 @@ public final /* synthetic */ class SensorUseStartedActivity$$ExternalSyntheticLa
     }
 
     public final boolean onDismiss() {
-        return SensorUseStartedActivity.m3015onClick$lambda4(this.f$0);
+        return SensorUseStartedActivity.m3019onClick$lambda4(this.f$0);
     }
 }

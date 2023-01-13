@@ -11,6 +11,6 @@ public final /* synthetic */ class LockscreenShadeTransitionController$$External
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        LockscreenShadeTransitionController.m3032setDragDownAmountAnimated$lambda4(this.f$0, valueAnimator);
+        LockscreenShadeTransitionController.m3036setDragDownAmountAnimated$lambda4(this.f$0, valueAnimator);
     }
 }

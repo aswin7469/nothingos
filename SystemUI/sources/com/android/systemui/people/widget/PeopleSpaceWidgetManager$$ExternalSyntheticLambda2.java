@@ -14,6 +14,6 @@ public final /* synthetic */ class PeopleSpaceWidgetManager$$ExternalSyntheticLa
     }
 
     public final Object apply(Object obj) {
-        return this.f$0.mo35178xafd3b74b(this.f$1, (Integer) obj);
+        return this.f$0.mo35182xafd3b74b(this.f$1, (Integer) obj);
     }
 }

@@ -14,6 +14,6 @@ public final /* synthetic */ class FgsManagerController$$ExternalSyntheticLambda
     }
 
     public final void run() {
-        FgsManagerController.m2892updateNumberOfVisibleRunningPackagesLocked$lambda13$lambda12(this.f$0, this.f$1);
+        FgsManagerController.m2897updateNumberOfVisibleRunningPackagesLocked$lambda13$lambda12(this.f$0, this.f$1);
     }
 }

@@ -12,6 +12,6 @@ public final /* synthetic */ class MediaDataManager$$ExternalSyntheticLambda13 i
     }
 
     public final void onTargetsAvailable(List list) {
-        MediaDataManager.m2798lambda2$lambda1(this.f$0, list);
+        MediaDataManager.m2803lambda2$lambda1(this.f$0, list);
     }
 }

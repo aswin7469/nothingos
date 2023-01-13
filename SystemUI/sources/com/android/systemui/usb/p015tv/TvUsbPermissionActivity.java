@@ -1,7 +1,7 @@
 package com.android.systemui.usb.p015tv;
 
 import android.view.View;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 
 /* renamed from: com.android.systemui.usb.tv.TvUsbPermissionActivity */
 public class TvUsbPermissionActivity extends TvUsbDialogActivity {
@@ -16,9 +16,9 @@ public class TvUsbPermissionActivity extends TvUsbDialogActivity {
         int i;
         super.onResume();
         if (this.mDialogHelper.isUsbDevice()) {
-            i = this.mDialogHelper.deviceHasAudioCapture() && !this.mDialogHelper.packageHasAudioRecordingPermission() ? C1893R.string.usb_device_permission_prompt_warn : C1893R.string.usb_device_permission_prompt;
+            i = this.mDialogHelper.deviceHasAudioCapture() && !this.mDialogHelper.packageHasAudioRecordingPermission() ? C1894R.string.usb_device_permission_prompt_warn : C1894R.string.usb_device_permission_prompt;
         } else {
-            i = C1893R.string.usb_accessory_permission_prompt;
+            i = C1894R.string.usb_accessory_permission_prompt;
         }
         initUI(this.mDialogHelper.getAppName(), getString(i, new Object[]{this.mDialogHelper.getAppName(), this.mDialogHelper.getDeviceDescription()}));
     }

@@ -13,7 +13,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.provider.Settings;
 import android.util.Log;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.dagger.qualifiers.Main;
@@ -48,7 +48,7 @@ public class TeslaInfoControllerImpl implements TeslaInfoController {
     private Context mContext;
     /* access modifiers changed from: private */
     public Handler mHandler;
-    private QSTile.Icon mProfile = QSTileImpl.ResourceIcon.get(C1893R.C1895drawable.ic_qs_tesla_profile);
+    private QSTile.Icon mProfile = QSTileImpl.ResourceIcon.get(C1894R.C1896drawable.ic_qs_tesla_profile);
     /* access modifiers changed from: private */
     public boolean mShowTeslaInfo;
     private final ContentObserver mTeslaActiveObserver;
@@ -58,7 +58,7 @@ public class TeslaInfoControllerImpl implements TeslaInfoController {
 
     @Inject
     public TeslaInfoControllerImpl(Context context, BroadcastDispatcher broadcastDispatcher, @Main Looper looper, DumpManager dumpManager) {
-        C42291 r6 = new ContentObserver(new Handler()) {
+        C42401 r6 = new ContentObserver(new Handler()) {
             public void onChange(boolean z) {
                 boolean z2 = Settings.System.getInt(TeslaInfoControllerImpl.this.mContentResolver, "tesla_active", 1) == 0;
                 Log.d(TeslaInfoControllerImpl.TAG, "onChange: mShowTeslaInfo " + TeslaInfoControllerImpl.this.mShowTeslaInfo + " showTeslaInfo " + z2);
@@ -69,7 +69,7 @@ public class TeslaInfoControllerImpl implements TeslaInfoController {
             }
         };
         this.mTeslaActiveObserver = r6;
-        C42302 r0 = new BroadcastReceiver() {
+        C42412 r0 = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
                 Log.d(TeslaInfoControllerImpl.TAG, "onReceive: action " + action);
@@ -96,10 +96,10 @@ public class TeslaInfoControllerImpl implements TeslaInfoController {
         this.mTeslaInfoReceiver = r0;
         this.mContext = context;
         this.mContentResolver = context.getContentResolver();
-        this.mHandler = new C4231H(looper);
+        this.mHandler = new C4242H(looper);
         this.mShowTeslaInfo = Settings.System.getInt(this.mContentResolver, "tesla_active", 1) != 0 ? false : true;
-        this.mUserName = this.mContext.getString(C1893R.string.qs_tesla_def_label);
-        this.mBatteryRange = this.mContext.getString(C1893R.string.qs_tesla_def_second_label);
+        this.mUserName = this.mContext.getString(C1894R.string.qs_tesla_def_label);
+        this.mBatteryRange = this.mContext.getString(C1894R.string.qs_tesla_def_second_label);
         context.registerReceiver(r0, new IntentFilter(ACTION_TESLA_CONNECT), ACTION_TESLA_PERMISSION, (Handler) null);
         this.mContentResolver.registerContentObserver(URI_TESLA_ACTIVE, false, r6);
         dumpManager.registerDumpable(TAG, this);
@@ -147,14 +147,14 @@ public class TeslaInfoControllerImpl implements TeslaInfoController {
     }
 
     /* renamed from: com.nothing.systemui.statusbar.policy.TeslaInfoControllerImpl$H */
-    private final class C4231H extends Handler {
+    private final class C4242H extends Handler {
         private static final int MSG_ACTIVE_STATE_CHANGED = 1;
         private static final int MSG_ADD_CALLBACK = 3;
         private static final int MSG_INFO_CHANGED = 2;
         private static final int MSG_REMOVE_CALLBACK = 4;
         private final ArrayList<TeslaInfoController.Callback> mCallbacks = new ArrayList<>();
 
-        public C4231H(Looper looper) {
+        public C4242H(Looper looper) {
             super(looper);
         }
 

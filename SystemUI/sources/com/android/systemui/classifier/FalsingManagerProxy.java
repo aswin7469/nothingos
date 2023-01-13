@@ -33,7 +33,7 @@ public class FalsingManagerProxy implements FalsingManager, Dumpable {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-classifier-FalsingManagerProxy  reason: not valid java name */
-    public /* synthetic */ void m2597lambda$new$0$comandroidsystemuiclassifierFalsingManagerProxy(DeviceConfig.Properties properties) {
+    public /* synthetic */ void m2602lambda$new$0$comandroidsystemuiclassifierFalsingManagerProxy(DeviceConfig.Properties properties) {
         onDeviceConfigPropertiesChanged(properties.getNamespace());
     }
 
@@ -47,7 +47,7 @@ public class FalsingManagerProxy implements FalsingManager, Dumpable {
         this.mBrightLineFalsingManagerProvider = provider;
         setupFalsingManager();
         deviceConfigProxy.addOnPropertiesChangedListener("systemui", executor, falsingManagerProxy$$ExternalSyntheticLambda0);
-        C20121 r3 = new PluginListener<FalsingPlugin>() {
+        C20141 r3 = new PluginListener<FalsingPlugin>() {
             public void onPluginConnected(FalsingPlugin falsingPlugin, Context context) {
                 FalsingManager falsingManager = falsingPlugin.getFalsingManager(context);
                 if (falsingManager != null) {

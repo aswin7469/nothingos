@@ -12,7 +12,7 @@ import sun.security.util.DerValue;
 public class PolicyInformation {
 
     /* renamed from: ID */
-    public static final String f933ID = "id";
+    public static final String f931ID = "id";
     public static final String NAME = "PolicyInformation";
     public static final String QUALIFIERS = "qualifiers";
     private CertificatePolicyId policyIdentifier;

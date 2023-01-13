@@ -5,7 +5,7 @@ import android.content.Context;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.p012qs.tileimpl.QSIconViewImpl;
 import com.android.systemui.p012qs.tileimpl.SlashImageView;
 import com.android.systemui.plugins.p011qs.QSTile;
@@ -15,8 +15,8 @@ public class SignalTileView extends QSIconViewImpl {
     private static final long DEFAULT_DURATION;
     private static final long SHORT_DURATION;
     protected FrameLayout mIconFrame;
-    private ImageView mIn = addTrafficView(C1893R.C1895drawable.ic_qs_signal_in);
-    private ImageView mOut = addTrafficView(C1893R.C1895drawable.ic_qs_signal_out);
+    private ImageView mIn = addTrafficView(C1894R.C1896drawable.ic_qs_signal_in);
+    private ImageView mOut = addTrafficView(C1894R.C1896drawable.ic_qs_signal_out);
     private ImageView mOverlay;
     protected ImageView mSignal;
     private int mSignalIndicatorToIconFrameSpacing;
@@ -37,8 +37,8 @@ public class SignalTileView extends QSIconViewImpl {
         super(context);
         setClipChildren(false);
         setClipToPadding(false);
-        this.mWideOverlayIconStartPadding = context.getResources().getDimensionPixelSize(C1893R.dimen.wide_type_icon_start_padding_qs);
-        this.mSignalIndicatorToIconFrameSpacing = context.getResources().getDimensionPixelSize(C1893R.dimen.signal_indicator_to_icon_frame_spacing);
+        this.mWideOverlayIconStartPadding = context.getResources().getDimensionPixelSize(C1894R.dimen.wide_type_icon_start_padding_qs);
+        this.mSignalIndicatorToIconFrameSpacing = context.getResources().getDimensionPixelSize(C1894R.dimen.signal_indicator_to_icon_frame_spacing);
     }
 
     private ImageView addTrafficView(int i) {

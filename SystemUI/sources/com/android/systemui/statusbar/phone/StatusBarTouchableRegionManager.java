@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowInsets;
 import com.android.internal.policy.SystemBarUtils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dumpable;
 import com.android.systemui.ScreenDecorations;
 import com.android.systemui.dagger.SysUISingleton;
@@ -85,7 +85,7 @@ public final class StatusBarTouchableRegionManager implements Dumpable {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-statusbar-phone-StatusBarTouchableRegionManager */
-    public /* synthetic */ void mo45350x3ee4734b(boolean z) {
+    public /* synthetic */ void mo45362x3ee4734b(boolean z) {
         updateTouchableRegion();
     }
 
@@ -93,7 +93,7 @@ public final class StatusBarTouchableRegionManager implements Dumpable {
     public void setup(CentralSurfaces centralSurfaces, View view) {
         this.mCentralSurfaces = centralSurfaces;
         this.mNotificationShadeWindowView = view;
-        this.mNotificationPanelView = view.findViewById(C1893R.C1897id.notification_panel);
+        this.mNotificationPanelView = view.findViewById(C1894R.C1898id.notification_panel);
     }
 
     public void dump(PrintWriter printWriter, String[] strArr) {

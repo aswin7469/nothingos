@@ -13,6 +13,6 @@ public final /* synthetic */ class RemoteInputController$$ExternalSyntheticLambd
     }
 
     public final void run() {
-        this.f$0.mo39012xfac918bb(this.f$1);
+        this.f$0.mo39013xfac918bb(this.f$1);
     }
 }

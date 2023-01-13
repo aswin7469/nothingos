@@ -12,6 +12,6 @@ public final /* synthetic */ class RotationLockTile$$ExternalSyntheticLambda0 im
     }
 
     public final void onSensorPrivacyChanged(int i, boolean z) {
-        this.f$0.m2981lambda$new$0$comandroidsystemuiqstilesRotationLockTile(i, z);
+        this.f$0.m2985lambda$new$0$comandroidsystemuiqstilesRotationLockTile(i, z);
     }
 }

@@ -11,6 +11,6 @@ public final /* synthetic */ class WifiPickerTracker$$ExternalSyntheticLambda16 
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo47905x20a4ed4d((StandardWifiEntry) obj);
+        this.f$0.mo47914x20a4ed4d((StandardWifiEntry) obj);
     }
 }

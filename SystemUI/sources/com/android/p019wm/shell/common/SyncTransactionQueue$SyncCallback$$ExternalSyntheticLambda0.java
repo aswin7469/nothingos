@@ -17,6 +17,6 @@ public final /* synthetic */ class SyncTransactionQueue$SyncCallback$$ExternalSy
     }
 
     public final void run() {
-        this.f$0.mo49126x2b2040e7(this.f$1, this.f$2);
+        this.f$0.mo49135x2b2040e7(this.f$1, this.f$2);
     }
 }

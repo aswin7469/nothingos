@@ -13,6 +13,6 @@ public final /* synthetic */ class AppAdapter$$ExternalSyntheticLambda0 implemen
     }
 
     public final void onClick(View view) {
-        AppAdapter.m2632onBindViewHolder$lambda0(this.f$0, this.f$1, view);
+        AppAdapter.m2637onBindViewHolder$lambda0(this.f$0, this.f$1, view);
     }
 }

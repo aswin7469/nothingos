@@ -3,7 +3,7 @@ package com.nothing.systemui.navigationbar;
 import android.content.Context;
 import android.provider.Settings;
 import android.util.Log;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.nothing.NtFeaturesUtils;
 
 public class NavigationBarInflaterViewEx {
@@ -15,11 +15,11 @@ public class NavigationBarInflaterViewEx {
     public String getDefaultLayout(Context context, boolean z, boolean z2) {
         int intForUser = Settings.Secure.getIntForUser(context.getContentResolver(), NAV_BAR_COMBINATION, 0, -2);
         Log.d(TAG, "navbarCombination = " + intForUser);
-        int i = (!NtFeaturesUtils.isSupport(new int[]{0}) || intForUser != 1) ? C1893R.string.config_navBarLayout : C1893R.string.config_navBarLayout_recent_left;
+        int i = (!NtFeaturesUtils.isSupport(new int[]{0}) || intForUser != 1) ? C1894R.string.config_navBarLayout : C1894R.string.config_navBarLayout_recent_left;
         if (z) {
-            i = C1893R.string.config_navBarLayoutHandle;
+            i = C1894R.string.config_navBarLayoutHandle;
         } else if (z2) {
-            i = C1893R.string.config_navBarLayoutQuickstep;
+            i = C1894R.string.config_navBarLayoutQuickstep;
         }
         return context.getString(i);
     }

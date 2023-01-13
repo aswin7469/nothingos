@@ -11,7 +11,7 @@ import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.service.dreams.IDreamManager;
 import android.util.Log;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.CoreStartable;
 import com.android.systemui.dagger.qualifiers.Main;
 import javax.inject.Inject;
@@ -39,7 +39,7 @@ public class DreamOverlayRegistrant extends CoreStartable {
         int componentEnabledSetting = packageManager.getComponentEnabledSetting(this.mOverlayServiceComponent);
         boolean z = false;
         if (componentEnabledSetting != 3) {
-            int i = this.mResources.getBoolean(C1893R.bool.config_dreamOverlayServiceEnabled) ? 1 : 2;
+            int i = this.mResources.getBoolean(C1894R.bool.config_dreamOverlayServiceEnabled) ? 1 : 2;
             if (i != componentEnabledSetting) {
                 packageManager.setComponentEnabledSetting(this.mOverlayServiceComponent, i, 0);
             }

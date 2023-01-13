@@ -19,13 +19,13 @@ public class StreamEncoder extends Writer {
     private static final int DEFAULT_BYTE_BUFFER_SIZE = 8192;
 
     /* renamed from: bb */
-    private ByteBuffer f904bb;
+    private ByteBuffer f902bb;
 
     /* renamed from: ch */
-    private WritableByteChannel f905ch;
+    private WritableByteChannel f903ch;
 
     /* renamed from: cs */
-    private Charset f906cs;
+    private Charset f904cs;
     private CharsetEncoder encoder;
     private boolean haveLeftoverChar;
     private volatile boolean isOpen;
@@ -137,11 +137,11 @@ public class StreamEncoder extends Writer {
         this.haveLeftoverChar = false;
         this.lcb = null;
         this.out = outputStream;
-        this.f905ch = null;
-        this.f906cs = charsetEncoder.charset();
+        this.f903ch = null;
+        this.f904cs = charsetEncoder.charset();
         this.encoder = charsetEncoder;
-        if (this.f905ch == null) {
-            this.f904bb = ByteBuffer.allocate(8192);
+        if (this.f903ch == null) {
+            this.f902bb = ByteBuffer.allocate(8192);
         }
     }
 
@@ -150,26 +150,26 @@ public class StreamEncoder extends Writer {
         this.haveLeftoverChar = false;
         this.lcb = null;
         this.out = null;
-        this.f905ch = writableByteChannel;
-        this.f906cs = charsetEncoder.charset();
+        this.f903ch = writableByteChannel;
+        this.f904cs = charsetEncoder.charset();
         this.encoder = charsetEncoder;
-        this.f904bb = ByteBuffer.allocate(i < 0 ? 8192 : i);
+        this.f902bb = ByteBuffer.allocate(i < 0 ? 8192 : i);
     }
 
     private void writeBytes() throws IOException {
-        this.f904bb.flip();
-        int limit = this.f904bb.limit();
-        int position = this.f904bb.position();
+        this.f902bb.flip();
+        int limit = this.f902bb.limit();
+        int position = this.f902bb.position();
         int i = position <= limit ? limit - position : 0;
         if (i > 0) {
-            WritableByteChannel writableByteChannel = this.f905ch;
+            WritableByteChannel writableByteChannel = this.f903ch;
             if (writableByteChannel != null) {
-                int write = writableByteChannel.write(this.f904bb);
+                int write = writableByteChannel.write(this.f902bb);
             } else {
-                this.out.write(this.f904bb.array(), this.f904bb.arrayOffset() + position, i);
+                this.out.write(this.f902bb.array(), this.f902bb.arrayOffset() + position, i);
             }
         }
-        this.f904bb.clear();
+        this.f902bb.clear();
     }
 
     private void flushLeftoverChar(CharBuffer charBuffer, boolean z) throws IOException {
@@ -191,7 +191,7 @@ public class StreamEncoder extends Writer {
                 if (!this.lcb.hasRemaining() && !z) {
                     break;
                 }
-                CoderResult encode = this.encoder.encode(this.lcb, this.f904bb, z);
+                CoderResult encode = this.encoder.encode(this.lcb, this.f902bb, z);
                 if (encode.isUnderflow()) {
                     if (this.lcb.hasRemaining()) {
                         this.leftoverChar = this.lcb.get();
@@ -218,7 +218,7 @@ public class StreamEncoder extends Writer {
             flushLeftoverChar(wrap, false);
         }
         while (wrap.hasRemaining()) {
-            CoderResult encode = this.encoder.encode(wrap, this.f904bb, false);
+            CoderResult encode = this.encoder.encode(wrap, this.f902bb, false);
             if (encode.isUnderflow()) {
                 if (wrap.remaining() == 1) {
                     this.haveLeftoverChar = true;
@@ -236,7 +236,7 @@ public class StreamEncoder extends Writer {
 
     /* access modifiers changed from: package-private */
     public void implFlushBuffer() throws IOException {
-        if (this.f904bb.position() > 0) {
+        if (this.f902bb.position() > 0) {
             writeBytes();
         }
     }
@@ -255,7 +255,7 @@ public class StreamEncoder extends Writer {
         flushLeftoverChar((CharBuffer) null, true);
         while (true) {
             try {
-                CoderResult flush = this.encoder.flush(this.f904bb);
+                CoderResult flush = this.encoder.flush(this.f902bb);
                 if (flush.isUnderflow()) {
                     break;
                 } else if (flush.isOverflow()) {
@@ -268,10 +268,10 @@ public class StreamEncoder extends Writer {
                 throw e;
             }
         }
-        if (this.f904bb.position() > 0) {
+        if (this.f902bb.position() > 0) {
             writeBytes();
         }
-        WritableByteChannel writableByteChannel = this.f905ch;
+        WritableByteChannel writableByteChannel = this.f903ch;
         if (writableByteChannel != null) {
             writableByteChannel.close();
         } else {
@@ -281,7 +281,7 @@ public class StreamEncoder extends Writer {
 
     /* access modifiers changed from: package-private */
     public String encodingName() {
-        Charset charset = this.f906cs;
+        Charset charset = this.f904cs;
         if (charset instanceof HistoricallyNamedCharset) {
             return ((HistoricallyNamedCharset) charset).historicalName();
         }

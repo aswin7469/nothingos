@@ -5,7 +5,7 @@ import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.View;
 import com.android.keyguard.AlphaOptimizedLinearLayout;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.statusbar.StatusIconDisplayable;
 import com.android.systemui.statusbar.notification.stack.AnimationFilter;
 import com.android.systemui.statusbar.notification.stack.AnimationProperties;
@@ -85,9 +85,9 @@ public class StatusIconContainer extends AlphaOptimizedLinearLayout {
 
     private void initDimens() {
         this.mIconDotFrameWidth = getResources().getDimensionPixelSize(17105552);
-        this.mDotPadding = getResources().getDimensionPixelSize(C1893R.dimen.overflow_icon_dot_padding);
-        this.mIconSpacing = getResources().getDimensionPixelSize(C1893R.dimen.status_bar_system_icon_spacing);
-        int dimensionPixelSize = getResources().getDimensionPixelSize(C1893R.dimen.overflow_dot_radius) * 2;
+        this.mDotPadding = getResources().getDimensionPixelSize(C1894R.dimen.overflow_icon_dot_padding);
+        this.mIconSpacing = getResources().getDimensionPixelSize(C1894R.dimen.status_bar_system_icon_spacing);
+        int dimensionPixelSize = getResources().getDimensionPixelSize(C1894R.dimen.overflow_dot_radius) * 2;
         this.mStaticDotDiameter = dimensionPixelSize;
         this.mUnderflowWidth = this.mIconDotFrameWidth + ((dimensionPixelSize + this.mDotPadding) * -1);
     }
@@ -174,12 +174,12 @@ public class StatusIconContainer extends AlphaOptimizedLinearLayout {
         super.onViewAdded(view);
         StatusIconState statusIconState = new StatusIconState();
         statusIconState.justAdded = true;
-        view.setTag(C1893R.C1897id.status_bar_view_state_tag, statusIconState);
+        view.setTag(C1894R.C1898id.status_bar_view_state_tag, statusIconState);
     }
 
     public void onViewRemoved(View view) {
         super.onViewRemoved(view);
-        view.setTag(C1893R.C1897id.status_bar_view_state_tag, (Object) null);
+        view.setTag(C1894R.C1898id.status_bar_view_state_tag, (Object) null);
     }
 
     public void addIgnoredSlot(String str) {
@@ -322,7 +322,7 @@ public class StatusIconContainer extends AlphaOptimizedLinearLayout {
     }
 
     private static StatusIconState getViewStateFromChild(View view) {
-        return (StatusIconState) view.getTag(C1893R.C1897id.status_bar_view_state_tag);
+        return (StatusIconState) view.getTag(C1894R.C1898id.status_bar_view_state_tag);
     }
 
     private static int getViewTotalMeasuredWidth(View view) {

@@ -16,7 +16,7 @@ public class NotifRemoteViewCacheImpl implements NotifRemoteViewCache {
 
     @Inject
     NotifRemoteViewCacheImpl(CommonNotifCollection commonNotifCollection) {
-        C27531 r0 = new NotifCollectionListener() {
+        C27591 r0 = new NotifCollectionListener() {
             public void onEntryInit(NotificationEntry notificationEntry) {
                 NotifRemoteViewCacheImpl.this.mNotifCachedContentViews.put(notificationEntry, new SparseArray());
             }

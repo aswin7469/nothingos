@@ -34,7 +34,7 @@ public class SafetyController implements CallbackController<Listener> {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onReceive$0$com-android-systemui-statusbar-policy-SafetyController$1 */
-        public /* synthetic */ void mo46043xf3842ebb() {
+        public /* synthetic */ void mo46055xf3842ebb() {
             SafetyController.this.handleSafetyCenterEnableChange();
         }
     };
@@ -80,7 +80,7 @@ public class SafetyController implements CallbackController<Listener> {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$addCallback$0$com-android-systemui-statusbar-policy-SafetyController */
-    public /* synthetic */ void mo46041xba028ac(Listener listener) {
+    public /* synthetic */ void mo46053xba028ac(Listener listener) {
         this.mSafetyCenterEnabled = this.mSafetyCenterManager.isSafetyCenterEnabled();
         listener.onSafetyCenterEnableChanged(isSafetyCenterEnabled());
     }

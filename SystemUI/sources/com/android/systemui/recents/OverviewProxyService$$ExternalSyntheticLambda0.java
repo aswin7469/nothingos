@@ -9,6 +9,6 @@ public final /* synthetic */ class OverviewProxyService$$ExternalSyntheticLambda
     }
 
     public final void run() {
-        this.f$0.mo37130x273a363e();
+        this.f$0.mo37129x273a363e();
     }
 }

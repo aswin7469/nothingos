@@ -9,6 +9,6 @@ public final /* synthetic */ class MediaDataManager$$ExternalSyntheticLambda0 im
     }
 
     public final void run() {
-        MediaDataManager.m2792dismissSmartspaceRecommendation$lambda20(this.f$0);
+        MediaDataManager.m2797dismissSmartspaceRecommendation$lambda20(this.f$0);
     }
 }

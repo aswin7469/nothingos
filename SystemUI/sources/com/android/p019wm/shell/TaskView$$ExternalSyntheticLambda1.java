@@ -10,6 +10,6 @@ public final /* synthetic */ class TaskView$$ExternalSyntheticLambda1 implements
     }
 
     public final void run() {
-        this.f$0.m3382lambda$performRelease$4$comandroidwmshellTaskView();
+        this.f$0.m3386lambda$performRelease$4$comandroidwmshellTaskView();
     }
 }

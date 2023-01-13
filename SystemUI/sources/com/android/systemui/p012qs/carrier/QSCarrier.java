@@ -12,7 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.android.settingslib.Utils;
 import com.android.settingslib.graph.SignalDrawable;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.FontSizeUtils;
 import java.util.Objects;
 
@@ -64,11 +64,11 @@ public class QSCarrier extends LinearLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mMobileGroup = findViewById(C1893R.C1897id.mobile_combo);
-        this.mMobileRoaming = (ImageView) findViewById(C1893R.C1897id.mobile_roaming);
-        this.mMobileSignal = (ImageView) findViewById(C1893R.C1897id.mobile_signal);
-        this.mCarrierText = (TextView) findViewById(C1893R.C1897id.qs_carrier_text);
-        this.mSpacer = findViewById(C1893R.C1897id.spacer);
+        this.mMobileGroup = findViewById(C1894R.C1898id.mobile_combo);
+        this.mMobileRoaming = (ImageView) findViewById(C1894R.C1898id.mobile_roaming);
+        this.mMobileSignal = (ImageView) findViewById(C1894R.C1898id.mobile_signal);
+        this.mCarrierText = (TextView) findViewById(C1894R.C1898id.qs_carrier_text);
+        this.mSpacer = findViewById(C1894R.C1898id.spacer);
     }
 
     public boolean updateState(CellSignalState cellSignalState, boolean z) {
@@ -93,7 +93,7 @@ public class QSCarrier extends LinearLayout {
             if (cellSignalState.providerModelBehavior) {
                 if (!this.mProviderModelInitialized) {
                     this.mProviderModelInitialized = true;
-                    this.mMobileSignal.setImageDrawable(this.mContext.getDrawable(C1893R.C1895drawable.ic_qs_no_calling_sms));
+                    this.mMobileSignal.setImageDrawable(this.mContext.getDrawable(C1894R.C1896drawable.ic_qs_no_calling_sms));
                 }
                 this.mMobileSignal.setImageDrawable(this.mContext.getDrawable(cellSignalState.mobileSignalIconId));
                 this.mMobileSignal.setContentDescription(cellSignalState.contentDescription);
@@ -108,7 +108,7 @@ public class QSCarrier extends LinearLayout {
                     sb.append(cellSignalState.contentDescription).append(", ");
                 }
                 if (cellSignalState.roaming) {
-                    sb.append(this.mContext.getString(C1893R.string.data_connection_roaming)).append(", ");
+                    sb.append(this.mContext.getString(C1894R.string.data_connection_roaming)).append(", ");
                 }
                 if (hasValidTypeContentDescription(cellSignalState.typeContentDescription)) {
                     sb.append(cellSignalState.typeContentDescription);
@@ -120,7 +120,7 @@ public class QSCarrier extends LinearLayout {
     }
 
     private boolean hasValidTypeContentDescription(String str) {
-        return TextUtils.equals(str, this.mContext.getString(C1893R.string.data_connection_no_internet)) || TextUtils.equals(str, this.mContext.getString(C1893R.string.cell_data_off_content_description)) || TextUtils.equals(str, this.mContext.getString(C1893R.string.not_default_data_content_description));
+        return TextUtils.equals(str, this.mContext.getString(C1894R.string.data_connection_no_internet)) || TextUtils.equals(str, this.mContext.getString(C1894R.string.cell_data_off_content_description)) || TextUtils.equals(str, this.mContext.getString(C1894R.string.not_default_data_content_description));
     }
 
     /* access modifiers changed from: package-private */

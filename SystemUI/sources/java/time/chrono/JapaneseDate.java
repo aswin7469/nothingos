@@ -29,7 +29,7 @@ import sun.util.calendar.Era;
 import sun.util.calendar.LocalGregorianCalendar;
 
 public final class JapaneseDate extends ChronoLocalDateImpl<JapaneseDate> implements ChronoLocalDate, Serializable {
-    static final LocalDate MEIJI_6_ISODATE = LocalDate.m908of(1873, 1, 1);
+    static final LocalDate MEIJI_6_ISODATE = LocalDate.m906of(1873, 1, 1);
     private static final long serialVersionUID = -305327627230580483L;
     private transient JapaneseEra era;
     private final transient LocalDate isoDate;
@@ -56,19 +56,19 @@ public final class JapaneseDate extends ChronoLocalDateImpl<JapaneseDate> implem
     }
 
     /* renamed from: of */
-    public static JapaneseDate m947of(JapaneseEra japaneseEra, int i, int i2, int i3) {
+    public static JapaneseDate m945of(JapaneseEra japaneseEra, int i, int i2, int i3) {
         Objects.requireNonNull(japaneseEra, "era");
         LocalGregorianCalendar.Date newCalendarDate = JapaneseChronology.JCAL.newCalendarDate((TimeZone) null);
         newCalendarDate.setEra(japaneseEra.getPrivateEra()).setDate(i, i2, i3);
         if (JapaneseChronology.JCAL.validate(newCalendarDate)) {
-            return new JapaneseDate(japaneseEra, i, LocalDate.m908of(newCalendarDate.getNormalizedYear(), i2, i3));
+            return new JapaneseDate(japaneseEra, i, LocalDate.m906of(newCalendarDate.getNormalizedYear(), i2, i3));
         }
         throw new DateTimeException("year, month, and day not valid for Era");
     }
 
     /* renamed from: of */
-    public static JapaneseDate m946of(int i, int i2, int i3) {
-        return new JapaneseDate(LocalDate.m908of(i, i2, i3));
+    public static JapaneseDate m944of(int i, int i2, int i3) {
+        return new JapaneseDate(LocalDate.m906of(i, i2, i3));
     }
 
     static JapaneseDate ofYearDay(JapaneseEra japaneseEra, int i, int i2) {
@@ -83,7 +83,7 @@ public final class JapaneseDate extends ChronoLocalDateImpl<JapaneseDate> implem
         }
         JapaneseChronology.JCAL.normalize(newCalendarDate);
         if (japaneseEra.getPrivateEra() == newCalendarDate.getEra() && i == newCalendarDate.getYear()) {
-            return new JapaneseDate(japaneseEra, i, LocalDate.m908of(newCalendarDate.getNormalizedYear(), newCalendarDate.getMonth(), newCalendarDate.getDayOfMonth()));
+            return new JapaneseDate(japaneseEra, i, LocalDate.m906of(newCalendarDate.getNormalizedYear(), newCalendarDate.getMonth(), newCalendarDate.getDayOfMonth()));
         }
         throw new DateTimeException("Invalid parameters");
     }
@@ -145,12 +145,12 @@ public final class JapaneseDate extends ChronoLocalDateImpl<JapaneseDate> implem
         }
         if (isSupported(temporalField)) {
             ChronoField chronoField = (ChronoField) temporalField;
-            int i = C28701.$SwitchMap$java$time$temporal$ChronoField[chronoField.ordinal()];
+            int i = C28761.$SwitchMap$java$time$temporal$ChronoField[chronoField.ordinal()];
             if (i == 1) {
-                return ValueRange.m955of(1, (long) lengthOfMonth());
+                return ValueRange.m953of(1, (long) lengthOfMonth());
             }
             if (i == 2) {
-                return ValueRange.m955of(1, (long) lengthOfYear());
+                return ValueRange.m953of(1, (long) lengthOfYear());
             }
             if (i != 3) {
                 return getChronology().range(chronoField);
@@ -158,7 +158,7 @@ public final class JapaneseDate extends ChronoLocalDateImpl<JapaneseDate> implem
             Calendar createCalendar = JapaneseChronology.createCalendar();
             createCalendar.set(0, this.era.getValue() + 2);
             createCalendar.set(this.yearOfEra, this.isoDate.getMonthValue() - 1, this.isoDate.getDayOfMonth());
-            return ValueRange.m955of(1, (long) createCalendar.getActualMaximum(1));
+            return ValueRange.m953of(1, (long) createCalendar.getActualMaximum(1));
         }
         throw new UnsupportedTemporalTypeException("Unsupported field: " + temporalField);
     }
@@ -207,15 +207,15 @@ public final class JapaneseDate extends ChronoLocalDateImpl<JapaneseDate> implem
         if (getLong(chronoField) == j) {
             return this;
         }
-        int i = C28701.$SwitchMap$java$time$temporal$ChronoField[chronoField.ordinal()];
+        int i = C28761.$SwitchMap$java$time$temporal$ChronoField[chronoField.ordinal()];
         if (i == 3 || i == 8 || i == 9) {
             int checkValidIntValue = getChronology().range(chronoField).checkValidIntValue(j, chronoField);
-            int i2 = C28701.$SwitchMap$java$time$temporal$ChronoField[chronoField.ordinal()];
+            int i2 = C28761.$SwitchMap$java$time$temporal$ChronoField[chronoField.ordinal()];
             if (i2 == 3) {
                 return withYear(checkValidIntValue);
             }
             if (i2 == 8) {
-                return withYear(JapaneseEra.m948of(checkValidIntValue), this.yearOfEra);
+                return withYear(JapaneseEra.m946of(checkValidIntValue), this.yearOfEra);
             }
             if (i2 == 9) {
                 return with(this.isoDate.withYear(checkValidIntValue));

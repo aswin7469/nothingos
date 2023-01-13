@@ -19,7 +19,7 @@ public class DozeFalsingManagerAdapter implements DozeMachine.Part {
     }
 
     /* renamed from: com.android.systemui.doze.DozeFalsingManagerAdapter$1 */
-    static /* synthetic */ class C20561 {
+    static /* synthetic */ class C20581 {
         static final /* synthetic */ int[] $SwitchMap$com$android$systemui$doze$DozeMachine$State;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(6:0|1|2|3|4|(3:5|6|8)) */
@@ -51,12 +51,12 @@ public class DozeFalsingManagerAdapter implements DozeMachine.Part {
             L_0x0028:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.doze.DozeFalsingManagerAdapter.C20561.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.doze.DozeFalsingManagerAdapter.C20581.<clinit>():void");
         }
     }
 
     private boolean isAodMode(DozeMachine.State state) {
-        int i = C20561.$SwitchMap$com$android$systemui$doze$DozeMachine$State[state.ordinal()];
+        int i = C20581.$SwitchMap$com$android$systemui$doze$DozeMachine$State[state.ordinal()];
         return i == 1 || i == 2 || i == 3;
     }
 }

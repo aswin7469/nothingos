@@ -8,7 +8,7 @@ import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import androidx.core.view.accessibility.AccessibilityViewCommand;
 import androidx.recyclerview.widget.RecyclerView;
 import com.android.internal.accessibility.dialog.AccessibilityTarget;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.List;
@@ -30,7 +30,7 @@ public class AccessibilityTargetAdapter extends RecyclerView.Adapter<ViewHolder>
     }
 
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View inflate = LayoutInflater.from(viewGroup.getContext()).inflate(C1893R.layout.accessibility_floating_menu_item, viewGroup, false);
+        View inflate = LayoutInflater.from(viewGroup.getContext()).inflate(C1894R.layout.accessibility_floating_menu_item, viewGroup, false);
         if (i == 0) {
             return new TopViewHolder(inflate);
         }
@@ -48,7 +48,7 @@ public class AccessibilityTargetAdapter extends RecyclerView.Adapter<ViewHolder>
         viewHolder.itemView.setOnClickListener(new AccessibilityTargetAdapter$$ExternalSyntheticLambda0(accessibilityTarget));
         viewHolder.itemView.setStateDescription(accessibilityTarget.getStateDescription());
         viewHolder.itemView.setContentDescription(accessibilityTarget.getLabel());
-        ViewCompat.replaceAccessibilityAction(viewHolder.itemView, AccessibilityNodeInfoCompat.AccessibilityActionCompat.ACTION_CLICK, accessibilityTarget.getFragmentType() == 2 ? viewHolder.itemView.getResources().getString(C1893R.string.accessibility_floating_button_action_double_tap_to_toggle) : null, (AccessibilityViewCommand) null);
+        ViewCompat.replaceAccessibilityAction(viewHolder.itemView, AccessibilityNodeInfoCompat.AccessibilityActionCompat.ACTION_CLICK, accessibilityTarget.getFragmentType() == 2 ? viewHolder.itemView.getResources().getString(C1894R.string.accessibility_floating_button_action_double_tap_to_toggle) : null, (AccessibilityViewCommand) null);
     }
 
     public int getItemViewType(int i) {
@@ -75,7 +75,7 @@ public class AccessibilityTargetAdapter extends RecyclerView.Adapter<ViewHolder>
 
         ViewHolder(View view) {
             super(view);
-            this.mIconView = view.findViewById(C1893R.C1897id.icon_view);
+            this.mIconView = view.findViewById(C1894R.C1898id.icon_view);
         }
 
         /* access modifiers changed from: package-private */

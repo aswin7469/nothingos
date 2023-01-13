@@ -5,7 +5,7 @@ import com.android.systemui.navigationbar.NavigationBarInflaterView;
 public abstract class LongBuffer extends Buffer implements Comparable<LongBuffer> {
 
     /* renamed from: hb */
-    final long[] f571hb;
+    final long[] f569hb;
     boolean isReadOnly;
     final int offset;
 
@@ -35,7 +35,7 @@ public abstract class LongBuffer extends Buffer implements Comparable<LongBuffer
 
     LongBuffer(int i, int i2, int i3, int i4, long[] jArr, int i5) {
         super(i, i2, i3, i4, 3);
-        this.f571hb = jArr;
+        this.f569hb = jArr;
         this.offset = i5;
     }
 
@@ -114,11 +114,11 @@ public abstract class LongBuffer extends Buffer implements Comparable<LongBuffer
     }
 
     public final boolean hasArray() {
-        return this.f571hb != null && !this.isReadOnly;
+        return this.f569hb != null && !this.isReadOnly;
     }
 
     public final long[] array() {
-        long[] jArr = this.f571hb;
+        long[] jArr = this.f569hb;
         if (jArr == null) {
             throw new UnsupportedOperationException();
         } else if (!this.isReadOnly) {
@@ -129,7 +129,7 @@ public abstract class LongBuffer extends Buffer implements Comparable<LongBuffer
     }
 
     public final int arrayOffset() {
-        if (this.f571hb == null) {
+        if (this.f569hb == null) {
             throw new UnsupportedOperationException();
         } else if (!this.isReadOnly) {
             return this.offset;

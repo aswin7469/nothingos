@@ -25,7 +25,7 @@ abstract class AsynchronousServerSocketChannelImpl extends AsynchronousServerSoc
     private ReadWriteLock closeLock = new ReentrantReadWriteLock();
 
     /* renamed from: fd */
-    protected final FileDescriptor f873fd = Net.serverSocket(true);
+    protected final FileDescriptor f871fd = Net.serverSocket(true);
     private boolean isReuseAddress;
     protected volatile InetSocketAddress localAddress = null;
     private volatile boolean open = true;
@@ -107,14 +107,14 @@ abstract class AsynchronousServerSocketChannelImpl extends AsynchronousServerSoc
             begin();
             synchronized (this.stateLock) {
                 if (this.localAddress == null) {
-                    NetHooks.beforeTcpBind(this.f873fd, inetSocketAddress.getAddress(), inetSocketAddress.getPort());
-                    Net.bind(this.f873fd, inetSocketAddress.getAddress(), inetSocketAddress.getPort());
-                    FileDescriptor fileDescriptor = this.f873fd;
+                    NetHooks.beforeTcpBind(this.f871fd, inetSocketAddress.getAddress(), inetSocketAddress.getPort());
+                    Net.bind(this.f871fd, inetSocketAddress.getAddress(), inetSocketAddress.getPort());
+                    FileDescriptor fileDescriptor = this.f871fd;
                     if (i < 1) {
                         i = 50;
                     }
                     Net.listen(fileDescriptor, i);
-                    this.localAddress = Net.localAddress(this.f873fd);
+                    this.localAddress = Net.localAddress(this.f871fd);
                 } else {
                     throw new AlreadyBoundException();
                 }
@@ -140,7 +140,7 @@ abstract class AsynchronousServerSocketChannelImpl extends AsynchronousServerSoc
             try {
                 begin();
                 if (socketOption != StandardSocketOptions.SO_REUSEADDR || !Net.useExclusiveBind()) {
-                    Net.setSocketOption(this.f873fd, Net.UNSPEC, socketOption, t);
+                    Net.setSocketOption(this.f871fd, Net.UNSPEC, socketOption, t);
                 } else {
                     this.isReuseAddress = ((Boolean) t).booleanValue();
                 }
@@ -161,7 +161,7 @@ abstract class AsynchronousServerSocketChannelImpl extends AsynchronousServerSoc
                 if (socketOption == StandardSocketOptions.SO_REUSEADDR && Net.useExclusiveBind()) {
                     return Boolean.valueOf(this.isReuseAddress);
                 }
-                T socketOption2 = Net.getSocketOption(this.f873fd, Net.UNSPEC, socketOption);
+                T socketOption2 = Net.getSocketOption(this.f871fd, Net.UNSPEC, socketOption);
                 end();
                 return socketOption2;
             } finally {

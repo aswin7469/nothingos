@@ -12,6 +12,6 @@ public final /* synthetic */ class AccessibilityFloatingMenuView$$ExternalSynthe
     }
 
     public final boolean onTouch(View view, MotionEvent motionEvent) {
-        return this.f$0.mo30052xab37714f(view, motionEvent);
+        return this.f$0.mo30062xab37714f(view, motionEvent);
     }
 }

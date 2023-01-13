@@ -55,19 +55,19 @@ public final class Channels {
         return new OutputStream() {
 
             /* renamed from: b1 */
-            private byte[] f574b1;
+            private byte[] f572b1;
 
             /* renamed from: bb */
-            private ByteBuffer f575bb;
+            private ByteBuffer f573bb;
 
             /* renamed from: bs */
-            private byte[] f576bs;
+            private byte[] f574bs;
 
             public synchronized void write(int i) throws IOException {
-                if (this.f574b1 == null) {
-                    this.f574b1 = new byte[1];
+                if (this.f572b1 == null) {
+                    this.f572b1 = new byte[1];
                 }
-                byte[] bArr = this.f574b1;
+                byte[] bArr = this.f572b1;
                 bArr[0] = (byte) i;
                 write(bArr);
             }
@@ -78,15 +78,15 @@ public final class Channels {
                 if (i >= 0) {
                     if (i <= bArr.length && i2 >= 0 && (i3 = i + i2) <= bArr.length && i3 >= 0) {
                         if (i2 != 0) {
-                            if (this.f576bs == bArr) {
-                                byteBuffer = this.f575bb;
+                            if (this.f574bs == bArr) {
+                                byteBuffer = this.f573bb;
                             } else {
                                 byteBuffer = ByteBuffer.wrap(bArr);
                             }
                             byteBuffer.limit(Math.min(i3, byteBuffer.capacity()));
                             byteBuffer.position(i);
-                            this.f575bb = byteBuffer;
-                            this.f576bs = bArr;
+                            this.f573bb = byteBuffer;
+                            this.f574bs = bArr;
                             Channels.writeFully(WritableByteChannel.this, byteBuffer);
                             return;
                         }
@@ -107,22 +107,22 @@ public final class Channels {
         return new InputStream() {
 
             /* renamed from: b1 */
-            private byte[] f577b1;
+            private byte[] f575b1;
 
             /* renamed from: bb */
-            private ByteBuffer f578bb;
+            private ByteBuffer f576bb;
 
             /* renamed from: bs */
-            private byte[] f579bs;
+            private byte[] f577bs;
 
             public synchronized int read() throws IOException {
-                if (this.f577b1 == null) {
-                    this.f577b1 = new byte[1];
+                if (this.f575b1 == null) {
+                    this.f575b1 = new byte[1];
                 }
-                if (read(this.f577b1) != 1) {
+                if (read(this.f575b1) != 1) {
                     return -1;
                 }
-                return this.f577b1[0] & 255;
+                return this.f575b1[0] & 255;
             }
 
             /* JADX WARNING: Code restructure failed: missing block: B:25:0x004b, code lost:
@@ -146,9 +146,9 @@ public final class Channels {
                     monitor-exit(r2)
                     return r1
                 L_0x0014:
-                    byte[] r5 = r2.f579bs     // Catch:{ all -> 0x006b }
+                    byte[] r5 = r2.f577bs     // Catch:{ all -> 0x006b }
                     if (r5 != r3) goto L_0x001b
-                    java.nio.ByteBuffer r5 = r2.f578bb     // Catch:{ all -> 0x006b }
+                    java.nio.ByteBuffer r5 = r2.f576bb     // Catch:{ all -> 0x006b }
                     goto L_0x001f
                 L_0x001b:
                     java.nio.ByteBuffer r5 = java.nio.ByteBuffer.wrap(r3)     // Catch:{ all -> 0x006b }
@@ -157,8 +157,8 @@ public final class Channels {
                     int r4 = r5.capacity()     // Catch:{ all -> 0x006b }
                     int r4 = java.lang.Math.min((int) r0, (int) r4)     // Catch:{ all -> 0x006b }
                     r5.limit((int) r4)     // Catch:{ all -> 0x006b }
-                    r2.f578bb = r5     // Catch:{ all -> 0x006b }
-                    r2.f579bs = r3     // Catch:{ all -> 0x006b }
+                    r2.f576bb = r5     // Catch:{ all -> 0x006b }
+                    r2.f577bs = r3     // Catch:{ all -> 0x006b }
                 L_0x0031:
                     java.nio.channels.AsynchronousByteChannel r3 = java.nio.channels.AsynchronousByteChannel.this     // Catch:{ ExecutionException -> 0x0050, InterruptedException -> 0x004e }
                     java.util.concurrent.Future r3 = r3.read(r5)     // Catch:{ ExecutionException -> 0x0050, InterruptedException -> 0x004e }
@@ -198,7 +198,7 @@ public final class Channels {
                     monitor-exit(r2)
                     throw r3
                 */
-                throw new UnsupportedOperationException("Method not decompiled: java.nio.channels.Channels.C43472.read(byte[], int, int):int");
+                throw new UnsupportedOperationException("Method not decompiled: java.nio.channels.Channels.C43592.read(byte[], int, int):int");
             }
 
             public void close() throws IOException {
@@ -212,19 +212,19 @@ public final class Channels {
         return new OutputStream() {
 
             /* renamed from: b1 */
-            private byte[] f580b1;
+            private byte[] f578b1;
 
             /* renamed from: bb */
-            private ByteBuffer f581bb;
+            private ByteBuffer f579bb;
 
             /* renamed from: bs */
-            private byte[] f582bs;
+            private byte[] f580bs;
 
             public synchronized void write(int i) throws IOException {
-                if (this.f580b1 == null) {
-                    this.f580b1 = new byte[1];
+                if (this.f578b1 == null) {
+                    this.f578b1 = new byte[1];
                 }
-                byte[] bArr = this.f580b1;
+                byte[] bArr = this.f578b1;
                 bArr[0] = (byte) i;
                 write(bArr);
             }
@@ -249,9 +249,9 @@ public final class Channels {
                     monitor-exit(r2)
                     return
                 L_0x0013:
-                    byte[] r5 = r2.f582bs     // Catch:{ all -> 0x006a }
+                    byte[] r5 = r2.f580bs     // Catch:{ all -> 0x006a }
                     if (r5 != r3) goto L_0x001a
-                    java.nio.ByteBuffer r5 = r2.f581bb     // Catch:{ all -> 0x006a }
+                    java.nio.ByteBuffer r5 = r2.f579bb     // Catch:{ all -> 0x006a }
                     goto L_0x001e
                 L_0x001a:
                     java.nio.ByteBuffer r5 = java.nio.ByteBuffer.wrap(r3)     // Catch:{ all -> 0x006a }
@@ -260,8 +260,8 @@ public final class Channels {
                     int r0 = java.lang.Math.min((int) r0, (int) r1)     // Catch:{ all -> 0x006a }
                     r5.limit((int) r0)     // Catch:{ all -> 0x006a }
                     r5.position((int) r4)     // Catch:{ all -> 0x006a }
-                    r2.f581bb = r5     // Catch:{ all -> 0x006a }
-                    r2.f582bs = r3     // Catch:{ all -> 0x006a }
+                    r2.f579bb = r5     // Catch:{ all -> 0x006a }
+                    r2.f580bs = r3     // Catch:{ all -> 0x006a }
                     r3 = 0
                 L_0x0031:
                     int r4 = r5.remaining()     // Catch:{ all -> 0x0059 }
@@ -302,7 +302,7 @@ public final class Channels {
                     monitor-exit(r2)
                     throw r3
                 */
-                throw new UnsupportedOperationException("Method not decompiled: java.nio.channels.Channels.C43483.write(byte[], int, int):void");
+                throw new UnsupportedOperationException("Method not decompiled: java.nio.channels.Channels.C43603.write(byte[], int, int):void");
             }
 
             public void close() throws IOException {
@@ -324,11 +324,11 @@ public final class Channels {
         private byte[] buf = new byte[0];
 
         /* renamed from: in */
-        private final InputStream f583in;
+        private final InputStream f581in;
         private final Object readLock = new Object();
 
         ReadableByteChannelImpl(InputStream inputStream) {
-            this.f583in = inputStream;
+            this.f581in = inputStream;
         }
 
         /* JADX WARNING: Code restructure failed: missing block: B:36:0x005d, code lost:
@@ -358,14 +358,14 @@ public final class Channels {
                 r9.buf = r6     // Catch:{ all -> 0x0053 }
             L_0x0023:
                 if (r3 <= 0) goto L_0x002e
-                java.io.InputStream r6 = r9.f583in     // Catch:{ all -> 0x0053 }
+                java.io.InputStream r6 = r9.f581in     // Catch:{ all -> 0x0053 }
                 int r6 = r6.available()     // Catch:{ all -> 0x0053 }
                 if (r6 > 0) goto L_0x002e
                 goto L_0x0055
             L_0x002e:
                 r6 = 1
                 r9.begin()     // Catch:{ all -> 0x004b }
-                java.io.InputStream r7 = r9.f583in     // Catch:{ all -> 0x004b }
+                java.io.InputStream r7 = r9.f581in     // Catch:{ all -> 0x004b }
                 byte[] r8 = r9.buf     // Catch:{ all -> 0x004b }
                 int r4 = r7.read(r8, r2, r5)     // Catch:{ all -> 0x004b }
                 if (r4 <= 0) goto L_0x003d
@@ -413,7 +413,7 @@ public final class Channels {
 
         /* access modifiers changed from: protected */
         public void implCloseChannel() throws IOException {
-            this.f583in.close();
+            this.f581in.close();
         }
     }
 

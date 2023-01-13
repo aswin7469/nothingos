@@ -11,6 +11,6 @@ public final /* synthetic */ class UnlockedScreenOffAnimationController$$Externa
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        UnlockedScreenOffAnimationController.m3195lightRevealAnimator$lambda1$lambda0(this.f$0, valueAnimator);
+        UnlockedScreenOffAnimationController.m3200lightRevealAnimator$lambda1$lambda0(this.f$0, valueAnimator);
     }
 }

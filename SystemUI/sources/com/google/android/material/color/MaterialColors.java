@@ -5,7 +5,7 @@ import android.graphics.Color;
 import android.util.TypedValue;
 import android.view.View;
 import androidx.core.graphics.ColorUtils;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.resources.MaterialAttributes;
 
 public class MaterialColors {
@@ -68,7 +68,7 @@ public class MaterialColors {
     }
 
     public static int harmonizeWithPrimary(Context context, int i) {
-        return harmonize(i, getColor(context, C3621R.attr.colorPrimary, MaterialColors.class.getCanonicalName()));
+        return harmonize(i, getColor(context, C3631R.attr.colorPrimary, MaterialColors.class.getCanonicalName()));
     }
 
     public static int harmonize(int i, int i2) {
@@ -76,7 +76,7 @@ public class MaterialColors {
     }
 
     public static ColorRoles getColorRoles(Context context, int i) {
-        return getColorRoles(i, MaterialAttributes.resolveBoolean(context, C3621R.attr.isLightTheme, true));
+        return getColorRoles(i, MaterialAttributes.resolveBoolean(context, C3631R.attr.isLightTheme, true));
     }
 
     public static ColorRoles getColorRoles(int i, boolean z) {

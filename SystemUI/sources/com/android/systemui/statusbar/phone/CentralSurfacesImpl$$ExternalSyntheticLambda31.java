@@ -12,6 +12,6 @@ public final /* synthetic */ class CentralSurfacesImpl$$ExternalSyntheticLambda3
     }
 
     public final void onFragmentViewCreated(String str, Fragment fragment) {
-        this.f$0.mo43886x297e2444(str, fragment);
+        this.f$0.mo43895x297e2444(str, fragment);
     }
 }

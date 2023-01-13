@@ -15,7 +15,7 @@ final class ZoneRegion extends ZoneId implements Serializable {
     private static final long serialVersionUID = 8386373296231747096L;
 
     /* renamed from: id */
-    private final String f379id;
+    private final String f378id;
     private final transient ZoneRules rules;
 
     static ZoneRegion ofId(String str, boolean z) {
@@ -49,17 +49,17 @@ final class ZoneRegion extends ZoneId implements Serializable {
     }
 
     ZoneRegion(String str, ZoneRules zoneRules) {
-        this.f379id = str;
+        this.f378id = str;
         this.rules = zoneRules;
     }
 
     public String getId() {
-        return this.f379id;
+        return this.f378id;
     }
 
     public ZoneRules getRules() {
         ZoneRules zoneRules = this.rules;
-        return zoneRules != null ? zoneRules : ZoneRulesProvider.getRules(this.f379id, false);
+        return zoneRules != null ? zoneRules : ZoneRulesProvider.getRules(this.f378id, false);
     }
 
     private Object writeReplace() {
@@ -78,10 +78,10 @@ final class ZoneRegion extends ZoneId implements Serializable {
 
     /* access modifiers changed from: package-private */
     public void writeExternal(DataOutput dataOutput) throws IOException {
-        dataOutput.writeUTF(this.f379id);
+        dataOutput.writeUTF(this.f378id);
     }
 
     static ZoneId readExternal(DataInput dataInput) throws IOException {
-        return ZoneId.m934of(dataInput.readUTF(), false);
+        return ZoneId.m932of(dataInput.readUTF(), false);
     }
 }

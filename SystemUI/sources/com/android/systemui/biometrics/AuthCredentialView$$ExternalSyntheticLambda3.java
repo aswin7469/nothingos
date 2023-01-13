@@ -13,6 +13,6 @@ public final /* synthetic */ class AuthCredentialView$$ExternalSyntheticLambda3 
     }
 
     public final Object get() {
-        return this.f$0.mo30656x9489c268(this.f$1);
+        return this.f$0.mo30667x9489c268(this.f$1);
     }
 }

@@ -17,6 +17,6 @@ public final /* synthetic */ class UserSwitcherActivity$$ExternalSyntheticLambda
     }
 
     public final void onItemClick(AdapterView adapterView, View view, int i, long j) {
-        UserSwitcherActivity.m3300showPopupMenu$lambda7$lambda6(this.f$0, this.f$1, this.f$2, adapterView, view, i, j);
+        UserSwitcherActivity.m3305showPopupMenu$lambda7$lambda6(this.f$0, this.f$1, this.f$2, adapterView, view, i, j);
     }
 }

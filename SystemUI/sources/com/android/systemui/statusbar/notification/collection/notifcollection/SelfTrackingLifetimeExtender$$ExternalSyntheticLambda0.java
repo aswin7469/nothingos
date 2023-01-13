@@ -11,6 +11,6 @@ public final /* synthetic */ class SelfTrackingLifetimeExtender$$ExternalSynthet
     }
 
     public final void run() {
-        SelfTrackingLifetimeExtender.m3117endLifetimeExtensionAfterDelay$lambda1(this.f$0, this.f$1);
+        SelfTrackingLifetimeExtender.m3121endLifetimeExtensionAfterDelay$lambda1(this.f$0, this.f$1);
     }
 }

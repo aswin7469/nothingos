@@ -12,6 +12,6 @@ public final /* synthetic */ class UnfoldLightRevealOverlayAnimation$$ExternalSy
     }
 
     public final void accept(Object obj) {
-        UnfoldLightRevealOverlayAnimation.m3274init$lambda1(this.f$0, (SurfaceControl.Builder) obj);
+        UnfoldLightRevealOverlayAnimation.m3279init$lambda1(this.f$0, (SurfaceControl.Builder) obj);
     }
 }

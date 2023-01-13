@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
 import com.android.internal.widget.LockscreenCredential;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 
 public abstract class KeyguardAbsKeyInputView extends KeyguardInputView {
     protected static final int MINIMUM_PASSWORD_LENGTH_BEFORE_REPORT = 3;
@@ -27,7 +27,7 @@ public abstract class KeyguardAbsKeyInputView extends KeyguardInputView {
 
     /* access modifiers changed from: protected */
     public int getWrongPasswordStringId() {
-        return C1893R.string.kg_wrong_password;
+        return C1894R.string.kg_wrong_password;
     }
 
     /* access modifiers changed from: protected */
@@ -52,7 +52,7 @@ public abstract class KeyguardAbsKeyInputView extends KeyguardInputView {
 
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
-        this.mEcaView = findViewById(C1893R.C1897id.keyguard_selector_fade_container);
+        this.mEcaView = findViewById(C1894R.C1898id.keyguard_selector_fade_container);
     }
 
     public boolean onKeyDown(int i, KeyEvent keyEvent) {

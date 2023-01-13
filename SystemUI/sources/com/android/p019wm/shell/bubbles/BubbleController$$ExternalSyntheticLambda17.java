@@ -13,6 +13,6 @@ public final /* synthetic */ class BubbleController$$ExternalSyntheticLambda17 i
     }
 
     public final Object invoke(Object obj) {
-        return this.f$0.mo48350x791ab4ce((List) obj);
+        return this.f$0.mo48359x791ab4ce((List) obj);
     }
 }

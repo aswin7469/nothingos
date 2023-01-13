@@ -4,7 +4,7 @@ import kotlin.Metadata;
 import kotlin.coroutines.Continuation;
 import kotlin.coroutines.jvm.internal.ContinuationImpl;
 
-@Metadata(mo64988k = 3, mo64989mv = {1, 5, 1}, mo64991xi = 48)
+@Metadata(mo65044k = 3, mo65045mv = {1, 5, 1}, mo65047xi = 48)
 /* compiled from: Collect.kt */
 public final class FlowKt__CollectKt$collect$3$emit$1 extends ContinuationImpl {
     int label;

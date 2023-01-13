@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.view.ViewOverlay;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import java.sql.Types;
 import java.util.Objects;
 
@@ -44,7 +44,7 @@ public class InattentiveSleepWarningView extends FrameLayout {
 
     InattentiveSleepWarningView(Context context) {
         super(context);
-        LayoutInflater.from(this.mContext).inflate(C1893R.layout.inattentive_sleep_warning, this, true);
+        LayoutInflater.from(this.mContext).inflate(C1894R.layout.inattentive_sleep_warning, this, true);
         setFocusable(true);
         setOnKeyListener(new InattentiveSleepWarningView$$ExternalSyntheticLambda0());
         Animator loadAnimator = AnimatorInflater.loadAnimator(getContext(), 17498113);
@@ -76,7 +76,7 @@ public class InattentiveSleepWarningView extends FrameLayout {
             setAlpha(1.0f);
             setVisibility(0);
             this.mWindowManager.addView(this, getLayoutParams(this.mWindowToken));
-            announceForAccessibility(getContext().getString(C1893R.string.inattentive_sleep_warning_message));
+            announceForAccessibility(getContext().getString(C1894R.string.inattentive_sleep_warning_message));
         } else if (this.mFadeOutAnimator.isStarted()) {
             this.mFadeOutAnimator.cancel();
         }

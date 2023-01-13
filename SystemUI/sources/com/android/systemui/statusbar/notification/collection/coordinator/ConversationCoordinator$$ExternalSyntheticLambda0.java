@@ -12,6 +12,6 @@ public final /* synthetic */ class ConversationCoordinator$$ExternalSyntheticLam
     }
 
     public final void onBeforeRenderList(List list) {
-        ConversationCoordinator.m3101onBeforeRenderListListener$lambda2(this.f$0, list);
+        ConversationCoordinator.m3105onBeforeRenderListListener$lambda2(this.f$0, list);
     }
 }

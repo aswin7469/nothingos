@@ -22,7 +22,7 @@ public final class ZoneOffsetTransition implements Comparable<ZoneOffsetTransiti
     private final LocalDateTime transition;
 
     /* renamed from: of */
-    public static ZoneOffsetTransition m960of(LocalDateTime localDateTime, ZoneOffset zoneOffset, ZoneOffset zoneOffset2) {
+    public static ZoneOffsetTransition m958of(LocalDateTime localDateTime, ZoneOffset zoneOffset, ZoneOffset zoneOffset2) {
         Objects.requireNonNull(localDateTime, "transition");
         Objects.requireNonNull(zoneOffset, "offsetBefore");
         Objects.requireNonNull(zoneOffset2, "offsetAfter");
@@ -124,9 +124,9 @@ public final class ZoneOffsetTransition implements Comparable<ZoneOffsetTransiti
     /* access modifiers changed from: package-private */
     public List<ZoneOffset> getValidOffsets() {
         if (isGap()) {
-            return List.m1722of();
+            return List.m1728of();
         }
-        return List.m1724of(getOffsetBefore(), getOffsetAfter());
+        return List.m1730of(getOffsetBefore(), getOffsetAfter());
     }
 
     public int compareTo(ZoneOffsetTransition zoneOffsetTransition) {

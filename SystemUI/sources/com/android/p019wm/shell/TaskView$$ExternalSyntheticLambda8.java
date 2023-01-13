@@ -16,6 +16,6 @@ public final /* synthetic */ class TaskView$$ExternalSyntheticLambda8 implements
     }
 
     public final void run() {
-        this.f$0.m3379lambda$onTaskAppeared$8$comandroidwmshellTaskView(this.f$1, this.f$2);
+        this.f$0.m3383lambda$onTaskAppeared$8$comandroidwmshellTaskView(this.f$1, this.f$2);
     }
 }

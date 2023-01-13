@@ -6,7 +6,7 @@ import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 import androidx.core.graphics.drawable.DrawableCompat;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 
 public class KeyguardSimPinView extends KeyguardPinBasedInputView {
     public static final String TAG = "KeyguardSimPinView";
@@ -14,7 +14,7 @@ public class KeyguardSimPinView extends KeyguardPinBasedInputView {
 
     /* access modifiers changed from: protected */
     public int getPasswordTextViewId() {
-        return C1893R.C1897id.simPinEntry;
+        return C1894R.C1898id.simPinEntry;
     }
 
     /* access modifiers changed from: protected */
@@ -34,7 +34,7 @@ public class KeyguardSimPinView extends KeyguardPinBasedInputView {
     }
 
     public void setEsimLocked(boolean z, int i) {
-        KeyguardEsimArea keyguardEsimArea = (KeyguardEsimArea) findViewById(C1893R.C1897id.keyguard_esim_area);
+        KeyguardEsimArea keyguardEsimArea = (KeyguardEsimArea) findViewById(C1894R.C1898id.keyguard_esim_area);
         keyguardEsimArea.setSubscriptionId(i);
         keyguardEsimArea.setVisibility(z ? 0 : 8);
     }
@@ -47,7 +47,7 @@ public class KeyguardSimPinView extends KeyguardPinBasedInputView {
 
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
-        this.mSimImageView = (ImageView) findViewById(C1893R.C1897id.keyguard_sim);
+        this.mSimImageView = (ImageView) findViewById(C1894R.C1898id.keyguard_sim);
         super.onFinishInflate();
         if (this.mEcaView instanceof EmergencyCarrierArea) {
             ((EmergencyCarrierArea) this.mEcaView).setCarrierTextVisible(true);

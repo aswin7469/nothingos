@@ -106,7 +106,7 @@ public class ExtensionControllerImpl implements ExtensionController {
         }
 
         public ExtensionController.Extension<T> build() {
-            Collections.sort(this.mExtension.mProducers, Comparator.comparingInt(new C3151xb62966b4()));
+            Collections.sort(this.mExtension.mProducers, Comparator.comparingInt(new C3161xb62966b4()));
             this.mExtension.notifyChanged();
             return this.mExtension;
         }
@@ -301,7 +301,7 @@ public class ExtensionControllerImpl implements ExtensionController {
                 int i = configuration.uiMode & 15;
                 if (i != this.mUiMode) {
                     this.mUiMode = i;
-                    this.mHandler.post(new C3152xc839f287(ExtensionImpl.this));
+                    this.mHandler.post(new C3162xc839f287(ExtensionImpl.this));
                 }
             }
 

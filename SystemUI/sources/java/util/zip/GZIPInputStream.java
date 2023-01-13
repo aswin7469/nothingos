@@ -106,7 +106,7 @@ public class GZIPInputStream extends InflaterInputStream {
     }
 
     private boolean readTrailer() throws IOException {
-        InputStream inputStream = this.f521in;
+        InputStream inputStream = this.f519in;
         int remaining = this.inf.getRemaining();
         if (remaining > 0) {
             inputStream = new SequenceInputStream(new ByteArrayInputStream(this.buf, this.len - remaining, remaining), new FilterInputStream(inputStream) {
@@ -116,7 +116,7 @@ public class GZIPInputStream extends InflaterInputStream {
         }
         if (readUInt(inputStream) != this.crc.getValue() || readUInt(inputStream) != (this.inf.getBytesWritten() & UpdateParameter.UPDATE_CHECK_INTERVAL_NEVER)) {
             throw new ZipException("Corrupt GZIP trailer");
-        } else if (this.f521in.available() <= 0 && remaining <= 26) {
+        } else if (this.f519in.available() <= 0 && remaining <= 26) {
             return true;
         } else {
             try {
@@ -148,7 +148,7 @@ public class GZIPInputStream extends InflaterInputStream {
         } else if (read >= -1 && read <= 255) {
             return read;
         } else {
-            throw new IOException(this.f521in.getClass().getName() + ".read() returned value out of range -1..255: " + read);
+            throw new IOException(this.f519in.getClass().getName() + ".read() returned value out of range -1..255: " + read);
         }
     }
 

@@ -15,6 +15,6 @@ public final /* synthetic */ class VolumeDialogImpl$$ExternalSyntheticLambda5 im
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        this.f$0.mo47352xd07f896(this.f$1, this.f$2, valueAnimator);
+        this.f$0.mo47361x53906af7(this.f$1, this.f$2, valueAnimator);
     }
 }

@@ -439,7 +439,7 @@ public class DisplayImeController implements DisplayController.OnDisplaysChanged
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$startAnimation$0$com-android-wm-shell-common-DisplayImeController$PerDisplay */
-        public /* synthetic */ void mo49056x97ad683d(float f, boolean z, float f2, float f3, ValueAnimator valueAnimator) {
+        public /* synthetic */ void mo49065x97ad683d(float f, boolean z, float f2, float f3, ValueAnimator valueAnimator) {
             SurfaceControl.Transaction acquire = DisplayImeController.this.mTransactionPool.acquire();
             float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
             acquire.setPosition(this.mImeSourceControl.getLeash(), f, floatValue);

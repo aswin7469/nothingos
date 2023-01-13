@@ -82,7 +82,7 @@ public class StartingSurfaceDrawer {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-wm-shell-startingsurface-StartingSurfaceDrawer */
-    public /* synthetic */ void mo51166xd9c02b69() {
+    public /* synthetic */ void mo51177xd9c02b69() {
         this.mChoreographer = Choreographer.getInstance();
     }
 
@@ -246,7 +246,7 @@ public class StartingSurfaceDrawer {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$addSplashScreenStartingWindow$1$com-android-wm-shell-startingsurface-StartingSurfaceDrawer */
-    public /* synthetic */ void mo51162xac683a44(SplashScreenViewSupplier splashScreenViewSupplier, int i, IBinder iBinder, FrameLayout frameLayout) {
+    public /* synthetic */ void mo51173xac683a44(SplashScreenViewSupplier splashScreenViewSupplier, int i, IBinder iBinder, FrameLayout frameLayout) {
         Trace.traceBegin(32, "addSplashScreenView");
         SplashScreenView splashScreenView = splashScreenViewSupplier.get();
         StartingWindowRecord startingWindowRecord = this.mStartingWindowRecords.get(i);
@@ -360,7 +360,7 @@ public class StartingSurfaceDrawer {
     /* access modifiers changed from: package-private */
     public void makeTaskSnapshotWindow(StartingWindowInfo startingWindowInfo, IBinder iBinder, TaskSnapshot taskSnapshot) {
         int i = startingWindowInfo.taskInfo.taskId;
-        mo51165x9a1aa546(i);
+        mo51176x9a1aa546(i);
         TaskSnapshotWindow create = TaskSnapshotWindow.create(startingWindowInfo, iBinder, taskSnapshot, this.mSplashScreenExecutor, new StartingSurfaceDrawer$$ExternalSyntheticLambda7(this, i));
         if (create != null) {
             this.mStartingWindowRecords.put(i, new StartingWindowRecord(iBinder, (View) null, create, 2));
@@ -381,7 +381,7 @@ public class StartingSurfaceDrawer {
             iArr[i2] = this.mStartingWindowRecords.keyAt(i2);
         }
         while (i >= 0) {
-            mo51165x9a1aa546(iArr[i]);
+            mo51176x9a1aa546(iArr[i]);
             i--;
         }
     }
@@ -410,13 +410,13 @@ public class StartingSurfaceDrawer {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$copySplashScreenView$4$com-android-wm-shell-startingsurface-StartingSurfaceDrawer */
-    public /* synthetic */ void mo51164xa34a6c3e(int i, Bundle bundle) {
+    public /* synthetic */ void mo51175xa34a6c3e(int i, Bundle bundle) {
         this.mSplashScreenExecutor.execute(new StartingSurfaceDrawer$$ExternalSyntheticLambda3(this, i));
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$copySplashScreenView$3$com-android-wm-shell-startingsurface-StartingSurfaceDrawer */
-    public /* synthetic */ void mo51163x9d46a0df(int i) {
+    public /* synthetic */ void mo51174x9d46a0df(int i) {
         onAppSplashScreenViewRemoved(i, false);
     }
 
@@ -495,7 +495,7 @@ public class StartingSurfaceDrawer {
             goto L_0x0031
         L_0x0067:
             if (r12 == 0) goto L_0x0073
-            r16.mo51165x9a1aa546(r17)
+            r16.mo51176x9a1aa546(r17)
             r3 = r17
             r4 = r22
             r1.saveSplashScreenRecord(r2, r3, r9, r4)
@@ -521,7 +521,7 @@ public class StartingSurfaceDrawer {
 
     /* access modifiers changed from: private */
     /* renamed from: removeWindowNoAnimate */
-    public void mo51165x9a1aa546(int i) {
+    public void mo51176x9a1aa546(int i) {
         this.mTmpRemovalInfo.taskId = i;
         removeWindowSynced(this.mTmpRemovalInfo, true);
     }
@@ -530,7 +530,7 @@ public class StartingSurfaceDrawer {
     public void onImeDrawnOnTask(int i) {
         StartingWindowRecord startingWindowRecord = this.mStartingWindowRecords.get(i);
         if (startingWindowRecord != null && startingWindowRecord.mTaskSnapshotWindow != null && startingWindowRecord.mTaskSnapshotWindow.hasImeSurface()) {
-            mo51165x9a1aa546(i);
+            mo51176x9a1aa546(i);
         }
     }
 
@@ -569,7 +569,7 @@ public class StartingSurfaceDrawer {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$removeWindowSynced$5$com-android-wm-shell-startingsurface-StartingSurfaceDrawer */
-    public /* synthetic */ void mo51167x431af55c(StartingWindowRecord startingWindowRecord) {
+    public /* synthetic */ void mo51178x431af55c(StartingWindowRecord startingWindowRecord) {
         removeWindowInner(startingWindowRecord.mDecorView, true);
     }
 

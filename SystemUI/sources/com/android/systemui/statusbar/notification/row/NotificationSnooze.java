@@ -26,7 +26,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.android.internal.logging.MetricsLogger;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.animation.Interpolators;
 import com.android.systemui.plugins.statusbar.NotificationSwipeActionHelper;
 import com.android.systemui.statusbar.notification.row.NotificationGuts;
@@ -42,7 +42,7 @@ public class NotificationSnooze extends LinearLayout implements NotificationGuts
     private static final LogMaker OPTIONS_OPEN_LOG = new LogMaker(1142).setType(1);
     private static final String TAG = "NotificationSnooze";
     private static final LogMaker UNDO_LOG = new LogMaker(1141).setType(4);
-    private static final int[] sAccessibilityActions = {C1893R.C1897id.action_snooze_shorter, C1893R.C1897id.action_snooze_short, C1893R.C1897id.action_snooze_long, C1893R.C1897id.action_snooze_longer};
+    private static final int[] sAccessibilityActions = {C1894R.C1898id.action_snooze_shorter, C1894R.C1898id.action_snooze_short, C1894R.C1898id.action_snooze_long, C1894R.C1898id.action_snooze_longer};
     private int mCollapsedHeight;
     private NotificationSwipeActionHelper.SnoozeOption mDefaultOption;
     private View mDivider;
@@ -110,19 +110,19 @@ public class NotificationSnooze extends LinearLayout implements NotificationGuts
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mCollapsedHeight = getResources().getDimensionPixelSize(C1893R.dimen.snooze_snackbar_min_height);
-        View findViewById = findViewById(C1893R.C1897id.notification_snooze);
+        this.mCollapsedHeight = getResources().getDimensionPixelSize(C1894R.dimen.snooze_snackbar_min_height);
+        View findViewById = findViewById(C1894R.C1898id.notification_snooze);
         this.mSnoozeView = findViewById;
         findViewById.setOnClickListener(this);
-        this.mSelectedOptionText = (TextView) findViewById(C1893R.C1897id.snooze_option_default);
-        TextView textView = (TextView) findViewById(C1893R.C1897id.undo);
+        this.mSelectedOptionText = (TextView) findViewById(C1894R.C1898id.snooze_option_default);
+        TextView textView = (TextView) findViewById(C1894R.C1898id.undo);
         this.mUndoButton = textView;
         textView.setOnClickListener(this);
-        this.mExpandButton = (ImageView) findViewById(C1893R.C1897id.expand_button);
-        View findViewById2 = findViewById(C1893R.C1897id.divider);
+        this.mExpandButton = (ImageView) findViewById(C1894R.C1898id.expand_button);
+        View findViewById2 = findViewById(C1894R.C1898id.divider);
         this.mDivider = findViewById2;
         findViewById2.setAlpha(0.0f);
-        ViewGroup viewGroup = (ViewGroup) findViewById(C1893R.C1897id.snooze_options);
+        ViewGroup viewGroup = (ViewGroup) findViewById(C1894R.C1898id.snooze_options);
         this.mSnoozeOptionContainer = viewGroup;
         viewGroup.setVisibility(4);
         this.mSnoozeOptionContainer.setAlpha(0.0f);
@@ -140,7 +140,7 @@ public class NotificationSnooze extends LinearLayout implements NotificationGuts
 
     public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo accessibilityNodeInfo) {
         super.onInitializeAccessibilityNodeInfo(accessibilityNodeInfo);
-        accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C1893R.C1897id.action_snooze_undo, getResources().getString(C1893R.string.snooze_undo)));
+        accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C1894R.C1898id.action_snooze_undo, getResources().getString(C1894R.string.snooze_undo)));
         int size = this.mSnoozeOptions.size();
         for (int i = 0; i < size; i++) {
             AccessibilityNodeInfo.AccessibilityAction accessibilityAction = this.mSnoozeOptions.get(i).getAccessibilityAction();
@@ -154,7 +154,7 @@ public class NotificationSnooze extends LinearLayout implements NotificationGuts
         if (super.performAccessibilityActionInternal(i, bundle)) {
             return true;
         }
-        if (i == C1893R.C1897id.action_snooze_undo) {
+        if (i == C1894R.C1898id.action_snooze_undo) {
             undoSnooze(this.mUndoButton);
             return true;
         }
@@ -178,7 +178,7 @@ public class NotificationSnooze extends LinearLayout implements NotificationGuts
             int min = Math.min(1, list.size());
             for (int i = 0; i < min; i++) {
                 SnoozeCriterion snoozeCriterion = list.get(i);
-                this.mSnoozeOptions.add(new NotificationSnoozeOption(snoozeCriterion, 0, snoozeCriterion.getExplanation(), snoozeCriterion.getConfirmation(), new AccessibilityNodeInfo.AccessibilityAction(C1893R.C1897id.action_snooze_assistant_suggestion_1, snoozeCriterion.getExplanation())));
+                this.mSnoozeOptions.add(new NotificationSnoozeOption(snoozeCriterion, 0, snoozeCriterion.getExplanation(), snoozeCriterion.getConfirmation(), new AccessibilityNodeInfo.AccessibilityAction(C1894R.C1898id.action_snooze_assistant_suggestion_1, snoozeCriterion.getExplanation())));
             }
             createOptionViews();
         }
@@ -205,8 +205,8 @@ public class NotificationSnooze extends LinearLayout implements NotificationGuts
         } catch (IllegalArgumentException unused) {
             Log.e(TAG, "Bad snooze constants");
         }
-        int i = this.mParser.getInt(KEY_DEFAULT_SNOOZE, resources.getInteger(C1893R.integer.config_notification_snooze_time_default));
-        int[] intArray = this.mParser.getIntArray(KEY_OPTIONS, resources.getIntArray(C1893R.array.config_notification_snooze_times));
+        int i = this.mParser.getInt(KEY_DEFAULT_SNOOZE, resources.getInteger(C1894R.integer.config_notification_snooze_time_default));
+        int[] intArray = this.mParser.getIntArray(KEY_OPTIONS, resources.getIntArray(C1894R.array.config_notification_snooze_times));
         for (int i2 = 0; i2 < intArray.length; i2++) {
             int[] iArr = sAccessibilityActions;
             if (i2 >= iArr.length) {
@@ -225,10 +225,10 @@ public class NotificationSnooze extends LinearLayout implements NotificationGuts
     private NotificationSwipeActionHelper.SnoozeOption createOption(int i, int i2) {
         Resources resources = getResources();
         boolean z = i >= 60;
-        int i3 = z ? C1893R.plurals.snoozeHourOptions : C1893R.plurals.snoozeMinuteOptions;
+        int i3 = z ? C1894R.plurals.snoozeHourOptions : C1894R.plurals.snoozeMinuteOptions;
         int i4 = z ? i / 60 : i;
         String quantityString = resources.getQuantityString(i3, i4, new Object[]{Integer.valueOf(i4)});
-        String format = String.format(resources.getString(C1893R.string.snoozed_for_time), quantityString);
+        String format = String.format(resources.getString(C1894R.string.snoozed_for_time), quantityString);
         AccessibilityNodeInfo.AccessibilityAction accessibilityAction = new AccessibilityNodeInfo.AccessibilityAction(i2, quantityString);
         int indexOf = format.indexOf(quantityString);
         if (indexOf == -1) {
@@ -244,7 +244,7 @@ public class NotificationSnooze extends LinearLayout implements NotificationGuts
         LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService("layout_inflater");
         for (int i = 0; i < this.mSnoozeOptions.size(); i++) {
             NotificationSwipeActionHelper.SnoozeOption snoozeOption = this.mSnoozeOptions.get(i);
-            TextView textView = (TextView) layoutInflater.inflate(C1893R.layout.notification_snooze_option, this.mSnoozeOptionContainer, false);
+            TextView textView = (TextView) layoutInflater.inflate(C1894R.layout.notification_snooze_option, this.mSnoozeOptionContainer, false);
             this.mSnoozeOptionContainer.addView(textView);
             textView.setText(snoozeOption.getDescription());
             textView.setTag(snoozeOption);
@@ -348,7 +348,7 @@ public class NotificationSnooze extends LinearLayout implements NotificationGuts
         NotificationSwipeActionHelper.SnoozeOption snoozeOption = (NotificationSwipeActionHelper.SnoozeOption) view.getTag();
         if (snoozeOption != null) {
             setSelected(snoozeOption, true);
-        } else if (id == C1893R.C1897id.notification_snooze) {
+        } else if (id == C1894R.C1898id.notification_snooze) {
             showSnoozeOptions(!this.mExpanded);
             this.mMetricsLogger.write(!this.mExpanded ? OPTIONS_OPEN_LOG : OPTIONS_CLOSE_LOG);
         } else {

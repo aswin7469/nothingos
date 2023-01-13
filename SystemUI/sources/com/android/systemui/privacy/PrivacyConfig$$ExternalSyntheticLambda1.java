@@ -13,6 +13,6 @@ public final /* synthetic */ class PrivacyConfig$$ExternalSyntheticLambda1 imple
     }
 
     public final void run() {
-        PrivacyConfig.m2868removeCallback$lambda6(this.f$0, this.f$1);
+        PrivacyConfig.m2873removeCallback$lambda6(this.f$0, this.f$1);
     }
 }

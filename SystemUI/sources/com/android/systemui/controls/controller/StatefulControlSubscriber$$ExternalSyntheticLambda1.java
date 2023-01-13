@@ -9,6 +9,6 @@ public final /* synthetic */ class StatefulControlSubscriber$$ExternalSyntheticL
     }
 
     public final void run() {
-        StatefulControlSubscriber.m2630cancel$lambda2(this.f$0);
+        StatefulControlSubscriber.m2635cancel$lambda2(this.f$0);
     }
 }

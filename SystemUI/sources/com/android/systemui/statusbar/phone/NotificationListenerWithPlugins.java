@@ -54,7 +54,7 @@ public class NotificationListenerWithPlugins extends NotificationListenerService
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onPluginConnected$0$com-android-systemui-statusbar-phone-NotificationListenerWithPlugins */
-    public /* synthetic */ void mo44515xddcf832e(NotificationListenerController notificationListenerController) {
+    public /* synthetic */ void mo44530xddcf832e(NotificationListenerController notificationListenerController) {
         notificationListenerController.onListenerConnected(getProvider());
     }
 

@@ -4,7 +4,7 @@ import kotlin.Metadata;
 import kotlin.Result;
 import kotlin.ResultKt;
 
-@Metadata(mo64986d1 = {"\u0000\n\n\u0000\n\u0002\u0010\u000b\n\u0002\b\u0003\"\u0014\u0010\u0000\u001a\u00020\u0001X\u0004¢\u0006\b\n\u0000\u001a\u0004\b\u0002\u0010\u0003¨\u0006\u0004"}, mo64987d2 = {"ANDROID_DETECTED", "", "getANDROID_DETECTED", "()Z", "kotlinx-coroutines-core"}, mo64988k = 2, mo64989mv = {1, 5, 1}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000\n\n\u0000\n\u0002\u0010\u000b\n\u0002\b\u0003\"\u0014\u0010\u0000\u001a\u00020\u0001X\u0004¢\u0006\b\n\u0000\u001a\u0004\b\u0002\u0010\u0003¨\u0006\u0004"}, mo65043d2 = {"ANDROID_DETECTED", "", "getANDROID_DETECTED", "()Z", "kotlinx-coroutines-core"}, mo65044k = 2, mo65045mv = {1, 5, 1}, mo65047xi = 48)
 /* compiled from: FastServiceLoader.kt */
 public final class FastServiceLoaderKt {
     private static final boolean ANDROID_DETECTED;
@@ -13,12 +13,12 @@ public final class FastServiceLoaderKt {
         Object obj;
         try {
             Result.Companion companion = Result.Companion;
-            obj = Result.m3936constructorimpl(Class.forName("android.os.Build"));
+            obj = Result.m3954constructorimpl(Class.forName("android.os.Build"));
         } catch (Throwable th) {
             Result.Companion companion2 = Result.Companion;
-            obj = Result.m3936constructorimpl(ResultKt.createFailure(th));
+            obj = Result.m3954constructorimpl(ResultKt.createFailure(th));
         }
-        ANDROID_DETECTED = Result.m3943isSuccessimpl(obj);
+        ANDROID_DETECTED = Result.m3961isSuccessimpl(obj);
     }
 
     public static final boolean getANDROID_DETECTED() {

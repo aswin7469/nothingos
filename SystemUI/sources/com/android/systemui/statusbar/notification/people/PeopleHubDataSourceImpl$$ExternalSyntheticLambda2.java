@@ -13,6 +13,6 @@ public final /* synthetic */ class PeopleHubDataSourceImpl$$ExternalSyntheticLam
     }
 
     public final void run() {
-        PeopleHubDataSourceImpl.m3127extractPerson$lambda9(this.f$0, this.f$1);
+        PeopleHubDataSourceImpl.m3131extractPerson$lambda9(this.f$0, this.f$1);
     }
 }

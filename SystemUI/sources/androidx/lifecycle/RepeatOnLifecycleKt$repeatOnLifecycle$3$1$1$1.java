@@ -22,7 +22,7 @@ import kotlinx.coroutines.CoroutineStart;
 import kotlinx.coroutines.Job;
 import kotlinx.coroutines.sync.Mutex;
 
-@Metadata(mo64986d1 = {"\u0000\u0012\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\u0010\u0000\u001a\u00020\u00012\u0006\u0010\u0002\u001a\u00020\u00032\u0006\u0010\u0004\u001a\u00020\u0005H\n"}, mo64987d2 = {"<anonymous>", "", "<anonymous parameter 0>", "Landroidx/lifecycle/LifecycleOwner;", "event", "Landroidx/lifecycle/Lifecycle$Event;"}, mo64988k = 3, mo64989mv = {1, 5, 1}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000\u0012\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\u0010\u0000\u001a\u00020\u00012\u0006\u0010\u0002\u001a\u00020\u00032\u0006\u0010\u0004\u001a\u00020\u0005H\n"}, mo65043d2 = {"<anonymous>", "", "<anonymous parameter 0>", "Landroidx/lifecycle/LifecycleOwner;", "event", "Landroidx/lifecycle/Lifecycle$Event;"}, mo65044k = 3, mo65045mv = {1, 5, 1}, mo65047xi = 48)
 /* compiled from: RepeatOnLifecycle.kt */
 final class RepeatOnLifecycleKt$repeatOnLifecycle$3$1$1$1 implements LifecycleEventObserver {
     final /* synthetic */ CoroutineScope $$this$coroutineScope;
@@ -64,12 +64,12 @@ final class RepeatOnLifecycleKt$repeatOnLifecycle$3$1$1$1 implements LifecycleEv
         if (event == Lifecycle.Event.ON_DESTROY) {
             Unit unit = Unit.INSTANCE;
             Result.Companion companion = Result.Companion;
-            this.$cont.resumeWith(Result.m3936constructorimpl(unit));
+            this.$cont.resumeWith(Result.m3954constructorimpl(unit));
         }
     }
 
-    @Metadata(mo64986d1 = {"\u0000\n\n\u0000\n\u0002\u0010\u0002\n\u0002\u0018\u0002\u0010\u0000\u001a\u00020\u0001*\u00020\u0002H@"}, mo64987d2 = {"<anonymous>", "", "Lkotlinx/coroutines/CoroutineScope;"}, mo64988k = 3, mo64989mv = {1, 5, 1}, mo64991xi = 48)
-    @DebugMetadata(mo65240c = "androidx.lifecycle.RepeatOnLifecycleKt$repeatOnLifecycle$3$1$1$1$1", mo65241f = "RepeatOnLifecycle.kt", mo65242i = {0, 1}, mo65243l = {171, 110}, mo65244m = "invokeSuspend", mo65245n = {"$this$withLock_u24default$iv", "$this$withLock_u24default$iv"}, mo65246s = {"L$0", "L$0"})
+    @Metadata(mo65042d1 = {"\u0000\n\n\u0000\n\u0002\u0010\u0002\n\u0002\u0018\u0002\u0010\u0000\u001a\u00020\u0001*\u00020\u0002H@"}, mo65043d2 = {"<anonymous>", "", "Lkotlinx/coroutines/CoroutineScope;"}, mo65044k = 3, mo65045mv = {1, 5, 1}, mo65047xi = 48)
+    @DebugMetadata(mo65296c = "androidx.lifecycle.RepeatOnLifecycleKt$repeatOnLifecycle$3$1$1$1$1", mo65297f = "RepeatOnLifecycle.kt", mo65298i = {0, 1}, mo65299l = {171, 110}, mo65300m = "invokeSuspend", mo65301n = {"$this$withLock_u24default$iv", "$this$withLock_u24default$iv"}, mo65302s = {"L$0", "L$0"})
     /* renamed from: androidx.lifecycle.RepeatOnLifecycleKt$repeatOnLifecycle$3$1$1$1$1 */
     /* compiled from: RepeatOnLifecycle.kt */
     static final class C10961 extends SuspendLambda implements Function2<CoroutineScope, Continuation<? super Unit>, Object> {

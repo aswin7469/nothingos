@@ -12,7 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.android.settingslib.Utils;
 import com.android.settingslib.net.DataUsageController;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.FontSizeUtils;
 import com.android.systemui.p012qs.DataUsageGraph;
 import java.text.DecimalFormat;
@@ -21,13 +21,13 @@ import java.text.DecimalFormat;
 public class DataUsageDetailView extends LinearLayout {
 
     /* renamed from: GB */
-    private static final double f334GB = 1.073741824E9d;
+    private static final double f333GB = 1.073741824E9d;
 
     /* renamed from: KB */
-    private static final double f335KB = 1024.0d;
+    private static final double f334KB = 1024.0d;
 
     /* renamed from: MB */
-    private static final double f336MB = 1048576.0d;
+    private static final double f335MB = 1048576.0d;
     private final DecimalFormat FORMAT = new DecimalFormat("#.##");
 
     /* access modifiers changed from: protected */
@@ -55,12 +55,12 @@ public class DataUsageDetailView extends LinearLayout {
     /* access modifiers changed from: protected */
     public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
-        FontSizeUtils.updateFontSize(this, 16908310, C1893R.dimen.qs_data_usage_text_size);
-        FontSizeUtils.updateFontSize(this, C1893R.C1897id.usage_text, C1893R.dimen.qs_data_usage_usage_text_size);
-        FontSizeUtils.updateFontSize(this, C1893R.C1897id.usage_carrier_text, C1893R.dimen.qs_data_usage_text_size);
-        FontSizeUtils.updateFontSize(this, C1893R.C1897id.usage_info_top_text, C1893R.dimen.qs_data_usage_text_size);
-        FontSizeUtils.updateFontSize(this, C1893R.C1897id.usage_period_text, C1893R.dimen.qs_data_usage_text_size);
-        FontSizeUtils.updateFontSize(this, C1893R.C1897id.usage_info_bottom_text, C1893R.dimen.qs_data_usage_text_size);
+        FontSizeUtils.updateFontSize(this, 16908310, C1894R.dimen.qs_data_usage_text_size);
+        FontSizeUtils.updateFontSize(this, C1894R.C1898id.usage_text, C1894R.dimen.qs_data_usage_usage_text_size);
+        FontSizeUtils.updateFontSize(this, C1894R.C1898id.usage_carrier_text, C1894R.dimen.qs_data_usage_text_size);
+        FontSizeUtils.updateFontSize(this, C1894R.C1898id.usage_info_top_text, C1894R.dimen.qs_data_usage_text_size);
+        FontSizeUtils.updateFontSize(this, C1894R.C1898id.usage_period_text, C1894R.dimen.qs_data_usage_text_size);
+        FontSizeUtils.updateFontSize(this, C1894R.C1898id.usage_info_bottom_text, C1894R.dimen.qs_data_usage_text_size);
     }
 
     public void bind(DataUsageController.DataUsageInfo dataUsageInfo) {
@@ -75,20 +75,20 @@ public class DataUsageDetailView extends LinearLayout {
         ColorStateList colorStateList = null;
         if (dataUsageInfo2.usageLevel < dataUsageInfo2.warningLevel || dataUsageInfo2.limitLevel <= 0) {
             j = dataUsageInfo2.usageLevel;
-            str = resources.getString(C1893R.string.quick_settings_cellular_detail_data_warning, new Object[]{formatBytes(dataUsageInfo2.warningLevel)});
-            i = C1893R.string.quick_settings_cellular_detail_data_usage;
+            str = resources.getString(C1894R.string.quick_settings_cellular_detail_data_warning, new Object[]{formatBytes(dataUsageInfo2.warningLevel)});
+            i = C1894R.string.quick_settings_cellular_detail_data_usage;
             str2 = null;
         } else if (dataUsageInfo2.usageLevel <= dataUsageInfo2.limitLevel) {
             j = dataUsageInfo2.limitLevel - dataUsageInfo2.usageLevel;
-            str = resources.getString(C1893R.string.quick_settings_cellular_detail_data_used, new Object[]{formatBytes(dataUsageInfo2.usageLevel)});
-            str2 = resources.getString(C1893R.string.quick_settings_cellular_detail_data_limit, new Object[]{formatBytes(dataUsageInfo2.limitLevel)});
-            i = C1893R.string.quick_settings_cellular_detail_remaining_data;
+            str = resources.getString(C1894R.string.quick_settings_cellular_detail_data_used, new Object[]{formatBytes(dataUsageInfo2.usageLevel)});
+            str2 = resources.getString(C1894R.string.quick_settings_cellular_detail_data_limit, new Object[]{formatBytes(dataUsageInfo2.limitLevel)});
+            i = C1894R.string.quick_settings_cellular_detail_remaining_data;
         } else {
             j = dataUsageInfo2.usageLevel - dataUsageInfo2.limitLevel;
-            str = resources.getString(C1893R.string.quick_settings_cellular_detail_data_used, new Object[]{formatBytes(dataUsageInfo2.usageLevel)});
-            String string = resources.getString(C1893R.string.quick_settings_cellular_detail_data_limit, new Object[]{formatBytes(dataUsageInfo2.limitLevel)});
+            str = resources.getString(C1894R.string.quick_settings_cellular_detail_data_used, new Object[]{formatBytes(dataUsageInfo2.usageLevel)});
+            String string = resources.getString(C1894R.string.quick_settings_cellular_detail_data_limit, new Object[]{formatBytes(dataUsageInfo2.limitLevel)});
             ColorStateList colorError = Utils.getColorError(this.mContext);
-            i = C1893R.string.quick_settings_cellular_detail_over_limit;
+            i = C1894R.string.quick_settings_cellular_detail_over_limit;
             String str3 = string;
             colorStateList = colorError;
             str2 = str3;
@@ -97,17 +97,17 @@ public class DataUsageDetailView extends LinearLayout {
             colorStateList = Utils.getColorAccent(this.mContext);
         }
         ((TextView) findViewById(16908310)).setText(i);
-        TextView textView = (TextView) findViewById(C1893R.C1897id.usage_text);
+        TextView textView = (TextView) findViewById(C1894R.C1898id.usage_text);
         textView.setText(formatBytes(j));
         textView.setTextColor(colorStateList);
-        DataUsageGraph dataUsageGraph = (DataUsageGraph) findViewById(C1893R.C1897id.usage_graph);
+        DataUsageGraph dataUsageGraph = (DataUsageGraph) findViewById(C1894R.C1898id.usage_graph);
         dataUsageGraph.setLevels(dataUsageInfo2.limitLevel, dataUsageInfo2.warningLevel, dataUsageInfo2.usageLevel);
-        ((TextView) findViewById(C1893R.C1897id.usage_carrier_text)).setText(dataUsageInfo2.carrier);
-        ((TextView) findViewById(C1893R.C1897id.usage_period_text)).setText(dataUsageInfo2.period);
-        TextView textView2 = (TextView) findViewById(C1893R.C1897id.usage_info_top_text);
+        ((TextView) findViewById(C1894R.C1898id.usage_carrier_text)).setText(dataUsageInfo2.carrier);
+        ((TextView) findViewById(C1894R.C1898id.usage_period_text)).setText(dataUsageInfo2.period);
+        TextView textView2 = (TextView) findViewById(C1894R.C1898id.usage_info_top_text);
         textView2.setVisibility(str != null ? 0 : 8);
         textView2.setText(str);
-        TextView textView3 = (TextView) findViewById(C1893R.C1897id.usage_info_bottom_text);
+        TextView textView3 = (TextView) findViewById(C1894R.C1898id.usage_info_bottom_text);
         textView3.setVisibility(str2 != null ? 0 : 8);
         textView3.setText(str2);
         if (dataUsageInfo2.warningLevel <= 0 && dataUsageInfo2.limitLevel <= 0) {
@@ -122,20 +122,20 @@ public class DataUsageDetailView extends LinearLayout {
         }
     }
 
-    private String formatBytes(long j) {
+    public static String formatBytes(long j) {
         String str;
         double d;
         double abs = (double) Math.abs(j);
         if (abs > 1.048576E8d) {
-            d = abs / f334GB;
+            d = abs / f333GB;
             str = "GB";
         } else if (abs > 102400.0d) {
-            d = abs / f336MB;
+            d = abs / f335MB;
             str = "MB";
         } else {
-            d = abs / f335KB;
+            d = abs / f334KB;
             str = "KB";
         }
-        return this.FORMAT.format(d * ((double) (j < 0 ? -1 : 1))) + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + str;
+        return new DecimalFormat("#.##").format(d * ((double) (j < 0 ? -1 : 1))) + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + str;
     }
 }

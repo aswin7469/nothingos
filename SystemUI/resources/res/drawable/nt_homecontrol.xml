@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:height="24dp" android:width="24dp" android:viewportWidth="18" android:viewportHeight="18">
+    <group>
+        <clip-path android:pathData="M0,0h18v18h-18z"/>
+        <path android:fillColor="@color/nt_keyguard_button_icon_color" android:pathData="M6,15.751V12.751H12V15.751H6ZM2.25,12.188V8.757C2.25,8.595 2.281,8.438 2.344,8.288C2.406,8.138 2.5,8.013 2.625,7.913L8.25,2.926C8.35,2.826 8.466,2.754 8.597,2.71C8.728,2.666 8.863,2.645 9,2.645C9.137,2.645 9.272,2.666 9.403,2.71C9.535,2.754 9.65,2.826 9.75,2.926L11.25,4.257L2.25,12.188ZM3.375,15.751C3.063,15.751 2.797,15.641 2.579,15.422C2.359,15.204 2.25,14.938 2.25,14.626V13.201L5.25,10.538V15.751H3.375ZM12.75,15.751V9.601L9.544,6.751L11.813,4.745L15.375,7.913C15.5,8.026 15.594,8.154 15.656,8.297C15.719,8.441 15.75,8.595 15.75,8.757V14.626C15.75,14.938 15.641,15.204 15.422,15.422C15.203,15.641 14.938,15.751 14.625,15.751H12.75Z"/>
+    </group>
+</vector>

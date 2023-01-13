@@ -13,6 +13,6 @@ public final /* synthetic */ class ChallengeDialogs$$ExternalSyntheticLambda4 im
     }
 
     public final void onClick(DialogInterface dialogInterface, int i) {
-        ChallengeDialogs.m2667createPinDialog$lambda5$lambda1(this.f$0, dialogInterface, i);
+        ChallengeDialogs.m2672createPinDialog$lambda5$lambda1(this.f$0, dialogInterface, i);
     }
 }

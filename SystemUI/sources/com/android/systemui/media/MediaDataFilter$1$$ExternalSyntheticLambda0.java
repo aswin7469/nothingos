@@ -13,6 +13,6 @@ public final /* synthetic */ class MediaDataFilter$1$$ExternalSyntheticLambda0 i
     }
 
     public final void run() {
-        MediaDataFilter.C21911.m2781onUserSwitched$lambda0(this.f$0, this.f$1);
+        MediaDataFilter.C21941.m2786onUserSwitched$lambda0(this.f$0, this.f$1);
     }
 }

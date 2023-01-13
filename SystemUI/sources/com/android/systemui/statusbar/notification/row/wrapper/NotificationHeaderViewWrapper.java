@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.android.internal.widget.CachingIconView;
 import com.android.internal.widget.NotificationExpandButton;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.animation.Interpolators;
 import com.android.systemui.statusbar.TransformableView;
 import com.android.systemui.statusbar.ViewTransformationHelper;
@@ -118,7 +118,7 @@ public class NotificationHeaderViewWrapper extends NotificationViewWrapper {
         updateTransformedTypes();
         addRemainingTransformTypes();
         updateCropToPaddingForImageViews();
-        this.mIcon.setTag(C1893R.C1897id.image_icon_tag, expandableNotificationRow.getEntry().getSbn().getNotification().getSmallIcon());
+        this.mIcon.setTag(C1894R.C1898id.image_icon_tag, expandableNotificationRow.getEntry().getSbn().getNotification().getSmallIcon());
         ArraySet<View> allTransformingViews2 = this.mTransformationHelper.getAllTransformingViews();
         for (int i = 0; i < allTransformingViews.size(); i++) {
             View valueAt = allTransformingViews.valueAt(i);

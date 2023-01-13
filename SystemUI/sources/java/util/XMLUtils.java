@@ -57,7 +57,7 @@ class XMLUtils {
         try {
             DocumentBuilder newDocumentBuilder = newInstance.newDocumentBuilder();
             newDocumentBuilder.setEntityResolver(new Resolver());
-            newDocumentBuilder.setErrorHandler(new C4400EH());
+            newDocumentBuilder.setErrorHandler(new C4412EH());
             return newDocumentBuilder.parse(new InputSource(inputStream));
         } catch (ParserConfigurationException e) {
             throw new Error((Throwable) e);
@@ -149,8 +149,8 @@ class XMLUtils {
     }
 
     /* renamed from: java.util.XMLUtils$EH */
-    private static class C4400EH implements ErrorHandler {
-        private C4400EH() {
+    private static class C4412EH implements ErrorHandler {
+        private C4412EH() {
         }
 
         public void error(SAXParseException sAXParseException) throws SAXException {

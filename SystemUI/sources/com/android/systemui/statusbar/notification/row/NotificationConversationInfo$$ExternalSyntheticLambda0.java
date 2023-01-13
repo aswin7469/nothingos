@@ -13,6 +13,6 @@ public final /* synthetic */ class NotificationConversationInfo$$ExternalSynthet
     }
 
     public final void onClick(View view) {
-        this.f$0.mo41535x24e356f8(this.f$1, view);
+        this.f$0.mo41541x24e356f8(this.f$1, view);
     }
 }

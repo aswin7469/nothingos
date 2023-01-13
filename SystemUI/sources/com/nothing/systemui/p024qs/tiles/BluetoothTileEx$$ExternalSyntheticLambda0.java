@@ -14,6 +14,6 @@ public final /* synthetic */ class BluetoothTileEx$$ExternalSyntheticLambda0 imp
     }
 
     public final void run() {
-        BluetoothTileEx.m3517saveModuleIDEarBitmap$lambda2(this.f$0, this.f$1);
+        BluetoothTileEx.m3525saveModuleIDEarBitmap$lambda3(this.f$0, this.f$1);
     }
 }

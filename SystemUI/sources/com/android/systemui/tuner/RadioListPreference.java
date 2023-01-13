@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.Toolbar;
 import androidx.preference.Preference;
 import com.android.settingslib.Utils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.fragments.FragmentHostManager;
 import java.util.Objects;
 
@@ -47,7 +47,7 @@ public class RadioListPreference extends CustomListPreference {
         Dialog dialog2 = new Dialog(getContext(), 16974371);
         Toolbar toolbar = (Toolbar) dialog2.findViewById(16908731);
         View view = new View(getContext());
-        view.setId(C1893R.C1897id.content);
+        view.setId(C1894R.C1898id.content);
         dialog2.setContentView(view);
         toolbar.setTitle(getTitle());
         toolbar.setNavigationIcon(Utils.getDrawable(dialog2.getContext(), 16843531));
@@ -61,7 +61,7 @@ public class RadioListPreference extends CustomListPreference {
     /* access modifiers changed from: protected */
     public void onDialogStateRestored(DialogFragment dialogFragment, Dialog dialog, Bundle bundle) {
         super.onDialogStateRestored(dialogFragment, dialog, bundle);
-        RadioFragment radioFragment = (RadioFragment) FragmentHostManager.get(dialog.findViewById(C1893R.C1897id.content)).getFragmentManager().findFragmentById(C1893R.C1897id.content);
+        RadioFragment radioFragment = (RadioFragment) FragmentHostManager.get(dialog.findViewById(C1894R.C1898id.content)).getFragmentManager().findFragmentById(C1894R.C1898id.content);
         if (radioFragment != null) {
             radioFragment.setPreference(this);
         }

@@ -13,14 +13,14 @@ import android.view.View;
 import android.view.ViewOutlineProvider;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.AppCompatImageView;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.shape.MaterialShapeDrawable;
 import com.google.android.material.shape.ShapeAppearanceModel;
 import com.google.android.material.shape.ShapeAppearancePathProvider;
 import com.google.android.material.shape.Shapeable;
 
 public class ShapeableImageView extends AppCompatImageView implements Shapeable {
-    private static final int DEF_STYLE_RES = C3621R.style.Widget_MaterialComponents_ShapeableImageView;
+    private static final int DEF_STYLE_RES = C3631R.style.Widget_MaterialComponents_ShapeableImageView;
     private static final int UNDEFINED_PADDING = Integer.MIN_VALUE;
     private final Paint borderPaint;
     private int bottomContentPadding;
@@ -88,38 +88,38 @@ public class ShapeableImageView extends AppCompatImageView implements Shapeable 
             android.graphics.Path r2 = new android.graphics.Path
             r2.<init>()
             r6.maskPath = r2
-            int[] r2 = com.google.android.material.C3621R.styleable.ShapeableImageView
+            int[] r2 = com.google.android.material.C3631R.styleable.ShapeableImageView
             android.content.res.TypedArray r2 = r1.obtainStyledAttributes(r8, r2, r9, r0)
-            int r4 = com.google.android.material.C3621R.styleable.ShapeableImageView_strokeColor
+            int r4 = com.google.android.material.C3631R.styleable.ShapeableImageView_strokeColor
             android.content.res.ColorStateList r4 = com.google.android.material.resources.MaterialResources.getColorStateList((android.content.Context) r1, (android.content.res.TypedArray) r2, (int) r4)
             r6.strokeColor = r4
-            int r4 = com.google.android.material.C3621R.styleable.ShapeableImageView_strokeWidth
+            int r4 = com.google.android.material.C3631R.styleable.ShapeableImageView_strokeWidth
             int r4 = r2.getDimensionPixelSize(r4, r7)
             float r4 = (float) r4
             r6.strokeWidth = r4
-            int r4 = com.google.android.material.C3621R.styleable.ShapeableImageView_contentPadding
+            int r4 = com.google.android.material.C3631R.styleable.ShapeableImageView_contentPadding
             int r7 = r2.getDimensionPixelSize(r4, r7)
             r6.leftContentPadding = r7
             r6.topContentPadding = r7
             r6.rightContentPadding = r7
             r6.bottomContentPadding = r7
-            int r4 = com.google.android.material.C3621R.styleable.ShapeableImageView_contentPaddingLeft
+            int r4 = com.google.android.material.C3631R.styleable.ShapeableImageView_contentPaddingLeft
             int r4 = r2.getDimensionPixelSize(r4, r7)
             r6.leftContentPadding = r4
-            int r4 = com.google.android.material.C3621R.styleable.ShapeableImageView_contentPaddingTop
+            int r4 = com.google.android.material.C3631R.styleable.ShapeableImageView_contentPaddingTop
             int r4 = r2.getDimensionPixelSize(r4, r7)
             r6.topContentPadding = r4
-            int r4 = com.google.android.material.C3621R.styleable.ShapeableImageView_contentPaddingRight
+            int r4 = com.google.android.material.C3631R.styleable.ShapeableImageView_contentPaddingRight
             int r4 = r2.getDimensionPixelSize(r4, r7)
             r6.rightContentPadding = r4
-            int r4 = com.google.android.material.C3621R.styleable.ShapeableImageView_contentPaddingBottom
+            int r4 = com.google.android.material.C3631R.styleable.ShapeableImageView_contentPaddingBottom
             int r7 = r2.getDimensionPixelSize(r4, r7)
             r6.bottomContentPadding = r7
-            int r7 = com.google.android.material.C3621R.styleable.ShapeableImageView_contentPaddingStart
+            int r7 = com.google.android.material.C3631R.styleable.ShapeableImageView_contentPaddingStart
             r4 = -2147483648(0xffffffff80000000, float:-0.0)
             int r7 = r2.getDimensionPixelSize(r7, r4)
             r6.startContentPadding = r7
-            int r7 = com.google.android.material.C3621R.styleable.ShapeableImageView_contentPaddingEnd
+            int r7 = com.google.android.material.C3631R.styleable.ShapeableImageView_contentPaddingEnd
             int r7 = r2.getDimensionPixelSize(r7, r4)
             r6.endContentPadding = r7
             r2.recycle()

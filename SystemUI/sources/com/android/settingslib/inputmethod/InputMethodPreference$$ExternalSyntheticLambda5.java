@@ -11,6 +11,6 @@ public final /* synthetic */ class InputMethodPreference$$ExternalSyntheticLambd
     }
 
     public final void onCancel(DialogInterface dialogInterface) {
-        this.f$0.mo28810x649039e2(dialogInterface);
+        this.f$0.mo28815x649039e2(dialogInterface);
     }
 }

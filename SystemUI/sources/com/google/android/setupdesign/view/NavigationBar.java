@@ -8,7 +8,7 @@ import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import com.google.android.setupdesign.C3953R;
+import com.google.android.setupdesign.C3963R;
 
 public class NavigationBar extends LinearLayout implements View.OnClickListener {
     private Button backButton;
@@ -24,7 +24,7 @@ public class NavigationBar extends LinearLayout implements View.OnClickListener 
 
     private static int getNavbarTheme(Context context) {
         boolean z = false;
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(new int[]{C3953R.attr.sudNavBarTheme, 16842800, 16842801});
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(new int[]{C3963R.attr.sudNavBarTheme, 16842800, 16842801});
         int resourceId = obtainStyledAttributes.getResourceId(0, 0);
         if (resourceId == 0) {
             float[] fArr = new float[3];
@@ -34,7 +34,7 @@ public class NavigationBar extends LinearLayout implements View.OnClickListener 
             if (fArr[2] > fArr2[2]) {
                 z = true;
             }
-            resourceId = z ? C3953R.style.SudNavBarThemeDark : C3953R.style.SudNavBarThemeLight;
+            resourceId = z ? C3963R.style.SudNavBarThemeDark : C3963R.style.SudNavBarThemeLight;
         }
         obtainStyledAttributes.recycle();
         return resourceId;
@@ -61,10 +61,10 @@ public class NavigationBar extends LinearLayout implements View.OnClickListener 
 
     private void init() {
         if (!isInEditMode()) {
-            View.inflate(getContext(), C3953R.layout.sud_navbar_view, this);
-            this.nextButton = (Button) findViewById(C3953R.C3956id.sud_navbar_next);
-            this.backButton = (Button) findViewById(C3953R.C3956id.sud_navbar_back);
-            this.moreButton = (Button) findViewById(C3953R.C3956id.sud_navbar_more);
+            View.inflate(getContext(), C3963R.layout.sud_navbar_view, this);
+            this.nextButton = (Button) findViewById(C3963R.C3966id.sud_navbar_next);
+            this.backButton = (Button) findViewById(C3963R.C3966id.sud_navbar_back);
+            this.moreButton = (Button) findViewById(C3963R.C3966id.sud_navbar_more);
         }
     }
 

@@ -11,6 +11,6 @@ public final /* synthetic */ class LightSourceDrawable$$ExternalSyntheticLambda1
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        LightSourceDrawable.m2767illuminate$lambda7$lambda6$lambda5(this.f$0, valueAnimator);
+        LightSourceDrawable.m2772illuminate$lambda7$lambda6$lambda5(this.f$0, valueAnimator);
     }
 }

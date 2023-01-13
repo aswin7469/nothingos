@@ -12,6 +12,6 @@ public final /* synthetic */ class BrightnessMirrorHandler$$ExternalSyntheticLam
     }
 
     public final void onBrightnessMirrorReinflated(View view) {
-        BrightnessMirrorHandler.m3022brightnessMirrorListener$lambda0(this.f$0, view);
+        BrightnessMirrorHandler.m3026brightnessMirrorListener$lambda0(this.f$0, view);
     }
 }

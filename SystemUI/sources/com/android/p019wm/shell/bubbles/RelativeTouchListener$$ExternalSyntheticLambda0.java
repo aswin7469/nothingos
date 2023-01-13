@@ -14,6 +14,6 @@ public final /* synthetic */ class RelativeTouchListener$$ExternalSyntheticLambd
     }
 
     public final void run() {
-        RelativeTouchListener.m3436onTouch$lambda0(this.f$0, this.f$1);
+        RelativeTouchListener.m3440onTouch$lambda0(this.f$0, this.f$1);
     }
 }

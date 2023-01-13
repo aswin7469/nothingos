@@ -50,13 +50,13 @@ public final class JapaneseChronology extends AbstractChronology implements Seri
 
     public JapaneseDate date(Era era, int i, int i2, int i3) {
         if (era instanceof JapaneseEra) {
-            return JapaneseDate.m947of((JapaneseEra) era, i, i2, i3);
+            return JapaneseDate.m945of((JapaneseEra) era, i, i2, i3);
         }
         throw new ClassCastException("Era must be JapaneseEra");
     }
 
     public JapaneseDate date(int i, int i2, int i3) {
-        return new JapaneseDate(LocalDate.m908of(i, i2, i3));
+        return new JapaneseDate(LocalDate.m906of(i, i2, i3));
     }
 
     public JapaneseDate dateYearDay(Era era, int i, int i2) {
@@ -127,11 +127,11 @@ public final class JapaneseChronology extends AbstractChronology implements Seri
     }
 
     public JapaneseEra eraOf(int i) {
-        return JapaneseEra.m948of(i);
+        return JapaneseEra.m946of(i);
     }
 
     public List<Era> eras() {
-        return List.m1733of((E[]) JapaneseEra.values());
+        return List.m1739of((E[]) JapaneseEra.values());
     }
 
     /* access modifiers changed from: package-private */
@@ -141,7 +141,7 @@ public final class JapaneseChronology extends AbstractChronology implements Seri
     }
 
     /* renamed from: java.time.chrono.JapaneseChronology$1 */
-    static /* synthetic */ class C28691 {
+    static /* synthetic */ class C28751 {
         static final /* synthetic */ int[] $SwitchMap$java$time$temporal$ChronoField;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(18:0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|18) */
@@ -211,12 +211,12 @@ public final class JapaneseChronology extends AbstractChronology implements Seri
             L_0x0060:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: java.time.chrono.JapaneseChronology.C28691.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: java.time.chrono.JapaneseChronology.C28751.<clinit>():void");
         }
     }
 
     public ValueRange range(ChronoField chronoField) {
-        switch (C28691.$SwitchMap$java$time$temporal$ChronoField[chronoField.ordinal()]) {
+        switch (C28751.$SwitchMap$java$time$temporal$ChronoField[chronoField.ordinal()]) {
             case 1:
             case 2:
             case 3:
@@ -225,14 +225,14 @@ public final class JapaneseChronology extends AbstractChronology implements Seri
             case 5:
                 Calendar createCalendar = createCalendar();
                 int year = getCurrentEra().getPrivateEra().getSinceDate().getYear();
-                return ValueRange.m957of(1, (long) createCalendar.getGreatestMinimum(1), (long) (createCalendar.getLeastMaximum(1) + 1), (long) (Year.MAX_VALUE - year));
+                return ValueRange.m955of(1, (long) createCalendar.getGreatestMinimum(1), (long) (createCalendar.getLeastMaximum(1) + 1), (long) (Year.MAX_VALUE - year));
             case 6:
                 Calendar createCalendar2 = createCalendar();
-                return ValueRange.m957of((long) createCalendar2.getMinimum(6), (long) createCalendar2.getGreatestMinimum(6), (long) createCalendar2.getLeastMaximum(6), (long) createCalendar2.getMaximum(6));
+                return ValueRange.m955of((long) createCalendar2.getMinimum(6), (long) createCalendar2.getGreatestMinimum(6), (long) createCalendar2.getLeastMaximum(6), (long) createCalendar2.getMaximum(6));
             case 7:
-                return ValueRange.m955of((long) JapaneseDate.MEIJI_6_ISODATE.getYear(), 999999999);
+                return ValueRange.m953of((long) JapaneseDate.MEIJI_6_ISODATE.getYear(), 999999999);
             case 8:
-                return ValueRange.m955of((long) JapaneseEra.MEIJI.getValue(), (long) getCurrentEra().getValue());
+                return ValueRange.m953of((long) JapaneseEra.MEIJI.getValue(), (long) getCurrentEra().getValue());
             default:
                 return chronoField.range();
         }

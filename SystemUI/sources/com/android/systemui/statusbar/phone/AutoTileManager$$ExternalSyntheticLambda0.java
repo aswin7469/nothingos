@@ -13,6 +13,6 @@ public final /* synthetic */ class AutoTileManager$$ExternalSyntheticLambda0 imp
     }
 
     public final void run() {
-        this.f$0.mo43656xb844e8a5(this.f$1);
+        this.f$0.mo43664xb844e8a5(this.f$1);
     }
 }

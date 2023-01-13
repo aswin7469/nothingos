@@ -11,6 +11,6 @@ public final /* synthetic */ class WindowMagnificationController$$ExternalSynthe
     }
 
     public final void doFrame(long j) {
-        this.f$0.mo30008x2f8a4bc2(j);
+        this.f$0.mo30018x2f8a4bc2(j);
     }
 }

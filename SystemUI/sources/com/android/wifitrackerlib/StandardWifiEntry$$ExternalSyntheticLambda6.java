@@ -16,6 +16,6 @@ public final /* synthetic */ class StandardWifiEntry$$ExternalSyntheticLambda6 i
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo47850x2217af08(this.f$1, this.f$2, (ScanResult) obj);
+        this.f$0.mo47859x2217af08(this.f$1, this.f$2, (ScanResult) obj);
     }
 }

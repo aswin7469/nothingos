@@ -26,7 +26,7 @@ import androidx.slice.builders.ListBuilder;
 import androidx.slice.builders.SliceAction;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardUpdateMonitorCallback;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.SystemUIAppComponentFactory;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.NotificationMediaManager;
@@ -193,20 +193,20 @@ public class KeyguardSliceProvider extends SliceProvider implements NextAlarmCon
 
     /* access modifiers changed from: protected */
     public void addPrimaryActionLocked(ListBuilder listBuilder) {
-        listBuilder.addRow(new ListBuilder.RowBuilder(Uri.parse(KEYGUARD_ACTION_URI)).setPrimaryAction(SliceAction.createDeeplink(this.mPendingIntent, IconCompat.createWithResource(getContext(), C1893R.C1895drawable.ic_access_alarms_big), 0, (CharSequence) this.mLastText)));
+        listBuilder.addRow(new ListBuilder.RowBuilder(Uri.parse(KEYGUARD_ACTION_URI)).setPrimaryAction(SliceAction.createDeeplink(this.mPendingIntent, IconCompat.createWithResource(getContext(), C1894R.C1896drawable.ic_access_alarms_big), 0, (CharSequence) this.mLastText)));
     }
 
     /* access modifiers changed from: protected */
     public void addNextAlarmLocked(ListBuilder listBuilder) {
         if (!TextUtils.isEmpty(this.mNextAlarm)) {
-            listBuilder.addRow(new ListBuilder.RowBuilder(this.mAlarmUri).setTitle(this.mNextAlarm).addEndItem(IconCompat.createWithResource(getContext(), C1893R.C1895drawable.ic_access_alarms_big), 0));
+            listBuilder.addRow(new ListBuilder.RowBuilder(this.mAlarmUri).setTitle(this.mNextAlarm).addEndItem(IconCompat.createWithResource(getContext(), C1894R.C1896drawable.ic_access_alarms_big), 0));
         }
     }
 
     /* access modifiers changed from: protected */
     public void addZenModeLocked(ListBuilder listBuilder) {
         if (isDndOn()) {
-            listBuilder.addRow(new ListBuilder.RowBuilder(this.mDndUri).setContentDescription(getContext().getResources().getString(C1893R.string.accessibility_quick_settings_dnd)).addEndItem(IconCompat.createWithResource(getContext(), C1893R.C1895drawable.stat_sys_dnd), 0));
+            listBuilder.addRow(new ListBuilder.RowBuilder(this.mDndUri).setContentDescription(getContext().getResources().getString(C1894R.string.accessibility_quick_settings_dnd)).addEndItem(IconCompat.createWithResource(getContext(), C1894R.C1896drawable.stat_sys_dnd), 0));
         }
     }
 
@@ -223,7 +223,7 @@ public class KeyguardSliceProvider extends SliceProvider implements NextAlarmCon
             if (keyguardSliceProvider != null) {
                 keyguardSliceProvider.onDestroy();
             }
-            this.mDatePattern = getContext().getString(C1893R.string.system_ui_aod_date_pattern);
+            this.mDatePattern = getContext().getString(C1894R.string.system_ui_aod_date_pattern);
             KeyguardWeatherController keyguardWeatherController = this.mKeyguardWeatherController;
             if (keyguardWeatherController != null) {
                 keyguardWeatherController.addCallback(this);
@@ -328,7 +328,7 @@ public class KeyguardSliceProvider extends SliceProvider implements NextAlarmCon
     /* access modifiers changed from: protected */
     public String getFormattedDateLocked() {
         String format = new SimpleDateFormat(android.text.format.DateFormat.getBestDateTimePattern(Locale.getDefault(), "EEE, d MMM"), Locale.getDefault()).format(new Date());
-        NTLogUtil.m1682i(TAG, "getFormattedDateLocked =" + format);
+        NTLogUtil.m1688i(TAG, "getFormattedDateLocked =" + format);
         return format;
     }
 
@@ -372,7 +372,7 @@ public class KeyguardSliceProvider extends SliceProvider implements NextAlarmCon
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onPrimaryMetadataOrStateChanged$0$com-android-systemui-keyguard-KeyguardSliceProvider */
-    public /* synthetic */ void mo33174x500fc039(MediaMetadata mediaMetadata, int i) {
+    public /* synthetic */ void mo33185x500fc039(MediaMetadata mediaMetadata, int i) {
         synchronized (this) {
             updateMediaStateLocked(mediaMetadata, i);
             this.mMediaWakeLock.setAcquired(false);
@@ -386,7 +386,7 @@ public class KeyguardSliceProvider extends SliceProvider implements NextAlarmCon
         if (mediaMetadata != null) {
             charSequence = mediaMetadata.getText("android.media.metadata.TITLE");
             if (TextUtils.isEmpty(charSequence)) {
-                charSequence = getContext().getResources().getString(C1893R.string.music_controls_no_title);
+                charSequence = getContext().getResources().getString(C1894R.string.music_controls_no_title);
             }
         } else {
             charSequence = null;
@@ -437,7 +437,7 @@ public class KeyguardSliceProvider extends SliceProvider implements NextAlarmCon
 
     /* access modifiers changed from: protected */
     public void addWeatherLocked(ListBuilder listBuilder) {
-        NTLogUtil.m1682i(TAG, "addWeatherLocked isWeatherOn=" + isWeatherOn());
+        NTLogUtil.m1688i(TAG, "addWeatherLocked isWeatherOn=" + isWeatherOn());
         if (isWeatherOn()) {
             listBuilder.addRow(new ListBuilder.RowBuilder(this.mWeatherUri));
         }
@@ -449,13 +449,13 @@ public class KeyguardSliceProvider extends SliceProvider implements NextAlarmCon
     }
 
     public void onWeatherSwitchChanged(boolean z) {
-        NTLogUtil.m1682i(TAG, "KeyguardWeather onWeatherSwitchChanged :" + z);
+        NTLogUtil.m1688i(TAG, "KeyguardWeather onWeatherSwitchChanged :" + z);
         notifyChange();
     }
 
     public void onWeatherDataChanged() {
         if (this.mKeyguardWeatherController != null) {
-            NTLogUtil.m1682i(TAG, "KeyguardWeather onWeatherDataChanged getWeatherData:" + this.mKeyguardWeatherController.getWeatherData());
+            NTLogUtil.m1688i(TAG, "KeyguardWeather onWeatherDataChanged getWeatherData:" + this.mKeyguardWeatherController.getWeatherData());
         }
         notifyChange();
     }
@@ -463,7 +463,7 @@ public class KeyguardSliceProvider extends SliceProvider implements NextAlarmCon
     /* access modifiers changed from: protected */
     public void addCalendarLocked(ListBuilder listBuilder) {
         if (isCalendarOn()) {
-            NTLogUtil.m1682i(TAG, "addCalendarLocked");
+            NTLogUtil.m1688i(TAG, "addCalendarLocked");
             listBuilder.addRow(new ListBuilder.RowBuilder(this.mCalendarUri));
         }
     }
@@ -474,13 +474,13 @@ public class KeyguardSliceProvider extends SliceProvider implements NextAlarmCon
     }
 
     public void onCalendarSwitchChanged(boolean z) {
-        NTLogUtil.m1682i(TAG, "KeyguardWeather onWeatherSwitchChanged :" + z);
+        NTLogUtil.m1688i(TAG, "KeyguardWeather onWeatherSwitchChanged :" + z);
         notifyChange();
     }
 
     public void onCalendarDataChanged() {
         if (this.mCalendarManager != null) {
-            NTLogUtil.m1682i(TAG, "KeyguardWeather onWeatherDataChanged getWeatherData:" + this.mCalendarManager.getCalendarEventData());
+            NTLogUtil.m1688i(TAG, "KeyguardWeather onWeatherDataChanged getWeatherData:" + this.mCalendarManager.getCalendarEventData());
         }
         notifyChange();
     }

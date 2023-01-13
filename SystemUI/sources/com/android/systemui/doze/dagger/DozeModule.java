@@ -3,7 +3,7 @@ package com.android.systemui.doze.dagger;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.os.Handler;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.doze.DozeAuthRemover;
 import com.android.systemui.doze.DozeBrightnessHostForwarder;
@@ -56,7 +56,7 @@ public abstract class DozeModule {
     static Optional<Sensor>[] providesBrightnessSensors(AsyncSensorManager asyncSensorManager, Context context, DozeParameters dozeParameters) {
         String[] brightnessNames = dozeParameters.brightnessNames();
         if (brightnessNames.length == 0 || brightnessNames == null) {
-            return new Optional[]{Optional.ofNullable(DozeSensors.findSensor(asyncSensorManager, context.getString(C1893R.string.doze_brightness_sensor_type), (String) null))};
+            return new Optional[]{Optional.ofNullable(DozeSensors.findSensor(asyncSensorManager, context.getString(C1894R.string.doze_brightness_sensor_type), (String) null))};
         }
         Optional<Sensor>[] optionalArr = new Optional[5];
         Arrays.fill((Object[]) optionalArr, (Object) Optional.empty());
@@ -64,7 +64,7 @@ public abstract class DozeModule {
         for (int i = 0; i < brightnessNames.length; i++) {
             String str = brightnessNames[i];
             if (!hashMap.containsKey(str)) {
-                hashMap.put(str, Optional.ofNullable(DozeSensors.findSensor(asyncSensorManager, context.getString(C1893R.string.doze_brightness_sensor_type), brightnessNames[i])));
+                hashMap.put(str, Optional.ofNullable(DozeSensors.findSensor(asyncSensorManager, context.getString(C1894R.string.doze_brightness_sensor_type), brightnessNames[i])));
             }
             optionalArr[i] = (Optional) hashMap.get(str);
         }

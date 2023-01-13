@@ -11,6 +11,6 @@ public final /* synthetic */ class StatefulControlSubscriber$$ExternalSyntheticL
     }
 
     public final void run() {
-        StatefulControlSubscriber.m2631run$lambda0(this.f$0);
+        StatefulControlSubscriber.m2636run$lambda0(this.f$0);
     }
 }

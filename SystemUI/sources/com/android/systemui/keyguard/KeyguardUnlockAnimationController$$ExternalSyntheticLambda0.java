@@ -11,6 +11,6 @@ public final /* synthetic */ class KeyguardUnlockAnimationController$$ExternalSy
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        KeyguardUnlockAnimationController.m2756lambda1$lambda0(this.f$0, valueAnimator);
+        KeyguardUnlockAnimationController.m2761lambda1$lambda0(this.f$0, valueAnimator);
     }
 }

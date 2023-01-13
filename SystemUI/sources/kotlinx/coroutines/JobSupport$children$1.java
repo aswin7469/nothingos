@@ -8,8 +8,8 @@ import kotlin.coroutines.jvm.internal.RestrictedSuspendLambda;
 import kotlin.jvm.functions.Function2;
 import kotlin.sequences.SequenceScope;
 
-@Metadata(mo64986d1 = {"\u0000\u000e\n\u0000\n\u0002\u0010\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\u0010\u0000\u001a\u00020\u0001*\b\u0012\u0004\u0012\u00020\u00030\u0002H@"}, mo64987d2 = {"<anonymous>", "", "Lkotlin/sequences/SequenceScope;", "Lkotlinx/coroutines/ChildJob;"}, mo64988k = 3, mo64989mv = {1, 5, 1}, mo64991xi = 48)
-@DebugMetadata(mo65240c = "kotlinx.coroutines.JobSupport$children$1", mo65241f = "JobSupport.kt", mo65242i = {1, 1}, mo65243l = {952, 954}, mo65244m = "invokeSuspend", mo65245n = {"this_$iv", "cur$iv"}, mo65246s = {"L$1", "L$2"})
+@Metadata(mo65042d1 = {"\u0000\u000e\n\u0000\n\u0002\u0010\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\u0010\u0000\u001a\u00020\u0001*\b\u0012\u0004\u0012\u00020\u00030\u0002H@"}, mo65043d2 = {"<anonymous>", "", "Lkotlin/sequences/SequenceScope;", "Lkotlinx/coroutines/ChildJob;"}, mo65044k = 3, mo65045mv = {1, 5, 1}, mo65047xi = 48)
+@DebugMetadata(mo65296c = "kotlinx.coroutines.JobSupport$children$1", mo65297f = "JobSupport.kt", mo65298i = {1, 1}, mo65299l = {952, 954}, mo65300m = "invokeSuspend", mo65301n = {"this_$iv", "cur$iv"}, mo65302s = {"L$1", "L$2"})
 /* compiled from: JobSupport.kt */
 final class JobSupport$children$1 extends RestrictedSuspendLambda implements Function2<SequenceScope<? super ChildJob>, Continuation<? super Unit>, Object> {
     private /* synthetic */ Object L$0;

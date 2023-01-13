@@ -215,19 +215,19 @@ public class Utils {
     }
 
     static String getConnectedDescription(Context context, WifiConfiguration wifiConfiguration, NetworkCapabilities networkCapabilities, boolean z, boolean z2) {
-        StringJoiner stringJoiner = new StringJoiner(context.getString(C3341R.string.wifitrackerlib_summary_separator));
+        StringJoiner stringJoiner = new StringJoiner(context.getString(C3351R.string.wifitrackerlib_summary_separator));
         if (wifiConfiguration != null && (wifiConfiguration.fromWifiNetworkSuggestion || wifiConfiguration.fromWifiNetworkSpecifier)) {
             String suggestionOrSpecifierLabel = getSuggestionOrSpecifierLabel(context, wifiConfiguration);
             if (!TextUtils.isEmpty(suggestionOrSpecifierLabel)) {
                 if (!z) {
-                    stringJoiner.add(context.getString(C3341R.string.wifitrackerlib_available_via_app, new Object[]{suggestionOrSpecifierLabel}));
+                    stringJoiner.add(context.getString(C3351R.string.wifitrackerlib_available_via_app, new Object[]{suggestionOrSpecifierLabel}));
                 } else {
-                    stringJoiner.add(context.getString(C3341R.string.wifitrackerlib_connected_via_app, new Object[]{suggestionOrSpecifierLabel}));
+                    stringJoiner.add(context.getString(C3351R.string.wifitrackerlib_connected_via_app, new Object[]{suggestionOrSpecifierLabel}));
                 }
             }
         }
         if (z2) {
-            stringJoiner.add(context.getString(C3341R.string.wifi_connected_low_quality));
+            stringJoiner.add(context.getString(C3351R.string.wifi_connected_low_quality));
         }
         String currentNetworkCapabilitiesInformation = getCurrentNetworkCapabilitiesInformation(context, networkCapabilities);
         if (!TextUtils.isEmpty(currentNetworkCapabilitiesInformation)) {
@@ -236,7 +236,7 @@ public class Utils {
         if (stringJoiner.length() != 0 || !z) {
             return stringJoiner.toString();
         }
-        return context.getResources().getStringArray(C3341R.array.wifitrackerlib_wifi_status)[NetworkInfo.DetailedState.CONNECTED.ordinal()];
+        return context.getResources().getStringArray(C3351R.array.wifitrackerlib_wifi_status)[NetworkInfo.DetailedState.CONNECTED.ordinal()];
     }
 
     static String getConnectingDescription(Context context, NetworkInfo networkInfo) {
@@ -244,7 +244,7 @@ public class Utils {
         if (context == null || networkInfo == null || (detailedState = networkInfo.getDetailedState()) == null) {
             return "";
         }
-        String[] stringArray = context.getResources().getStringArray(C3341R.array.wifitrackerlib_wifi_status);
+        String[] stringArray = context.getResources().getStringArray(C3351R.array.wifitrackerlib_wifi_status);
         int ordinal = detailedState.ordinal();
         if (ordinal >= stringArray.length) {
             return "";
@@ -256,22 +256,22 @@ public class Utils {
         if (context == null || wifiConfiguration == null) {
             return "";
         }
-        StringJoiner stringJoiner = new StringJoiner(context.getString(C3341R.string.wifitrackerlib_summary_separator));
+        StringJoiner stringJoiner = new StringJoiner(context.getString(C3351R.string.wifitrackerlib_summary_separator));
         if (z2) {
-            stringJoiner.add(context.getString(C3341R.string.wifitrackerlib_wifi_disconnected));
+            stringJoiner.add(context.getString(C3351R.string.wifitrackerlib_wifi_disconnected));
         } else if (!z || wifiConfiguration.isPasspoint()) {
             if (wifiConfiguration.fromWifiNetworkSuggestion) {
                 String suggestionOrSpecifierLabel = getSuggestionOrSpecifierLabel(context, wifiConfiguration);
                 if (!TextUtils.isEmpty(suggestionOrSpecifierLabel)) {
-                    stringJoiner.add(context.getString(C3341R.string.wifitrackerlib_available_via_app, new Object[]{suggestionOrSpecifierLabel}));
+                    stringJoiner.add(context.getString(C3351R.string.wifitrackerlib_available_via_app, new Object[]{suggestionOrSpecifierLabel}));
                 }
             } else {
-                stringJoiner.add(context.getString(C3341R.string.wifitrackerlib_wifi_remembered));
+                stringJoiner.add(context.getString(C3351R.string.wifitrackerlib_wifi_remembered));
             }
         } else if (!wifiTrackerInjector.getNoAttributionAnnotationPackages().contains(wifiConfiguration.creatorName)) {
             String appLabel = getAppLabel(context, wifiConfiguration.creatorName);
             if (!TextUtils.isEmpty(appLabel)) {
-                stringJoiner.add(context.getString(C3341R.string.wifitrackerlib_saved_network, new Object[]{appLabel}));
+                stringJoiner.add(context.getString(C3351R.string.wifitrackerlib_saved_network, new Object[]{appLabel}));
             }
         }
         String wifiConfigurationFailureMessage = getWifiConfigurationFailureMessage(context, wifiConfiguration);
@@ -313,10 +313,10 @@ public class Utils {
             android.net.wifi.WifiConfiguration$NetworkSelectionStatus r5 = r5.getNetworkSelectionStatus()
             int r5 = r5.getNetworkSelectionStatus()
             if (r5 != r2) goto L_0x001c
-            int r5 = com.android.wifitrackerlib.C3341R.string.wifitrackerlib_wifi_no_internet_no_reconnect
+            int r5 = com.android.wifitrackerlib.C3351R.string.wifitrackerlib_wifi_no_internet_no_reconnect
             goto L_0x001e
         L_0x001c:
-            int r5 = com.android.wifitrackerlib.C3341R.string.wifitrackerlib_wifi_no_internet
+            int r5 = com.android.wifitrackerlib.C3351R.string.wifitrackerlib_wifi_no_internet
         L_0x001e:
             java.lang.String r4 = r4.getString(r5)
             return r4
@@ -341,23 +341,23 @@ public class Utils {
             if (r1 == r2) goto L_0x0061
             goto L_0x006f
         L_0x004c:
-            int r5 = com.android.wifitrackerlib.C3341R.string.wifitrackerlib_wifi_check_password_try_again
+            int r5 = com.android.wifitrackerlib.C3351R.string.wifitrackerlib_wifi_check_password_try_again
             java.lang.String r4 = r4.getString(r5)
             return r4
         L_0x0053:
-            int r5 = com.android.wifitrackerlib.C3341R.string.wifitrackerlib_wifi_no_internet_no_reconnect
+            int r5 = com.android.wifitrackerlib.C3351R.string.wifitrackerlib_wifi_no_internet_no_reconnect
             java.lang.String r4 = r4.getString(r5)
             return r4
         L_0x005a:
-            int r5 = com.android.wifitrackerlib.C3341R.string.wifitrackerlib_wifi_disabled_network_failure
+            int r5 = com.android.wifitrackerlib.C3351R.string.wifitrackerlib_wifi_disabled_network_failure
             java.lang.String r4 = r4.getString(r5)
             return r4
         L_0x0061:
-            int r5 = com.android.wifitrackerlib.C3341R.string.wifitrackerlib_wifi_disabled_password_failure
+            int r5 = com.android.wifitrackerlib.C3351R.string.wifitrackerlib_wifi_disabled_password_failure
             java.lang.String r4 = r4.getString(r5)
             return r4
         L_0x0068:
-            int r5 = com.android.wifitrackerlib.C3341R.string.wifitrackerlib_wifi_disabled_generic
+            int r5 = com.android.wifitrackerlib.C3351R.string.wifitrackerlib_wifi_disabled_generic
             java.lang.String r4 = r4.getString(r5)
             return r4
         L_0x006f:
@@ -380,27 +380,27 @@ public class Utils {
         L_0x007a:
             return r0
         L_0x007b:
-            int r5 = com.android.wifitrackerlib.C3341R.string.wifitrackerlib_wifi_network_not_found
+            int r5 = com.android.wifitrackerlib.C3351R.string.wifitrackerlib_wifi_network_not_found
             java.lang.String r4 = r4.getString(r5)
             return r4
         L_0x0082:
-            int r5 = com.android.wifitrackerlib.C3341R.string.wifitrackerlib_wifi_mbo_oce_assoc_disallowed_insufficient_rssi
+            int r5 = com.android.wifitrackerlib.C3351R.string.wifitrackerlib_wifi_mbo_oce_assoc_disallowed_insufficient_rssi
             java.lang.String r4 = r4.getString(r5)
             return r4
         L_0x0089:
-            int r5 = com.android.wifitrackerlib.C3341R.string.wifitrackerlib_wifi_mbo_assoc_disallowed_max_num_sta_associated
+            int r5 = com.android.wifitrackerlib.C3351R.string.wifitrackerlib_wifi_mbo_assoc_disallowed_max_num_sta_associated
             java.lang.String r4 = r4.getString(r5)
             return r4
         L_0x0090:
-            int r5 = com.android.wifitrackerlib.C3341R.string.wifitrackerlib_wifi_mbo_assoc_disallowed_cannot_connect
+            int r5 = com.android.wifitrackerlib.C3351R.string.wifitrackerlib_wifi_mbo_assoc_disallowed_cannot_connect
             java.lang.String r4 = r4.getString(r5)
             return r4
         L_0x0097:
-            int r5 = com.android.wifitrackerlib.C3341R.string.wifitrackerlib_wifi_poor_channel_conditions
+            int r5 = com.android.wifitrackerlib.C3351R.string.wifitrackerlib_wifi_poor_channel_conditions
             java.lang.String r4 = r4.getString(r5)
             return r4
         L_0x009e:
-            int r5 = com.android.wifitrackerlib.C3341R.string.wifitrackerlib_wifi_ap_unable_to_handle_new_sta
+            int r5 = com.android.wifitrackerlib.C3351R.string.wifitrackerlib_wifi_ap_unable_to_handle_new_sta
             java.lang.String r4 = r4.getString(r5)
             return r4
         L_0x00a5:
@@ -413,7 +413,7 @@ public class Utils {
         if (context == null || wifiEntry == null || !wifiEntry.canSetAutoJoinEnabled() || wifiEntry.isAutoJoinEnabled()) {
             return "";
         }
-        return context.getString(C3341R.string.wifitrackerlib_auto_connect_disable);
+        return context.getString(C3351R.string.wifitrackerlib_auto_connect_disable);
     }
 
     static String getMeteredDescription(Context context, WifiEntry wifiEntry) {
@@ -424,13 +424,13 @@ public class Utils {
             return "";
         }
         if (wifiEntry.getMeteredChoice() == 1) {
-            return context.getString(C3341R.string.wifitrackerlib_wifi_metered_label);
+            return context.getString(C3351R.string.wifitrackerlib_wifi_metered_label);
         }
         if (wifiEntry.getMeteredChoice() == 2) {
-            return context.getString(C3341R.string.wifitrackerlib_wifi_unmetered_label);
+            return context.getString(C3351R.string.wifitrackerlib_wifi_unmetered_label);
         }
         if (wifiEntry.isMetered()) {
-            return context.getString(C3341R.string.wifitrackerlib_wifi_metered_label);
+            return context.getString(C3351R.string.wifitrackerlib_wifi_metered_label);
         }
         return "";
     }
@@ -488,13 +488,13 @@ public class Utils {
                 return context.getString(context.getResources().getIdentifier("network_available_sign_in", "string", "android"));
             }
             if (networkCapabilities.hasCapability(24)) {
-                return context.getString(C3341R.string.wifitrackerlib_wifi_limited_connection);
+                return context.getString(C3351R.string.wifitrackerlib_wifi_limited_connection);
             }
             if (!networkCapabilities.hasCapability(16)) {
                 if (networkCapabilities.isPrivateDnsBroken()) {
-                    return context.getString(C3341R.string.wifitrackerlib_private_dns_broken);
+                    return context.getString(C3351R.string.wifitrackerlib_private_dns_broken);
                 }
-                return context.getString(C3341R.string.wifitrackerlib_wifi_connected_cannot_provide_internet);
+                return context.getString(C3351R.string.wifitrackerlib_wifi_connected_cannot_provide_internet);
             }
         }
         return "";
@@ -505,7 +505,7 @@ public class Utils {
         if (context == null || networkInfo == null || (detailedState = networkInfo.getDetailedState()) == null) {
             return "";
         }
-        String[] stringArray = context.getResources().getStringArray(C3341R.array.wifitrackerlib_wifi_status);
+        String[] stringArray = context.getResources().getStringArray(C3351R.array.wifitrackerlib_wifi_status);
         int ordinal = detailedState.ordinal();
         if (ordinal >= stringArray.length) {
             return "";
@@ -583,7 +583,7 @@ public class Utils {
                 i = getSubIdForConfig(context, wifiConfiguration);
             }
             if (i != -1 && !isImsiPrivacyProtectionProvided(context, i)) {
-                return NonSdkApiWrapper.linkifyAnnotation(context, context.getText(C3341R.string.wifitrackerlib_imsi_protection_warning), "url", context.getString(C3341R.string.wifitrackerlib_help_url_imsi_protection));
+                return NonSdkApiWrapper.linkifyAnnotation(context, context.getText(C3351R.string.wifitrackerlib_imsi_protection_warning), "url", context.getString(C3351R.string.wifitrackerlib_help_url_imsi_protection));
             }
         }
         return "";
@@ -737,21 +737,21 @@ public class Utils {
 
     public static String getStandardString(Context context, int i) {
         if (i == 1) {
-            return context.getString(C3341R.string.wifitrackerlib_wifi_standard_legacy);
+            return context.getString(C3351R.string.wifitrackerlib_wifi_standard_legacy);
         }
         switch (i) {
             case 4:
-                return context.getString(C3341R.string.wifitrackerlib_wifi_standard_11n);
+                return context.getString(C3351R.string.wifitrackerlib_wifi_standard_11n);
             case 5:
-                return context.getString(C3341R.string.wifitrackerlib_wifi_standard_11ac);
+                return context.getString(C3351R.string.wifitrackerlib_wifi_standard_11ac);
             case 6:
-                return context.getString(C3341R.string.wifitrackerlib_wifi_standard_11ax);
+                return context.getString(C3351R.string.wifitrackerlib_wifi_standard_11ax);
             case 7:
-                return context.getString(C3341R.string.wifitrackerlib_wifi_standard_11ad);
+                return context.getString(C3351R.string.wifitrackerlib_wifi_standard_11ad);
             case 8:
-                return context.getString(C3341R.string.wifitrackerlib_wifi_standard_11be);
+                return context.getString(C3351R.string.wifitrackerlib_wifi_standard_11be);
             default:
-                return context.getString(C3341R.string.wifitrackerlib_wifi_standard_unknown);
+                return context.getString(C3351R.string.wifitrackerlib_wifi_standard_unknown);
         }
     }
 }

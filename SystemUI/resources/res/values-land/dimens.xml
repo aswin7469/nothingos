@@ -21,6 +21,7 @@
     <dimen name="fgs_dialog_height">900px</dimen>
     <dimen name="global_actions_power_dialog_item_bottom_margin">35dp</dimen>
     <dimen name="global_actions_power_dialog_item_height">130dp</dimen>
+    <dimen name="internet_settings_panel_max_height">@dimen/settings_panel_height</dimen>
     <dimen name="keyguard_eca_bottom_margin">2dp</dimen>
     <dimen name="keyguard_eca_top_margin">0dp</dimen>
     <dimen name="keyguard_password_height">26dp</dimen>
@@ -95,4 +96,5 @@
     <dimen name="volume_row_slider_height">128dp</dimen>
     <dimen name="volume_tool_tip_top_margin">12dp</dimen>
     <dimen name="wallet_card_carousel_container_top_margin">24dp</dimen>
+    <dimen name="wifi_settings_panel_height">@dimen/settings_panel_height</dimen>
 </resources>

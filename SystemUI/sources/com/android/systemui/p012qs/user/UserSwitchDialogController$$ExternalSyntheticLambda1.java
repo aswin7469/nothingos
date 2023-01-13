@@ -15,6 +15,6 @@ public final /* synthetic */ class UserSwitchDialogController$$ExternalSynthetic
     }
 
     public final void onClick(DialogInterface dialogInterface, int i) {
-        UserSwitchDialogController.m2992showDialog$lambda2$lambda1(this.f$0, this.f$1, dialogInterface, i);
+        UserSwitchDialogController.m2996showDialog$lambda2$lambda1(this.f$0, this.f$1, dialogInterface, i);
     }
 }

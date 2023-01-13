@@ -224,7 +224,7 @@ class ScreenRotationAnimation {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startColorAnimation$0$com-android-wm-shell-transition-ScreenRotationAnimation */
-    public /* synthetic */ void mo51270x9a10279a(ValueAnimator valueAnimator, int i, int i2, float[] fArr, SurfaceControl.Transaction transaction, ValueAnimator valueAnimator2) {
+    public /* synthetic */ void mo51281x9a10279a(ValueAnimator valueAnimator, int i, int i2, float[] fArr, SurfaceControl.Transaction transaction, ValueAnimator valueAnimator2) {
         applyColor(i, i2, fArr, (float) (Math.min(valueAnimator.getDuration(), valueAnimator.getCurrentPlayTime()) / valueAnimator.getDuration()), this.mBackColorSurface, transaction);
     }
 

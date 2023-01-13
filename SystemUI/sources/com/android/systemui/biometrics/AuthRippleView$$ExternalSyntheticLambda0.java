@@ -11,6 +11,6 @@ public final /* synthetic */ class AuthRippleView$$ExternalSyntheticLambda0 impl
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        AuthRippleView.m2566retractDwellRipple$lambda1$lambda0(this.f$0, valueAnimator);
+        AuthRippleView.m2572retractDwellRipple$lambda1$lambda0(this.f$0, valueAnimator);
     }
 }

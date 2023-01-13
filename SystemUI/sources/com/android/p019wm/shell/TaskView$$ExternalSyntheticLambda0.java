@@ -17,6 +17,6 @@ public final /* synthetic */ class TaskView$$ExternalSyntheticLambda0 implements
     }
 
     public final void run() {
-        this.f$0.m3387lambda$startShortcutActivity$0$comandroidwmshellTaskView(this.f$1, this.f$2);
+        this.f$0.m3391lambda$startShortcutActivity$0$comandroidwmshellTaskView(this.f$1, this.f$2);
     }
 }

@@ -16,6 +16,6 @@ public final /* synthetic */ class ViewGroupFadeHelper$Companion$$ExternalSynthe
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        ViewGroupFadeHelper.Companion.m3094fadeOutAllChildrenExcept$lambda1$lambda0(this.f$0, this.f$1, valueAnimator);
+        ViewGroupFadeHelper.Companion.m3098fadeOutAllChildrenExcept$lambda1$lambda0(this.f$0, this.f$1, valueAnimator);
     }
 }

@@ -30,7 +30,7 @@ public enum DayOfWeek implements TemporalAccessor, TemporalAdjuster {
     }
 
     /* renamed from: of */
-    public static DayOfWeek m906of(int i) {
+    public static DayOfWeek m904of(int i) {
         if (i >= 1 && i <= 7) {
             return ENUMS[i - 1];
         }
@@ -42,7 +42,7 @@ public enum DayOfWeek implements TemporalAccessor, TemporalAdjuster {
             return (DayOfWeek) temporalAccessor;
         }
         try {
-            return m906of(temporalAccessor.get(ChronoField.DAY_OF_WEEK));
+            return m904of(temporalAccessor.get(ChronoField.DAY_OF_WEEK));
         } catch (DateTimeException e) {
             throw new DateTimeException("Unable to obtain DayOfWeek from TemporalAccessor: " + temporalAccessor + " of type " + temporalAccessor.getClass().getName(), e);
         }

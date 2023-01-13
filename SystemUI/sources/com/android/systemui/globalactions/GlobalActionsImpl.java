@@ -8,7 +8,7 @@ import android.view.Window;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.android.settingslib.Utils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.plugins.GlobalActions;
 import com.android.systemui.scrim.ScrimDrawable;
 import com.android.systemui.statusbar.BlurUtils;
@@ -51,7 +51,7 @@ public class GlobalActionsImpl implements GlobalActions, CommandQueue.Callbacks 
     public void showShutdownUi(boolean z, String str) {
         int i;
         ScrimDrawable scrimDrawable = new ScrimDrawable();
-        Dialog dialog = new Dialog(this.mContext, C1893R.style.Theme_SystemUI_Dialog_GlobalActions);
+        Dialog dialog = new Dialog(this.mContext, C1894R.style.Theme_SystemUI_Dialog_GlobalActions);
         dialog.setOnShowListener(new GlobalActionsImpl$$ExternalSyntheticLambda0(this, scrimDrawable, dialog));
         Window window = dialog.getWindow();
         window.requestFeature(1);
@@ -65,13 +65,13 @@ public class GlobalActionsImpl implements GlobalActions, CommandQueue.Callbacks 
         window.clearFlags(2);
         window.addFlags(17629472);
         window.setBackgroundDrawable(scrimDrawable);
-        window.setWindowAnimations(C1893R.style.Animation_ShutdownUi);
+        window.setWindowAnimations(C1894R.style.Animation_ShutdownUi);
         dialog.setContentView(17367321);
         dialog.setCancelable(false);
         if (this.mBlurUtils.supportsBlursOnWindows()) {
-            i = Utils.getColorAttrDefaultColor(this.mContext, C1893R.attr.wallpaperTextColor);
+            i = Utils.getColorAttrDefaultColor(this.mContext, C1894R.attr.wallpaperTextColor);
         } else {
-            i = this.mContext.getResources().getColor(C1893R.C1894color.global_actions_shutdown_ui_text);
+            i = this.mContext.getResources().getColor(C1894R.C1895color.global_actions_shutdown_ui_text);
         }
         ((ProgressBar) dialog.findViewById(16908301)).getIndeterminateDrawable().setTint(i);
         TextView textView = (TextView) dialog.findViewById(16908308);
@@ -89,13 +89,13 @@ public class GlobalActionsImpl implements GlobalActions, CommandQueue.Callbacks 
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$showShutdownUi$0$com-android-systemui-globalactions-GlobalActionsImpl */
-    public /* synthetic */ void mo33002x50e7553b(ScrimDrawable scrimDrawable, Dialog dialog, DialogInterface dialogInterface) {
+    public /* synthetic */ void mo33012x50e7553b(ScrimDrawable scrimDrawable, Dialog dialog, DialogInterface dialogInterface) {
         if (this.mBlurUtils.supportsBlursOnWindows()) {
             scrimDrawable.setAlpha(255);
             this.mBlurUtils.applyBlur(dialog.getWindow().getDecorView().getViewRootImpl(), (int) this.mBlurUtils.blurRadiusOfRatio(1.0f), true);
             return;
         }
-        scrimDrawable.setAlpha((int) (this.mContext.getResources().getFloat(C1893R.dimen.shutdown_scrim_behind_alpha) * 255.0f));
+        scrimDrawable.setAlpha((int) (this.mContext.getResources().getFloat(C1894R.dimen.shutdown_scrim_behind_alpha) * 255.0f));
     }
 
     private int getRebootMessage(boolean z, String str) {

@@ -10,8 +10,8 @@ import kotlin.coroutines.jvm.internal.SuspendLambda;
 import kotlin.jvm.functions.Function2;
 import kotlinx.coroutines.CoroutineScope;
 
-@Metadata(mo64986d1 = {"\u0000\f\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\u0010\u0000\u001a\u00020\u0001\"\u0004\b\u0000\u0010\u0002*\u00020\u0003H@"}, mo64987d2 = {"<anonymous>", "", "E", "Lkotlinx/coroutines/CoroutineScope;"}, mo64988k = 3, mo64989mv = {1, 5, 1}, mo64991xi = 48)
-@DebugMetadata(mo65240c = "kotlinx.coroutines.channels.ChannelsKt__ChannelsKt$sendBlocking$1", mo65241f = "Channels.kt", mo65242i = {}, mo65243l = {57}, mo65244m = "invokeSuspend", mo65245n = {}, mo65246s = {})
+@Metadata(mo65042d1 = {"\u0000\f\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\u0010\u0000\u001a\u00020\u0001\"\u0004\b\u0000\u0010\u0002*\u00020\u0003H@"}, mo65043d2 = {"<anonymous>", "", "E", "Lkotlinx/coroutines/CoroutineScope;"}, mo65044k = 3, mo65045mv = {1, 5, 1}, mo65047xi = 48)
+@DebugMetadata(mo65296c = "kotlinx.coroutines.channels.ChannelsKt__ChannelsKt$sendBlocking$1", mo65297f = "Channels.kt", mo65298i = {}, mo65299l = {57}, mo65300m = "invokeSuspend", mo65301n = {}, mo65302s = {})
 /* compiled from: Channels.kt */
 final class ChannelsKt__ChannelsKt$sendBlocking$1 extends SuspendLambda implements Function2<CoroutineScope, Continuation<? super Unit>, Object> {
     final /* synthetic */ E $element;

@@ -3,7 +3,7 @@ package com.google.android.material.resources;
 import android.content.Context;
 import android.util.TypedValue;
 import android.view.View;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 
 public class MaterialAttributes {
     public static TypedValue resolve(Context context, int i) {
@@ -44,7 +44,7 @@ public class MaterialAttributes {
     }
 
     public static int resolveMinimumAccessibleTouchTarget(Context context) {
-        return resolveDimension(context, C3621R.attr.minTouchTargetSize, C3621R.dimen.mtrl_min_touch_target_size);
+        return resolveDimension(context, C3631R.attr.minTouchTargetSize, C3631R.dimen.mtrl_min_touch_target_size);
     }
 
     public static int resolveDimension(Context context, int i, int i2) {

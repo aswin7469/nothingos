@@ -16,7 +16,7 @@ import kotlinx.android.parcel.Parceler;
 @java.lang.annotation.Repeatable(Container.class)
 @Retention(AnnotationRetention.SOURCE)
 @java.lang.annotation.Target({ElementType.TYPE})
-@Metadata(mo64986d1 = {"\u0000\u0012\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\u0010\u001b\n\u0000\b\u0002\u0018\u0000*\u0004\b\u0000\u0010\u0001*\u0010\b\u0001\u0010\u0002*\n\u0012\u0006\b\u0000\u0012\u0002H\u00010\u00032\u00020\u0004B\u0000¨\u0006\u0005"}, mo64987d2 = {"Lkotlinx/android/parcel/TypeParceler;", "T", "P", "Lkotlinx/android/parcel/Parceler;", "", "kotlin-android-extensions-runtime"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000\u0012\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\u0010\u001b\n\u0000\b\u0002\u0018\u0000*\u0004\b\u0000\u0010\u0001*\u0010\b\u0001\u0010\u0002*\n\u0012\u0006\b\u0000\u0012\u0002H\u00010\u00032\u00020\u0004B\u0000¨\u0006\u0005"}, mo65043d2 = {"Lkotlinx/android/parcel/TypeParceler;", "T", "P", "Lkotlinx/android/parcel/Parceler;", "", "kotlin-android-extensions-runtime"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 @java.lang.annotation.Retention(RetentionPolicy.SOURCE)
 /* compiled from: TypeParceler.kt */
 public @interface TypeParceler<T, P extends Parceler<? super T>> {
@@ -25,7 +25,7 @@ public @interface TypeParceler<T, P extends Parceler<? super T>> {
     @Retention(AnnotationRetention.SOURCE)
     @RepeatableContainer
     @java.lang.annotation.Target({ElementType.TYPE})
-    @Metadata(mo64988k = 3, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65044k = 3, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     @java.lang.annotation.Retention(RetentionPolicy.SOURCE)
     /* compiled from: TypeParceler.kt */
     public @interface Container {

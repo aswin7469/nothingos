@@ -25,7 +25,7 @@ public final class OptionalLong {
     }
 
     /* renamed from: of */
-    public static OptionalLong m1749of(long j) {
+    public static OptionalLong m1755of(long j) {
         return new OptionalLong(j);
     }
 
@@ -60,7 +60,7 @@ public final class OptionalLong {
 
     public LongStream stream() {
         if (this.isPresent) {
-            return LongStream.m1778of(this.value);
+            return LongStream.m1784of(this.value);
         }
         return LongStream.empty();
     }

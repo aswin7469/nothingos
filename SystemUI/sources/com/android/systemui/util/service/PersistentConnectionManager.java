@@ -29,7 +29,7 @@ public class PersistentConnectionManager<T> {
 
         public void onDisconnected(ObservableServiceConnection observableServiceConnection, int i) {
             if (PersistentConnectionManager.this.mSystemClock.currentTimeMillis() - this.mStartTime > ((long) PersistentConnectionManager.this.mMinConnectionDuration)) {
-                PersistentConnectionManager.this.mo47120xf835ab20();
+                PersistentConnectionManager.this.mo47132xf835ab20();
             } else {
                 PersistentConnectionManager.this.scheduleConnectionAttempt();
             }
@@ -61,7 +61,7 @@ public class PersistentConnectionManager<T> {
     public void start() {
         this.mConnection.addCallback(this.mConnectionCallback);
         this.mObserver.addCallback(this.mObserverCallback);
-        mo47120xf835ab20();
+        mo47132xf835ab20();
     }
 
     public void stop() {
@@ -72,7 +72,7 @@ public class PersistentConnectionManager<T> {
 
     /* access modifiers changed from: private */
     /* renamed from: initiateConnectionAttempt */
-    public void mo47120xf835ab20() {
+    public void mo47132xf835ab20() {
         this.mReconnectAttempts = 0;
         this.mConnection.bind();
     }

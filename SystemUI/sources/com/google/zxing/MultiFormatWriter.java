@@ -22,7 +22,7 @@ public final class MultiFormatWriter implements Writer {
     }
 
     /* renamed from: com.google.zxing.MultiFormatWriter$1 */
-    static /* synthetic */ class C40901 {
+    static /* synthetic */ class C41001 {
         static final /* synthetic */ int[] $SwitchMap$com$google$zxing$BarcodeFormat;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(26:0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|(3:25|26|28)) */
@@ -124,13 +124,13 @@ public final class MultiFormatWriter implements Writer {
             L_0x009c:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: com.google.zxing.MultiFormatWriter.C40901.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: com.google.zxing.MultiFormatWriter.C41001.<clinit>():void");
         }
     }
 
     public BitMatrix encode(String str, BarcodeFormat barcodeFormat, int i, int i2, Map<EncodeHintType, ?> map) throws WriterException {
         Writer writer;
-        switch (C40901.$SwitchMap$com$google$zxing$BarcodeFormat[barcodeFormat.ordinal()]) {
+        switch (C41001.$SwitchMap$com$google$zxing$BarcodeFormat[barcodeFormat.ordinal()]) {
             case 1:
                 writer = new EAN8Writer();
                 break;

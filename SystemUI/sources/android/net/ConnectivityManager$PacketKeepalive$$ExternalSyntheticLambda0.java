@@ -11,6 +11,6 @@ public final /* synthetic */ class ConnectivityManager$PacketKeepalive$$External
     }
 
     public final void run() {
-        this.f$0.m1873lambda$stop$0$androidnetConnectivityManager$PacketKeepalive();
+        this.f$0.m1879lambda$stop$0$androidnetConnectivityManager$PacketKeepalive();
     }
 }

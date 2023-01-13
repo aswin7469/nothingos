@@ -11,6 +11,6 @@ public final /* synthetic */ class HeadsUpManagerPhone$$ExternalSyntheticLambda0
     }
 
     public final void onReorderingAllowed() {
-        this.f$0.mo44062xa2a85e19();
+        this.f$0.mo44072xa2a85e19();
     }
 }

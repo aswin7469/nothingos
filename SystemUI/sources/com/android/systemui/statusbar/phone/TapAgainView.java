@@ -9,7 +9,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 import com.android.p019wm.shell.animation.Interpolators;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 
 public class TapAgainView extends TextView {
     private TextView mTextView;
@@ -26,12 +26,12 @@ public class TapAgainView extends TextView {
 
     /* access modifiers changed from: package-private */
     public void updateColor() {
-        setTextColor(getResources().getColor(C1893R.C1894color.notif_pill_text, this.mContext.getTheme()));
-        setBackground(getResources().getDrawable(C1893R.C1895drawable.rounded_bg_full, this.mContext.getTheme()));
+        setTextColor(getResources().getColor(C1894R.C1895color.notif_pill_text, this.mContext.getTheme()));
+        setBackground(getResources().getDrawable(C1894R.C1896drawable.rounded_bg_full, this.mContext.getTheme()));
     }
 
     public void animateIn() {
-        int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.keyguard_indication_y_translation);
+        int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.keyguard_indication_y_translation);
         AnimatorSet animatorSet = new AnimatorSet();
         ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, View.ALPHA, new float[]{1.0f});
         ofFloat.setStartDelay(150);
@@ -50,7 +50,7 @@ public class TapAgainView extends TextView {
     }
 
     public void animateOut() {
-        int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.keyguard_indication_y_translation);
+        int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.keyguard_indication_y_translation);
         AnimatorSet animatorSet = new AnimatorSet();
         ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, View.ALPHA, new float[]{0.0f});
         ofFloat.setDuration(167);

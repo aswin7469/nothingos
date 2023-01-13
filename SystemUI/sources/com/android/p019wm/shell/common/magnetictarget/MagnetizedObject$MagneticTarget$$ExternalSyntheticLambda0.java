@@ -12,6 +12,6 @@ public final /* synthetic */ class MagnetizedObject$MagneticTarget$$ExternalSynt
     }
 
     public final void run() {
-        MagnetizedObject.MagneticTarget.m3452updateLocationOnScreen$lambda0(this.f$0);
+        MagnetizedObject.MagneticTarget.m3456updateLocationOnScreen$lambda0(this.f$0);
     }
 }

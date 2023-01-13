@@ -13,6 +13,6 @@ public final /* synthetic */ class LongScreenshotActivity$$ExternalSyntheticLamb
     }
 
     public final void run() {
-        this.f$0.mo37374x67b51509(this.f$1);
+        this.f$0.mo37375x67b51509(this.f$1);
     }
 }

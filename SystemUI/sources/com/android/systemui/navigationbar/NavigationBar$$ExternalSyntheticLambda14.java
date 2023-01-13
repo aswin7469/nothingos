@@ -11,6 +11,6 @@ public final /* synthetic */ class NavigationBar$$ExternalSyntheticLambda14 impl
     }
 
     public final void update() {
-        this.f$0.mo34640xba59c33f();
+        this.f$0.mo34644xba59c33f();
     }
 }

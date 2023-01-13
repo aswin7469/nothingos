@@ -8,7 +8,7 @@ import android.util.MathUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import com.android.internal.policy.SystemBarUtils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.statusbar.EmptyShadeView;
 import com.android.systemui.statusbar.NotificationShelf;
 import com.android.systemui.statusbar.notification.row.ActivatableNotificationView;
@@ -59,15 +59,15 @@ public class StackScrollAlgorithm {
 
     private void initConstants(Context context) {
         Resources resources = context.getResources();
-        this.mPaddingBetweenElements = (float) resources.getDimensionPixelSize(C1893R.dimen.notification_divider_height);
-        this.mCollapsedSize = resources.getDimensionPixelSize(C1893R.dimen.notification_min_height);
-        this.mClipNotificationScrollToTop = resources.getBoolean(C1893R.bool.config_clipNotificationScrollToTop);
-        this.mHeadsUpInset = (float) (SystemBarUtils.getStatusBarHeight(context) + resources.getDimensionPixelSize(C1893R.dimen.heads_up_status_bar_padding));
-        this.mPinnedZTranslationExtra = resources.getDimensionPixelSize(C1893R.dimen.heads_up_pinned_elevation);
-        this.mGapHeight = (float) resources.getDimensionPixelSize(C1893R.dimen.notification_section_divider_height);
-        this.mGapHeightOnLockscreen = (float) resources.getDimensionPixelSize(C1893R.dimen.notification_section_divider_height_lockscreen);
-        this.mNotificationScrimPadding = (float) resources.getDimensionPixelSize(C1893R.dimen.notification_side_paddings);
-        this.mMarginBottom = resources.getDimensionPixelSize(C1893R.dimen.notification_panel_margin_bottom);
+        this.mPaddingBetweenElements = (float) resources.getDimensionPixelSize(C1894R.dimen.notification_divider_height);
+        this.mCollapsedSize = resources.getDimensionPixelSize(C1894R.dimen.notification_min_height);
+        this.mClipNotificationScrollToTop = resources.getBoolean(C1894R.bool.config_clipNotificationScrollToTop);
+        this.mHeadsUpInset = (float) (SystemBarUtils.getStatusBarHeight(context) + resources.getDimensionPixelSize(C1894R.dimen.heads_up_status_bar_padding));
+        this.mPinnedZTranslationExtra = resources.getDimensionPixelSize(C1894R.dimen.heads_up_pinned_elevation);
+        this.mGapHeight = (float) resources.getDimensionPixelSize(C1894R.dimen.notification_section_divider_height);
+        this.mGapHeightOnLockscreen = (float) resources.getDimensionPixelSize(C1894R.dimen.notification_section_divider_height_lockscreen);
+        this.mNotificationScrimPadding = (float) resources.getDimensionPixelSize(C1894R.dimen.notification_side_paddings);
+        this.mMarginBottom = resources.getDimensionPixelSize(C1894R.dimen.notification_panel_margin_bottom);
     }
 
     public void resetViewStates(AmbientState ambientState, int i) {

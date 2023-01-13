@@ -14,6 +14,6 @@ public final /* synthetic */ class CastTile$$ExternalSyntheticLambda0 implements
     }
 
     public final void run() {
-        this.f$0.m2971lambda$showDialog$3$comandroidsystemuiqstilesCastTile(this.f$1);
+        this.f$0.m2976lambda$showDialog$3$comandroidsystemuiqstilesCastTile(this.f$1);
     }
 }

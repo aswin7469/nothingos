@@ -22,7 +22,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.android.settingslib.Utils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.recents.TriangleShape;
 
 class BaseTooltipView extends FrameLayout {
@@ -121,8 +121,8 @@ class BaseTooltipView extends FrameLayout {
     }
 
     private void initViews() {
-        View inflate = LayoutInflater.from(getContext()).inflate(C1893R.layout.accessibility_floating_menu_tooltip, this, false);
-        this.mTextView = (TextView) inflate.findViewById(C1893R.C1897id.text);
+        View inflate = LayoutInflater.from(getContext()).inflate(C1894R.layout.accessibility_floating_menu_tooltip, this, false);
+        this.mTextView = (TextView) inflate.findViewById(C1894R.C1898id.text);
         addView(inflate);
     }
 
@@ -136,14 +136,14 @@ class BaseTooltipView extends FrameLayout {
     private void updateDimensions() {
         Resources resources = getResources();
         this.mScreenWidth = resources.getDisplayMetrics().widthPixels;
-        this.mArrowWidth = resources.getDimensionPixelSize(C1893R.dimen.accessibility_floating_tooltip_arrow_width);
-        this.mArrowHeight = resources.getDimensionPixelSize(C1893R.dimen.accessibility_floating_tooltip_arrow_height);
-        this.mArrowMargin = resources.getDimensionPixelSize(C1893R.dimen.accessibility_floating_tooltip_arrow_margin);
-        this.mArrowCornerRadius = resources.getDimensionPixelSize(C1893R.dimen.accessibility_floating_tooltip_arrow_corner_radius);
-        this.mFontSize = resources.getDimensionPixelSize(C1893R.dimen.accessibility_floating_tooltip_font_size);
-        this.mTextViewMargin = resources.getDimensionPixelSize(C1893R.dimen.accessibility_floating_tooltip_margin);
-        this.mTextViewPadding = resources.getDimensionPixelSize(C1893R.dimen.accessibility_floating_tooltip_padding);
-        this.mTextViewCornerRadius = resources.getDimensionPixelSize(C1893R.dimen.accessibility_floating_tooltip_text_corner_radius);
+        this.mArrowWidth = resources.getDimensionPixelSize(C1894R.dimen.accessibility_floating_tooltip_arrow_width);
+        this.mArrowHeight = resources.getDimensionPixelSize(C1894R.dimen.accessibility_floating_tooltip_arrow_height);
+        this.mArrowMargin = resources.getDimensionPixelSize(C1894R.dimen.accessibility_floating_tooltip_arrow_margin);
+        this.mArrowCornerRadius = resources.getDimensionPixelSize(C1894R.dimen.accessibility_floating_tooltip_arrow_corner_radius);
+        this.mFontSize = resources.getDimensionPixelSize(C1894R.dimen.accessibility_floating_tooltip_font_size);
+        this.mTextViewMargin = resources.getDimensionPixelSize(C1894R.dimen.accessibility_floating_tooltip_margin);
+        this.mTextViewPadding = resources.getDimensionPixelSize(C1894R.dimen.accessibility_floating_tooltip_padding);
+        this.mTextViewCornerRadius = resources.getDimensionPixelSize(C1894R.dimen.accessibility_floating_tooltip_text_corner_radius);
     }
 
     private void updateTooltipView() {
@@ -168,7 +168,7 @@ class BaseTooltipView extends FrameLayout {
     private void updateArrowWith(Rect rect) {
         int i;
         boolean isAnchorViewOnLeft = isAnchorViewOnLeft(rect);
-        View findViewById = findViewById(isAnchorViewOnLeft ? C1893R.C1897id.arrow_left : C1893R.C1897id.arrow_right);
+        View findViewById = findViewById(isAnchorViewOnLeft ? C1894R.C1898id.arrow_left : C1894R.C1898id.arrow_right);
         findViewById.setVisibility(0);
         drawArrow(findViewById, isAnchorViewOnLeft);
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) findViewById.getLayoutParams();

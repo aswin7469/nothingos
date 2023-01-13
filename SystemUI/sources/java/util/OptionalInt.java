@@ -25,7 +25,7 @@ public final class OptionalInt {
     }
 
     /* renamed from: of */
-    public static OptionalInt m1748of(int i) {
+    public static OptionalInt m1754of(int i) {
         return new OptionalInt(i);
     }
 
@@ -60,7 +60,7 @@ public final class OptionalInt {
 
     public IntStream stream() {
         if (this.isPresent) {
-            return IntStream.m1776of(this.value);
+            return IntStream.m1782of(this.value);
         }
         return IntStream.empty();
     }

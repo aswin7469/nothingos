@@ -19,7 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.constraintlayout.motion.widget.Key;
 import com.android.settingslib.graph.ThemedBatteryDrawable;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.DejankUtils;
 import com.android.systemui.DualToneHandler;
 import com.android.systemui.animation.Interpolators;
@@ -99,8 +99,8 @@ public class BatteryMeterView extends LinearLayout implements DarkIconDispatcher
         this.mShowPercentMode = 0;
         setOrientation(0);
         setGravity(8388627);
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C1893R.styleable.BatteryMeterView, i, 0);
-        int color = obtainStyledAttributes.getColor(0, context.getColor(C1893R.C1894color.meter_background_color));
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C1894R.styleable.BatteryMeterView, i, 0);
+        int color = obtainStyledAttributes.getColor(0, context.getColor(C1894R.C1895color.meter_background_color));
         this.mPercentageStyleId = obtainStyledAttributes.getResourceId(1, 0);
         ThemedBatteryDrawable themedBatteryDrawable = new ThemedBatteryDrawable(context, color);
         this.mDrawable = themedBatteryDrawable;
@@ -172,7 +172,7 @@ public class BatteryMeterView extends LinearLayout implements DarkIconDispatcher
     }
 
     private TextView loadPercentView() {
-        return (TextView) LayoutInflater.from(getContext()).inflate(C1893R.layout.battery_percentage_view, (ViewGroup) null);
+        return (TextView) LayoutInflater.from(getContext()).inflate(C1894R.layout.battery_percentage_view, (ViewGroup) null);
     }
 
     public void updatePercentView() {
@@ -192,13 +192,13 @@ public class BatteryMeterView extends LinearLayout implements DarkIconDispatcher
     /* access modifiers changed from: package-private */
     public void updatePercentText() {
         if (this.mBatteryStateUnknown) {
-            setContentDescription(getContext().getString(C1893R.string.accessibility_battery_unknown));
+            setContentDescription(getContext().getString(C1894R.string.accessibility_battery_unknown));
             return;
         }
         BatteryEstimateFetcher batteryEstimateFetcher = this.mBatteryEstimateFetcher;
         if (batteryEstimateFetcher != null) {
             if (this.mBatteryPercentView == null) {
-                setContentDescription(getContext().getString(this.mCharging ? C1893R.string.accessibility_battery_level_charging : C1893R.string.accessibility_battery_level, new Object[]{Integer.valueOf(this.mLevel)}));
+                setContentDescription(getContext().getString(this.mCharging ? C1894R.string.accessibility_battery_level_charging : C1894R.string.accessibility_battery_level, new Object[]{Integer.valueOf(this.mLevel)}));
             } else if (this.mShowPercentMode != 3 || this.mCharging) {
                 setPercentTextAtCurrentLevel();
             } else {
@@ -209,7 +209,7 @@ public class BatteryMeterView extends LinearLayout implements DarkIconDispatcher
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updatePercentText$0$com-android-systemui-battery-BatteryMeterView */
-    public /* synthetic */ void mo30446x299cb55(String str) {
+    public /* synthetic */ void mo30456x299cb55(String str) {
         TextView textView = this.mBatteryPercentView;
         if (textView != null) {
             if (str == null || this.mShowPercentMode != 3) {
@@ -217,7 +217,7 @@ public class BatteryMeterView extends LinearLayout implements DarkIconDispatcher
                 return;
             }
             textView.setText(str);
-            setContentDescription(getContext().getString(C1893R.string.accessibility_battery_level_with_estimate, new Object[]{Integer.valueOf(this.mLevel), str}));
+            setContentDescription(getContext().getString(C1894R.string.accessibility_battery_level_with_estimate, new Object[]{Integer.valueOf(this.mLevel), str}));
         }
     }
 
@@ -227,7 +227,7 @@ public class BatteryMeterView extends LinearLayout implements DarkIconDispatcher
             if (!TextUtils.equals(this.mBatteryPercentView.getText(), format)) {
                 this.mBatteryPercentView.setText(format);
             }
-            setContentDescription(getContext().getString(this.mCharging ? C1893R.string.accessibility_battery_level_charging : C1893R.string.accessibility_battery_level, new Object[]{Integer.valueOf(this.mLevel)}));
+            setContentDescription(getContext().getString(this.mCharging ? C1894R.string.accessibility_battery_level_charging : C1894R.string.accessibility_battery_level, new Object[]{Integer.valueOf(this.mLevel)}));
         }
     }
 
@@ -262,13 +262,13 @@ public class BatteryMeterView extends LinearLayout implements DarkIconDispatcher
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateShowPercent$1$com-android-systemui-battery-BatteryMeterView */
-    public /* synthetic */ Integer mo30447xce37b50c() {
+    public /* synthetic */ Integer mo30457xce37b50c() {
         return Integer.valueOf(Settings.System.getIntForUser(getContext().getContentResolver(), "status_bar_show_battery_percent", 0, -2));
     }
 
     private Drawable getUnknownStateDrawable() {
         if (this.mUnknownStateDrawable == null) {
-            Drawable drawable = this.mContext.getDrawable(C1893R.C1895drawable.ic_battery_unknown);
+            Drawable drawable = this.mContext.getDrawable(C1894R.C1896drawable.ic_battery_unknown);
             this.mUnknownStateDrawable = drawable;
             drawable.setTint(this.mTextColor);
         }

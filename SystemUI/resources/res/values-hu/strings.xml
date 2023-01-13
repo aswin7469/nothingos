@@ -696,9 +696,15 @@
     <string name="force_rtl_layout_all_locales_summary">Elrendezés jobbról balra minden nyelvnél</string>
     <string name="forced_resizable_secondary_display">Előfordulhat, hogy az alkalmazás nem működik másodlagos kijelzőn.</string>
     <string name="game_status">Játékban</string>
+    <string name="gamemode_description">A Játék mód észleli, hogy éppen játszik-e, és automatikusan bekapcsol</string>
+    <string name="gamemode_gamedashboard_title">Játék kezelőpanel</string>
+    <string name="gamemode_notification_content">Koppintson a Beállítások megnyitásához</string>
+    <string name="gamemode_notification_title">A Játék mód jelenleg be van kapcsolva</string>
     <string name="global_action_lock_message">További lehetőségekért oldja fel a telefont</string>
     <string name="global_action_screenshot">Képernyőkép</string>
     <string name="global_action_smart_lock_disabled">Smart Lock kikapcsolva</string>
+    <string name="gm_guide_status_on">BE</string>
+    <string name="gm_notification_title">Játék mód</string>
     <string name="go_to_web">Ugrás a böngészőbe</string>
     <string name="got_it">Értem</string>
     <string name="guest_exit_guest">Vendég munkamenet eltávolítása</string>

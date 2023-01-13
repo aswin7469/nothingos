@@ -27,10 +27,10 @@ public class KeyguardUpdateMonitorEx {
 
     public void handleGestureFingerDown() {
         if (((CentralSurfacesImplEx) NTDependencyEx.get(CentralSurfacesImplEx.class)).isNear()) {
-            NTLogUtil.m1680d(TAG, "cancel handleTapGestureDown due to isNear");
+            NTLogUtil.m1686d(TAG, "cancel handleTapGestureDown due to isNear");
             return;
         }
-        NTLogUtil.m1680d(TAG, "handleTapGestureDown: ");
+        NTLogUtil.m1686d(TAG, "handleTapGestureDown: ");
         if (this.mAuthController.getSensorRectF() != null) {
             ((CentralSurfacesImplEx) NTDependencyEx.get(CentralSurfacesImplEx.class)).onFingerprintDown();
         }
@@ -38,10 +38,10 @@ public class KeyguardUpdateMonitorEx {
 
     public void handleGestureFingerUp() {
         if (((CentralSurfacesImplEx) NTDependencyEx.get(CentralSurfacesImplEx.class)).isNear()) {
-            NTLogUtil.m1680d(TAG, "cancel handleTapGestureUp due to isNear");
+            NTLogUtil.m1686d(TAG, "cancel handleTapGestureUp due to isNear");
             return;
         }
-        NTLogUtil.m1680d(TAG, "handleTapGestureUp: ");
+        NTLogUtil.m1686d(TAG, "handleTapGestureUp: ");
         if (this.mAuthController.getSensorRectF() != null) {
             ((CentralSurfacesImplEx) NTDependencyEx.get(CentralSurfacesImplEx.class)).onFingerprintUp();
         }

@@ -13,6 +13,6 @@ public final /* synthetic */ class ControlsProviderLifecycleManager$$ExternalSyn
     }
 
     public final void run() {
-        ControlsProviderLifecycleManager.m2629maybeBindAndLoadSuggested$lambda11(this.f$0, this.f$1);
+        ControlsProviderLifecycleManager.m2634maybeBindAndLoadSuggested$lambda11(this.f$0, this.f$1);
     }
 }

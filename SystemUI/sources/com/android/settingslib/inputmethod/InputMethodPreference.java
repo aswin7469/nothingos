@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.Toast;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
@@ -21,6 +20,7 @@ import com.android.settingslib.C1757R;
 import com.android.settingslib.PrimarySwitchPreference;
 import com.android.settingslib.RestrictedLockUtils;
 import com.android.settingslib.RestrictedLockUtilsInternal;
+import com.nothing.ui.support.NtCustSwitch;
 import java.text.Collator;
 
 public class InputMethodPreference extends PrimarySwitchPreference implements Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
@@ -75,9 +75,9 @@ public class InputMethodPreference extends PrimarySwitchPreference implements Pr
 
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
-        Switch switchR = getSwitch();
-        if (switchR != null) {
-            switchR.setOnClickListener(new InputMethodPreference$$ExternalSyntheticLambda2(this, switchR));
+        NtCustSwitch ntCustSwitch = getSwitch();
+        if (ntCustSwitch != null) {
+            ntCustSwitch.setOnClickListener(new InputMethodPreference$$ExternalSyntheticLambda2(this, ntCustSwitch));
         }
         ImageView imageView = (ImageView) preferenceViewHolder.itemView.findViewById(16908294);
         int dimensionPixelSize = getContext().getResources().getDimensionPixelSize(C1757R.dimen.secondary_app_icon_size);
@@ -91,9 +91,9 @@ public class InputMethodPreference extends PrimarySwitchPreference implements Pr
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onBindViewHolder$0$com-android-settingslib-inputmethod-InputMethodPreference */
-    public /* synthetic */ void mo28805x17bf641(Switch switchR, View view) {
-        if (switchR.isEnabled()) {
-            switchR.setChecked(isChecked());
+    public /* synthetic */ void mo28810x17bf641(NtCustSwitch ntCustSwitch, View view) {
+        if (ntCustSwitch.isEnabled()) {
+            ntCustSwitch.setChecked(isChecked());
             callChangeListener(Boolean.valueOf(!isChecked()));
         }
     }
@@ -178,7 +178,7 @@ public class InputMethodPreference extends PrimarySwitchPreference implements Pr
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$showSecurityWarnDialog$1$com-android-settingslib-inputmethod-InputMethodPreference */
-    public /* synthetic */ void mo28808x4324a060(DialogInterface dialogInterface, int i) {
+    public /* synthetic */ void mo28813x4324a060(DialogInterface dialogInterface, int i) {
         if (this.mImi.getServiceInfo().directBootAware || isTv()) {
             setCheckedInternal(true);
         } else {
@@ -188,13 +188,13 @@ public class InputMethodPreference extends PrimarySwitchPreference implements Pr
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$showSecurityWarnDialog$2$com-android-settingslib-inputmethod-InputMethodPreference */
-    public /* synthetic */ void mo28809x53da6d21(DialogInterface dialogInterface, int i) {
+    public /* synthetic */ void mo28814x53da6d21(DialogInterface dialogInterface, int i) {
         setCheckedInternal(false);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$showSecurityWarnDialog$3$com-android-settingslib-inputmethod-InputMethodPreference */
-    public /* synthetic */ void mo28810x649039e2(DialogInterface dialogInterface) {
+    public /* synthetic */ void mo28815x649039e2(DialogInterface dialogInterface) {
         setCheckedInternal(false);
     }
 
@@ -220,13 +220,13 @@ public class InputMethodPreference extends PrimarySwitchPreference implements Pr
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$showDirectBootWarnDialog$4$com-android-settingslib-inputmethod-InputMethodPreference */
-    public /* synthetic */ void mo28806x43b71f1e(DialogInterface dialogInterface, int i) {
+    public /* synthetic */ void mo28811x43b71f1e(DialogInterface dialogInterface, int i) {
         setCheckedInternal(true);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$showDirectBootWarnDialog$5$com-android-settingslib-inputmethod-InputMethodPreference */
-    public /* synthetic */ void mo28807x546cebdf(DialogInterface dialogInterface, int i) {
+    public /* synthetic */ void mo28812x546cebdf(DialogInterface dialogInterface, int i) {
         setCheckedInternal(false);
     }
 

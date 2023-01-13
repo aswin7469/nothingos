@@ -12,6 +12,6 @@ public final /* synthetic */ class OngoingCallController$$ExternalSyntheticLambd
     }
 
     public final void accept(Object obj) {
-        OngoingCallController.m3212updateGestureListening$lambda6(this.f$0, (SwipeStatusBarAwayGestureHandler) obj);
+        OngoingCallController.m3217updateGestureListening$lambda6(this.f$0, (SwipeStatusBarAwayGestureHandler) obj);
     }
 }

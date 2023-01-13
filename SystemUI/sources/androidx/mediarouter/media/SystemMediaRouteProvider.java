@@ -252,14 +252,14 @@ abstract class SystemMediaRouteProvider extends MediaRouteProvider {
             if (getDefaultRoute() == obj) {
                 str = SystemMediaRouteProvider.DEFAULT_ROUTE_ID;
             } else {
-                str = String.format(Locale.f700US, "ROUTE_%08x", Integer.valueOf(getRouteName(obj).hashCode()));
+                str = String.format(Locale.f698US, "ROUTE_%08x", Integer.valueOf(getRouteName(obj).hashCode()));
             }
             if (findSystemRouteRecordByDescriptorId(str) < 0) {
                 return str;
             }
             int i = 2;
             while (true) {
-                String format = String.format(Locale.f700US, "%s_%d", str, Integer.valueOf(i));
+                String format = String.format(Locale.f698US, "%s_%d", str, Integer.valueOf(i));
                 if (findSystemRouteRecordByDescriptorId(format) < 0) {
                     return format;
                 }

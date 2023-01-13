@@ -19,6 +19,6 @@ public final /* synthetic */ class MediaDataManager$$ExternalSyntheticLambda5 im
     }
 
     public final void run() {
-        MediaDataManager.m2800loadMediaData$lambda8(this.f$0, this.f$1, this.f$2, this.f$3, this.f$4);
+        MediaDataManager.m2805loadMediaData$lambda8(this.f$0, this.f$1, this.f$2, this.f$3, this.f$4);
     }
 }

@@ -13,6 +13,6 @@ public final /* synthetic */ class PipController$$ExternalSyntheticLambda7 imple
     }
 
     public final void onRotateDisplay(int i, int i2, int i3, WindowContainerTransaction windowContainerTransaction) {
-        this.f$0.m3462lambda$new$0$comandroidwmshellpipphonePipController(i, i2, i3, windowContainerTransaction);
+        this.f$0.m3466lambda$new$0$comandroidwmshellpipphonePipController(i, i2, i3, windowContainerTransaction);
     }
 }

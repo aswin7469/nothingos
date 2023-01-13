@@ -66,7 +66,7 @@ public class StartingWindowController implements RemoteCallable<StartingWindowCo
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$addStartingWindow$0$com-android-wm-shell-startingsurface-StartingWindowController */
-    public /* synthetic */ void mo51184xac73a8d2(StartingWindowInfo startingWindowInfo, IBinder iBinder) {
+    public /* synthetic */ void mo51195xac73a8d2(StartingWindowInfo startingWindowInfo, IBinder iBinder) {
         Trace.traceBegin(32, "addStartingWindow");
         int suggestedWindowType = this.mStartingWindowTypeAlgorithm.getSuggestedWindowType(startingWindowInfo);
         ActivityManager.RunningTaskInfo runningTaskInfo = startingWindowInfo.taskInfo;
@@ -96,7 +96,7 @@ public class StartingWindowController implements RemoteCallable<StartingWindowCo
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$copySplashScreenView$1$com-android-wm-shell-startingsurface-StartingWindowController */
-    public /* synthetic */ void mo51186x2b64eaa9(int i) {
+    public /* synthetic */ void mo51197x2b64eaa9(int i) {
         this.mStartingSurfaceDrawer.copySplashScreenView(i);
     }
 
@@ -106,13 +106,13 @@ public class StartingWindowController implements RemoteCallable<StartingWindowCo
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onAppSplashScreenViewRemoved$2$com-android-wm-shell-startingsurface-StartingWindowController */
-    public /* synthetic */ void mo51187x2bf18d83(int i) {
+    public /* synthetic */ void mo51198x2bf18d83(int i) {
         this.mStartingSurfaceDrawer.onAppSplashScreenViewRemoved(i);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onImeDrawnOnTask$3$com-android-wm-shell-startingsurface-StartingWindowController */
-    public /* synthetic */ void mo51188xe0d462aa(int i) {
+    public /* synthetic */ void mo51199xe0d462aa(int i) {
         this.mStartingSurfaceDrawer.onImeDrawnOnTask(i);
     }
 
@@ -122,7 +122,7 @@ public class StartingWindowController implements RemoteCallable<StartingWindowCo
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$removeStartingWindow$4$com-android-wm-shell-startingsurface-StartingWindowController */
-    public /* synthetic */ void mo51189xebd090d3(StartingWindowRemovalInfo startingWindowRemovalInfo) {
+    public /* synthetic */ void mo51200xebd090d3(StartingWindowRemovalInfo startingWindowRemovalInfo) {
         this.mStartingSurfaceDrawer.removeStartingWindow(startingWindowRemovalInfo);
     }
 
@@ -133,7 +133,7 @@ public class StartingWindowController implements RemoteCallable<StartingWindowCo
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$removeStartingWindow$5$com-android-wm-shell-startingsurface-StartingWindowController */
-    public /* synthetic */ void mo51190xdf601514(StartingWindowRemovalInfo startingWindowRemovalInfo) {
+    public /* synthetic */ void mo51201xdf601514(StartingWindowRemovalInfo startingWindowRemovalInfo) {
         synchronized (this.mTaskBackgroundColors) {
             this.mTaskBackgroundColors.delete(startingWindowRemovalInfo.taskId);
         }
@@ -145,7 +145,7 @@ public class StartingWindowController implements RemoteCallable<StartingWindowCo
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$clearAllWindows$6$com-android-wm-shell-startingsurface-StartingWindowController */
-    public /* synthetic */ void mo51185xc0b0af96() {
+    public /* synthetic */ void mo51196xc0b0af96() {
         this.mStartingSurfaceDrawer.clearAllWindows();
         synchronized (this.mTaskBackgroundColors) {
             this.mTaskBackgroundColors.clear();
@@ -219,12 +219,12 @@ public class StartingWindowController implements RemoteCallable<StartingWindowCo
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$setSysuiProxy$0$com-android-wm-shell-startingsurface-StartingWindowController$StartingSurfaceImpl */
-        public /* synthetic */ void mo51199xc966bb19(StartingSurface.SysuiProxy sysuiProxy) {
+        public /* synthetic */ void mo51210xc966bb19(StartingSurface.SysuiProxy sysuiProxy) {
             StartingWindowController.this.mStartingSurfaceDrawer.setSysuiProxy(sysuiProxy);
         }
 
         public void setSysuiProxy(StartingSurface.SysuiProxy sysuiProxy) {
-            StartingWindowController.this.mSplashScreenExecutor.execute(new C3602x337bec04(this, sysuiProxy));
+            StartingWindowController.this.mSplashScreenExecutor.execute(new C3612x337bec04(this, sysuiProxy));
         }
     }
 
@@ -232,22 +232,22 @@ public class StartingWindowController implements RemoteCallable<StartingWindowCo
     private static class IStartingWindowImpl extends IStartingWindow.Stub {
         private StartingWindowController mController;
         private SingleInstanceRemoteListener<StartingWindowController, IStartingWindowListener> mListener;
-        private final TriConsumer<Integer, Integer, Integer> mStartingWindowListener = new C3599x795f7bd2(this);
+        private final TriConsumer<Integer, Integer, Integer> mStartingWindowListener = new C3609x795f7bd2(this);
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$new$1$com-android-wm-shell-startingsurface-StartingWindowController$IStartingWindowImpl */
-        public /* synthetic */ void mo51196x697a2bb7(Integer num, Integer num2, Integer num3) {
-            this.mListener.call(new C3598x795f7bd1(num, num2, num3));
+        public /* synthetic */ void mo51207x697a2bb7(Integer num, Integer num2, Integer num3) {
+            this.mListener.call(new C3608x795f7bd1(num, num2, num3));
         }
 
         public IStartingWindowImpl(StartingWindowController startingWindowController) {
             this.mController = startingWindowController;
-            this.mListener = new SingleInstanceRemoteListener<>(startingWindowController, new C3600x795f7bd3(this), new C3601x795f7bd4());
+            this.mListener = new SingleInstanceRemoteListener<>(startingWindowController, new C3610x795f7bd3(this), new C3611x795f7bd4());
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$new$2$com-android-wm-shell-startingsurface-StartingWindowController$IStartingWindowImpl */
-        public /* synthetic */ void mo51197x10f60578(StartingWindowController startingWindowController) {
+        public /* synthetic */ void mo51208x10f60578(StartingWindowController startingWindowController) {
             startingWindowController.setStartingWindowListener(this.mStartingWindowListener);
         }
 
@@ -257,12 +257,12 @@ public class StartingWindowController implements RemoteCallable<StartingWindowCo
         }
 
         public void setStartingWindowListener(IStartingWindowListener iStartingWindowListener) {
-            ExecutorUtils.executeRemoteCallWithTaskPermission(this.mController, "setStartingWindowListener", new C3597x795f7bd0(this, iStartingWindowListener));
+            ExecutorUtils.executeRemoteCallWithTaskPermission(this.mController, "setStartingWindowListener", new C3607x795f7bd0(this, iStartingWindowListener));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$setStartingWindowListener$4$com-android-wm-shell-startingsurface-StartingWindowController$IStartingWindowImpl */
-        public /* synthetic */ void mo51198xe0563840(IStartingWindowListener iStartingWindowListener, StartingWindowController startingWindowController) {
+        public /* synthetic */ void mo51209xe0563840(IStartingWindowListener iStartingWindowListener, StartingWindowController startingWindowController) {
             if (iStartingWindowListener != null) {
                 this.mListener.register(iStartingWindowListener);
             } else {

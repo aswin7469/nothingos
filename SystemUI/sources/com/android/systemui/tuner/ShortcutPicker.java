@@ -11,7 +11,7 @@ import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragment;
 import androidx.preference.PreferenceScreen;
 import androidx.preference.PreferenceViewHolder;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dependency;
 import com.android.systemui.tuner.ShortcutParser;
 import com.android.systemui.tuner.TunerService;
@@ -29,12 +29,12 @@ public class ShortcutPicker extends PreferenceFragment implements TunerService.T
         PreferenceScreen createPreferenceScreen = getPreferenceManager().createPreferenceScreen(context);
         createPreferenceScreen.setOrderingAsAdded(true);
         PreferenceCategory preferenceCategory = new PreferenceCategory(context);
-        preferenceCategory.setTitle((int) C1893R.string.tuner_other_apps);
+        preferenceCategory.setTitle((int) C1894R.string.tuner_other_apps);
         SelectablePreference selectablePreference = new SelectablePreference(context);
         this.mNonePreference = selectablePreference;
         this.mSelectablePreferences.add(selectablePreference);
-        this.mNonePreference.setTitle((int) C1893R.string.lockscreen_none);
-        this.mNonePreference.setIcon((int) C1893R.C1895drawable.ic_remove_circle);
+        this.mNonePreference.setTitle((int) C1894R.string.lockscreen_none);
+        this.mNonePreference.setIcon((int) C1894R.C1896drawable.ic_remove_circle);
         createPreferenceScreen.addPreference(this.mNonePreference);
         List<LauncherActivityInfo> activityList = ((LauncherApps) getContext().getSystemService(LauncherApps.class)).getActivityList((String) null, Process.myUserHandle());
         createPreferenceScreen.addPreference(preferenceCategory);
@@ -55,7 +55,7 @@ public class ShortcutPicker extends PreferenceFragment implements TunerService.T
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onCreatePreferences$1$com-android-systemui-tuner-ShortcutPicker */
-    public /* synthetic */ void mo46438x56ec3030(Context context, PreferenceScreen preferenceScreen, PreferenceCategory preferenceCategory, LauncherActivityInfo launcherActivityInfo) {
+    public /* synthetic */ void mo46450x56ec3030(Context context, PreferenceScreen preferenceScreen, PreferenceCategory preferenceCategory, LauncherActivityInfo launcherActivityInfo) {
         try {
             List<ShortcutParser.Shortcut> shortcuts = new ShortcutParser(getContext(), launcherActivityInfo.getComponentName()).getShortcuts();
             AppPreference appPreference = new AppPreference(context, launcherActivityInfo);
@@ -72,7 +72,7 @@ public class ShortcutPicker extends PreferenceFragment implements TunerService.T
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onCreatePreferences$0$com-android-systemui-tuner-ShortcutPicker */
-    public /* synthetic */ void mo46437x71aac16f(Context context, LauncherActivityInfo launcherActivityInfo, PreferenceScreen preferenceScreen, ShortcutParser.Shortcut shortcut) {
+    public /* synthetic */ void mo46449x71aac16f(Context context, LauncherActivityInfo launcherActivityInfo, PreferenceScreen preferenceScreen, ShortcutParser.Shortcut shortcut) {
         ShortcutPreference shortcutPreference = new ShortcutPreference(context, shortcut, launcherActivityInfo.getLabel());
         this.mSelectablePreferences.add(shortcutPreference);
         preferenceScreen.addPreference(shortcutPreference);
@@ -87,9 +87,9 @@ public class ShortcutPicker extends PreferenceFragment implements TunerService.T
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
         if (LockscreenFragment.LOCKSCREEN_LEFT_BUTTON.equals(this.mKey)) {
-            getActivity().setTitle(C1893R.string.lockscreen_shortcut_left);
+            getActivity().setTitle(C1894R.string.lockscreen_shortcut_left);
         } else {
-            getActivity().setTitle(C1893R.string.lockscreen_shortcut_right);
+            getActivity().setTitle(C1894R.string.lockscreen_shortcut_right);
         }
     }
 
@@ -112,8 +112,8 @@ public class ShortcutPicker extends PreferenceFragment implements TunerService.T
         public AppPreference(Context context, LauncherActivityInfo launcherActivityInfo) {
             super(context);
             this.mInfo = launcherActivityInfo;
-            setTitle((CharSequence) context.getString(C1893R.string.tuner_launch_app, new Object[]{launcherActivityInfo.getLabel()}));
-            setSummary((CharSequence) context.getString(C1893R.string.tuner_app, new Object[]{launcherActivityInfo.getLabel()}));
+            setTitle((CharSequence) context.getString(C1894R.string.tuner_launch_app, new Object[]{launcherActivityInfo.getLabel()}));
+            setSummary((CharSequence) context.getString(C1894R.string.tuner_app, new Object[]{launcherActivityInfo.getLabel()}));
         }
 
         public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
@@ -145,7 +145,7 @@ public class ShortcutPicker extends PreferenceFragment implements TunerService.T
             super(context);
             this.mShortcut = shortcut;
             setTitle((CharSequence) shortcut.label);
-            setSummary((CharSequence) context.getString(C1893R.string.tuner_app, new Object[]{charSequence}));
+            setSummary((CharSequence) context.getString(C1894R.string.tuner_app, new Object[]{charSequence}));
         }
 
         public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {

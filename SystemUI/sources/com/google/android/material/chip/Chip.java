@@ -29,7 +29,7 @@ import androidx.core.view.AccessibilityDelegateCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import androidx.customview.widget.ExploreByTouchHelper;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.animation.MotionSpec;
 import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.internal.MaterialCheckable;
@@ -49,7 +49,7 @@ public class Chip extends AppCompatCheckBox implements ChipDrawable.Delegate, Sh
     private static final int CHIP_BODY_VIRTUAL_ID = 0;
     private static final int CLOSE_ICON_VIRTUAL_ID = 1;
     private static final String COMPOUND_BUTTON_ACCESSIBILITY_CLASS_NAME = "android.widget.CompoundButton";
-    private static final int DEF_STYLE_RES = C3621R.style.Widget_MaterialComponents_Chip_Action;
+    private static final int DEF_STYLE_RES = C3631R.style.Widget_MaterialComponents_Chip_Action;
     /* access modifiers changed from: private */
     public static final Rect EMPTY_BOUNDS = new Rect();
     private static final String GENERIC_VIEW_ACCESSIBILITY_CLASS_NAME = "android.view.View";
@@ -88,7 +88,7 @@ public class Chip extends AppCompatCheckBox implements ChipDrawable.Delegate, Sh
     }
 
     public Chip(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, C3621R.attr.chipStyle);
+        this(context, attributeSet, C3631R.attr.chipStyle);
     }
 
     /* JADX WARNING: Illegal instructions before constructor call */
@@ -115,13 +115,13 @@ public class Chip extends AppCompatCheckBox implements ChipDrawable.Delegate, Sh
             r6.setChipDrawable(r7)
             float r1 = androidx.core.view.ViewCompat.getElevation(r6)
             r7.setElevation(r1)
-            int[] r2 = com.google.android.material.C3621R.styleable.Chip
+            int[] r2 = com.google.android.material.C3631R.styleable.Chip
             r1 = 0
             int[] r5 = new int[r1]
             r1 = r8
             r3 = r9
             android.content.res.TypedArray r8 = com.google.android.material.internal.ThemeEnforcement.obtainStyledAttributes(r0, r1, r2, r3, r4, r5)
-            int r9 = com.google.android.material.C3621R.styleable.Chip_shapeAppearance
+            int r9 = com.google.android.material.C3631R.styleable.Chip_shapeAppearance
             boolean r9 = r8.hasValue(r9)
             r8.recycle()
             com.google.android.material.chip.Chip$ChipTouchHelper r8 = new com.google.android.material.chip.Chip$ChipTouchHelper
@@ -199,9 +199,9 @@ public class Chip extends AppCompatCheckBox implements ChipDrawable.Delegate, Sh
     }
 
     private void initMinTouchTarget(Context context, AttributeSet attributeSet, int i) {
-        TypedArray obtainStyledAttributes = ThemeEnforcement.obtainStyledAttributes(context, attributeSet, C3621R.styleable.Chip, i, DEF_STYLE_RES, new int[0]);
-        this.ensureMinTouchTargetSize = obtainStyledAttributes.getBoolean(C3621R.styleable.Chip_ensureMinTouchTargetSize, false);
-        this.minTouchTargetSize = (int) Math.ceil((double) obtainStyledAttributes.getDimension(C3621R.styleable.Chip_chipMinTouchTargetSize, (float) Math.ceil((double) ViewUtils.dpToPx(getContext(), 48))));
+        TypedArray obtainStyledAttributes = ThemeEnforcement.obtainStyledAttributes(context, attributeSet, C3631R.styleable.Chip, i, DEF_STYLE_RES, new int[0]);
+        this.ensureMinTouchTargetSize = obtainStyledAttributes.getBoolean(C3631R.styleable.Chip_ensureMinTouchTargetSize, false);
+        this.minTouchTargetSize = (int) Math.ceil((double) obtainStyledAttributes.getDimension(C3631R.styleable.Chip_chipMinTouchTargetSize, (float) Math.ceil((double) ViewUtils.dpToPx(getContext(), 48))));
         obtainStyledAttributes.recycle();
     }
 
@@ -763,7 +763,7 @@ public class Chip extends AppCompatCheckBox implements ChipDrawable.Delegate, Sh
                 } else {
                     CharSequence text = Chip.this.getText();
                     Context context = Chip.this.getContext();
-                    int i2 = C3621R.string.mtrl_chip_close_icon_content_description;
+                    int i2 = C3631R.string.mtrl_chip_close_icon_content_description;
                     Object[] objArr = new Object[1];
                     if (!TextUtils.isEmpty(text)) {
                         charSequence = text;

@@ -44,7 +44,7 @@ public final class Code128Writer extends OneDimensionalCodeWriter {
 
     /* access modifiers changed from: protected */
     public boolean[] encode(String str, Map<EncodeHintType, ?> map) {
-        return map != null && map.containsKey(EncodeHintType.CODE128_COMPACT) && Boolean.parseBoolean(map.get(EncodeHintType.CODE128_COMPACT).toString()) ? new MinimalEncoder((C40991) null).encode(str) : encodeFast(str, check(str, map));
+        return map != null && map.containsKey(EncodeHintType.CODE128_COMPACT) && Boolean.parseBoolean(map.get(EncodeHintType.CODE128_COMPACT).toString()) ? new MinimalEncoder((C41091) null).encode(str) : encodeFast(str, check(str, map));
     }
 
     /* JADX WARNING: Can't fix incorrect switch cases order */
@@ -385,23 +385,23 @@ public final class Code128Writer extends OneDimensionalCodeWriter {
         static final /* synthetic */ boolean $assertionsDisabled = false;
 
         /* renamed from: A */
-        static final String f474A = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_\u0000\u0001\u0002\u0003\u0004\u0005\u0006\u0007\b\t\n\u000b\f\r\u000e\u000f\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001a\u001b\u001c\u001d\u001e\u001fÿ";
+        static final String f473A = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_\u0000\u0001\u0002\u0003\u0004\u0005\u0006\u0007\b\t\n\u000b\f\r\u000e\u000f\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001a\u001b\u001c\u001d\u001e\u001fÿ";
 
         /* renamed from: B */
-        static final String f475B = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~ÿ";
+        static final String f474B = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~ÿ";
         private static final int CODE_SHIFT = 98;
         private int[][] memoizedCost;
         private Latch[][] minPath;
 
         private enum Charset {
-            f476A,
+            f475A,
             B,
             C,
             NONE
         }
 
         private enum Latch {
-            f479A,
+            f478A,
             B,
             C,
             SHIFT,
@@ -419,7 +419,7 @@ public final class Code128Writer extends OneDimensionalCodeWriter {
         private MinimalEncoder() {
         }
 
-        /* synthetic */ MinimalEncoder(C40991 r1) {
+        /* synthetic */ MinimalEncoder(C41091 r1) {
             this();
         }
 
@@ -469,7 +469,7 @@ public final class Code128Writer extends OneDimensionalCodeWriter {
                 int r13 = r10.ordinal()
                 r12 = r12[r13]
                 r12 = r12[r11]
-                int[] r13 = com.google.zxing.oned.Code128Writer.C40991.f473x56054aa0
+                int[] r13 = com.google.zxing.oned.Code128Writer.C41091.f472x56054aa0
                 int r14 = r12.ordinal()
                 r13 = r13[r14]
                 r14 = 100
@@ -505,7 +505,7 @@ public final class Code128Writer extends OneDimensionalCodeWriter {
                 addPattern(r4, r10, r7, r8, r11)
                 goto L_0x0095
             L_0x008a:
-                com.google.zxing.oned.Code128Writer$MinimalEncoder$Charset r3 = com.google.zxing.oned.Code128Writer.MinimalEncoder.Charset.f476A
+                com.google.zxing.oned.Code128Writer$MinimalEncoder$Charset r3 = com.google.zxing.oned.Code128Writer.MinimalEncoder.Charset.f475A
                 if (r11 != 0) goto L_0x0091
                 r10 = 103(0x67, float:1.44E-43)
                 goto L_0x0092
@@ -547,7 +547,7 @@ public final class Code128Writer extends OneDimensionalCodeWriter {
                 int r14 = r3 + -32
                 goto L_0x00e2
             L_0x00c9:
-                com.google.zxing.oned.Code128Writer$MinimalEncoder$Charset r3 = com.google.zxing.oned.Code128Writer.MinimalEncoder.Charset.f476A
+                com.google.zxing.oned.Code128Writer$MinimalEncoder$Charset r3 = com.google.zxing.oned.Code128Writer.MinimalEncoder.Charset.f475A
                 if (r10 != r3) goto L_0x00d1
                 com.google.zxing.oned.Code128Writer$MinimalEncoder$Latch r3 = com.google.zxing.oned.Code128Writer.MinimalEncoder.Latch.SHIFT
                 if (r12 != r3) goto L_0x00d9
@@ -568,7 +568,7 @@ public final class Code128Writer extends OneDimensionalCodeWriter {
             L_0x00e1:
                 r14 = r13
             L_0x00e2:
-                com.google.zxing.oned.Code128Writer$MinimalEncoder$Charset r3 = com.google.zxing.oned.Code128Writer.MinimalEncoder.Charset.f476A
+                com.google.zxing.oned.Code128Writer$MinimalEncoder$Charset r3 = com.google.zxing.oned.Code128Writer.MinimalEncoder.Charset.f475A
                 if (r10 != r3) goto L_0x00ea
                 com.google.zxing.oned.Code128Writer$MinimalEncoder$Latch r3 = com.google.zxing.oned.Code128Writer.MinimalEncoder.Latch.SHIFT
                 if (r12 != r3) goto L_0x00f2
@@ -612,7 +612,7 @@ public final class Code128Writer extends OneDimensionalCodeWriter {
         private boolean canEncode(CharSequence charSequence, Charset charset, int i) {
             int i2;
             char charAt = charSequence.charAt(i);
-            int i3 = C40991.f472x18b242a8[charset.ordinal()];
+            int i3 = C41091.f471x18b242a8[charset.ordinal()];
             if (i3 != 1) {
                 if (i3 != 2) {
                     if (i3 != 3) {
@@ -622,12 +622,12 @@ public final class Code128Writer extends OneDimensionalCodeWriter {
                         return true;
                     }
                     return false;
-                } else if (charAt == 241 || charAt == 242 || charAt == 243 || charAt == 244 || f475B.indexOf((int) charAt) >= 0) {
+                } else if (charAt == 241 || charAt == 242 || charAt == 243 || charAt == 244 || f474B.indexOf((int) charAt) >= 0) {
                     return true;
                 } else {
                     return false;
                 }
-            } else if (charAt == 241 || charAt == 242 || charAt == 243 || charAt == 244 || f474A.indexOf((int) charAt) >= 0) {
+            } else if (charAt == 241 || charAt == 242 || charAt == 243 || charAt == 244 || f473A.indexOf((int) charAt) >= 0) {
                 return true;
             } else {
                 return false;
@@ -645,7 +645,7 @@ public final class Code128Writer extends OneDimensionalCodeWriter {
             int i5 = i + 1;
             int i6 = 1;
             boolean z = i5 >= charSequence.length();
-            Charset[] charsetArr = {Charset.f476A, Charset.B};
+            Charset[] charsetArr = {Charset.f475A, Charset.B};
             int i7 = Integer.MAX_VALUE;
             for (int i8 = 0; i8 <= 1; i8++) {
                 if (canEncode(charSequence, charsetArr[i8], i)) {
@@ -704,13 +704,13 @@ public final class Code128Writer extends OneDimensionalCodeWriter {
     }
 
     /* renamed from: com.google.zxing.oned.Code128Writer$1 */
-    static /* synthetic */ class C40991 {
+    static /* synthetic */ class C41091 {
 
         /* renamed from: $SwitchMap$com$google$zxing$oned$Code128Writer$MinimalEncoder$Charset */
-        static final /* synthetic */ int[] f472x18b242a8;
+        static final /* synthetic */ int[] f471x18b242a8;
 
         /* renamed from: $SwitchMap$com$google$zxing$oned$Code128Writer$MinimalEncoder$Latch */
-        static final /* synthetic */ int[] f473x56054aa0;
+        static final /* synthetic */ int[] f472x56054aa0;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(17:0|(2:1|2)|3|(2:5|6)|7|9|10|11|13|14|15|16|17|18|19|20|22) */
         /* JADX WARNING: Can't wrap try/catch for region: R(19:0|1|2|3|5|6|7|9|10|11|13|14|15|16|17|18|19|20|22) */
@@ -723,20 +723,20 @@ public final class Code128Writer extends OneDimensionalCodeWriter {
                 com.google.zxing.oned.Code128Writer$MinimalEncoder$Charset[] r0 = com.google.zxing.oned.Code128Writer.MinimalEncoder.Charset.values()
                 int r0 = r0.length
                 int[] r0 = new int[r0]
-                f472x18b242a8 = r0
+                f471x18b242a8 = r0
                 r1 = 1
-                com.google.zxing.oned.Code128Writer$MinimalEncoder$Charset r2 = com.google.zxing.oned.Code128Writer.MinimalEncoder.Charset.f476A     // Catch:{ NoSuchFieldError -> 0x0012 }
+                com.google.zxing.oned.Code128Writer$MinimalEncoder$Charset r2 = com.google.zxing.oned.Code128Writer.MinimalEncoder.Charset.f475A     // Catch:{ NoSuchFieldError -> 0x0012 }
                 int r2 = r2.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
                 r0[r2] = r1     // Catch:{ NoSuchFieldError -> 0x0012 }
             L_0x0012:
                 r0 = 2
-                int[] r2 = f472x18b242a8     // Catch:{ NoSuchFieldError -> 0x001d }
+                int[] r2 = f471x18b242a8     // Catch:{ NoSuchFieldError -> 0x001d }
                 com.google.zxing.oned.Code128Writer$MinimalEncoder$Charset r3 = com.google.zxing.oned.Code128Writer.MinimalEncoder.Charset.B     // Catch:{ NoSuchFieldError -> 0x001d }
                 int r3 = r3.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
                 r2[r3] = r0     // Catch:{ NoSuchFieldError -> 0x001d }
             L_0x001d:
                 r2 = 3
-                int[] r3 = f472x18b242a8     // Catch:{ NoSuchFieldError -> 0x0028 }
+                int[] r3 = f471x18b242a8     // Catch:{ NoSuchFieldError -> 0x0028 }
                 com.google.zxing.oned.Code128Writer$MinimalEncoder$Charset r4 = com.google.zxing.oned.Code128Writer.MinimalEncoder.Charset.C     // Catch:{ NoSuchFieldError -> 0x0028 }
                 int r4 = r4.ordinal()     // Catch:{ NoSuchFieldError -> 0x0028 }
                 r3[r4] = r2     // Catch:{ NoSuchFieldError -> 0x0028 }
@@ -744,22 +744,22 @@ public final class Code128Writer extends OneDimensionalCodeWriter {
                 com.google.zxing.oned.Code128Writer$MinimalEncoder$Latch[] r3 = com.google.zxing.oned.Code128Writer.MinimalEncoder.Latch.values()
                 int r3 = r3.length
                 int[] r3 = new int[r3]
-                f473x56054aa0 = r3
-                com.google.zxing.oned.Code128Writer$MinimalEncoder$Latch r4 = com.google.zxing.oned.Code128Writer.MinimalEncoder.Latch.f479A     // Catch:{ NoSuchFieldError -> 0x0039 }
+                f472x56054aa0 = r3
+                com.google.zxing.oned.Code128Writer$MinimalEncoder$Latch r4 = com.google.zxing.oned.Code128Writer.MinimalEncoder.Latch.f478A     // Catch:{ NoSuchFieldError -> 0x0039 }
                 int r4 = r4.ordinal()     // Catch:{ NoSuchFieldError -> 0x0039 }
                 r3[r4] = r1     // Catch:{ NoSuchFieldError -> 0x0039 }
             L_0x0039:
-                int[] r1 = f473x56054aa0     // Catch:{ NoSuchFieldError -> 0x0043 }
+                int[] r1 = f472x56054aa0     // Catch:{ NoSuchFieldError -> 0x0043 }
                 com.google.zxing.oned.Code128Writer$MinimalEncoder$Latch r3 = com.google.zxing.oned.Code128Writer.MinimalEncoder.Latch.B     // Catch:{ NoSuchFieldError -> 0x0043 }
                 int r3 = r3.ordinal()     // Catch:{ NoSuchFieldError -> 0x0043 }
                 r1[r3] = r0     // Catch:{ NoSuchFieldError -> 0x0043 }
             L_0x0043:
-                int[] r0 = f473x56054aa0     // Catch:{ NoSuchFieldError -> 0x004d }
+                int[] r0 = f472x56054aa0     // Catch:{ NoSuchFieldError -> 0x004d }
                 com.google.zxing.oned.Code128Writer$MinimalEncoder$Latch r1 = com.google.zxing.oned.Code128Writer.MinimalEncoder.Latch.C     // Catch:{ NoSuchFieldError -> 0x004d }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x004d }
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x004d }
             L_0x004d:
-                int[] r0 = f473x56054aa0     // Catch:{ NoSuchFieldError -> 0x0058 }
+                int[] r0 = f472x56054aa0     // Catch:{ NoSuchFieldError -> 0x0058 }
                 com.google.zxing.oned.Code128Writer$MinimalEncoder$Latch r1 = com.google.zxing.oned.Code128Writer.MinimalEncoder.Latch.SHIFT     // Catch:{ NoSuchFieldError -> 0x0058 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0058 }
                 r2 = 4
@@ -767,7 +767,7 @@ public final class Code128Writer extends OneDimensionalCodeWriter {
             L_0x0058:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: com.google.zxing.oned.Code128Writer.C40991.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: com.google.zxing.oned.Code128Writer.C41091.<clinit>():void");
         }
     }
 }

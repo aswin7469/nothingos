@@ -60,13 +60,13 @@ public class DataCollector implements SensorEventListener {
     private DataCollector(Context context) {
         Handler handler = new Handler(Looper.getMainLooper());
         this.mHandler = handler;
-        C19301 r1 = new ContentObserver(handler) {
+        C19311 r1 = new ContentObserver(handler) {
             public void onChange(boolean z) {
                 DataCollector.this.updateConfiguration();
             }
         };
         this.mSettingsObserver = r1;
-        C19312 r0 = new PluginListener<FalsingPlugin>() {
+        C19322 r0 = new PluginListener<FalsingPlugin>() {
             public void onPluginConnected(FalsingPlugin falsingPlugin, Context context) {
                 FalsingPlugin unused = DataCollector.this.mFalsingPlugin = falsingPlugin;
             }

@@ -21,6 +21,6 @@ public final /* synthetic */ class NotificationRowBinderImpl$$ExternalSyntheticL
     }
 
     public final void onInflationFinished(ExpandableNotificationRow expandableNotificationRow) {
-        this.f$0.mo40342x21e5a191(this.f$1, this.f$2, this.f$3, expandableNotificationRow);
+        this.f$0.mo40345x21e5a191(this.f$1, this.f$2, this.f$3, expandableNotificationRow);
     }
 }

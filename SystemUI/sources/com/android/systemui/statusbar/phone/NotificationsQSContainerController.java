@@ -6,13 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.flags.BooleanFlag;
 import com.android.systemui.flags.FeatureFlags;
 import com.android.systemui.flags.Flags;
 import com.android.systemui.navigationbar.NavigationModeController;
-import com.android.systemui.plugins.p011qs.C2301QS;
+import com.android.systemui.plugins.p011qs.C2304QS;
 import com.android.systemui.plugins.p011qs.QSContainerController;
 import com.android.systemui.recents.OverviewProxyService;
 import com.android.systemui.shared.system.QuickStepContract;
@@ -24,7 +24,7 @@ import javax.inject.Inject;
 import kotlin.Metadata;
 import kotlin.jvm.internal.Intrinsics;
 
-@Metadata(mo64986d1 = {"\u0000i\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\b\n\u0002\b\u0002\n\u0002\b\u0004\n\u0002\u0010\u000b\n\u0002\b\u0010\n\u0002\u0018\u0002\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\n\n\u0002\u0018\u0002\n\u0002\b\u0007*\u0001\u0012\u0018\u00002\b\u0012\u0004\u0012\u00020\u00020\u00012\u00020\u0003B1\b\u0007\u0012\u0006\u0010\u0004\u001a\u00020\u0002\u0012\u0006\u0010\u0005\u001a\u00020\u0006\u0012\u0006\u0010\u0007\u001a\u00020\b\u0012\u0006\u0010\t\u001a\u00020\n\u0012\b\b\u0001\u0010\u000b\u001a\u00020\f¢\u0006\u0002\u0010\rJ\b\u0010+\u001a\u00020,H\u0002J\u0010\u0010-\u001a\u00020.2\u0006\u0010/\u001a\u000200H\u0002J\b\u00101\u001a\u00020.H\u0014J\b\u00102\u001a\u00020.H\u0016J\b\u00103\u001a\u00020.H\u0014J\u0010\u00104\u001a\u00020.2\u0006\u00105\u001a\u00020\u0016H\u0016J\u0010\u00106\u001a\u00020.2\u0006\u00107\u001a\u00020\u0016H\u0016J\u0010\u00108\u001a\u00020.2\u0006\u00107\u001a\u00020\u0016H\u0016J\u0010\u00109\u001a\u00020.2\u0006\u0010:\u001a\u00020;H\u0002J\u0010\u0010<\u001a\u00020.2\u0006\u0010:\u001a\u00020;H\u0002J\u0010\u0010=\u001a\u00020.2\u0006\u0010:\u001a\u00020;H\u0002J\u0010\u0010>\u001a\u00020.2\u0006\u0010:\u001a\u00020;H\u0002J\b\u0010?\u001a\u00020.H\u0002J\u0006\u0010@\u001a\u00020.J\u0006\u0010A\u001a\u00020.R\u000e\u0010\u000e\u001a\u00020\u000fX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0010\u001a\u00020\u000fX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u000b\u001a\u00020\fX\u0004¢\u0006\u0002\n\u0000R\u0010\u0010\u0011\u001a\u00020\u0012X\u0004¢\u0006\u0004\n\u0002\u0010\u0013R\u000e\u0010\t\u001a\u00020\nX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0014\u001a\u00020\u000fX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0015\u001a\u00020\u0016X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0017\u001a\u00020\u0016X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0018\u001a\u00020\u0016X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0019\u001a\u00020\u0016X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u001a\u001a\u00020\u0016X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u001b\u001a\u00020\u000fX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0005\u001a\u00020\u0006X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u001c\u001a\u00020\u000fX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0007\u001a\u00020\bX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u001d\u001a\u00020\u000fX\u000e¢\u0006\u0002\n\u0000R$\u0010\u001f\u001a\u00020\u00162\u0006\u0010\u001e\u001a\u00020\u0016@FX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b \u0010!\"\u0004\b\"\u0010#R\u000e\u0010$\u001a\u00020\u000fX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010%\u001a\u00020\u0016X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010&\u001a\u00020'X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010(\u001a\u00020\u0016X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010)\u001a\u00020\u000fX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010*\u001a\u00020\u0016X\u0004¢\u0006\u0002\n\u0000¨\u0006B"}, mo64987d2 = {"Lcom/android/systemui/statusbar/phone/NotificationsQSContainerController;", "Lcom/android/systemui/util/ViewController;", "Lcom/android/systemui/statusbar/phone/NotificationsQuickSettingsContainer;", "Lcom/android/systemui/plugins/qs/QSContainerController;", "view", "navigationModeController", "Lcom/android/systemui/navigationbar/NavigationModeController;", "overviewProxyService", "Lcom/android/systemui/recents/OverviewProxyService;", "featureFlags", "Lcom/android/systemui/flags/FeatureFlags;", "delayableExecutor", "Lcom/android/systemui/util/concurrency/DelayableExecutor;", "(Lcom/android/systemui/statusbar/phone/NotificationsQuickSettingsContainer;Lcom/android/systemui/navigationbar/NavigationModeController;Lcom/android/systemui/recents/OverviewProxyService;Lcom/android/systemui/flags/FeatureFlags;Lcom/android/systemui/util/concurrency/DelayableExecutor;)V", "bottomCutoutInsets", "", "bottomStableInsets", "delayedInsetSetter", "com/android/systemui/statusbar/phone/NotificationsQSContainerController$delayedInsetSetter$1", "Lcom/android/systemui/statusbar/phone/NotificationsQSContainerController$delayedInsetSetter$1;", "footerActionsOffset", "isGestureNavigation", "", "isQSCustomizerAnimating", "isQSCustomizing", "isQSDetailShowing", "largeScreenShadeHeaderActive", "largeScreenShadeHeaderHeight", "notificationsBottomMargin", "panelMarginHorizontal", "value", "qsExpanded", "getQsExpanded", "()Z", "setQsExpanded", "(Z)V", "scrimShadeBottomMargin", "splitShadeEnabled", "taskbarVisibilityListener", "Lcom/android/systemui/recents/OverviewProxyService$OverviewProxyListener;", "taskbarVisible", "topMargin", "useCombinedQSHeaders", "calculateBottomSpacing", "Lcom/android/systemui/statusbar/phone/Paddings;", "ensureAllViewsHaveIds", "", "parentView", "Landroid/view/ViewGroup;", "onInit", "onViewAttached", "onViewDetached", "setCustomizerAnimating", "animating", "setCustomizerShowing", "showing", "setDetailShowing", "setKeyguardStatusViewConstraints", "constraintSet", "Landroidx/constraintlayout/widget/ConstraintSet;", "setLargeScreenShadeHeaderConstraints", "setNotificationsConstraints", "setQsConstraints", "updateBottomSpacing", "updateConstraints", "updateResources", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000i\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\b\n\u0002\b\u0002\n\u0002\b\u0004\n\u0002\u0010\u000b\n\u0002\b\u0010\n\u0002\u0018\u0002\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\n\n\u0002\u0018\u0002\n\u0002\b\u0007*\u0001\u0012\u0018\u00002\b\u0012\u0004\u0012\u00020\u00020\u00012\u00020\u0003B1\b\u0007\u0012\u0006\u0010\u0004\u001a\u00020\u0002\u0012\u0006\u0010\u0005\u001a\u00020\u0006\u0012\u0006\u0010\u0007\u001a\u00020\b\u0012\u0006\u0010\t\u001a\u00020\n\u0012\b\b\u0001\u0010\u000b\u001a\u00020\f¢\u0006\u0002\u0010\rJ\b\u0010+\u001a\u00020,H\u0002J\u0010\u0010-\u001a\u00020.2\u0006\u0010/\u001a\u000200H\u0002J\b\u00101\u001a\u00020.H\u0014J\b\u00102\u001a\u00020.H\u0016J\b\u00103\u001a\u00020.H\u0014J\u0010\u00104\u001a\u00020.2\u0006\u00105\u001a\u00020\u0016H\u0016J\u0010\u00106\u001a\u00020.2\u0006\u00107\u001a\u00020\u0016H\u0016J\u0010\u00108\u001a\u00020.2\u0006\u00107\u001a\u00020\u0016H\u0016J\u0010\u00109\u001a\u00020.2\u0006\u0010:\u001a\u00020;H\u0002J\u0010\u0010<\u001a\u00020.2\u0006\u0010:\u001a\u00020;H\u0002J\u0010\u0010=\u001a\u00020.2\u0006\u0010:\u001a\u00020;H\u0002J\u0010\u0010>\u001a\u00020.2\u0006\u0010:\u001a\u00020;H\u0002J\b\u0010?\u001a\u00020.H\u0002J\u0006\u0010@\u001a\u00020.J\u0006\u0010A\u001a\u00020.R\u000e\u0010\u000e\u001a\u00020\u000fX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0010\u001a\u00020\u000fX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u000b\u001a\u00020\fX\u0004¢\u0006\u0002\n\u0000R\u0010\u0010\u0011\u001a\u00020\u0012X\u0004¢\u0006\u0004\n\u0002\u0010\u0013R\u000e\u0010\t\u001a\u00020\nX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0014\u001a\u00020\u000fX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0015\u001a\u00020\u0016X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0017\u001a\u00020\u0016X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0018\u001a\u00020\u0016X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0019\u001a\u00020\u0016X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u001a\u001a\u00020\u0016X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u001b\u001a\u00020\u000fX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0005\u001a\u00020\u0006X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u001c\u001a\u00020\u000fX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0007\u001a\u00020\bX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u001d\u001a\u00020\u000fX\u000e¢\u0006\u0002\n\u0000R$\u0010\u001f\u001a\u00020\u00162\u0006\u0010\u001e\u001a\u00020\u0016@FX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b \u0010!\"\u0004\b\"\u0010#R\u000e\u0010$\u001a\u00020\u000fX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010%\u001a\u00020\u0016X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010&\u001a\u00020'X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010(\u001a\u00020\u0016X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010)\u001a\u00020\u000fX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010*\u001a\u00020\u0016X\u0004¢\u0006\u0002\n\u0000¨\u0006B"}, mo65043d2 = {"Lcom/android/systemui/statusbar/phone/NotificationsQSContainerController;", "Lcom/android/systemui/util/ViewController;", "Lcom/android/systemui/statusbar/phone/NotificationsQuickSettingsContainer;", "Lcom/android/systemui/plugins/qs/QSContainerController;", "view", "navigationModeController", "Lcom/android/systemui/navigationbar/NavigationModeController;", "overviewProxyService", "Lcom/android/systemui/recents/OverviewProxyService;", "featureFlags", "Lcom/android/systemui/flags/FeatureFlags;", "delayableExecutor", "Lcom/android/systemui/util/concurrency/DelayableExecutor;", "(Lcom/android/systemui/statusbar/phone/NotificationsQuickSettingsContainer;Lcom/android/systemui/navigationbar/NavigationModeController;Lcom/android/systemui/recents/OverviewProxyService;Lcom/android/systemui/flags/FeatureFlags;Lcom/android/systemui/util/concurrency/DelayableExecutor;)V", "bottomCutoutInsets", "", "bottomStableInsets", "delayedInsetSetter", "com/android/systemui/statusbar/phone/NotificationsQSContainerController$delayedInsetSetter$1", "Lcom/android/systemui/statusbar/phone/NotificationsQSContainerController$delayedInsetSetter$1;", "footerActionsOffset", "isGestureNavigation", "", "isQSCustomizerAnimating", "isQSCustomizing", "isQSDetailShowing", "largeScreenShadeHeaderActive", "largeScreenShadeHeaderHeight", "notificationsBottomMargin", "panelMarginHorizontal", "value", "qsExpanded", "getQsExpanded", "()Z", "setQsExpanded", "(Z)V", "scrimShadeBottomMargin", "splitShadeEnabled", "taskbarVisibilityListener", "Lcom/android/systemui/recents/OverviewProxyService$OverviewProxyListener;", "taskbarVisible", "topMargin", "useCombinedQSHeaders", "calculateBottomSpacing", "Lcom/android/systemui/statusbar/phone/Paddings;", "ensureAllViewsHaveIds", "", "parentView", "Landroid/view/ViewGroup;", "onInit", "onViewAttached", "onViewDetached", "setCustomizerAnimating", "animating", "setCustomizerShowing", "showing", "setDetailShowing", "setKeyguardStatusViewConstraints", "constraintSet", "Landroidx/constraintlayout/widget/ConstraintSet;", "setLargeScreenShadeHeaderConstraints", "setNotificationsConstraints", "setQsConstraints", "updateBottomSpacing", "updateConstraints", "updateResources", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* compiled from: NotificationsQSContainerController.kt */
 public final class NotificationsQSContainerController extends ViewController<NotificationsQuickSettingsContainer> implements QSContainerController {
     /* access modifiers changed from: private */
@@ -50,7 +50,8 @@ public final class NotificationsQSContainerController extends ViewController<Not
     private boolean qsExpanded;
     /* access modifiers changed from: private */
     public int scrimShadeBottomMargin;
-    private boolean splitShadeEnabled;
+    /* access modifiers changed from: private */
+    public boolean splitShadeEnabled;
     private final OverviewProxyService.OverviewProxyListener taskbarVisibilityListener = new NotificationsQSContainerController$taskbarVisibilityListener$1(this);
     /* access modifiers changed from: private */
     public boolean taskbarVisible;
@@ -93,7 +94,7 @@ public final class NotificationsQSContainerController extends ViewController<Not
 
     /* access modifiers changed from: private */
     /* renamed from: onInit$lambda-0  reason: not valid java name */
-    public static final void m3184onInit$lambda0(NotificationsQSContainerController notificationsQSContainerController, int i) {
+    public static final void m3189onInit$lambda0(NotificationsQSContainerController notificationsQSContainerController, int i) {
         Intrinsics.checkNotNullParameter(notificationsQSContainerController, "this$0");
         notificationsQSContainerController.isGestureNavigation = QuickStepContract.isGesturalMode(i);
     }
@@ -108,7 +109,7 @@ public final class NotificationsQSContainerController extends ViewController<Not
 
     /* access modifiers changed from: private */
     /* renamed from: onViewAttached$lambda-1  reason: not valid java name */
-    public static final void m3185onViewAttached$lambda1(NotificationsQSContainerController notificationsQSContainerController, C2301QS qs) {
+    public static final void m3190onViewAttached$lambda1(NotificationsQSContainerController notificationsQSContainerController, C2304QS qs) {
         Intrinsics.checkNotNullParameter(notificationsQSContainerController, "this$0");
         Intrinsics.checkNotNullParameter(qs, "qs");
         qs.setContainerController(notificationsQSContainerController);
@@ -116,7 +117,7 @@ public final class NotificationsQSContainerController extends ViewController<Not
 
     /* access modifiers changed from: private */
     /* renamed from: onViewAttached$lambda-2  reason: not valid java name */
-    public static final void m3186onViewAttached$lambda2(NotificationsQSContainerController notificationsQSContainerController, Configuration configuration) {
+    public static final void m3191onViewAttached$lambda2(NotificationsQSContainerController notificationsQSContainerController, Configuration configuration) {
         Intrinsics.checkNotNullParameter(notificationsQSContainerController, "this$0");
         notificationsQSContainerController.updateResources();
     }
@@ -140,18 +141,18 @@ public final class NotificationsQSContainerController extends ViewController<Not
         Resources resources2 = getResources();
         Intrinsics.checkNotNullExpressionValue(resources2, "resources");
         this.largeScreenShadeHeaderActive = LargeScreenUtils.shouldUseLargeScreenShadeHeader(resources2);
-        this.notificationsBottomMargin = getResources().getDimensionPixelSize(C1893R.dimen.notification_panel_margin_bottom);
-        this.largeScreenShadeHeaderHeight = getResources().getDimensionPixelSize(C1893R.dimen.large_screen_shade_header_height);
-        this.panelMarginHorizontal = getResources().getDimensionPixelSize(C1893R.dimen.notification_panel_margin_horizontal);
+        this.notificationsBottomMargin = getResources().getDimensionPixelSize(C1894R.dimen.notification_panel_margin_bottom);
+        this.largeScreenShadeHeaderHeight = getResources().getDimensionPixelSize(C1894R.dimen.large_screen_shade_header_height);
+        this.panelMarginHorizontal = getResources().getDimensionPixelSize(C1894R.dimen.notification_panel_margin_horizontal);
         if (this.largeScreenShadeHeaderActive) {
             i = this.largeScreenShadeHeaderHeight;
         } else {
-            i = getResources().getDimensionPixelSize(C1893R.dimen.notification_panel_margin_top);
+            i = getResources().getDimensionPixelSize(C1894R.dimen.notification_panel_margin_top);
         }
         this.topMargin = i;
         updateConstraints();
-        boolean access$setAndReportChange = NotificationsQSContainerControllerKt.setAndReportChange(new C3044xcb887726(this), getResources().getDimensionPixelSize(C1893R.dimen.split_shade_notifications_scrim_margin_bottom));
-        boolean access$setAndReportChange2 = NotificationsQSContainerControllerKt.setAndReportChange(new C3043xbda5425a(this), getResources().getDimensionPixelSize(C1893R.dimen.qs_footer_action_inset) + getResources().getDimensionPixelSize(C1893R.dimen.qs_footer_actions_bottom_padding));
+        boolean access$setAndReportChange = NotificationsQSContainerControllerKt.setAndReportChange(new C3054xcb887726(this), getResources().getDimensionPixelSize(C1894R.dimen.split_shade_notifications_scrim_margin_bottom));
+        boolean access$setAndReportChange2 = NotificationsQSContainerControllerKt.setAndReportChange(new C3053xbda5425a(this), getResources().getDimensionPixelSize(C1894R.dimen.qs_footer_action_inset) + getResources().getDimensionPixelSize(C1894R.dimen.qs_footer_actions_bottom_padding));
         if (!access$setAndReportChange && !access$setAndReportChange2) {
             z = false;
         }
@@ -271,39 +272,39 @@ public final class NotificationsQSContainerController extends ViewController<Not
 
     private final void setLargeScreenShadeHeaderConstraints(ConstraintSet constraintSet) {
         if (this.largeScreenShadeHeaderActive) {
-            constraintSet.constrainHeight(C1893R.C1897id.split_shade_status_bar, this.largeScreenShadeHeaderHeight);
+            constraintSet.constrainHeight(C1894R.C1898id.split_shade_status_bar, this.largeScreenShadeHeaderHeight);
         } else if (this.useCombinedQSHeaders) {
-            constraintSet.constrainHeight(C1893R.C1897id.split_shade_status_bar, -2);
+            constraintSet.constrainHeight(C1894R.C1898id.split_shade_status_bar, -2);
         }
     }
 
     private final void setNotificationsConstraints(ConstraintSet constraintSet) {
         int i = 0;
-        constraintSet.connect(C1893R.C1897id.notification_stack_scroller, 6, this.splitShadeEnabled ? C1893R.C1897id.qs_edge_guideline : 0, 6);
+        constraintSet.connect(C1894R.C1898id.notification_stack_scroller, 6, this.splitShadeEnabled ? C1894R.C1898id.qs_edge_guideline : 0, 6);
         if (!this.splitShadeEnabled) {
             i = this.panelMarginHorizontal;
         }
-        constraintSet.setMargin(C1893R.C1897id.notification_stack_scroller, 6, i);
-        constraintSet.setMargin(C1893R.C1897id.notification_stack_scroller, 7, this.panelMarginHorizontal);
-        constraintSet.setMargin(C1893R.C1897id.notification_stack_scroller, 3, this.topMargin);
-        constraintSet.setMargin(C1893R.C1897id.notification_stack_scroller, 4, this.notificationsBottomMargin);
+        constraintSet.setMargin(C1894R.C1898id.notification_stack_scroller, 6, i);
+        constraintSet.setMargin(C1894R.C1898id.notification_stack_scroller, 7, this.panelMarginHorizontal);
+        constraintSet.setMargin(C1894R.C1898id.notification_stack_scroller, 3, this.topMargin);
+        constraintSet.setMargin(C1894R.C1898id.notification_stack_scroller, 4, this.notificationsBottomMargin);
     }
 
     private final void setQsConstraints(ConstraintSet constraintSet) {
         int i = 0;
-        constraintSet.connect(C1893R.C1897id.qs_frame, 7, this.splitShadeEnabled ? C1893R.C1897id.qs_edge_guideline : 0, 7);
-        constraintSet.setMargin(C1893R.C1897id.qs_frame, 6, this.splitShadeEnabled ? 0 : this.panelMarginHorizontal);
+        constraintSet.connect(C1894R.C1898id.qs_frame, 7, this.splitShadeEnabled ? C1894R.C1898id.qs_edge_guideline : 0, 7);
+        constraintSet.setMargin(C1894R.C1898id.qs_frame, 6, this.splitShadeEnabled ? 0 : this.panelMarginHorizontal);
         if (!this.splitShadeEnabled) {
             i = this.panelMarginHorizontal;
         }
-        constraintSet.setMargin(C1893R.C1897id.qs_frame, 7, i);
-        constraintSet.setMargin(C1893R.C1897id.qs_frame, 3, this.topMargin);
+        constraintSet.setMargin(C1894R.C1898id.qs_frame, 7, i);
+        constraintSet.setMargin(C1894R.C1898id.qs_frame, 3, this.topMargin);
     }
 
     private final void setKeyguardStatusViewConstraints(ConstraintSet constraintSet) {
-        int dimensionPixelSize = getResources().getDimensionPixelSize(C1893R.dimen.status_view_margin_horizontal);
-        constraintSet.setMargin(C1893R.C1897id.keyguard_status_view, 6, dimensionPixelSize);
-        constraintSet.setMargin(C1893R.C1897id.keyguard_status_view, 7, dimensionPixelSize);
+        int dimensionPixelSize = getResources().getDimensionPixelSize(C1894R.dimen.status_view_margin_horizontal);
+        constraintSet.setMargin(C1894R.C1898id.keyguard_status_view, 6, dimensionPixelSize);
+        constraintSet.setMargin(C1894R.C1898id.keyguard_status_view, 7, dimensionPixelSize);
     }
 
     private final void ensureAllViewsHaveIds(ViewGroup viewGroup) {

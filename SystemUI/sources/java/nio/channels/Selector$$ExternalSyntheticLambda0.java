@@ -13,6 +13,6 @@ public final /* synthetic */ class Selector$$ExternalSyntheticLambda0 implements
     }
 
     public final void accept(Object obj) {
-        this.f$0.m3706lambda$doSelect$0$javaniochannelsSelector(this.f$1, (SelectionKey) obj);
+        this.f$0.m3724lambda$doSelect$0$javaniochannelsSelector(this.f$1, (SelectionKey) obj);
     }
 }

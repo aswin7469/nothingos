@@ -12,6 +12,6 @@ public final /* synthetic */ class BubbleStackView$$ExternalSyntheticLambda41 im
     }
 
     public final void onClick(View view) {
-        this.f$0.m3422lambda$new$3$comandroidwmshellbubblesBubbleStackView(view);
+        this.f$0.m3426lambda$new$3$comandroidwmshellbubblesBubbleStackView(view);
     }
 }

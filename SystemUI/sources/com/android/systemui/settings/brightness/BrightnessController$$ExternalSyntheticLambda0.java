@@ -11,6 +11,6 @@ public final /* synthetic */ class BrightnessController$$ExternalSyntheticLambda
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        this.f$0.mo37729x9ea265e7(valueAnimator);
+        this.f$0.mo37730x9ea265e7(valueAnimator);
     }
 }

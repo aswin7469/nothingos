@@ -618,6 +618,10 @@
     <color name="nt_color_highlight_material">#1a06080a</color>
     <color name="nt_default_text_color">#f0f2f2</color>
     <color name="nt_fgs_dialog_bg_color">#ffffff</color>
+    <color name="nt_keyguard_button_background">@android:color/hint_foreground_light</color>
+    <color name="nt_keyguard_button_background_pressed">@android:color/search_widget_corpus_item_background</color>
+    <color name="nt_keyguard_button_icon_color">@android:color/hint_foreground_dark</color>
+    <color name="nt_keyguard_button_icon_color_pressed">@android:color/hint_foreground_dark</color>
     <color name="nt_keyguard_glance_text_shadow_color">#40000000</color>
     <color name="overlay_background_protection_start">#40000000</color>
     <color name="overlay_button_ripple">#1f000000</color>

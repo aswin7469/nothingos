@@ -9,6 +9,6 @@ public final /* synthetic */ class NotificationConversationInfo$$ExternalSynthet
     }
 
     public final void run() {
-        this.f$0.mo41540x560aeef8();
+        this.f$0.mo41546x560aeef8();
     }
 }

@@ -9,6 +9,6 @@ public final /* synthetic */ class StatusBarHideIconsForBouncerManager$$External
     }
 
     public final void run() {
-        StatusBarHideIconsForBouncerManager.m3191updateHideIconsForBouncer$lambda1(this.f$0);
+        StatusBarHideIconsForBouncerManager.m3196updateHideIconsForBouncer$lambda1(this.f$0);
     }
 }

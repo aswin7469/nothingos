@@ -5,7 +5,7 @@ import android.content.res.TypedArray;
 import android.os.PersistableBundle;
 import android.util.AttributeSet;
 import android.view.View;
-import com.google.android.setupcompat.C3931R;
+import com.google.android.setupcompat.C3941R;
 import com.google.android.setupcompat.logging.CustomEvent;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -57,11 +57,11 @@ public final class FooterButton implements View.OnClickListener {
         this.enabled = true;
         this.visibility = 0;
         this.clickCount = 0;
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C3931R.styleable.SucFooterButton);
-        this.text = obtainStyledAttributes.getString(C3931R.styleable.SucFooterButton_android_text);
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C3941R.styleable.SucFooterButton);
+        this.text = obtainStyledAttributes.getString(C3941R.styleable.SucFooterButton_android_text);
         this.onClickListener = null;
-        this.buttonType = getButtonTypeValue(obtainStyledAttributes.getInt(C3931R.styleable.SucFooterButton_sucButtonType, 0));
-        this.theme = obtainStyledAttributes.getResourceId(C3931R.styleable.SucFooterButton_android_theme, 0);
+        this.buttonType = getButtonTypeValue(obtainStyledAttributes.getInt(C3941R.styleable.SucFooterButton_sucButtonType, 0));
+        this.theme = obtainStyledAttributes.getResourceId(C3941R.styleable.SucFooterButton_android_theme, 0);
         obtainStyledAttributes.recycle();
     }
 

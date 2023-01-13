@@ -9,8 +9,8 @@ import kotlin.coroutines.jvm.internal.DebugMetadata;
 import kotlin.coroutines.jvm.internal.SuspendLambda;
 import kotlin.jvm.functions.Function2;
 
-@Metadata(mo64986d1 = {"\u0000\n\n\u0000\n\u0002\u0010\u0002\n\u0002\u0018\u0002\u0010\u0000\u001a\u00020\u0001*\b\u0012\u0004\u0012\u00020\u00010\u0002H@"}, mo64987d2 = {"<anonymous>", "", "Lkotlinx/coroutines/channels/ProducerScope;"}, mo64988k = 3, mo64989mv = {1, 5, 1}, mo64991xi = 48)
-@DebugMetadata(mo65240c = "kotlinx.coroutines.channels.TickerChannelsKt$ticker$3", mo65241f = "TickerChannels.kt", mo65242i = {}, mo65243l = {72, 73}, mo65244m = "invokeSuspend", mo65245n = {}, mo65246s = {})
+@Metadata(mo65042d1 = {"\u0000\n\n\u0000\n\u0002\u0010\u0002\n\u0002\u0018\u0002\u0010\u0000\u001a\u00020\u0001*\b\u0012\u0004\u0012\u00020\u00010\u0002H@"}, mo65043d2 = {"<anonymous>", "", "Lkotlinx/coroutines/channels/ProducerScope;"}, mo65044k = 3, mo65045mv = {1, 5, 1}, mo65047xi = 48)
+@DebugMetadata(mo65296c = "kotlinx.coroutines.channels.TickerChannelsKt$ticker$3", mo65297f = "TickerChannels.kt", mo65298i = {}, mo65299l = {72, 73}, mo65300m = "invokeSuspend", mo65301n = {}, mo65302s = {})
 /* compiled from: TickerChannels.kt */
 final class TickerChannelsKt$ticker$3 extends SuspendLambda implements Function2<ProducerScope<? super Unit>, Continuation<? super Unit>, Object> {
     final /* synthetic */ long $delayMillis;
@@ -19,7 +19,7 @@ final class TickerChannelsKt$ticker$3 extends SuspendLambda implements Function2
     private /* synthetic */ Object L$0;
     int label;
 
-    @Metadata(mo64988k = 3, mo64989mv = {1, 5, 1}, mo64991xi = 48)
+    @Metadata(mo65044k = 3, mo65045mv = {1, 5, 1}, mo65047xi = 48)
     /* compiled from: TickerChannels.kt */
     public /* synthetic */ class WhenMappings {
         public static final /* synthetic */ int[] $EnumSwitchMapping$0;

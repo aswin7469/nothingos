@@ -9,6 +9,6 @@ public final /* synthetic */ class SeekBarViewModel$$ExternalSyntheticLambda5 im
     }
 
     public final void run() {
-        SeekBarViewModel.m2835onDestroy$lambda7(this.f$0);
+        SeekBarViewModel.m2840onDestroy$lambda7(this.f$0);
     }
 }

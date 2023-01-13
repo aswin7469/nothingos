@@ -17,7 +17,7 @@ import java.util.function.UnaryOperator;
 public class AtomicReferenceArray<E> implements Serializable {
 
     /* renamed from: AA */
-    private static final VarHandle f767AA = MethodHandles.arrayElementVarHandle(Object[].class);
+    private static final VarHandle f765AA = MethodHandles.arrayElementVarHandle(Object[].class);
     private static final long serialVersionUID = -6209656149925076980L;
     private final Object[] array;
 

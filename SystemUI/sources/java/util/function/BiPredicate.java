@@ -24,7 +24,7 @@ public interface BiPredicate<T, U> {
     }
 
     /* renamed from: or */
-    BiPredicate<T, U> mo63096or(BiPredicate<? super T, ? super U> biPredicate) {
+    BiPredicate<T, U> mo63152or(BiPredicate<? super T, ? super U> biPredicate) {
         Objects.requireNonNull(biPredicate);
         return new BiPredicate$$ExternalSyntheticLambda2(this, biPredicate);
     }

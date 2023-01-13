@@ -10,6 +10,6 @@ public final /* synthetic */ class PipInputConsumer$$ExternalSyntheticLambda2 im
     }
 
     public final void run() {
-        this.f$0.mo50365x5df529e2();
+        this.f$0.mo50374x5df529e2();
     }
 }

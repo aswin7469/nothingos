@@ -197,7 +197,7 @@ class UnixFileSystem extends FileSystem {
             throw new IllegalArgumentException("Bad access mode: " + i);
         }
         try {
-            return Libcore.f857os.access(file.getPath(), i2);
+            return Libcore.f855os.access(file.getPath(), i2);
         } catch (ErrnoException unused) {
             return false;
         }
@@ -211,7 +211,7 @@ class UnixFileSystem extends FileSystem {
 
     public long getLength(File file) {
         try {
-            return Libcore.f857os.stat(file.getPath()).st_size;
+            return Libcore.f855os.stat(file.getPath()).st_size;
         } catch (ErrnoException unused) {
             return 0;
         }
@@ -233,7 +233,7 @@ class UnixFileSystem extends FileSystem {
         this.cache.clear();
         this.javaHomePrefixCache.clear();
         try {
-            Libcore.f857os.remove(file.getPath());
+            Libcore.f855os.remove(file.getPath());
             return true;
         } catch (ErrnoException unused) {
             return false;
@@ -256,7 +256,7 @@ class UnixFileSystem extends FileSystem {
         this.cache.clear();
         this.javaHomePrefixCache.clear();
         try {
-            Libcore.f857os.rename(file.getPath(), file2.getPath());
+            Libcore.f855os.rename(file.getPath(), file2.getPath());
             return true;
         } catch (ErrnoException unused) {
             return false;

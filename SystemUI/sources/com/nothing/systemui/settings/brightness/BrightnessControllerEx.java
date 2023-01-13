@@ -23,11 +23,11 @@ public class BrightnessControllerEx {
     public int calculateSliderVal(float f, float f2, float f3, int i) {
         int lerpInv = (int) (MathUtils.lerpInv(f, f2, f3) * 65535.0f);
         if (lerpInv == ((int) convertToNTSliderValForManual(i))) {
-            NTLogUtil.m1680d(TAG, "NT slider: The value in the slider is equal to the value on the current brightness");
+            NTLogUtil.m1686d(TAG, "NT slider: The value in the slider is equal to the value on the current brightness");
             return -1;
         }
         int convertToNTSliderValForAutoBrightness = (int) convertToNTSliderValForAutoBrightness(lerpInv);
-        NTLogUtil.m1680d(TAG, "NT slider animateSliderTo: " + convertToNTSliderValForAutoBrightness);
+        NTLogUtil.m1686d(TAG, "NT slider animateSliderTo: " + convertToNTSliderValForAutoBrightness);
         return convertToNTSliderValForAutoBrightness;
     }
 

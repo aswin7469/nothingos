@@ -9,7 +9,7 @@ import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.RippleDrawable;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.view.ViewCompat;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.internal.ViewUtils;
 import com.google.android.material.resources.MaterialResources;
@@ -49,28 +49,28 @@ class MaterialButtonHelper {
 
     /* access modifiers changed from: package-private */
     public void loadFromAttributes(TypedArray typedArray) {
-        this.insetLeft = typedArray.getDimensionPixelOffset(C3621R.styleable.MaterialButton_android_insetLeft, 0);
-        this.insetRight = typedArray.getDimensionPixelOffset(C3621R.styleable.MaterialButton_android_insetRight, 0);
-        this.insetTop = typedArray.getDimensionPixelOffset(C3621R.styleable.MaterialButton_android_insetTop, 0);
-        this.insetBottom = typedArray.getDimensionPixelOffset(C3621R.styleable.MaterialButton_android_insetBottom, 0);
-        if (typedArray.hasValue(C3621R.styleable.MaterialButton_cornerRadius)) {
-            int dimensionPixelSize = typedArray.getDimensionPixelSize(C3621R.styleable.MaterialButton_cornerRadius, -1);
+        this.insetLeft = typedArray.getDimensionPixelOffset(C3631R.styleable.MaterialButton_android_insetLeft, 0);
+        this.insetRight = typedArray.getDimensionPixelOffset(C3631R.styleable.MaterialButton_android_insetRight, 0);
+        this.insetTop = typedArray.getDimensionPixelOffset(C3631R.styleable.MaterialButton_android_insetTop, 0);
+        this.insetBottom = typedArray.getDimensionPixelOffset(C3631R.styleable.MaterialButton_android_insetBottom, 0);
+        if (typedArray.hasValue(C3631R.styleable.MaterialButton_cornerRadius)) {
+            int dimensionPixelSize = typedArray.getDimensionPixelSize(C3631R.styleable.MaterialButton_cornerRadius, -1);
             this.cornerRadius = dimensionPixelSize;
             setShapeAppearanceModel(this.shapeAppearanceModel.withCornerSize((float) dimensionPixelSize));
             this.cornerRadiusSet = true;
         }
-        this.strokeWidth = typedArray.getDimensionPixelSize(C3621R.styleable.MaterialButton_strokeWidth, 0);
-        this.backgroundTintMode = ViewUtils.parseTintMode(typedArray.getInt(C3621R.styleable.MaterialButton_backgroundTintMode, -1), PorterDuff.Mode.SRC_IN);
-        this.backgroundTint = MaterialResources.getColorStateList(this.materialButton.getContext(), typedArray, C3621R.styleable.MaterialButton_backgroundTint);
-        this.strokeColor = MaterialResources.getColorStateList(this.materialButton.getContext(), typedArray, C3621R.styleable.MaterialButton_strokeColor);
-        this.rippleColor = MaterialResources.getColorStateList(this.materialButton.getContext(), typedArray, C3621R.styleable.MaterialButton_rippleColor);
-        this.checkable = typedArray.getBoolean(C3621R.styleable.MaterialButton_android_checkable, false);
-        this.elevation = typedArray.getDimensionPixelSize(C3621R.styleable.MaterialButton_elevation, 0);
+        this.strokeWidth = typedArray.getDimensionPixelSize(C3631R.styleable.MaterialButton_strokeWidth, 0);
+        this.backgroundTintMode = ViewUtils.parseTintMode(typedArray.getInt(C3631R.styleable.MaterialButton_backgroundTintMode, -1), PorterDuff.Mode.SRC_IN);
+        this.backgroundTint = MaterialResources.getColorStateList(this.materialButton.getContext(), typedArray, C3631R.styleable.MaterialButton_backgroundTint);
+        this.strokeColor = MaterialResources.getColorStateList(this.materialButton.getContext(), typedArray, C3631R.styleable.MaterialButton_strokeColor);
+        this.rippleColor = MaterialResources.getColorStateList(this.materialButton.getContext(), typedArray, C3631R.styleable.MaterialButton_rippleColor);
+        this.checkable = typedArray.getBoolean(C3631R.styleable.MaterialButton_android_checkable, false);
+        this.elevation = typedArray.getDimensionPixelSize(C3631R.styleable.MaterialButton_elevation, 0);
         int paddingStart = ViewCompat.getPaddingStart(this.materialButton);
         int paddingTop = this.materialButton.getPaddingTop();
         int paddingEnd = ViewCompat.getPaddingEnd(this.materialButton);
         int paddingBottom = this.materialButton.getPaddingBottom();
-        if (typedArray.hasValue(C3621R.styleable.MaterialButton_android_background)) {
+        if (typedArray.hasValue(C3631R.styleable.MaterialButton_android_background)) {
             setBackgroundOverwritten();
         } else {
             updateBackground();
@@ -149,7 +149,7 @@ class MaterialButtonHelper {
         materialShapeDrawable.setStroke((float) this.strokeWidth, this.strokeColor);
         MaterialShapeDrawable materialShapeDrawable2 = new MaterialShapeDrawable(this.shapeAppearanceModel);
         materialShapeDrawable2.setTint(0);
-        materialShapeDrawable2.setStroke((float) this.strokeWidth, this.shouldDrawSurfaceColorStroke ? MaterialColors.getColor(this.materialButton, C3621R.attr.colorSurface) : 0);
+        materialShapeDrawable2.setStroke((float) this.strokeWidth, this.shouldDrawSurfaceColorStroke ? MaterialColors.getColor(this.materialButton, C3631R.attr.colorSurface) : 0);
         if (IS_MIN_LOLLIPOP) {
             MaterialShapeDrawable materialShapeDrawable3 = new MaterialShapeDrawable(this.shapeAppearanceModel);
             this.maskDrawable = materialShapeDrawable3;
@@ -231,7 +231,7 @@ class MaterialButtonHelper {
         if (materialShapeDrawable != null) {
             materialShapeDrawable.setStroke((float) this.strokeWidth, this.strokeColor);
             if (surfaceColorStrokeDrawable != null) {
-                surfaceColorStrokeDrawable.setStroke((float) this.strokeWidth, this.shouldDrawSurfaceColorStroke ? MaterialColors.getColor(this.materialButton, C3621R.attr.colorSurface) : 0);
+                surfaceColorStrokeDrawable.setStroke((float) this.strokeWidth, this.shouldDrawSurfaceColorStroke ? MaterialColors.getColor(this.materialButton, C3631R.attr.colorSurface) : 0);
             }
         }
     }

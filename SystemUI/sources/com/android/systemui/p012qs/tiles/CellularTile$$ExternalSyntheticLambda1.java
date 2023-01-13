@@ -12,6 +12,6 @@ public final /* synthetic */ class CellularTile$$ExternalSyntheticLambda1 implem
     }
 
     public final boolean onLongClick(View view) {
-        return this.f$0.mo36860x686d7bb6(view);
+        return this.f$0.mo36857x686d7bb6(view);
     }
 }

@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.constraintlayout.helper.widget.Flow;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.HardwareBgDrawable;
 
 public class GlobalActionsLayoutLite extends GlobalActionsLayout {
@@ -33,22 +33,22 @@ public class GlobalActionsLayoutLite extends GlobalActionsLayout {
 
     public void onUpdateList() {
         super.onUpdateList();
-        int integer = getResources().getInteger(C1893R.integer.power_menu_lite_max_columns);
+        int integer = getResources().getInteger(C1894R.integer.power_menu_lite_max_columns);
         if (getListView().getChildCount() - 1 == integer + 1 && integer > 2) {
             integer--;
         }
-        ((Flow) findViewById(C1893R.C1897id.list_flow)).setMaxElementsWrap(integer);
+        ((Flow) findViewById(C1894R.C1898id.list_flow)).setMaxElementsWrap(integer);
     }
 
     /* access modifiers changed from: protected */
     public void addToListView(View view, boolean z) {
         super.addToListView(view, z);
-        ((Flow) findViewById(C1893R.C1897id.list_flow)).addView(view);
+        ((Flow) findViewById(C1894R.C1898id.list_flow)).addView(view);
     }
 
     /* access modifiers changed from: protected */
     public void removeAllListViews() {
-        View findViewById = findViewById(C1893R.C1897id.list_flow);
+        View findViewById = findViewById(C1894R.C1898id.list_flow);
         super.removeAllListViews();
         super.addToListView(findViewById, false);
     }
@@ -76,7 +76,7 @@ public class GlobalActionsLayoutLite extends GlobalActionsLayout {
 
     /* access modifiers changed from: protected */
     public float getGridItemSize() {
-        return getContext().getResources().getDimension(C1893R.dimen.global_actions_grid_item_height);
+        return getContext().getResources().getDimension(C1894R.dimen.global_actions_grid_item_height);
     }
 
     /* access modifiers changed from: protected */

@@ -106,7 +106,7 @@ public abstract class SocketKeepalive implements AutoCloseable {
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onStarted$0$android-net-SocketKeepalive$1  reason: not valid java name */
-            public /* synthetic */ void m1933lambda$onStarted$0$androidnetSocketKeepalive$1(int i, Callback callback) {
+            public /* synthetic */ void m1939lambda$onStarted$0$androidnetSocketKeepalive$1(int i, Callback callback) {
                 SocketKeepalive.this.mSlot = Integer.valueOf(i);
                 callback.onStarted();
             }
@@ -122,7 +122,7 @@ public abstract class SocketKeepalive implements AutoCloseable {
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onStopped$1$android-net-SocketKeepalive$1  reason: not valid java name */
-            public /* synthetic */ void m1934lambda$onStopped$1$androidnetSocketKeepalive$1(Callback callback) {
+            public /* synthetic */ void m1940lambda$onStopped$1$androidnetSocketKeepalive$1(Callback callback) {
                 SocketKeepalive.this.mSlot = null;
                 callback.onStopped();
             }
@@ -138,7 +138,7 @@ public abstract class SocketKeepalive implements AutoCloseable {
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onError$2$android-net-SocketKeepalive$1  reason: not valid java name */
-            public /* synthetic */ void m1932lambda$onError$2$androidnetSocketKeepalive$1(Callback callback, int i) {
+            public /* synthetic */ void m1938lambda$onError$2$androidnetSocketKeepalive$1(Callback callback, int i) {
                 SocketKeepalive.this.mSlot = null;
                 callback.onError(i);
             }
@@ -154,7 +154,7 @@ public abstract class SocketKeepalive implements AutoCloseable {
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onDataReceived$3$android-net-SocketKeepalive$1  reason: not valid java name */
-            public /* synthetic */ void m1931lambda$onDataReceived$3$androidnetSocketKeepalive$1(Callback callback) {
+            public /* synthetic */ void m1937lambda$onDataReceived$3$androidnetSocketKeepalive$1(Callback callback) {
                 SocketKeepalive.this.mSlot = null;
                 callback.onDataReceived();
             }

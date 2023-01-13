@@ -17,9 +17,9 @@ public class AnimUtils {
         view.setVisibility(0);
         view.measure(-1, -2);
         final int measuredHeight = view.getMeasuredHeight();
-        NTLogUtil.m1680d(TAG, "expand height = " + view.getHeight() + ", viewHeight:" + measuredHeight + ", bottom:" + view.getPaddingBottom());
+        NTLogUtil.m1686d(TAG, "expand height = " + view.getHeight() + ", viewHeight:" + measuredHeight + ", bottom:" + view.getPaddingBottom());
         view.getLayoutParams().height = 0;
-        C42191 r0 = new Animation() {
+        C42311 r0 = new Animation() {
             /* access modifiers changed from: protected */
             public /* bridge */ /* synthetic */ Object clone() throws CloneNotSupportedException {
                 return super.clone();
@@ -44,9 +44,9 @@ public class AnimUtils {
     public static Animation collapse(final View view) {
         view.measure(-1, -2);
         final int measuredHeight = view.getMeasuredHeight();
-        NTLogUtil.m1680d(TAG, "collapse height = " + view.getHeight() + ", viewHeight:" + measuredHeight + ", bottom:" + view.getPaddingBottom());
+        NTLogUtil.m1686d(TAG, "collapse height = " + view.getHeight() + ", viewHeight:" + measuredHeight + ", bottom:" + view.getPaddingBottom());
         view.getLayoutParams().height = measuredHeight;
-        C42202 r1 = new Animation() {
+        C42322 r1 = new Animation() {
             /* access modifiers changed from: protected */
             public /* bridge */ /* synthetic */ Object clone() throws CloneNotSupportedException {
                 return super.clone();

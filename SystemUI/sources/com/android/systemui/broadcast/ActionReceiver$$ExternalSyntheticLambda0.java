@@ -18,6 +18,6 @@ public final /* synthetic */ class ActionReceiver$$ExternalSyntheticLambda0 impl
     }
 
     public final void run() {
-        ActionReceiver.m2592onReceive$lambda3(this.f$0, this.f$1, this.f$2, this.f$3);
+        ActionReceiver.m2597onReceive$lambda3(this.f$0, this.f$1, this.f$2, this.f$3);
     }
 }

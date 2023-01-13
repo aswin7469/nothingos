@@ -10,6 +10,6 @@ public final /* synthetic */ class PipController$$ExternalSyntheticLambda2 imple
     }
 
     public final void run() {
-        this.f$0.m3459lambda$init$2$comandroidwmshellpipphonePipController();
+        this.f$0.m3463lambda$init$2$comandroidwmshellpipphonePipController();
     }
 }

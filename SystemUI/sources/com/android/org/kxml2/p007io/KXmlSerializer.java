@@ -333,7 +333,7 @@ public class KXmlSerializer implements XmlSerializer {
             }
             setOutput(outputStreamWriter);
             this.encoding = str;
-            if (str != null && str.toLowerCase(Locale.f700US).startsWith("utf")) {
+            if (str != null && str.toLowerCase(Locale.f698US).startsWith("utf")) {
                 this.unicode = true;
                 return;
             }
@@ -346,7 +346,7 @@ public class KXmlSerializer implements XmlSerializer {
         append("<?xml version='1.0' ");
         if (str != null) {
             this.encoding = str;
-            if (str.toLowerCase(Locale.f700US).startsWith("utf")) {
+            if (str.toLowerCase(Locale.f698US).startsWith("utf")) {
                 this.unicode = true;
             }
         }

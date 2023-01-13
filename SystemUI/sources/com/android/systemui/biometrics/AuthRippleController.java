@@ -9,11 +9,12 @@ import android.util.DisplayMetrics;
 import android.view.Display;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.settingslib.Utils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.animation.Interpolators;
 import com.android.systemui.keyguard.WakefulnessLifecycle;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.CircleReveal;
+import com.android.systemui.statusbar.LiftReveal;
 import com.android.systemui.statusbar.LightRevealEffect;
 import com.android.systemui.statusbar.LightRevealScrim;
 import com.android.systemui.statusbar.NotificationShadeWindowController;
@@ -27,6 +28,9 @@ import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
 import com.android.systemui.util.ViewController;
 import com.android.systemui.util.leak.RotationUtils;
+import com.nothing.systemui.NTDependencyEx;
+import com.nothing.systemui.biometrics.AuthRippleControllerEx;
+import com.nothing.systemui.util.NTLogUtil;
 import java.p026io.PrintWriter;
 import java.util.List;
 import javax.inject.Inject;
@@ -37,11 +41,11 @@ import kotlin.jvm.internal.Intrinsics;
 import kotlin.text.StringsKt;
 
 @CentralSurfacesComponent.CentralSurfacesScope
-@Metadata(mo64986d1 = {"\u0000¶\u0001\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0000\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0006\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0010\u000b\n\u0002\b\b\n\u0002\b\u0003\n\u0002\u0010\u0007\n\u0002\b\u0002\n\u0002\u0010\u0002\n\u0002\b\u0007\n\u0002\u0018\u0002\n\u0002\b\b*\u0004#(2D\b\u0007\u0018\u0000 Y2\b\u0012\u0004\u0012\u00020\u00020\u00012\u00020\u00032\u00020\u0004:\u0002XYB\b\u0007\u0012\u0006\u0010\u0005\u001a\u00020\u0006\u0012\u0006\u0010\u0007\u001a\u00020\b\u0012\u0006\u0010\t\u001a\u00020\n\u0012\u0006\u0010\u000b\u001a\u00020\f\u0012\u0006\u0010\r\u001a\u00020\u000e\u0012\u0006\u0010\u000f\u001a\u00020\u0010\u0012\u0006\u0010\u0011\u001a\u00020\u0012\u0012\u0006\u0010\u0013\u001a\u00020\u0014\u0012\u0006\u0010\u0015\u001a\u00020\u0016\u0012\u0006\u0010\u0017\u001a\u00020\u0018\u0012\u0006\u0010\u0019\u001a\u00020\u001a\u0012\f\u0010\u001b\u001a\b\u0012\u0004\u0012\u00020\u001d0\u001c\u0012\u0006\u0010\u001e\u001a\u00020\u001f\u0012\b\u0010 \u001a\u0004\u0018\u00010\u0002¢\u0006\u0002\u0010!J\u0006\u0010H\u001a\u00020;J\b\u0010I\u001a\u00020JH\u0014J\b\u0010K\u001a\u00020JH\u0016J\b\u0010L\u001a\u00020JH\u0016J\b\u0010M\u001a\u00020JH\u0017J\b\u0010N\u001a\u00020JH\u0017J\b\u0010O\u001a\u00020JH\u0002J\u0010\u0010P\u001a\u00020J2\b\u0010Q\u001a\u0004\u0018\u00010RJ\b\u0010S\u001a\u00020JH\u0002J\b\u0010T\u001a\u00020JH\u0002J\b\u0010U\u001a\u00020JH\u0002J\u0006\u0010V\u001a\u00020JJ\b\u0010W\u001a\u00020JH\u0002R\u000e\u0010\t\u001a\u00020\nX\u0004¢\u0006\u0002\n\u0000R\u0010\u0010\"\u001a\u00020#X\u0004¢\u0006\u0004\n\u0002\u0010$R\u000e\u0010\u0019\u001a\u00020\u001aX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0017\u001a\u00020\u0018X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0005\u001a\u00020\u0006X\u0004¢\u0006\u0002\n\u0000R\u0010\u0010%\u001a\u0004\u0018\u00010&X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0013\u001a\u00020\u0014X\u0004¢\u0006\u0002\n\u0000R\u0010\u0010'\u001a\u00020(X\u0004¢\u0006\u0004\n\u0002\u0010)R\u000e\u0010\u000b\u001a\u00020\fX\u0004¢\u0006\u0002\n\u0000R\u0010\u0010*\u001a\u0004\u0018\u00010+X\u000e¢\u0006\u0002\n\u0000R\u001c\u0010,\u001a\u0004\u0018\u00010+X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b-\u0010.\"\u0004\b/\u00100R\u000e\u0010\u000f\u001a\u00020\u0010X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\r\u001a\u00020\u000eX\u0004¢\u0006\u0002\n\u0000R\u0010\u00101\u001a\u000202X\u0004¢\u0006\u0004\n\u0002\u00103R\u001c\u00104\u001a\u0004\u0018\u000105X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b6\u00107\"\u0004\b8\u00109R\u000e\u0010\u0015\u001a\u00020\u0016X\u0004¢\u0006\u0002\n\u0000R$\u0010:\u001a\u00020;8\u0000@\u0000X\u000e¢\u0006\u0014\n\u0000\u0012\u0004\b<\u0010=\u001a\u0004\b>\u0010?\"\u0004\b@\u0010AR\u000e\u0010\u001e\u001a\u00020\u001fX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0007\u001a\u00020\bX\u0004¢\u0006\u0002\n\u0000R\u0010\u0010B\u001a\u0004\u0018\u00010\u001dX\u000e¢\u0006\u0002\n\u0000R\u0010\u0010C\u001a\u00020DX\u0004¢\u0006\u0004\n\u0002\u0010ER\u0014\u0010\u001b\u001a\b\u0012\u0004\u0012\u00020\u001d0\u001cX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010F\u001a\u00020GX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0011\u001a\u00020\u0012X\u0004¢\u0006\u0002\n\u0000¨\u0006Z"}, mo64987d2 = {"Lcom/android/systemui/biometrics/AuthRippleController;", "Lcom/android/systemui/util/ViewController;", "Lcom/android/systemui/biometrics/AuthRippleView;", "Lcom/android/systemui/statusbar/policy/KeyguardStateController$Callback;", "Lcom/android/systemui/keyguard/WakefulnessLifecycle$Observer;", "centralSurfaces", "Lcom/android/systemui/statusbar/phone/CentralSurfaces;", "sysuiContext", "Landroid/content/Context;", "authController", "Lcom/android/systemui/biometrics/AuthController;", "configurationController", "Lcom/android/systemui/statusbar/policy/ConfigurationController;", "keyguardUpdateMonitor", "Lcom/android/keyguard/KeyguardUpdateMonitor;", "keyguardStateController", "Lcom/android/systemui/statusbar/policy/KeyguardStateController;", "wakefulnessLifecycle", "Lcom/android/systemui/keyguard/WakefulnessLifecycle;", "commandRegistry", "Lcom/android/systemui/statusbar/commandline/CommandRegistry;", "notificationShadeWindowController", "Lcom/android/systemui/statusbar/NotificationShadeWindowController;", "bypassController", "Lcom/android/systemui/statusbar/phone/KeyguardBypassController;", "biometricUnlockController", "Lcom/android/systemui/statusbar/phone/BiometricUnlockController;", "udfpsControllerProvider", "Ljavax/inject/Provider;", "Lcom/android/systemui/biometrics/UdfpsController;", "statusBarStateController", "Lcom/android/systemui/plugins/statusbar/StatusBarStateController;", "rippleView", "(Lcom/android/systemui/statusbar/phone/CentralSurfaces;Landroid/content/Context;Lcom/android/systemui/biometrics/AuthController;Lcom/android/systemui/statusbar/policy/ConfigurationController;Lcom/android/keyguard/KeyguardUpdateMonitor;Lcom/android/systemui/statusbar/policy/KeyguardStateController;Lcom/android/systemui/keyguard/WakefulnessLifecycle;Lcom/android/systemui/statusbar/commandline/CommandRegistry;Lcom/android/systemui/statusbar/NotificationShadeWindowController;Lcom/android/systemui/statusbar/phone/KeyguardBypassController;Lcom/android/systemui/statusbar/phone/BiometricUnlockController;Ljavax/inject/Provider;Lcom/android/systemui/plugins/statusbar/StatusBarStateController;Lcom/android/systemui/biometrics/AuthRippleView;)V", "authControllerCallback", "com/android/systemui/biometrics/AuthRippleController$authControllerCallback$1", "Lcom/android/systemui/biometrics/AuthRippleController$authControllerCallback$1;", "circleReveal", "Lcom/android/systemui/statusbar/LightRevealEffect;", "configurationChangedListener", "com/android/systemui/biometrics/AuthRippleController$configurationChangedListener$1", "Lcom/android/systemui/biometrics/AuthRippleController$configurationChangedListener$1;", "faceSensorLocation", "Landroid/graphics/PointF;", "fingerprintSensorLocation", "getFingerprintSensorLocation", "()Landroid/graphics/PointF;", "setFingerprintSensorLocation", "(Landroid/graphics/PointF;)V", "keyguardUpdateMonitorCallback", "com/android/systemui/biometrics/AuthRippleController$keyguardUpdateMonitorCallback$1", "Lcom/android/systemui/biometrics/AuthRippleController$keyguardUpdateMonitorCallback$1;", "lightRevealScrimAnimator", "Landroid/animation/ValueAnimator;", "getLightRevealScrimAnimator", "()Landroid/animation/ValueAnimator;", "setLightRevealScrimAnimator", "(Landroid/animation/ValueAnimator;)V", "startLightRevealScrimOnKeyguardFadingAway", "", "getStartLightRevealScrimOnKeyguardFadingAway$SystemUI_nothingRelease$annotations", "()V", "getStartLightRevealScrimOnKeyguardFadingAway$SystemUI_nothingRelease", "()Z", "setStartLightRevealScrimOnKeyguardFadingAway$SystemUI_nothingRelease", "(Z)V", "udfpsController", "udfpsControllerCallback", "com/android/systemui/biometrics/AuthRippleController$udfpsControllerCallback$1", "Lcom/android/systemui/biometrics/AuthRippleController$udfpsControllerCallback$1;", "udfpsRadius", "", "isAnimatingLightRevealScrim", "onInit", "", "onKeyguardFadingAwayChanged", "onStartedGoingToSleep", "onViewAttached", "onViewDetached", "showDwellRipple", "showUnlockRipple", "biometricSourceType", "Landroid/hardware/biometrics/BiometricSourceType;", "showUnlockedRipple", "updateFingerprintLocation", "updateRippleColor", "updateSensorLocation", "updateUdfpsDependentParams", "AuthRippleCommand", "Companion", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000¶\u0001\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0000\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0006\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0010\u000b\n\u0002\b\b\n\u0002\b\u0003\n\u0002\u0010\u0007\n\u0002\b\u0002\n\u0002\u0010\u0002\n\u0002\b\b\n\u0002\u0018\u0002\n\u0002\b\b*\u0004#(2D\b\u0007\u0018\u0000 Z2\b\u0012\u0004\u0012\u00020\u00020\u00012\u00020\u00032\u00020\u0004:\u0002YZB\b\u0007\u0012\u0006\u0010\u0005\u001a\u00020\u0006\u0012\u0006\u0010\u0007\u001a\u00020\b\u0012\u0006\u0010\t\u001a\u00020\n\u0012\u0006\u0010\u000b\u001a\u00020\f\u0012\u0006\u0010\r\u001a\u00020\u000e\u0012\u0006\u0010\u000f\u001a\u00020\u0010\u0012\u0006\u0010\u0011\u001a\u00020\u0012\u0012\u0006\u0010\u0013\u001a\u00020\u0014\u0012\u0006\u0010\u0015\u001a\u00020\u0016\u0012\u0006\u0010\u0017\u001a\u00020\u0018\u0012\u0006\u0010\u0019\u001a\u00020\u001a\u0012\f\u0010\u001b\u001a\b\u0012\u0004\u0012\u00020\u001d0\u001c\u0012\u0006\u0010\u001e\u001a\u00020\u001f\u0012\b\u0010 \u001a\u0004\u0018\u00010\u0002¢\u0006\u0002\u0010!J\u0006\u0010H\u001a\u00020;J\b\u0010I\u001a\u00020JH\u0014J\b\u0010K\u001a\u00020JH\u0016J\b\u0010L\u001a\u00020JH\u0016J\b\u0010M\u001a\u00020JH\u0016J\b\u0010N\u001a\u00020JH\u0017J\b\u0010O\u001a\u00020JH\u0017J\b\u0010P\u001a\u00020JH\u0002J\u0010\u0010Q\u001a\u00020J2\b\u0010R\u001a\u0004\u0018\u00010SJ\b\u0010T\u001a\u00020JH\u0002J\b\u0010U\u001a\u00020JH\u0002J\b\u0010V\u001a\u00020JH\u0002J\u0006\u0010W\u001a\u00020JJ\b\u0010X\u001a\u00020JH\u0002R\u000e\u0010\t\u001a\u00020\nX\u0004¢\u0006\u0002\n\u0000R\u0010\u0010\"\u001a\u00020#X\u0004¢\u0006\u0004\n\u0002\u0010$R\u000e\u0010\u0019\u001a\u00020\u001aX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0017\u001a\u00020\u0018X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0005\u001a\u00020\u0006X\u0004¢\u0006\u0002\n\u0000R\u0010\u0010%\u001a\u0004\u0018\u00010&X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0013\u001a\u00020\u0014X\u0004¢\u0006\u0002\n\u0000R\u0010\u0010'\u001a\u00020(X\u0004¢\u0006\u0004\n\u0002\u0010)R\u000e\u0010\u000b\u001a\u00020\fX\u0004¢\u0006\u0002\n\u0000R\u0010\u0010*\u001a\u0004\u0018\u00010+X\u000e¢\u0006\u0002\n\u0000R\u001c\u0010,\u001a\u0004\u0018\u00010+X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b-\u0010.\"\u0004\b/\u00100R\u000e\u0010\u000f\u001a\u00020\u0010X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\r\u001a\u00020\u000eX\u0004¢\u0006\u0002\n\u0000R\u0010\u00101\u001a\u000202X\u0004¢\u0006\u0004\n\u0002\u00103R\u001c\u00104\u001a\u0004\u0018\u000105X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b6\u00107\"\u0004\b8\u00109R\u000e\u0010\u0015\u001a\u00020\u0016X\u0004¢\u0006\u0002\n\u0000R$\u0010:\u001a\u00020;8\u0000@\u0000X\u000e¢\u0006\u0014\n\u0000\u0012\u0004\b<\u0010=\u001a\u0004\b>\u0010?\"\u0004\b@\u0010AR\u000e\u0010\u001e\u001a\u00020\u001fX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0007\u001a\u00020\bX\u0004¢\u0006\u0002\n\u0000R\u0010\u0010B\u001a\u0004\u0018\u00010\u001dX\u000e¢\u0006\u0002\n\u0000R\u0010\u0010C\u001a\u00020DX\u0004¢\u0006\u0004\n\u0002\u0010ER\u0014\u0010\u001b\u001a\b\u0012\u0004\u0012\u00020\u001d0\u001cX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010F\u001a\u00020GX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0011\u001a\u00020\u0012X\u0004¢\u0006\u0002\n\u0000¨\u0006["}, mo65043d2 = {"Lcom/android/systemui/biometrics/AuthRippleController;", "Lcom/android/systemui/util/ViewController;", "Lcom/android/systemui/biometrics/AuthRippleView;", "Lcom/android/systemui/statusbar/policy/KeyguardStateController$Callback;", "Lcom/android/systemui/keyguard/WakefulnessLifecycle$Observer;", "centralSurfaces", "Lcom/android/systemui/statusbar/phone/CentralSurfaces;", "sysuiContext", "Landroid/content/Context;", "authController", "Lcom/android/systemui/biometrics/AuthController;", "configurationController", "Lcom/android/systemui/statusbar/policy/ConfigurationController;", "keyguardUpdateMonitor", "Lcom/android/keyguard/KeyguardUpdateMonitor;", "keyguardStateController", "Lcom/android/systemui/statusbar/policy/KeyguardStateController;", "wakefulnessLifecycle", "Lcom/android/systemui/keyguard/WakefulnessLifecycle;", "commandRegistry", "Lcom/android/systemui/statusbar/commandline/CommandRegistry;", "notificationShadeWindowController", "Lcom/android/systemui/statusbar/NotificationShadeWindowController;", "bypassController", "Lcom/android/systemui/statusbar/phone/KeyguardBypassController;", "biometricUnlockController", "Lcom/android/systemui/statusbar/phone/BiometricUnlockController;", "udfpsControllerProvider", "Ljavax/inject/Provider;", "Lcom/android/systemui/biometrics/UdfpsController;", "statusBarStateController", "Lcom/android/systemui/plugins/statusbar/StatusBarStateController;", "rippleView", "(Lcom/android/systemui/statusbar/phone/CentralSurfaces;Landroid/content/Context;Lcom/android/systemui/biometrics/AuthController;Lcom/android/systemui/statusbar/policy/ConfigurationController;Lcom/android/keyguard/KeyguardUpdateMonitor;Lcom/android/systemui/statusbar/policy/KeyguardStateController;Lcom/android/systemui/keyguard/WakefulnessLifecycle;Lcom/android/systemui/statusbar/commandline/CommandRegistry;Lcom/android/systemui/statusbar/NotificationShadeWindowController;Lcom/android/systemui/statusbar/phone/KeyguardBypassController;Lcom/android/systemui/statusbar/phone/BiometricUnlockController;Ljavax/inject/Provider;Lcom/android/systemui/plugins/statusbar/StatusBarStateController;Lcom/android/systemui/biometrics/AuthRippleView;)V", "authControllerCallback", "com/android/systemui/biometrics/AuthRippleController$authControllerCallback$1", "Lcom/android/systemui/biometrics/AuthRippleController$authControllerCallback$1;", "circleReveal", "Lcom/android/systemui/statusbar/LightRevealEffect;", "configurationChangedListener", "com/android/systemui/biometrics/AuthRippleController$configurationChangedListener$1", "Lcom/android/systemui/biometrics/AuthRippleController$configurationChangedListener$1;", "faceSensorLocation", "Landroid/graphics/PointF;", "fingerprintSensorLocation", "getFingerprintSensorLocation", "()Landroid/graphics/PointF;", "setFingerprintSensorLocation", "(Landroid/graphics/PointF;)V", "keyguardUpdateMonitorCallback", "com/android/systemui/biometrics/AuthRippleController$keyguardUpdateMonitorCallback$1", "Lcom/android/systemui/biometrics/AuthRippleController$keyguardUpdateMonitorCallback$1;", "lightRevealScrimAnimator", "Landroid/animation/ValueAnimator;", "getLightRevealScrimAnimator", "()Landroid/animation/ValueAnimator;", "setLightRevealScrimAnimator", "(Landroid/animation/ValueAnimator;)V", "startLightRevealScrimOnKeyguardFadingAway", "", "getStartLightRevealScrimOnKeyguardFadingAway$SystemUI_nothingRelease$annotations", "()V", "getStartLightRevealScrimOnKeyguardFadingAway$SystemUI_nothingRelease", "()Z", "setStartLightRevealScrimOnKeyguardFadingAway$SystemUI_nothingRelease", "(Z)V", "udfpsController", "udfpsControllerCallback", "com/android/systemui/biometrics/AuthRippleController$udfpsControllerCallback$1", "Lcom/android/systemui/biometrics/AuthRippleController$udfpsControllerCallback$1;", "udfpsRadius", "", "isAnimatingLightRevealScrim", "onInit", "", "onKeyguardFadingAwayChanged", "onKeyguardShowingChanged", "onStartedGoingToSleep", "onViewAttached", "onViewDetached", "showDwellRipple", "showUnlockRipple", "biometricSourceType", "Landroid/hardware/biometrics/BiometricSourceType;", "showUnlockedRipple", "updateFingerprintLocation", "updateRippleColor", "updateSensorLocation", "updateUdfpsDependentParams", "AuthRippleCommand", "Companion", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* compiled from: AuthRippleController.kt */
 public final class AuthRippleController extends ViewController<AuthRippleView> implements KeyguardStateController.Callback, WakefulnessLifecycle.Observer {
     public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
-    public static final long RIPPLE_ANIMATION_DURATION = 1533;
+    public static final long RIPPLE_ANIMATION_DURATION = 1450;
     private final AuthController authController;
     private final AuthRippleController$authControllerCallback$1 authControllerCallback = new AuthRippleController$authControllerCallback$1(this);
     private final BiometricUnlockController biometricUnlockController;
@@ -107,12 +111,12 @@ public final class AuthRippleController extends ViewController<AuthRippleView> i
     }
 
     /* renamed from: getStartLightRevealScrimOnKeyguardFadingAway$SystemUI_nothingRelease */
-    public final boolean mo30706xe7cf5f2d() {
+    public final boolean mo30717xe7cf5f2d() {
         return this.startLightRevealScrimOnKeyguardFadingAway;
     }
 
     /* renamed from: setStartLightRevealScrimOnKeyguardFadingAway$SystemUI_nothingRelease */
-    public final void mo30710x3cf733a1(boolean z) {
+    public final void mo30721x3cf733a1(boolean z) {
         this.startLightRevealScrimOnKeyguardFadingAway = z;
     }
 
@@ -134,7 +138,8 @@ public final class AuthRippleController extends ViewController<AuthRippleView> i
 
     /* access modifiers changed from: protected */
     public void onInit() {
-        ((AuthRippleView) this.mView).setAlphaInDuration((long) this.sysuiContext.getResources().getInteger(C1893R.integer.auth_ripple_alpha_in_duration));
+        ((AuthRippleView) this.mView).setAlphaInDuration((long) this.sysuiContext.getResources().getInteger(C1894R.integer.auth_ripple_alpha_in_duration));
+        ((AuthRippleControllerEx) NTDependencyEx.get(AuthRippleControllerEx.class)).init();
     }
 
     public void onViewAttached() {
@@ -203,15 +208,26 @@ public final class AuthRippleController extends ViewController<AuthRippleView> i
 
     /* access modifiers changed from: private */
     /* renamed from: showUnlockedRipple$lambda-1  reason: not valid java name */
-    public static final void m2561showUnlockedRipple$lambda1(AuthRippleController authRippleController) {
+    public static final void m2567showUnlockedRipple$lambda1(AuthRippleController authRippleController) {
         Intrinsics.checkNotNullParameter(authRippleController, "this$0");
         authRippleController.notificationShadeWindowController.setForcePluginOpen(false, authRippleController);
     }
 
     public void onKeyguardFadingAwayChanged() {
+        boolean isDeviceLandscape = ((AuthRippleControllerEx) NTDependencyEx.get(AuthRippleControllerEx.class)).isDeviceLandscape();
+        NTLogUtil.m1686d("AuthRippleController", "keyguardFadingAway: " + this.startLightRevealScrimOnKeyguardFadingAway + ", animator: " + this.lightRevealScrimAnimator + ", isLandscapeUnlocked: " + isDeviceLandscape);
         if (this.keyguardStateController.isKeyguardFadingAway()) {
             LightRevealScrim lightRevealScrim = this.centralSurfaces.getLightRevealScrim();
             if (this.startLightRevealScrimOnKeyguardFadingAway && lightRevealScrim != null) {
+                if (isDeviceLandscape) {
+                    lightRevealScrim.setRevealAmount(1.0f);
+                    if (Intrinsics.areEqual((Object) lightRevealScrim.getRevealEffect(), (Object) this.circleReveal)) {
+                        lightRevealScrim.setRevealEffect(LiftReveal.INSTANCE);
+                    }
+                    this.lightRevealScrimAnimator = null;
+                    this.startLightRevealScrimOnKeyguardFadingAway = false;
+                    return;
+                }
                 ValueAnimator valueAnimator = this.lightRevealScrimAnimator;
                 if (valueAnimator != null) {
                     valueAnimator.cancel();
@@ -231,7 +247,7 @@ public final class AuthRippleController extends ViewController<AuthRippleView> i
 
     /* access modifiers changed from: private */
     /* renamed from: onKeyguardFadingAwayChanged$lambda-3$lambda-2  reason: not valid java name */
-    public static final void m2560onKeyguardFadingAwayChanged$lambda3$lambda2(LightRevealScrim lightRevealScrim, AuthRippleController authRippleController, ValueAnimator valueAnimator, ValueAnimator valueAnimator2) {
+    public static final void m2566onKeyguardFadingAwayChanged$lambda3$lambda2(LightRevealScrim lightRevealScrim, AuthRippleController authRippleController, ValueAnimator valueAnimator, ValueAnimator valueAnimator2) {
         Intrinsics.checkNotNullParameter(authRippleController, "this$0");
         if (!Intrinsics.areEqual((Object) lightRevealScrim.getRevealEffect(), (Object) authRippleController.circleReveal)) {
             valueAnimator.cancel();
@@ -301,7 +317,7 @@ public final class AuthRippleController extends ViewController<AuthRippleView> i
 
     /* access modifiers changed from: private */
     public final void updateRippleColor() {
-        ((AuthRippleView) this.mView).setLockScreenColor(Utils.getColorAttrDefaultColor(this.sysuiContext, C1893R.attr.wallpaperTextColorAccent));
+        ((AuthRippleView) this.mView).setLockScreenColor(Utils.getColorAttrDefaultColor(this.sysuiContext, C1894R.attr.wallpaperTextColorAccent));
     }
 
     /* access modifiers changed from: private */
@@ -322,7 +338,7 @@ public final class AuthRippleController extends ViewController<AuthRippleView> i
         }
     }
 
-    @Metadata(mo64986d1 = {"\u0000$\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010 \n\u0002\u0010\u000e\n\u0002\b\u0003\b\u0004\u0018\u00002\u00020\u0001B\u0005¢\u0006\u0002\u0010\u0002J\u001e\u0010\u0003\u001a\u00020\u00042\u0006\u0010\u0005\u001a\u00020\u00062\f\u0010\u0007\u001a\b\u0012\u0004\u0012\u00020\t0\bH\u0016J\u0010\u0010\n\u001a\u00020\u00042\u0006\u0010\u0005\u001a\u00020\u0006H\u0016J\u000e\u0010\u000b\u001a\u00020\u00042\u0006\u0010\u0005\u001a\u00020\u0006¨\u0006\f"}, mo64987d2 = {"Lcom/android/systemui/biometrics/AuthRippleController$AuthRippleCommand;", "Lcom/android/systemui/statusbar/commandline/Command;", "(Lcom/android/systemui/biometrics/AuthRippleController;)V", "execute", "", "pw", "Ljava/io/PrintWriter;", "args", "", "", "help", "invalidCommand", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u0000$\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010 \n\u0002\u0010\u000e\n\u0002\b\u0003\b\u0004\u0018\u00002\u00020\u0001B\u0005¢\u0006\u0002\u0010\u0002J\u001e\u0010\u0003\u001a\u00020\u00042\u0006\u0010\u0005\u001a\u00020\u00062\f\u0010\u0007\u001a\b\u0012\u0004\u0012\u00020\t0\bH\u0016J\u0010\u0010\n\u001a\u00020\u00042\u0006\u0010\u0005\u001a\u00020\u0006H\u0016J\u000e\u0010\u000b\u001a\u00020\u00042\u0006\u0010\u0005\u001a\u00020\u0006¨\u0006\f"}, mo65043d2 = {"Lcom/android/systemui/biometrics/AuthRippleController$AuthRippleCommand;", "Lcom/android/systemui/statusbar/commandline/Command;", "(Lcom/android/systemui/biometrics/AuthRippleController;)V", "execute", "", "pw", "Ljava/io/PrintWriter;", "args", "", "", "help", "invalidCommand", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* compiled from: AuthRippleController.kt */
     public final class AuthRippleCommand implements Command {
         public AuthRippleCommand() {
@@ -393,7 +409,7 @@ public final class AuthRippleController extends ViewController<AuthRippleView> i
         }
     }
 
-    @Metadata(mo64986d1 = {"\u0000\u0012\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\t\n\u0000\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u000e\u0010\u0003\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000¨\u0006\u0005"}, mo64987d2 = {"Lcom/android/systemui/biometrics/AuthRippleController$Companion;", "", "()V", "RIPPLE_ANIMATION_DURATION", "", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u0000\u0012\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\t\n\u0000\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u000e\u0010\u0003\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000¨\u0006\u0005"}, mo65043d2 = {"Lcom/android/systemui/biometrics/AuthRippleController$Companion;", "", "()V", "RIPPLE_ANIMATION_DURATION", "", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* compiled from: AuthRippleController.kt */
     public static final class Companion {
         public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
@@ -402,5 +418,9 @@ public final class AuthRippleController extends ViewController<AuthRippleView> i
 
         private Companion() {
         }
+    }
+
+    public void onKeyguardShowingChanged() {
+        ((AuthRippleControllerEx) NTDependencyEx.get(AuthRippleControllerEx.class)).onKeyguardShowingChanged();
     }
 }

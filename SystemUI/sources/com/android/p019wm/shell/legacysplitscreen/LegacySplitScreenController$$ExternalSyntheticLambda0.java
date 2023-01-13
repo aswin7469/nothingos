@@ -13,6 +13,6 @@ public final /* synthetic */ class LegacySplitScreenController$$ExternalSyntheti
     }
 
     public final void onRotateDisplay(int i, int i2, int i3, WindowContainerTransaction windowContainerTransaction) {
-        this.f$0.mo49703x4b648d14(i, i2, i3, windowContainerTransaction);
+        this.f$0.mo49712x4b648d14(i, i2, i3, windowContainerTransaction);
     }
 }

@@ -54,7 +54,7 @@ abstract class ChronoLocalDateImpl<D extends ChronoLocalDate> implements ChronoL
         if (!(temporalUnit instanceof ChronoUnit)) {
             return super.plus(j, temporalUnit);
         }
-        switch (C28621.$SwitchMap$java$time$temporal$ChronoUnit[((ChronoUnit) temporalUnit).ordinal()]) {
+        switch (C28681.$SwitchMap$java$time$temporal$ChronoUnit[((ChronoUnit) temporalUnit).ordinal()]) {
             case 1:
                 return plusDays(j);
             case 2:
@@ -77,7 +77,7 @@ abstract class ChronoLocalDateImpl<D extends ChronoLocalDate> implements ChronoL
     }
 
     /* renamed from: java.time.chrono.ChronoLocalDateImpl$1 */
-    static /* synthetic */ class C28621 {
+    static /* synthetic */ class C28681 {
         static final /* synthetic */ int[] $SwitchMap$java$time$temporal$ChronoUnit;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(18:0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|18) */
@@ -147,7 +147,7 @@ abstract class ChronoLocalDateImpl<D extends ChronoLocalDate> implements ChronoL
             L_0x0060:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: java.time.chrono.ChronoLocalDateImpl.C28621.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: java.time.chrono.ChronoLocalDateImpl.C28681.<clinit>():void");
         }
     }
 
@@ -216,7 +216,7 @@ abstract class ChronoLocalDateImpl<D extends ChronoLocalDate> implements ChronoL
         Objects.requireNonNull(temporal, "endExclusive");
         ChronoLocalDate date = getChronology().date(temporal);
         if (temporalUnit instanceof ChronoUnit) {
-            switch (C28621.$SwitchMap$java$time$temporal$ChronoUnit[((ChronoUnit) temporalUnit).ordinal()]) {
+            switch (C28681.$SwitchMap$java$time$temporal$ChronoUnit[((ChronoUnit) temporalUnit).ordinal()]) {
                 case 1:
                     return daysUntil(date);
                 case 2:

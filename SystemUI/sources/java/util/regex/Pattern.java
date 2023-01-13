@@ -212,7 +212,7 @@ public final class Pattern implements Serializable {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$asPredicate$0$java-util-regex-Pattern  reason: not valid java name */
-    public /* synthetic */ boolean m3865lambda$asPredicate$0$javautilregexPattern(String str) {
+    public /* synthetic */ boolean m3883lambda$asPredicate$0$javautilregexPattern(String str) {
         return matcher(str).find();
     }
 

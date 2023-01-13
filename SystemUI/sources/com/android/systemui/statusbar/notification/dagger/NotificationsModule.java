@@ -8,7 +8,7 @@ import android.os.Handler;
 import android.view.accessibility.AccessibilityManager;
 import com.android.internal.logging.UiEventLogger;
 import com.android.internal.statusbar.IStatusBarService;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.dagger.qualifiers.Background;
 import com.android.systemui.dagger.qualifiers.Main;
@@ -168,7 +168,7 @@ public interface NotificationsModule {
     @SysUISingleton
     @Provides
     static NotificationsController provideNotificationsController(Context context, Provider<NotificationsControllerImpl> provider, Provider<NotificationsControllerStub> provider2) {
-        if (context.getResources().getBoolean(C1893R.bool.config_renderNotifications)) {
+        if (context.getResources().getBoolean(C1894R.bool.config_renderNotifications)) {
             return provider.get();
         }
         return provider2.get();

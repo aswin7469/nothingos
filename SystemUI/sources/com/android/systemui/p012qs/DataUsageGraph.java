@@ -8,7 +8,7 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
 import com.android.settingslib.Utils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 
 /* renamed from: com.android.systemui.qs.DataUsageGraph */
 public class DataUsageGraph extends View {
@@ -27,11 +27,11 @@ public class DataUsageGraph extends View {
     public DataUsageGraph(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         Resources resources = context.getResources();
-        this.mTrackColor = Utils.getColorStateListDefaultColor(context, C1893R.C1894color.data_usage_graph_track);
-        this.mWarningColor = Utils.getColorStateListDefaultColor(context, C1893R.C1894color.data_usage_graph_warning);
+        this.mTrackColor = Utils.getColorStateListDefaultColor(context, C1894R.C1895color.data_usage_graph_track);
+        this.mWarningColor = Utils.getColorStateListDefaultColor(context, C1894R.C1895color.data_usage_graph_warning);
         this.mUsageColor = Utils.getColorAccentDefaultColor(context);
         this.mOverlimitColor = Utils.getColorErrorDefaultColor(context);
-        this.mMarkerWidth = resources.getDimensionPixelSize(C1893R.dimen.data_usage_graph_marker_width);
+        this.mMarkerWidth = resources.getDimensionPixelSize(C1894R.dimen.data_usage_graph_marker_width);
     }
 
     public void setLevels(long j, long j2, long j3) {

@@ -4,6 +4,6 @@ package com.android.systemui.p012qs;
 /* compiled from: D8$$SyntheticClass */
 public final /* synthetic */ class FooterActionsController$$ExternalSyntheticLambda0 implements Runnable {
     public final void run() {
-        FooterActionsController.m2896onClickListener$lambda3$lambda2();
+        FooterActionsController.m2901onClickListener$lambda3$lambda2();
     }
 }

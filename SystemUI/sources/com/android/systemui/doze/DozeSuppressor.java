@@ -80,7 +80,7 @@ public class DozeSuppressor implements DozeMachine.Part {
     }
 
     /* renamed from: com.android.systemui.doze.DozeSuppressor$3 */
-    static /* synthetic */ class C20673 {
+    static /* synthetic */ class C20693 {
         static final /* synthetic */ int[] $SwitchMap$com$android$systemui$doze$DozeMachine$State;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(6:0|1|2|3|4|6) */
@@ -108,12 +108,12 @@ public class DozeSuppressor implements DozeMachine.Part {
             L_0x001d:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.doze.DozeSuppressor.C20673.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.doze.DozeSuppressor.C20693.<clinit>():void");
         }
     }
 
     public void transitionTo(DozeMachine.State state, DozeMachine.State state2) {
-        int i = C20673.$SwitchMap$com$android$systemui$doze$DozeMachine$State[state2.ordinal()];
+        int i = C20693.$SwitchMap$com$android$systemui$doze$DozeMachine$State[state2.ordinal()];
         if (i == 1) {
             registerBroadcastReceiver();
             this.mDozeHost.addCallback(this.mHostCallback);

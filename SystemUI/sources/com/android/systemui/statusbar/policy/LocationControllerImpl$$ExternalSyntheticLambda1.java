@@ -11,6 +11,6 @@ public final /* synthetic */ class LocationControllerImpl$$ExternalSyntheticLamb
     }
 
     public final void onPropertiesChanged(DeviceConfig.Properties properties) {
-        this.f$0.mo45921x5109b535(properties);
+        this.f$0.mo45933x5109b535(properties);
     }
 }

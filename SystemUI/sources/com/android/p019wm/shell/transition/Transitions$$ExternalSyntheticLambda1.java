@@ -16,6 +16,6 @@ public final /* synthetic */ class Transitions$$ExternalSyntheticLambda1 impleme
     }
 
     public final void onTransitionFinished(WindowContainerTransaction windowContainerTransaction, WindowContainerTransactionCallback windowContainerTransactionCallback) {
-        this.f$0.mo51284xe84873b9(this.f$1, windowContainerTransaction, windowContainerTransactionCallback);
+        this.f$0.mo51295xe84873b9(this.f$1, windowContainerTransaction, windowContainerTransactionCallback);
     }
 }

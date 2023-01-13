@@ -10,7 +10,7 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.util.Log;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.dump.DumpManager;
 import com.android.systemui.statusbar.policy.CastController;
@@ -78,7 +78,7 @@ public class CastControllerImpl implements CastController {
 
     @Inject
     public CastControllerImpl(Context context, DumpManager dumpManager) {
-        C31382 r0 = new MediaProjectionManager.Callback() {
+        C31482 r0 = new MediaProjectionManager.Callback() {
             public void onStart(MediaProjectionInfo mediaProjectionInfo) {
                 CastControllerImpl.this.setProjection(mediaProjectionInfo, true);
             }
@@ -182,7 +182,7 @@ public class CastControllerImpl implements CastController {
         synchronized (this.mRoutes) {
             for (MediaRouter.RouteInfo next : this.mRoutes.values()) {
                 CastController.CastDevice castDevice = new CastController.CastDevice();
-                castDevice.f395id = next.getTag().toString();
+                castDevice.f394id = next.getTag().toString();
                 CharSequence name = next.getName(this.mContext);
                 String str = null;
                 castDevice.name = name != null ? name.toString() : null;
@@ -209,9 +209,9 @@ public class CastControllerImpl implements CastController {
         synchronized (this.mProjectionLock) {
             if (this.mProjection != null) {
                 CastController.CastDevice castDevice2 = new CastController.CastDevice();
-                castDevice2.f395id = this.mProjection.getPackageName();
+                castDevice2.f394id = this.mProjection.getPackageName();
                 castDevice2.name = getAppName(this.mProjection.getPackageName());
-                castDevice2.description = this.mContext.getString(C1893R.string.quick_settings_casting);
+                castDevice2.description = this.mContext.getString(C1894R.string.quick_settings_casting);
                 castDevice2.state = 2;
                 castDevice2.tag = this.mProjection;
                 arrayList.add(castDevice2);

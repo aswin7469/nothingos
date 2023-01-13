@@ -10,6 +10,6 @@ public final /* synthetic */ class PipMenuView$$ExternalSyntheticLambda1 impleme
     }
 
     public final void run() {
-        this.f$0.m3467lambda$showMenu$4$comandroidwmshellpipphonePipMenuView();
+        this.f$0.m3471lambda$showMenu$4$comandroidwmshellpipphonePipMenuView();
     }
 }

@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.ViewPropertyAnimator;
 import androidx.core.view.ViewCompat;
 import com.android.internal.graphics.ColorUtils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.screenshot.CropView;
 
 public class MagnifierView extends View implements CropView.CropInteractionListener {
@@ -52,7 +52,7 @@ public class MagnifierView extends View implements CropView.CropInteractionListe
                 ViewPropertyAnimator unused = MagnifierView.this.mTranslationAnimator = null;
             }
         };
-        TypedArray obtainStyledAttributes = context.getTheme().obtainStyledAttributes(attributeSet, C1893R.styleable.MagnifierView, 0, 0);
+        TypedArray obtainStyledAttributes = context.getTheme().obtainStyledAttributes(attributeSet, C1894R.styleable.MagnifierView, 0, 0);
         Paint paint = new Paint();
         this.mShadePaint = paint;
         paint.setColor(ColorUtils.setAlphaComponent(obtainStyledAttributes.getColor(5, 0), obtainStyledAttributes.getInteger(4, 255)));
@@ -160,7 +160,7 @@ public class MagnifierView extends View implements CropView.CropInteractionListe
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onCropDragComplete$0$com-android-systemui-screenshot-MagnifierView */
-    public /* synthetic */ void mo37390xdc81bcfd() {
+    public /* synthetic */ void mo37391xdc81bcfd() {
         setVisibility(4);
     }
 

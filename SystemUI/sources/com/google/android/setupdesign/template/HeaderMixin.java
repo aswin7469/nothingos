@@ -15,7 +15,7 @@ import com.google.android.setupcompat.internal.TemplateLayout;
 import com.google.android.setupcompat.partnerconfig.PartnerConfig;
 import com.google.android.setupcompat.partnerconfig.PartnerConfigHelper;
 import com.google.android.setupcompat.template.Mixin;
-import com.google.android.setupdesign.C3953R;
+import com.google.android.setupdesign.C3963R;
 import com.google.android.setupdesign.util.HeaderAreaStyler;
 import com.google.android.setupdesign.util.LayoutStyler;
 import com.google.android.setupdesign.util.PartnerStyleHelper;
@@ -34,9 +34,9 @@ public class HeaderMixin implements Mixin {
 
     public HeaderMixin(TemplateLayout templateLayout2, AttributeSet attributeSet, int i) {
         this.templateLayout = templateLayout2;
-        TypedArray obtainStyledAttributes = templateLayout2.getContext().obtainStyledAttributes(attributeSet, C3953R.styleable.SucHeaderMixin, i, 0);
-        CharSequence text = obtainStyledAttributes.getText(C3953R.styleable.SucHeaderMixin_sucHeaderText);
-        ColorStateList colorStateList = obtainStyledAttributes.getColorStateList(C3953R.styleable.SucHeaderMixin_sucHeaderTextColor);
+        TypedArray obtainStyledAttributes = templateLayout2.getContext().obtainStyledAttributes(attributeSet, C3963R.styleable.SucHeaderMixin, i, 0);
+        CharSequence text = obtainStyledAttributes.getText(C3963R.styleable.SucHeaderMixin_sucHeaderText);
+        ColorStateList colorStateList = obtainStyledAttributes.getColorStateList(C3963R.styleable.SucHeaderMixin_sucHeaderTextColor);
         obtainStyledAttributes.recycle();
         tryUpdateAutoTextSizeFlagWithPartnerConfig();
         if (text != null) {
@@ -81,9 +81,9 @@ public class HeaderMixin implements Mixin {
     }
 
     public void tryApplyPartnerCustomizationStyle() {
-        TextView textView = (TextView) this.templateLayout.findManagedViewById(C3953R.C3956id.suc_layout_title);
+        TextView textView = (TextView) this.templateLayout.findManagedViewById(C3963R.C3966id.suc_layout_title);
         if (PartnerStyleHelper.shouldApplyPartnerResource((View) this.templateLayout)) {
-            View findManagedViewById = this.templateLayout.findManagedViewById(C3953R.C3956id.sud_layout_header);
+            View findManagedViewById = this.templateLayout.findManagedViewById(C3963R.C3966id.sud_layout_header);
             LayoutStyler.applyPartnerCustomizationExtraPaddingStyle(findManagedViewById);
             HeaderAreaStyler.applyPartnerCustomizationHeaderStyle(textView);
             HeaderAreaStyler.applyPartnerCustomizationHeaderAreaStyle((ViewGroup) findManagedViewById);
@@ -95,7 +95,7 @@ public class HeaderMixin implements Mixin {
     }
 
     public TextView getTextView() {
-        return (TextView) this.templateLayout.findManagedViewById(C3953R.C3956id.suc_layout_title);
+        return (TextView) this.templateLayout.findManagedViewById(C3963R.C3966id.suc_layout_title);
     }
 
     public void setText(int i) {

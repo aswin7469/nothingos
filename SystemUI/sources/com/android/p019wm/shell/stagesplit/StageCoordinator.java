@@ -88,7 +88,7 @@ class StageCoordinator implements SplitLayout.SplitLayoutHandler, RootTaskDispla
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-wm-shell-stagesplit-StageCoordinator  reason: not valid java name */
-    public /* synthetic */ void m3485lambda$new$0$comandroidwmshellstagesplitStageCoordinator() {
+    public /* synthetic */ void m3489lambda$new$0$comandroidwmshellstagesplitStageCoordinator() {
         if (!isSplitScreenVisible()) {
             setDividerVisibility(false);
             this.mSplitLayout.resetDividerPosition();
@@ -121,7 +121,7 @@ class StageCoordinator implements SplitLayout.SplitLayoutHandler, RootTaskDispla
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onLeashReady$0$com-android-wm-shell-stagesplit-StageCoordinator$1 */
-            public /* synthetic */ void mo51051x9e0c9ebc(SurfaceControl.Transaction transaction) {
+            public /* synthetic */ void mo51062x9e0c9ebc(SurfaceControl.Transaction transaction) {
                 StageCoordinator.this.applyDividerVisibility(transaction);
             }
 
@@ -172,7 +172,7 @@ class StageCoordinator implements SplitLayout.SplitLayoutHandler, RootTaskDispla
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onLeashReady$0$com-android-wm-shell-stagesplit-StageCoordinator$1 */
-            public /* synthetic */ void mo51051x9e0c9ebc(SurfaceControl.Transaction transaction) {
+            public /* synthetic */ void mo51062x9e0c9ebc(SurfaceControl.Transaction transaction) {
                 StageCoordinator.this.applyDividerVisibility(transaction);
             }
 
@@ -221,7 +221,7 @@ class StageCoordinator implements SplitLayout.SplitLayoutHandler, RootTaskDispla
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$moveToSideStage$1$com-android-wm-shell-stagesplit-StageCoordinator */
-    public /* synthetic */ void mo51026xe9506c92(SurfaceControl.Transaction transaction) {
+    public /* synthetic */ void mo51037xe9506c92(SurfaceControl.Transaction transaction) {
         updateSurfaceBounds((SplitLayout) null, transaction, false);
     }
 
@@ -450,7 +450,7 @@ class StageCoordinator implements SplitLayout.SplitLayoutHandler, RootTaskDispla
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$applyExitSplitScreen$2$com-android-wm-shell-stagesplit-StageCoordinator */
-    public /* synthetic */ void mo51025x6440dab8(SurfaceControl.Transaction transaction) {
+    public /* synthetic */ void mo51036x6440dab8(SurfaceControl.Transaction transaction) {
         transaction.setWindowCrop(this.mMainStage.mRootLeash, (Rect) null).setWindowCrop(this.mSideStage.mRootLeash, (Rect) null);
     }
 
@@ -603,7 +603,7 @@ class StageCoordinator implements SplitLayout.SplitLayoutHandler, RootTaskDispla
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onStageVisibilityChanged$3$com-android-wm-shell-stagesplit-StageCoordinator */
-    public /* synthetic */ void mo51031xba06c2ee(boolean z, boolean z2, SurfaceControl.Transaction transaction) {
+    public /* synthetic */ void mo51042xba06c2ee(boolean z, boolean z2, SurfaceControl.Transaction transaction) {
         if (z) {
             transaction.setVisibility(this.mSideStage.mRootLeash, z2).setVisibility(this.mMainStage.mRootLeash, z2);
             applyDividerVisibility(transaction);
@@ -681,7 +681,7 @@ class StageCoordinator implements SplitLayout.SplitLayoutHandler, RootTaskDispla
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onLayoutPositionChanging$4$com-android-wm-shell-stagesplit-StageCoordinator */
-    public /* synthetic */ void mo51028xd4a6cf71(SplitLayout splitLayout, SurfaceControl.Transaction transaction) {
+    public /* synthetic */ void mo51039xd4a6cf71(SplitLayout splitLayout, SurfaceControl.Transaction transaction) {
         updateSurfaceBounds(splitLayout, transaction, true);
     }
 
@@ -691,7 +691,7 @@ class StageCoordinator implements SplitLayout.SplitLayoutHandler, RootTaskDispla
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onLayoutSizeChanging$5$com-android-wm-shell-stagesplit-StageCoordinator */
-    public /* synthetic */ void mo51030x500a14b8(SplitLayout splitLayout, SurfaceControl.Transaction transaction) {
+    public /* synthetic */ void mo51041x500a14b8(SplitLayout splitLayout, SurfaceControl.Transaction transaction) {
         updateSurfaceBounds(splitLayout, transaction, true);
     }
 
@@ -712,7 +712,7 @@ class StageCoordinator implements SplitLayout.SplitLayoutHandler, RootTaskDispla
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onLayoutSizeChanged$6$com-android-wm-shell-stagesplit-StageCoordinator */
-    public /* synthetic */ void mo51029x2642199e(SplitLayout splitLayout, SurfaceControl.Transaction transaction) {
+    public /* synthetic */ void mo51040x2642199e(SplitLayout splitLayout, SurfaceControl.Transaction transaction) {
         updateSurfaceBounds(splitLayout, transaction, false);
     }
 

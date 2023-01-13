@@ -11,7 +11,7 @@ import android.util.DisplayMetrics;
 import android.util.Size;
 import android.util.TypedValue;
 import android.view.Gravity;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.common.DisplayLayout;
 import com.android.p019wm.shell.pip.PipBoundsState;
 import java.p026io.PrintWriter;
@@ -44,11 +44,11 @@ public class PipBoundsAlgorithm {
     private void reloadResources(Context context) {
         Point point;
         Resources resources = context.getResources();
-        this.mDefaultAspectRatio = resources.getFloat(C3343R.dimen.config_pictureInPictureDefaultAspectRatio);
-        this.mDefaultStackGravity = resources.getInteger(C3343R.integer.config_defaultPictureInPictureGravity);
-        this.mDefaultMinSize = resources.getDimensionPixelSize(C3343R.dimen.default_minimal_size_pip_resizable_task);
-        this.mOverridableMinSize = resources.getDimensionPixelSize(C3343R.dimen.overridable_minimal_size_pip_resizable_task);
-        String string = resources.getString(C3343R.string.config_defaultPictureInPictureScreenEdgeInsets);
+        this.mDefaultAspectRatio = resources.getFloat(C3353R.dimen.config_pictureInPictureDefaultAspectRatio);
+        this.mDefaultStackGravity = resources.getInteger(C3353R.integer.config_defaultPictureInPictureGravity);
+        this.mDefaultMinSize = resources.getDimensionPixelSize(C3353R.dimen.default_minimal_size_pip_resizable_task);
+        this.mOverridableMinSize = resources.getDimensionPixelSize(C3353R.dimen.overridable_minimal_size_pip_resizable_task);
+        String string = resources.getString(C3353R.string.config_defaultPictureInPictureScreenEdgeInsets);
         Size parseSize = !string.isEmpty() ? Size.parseSize(string) : null;
         if (parseSize == null) {
             point = new Point();
@@ -58,8 +58,8 @@ public class PipBoundsAlgorithm {
         this.mScreenEdgeInsets = point;
         this.mMinAspectRatio = resources.getFloat(17105093);
         this.mMaxAspectRatio = resources.getFloat(17105092);
-        this.mDefaultSizePercent = resources.getFloat(C3343R.dimen.config_pictureInPictureDefaultSizePercent);
-        float f = resources.getFloat(C3343R.dimen.config_pictureInPictureAspectRatioLimitForMinSize);
+        this.mDefaultSizePercent = resources.getFloat(C3353R.dimen.config_pictureInPictureDefaultSizePercent);
+        float f = resources.getFloat(C3353R.dimen.config_pictureInPictureAspectRatioLimitForMinSize);
         this.mMaxAspectRatioForMinSize = f;
         this.mMinAspectRatioForMinSize = 1.0f / f;
     }

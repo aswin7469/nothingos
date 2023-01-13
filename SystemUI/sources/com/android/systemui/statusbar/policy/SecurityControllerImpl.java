@@ -25,7 +25,7 @@ import android.util.Log;
 import android.util.SparseArray;
 import com.android.internal.net.LegacyVpnInfo;
 import com.android.internal.net.VpnConfig;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.dagger.qualifiers.Background;
@@ -67,7 +67,7 @@ public class SecurityControllerImpl extends CurrentUserTracker implements Securi
     @Inject
     public SecurityControllerImpl(Context context, @Background Handler handler, BroadcastDispatcher broadcastDispatcher, @Background Executor executor, DumpManager dumpManager) {
         super(broadcastDispatcher);
-        C31831 r0 = new ConnectivityManager.NetworkCallback() {
+        C31931 r0 = new ConnectivityManager.NetworkCallback() {
             public void onAvailable(Network network) {
                 if (SecurityControllerImpl.DEBUG) {
                     Log.d(SecurityControllerImpl.TAG, "onAvailable " + network.getNetId());
@@ -85,7 +85,7 @@ public class SecurityControllerImpl extends CurrentUserTracker implements Securi
             }
         };
         this.mNetworkCallback = r0;
-        C31842 r1 = new BroadcastReceiver() {
+        C31942 r1 = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
                 int intExtra;
                 if ("android.security.action.TRUST_STORE_CHANGED".equals(intent.getAction())) {
@@ -360,7 +360,7 @@ public class SecurityControllerImpl extends CurrentUserTracker implements Securi
     /* JADX WARNING: Removed duplicated region for block: B:44:0x00a7  */
     /* renamed from: lambda$refreshCACerts$0$com-android-systemui-statusbar-policy-SecurityControllerImpl */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    public /* synthetic */ void mo46070xc8cf2670(int r8) {
+    public /* synthetic */ void mo46082xc8cf2670(int r8) {
         /*
             r7 = this;
             java.lang.String r0 = "Refreshing CA Certs "
@@ -472,12 +472,12 @@ public class SecurityControllerImpl extends CurrentUserTracker implements Securi
         L_0x00cd:
             throw r8
         */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.policy.SecurityControllerImpl.mo46070xc8cf2670(int):void");
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.policy.SecurityControllerImpl.mo46082xc8cf2670(int):void");
     }
 
     private String getNameForVpnConfig(VpnConfig vpnConfig, UserHandle userHandle) {
         if (vpnConfig.legacy) {
-            return this.mContext.getString(C1893R.string.legacy_vpn_name);
+            return this.mContext.getString(C1894R.string.legacy_vpn_name);
         }
         String str = vpnConfig.user;
         try {

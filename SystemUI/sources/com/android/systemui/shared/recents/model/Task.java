@@ -54,7 +54,7 @@ public class Task {
         @ViewDebug.ExportedProperty(category = "recents")
 
         /* renamed from: id */
-        public final int f344id;
+        public final int f343id;
         @ViewDebug.ExportedProperty(category = "recents")
         public long lastActiveTime;
         private int mHashCode;
@@ -75,7 +75,7 @@ public class Task {
             } else {
                 componentName = taskInfo.realActivity;
             }
-            this.f344id = taskInfo.taskId;
+            this.f343id = taskInfo.taskId;
             this.windowingMode = taskInfo.configuration.windowConfiguration.getWindowingMode();
             this.baseIntent = taskInfo.baseIntent;
             this.sourceComponent = componentName;
@@ -86,7 +86,7 @@ public class Task {
         }
 
         public TaskKey(int i, int i2, Intent intent, ComponentName componentName, int i3, long j) {
-            this.f344id = i;
+            this.f343id = i;
             this.windowingMode = i2;
             this.baseIntent = intent;
             this.sourceComponent = componentName;
@@ -97,7 +97,7 @@ public class Task {
         }
 
         public TaskKey(int i, int i2, Intent intent, ComponentName componentName, int i3, long j, int i4) {
-            this.f344id = i;
+            this.f343id = i;
             this.windowingMode = i2;
             this.baseIntent = intent;
             this.sourceComponent = componentName;
@@ -128,7 +128,7 @@ public class Task {
                 return false;
             }
             TaskKey taskKey = (TaskKey) obj;
-            if (this.f344id == taskKey.f344id && this.windowingMode == taskKey.windowingMode && this.userId == taskKey.userId) {
+            if (this.f343id == taskKey.f343id && this.windowingMode == taskKey.windowingMode && this.userId == taskKey.userId) {
                 return true;
             }
             return false;
@@ -139,15 +139,15 @@ public class Task {
         }
 
         public String toString() {
-            return "id=" + this.f344id + " windowingMode=" + this.windowingMode + " user=" + this.userId + " lastActiveTime=" + this.lastActiveTime;
+            return "id=" + this.f343id + " windowingMode=" + this.windowingMode + " user=" + this.userId + " lastActiveTime=" + this.lastActiveTime;
         }
 
         private void updateHashCode() {
-            this.mHashCode = Objects.hash(Integer.valueOf(this.f344id), Integer.valueOf(this.windowingMode), Integer.valueOf(this.userId));
+            this.mHashCode = Objects.hash(Integer.valueOf(this.f343id), Integer.valueOf(this.windowingMode), Integer.valueOf(this.userId));
         }
 
         public final void writeToParcel(Parcel parcel, int i) {
-            parcel.writeInt(this.f344id);
+            parcel.writeInt(this.f343id);
             parcel.writeInt(this.windowingMode);
             parcel.writeTypedObject(this.baseIntent, i);
             parcel.writeInt(this.userId);

@@ -15,7 +15,7 @@ public class JarInputStream extends ZipInputStream {
     private JarEntry first;
 
     /* renamed from: jv */
-    private JarVerifier f772jv;
+    private JarVerifier f770jv;
     private Manifest man;
     private ManifestEntryVerifier mev;
     private boolean tryManifest;
@@ -43,7 +43,7 @@ public class JarInputStream extends ZipInputStream {
         this.man.read(new ByteArrayInputStream(bytes));
         closeEntry();
         if (this.doVerify) {
-            this.f772jv = new JarVerifier(bytes);
+            this.f770jv = new JarVerifier(bytes);
             this.mev = new ManifestEntryVerifier(this.man);
         }
         return (JarEntry) super.getNextEntry();
@@ -79,13 +79,13 @@ public class JarInputStream extends ZipInputStream {
             }
             this.first = null;
         }
-        JarVerifier jarVerifier = this.f772jv;
+        JarVerifier jarVerifier = this.f770jv;
         if (!(jarVerifier == null || jarEntry == null)) {
             if (jarVerifier.nothingToVerify()) {
-                this.f772jv = null;
+                this.f770jv = null;
                 this.mev = null;
             } else {
-                this.f772jv.beginEntry(jarEntry, this.mev);
+                this.f770jv.beginEntry(jarEntry, this.mev);
             }
         }
         return jarEntry;
@@ -97,7 +97,7 @@ public class JarInputStream extends ZipInputStream {
 
     public int read(byte[] bArr, int i, int i2) throws IOException {
         int read = this.first == null ? super.read(bArr, i, i2) : -1;
-        JarVerifier jarVerifier = this.f772jv;
+        JarVerifier jarVerifier = this.f770jv;
         if (jarVerifier != null) {
             jarVerifier.update(read, bArr, i, i2, this.mev);
         }

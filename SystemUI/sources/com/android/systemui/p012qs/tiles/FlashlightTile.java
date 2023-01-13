@@ -7,7 +7,7 @@ import android.os.Looper;
 import android.view.View;
 import android.widget.Switch;
 import com.android.internal.logging.MetricsLogger;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.qualifiers.Background;
 import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.p012qs.QSHost;
@@ -69,7 +69,7 @@ public class FlashlightTile extends QSTileImpl<QSTile.BooleanState> implements F
     }
 
     public CharSequence getTileLabel() {
-        return this.mContext.getString(C1893R.string.quick_settings_flashlight_label);
+        return this.mContext.getString(C1894R.string.quick_settings_flashlight_label);
     }
 
     /* access modifiers changed from: protected */
@@ -82,14 +82,14 @@ public class FlashlightTile extends QSTileImpl<QSTile.BooleanState> implements F
         if (booleanState.slash == null) {
             booleanState.slash = new QSTile.SlashState();
         }
-        booleanState.label = this.mHost.getContext().getString(C1893R.string.quick_settings_flashlight_label);
+        booleanState.label = this.mHost.getContext().getString(C1894R.string.quick_settings_flashlight_label);
         booleanState.secondaryLabel = "";
         booleanState.stateDescription = "";
         int i = 1;
         if (!this.mFlashlightController.isAvailable()) {
             booleanState.icon = this.mIcon;
             booleanState.slash.isSlashed = true;
-            booleanState.secondaryLabel = this.mContext.getString(C1893R.string.quick_settings_flashlight_camera_in_use);
+            booleanState.secondaryLabel = this.mContext.getString(C1894R.string.quick_settings_flashlight_camera_in_use);
             booleanState.stateDescription = booleanState.secondaryLabel;
             booleanState.state = 0;
             return;
@@ -106,7 +106,7 @@ public class FlashlightTile extends QSTileImpl<QSTile.BooleanState> implements F
         }
         booleanState.icon = this.mIcon;
         booleanState.slash.isSlashed = !booleanState.value;
-        booleanState.contentDescription = this.mContext.getString(C1893R.string.quick_settings_flashlight_label);
+        booleanState.contentDescription = this.mContext.getString(C1894R.string.quick_settings_flashlight_label);
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
         if (booleanState.value) {
             i = 2;

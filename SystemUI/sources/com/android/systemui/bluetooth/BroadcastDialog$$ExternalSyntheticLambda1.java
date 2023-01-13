@@ -11,6 +11,6 @@ public final /* synthetic */ class BroadcastDialog$$ExternalSyntheticLambda1 imp
     }
 
     public final void onClick(View view) {
-        this.f$0.m2590lambda$onCreate$1$comandroidsystemuibluetoothBroadcastDialog(view);
+        this.f$0.m2596lambda$onCreate$1$comandroidsystemuibluetoothBroadcastDialog(view);
     }
 }

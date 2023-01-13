@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Switch;
 import com.android.internal.logging.MetricsLogger;
 import com.android.settingslib.media.MediaOutputConstants;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.qualifiers.Background;
 import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.p012qs.QSHost;
@@ -24,7 +24,7 @@ import javax.inject.Inject;
 public class GlyphsTile extends QSTileImpl<QSTile.BooleanState> {
     private final GlyphsController.Callback mCallBack;
     private final GlyphsController mGlyphsController;
-    private final QSTile.Icon mIcon = QSTileImpl.ResourceIcon.get(C1893R.C1895drawable.ic_qs_glyphs);
+    private final QSTile.Icon mIcon = QSTileImpl.ResourceIcon.get(C1894R.C1896drawable.ic_qs_glyphs);
 
     public int getMetricsCategory() {
         return 0;
@@ -33,7 +33,7 @@ public class GlyphsTile extends QSTileImpl<QSTile.BooleanState> {
     @Inject
     public GlyphsTile(QSHost qSHost, @Background Looper looper, @Main Handler handler, FalsingManager falsingManager, MetricsLogger metricsLogger, StatusBarStateController statusBarStateController, ActivityStarter activityStarter, QSLogger qSLogger, GlyphsController glyphsController) {
         super(qSHost, looper, handler, falsingManager, metricsLogger, statusBarStateController, activityStarter, qSLogger);
-        C41931 r1 = new GlyphsController.Callback() {
+        C42051 r1 = new GlyphsController.Callback() {
             public void onGlyphsChange() {
                 GlyphsTile.this.refreshState();
             }
@@ -55,7 +55,7 @@ public class GlyphsTile extends QSTileImpl<QSTile.BooleanState> {
     /* access modifiers changed from: protected */
     public void handleUpdateState(QSTile.BooleanState booleanState, Object obj) {
         booleanState.icon = this.mIcon;
-        booleanState.label = this.mContext.getString(C1893R.string.quick_settings_glyphs_label);
+        booleanState.label = this.mContext.getString(C1894R.string.quick_settings_glyphs_label);
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
         booleanState.contentDescription = booleanState.label;
         booleanState.value = this.mGlyphsController.getGlyphsEnabled();
@@ -70,6 +70,6 @@ public class GlyphsTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     public CharSequence getTileLabel() {
-        return this.mContext.getString(C1893R.string.quick_settings_glyphs_label);
+        return this.mContext.getString(C1894R.string.quick_settings_glyphs_label);
     }
 }

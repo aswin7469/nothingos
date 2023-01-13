@@ -11,7 +11,7 @@ import com.android.settingslib.SignalIcon;
 import com.android.settingslib.graph.SignalDrawable;
 import com.android.settingslib.mobile.TelephonyIcons;
 import com.android.settingslib.wifi.WifiStatusTracker;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.qualifiers.Background;
 import com.android.systemui.navigationbar.NavigationBarInflaterView;
 import com.nothing.systemui.NTDependencyEx;
@@ -74,17 +74,17 @@ public class WifiSignalController extends SignalController<WifiState, SignalIcon
 
     private void notifyListenersForNonCarrierWifi(SignalCallback signalCallback) {
         int i;
-        boolean z = ((WifiState) this.mCurrentState).enabled && ((((WifiState) this.mCurrentState).connected && ((WifiState) this.mCurrentState).inetCondition == 1) || !this.mHasMobileDataFeature || ((WifiState) this.mCurrentState).isDefault || this.mContext.getResources().getBoolean(C1893R.bool.config_showWifiIndicatorWhenEnabled));
+        boolean z = ((WifiState) this.mCurrentState).enabled && ((((WifiState) this.mCurrentState).connected && ((WifiState) this.mCurrentState).inetCondition == 1) || !this.mHasMobileDataFeature || ((WifiState) this.mCurrentState).isDefault || this.mContext.getResources().getBoolean(C1894R.bool.config_showWifiIndicatorWhenEnabled));
         String str = ((WifiState) this.mCurrentState).connected ? ((WifiState) this.mCurrentState).ssid : null;
         boolean z2 = z && ((WifiState) this.mCurrentState).ssid != null;
         String charSequence = getTextIfExists(getContentDescription()).toString();
         if (((WifiState) this.mCurrentState).inetCondition == 0) {
-            charSequence = charSequence + NavigationBarInflaterView.BUTTON_SEPARATOR + this.mContext.getString(C1893R.string.data_connection_no_internet);
+            charSequence = charSequence + NavigationBarInflaterView.BUTTON_SEPARATOR + this.mContext.getString(C1894R.string.data_connection_no_internet);
         }
         IconState iconState = new IconState(z, getCurrentIconId(), charSequence);
         boolean z3 = ((WifiState) this.mCurrentState).connected;
         if (this.mWifiTracker.isCaptivePortal) {
-            i = C1893R.C1895drawable.ic_qs_wifi_disconnected;
+            i = C1894R.C1896drawable.ic_qs_wifi_disconnected;
         } else {
             i = getQsCurrentIconId();
         }
@@ -100,7 +100,7 @@ public class WifiSignalController extends SignalController<WifiState, SignalIcon
         CharSequence textIfExists = getTextIfExists(mobileIconGroup.dataContentDescription);
         String obj = Html.fromHtml(textIfExists.toString(), 0).toString();
         if (((WifiState) this.mCurrentState).inetCondition == 0) {
-            obj = this.mContext.getString(C1893R.string.data_connection_no_internet);
+            obj = this.mContext.getString(C1894R.string.data_connection_no_internet);
         }
         String str = obj;
         boolean z = ((WifiState) this.mCurrentState).enabled && ((WifiState) this.mCurrentState).connected && ((WifiState) this.mCurrentState).isDefault;
@@ -155,7 +155,7 @@ public class WifiSignalController extends SignalController<WifiState, SignalIcon
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$fetchInitialState$0$com-android-systemui-statusbar-connectivity-WifiSignalController */
-    public /* synthetic */ void mo39457xdd29ecb1() {
+    public /* synthetic */ void mo39459xdd29ecb1() {
         this.mWifiTracker.fetchInitialState();
         copyWifiStates();
         notifyListenersIfNecessary();
@@ -168,7 +168,7 @@ public class WifiSignalController extends SignalController<WifiState, SignalIcon
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$handleBroadcast$1$com-android-systemui-statusbar-connectivity-WifiSignalController */
-    public /* synthetic */ void mo39458xcac5a6de(Intent intent) {
+    public /* synthetic */ void mo39460xcac5a6de(Intent intent) {
         this.mWifiTracker.handleBroadcast(intent);
         copyWifiStates();
         notifyListenersIfNecessary();
@@ -181,7 +181,7 @@ public class WifiSignalController extends SignalController<WifiState, SignalIcon
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$handleStatusUpdated$2$com-android-systemui-statusbar-connectivity-WifiSignalController */
-    public /* synthetic */ void mo39459xd672f7d5() {
+    public /* synthetic */ void mo39461xd672f7d5() {
         copyWifiStates();
         notifyListenersIfNecessary();
     }

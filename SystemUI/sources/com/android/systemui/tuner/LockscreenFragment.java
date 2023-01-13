@@ -22,7 +22,7 @@ import androidx.preference.PreferenceFragment;
 import androidx.preference.SwitchPreference;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.IntentButtonProvider;
 import com.android.systemui.statusbar.ScalingDrawableWrapper;
@@ -50,7 +50,7 @@ public class LockscreenFragment extends PreferenceFragment {
     public void onCreatePreferences(Bundle bundle, String str) {
         this.mTunerService = (TunerService) Dependency.get(TunerService.class);
         this.mHandler = new Handler();
-        addPreferencesFromResource(C1893R.C1901xml.lockscreen_settings);
+        addPreferencesFromResource(C1894R.C1902xml.lockscreen_settings);
         setupGroup(LOCKSCREEN_LEFT_BUTTON, LOCKSCREEN_LEFT_UNLOCK);
         setupGroup(LOCKSCREEN_RIGHT_BUTTON, LOCKSCREEN_RIGHT_UNLOCK);
     }
@@ -62,7 +62,7 @@ public class LockscreenFragment extends PreferenceFragment {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onDestroy$0$com-android-systemui-tuner-LockscreenFragment  reason: not valid java name */
-    public /* synthetic */ void m3252lambda$onDestroy$0$comandroidsystemuitunerLockscreenFragment(TunerService.Tunable tunable) {
+    public /* synthetic */ void m3257lambda$onDestroy$0$comandroidsystemuitunerLockscreenFragment(TunerService.Tunable tunable) {
         this.mTunerService.removeTunable(tunable);
     }
 
@@ -72,27 +72,27 @@ public class LockscreenFragment extends PreferenceFragment {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setupGroup$1$com-android-systemui-tuner-LockscreenFragment */
-    public /* synthetic */ void mo46393xd5944fa2(SwitchPreference switchPreference, Preference preference, String str, String str2) {
+    public /* synthetic */ void mo46405xd5944fa2(SwitchPreference switchPreference, Preference preference, String str, String str2) {
         switchPreference.setVisible(!TextUtils.isEmpty(str2));
         setSummary(preference, str2);
     }
 
     private void showSelectDialog(String str) {
-        RecyclerView recyclerView = (RecyclerView) LayoutInflater.from(getContext()).inflate(C1893R.layout.tuner_shortcut_list, (ViewGroup) null);
+        RecyclerView recyclerView = (RecyclerView) LayoutInflater.from(getContext()).inflate(C1894R.layout.tuner_shortcut_list, (ViewGroup) null);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(new Adapter(getContext(), new LockscreenFragment$$ExternalSyntheticLambda0(this, str, new AlertDialog.Builder(getContext()).setView(recyclerView).show())));
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$showSelectDialog$2$com-android-systemui-tuner-LockscreenFragment */
-    public /* synthetic */ void mo46394x9fc62522(String str, AlertDialog alertDialog, Item item) {
+    public /* synthetic */ void mo46406x9fc62522(String str, AlertDialog alertDialog, Item item) {
         this.mTunerService.setValue(str, item.getSettingValue());
         alertDialog.dismiss();
     }
 
     private void setSummary(Preference preference, String str) {
         if (str == null) {
-            preference.setSummary((int) C1893R.string.lockscreen_none);
+            preference.setSummary((int) C1894R.string.lockscreen_none);
             return;
         }
         CharSequence charSequence = null;
@@ -109,7 +109,7 @@ public class LockscreenFragment extends PreferenceFragment {
             }
             preference.setSummary(charSequence);
         } else {
-            preference.setSummary((int) C1893R.string.lockscreen_none);
+            preference.setSummary((int) C1894R.string.lockscreen_none);
         }
     }
 
@@ -139,7 +139,7 @@ public class LockscreenFragment extends PreferenceFragment {
             super(view);
             this.icon = (ImageView) view.findViewById(16908294);
             this.title = (TextView) view.findViewById(16908310);
-            this.expand = (ExpandableIndicator) view.findViewById(C1893R.C1897id.expand);
+            this.expand = (ExpandableIndicator) view.findViewById(C1894R.C1898id.expand);
         }
     }
 
@@ -218,7 +218,7 @@ public class LockscreenFragment extends PreferenceFragment {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$toggleExpando$0$com-android-systemui-tuner-LockscreenFragment$App */
-        public /* synthetic */ void mo46407xc35849c3(Adapter adapter, Item item) {
+        public /* synthetic */ void mo46419xc35849c3(Adapter adapter, Item item) {
             adapter.addItem(this, item);
         }
     }
@@ -250,7 +250,7 @@ public class LockscreenFragment extends PreferenceFragment {
         }
 
         public Holder onCreateViewHolder(ViewGroup viewGroup, int i) {
-            return new Holder(LayoutInflater.from(viewGroup.getContext()).inflate(C1893R.layout.tuner_shortcut_item, viewGroup, false));
+            return new Holder(LayoutInflater.from(viewGroup.getContext()).inflate(C1894R.layout.tuner_shortcut_item, viewGroup, false));
         }
 
         public void onBindViewHolder(Holder holder, int i) {
@@ -270,13 +270,13 @@ public class LockscreenFragment extends PreferenceFragment {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onBindViewHolder$0$com-android-systemui-tuner-LockscreenFragment$Adapter */
-        public /* synthetic */ void mo46398xa90486b7(Holder holder, View view) {
+        public /* synthetic */ void mo46410xa90486b7(Holder holder, View view) {
             this.mCallback.accept(this.mItems.get(holder.getAdapterPosition()));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onBindViewHolder$1$com-android-systemui-tuner-LockscreenFragment$Adapter */
-        public /* synthetic */ void mo46399xd258dbf8(Holder holder, View view) {
+        public /* synthetic */ void mo46411xd258dbf8(Holder holder, View view) {
             this.mItems.get(holder.getAdapterPosition()).toggleExpando(this);
         }
 

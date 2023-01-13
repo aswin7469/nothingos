@@ -49,7 +49,7 @@ public class LatencyTester extends CoreStartable {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-LatencyTester  reason: not valid java name */
-    public /* synthetic */ void m2521lambda$new$0$comandroidsystemuiLatencyTester(DeviceConfig.Properties properties) {
+    public /* synthetic */ void m2527lambda$new$0$comandroidsystemuiLatencyTester(DeviceConfig.Properties properties) {
         updateEnabled();
     }
 

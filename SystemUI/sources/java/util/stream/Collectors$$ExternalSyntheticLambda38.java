@@ -6,6 +6,6 @@ import java.util.function.Function;
 /* compiled from: D8$$SyntheticClass */
 public final /* synthetic */ class Collectors$$ExternalSyntheticLambda38 implements Function {
     public final Object apply(Object obj) {
-        return Set.m1761of((E[]) ((Set) obj).toArray());
+        return Set.m1767of((E[]) ((Set) obj).toArray());
     }
 }

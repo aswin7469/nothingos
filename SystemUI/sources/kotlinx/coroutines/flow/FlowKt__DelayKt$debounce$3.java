@@ -6,7 +6,7 @@ import kotlin.jvm.internal.Lambda;
 import kotlin.time.Duration;
 import kotlinx.coroutines.DelayKt;
 
-@Metadata(mo64986d1 = {"\u0000\n\n\u0000\n\u0002\u0010\t\n\u0002\b\u0002\u0010\u0000\u001a\u00020\u0001\"\u0004\b\u0000\u0010\u00022\u0006\u0010\u0003\u001a\u0002H\u0002H\n"}, mo64987d2 = {"<anonymous>", "", "T", "emittedItem"}, mo64988k = 3, mo64989mv = {1, 5, 1}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000\n\n\u0000\n\u0002\u0010\t\n\u0002\b\u0002\u0010\u0000\u001a\u00020\u0001\"\u0004\b\u0000\u0010\u00022\u0006\u0010\u0003\u001a\u0002H\u0002H\n"}, mo65043d2 = {"<anonymous>", "", "T", "emittedItem"}, mo65044k = 3, mo65045mv = {1, 5, 1}, mo65047xi = 48)
 /* compiled from: Delay.kt */
 final class FlowKt__DelayKt$debounce$3 extends Lambda implements Function1<T, Long> {
     final /* synthetic */ Function1<T, Duration> $timeout;
@@ -18,6 +18,6 @@ final class FlowKt__DelayKt$debounce$3 extends Lambda implements Function1<T, Lo
     }
 
     public final long invoke(T t) {
-        return DelayKt.m5418toDelayMillisLRDsOJo(this.$timeout.invoke(t).m5303unboximpl());
+        return DelayKt.m5436toDelayMillisLRDsOJo(this.$timeout.invoke(t).m5321unboximpl());
     }
 }

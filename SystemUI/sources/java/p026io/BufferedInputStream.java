@@ -18,7 +18,7 @@ public class BufferedInputStream extends FilterInputStream {
     }
 
     private InputStream getInIfOpen() throws IOException {
-        InputStream inputStream = this.f521in;
+        InputStream inputStream = this.f519in;
         if (inputStream != null) {
             return inputStream;
         }
@@ -168,7 +168,7 @@ public class BufferedInputStream extends FilterInputStream {
             monitor-exit(r3)
             return r0
         L_0x0027:
-            java.io.InputStream r1 = r3.f521in     // Catch:{ all -> 0x0039 }
+            java.io.InputStream r1 = r3.f519in     // Catch:{ all -> 0x0039 }
             if (r1 == 0) goto L_0x0013
             int r1 = r1.available()     // Catch:{ all -> 0x0039 }
             if (r1 > 0) goto L_0x0013
@@ -243,8 +243,8 @@ public class BufferedInputStream extends FilterInputStream {
                 return;
             }
         } while (!bufUpdater.compareAndSet(this, bArr, null));
-        InputStream inputStream = this.f521in;
-        this.f521in = null;
+        InputStream inputStream = this.f519in;
+        this.f519in = null;
         if (inputStream != null) {
             inputStream.close();
         }

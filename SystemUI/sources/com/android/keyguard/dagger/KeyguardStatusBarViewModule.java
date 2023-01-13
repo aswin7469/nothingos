@@ -1,7 +1,7 @@
 package com.android.keyguard.dagger;
 
 import com.android.keyguard.CarrierText;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.battery.BatteryMeterView;
 import com.android.systemui.statusbar.phone.KeyguardStatusBarView;
 import com.android.systemui.statusbar.phone.userswitcher.StatusBarUserSwitcherContainer;
@@ -21,18 +21,18 @@ public abstract class KeyguardStatusBarViewModule {
     @KeyguardStatusBarViewScope
     @Provides
     static CarrierText getCarrierText(KeyguardStatusBarView keyguardStatusBarView) {
-        return (CarrierText) keyguardStatusBarView.findViewById(C1893R.C1897id.keyguard_carrier_text);
+        return (CarrierText) keyguardStatusBarView.findViewById(C1894R.C1898id.keyguard_carrier_text);
     }
 
     @KeyguardStatusBarViewScope
     @Provides
     static BatteryMeterView getBatteryMeterView(KeyguardStatusBarView keyguardStatusBarView) {
-        return (BatteryMeterView) keyguardStatusBarView.findViewById(C1893R.C1897id.battery);
+        return (BatteryMeterView) keyguardStatusBarView.findViewById(C1894R.C1898id.battery);
     }
 
     @KeyguardStatusBarViewScope
     @Provides
     static StatusBarUserSwitcherContainer getUserSwitcherContainer(KeyguardStatusBarView keyguardStatusBarView) {
-        return (StatusBarUserSwitcherContainer) keyguardStatusBarView.findViewById(C1893R.C1897id.user_switcher_container);
+        return (StatusBarUserSwitcherContainer) keyguardStatusBarView.findViewById(C1894R.C1898id.user_switcher_container);
     }
 }

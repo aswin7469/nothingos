@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerViewAccessibilityDelegate;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import java.util.Collections;
 import java.util.List;
 
@@ -105,7 +105,7 @@ public class WalletCardCarousel extends RecyclerView {
             int i2 = this.mCardWidthPx;
             this.mCornerRadiusPx = ((float) i2) * CORNER_RADIUS_RATIO;
             this.mCardMarginPx = Math.round(((float) i2) * CARD_MARGIN_RATIO);
-            int dimensionPixelSize = this.mCardWidthPx + (resources.getDimensionPixelSize(C1893R.dimen.card_margin) * 2);
+            int dimensionPixelSize = this.mCardWidthPx + (resources.getDimensionPixelSize(C1894R.dimen.card_margin) * 2);
             this.mTotalCardWidth = dimensionPixelSize;
             this.mCardEdgeToCenterDistance = ((float) dimensionPixelSize) / 2.0f;
             updatePadding(i);
@@ -126,7 +126,7 @@ public class WalletCardCarousel extends RecyclerView {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onViewAdded$0$com-android-systemui-wallet-ui-WalletCardCarousel */
-    public /* synthetic */ void mo47438x1d4e5df5(View view, View view2, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
+    public /* synthetic */ void mo47447x1d4e5df5(View view, View view2, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
         updateCardView(view);
     }
 
@@ -309,7 +309,7 @@ public class WalletCardCarousel extends RecyclerView {
         }
 
         public WalletCardViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-            View inflate = LayoutInflater.from(viewGroup.getContext()).inflate(C1893R.layout.wallet_card_view, viewGroup, false);
+            View inflate = LayoutInflater.from(viewGroup.getContext()).inflate(C1894R.layout.wallet_card_view, viewGroup, false);
             WalletCardViewHolder walletCardViewHolder = new WalletCardViewHolder(inflate);
             CardView cardView = walletCardViewHolder.mCardView;
             cardView.setRadius(WalletCardCarousel.this.mCornerRadiusPx);
@@ -328,12 +328,12 @@ public class WalletCardCarousel extends RecyclerView {
             }
             walletCardViewHolder.mImageView.setImageDrawable(walletCardViewInfo.getCardDrawable());
             walletCardViewHolder.mCardView.setContentDescription(walletCardViewInfo.getContentDescription());
-            walletCardViewHolder.mCardView.setOnClickListener(new C3307x7bd3973a(this, i, walletCardViewInfo));
+            walletCardViewHolder.mCardView.setOnClickListener(new C3317x7bd3973a(this, i, walletCardViewInfo));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onBindViewHolder$0$com-android-systemui-wallet-ui-WalletCardCarousel$WalletCardCarouselAdapter */
-        public /* synthetic */ void mo47450xc40cc182(int i, WalletCardViewInfo walletCardViewInfo, View view) {
+        public /* synthetic */ void mo47459xc40cc182(int i, WalletCardViewInfo walletCardViewInfo, View view) {
             if (i != WalletCardCarousel.this.mCenteredAdapterPosition) {
                 WalletCardCarousel.this.mSelectionListener.onUncenteredClick(i);
             } else {

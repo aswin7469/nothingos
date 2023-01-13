@@ -11,6 +11,6 @@ public final /* synthetic */ class SplitShadeLockScreenOverScroller$$ExternalSyn
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        SplitShadeLockScreenOverScroller.m3041releaseOverScroll$lambda0(this.f$0, valueAnimator);
+        SplitShadeLockScreenOverScroller.m3045releaseOverScroll$lambda0(this.f$0, valueAnimator);
     }
 }

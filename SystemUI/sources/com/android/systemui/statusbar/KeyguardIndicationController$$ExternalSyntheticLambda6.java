@@ -11,6 +11,6 @@ public final /* synthetic */ class KeyguardIndicationController$$ExternalSynthet
     }
 
     public final void onClick(View view) {
-        this.f$0.mo38592xb29e1346(view);
+        this.f$0.mo38593xb29e1346(view);
     }
 }

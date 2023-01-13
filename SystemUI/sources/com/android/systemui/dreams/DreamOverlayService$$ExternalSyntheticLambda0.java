@@ -13,6 +13,6 @@ public final /* synthetic */ class DreamOverlayService$$ExternalSyntheticLambda0
     }
 
     public final void run() {
-        this.f$0.mo32510xe087c6d0(this.f$1);
+        this.f$0.mo32521xe087c6d0(this.f$1);
     }
 }

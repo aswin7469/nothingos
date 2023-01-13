@@ -10,6 +10,6 @@ public final /* synthetic */ class BluetoothItem$$ExternalSyntheticLambda0 imple
     }
 
     public final void run() {
-        this.f$0.mo57820x8bd88055();
+        this.f$0.mo57856x8bd88055();
     }
 }

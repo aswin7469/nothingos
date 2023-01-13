@@ -119,7 +119,7 @@ public class FragmentService implements Dumpable {
 
         /* access modifiers changed from: private */
         /* renamed from: handleSendConfigurationChange */
-        public void mo32843x9e9fc2a7(Configuration configuration) {
+        public void mo32854x9e9fc2a7(Configuration configuration) {
             this.mFragmentHostManager.onConfigurationChanged(configuration);
         }
     }

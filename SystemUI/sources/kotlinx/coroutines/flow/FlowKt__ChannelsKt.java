@@ -20,11 +20,11 @@ import kotlinx.coroutines.channels.ReceiveChannel;
 import kotlinx.coroutines.flow.internal.ChannelFlow;
 import kotlinx.coroutines.flow.internal.ChannelFlowKt;
 
-@Metadata(mo64986d1 = {"\u00006\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\u0018\u0002\n\u0002\b\u0004\n\u0002\u0010\u000b\n\u0002\b\u0005\u001a\u001e\u0010\u0000\u001a\b\u0012\u0004\u0012\u0002H\u00020\u0001\"\u0004\b\u0000\u0010\u0002*\b\u0012\u0004\u0012\u0002H\u00020\u0003H\u0007\u001a0\u0010\u0004\u001a\b\u0012\u0004\u0012\u0002H\u00020\u0003\"\u0004\b\u0000\u0010\u0002*\b\u0012\u0004\u0012\u0002H\u00020\u00012\u0006\u0010\u0005\u001a\u00020\u00062\b\b\u0002\u0010\u0007\u001a\u00020\bH\u0007\u001a\u001c\u0010\t\u001a\b\u0012\u0004\u0012\u0002H\u00020\u0001\"\u0004\b\u0000\u0010\u0002*\b\u0012\u0004\u0012\u0002H\u00020\n\u001a/\u0010\u000b\u001a\u00020\f\"\u0004\b\u0000\u0010\u0002*\b\u0012\u0004\u0012\u0002H\u00020\r2\f\u0010\u000e\u001a\b\u0012\u0004\u0012\u0002H\u00020\nH@ø\u0001\u0000¢\u0006\u0002\u0010\u000f\u001a9\u0010\u0010\u001a\u00020\f\"\u0004\b\u0000\u0010\u0002*\b\u0012\u0004\u0012\u0002H\u00020\r2\f\u0010\u000e\u001a\b\u0012\u0004\u0012\u0002H\u00020\n2\u0006\u0010\u0011\u001a\u00020\u0012H@ø\u0001\u0000¢\u0006\u0004\b\u0013\u0010\u0014\u001a&\u0010\u0015\u001a\b\u0012\u0004\u0012\u0002H\u00020\n\"\u0004\b\u0000\u0010\u0002*\b\u0012\u0004\u0012\u0002H\u00020\u00012\u0006\u0010\u0005\u001a\u00020\u0006H\u0007\u001a\u001c\u0010\u0016\u001a\b\u0012\u0004\u0012\u0002H\u00020\u0001\"\u0004\b\u0000\u0010\u0002*\b\u0012\u0004\u0012\u0002H\u00020\n\u0002\u0004\n\u0002\b\u0019¨\u0006\u0017"}, mo64987d2 = {"asFlow", "Lkotlinx/coroutines/flow/Flow;", "T", "Lkotlinx/coroutines/channels/BroadcastChannel;", "broadcastIn", "scope", "Lkotlinx/coroutines/CoroutineScope;", "start", "Lkotlinx/coroutines/CoroutineStart;", "consumeAsFlow", "Lkotlinx/coroutines/channels/ReceiveChannel;", "emitAll", "", "Lkotlinx/coroutines/flow/FlowCollector;", "channel", "(Lkotlinx/coroutines/flow/FlowCollector;Lkotlinx/coroutines/channels/ReceiveChannel;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;", "emitAllImpl", "consume", "", "emitAllImpl$FlowKt__ChannelsKt", "(Lkotlinx/coroutines/flow/FlowCollector;Lkotlinx/coroutines/channels/ReceiveChannel;ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;", "produceIn", "receiveAsFlow", "kotlinx-coroutines-core"}, mo64988k = 5, mo64989mv = {1, 5, 1}, mo64991xi = 48, mo64992xs = "kotlinx/coroutines/flow/FlowKt")
+@Metadata(mo65042d1 = {"\u00006\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\u0018\u0002\n\u0002\b\u0004\n\u0002\u0010\u000b\n\u0002\b\u0005\u001a\u001e\u0010\u0000\u001a\b\u0012\u0004\u0012\u0002H\u00020\u0001\"\u0004\b\u0000\u0010\u0002*\b\u0012\u0004\u0012\u0002H\u00020\u0003H\u0007\u001a0\u0010\u0004\u001a\b\u0012\u0004\u0012\u0002H\u00020\u0003\"\u0004\b\u0000\u0010\u0002*\b\u0012\u0004\u0012\u0002H\u00020\u00012\u0006\u0010\u0005\u001a\u00020\u00062\b\b\u0002\u0010\u0007\u001a\u00020\bH\u0007\u001a\u001c\u0010\t\u001a\b\u0012\u0004\u0012\u0002H\u00020\u0001\"\u0004\b\u0000\u0010\u0002*\b\u0012\u0004\u0012\u0002H\u00020\n\u001a/\u0010\u000b\u001a\u00020\f\"\u0004\b\u0000\u0010\u0002*\b\u0012\u0004\u0012\u0002H\u00020\r2\f\u0010\u000e\u001a\b\u0012\u0004\u0012\u0002H\u00020\nH@ø\u0001\u0000¢\u0006\u0002\u0010\u000f\u001a9\u0010\u0010\u001a\u00020\f\"\u0004\b\u0000\u0010\u0002*\b\u0012\u0004\u0012\u0002H\u00020\r2\f\u0010\u000e\u001a\b\u0012\u0004\u0012\u0002H\u00020\n2\u0006\u0010\u0011\u001a\u00020\u0012H@ø\u0001\u0000¢\u0006\u0004\b\u0013\u0010\u0014\u001a&\u0010\u0015\u001a\b\u0012\u0004\u0012\u0002H\u00020\n\"\u0004\b\u0000\u0010\u0002*\b\u0012\u0004\u0012\u0002H\u00020\u00012\u0006\u0010\u0005\u001a\u00020\u0006H\u0007\u001a\u001c\u0010\u0016\u001a\b\u0012\u0004\u0012\u0002H\u00020\u0001\"\u0004\b\u0000\u0010\u0002*\b\u0012\u0004\u0012\u0002H\u00020\n\u0002\u0004\n\u0002\b\u0019¨\u0006\u0017"}, mo65043d2 = {"asFlow", "Lkotlinx/coroutines/flow/Flow;", "T", "Lkotlinx/coroutines/channels/BroadcastChannel;", "broadcastIn", "scope", "Lkotlinx/coroutines/CoroutineScope;", "start", "Lkotlinx/coroutines/CoroutineStart;", "consumeAsFlow", "Lkotlinx/coroutines/channels/ReceiveChannel;", "emitAll", "", "Lkotlinx/coroutines/flow/FlowCollector;", "channel", "(Lkotlinx/coroutines/flow/FlowCollector;Lkotlinx/coroutines/channels/ReceiveChannel;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;", "emitAllImpl", "consume", "", "emitAllImpl$FlowKt__ChannelsKt", "(Lkotlinx/coroutines/flow/FlowCollector;Lkotlinx/coroutines/channels/ReceiveChannel;ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;", "produceIn", "receiveAsFlow", "kotlinx-coroutines-core"}, mo65044k = 5, mo65045mv = {1, 5, 1}, mo65047xi = 48, mo65048xs = "kotlinx/coroutines/flow/FlowKt")
 /* compiled from: Channels.kt */
 final /* synthetic */ class FlowKt__ChannelsKt {
 
-    @Metadata(mo64988k = 3, mo64989mv = {1, 5, 1}, mo64991xi = 48)
+    @Metadata(mo65044k = 3, mo65045mv = {1, 5, 1}, mo65047xi = 48)
     /* compiled from: Channels.kt */
     public /* synthetic */ class WhenMappings {
         public static final /* synthetic */ int[] $EnumSwitchMapping$0;
@@ -102,7 +102,7 @@ final /* synthetic */ class FlowKt__ChannelsKt {
             kotlinx.coroutines.flow.FlowCollector r8 = (kotlinx.coroutines.flow.FlowCollector) r8
             kotlin.ResultKt.throwOnFailure(r9)     // Catch:{ all -> 0x0056 }
             kotlinx.coroutines.channels.ChannelResult r9 = (kotlinx.coroutines.channels.ChannelResult) r9     // Catch:{ all -> 0x0056 }
-            java.lang.Object r9 = r9.m5447unboximpl()     // Catch:{ all -> 0x0056 }
+            java.lang.Object r9 = r9.m5465unboximpl()     // Catch:{ all -> 0x0056 }
             goto L_0x0070
         L_0x0056:
             r8 = move-exception
@@ -115,7 +115,7 @@ final /* synthetic */ class FlowKt__ChannelsKt {
             r0.L$1 = r7     // Catch:{ all -> 0x0099 }
             r0.Z$0 = r8     // Catch:{ all -> 0x0099 }
             r0.label = r4     // Catch:{ all -> 0x0099 }
-            java.lang.Object r9 = r7.m5454receiveCatchingJP2dKIU(r0)     // Catch:{ all -> 0x0099 }
+            java.lang.Object r9 = r7.m5472receiveCatchingJP2dKIU(r0)     // Catch:{ all -> 0x0099 }
             if (r9 != r1) goto L_0x006d
             return r1
         L_0x006d:
@@ -123,9 +123,9 @@ final /* synthetic */ class FlowKt__ChannelsKt {
             r8 = r6
             r6 = r5
         L_0x0070:
-            boolean r2 = kotlinx.coroutines.channels.ChannelResult.m5443isClosedimpl(r9)     // Catch:{ all -> 0x0056 }
+            boolean r2 = kotlinx.coroutines.channels.ChannelResult.m5461isClosedimpl(r9)     // Catch:{ all -> 0x0056 }
             if (r2 == 0) goto L_0x0086
-            java.lang.Throwable r8 = kotlinx.coroutines.channels.ChannelResult.m5439exceptionOrNullimpl(r9)     // Catch:{ all -> 0x0056 }
+            java.lang.Throwable r8 = kotlinx.coroutines.channels.ChannelResult.m5457exceptionOrNullimpl(r9)     // Catch:{ all -> 0x0056 }
             if (r8 != 0) goto L_0x0085
             if (r6 == 0) goto L_0x0082
             r6 = 0
@@ -136,7 +136,7 @@ final /* synthetic */ class FlowKt__ChannelsKt {
         L_0x0085:
             throw r8     // Catch:{ all -> 0x0056 }
         L_0x0086:
-            java.lang.Object r9 = kotlinx.coroutines.channels.ChannelResult.m5441getOrThrowimpl(r9)     // Catch:{ all -> 0x0056 }
+            java.lang.Object r9 = kotlinx.coroutines.channels.ChannelResult.m5459getOrThrowimpl(r9)     // Catch:{ all -> 0x0056 }
             r0.L$0 = r8     // Catch:{ all -> 0x0056 }
             r0.L$1 = r7     // Catch:{ all -> 0x0056 }
             r0.Z$0 = r6     // Catch:{ all -> 0x0056 }

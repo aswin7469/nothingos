@@ -8,7 +8,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 import com.android.keyguard.AlphaOptimizedLinearLayout;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.plugins.DarkIconDispatcher;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import java.util.ArrayList;
@@ -78,8 +78,8 @@ public class HeadsUpStatusBarView extends AlphaOptimizedLinearLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mIconPlaceholder = findViewById(C1893R.C1897id.icon_placeholder);
-        this.mTextView = (TextView) findViewById(C1893R.C1897id.text);
+        this.mIconPlaceholder = findViewById(C1894R.C1898id.icon_placeholder);
+        this.mTextView = (TextView) findViewById(C1894R.C1898id.text);
     }
 
     public void setEntry(NotificationEntry notificationEntry) {
@@ -100,7 +100,7 @@ public class HeadsUpStatusBarView extends AlphaOptimizedLinearLayout {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-statusbar-HeadsUpStatusBarView  reason: not valid java name */
-    public /* synthetic */ void m3024lambda$new$0$comandroidsystemuistatusbarHeadsUpStatusBarView(NotificationEntry notificationEntry) {
+    public /* synthetic */ void m3028lambda$new$0$comandroidsystemuistatusbarHeadsUpStatusBarView(NotificationEntry notificationEntry) {
         if (notificationEntry == this.mShowingEntry) {
             setEntry(notificationEntry);
             return;

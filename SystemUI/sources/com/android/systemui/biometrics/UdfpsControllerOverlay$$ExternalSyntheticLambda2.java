@@ -13,6 +13,6 @@ public final /* synthetic */ class UdfpsControllerOverlay$$ExternalSyntheticLamb
     }
 
     public final void onTouchExplorationStateChanged(boolean z) {
-        UdfpsControllerOverlay.m2586show$lambda4$lambda3(this.f$0, this.f$1, z);
+        UdfpsControllerOverlay.m2592show$lambda4$lambda3(this.f$0, this.f$1, z);
     }
 }

@@ -335,7 +335,7 @@ public class WifiEntry {
         if (this.mNetworkInfo == null) {
             return 0;
         }
-        switch (C33421.$SwitchMap$android$net$NetworkInfo$DetailedState[this.mNetworkInfo.getDetailedState().ordinal()]) {
+        switch (C33521.$SwitchMap$android$net$NetworkInfo$DetailedState[this.mNetworkInfo.getDetailedState().ordinal()]) {
             case 1:
             case 2:
             case 3:
@@ -351,7 +351,7 @@ public class WifiEntry {
     }
 
     /* renamed from: com.android.wifitrackerlib.WifiEntry$1 */
-    static /* synthetic */ class C33421 {
+    static /* synthetic */ class C33521 {
         static final /* synthetic */ int[] $SwitchMap$android$net$NetworkInfo$DetailedState;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(14:0|1|2|3|4|5|6|7|8|9|10|11|12|(3:13|14|16)) */
@@ -412,7 +412,7 @@ public class WifiEntry {
             L_0x0054:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.wifitrackerlib.WifiEntry.C33421.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: com.android.wifitrackerlib.WifiEntry.C33521.<clinit>():void");
         }
     }
 
@@ -508,7 +508,7 @@ public class WifiEntry {
 
     public void setManageSubscriptionAction(ManageSubscriptionAction manageSubscriptionAction) {
         boolean z = !this.mManageSubscriptionAction.isPresent();
-        this.mManageSubscriptionAction = Optional.m1745of(manageSubscriptionAction);
+        this.mManageSubscriptionAction = Optional.m1751of(manageSubscriptionAction);
         if (z) {
             notifyOnUpdated();
         }
@@ -536,7 +536,7 @@ public class WifiEntry {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$notifyOnUpdated$8$com-android-wifitrackerlib-WifiEntry  reason: not valid java name */
-    public /* synthetic */ void m3374lambda$notifyOnUpdated$8$comandroidwifitrackerlibWifiEntry() {
+    public /* synthetic */ void m3378lambda$notifyOnUpdated$8$comandroidwifitrackerlibWifiEntry() {
         WifiEntryCallback wifiEntryCallback = this.mListener;
         if (wifiEntryCallback != null) {
             wifiEntryCallback.onUpdated();
@@ -586,7 +586,7 @@ public class WifiEntry {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateConnectionInfo$9$com-android-wifitrackerlib-WifiEntry */
-    public /* synthetic */ void mo47877x6620d799() {
+    public /* synthetic */ void mo47886x6620d799() {
         ConnectCallback connectCallback = this.mConnectCallback;
         if (connectCallback != null) {
             connectCallback.onConnectResult(0);
@@ -595,7 +595,7 @@ public class WifiEntry {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateConnectionInfo$10$com-android-wifitrackerlib-WifiEntry */
-    public /* synthetic */ void mo47876x4cd5470f() {
+    public /* synthetic */ void mo47885x4cd5470f() {
         DisconnectCallback disconnectCallback = this.mDisconnectCallback;
         if (disconnectCallback != null) {
             disconnectCallback.onDisconnectResult(0);
@@ -700,7 +700,7 @@ public class WifiEntry {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onSuccess$0$com-android-wifitrackerlib-WifiEntry$ConnectActionListener */
-        public /* synthetic */ void mo47890xf3841d7d() {
+        public /* synthetic */ void mo47899xf3841d7d() {
             ConnectCallback connectCallback = WifiEntry.this.mConnectCallback;
             if (connectCallback != null && WifiEntry.this.mCalledConnect && WifiEntry.this.getConnectedState() == 0) {
                 connectCallback.onConnectResult(2);
@@ -714,7 +714,7 @@ public class WifiEntry {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onFailure$1$com-android-wifitrackerlib-WifiEntry$ConnectActionListener */
-        public /* synthetic */ void mo47889xecc374b5() {
+        public /* synthetic */ void mo47898xecc374b5() {
             ConnectCallback connectCallback = WifiEntry.this.mConnectCallback;
             if (connectCallback != null) {
                 connectCallback.onConnectResult(2);
@@ -732,7 +732,7 @@ public class WifiEntry {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onSuccess$0$com-android-wifitrackerlib-WifiEntry$ForgetActionListener */
-        public /* synthetic */ void mo47893x9651724e() {
+        public /* synthetic */ void mo47902x9651724e() {
             ForgetCallback forgetCallback = WifiEntry.this.mForgetCallback;
             if (forgetCallback != null) {
                 forgetCallback.onForgetResult(0);
@@ -745,7 +745,7 @@ public class WifiEntry {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onFailure$1$com-android-wifitrackerlib-WifiEntry$ForgetActionListener */
-        public /* synthetic */ void mo47892xe8ae5416() {
+        public /* synthetic */ void mo47901xe8ae5416() {
             ForgetCallback forgetCallback = WifiEntry.this.mForgetCallback;
             if (forgetCallback != null) {
                 forgetCallback.onForgetResult(1);

@@ -8,7 +8,7 @@ import android.util.MathUtils;
 import android.view.View;
 import androidx.core.graphics.ColorUtils;
 import androidx.recyclerview.widget.RecyclerView;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 
 /* renamed from: com.android.systemui.wallet.ui.DotIndicatorDecoration */
 final class DotIndicatorDecoration extends RecyclerView.ItemDecoration {
@@ -21,17 +21,17 @@ final class DotIndicatorDecoration extends RecyclerView.ItemDecoration {
     private final int mUnselectedRadius;
 
     DotIndicatorDecoration(Context context) {
-        this.mUnselectedRadius = context.getResources().getDimensionPixelSize(C1893R.dimen.card_carousel_dot_unselected_radius);
-        this.mSelectedRadius = context.getResources().getDimensionPixelSize(C1893R.dimen.card_carousel_dot_selected_radius);
-        this.mDotMargin = context.getResources().getDimensionPixelSize(C1893R.dimen.card_carousel_dot_margin);
-        this.mUnselectedColor = context.getColor(C1893R.C1894color.material_dynamic_neutral70);
-        this.mSelectedColor = context.getColor(C1893R.C1894color.material_dynamic_neutral100);
+        this.mUnselectedRadius = context.getResources().getDimensionPixelSize(C1894R.dimen.card_carousel_dot_unselected_radius);
+        this.mSelectedRadius = context.getResources().getDimensionPixelSize(C1894R.dimen.card_carousel_dot_selected_radius);
+        this.mDotMargin = context.getResources().getDimensionPixelSize(C1894R.dimen.card_carousel_dot_margin);
+        this.mUnselectedColor = context.getColor(C1894R.C1895color.material_dynamic_neutral70);
+        this.mSelectedColor = context.getColor(C1894R.C1895color.material_dynamic_neutral100);
     }
 
     public void getItemOffsets(Rect rect, View view, RecyclerView recyclerView, RecyclerView.State state) {
         super.getItemOffsets(rect, view, recyclerView, state);
         if (recyclerView.getAdapter().getItemCount() > 1) {
-            rect.bottom = view.getResources().getDimensionPixelSize(C1893R.dimen.card_carousel_dot_offset);
+            rect.bottom = view.getResources().getDimensionPixelSize(C1894R.dimen.card_carousel_dot_offset);
         }
     }
 

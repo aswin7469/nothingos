@@ -466,7 +466,7 @@ public final class Inet6Address extends InetAddress {
     }
 
     public String getHostAddress() {
-        return Libcore.f857os.getnameinfo(this, OsConstants.NI_NUMERICHOST);
+        return Libcore.f855os.getnameinfo(this, OsConstants.NI_NUMERICHOST);
     }
 
     public int hashCode() {

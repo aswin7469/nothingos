@@ -140,7 +140,7 @@ public class BouncerSwipeTouchHandler implements DreamTouchHandler {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onSessionStart$0$com-android-systemui-dreams-touch-BouncerSwipeTouchHandler */
-    public /* synthetic */ void mo32623xabef0776() {
+    public /* synthetic */ void mo32634xabef0776() {
         this.mVelocityTracker.recycle();
         this.mCapture = null;
         this.mNotificationShadeWindowController.setForcePluginOpen(false, this);
@@ -148,7 +148,7 @@ public class BouncerSwipeTouchHandler implements DreamTouchHandler {
 
     /* access modifiers changed from: private */
     /* renamed from: onMotionEvent */
-    public void mo32624xb1f2d2d5(InputEvent inputEvent) {
+    public void mo32635xb1f2d2d5(InputEvent inputEvent) {
         if (!(inputEvent instanceof MotionEvent)) {
             Log.e(TAG, "non MotionEvent received:" + inputEvent);
             return;
@@ -192,7 +192,7 @@ public class BouncerSwipeTouchHandler implements DreamTouchHandler {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$createExpansionAnimator$2$com-android-systemui-dreams-touch-BouncerSwipeTouchHandler */
-    public /* synthetic */ void mo32622xfaaef06f(float f, ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo32633xfaaef06f(float f, ValueAnimator valueAnimator) {
         float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
         setPanelExpansion(floatValue, f * floatValue);
     }

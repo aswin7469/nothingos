@@ -6,7 +6,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.HardwareBgDrawable;
 import com.android.systemui.MultiListLayout;
 import com.android.systemui.util.leak.RotationUtils;
@@ -28,11 +28,11 @@ public abstract class GlobalActionsLayout extends MultiListLayout {
     private void setBackgrounds() {
         HardwareBgDrawable backgroundDrawable;
         ViewGroup listView = getListView();
-        HardwareBgDrawable backgroundDrawable2 = getBackgroundDrawable(getResources().getColor(C1893R.C1894color.global_actions_grid_background, (Resources.Theme) null));
+        HardwareBgDrawable backgroundDrawable2 = getBackgroundDrawable(getResources().getColor(C1894R.C1895color.global_actions_grid_background, (Resources.Theme) null));
         if (backgroundDrawable2 != null) {
             listView.setBackground(backgroundDrawable2);
         }
-        if (getSeparatedView() != null && (backgroundDrawable = getBackgroundDrawable(getResources().getColor(C1893R.C1894color.global_actions_separated_background, (Resources.Theme) null))) != null) {
+        if (getSeparatedView() != null && (backgroundDrawable = getBackgroundDrawable(getResources().getColor(C1894R.C1895color.global_actions_separated_background, (Resources.Theme) null))) != null) {
             getSeparatedView().setBackground(backgroundDrawable);
         }
     }
@@ -106,7 +106,7 @@ public abstract class GlobalActionsLayout extends MultiListLayout {
 
     /* access modifiers changed from: protected */
     public ViewGroup getSeparatedView() {
-        return (ViewGroup) findViewById(C1893R.C1897id.separated_button);
+        return (ViewGroup) findViewById(C1894R.C1898id.separated_button);
     }
 
     /* access modifiers changed from: protected */

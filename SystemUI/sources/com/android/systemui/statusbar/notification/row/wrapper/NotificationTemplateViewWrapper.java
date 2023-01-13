@@ -16,7 +16,7 @@ import android.widget.TextView;
 import androidx.core.app.NotificationCompat;
 import com.android.internal.util.ContrastColorUtil;
 import com.android.internal.widget.NotificationActionListLayout;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dependency;
 import com.android.systemui.UiOffloadThread;
 import com.android.systemui.statusbar.CrossFadeHelper;
@@ -48,7 +48,7 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
 
     protected NotificationTemplateViewWrapper(Context context, View view, ExpandableNotificationRow expandableNotificationRow) {
         super(context, view, expandableNotificationRow);
-        this.mAllowHideHeader = context.getResources().getBoolean(C1893R.bool.heads_up_notification_hides_header);
+        this.mAllowHideHeader = context.getResources().getBoolean(C1894R.bool.heads_up_notification_hides_header);
         this.mTransformationHelper.setCustomTransformation(new ViewTransformationHelper.CustomTransformation() {
             public boolean transformTo(TransformState transformState, TransformableView transformableView, float f) {
                 if (!(transformableView instanceof HybridNotificationView)) {
@@ -97,13 +97,13 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
         ImageView imageView = (ImageView) this.mView.findViewById(16909431);
         this.mRightIcon = imageView;
         if (imageView != null) {
-            imageView.setTag(C1893R.C1897id.image_icon_tag, getRightIcon(statusBarNotification.getNotification()));
-            this.mRightIcon.setTag(C1893R.C1897id.align_transform_end_tag, true);
+            imageView.setTag(C1894R.C1898id.image_icon_tag, getRightIcon(statusBarNotification.getNotification()));
+            this.mRightIcon.setTag(C1894R.C1898id.align_transform_end_tag, true);
         }
         ImageView imageView2 = (ImageView) this.mView.findViewById(16909175);
         this.mLeftIcon = imageView2;
         if (imageView2 != null) {
-            imageView2.setTag(C1893R.C1897id.image_icon_tag, getLargeIcon(statusBarNotification.getNotification()));
+            imageView2.setTag(C1894R.C1898id.image_icon_tag, getLargeIcon(statusBarNotification.getNotification()));
         }
         this.mTitle = (TextView) this.mView.findViewById(16908310);
         this.mText = (TextView) this.mView.findViewById(16909579);
@@ -148,7 +148,7 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updatePendingIntentCancellations$0$com-android-systemui-statusbar-notification-row-wrapper-NotificationTemplateViewWrapper */
-    public /* synthetic */ void mo41789xed444a91(Button button) {
+    public /* synthetic */ void mo41797xed444a91(Button button) {
         if (button.isEnabled()) {
             button.setEnabled(false);
             ColorStateList textColors = button.getTextColors();
@@ -194,13 +194,13 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$performOnPendingIntentCancellation$2$com-android-systemui-statusbar-notification-row-wrapper-NotificationTemplateViewWrapper */
-    public /* synthetic */ void mo41788x8c7348a3(PendingIntent pendingIntent, Runnable runnable, PendingIntent pendingIntent2) {
+    public /* synthetic */ void mo41796x8c7348a3(PendingIntent pendingIntent, Runnable runnable, PendingIntent pendingIntent2) {
         this.mView.post(new NotificationTemplateViewWrapper$$ExternalSyntheticLambda0(this, pendingIntent, runnable));
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$performOnPendingIntentCancellation$1$com-android-systemui-statusbar-notification-row-wrapper-NotificationTemplateViewWrapper */
-    public /* synthetic */ void mo41787xa36b83a2(PendingIntent pendingIntent, Runnable runnable) {
+    public /* synthetic */ void mo41795xa36b83a2(PendingIntent pendingIntent, Runnable runnable) {
         this.mCancelledPendingIntents.add(pendingIntent);
         runnable.run();
     }
@@ -308,7 +308,7 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
         int extraMeasureHeight = notificationActionListLayout != null ? notificationActionListLayout.getExtraMeasureHeight() : 0;
         View view = this.mRemoteInputHistory;
         if (!(view == null || view.getVisibility() == 8)) {
-            extraMeasureHeight += this.mRow.getContext().getResources().getDimensionPixelSize(C1893R.dimen.remote_input_history_extra_height);
+            extraMeasureHeight += this.mRow.getContext().getResources().getDimensionPixelSize(C1894R.dimen.remote_input_history_extra_height);
         }
         return extraMeasureHeight + super.getExtraMeasureHeight();
     }

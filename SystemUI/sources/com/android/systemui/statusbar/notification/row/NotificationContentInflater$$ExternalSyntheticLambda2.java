@@ -15,6 +15,6 @@ public final /* synthetic */ class NotificationContentInflater$$ExternalSyntheti
     }
 
     public final void run() {
-        this.f$0.mo41418xc60e47f2(this.f$1, this.f$2);
+        this.f$0.mo41424xc60e47f2(this.f$1, this.f$2);
     }
 }

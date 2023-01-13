@@ -9,6 +9,6 @@ public final /* synthetic */ class AuthCredentialView$$ExternalSyntheticLambda4 
     }
 
     public final void run() {
-        this.f$0.mo30658xa3c15763();
+        this.f$0.mo30669xa3c15763();
     }
 }

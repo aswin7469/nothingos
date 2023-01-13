@@ -16,6 +16,6 @@ public final /* synthetic */ class NotificationListener$$ExternalSyntheticLambda
     }
 
     public final void run() {
-        this.f$0.mo38717x8f830a0c(this.f$1, this.f$2);
+        this.f$0.mo38718x8f830a0c(this.f$1, this.f$2);
     }
 }

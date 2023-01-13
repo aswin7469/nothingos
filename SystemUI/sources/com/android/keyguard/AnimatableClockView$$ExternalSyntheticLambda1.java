@@ -25,6 +25,6 @@ public final /* synthetic */ class AnimatableClockView$$ExternalSyntheticLambda1
     }
 
     public final void run() {
-        AnimatableClockView.m2278setTextStyle$lambda1(this.f$0, this.f$1, this.f$2, this.f$3, this.f$4, this.f$5, this.f$6, this.f$7);
+        AnimatableClockView.m2284setTextStyle$lambda1(this.f$0, this.f$1, this.f$2, this.f$3, this.f$4, this.f$5, this.f$6, this.f$7);
     }
 }

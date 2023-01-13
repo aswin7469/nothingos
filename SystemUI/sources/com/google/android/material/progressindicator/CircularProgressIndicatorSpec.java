@@ -3,7 +3,7 @@ package com.google.android.material.progressindicator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.internal.ThemeEnforcement;
 import com.google.android.material.resources.MaterialResources;
 
@@ -17,7 +17,7 @@ public final class CircularProgressIndicatorSpec extends BaseProgressIndicatorSp
     }
 
     public CircularProgressIndicatorSpec(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, C3621R.attr.circularProgressIndicatorStyle);
+        this(context, attributeSet, C3631R.attr.circularProgressIndicatorStyle);
     }
 
     public CircularProgressIndicatorSpec(Context context, AttributeSet attributeSet, int i) {
@@ -26,12 +26,12 @@ public final class CircularProgressIndicatorSpec extends BaseProgressIndicatorSp
 
     public CircularProgressIndicatorSpec(Context context, AttributeSet attributeSet, int i, int i2) {
         super(context, attributeSet, i, i2);
-        int dimensionPixelSize = context.getResources().getDimensionPixelSize(C3621R.dimen.mtrl_progress_circular_size_medium);
-        int dimensionPixelSize2 = context.getResources().getDimensionPixelSize(C3621R.dimen.mtrl_progress_circular_inset_medium);
-        TypedArray obtainStyledAttributes = ThemeEnforcement.obtainStyledAttributes(context, attributeSet, C3621R.styleable.CircularProgressIndicator, i, i2, new int[0]);
-        this.indicatorSize = Math.max(MaterialResources.getDimensionPixelSize(context, obtainStyledAttributes, C3621R.styleable.CircularProgressIndicator_indicatorSize, dimensionPixelSize), this.trackThickness * 2);
-        this.indicatorInset = MaterialResources.getDimensionPixelSize(context, obtainStyledAttributes, C3621R.styleable.CircularProgressIndicator_indicatorInset, dimensionPixelSize2);
-        this.indicatorDirection = obtainStyledAttributes.getInt(C3621R.styleable.CircularProgressIndicator_indicatorDirectionCircular, 0);
+        int dimensionPixelSize = context.getResources().getDimensionPixelSize(C3631R.dimen.mtrl_progress_circular_size_medium);
+        int dimensionPixelSize2 = context.getResources().getDimensionPixelSize(C3631R.dimen.mtrl_progress_circular_inset_medium);
+        TypedArray obtainStyledAttributes = ThemeEnforcement.obtainStyledAttributes(context, attributeSet, C3631R.styleable.CircularProgressIndicator, i, i2, new int[0]);
+        this.indicatorSize = Math.max(MaterialResources.getDimensionPixelSize(context, obtainStyledAttributes, C3631R.styleable.CircularProgressIndicator_indicatorSize, dimensionPixelSize), this.trackThickness * 2);
+        this.indicatorInset = MaterialResources.getDimensionPixelSize(context, obtainStyledAttributes, C3631R.styleable.CircularProgressIndicator_indicatorInset, dimensionPixelSize2);
+        this.indicatorDirection = obtainStyledAttributes.getInt(C3631R.styleable.CircularProgressIndicator_indicatorDirectionCircular, 0);
         obtainStyledAttributes.recycle();
         validateSpec();
     }

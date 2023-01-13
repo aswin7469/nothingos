@@ -10,6 +10,6 @@ public final /* synthetic */ class ForegroundServiceManagerDialog$$ExternalSynth
     }
 
     public final void run() {
-        this.f$0.mo57608x400f6ae();
+        this.f$0.mo57629x400f6ae();
     }
 }

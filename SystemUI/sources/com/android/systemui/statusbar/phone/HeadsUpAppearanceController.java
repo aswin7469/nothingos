@@ -3,7 +3,7 @@ package com.android.systemui.statusbar.phone;
 import android.graphics.Rect;
 import android.view.View;
 import com.android.internal.widget.ViewClippingUtil;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.plugins.DarkIconDispatcher;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.CommandQueue;
@@ -43,7 +43,7 @@ public class HeadsUpAppearanceController extends ViewController<HeadsUpStatusBar
     private final Optional<View> mOperatorNameViewOptional;
     private final ViewClippingUtil.ClippingParameters mParentClippingParams = new ViewClippingUtil.ClippingParameters() {
         public boolean shouldFinish(View view) {
-            return view.getId() == C1893R.C1897id.status_bar;
+            return view.getId() == C1894R.C1898id.status_bar;
         }
     };
     private final BiConsumer<Float, Float> mSetExpandedHeight = new HeadsUpAppearanceController$$ExternalSyntheticLambda3(this);
@@ -98,7 +98,7 @@ public class HeadsUpAppearanceController extends ViewController<HeadsUpStatusBar
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onViewAttached$0$com-android-systemui-statusbar-phone-HeadsUpAppearanceController */
-    public /* synthetic */ void mo44043x76ccce16() {
+    public /* synthetic */ void mo44053x76ccce16() {
         updateIsolatedIconLocation(true);
     }
 
@@ -119,7 +119,7 @@ public class HeadsUpAppearanceController extends ViewController<HeadsUpStatusBar
 
     public void onHeadsUpPinned(NotificationEntry notificationEntry) {
         updateTopEntry();
-        mo44046x1d186c59(notificationEntry);
+        mo44056x1d186c59(notificationEntry);
     }
 
     /* access modifiers changed from: private */
@@ -197,13 +197,13 @@ public class HeadsUpAppearanceController extends ViewController<HeadsUpStatusBar
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setShown$1$com-android-systemui-statusbar-phone-HeadsUpAppearanceController */
-    public /* synthetic */ void mo44044xc052842e(View view) {
+    public /* synthetic */ void mo44054xc052842e(View view) {
         hide(view, 4);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setShown$2$com-android-systemui-statusbar-phone-HeadsUpAppearanceController */
-    public /* synthetic */ void mo44045x2a820c4d() {
+    public /* synthetic */ void mo44055x2a820c4d() {
         updateParentClipping(true);
     }
 
@@ -265,7 +265,7 @@ public class HeadsUpAppearanceController extends ViewController<HeadsUpStatusBar
 
     public void onHeadsUpUnPinned(NotificationEntry notificationEntry) {
         updateTopEntry();
-        mo44046x1d186c59(notificationEntry);
+        mo44056x1d186c59(notificationEntry);
     }
 
     public void setAppearFraction(float f, float f2) {
@@ -285,7 +285,7 @@ public class HeadsUpAppearanceController extends ViewController<HeadsUpStatusBar
         ExpandableNotificationRow expandableNotificationRow2 = this.mTrackedChild;
         this.mTrackedChild = expandableNotificationRow;
         if (expandableNotificationRow2 != null) {
-            mo44046x1d186c59(expandableNotificationRow2.getEntry());
+            mo44056x1d186c59(expandableNotificationRow2.getEntry());
         }
     }
 
@@ -298,7 +298,7 @@ public class HeadsUpAppearanceController extends ViewController<HeadsUpStatusBar
     }
 
     /* renamed from: updateHeader */
-    public void mo44046x1d186c59(NotificationEntry notificationEntry) {
+    public void mo44056x1d186c59(NotificationEntry notificationEntry) {
         float f;
         ExpandableNotificationRow row = notificationEntry.getRow();
         if (row.isPinned() || row.isHeadsUpAnimatingAway() || row == this.mTrackedChild || row.showingPulsing()) {

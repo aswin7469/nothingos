@@ -11,6 +11,6 @@ public final /* synthetic */ class TakeScreenshotService$$ExternalSyntheticLambd
     }
 
     public final void run() {
-        this.f$0.mo37607xe25464cd(this.f$1);
+        this.f$0.mo37608xe25464cd(this.f$1);
     }
 }

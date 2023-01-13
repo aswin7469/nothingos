@@ -30,7 +30,7 @@ public class UserCreator {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$createUser$0$com-android-systemui-user-UserCreator  reason: not valid java name */
-    public /* synthetic */ void m3293lambda$createUser$0$comandroidsystemuiuserUserCreator(String str, Dialog dialog, Runnable runnable, Drawable drawable, Consumer consumer) {
+    public /* synthetic */ void m3298lambda$createUser$0$comandroidsystemuiuserUserCreator(String str, Dialog dialog, Runnable runnable, Drawable drawable, Consumer consumer) {
         UserInfo createUser = this.mUserManager.createUser(str, "android.os.usertype.full.SECONDARY", 0);
         if (createUser == null) {
             dialog.dismiss();

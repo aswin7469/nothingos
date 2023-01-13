@@ -8,12 +8,12 @@ import java.p026io.OutputStream;
 import java.util.Set;
 
 public abstract class SocketImpl implements SocketOptions {
-    private static final Set<SocketOption<?>> serverSocketOptions = Set.m1753of(StandardSocketOptions.SO_RCVBUF, StandardSocketOptions.SO_REUSEADDR, StandardSocketOptions.IP_TOS);
-    private static final Set<SocketOption<?>> socketOptions = Set.m1757of(StandardSocketOptions.SO_KEEPALIVE, StandardSocketOptions.SO_SNDBUF, StandardSocketOptions.SO_RCVBUF, StandardSocketOptions.SO_REUSEADDR, StandardSocketOptions.SO_LINGER, StandardSocketOptions.IP_TOS, StandardSocketOptions.TCP_NODELAY);
+    private static final Set<SocketOption<?>> serverSocketOptions = Set.m1759of(StandardSocketOptions.SO_RCVBUF, StandardSocketOptions.SO_REUSEADDR, StandardSocketOptions.IP_TOS);
+    private static final Set<SocketOption<?>> socketOptions = Set.m1763of(StandardSocketOptions.SO_KEEPALIVE, StandardSocketOptions.SO_SNDBUF, StandardSocketOptions.SO_RCVBUF, StandardSocketOptions.SO_REUSEADDR, StandardSocketOptions.SO_LINGER, StandardSocketOptions.IP_TOS, StandardSocketOptions.TCP_NODELAY);
     protected InetAddress address;
 
     /* renamed from: fd */
-    protected FileDescriptor f559fd;
+    protected FileDescriptor f557fd;
     protected int localport;
     protected int port;
     ServerSocket serverSocket = null;
@@ -76,11 +76,11 @@ public abstract class SocketImpl implements SocketOptions {
 
     /* access modifiers changed from: protected */
     public FileDescriptor getFileDescriptor() {
-        return this.f559fd;
+        return this.f557fd;
     }
 
     public FileDescriptor getFD$() {
-        return this.f559fd;
+        return this.f557fd;
     }
 
     /* access modifiers changed from: protected */

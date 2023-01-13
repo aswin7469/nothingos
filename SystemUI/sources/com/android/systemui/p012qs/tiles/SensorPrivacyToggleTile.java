@@ -6,7 +6,7 @@ import android.os.Looper;
 import android.view.View;
 import android.widget.Switch;
 import com.android.internal.logging.MetricsLogger;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.qualifiers.Background;
 import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.p012qs.QSHost;
@@ -57,7 +57,7 @@ public abstract class SensorPrivacyToggleTile extends QSTileImpl<QSTile.BooleanS
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$handleClick$0$com-android-systemui-qs-tiles-SensorPrivacyToggleTile */
-    public /* synthetic */ void mo36923xb55eac88(boolean z) {
+    public /* synthetic */ void mo36921xb55eac88(boolean z) {
         this.mSensorPrivacyController.setSensorBlocked(1, getSensorId(), !z);
     }
 
@@ -75,9 +75,9 @@ public abstract class SensorPrivacyToggleTile extends QSTileImpl<QSTile.BooleanS
         booleanState.value = !z;
         booleanState.label = getTileLabel();
         if (z) {
-            booleanState.secondaryLabel = this.mContext.getString(C1893R.string.quick_settings_camera_mic_blocked);
+            booleanState.secondaryLabel = this.mContext.getString(C1894R.string.quick_settings_camera_mic_blocked);
         } else {
-            booleanState.secondaryLabel = this.mContext.getString(C1893R.string.quick_settings_camera_mic_available);
+            booleanState.secondaryLabel = this.mContext.getString(C1894R.string.quick_settings_camera_mic_available);
         }
         booleanState.contentDescription = booleanState.label;
         booleanState.expandedAccessibilityClassName = Switch.class.getName();

@@ -13,7 +13,7 @@ import android.view.ViewOverlay;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.android.internal.util.ArrayUtils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.FontSizeUtils;
 import com.android.systemui.statusbar.phone.UserAvatarView;
 
@@ -28,7 +28,7 @@ public class UserDetailItemView extends LinearLayout {
 
     /* access modifiers changed from: protected */
     public int getFontSizeDimen() {
-        return C1893R.dimen.qs_tile_text_size;
+        return C1894R.dimen.qs_tile_text_size;
     }
 
     public boolean hasOverlappingRendering() {
@@ -67,7 +67,7 @@ public class UserDetailItemView extends LinearLayout {
 
     public UserDetailItemView(Context context, AttributeSet attributeSet, int i, int i2) {
         super(context, attributeSet, i, i2);
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C1893R.styleable.UserDetailItemView, i, i2);
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C1894R.styleable.UserDetailItemView, i, i2);
         int indexCount = obtainStyledAttributes.getIndexCount();
         for (int i3 = 0; i3 < indexCount; i3++) {
             int index = obtainStyledAttributes.getIndex(i3);
@@ -113,8 +113,8 @@ public class UserDetailItemView extends LinearLayout {
 
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
-        this.mAvatar = (UserAvatarView) findViewById(C1893R.C1897id.user_picture);
-        TextView textView = (TextView) findViewById(C1893R.C1897id.user_name);
+        this.mAvatar = (UserAvatarView) findViewById(C1894R.C1898id.user_picture);
+        TextView textView = (TextView) findViewById(C1894R.C1898id.user_name);
         this.mName = textView;
         if (this.mRegularStyle == 0) {
             this.mRegularStyle = textView.getExplicitStyle();
@@ -123,7 +123,7 @@ public class UserDetailItemView extends LinearLayout {
             this.mActivatedStyle = this.mName.getExplicitStyle();
         }
         updateTextStyle();
-        this.mRestrictedPadlock = findViewById(C1893R.C1897id.restricted_padlock);
+        this.mRestrictedPadlock = findViewById(C1894R.C1898id.restricted_padlock);
     }
 
     /* access modifiers changed from: protected */

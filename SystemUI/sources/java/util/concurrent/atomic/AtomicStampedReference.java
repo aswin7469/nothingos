@@ -37,13 +37,13 @@ public class AtomicStampedReference<V> {
         }
 
         /* renamed from: of */
-        static <T> Pair<T> m1765of(T t, int i) {
+        static <T> Pair<T> m1771of(T t, int i) {
             return new Pair<>(t, i);
         }
     }
 
     public AtomicStampedReference(V v, int i) {
-        this.pair = Pair.m1765of(v, i);
+        this.pair = Pair.m1771of(v, i);
     }
 
     public V getReference() {
@@ -66,19 +66,19 @@ public class AtomicStampedReference<V> {
 
     public boolean compareAndSet(V v, V v2, int i, int i2) {
         Pair<V> pair2 = this.pair;
-        return v == pair2.reference && i == pair2.stamp && ((v2 == pair2.reference && i2 == pair2.stamp) || casPair(pair2, Pair.m1765of(v2, i2)));
+        return v == pair2.reference && i == pair2.stamp && ((v2 == pair2.reference && i2 == pair2.stamp) || casPair(pair2, Pair.m1771of(v2, i2)));
     }
 
     public void set(V v, int i) {
         Pair<V> pair2 = this.pair;
         if (v != pair2.reference || i != pair2.stamp) {
-            this.pair = Pair.m1765of(v, i);
+            this.pair = Pair.m1771of(v, i);
         }
     }
 
     public boolean attemptStamp(V v, int i) {
         Pair<V> pair2 = this.pair;
-        return v == pair2.reference && (i == pair2.stamp || casPair(pair2, Pair.m1765of(v, i)));
+        return v == pair2.reference && (i == pair2.stamp || casPair(pair2, Pair.m1771of(v, i)));
     }
 
     static {

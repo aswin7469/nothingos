@@ -3,7 +3,7 @@ package com.google.android.setupdesign.template;
 import android.view.View;
 import com.google.android.setupcompat.internal.TemplateLayout;
 import com.google.android.setupcompat.template.Mixin;
-import com.google.android.setupdesign.C3953R;
+import com.google.android.setupdesign.C3963R;
 import com.google.android.setupdesign.view.NavigationBar;
 
 public class NavigationBarMixin implements Mixin {
@@ -14,7 +14,7 @@ public class NavigationBarMixin implements Mixin {
     }
 
     public NavigationBar getNavigationBar() {
-        View findManagedViewById = this.templateLayout.findManagedViewById(C3953R.C3956id.sud_layout_navigation_bar);
+        View findManagedViewById = this.templateLayout.findManagedViewById(C3963R.C3966id.sud_layout_navigation_bar);
         if (findManagedViewById instanceof NavigationBar) {
             return (NavigationBar) findManagedViewById;
         }

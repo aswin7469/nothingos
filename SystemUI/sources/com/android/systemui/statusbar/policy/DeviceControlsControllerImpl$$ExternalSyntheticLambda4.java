@@ -12,6 +12,6 @@ public final /* synthetic */ class DeviceControlsControllerImpl$$ExternalSynthet
     }
 
     public final void accept(Object obj) {
-        DeviceControlsControllerImpl.m3233removeCallback$lambda2(this.f$0, (ControlsListingController) obj);
+        DeviceControlsControllerImpl.m3238removeCallback$lambda2(this.f$0, (ControlsListingController) obj);
     }
 }

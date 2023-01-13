@@ -12,6 +12,6 @@ public final /* synthetic */ class OneHandedTutorialHandler$$ExternalSyntheticLa
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        this.f$0.mo49952xe327c1d6(valueAnimator);
+        this.f$0.mo49961xe327c1d6(valueAnimator);
     }
 }

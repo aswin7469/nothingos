@@ -13,6 +13,6 @@ public final /* synthetic */ class DozeServiceHost$$ExternalSyntheticLambda0 imp
     }
 
     public final void run() {
-        this.f$0.mo44034x85b51859(this.f$1);
+        this.f$0.mo44044x85b51859(this.f$1);
     }
 }

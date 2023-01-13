@@ -8,7 +8,7 @@ import android.os.Looper;
 import android.view.View;
 import android.widget.Switch;
 import com.android.internal.logging.MetricsLogger;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Prefs;
 import com.android.systemui.animation.DialogLaunchAnimator;
 import com.android.systemui.dagger.qualifiers.Background;
@@ -60,7 +60,7 @@ public class DataSaverTile extends QSTileImpl<QSTile.BooleanState> implements Da
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$handleClick$1$com-android-systemui-qs-tiles-DataSaverTile  reason: not valid java name */
-    public /* synthetic */ void m2973lambda$handleClick$1$comandroidsystemuiqstilesDataSaverTile(View view) {
+    public /* synthetic */ void m2978lambda$handleClick$1$comandroidsystemuiqstilesDataSaverTile(View view) {
         SystemUIDialog systemUIDialog = new SystemUIDialog(this.mContext);
         systemUIDialog.setTitle(17040096);
         systemUIDialog.setMessage(17040094);
@@ -76,7 +76,7 @@ public class DataSaverTile extends QSTileImpl<QSTile.BooleanState> implements Da
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$handleClick$0$com-android-systemui-qs-tiles-DataSaverTile  reason: not valid java name */
-    public /* synthetic */ void m2972lambda$handleClick$0$comandroidsystemuiqstilesDataSaverTile(DialogInterface dialogInterface, int i) {
+    public /* synthetic */ void m2977lambda$handleClick$0$comandroidsystemuiqstilesDataSaverTile(DialogInterface dialogInterface, int i) {
         toggleDataSaver();
         Prefs.putBoolean(this.mContext, Prefs.Key.QS_DATA_SAVER_DIALOG_SHOWN, true);
     }
@@ -88,7 +88,7 @@ public class DataSaverTile extends QSTileImpl<QSTile.BooleanState> implements Da
     }
 
     public CharSequence getTileLabel() {
-        return this.mContext.getString(C1893R.string.data_saver);
+        return this.mContext.getString(C1894R.string.data_saver);
     }
 
     /* access modifiers changed from: protected */
@@ -101,9 +101,9 @@ public class DataSaverTile extends QSTileImpl<QSTile.BooleanState> implements Da
         }
         booleanState.value = z;
         booleanState.state = booleanState.value ? 2 : 1;
-        booleanState.label = this.mContext.getString(C1893R.string.data_saver);
+        booleanState.label = this.mContext.getString(C1894R.string.data_saver);
         booleanState.contentDescription = booleanState.label;
-        booleanState.icon = QSTileImpl.ResourceIcon.get(booleanState.value ? C1893R.C1895drawable.ic_data_saver : C1893R.C1895drawable.ic_data_saver_off);
+        booleanState.icon = QSTileImpl.ResourceIcon.get(booleanState.value ? C1894R.C1896drawable.ic_data_saver : C1894R.C1896drawable.ic_data_saver_off);
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
     }
 

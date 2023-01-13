@@ -7,8 +7,10 @@ import android.os.PowerManager;
 import android.os.SystemClock;
 import android.provider.Settings;
 import com.android.keyguard.KeyguardUpdateMonitor;
+import com.android.systemui.shared.system.ActivityManagerWrapper;
 import com.android.systemui.statusbar.CircleReveal;
 import com.android.systemui.statusbar.phone.BiometricUnlockController;
+import com.android.systemui.statusbar.phone.ConfigurationControllerImpl;
 import com.android.systemui.statusbar.phone.DozeParameters;
 import com.android.systemui.statusbar.phone.DozeServiceHost;
 import com.android.systemui.statusbar.phone.NotificationPanelViewController;
@@ -19,7 +21,6 @@ import com.nothing.systemui.util.NTLogUtil;
 import javax.inject.Inject;
 
 public class CentralSurfacesImplEx {
-    public static int DELAY_SHOW_AOD_DURATION = 400;
     private static final String MOTION_TRIGGER_SHOW_FP_ICON = "motion_trigger_show_fp_icon";
     private static String TAG = "CentralSurfacesImplEx";
     private static final String TAP_FILE = "/sys/devices/platform/soc/a94000.spi/spi_master/spi0/spi0.0/fts_parse_coordinate";
@@ -54,13 +55,19 @@ public class CentralSurfacesImplEx {
     };
     private LiftWakeGestureController mLiftWakeGestureController = null;
     private Handler mMainHandler;
-    private boolean mNeedDelayShowAod = false;
     /* access modifiers changed from: private */
     public NotificationPanelViewController mNotificationPanelViewController;
+    private boolean mPanelCollapsedByDream = false;
     /* access modifiers changed from: private */
     public PowerManager mPowerManager;
     private int mTapToSleepX = -1;
     private int mTapToSleepY = -1;
+
+    public void onScreenTurnedOff() {
+    }
+
+    public void onScreenTurningOff() {
+    }
 
     @Inject
     public CentralSurfacesImplEx(Context context, PowerManager powerManager, KeyguardUpdateMonitor keyguardUpdateMonitor, AODController aODController, LiftWakeGestureController liftWakeGestureController) {
@@ -84,37 +91,59 @@ public class CentralSurfacesImplEx {
         this.mNotificationPanelViewController = notificationPanelViewController;
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:32:0x016b  */
-    /* JADX WARNING: Removed duplicated region for block: B:34:? A[RETURN, SYNTHETIC] */
+    public boolean shouldInstantCollapsePanel(String str) {
+        boolean z = ((ConfigurationControllerImpl) NTDependencyEx.get(ConfigurationControllerImpl.class)).getOrientation() == 2;
+        boolean equals = ActivityManagerWrapper.CLOSE_SYSTEM_WINDOWS_REASON_HOME_KEY.equals(str);
+        boolean equals2 = "recentapps".equals(str);
+        if (!z || (!equals && !equals2)) {
+            return false;
+        }
+        return true;
+    }
+
+    /* JADX WARNING: Removed duplicated region for block: B:42:0x01a0  */
+    /* JADX WARNING: Removed duplicated region for block: B:44:? A[RETURN, SYNTHETIC] */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void updateRevealEffectEx(com.android.systemui.statusbar.SysuiStatusBarStateController r15, android.util.DisplayMetrics r16, com.android.systemui.keyguard.WakefulnessLifecycle r17, boolean r18, android.graphics.PointF r19, com.android.systemui.statusbar.LightRevealScrim r20, com.android.systemui.statusbar.PowerButtonReveal r21, boolean r22) {
+    public void updateRevealEffectEx(com.android.systemui.statusbar.SysuiStatusBarStateController r16, android.util.DisplayMetrics r17, com.android.systemui.keyguard.WakefulnessLifecycle r18, boolean r19, android.graphics.PointF r20, com.android.systemui.statusbar.LightRevealScrim r21, com.android.systemui.statusbar.PowerButtonReveal r22, boolean r23) {
         /*
-            r14 = this;
-            r0 = r14
-            r1 = r16
-            r2 = r18
-            r3 = r19
-            r8 = r20
-            r9 = r22
+            r15 = this;
+            r0 = r15
+            r1 = r17
+            r2 = r19
+            r3 = r20
+            r8 = r21
+            r9 = r23
             r10 = 0
             r0.mIsTapSleep = r10
-            int r11 = r17.getLastWakeReason()
-            int r12 = r17.getLastSleepReason()
+            com.android.systemui.statusbar.phone.NotificationPanelViewController r4 = r0.mNotificationPanelViewController
+            r11 = 1
+            if (r4 == 0) goto L_0x0019
+            boolean r4 = r4.isPanelFullyCollapsed()
+            r12 = r4
+            goto L_0x001a
+        L_0x0019:
+            r12 = r11
+        L_0x001a:
+            int r13 = r18.getLastWakeReason()
+            int r14 = r18.getLastSleepReason()
             java.lang.String r4 = TAG
             java.lang.StringBuilder r5 = new java.lang.StringBuilder
             java.lang.String r6 = "wakeReason = "
             r5.<init>((java.lang.String) r6)
-            java.lang.StringBuilder r5 = r5.append((int) r11)
+            java.lang.StringBuilder r5 = r5.append((int) r13)
             java.lang.String r6 = ", sleepReason: "
             java.lang.StringBuilder r5 = r5.append((java.lang.String) r6)
-            java.lang.StringBuilder r5 = r5.append((int) r12)
+            java.lang.StringBuilder r5 = r5.append((int) r14)
             java.lang.String r6 = ", isWakingUp: "
             java.lang.StringBuilder r5 = r5.append((java.lang.String) r6)
             java.lang.StringBuilder r5 = r5.append((boolean) r9)
+            java.lang.String r6 = ", isFullCollapsed: "
+            java.lang.StringBuilder r5 = r5.append((java.lang.String) r6)
+            java.lang.StringBuilder r5 = r5.append((boolean) r12)
             java.lang.String r5 = r5.toString()
-            com.nothing.systemui.util.NTLogUtil.m1680d(r4, r5)
-            if (r9 == 0) goto L_0x00d9
-            if (r3 == 0) goto L_0x0071
+            com.nothing.systemui.util.NTLogUtil.m1686d(r4, r5)
+            if (r9 == 0) goto L_0x00ef
+            if (r3 == 0) goto L_0x0087
             java.lang.String r4 = TAG
             java.lang.StringBuilder r5 = new java.lang.StringBuilder
             java.lang.String r6 = "wakingUpComingFromTouch: "
@@ -129,31 +158,31 @@ public class CentralSurfacesImplEx {
             float r6 = r3.y
             java.lang.StringBuilder r5 = r5.append((float) r6)
             java.lang.String r5 = r5.toString()
-            com.nothing.systemui.util.NTLogUtil.m1680d(r4, r5)
-        L_0x0071:
+            com.nothing.systemui.util.NTLogUtil.m1686d(r4, r5)
+        L_0x0087:
             java.lang.String r4 = TAG
             java.lang.StringBuilder r5 = new java.lang.StringBuilder
             java.lang.String r6 = "getXY= "
             r5.<init>((java.lang.String) r6)
-            android.graphics.Point r6 = r14.getTapXY()
+            android.graphics.Point r6 = r15.getTapXY()
             java.lang.StringBuilder r5 = r5.append((java.lang.Object) r6)
             java.lang.String r5 = r5.toString()
-            com.nothing.systemui.util.NTLogUtil.m1680d(r4, r5)
-            if (r2 == 0) goto L_0x0092
+            com.nothing.systemui.util.NTLogUtil.m1686d(r4, r5)
+            if (r2 == 0) goto L_0x00a8
             float r2 = r3.x
             float r3 = r3.y
             r4 = r2
             r5 = r3
-            goto L_0x009e
-        L_0x0092:
-            android.graphics.Point r2 = r14.getTapXY()
+            goto L_0x00b4
+        L_0x00a8:
+            android.graphics.Point r2 = r15.getTapXY()
             int r3 = r2.x
             float r3 = (float) r3
             int r2 = r2.y
             float r2 = (float) r2
             r5 = r2
             r4 = r3
-        L_0x009e:
+        L_0x00b4:
             java.lang.String r2 = TAG
             java.lang.StringBuilder r3 = new java.lang.StringBuilder
             java.lang.String r6 = "updateRevealEffect:  x= "
@@ -163,7 +192,7 @@ public class CentralSurfacesImplEx {
             java.lang.StringBuilder r3 = r3.append((java.lang.String) r6)
             java.lang.StringBuilder r3 = r3.append((float) r5)
             java.lang.String r3 = r3.toString()
-            com.nothing.systemui.util.NTLogUtil.m1680d(r2, r3)
+            com.nothing.systemui.util.NTLogUtil.m1686d(r2, r3)
             com.android.systemui.statusbar.CircleReveal r2 = r0.mCircleReveal
             r6 = 0
             int r3 = r1.widthPixels
@@ -175,55 +204,65 @@ public class CentralSurfacesImplEx {
             float r7 = r7 - r5
             float r7 = java.lang.Math.max((float) r5, (float) r7)
             float r7 = java.lang.Math.max((float) r3, (float) r7)
-            r3 = r20
+            r3 = r21
             r2.updateCircleReveal(r3, r4, r5, r6, r7)
-        L_0x00d9:
+        L_0x00ef:
             r2 = 4
             r7 = 1065353216(0x3f800000, float:1.0)
-            r13 = 1
-            if (r9 == 0) goto L_0x0110
-            if (r11 != r13) goto L_0x00ef
-            r20.setRevealEffect(r21)
-            float r1 = r15.getDozeAmount()
+            if (r9 == 0) goto L_0x012c
+            if (r13 != r11) goto L_0x0104
+            r21.setRevealEffect(r22)
+            float r1 = r16.getDozeAmount()
             float r7 = r7 - r1
             r8.setRevealAmount(r7)
-        L_0x00ec:
-            r10 = r13
-            goto L_0x0167
-        L_0x00ef:
+        L_0x0101:
+            r10 = r11
+            goto L_0x019c
+        L_0x0104:
             r1 = 6
-            if (r11 != r1) goto L_0x0102
+            if (r13 != r1) goto L_0x0117
             r0.mIsTapWakeUp = r10
             com.android.systemui.statusbar.CircleReveal r1 = r0.mCircleReveal
             r8.setRevealEffect(r1)
-            float r1 = r15.getDozeAmount()
+            float r1 = r16.getDozeAmount()
             float r7 = r7 - r1
             r8.setRevealAmount(r7)
-            goto L_0x00ec
-        L_0x0102:
-            if (r11 != r2) goto L_0x010a
+            goto L_0x0101
+        L_0x0117:
+            if (r13 != r2) goto L_0x0125
+            boolean r1 = r15.isWakeAndUnlock()
+            if (r1 != 0) goto L_0x0101
             com.android.systemui.statusbar.LiftReveal r1 = com.android.systemui.statusbar.LiftReveal.INSTANCE
             r8.setRevealEffect(r1)
-            goto L_0x00ec
-        L_0x010a:
+            goto L_0x0101
+        L_0x0125:
             com.android.systemui.statusbar.LiftReveal r1 = com.android.systemui.statusbar.LiftReveal.INSTANCE
             r8.setRevealEffect(r1)
-            goto L_0x0167
-        L_0x0110:
-            if (r9 != 0) goto L_0x0167
-            if (r12 != r2) goto L_0x0120
-            r20.setRevealEffect(r21)
-            float r1 = r15.getDozeAmount()
+            goto L_0x019c
+        L_0x012c:
+            if (r9 != 0) goto L_0x019c
+            if (r12 == 0) goto L_0x0197
+            android.content.Context r3 = r0.mContext
+            android.content.res.Resources r3 = r3.getResources()
+            android.content.res.Configuration r3 = r3.getConfiguration()
+            int r3 = r3.orientation
+            r4 = 2
+            if (r3 != r4) goto L_0x0140
+            goto L_0x0197
+        L_0x0140:
+            if (r14 != r2) goto L_0x014e
+            r21.setRevealEffect(r22)
+            float r1 = r16.getDozeAmount()
             float r7 = r7 - r1
             r8.setRevealAmount(r7)
-            goto L_0x00ec
-        L_0x0120:
-            if (r12 != 0) goto L_0x0162
+            goto L_0x0101
+        L_0x014e:
+            if (r14 != 0) goto L_0x0191
             int r2 = r0.mTapToSleepX
             r3 = -1
-            if (r2 == r3) goto L_0x0167
+            if (r2 == r3) goto L_0x019c
             int r4 = r0.mTapToSleepY
-            if (r4 == r3) goto L_0x0167
+            if (r4 == r3) goto L_0x019c
             com.android.systemui.statusbar.CircleReveal r3 = r0.mCircleReveal
             float r5 = (float) r2
             float r4 = (float) r4
@@ -240,28 +279,32 @@ public class CentralSurfacesImplEx {
             int r1 = java.lang.Math.max((int) r2, (int) r1)
             float r9 = (float) r1
             r1 = r3
-            r2 = r20
+            r2 = r21
             r3 = r5
             r5 = r6
             r6 = r9
             r1.updateCircleReveal(r2, r3, r4, r5, r6)
-            r0.mIsTapSleep = r13
+            r0.mIsTapSleep = r11
             com.android.systemui.statusbar.CircleReveal r1 = r0.mCircleReveal
             r8.setRevealEffect(r1)
-            float r1 = r15.getDozeAmount()
+            float r1 = r16.getDozeAmount()
             float r7 = r7 - r1
             r8.setRevealAmount(r7)
-            goto L_0x00ec
-        L_0x0162:
+            goto L_0x0101
+        L_0x0191:
             com.android.systemui.statusbar.LiftReveal r1 = com.android.systemui.statusbar.LiftReveal.INSTANCE
             r8.setRevealEffect(r1)
-        L_0x0167:
+            goto L_0x019c
+        L_0x0197:
+            com.android.systemui.statusbar.LiftReveal r1 = com.android.systemui.statusbar.LiftReveal.INSTANCE
+            r8.setRevealEffect(r1)
+        L_0x019c:
             boolean r1 = r0.mCurShouldPlayOnOffAnimation
-            if (r1 == r10) goto L_0x0172
+            if (r1 == r10) goto L_0x01a7
             r0.mCurShouldPlayOnOffAnimation = r10
             com.android.systemui.statusbar.phone.DozeParameters r0 = r0.mDozeParameters
             r0.updateControlScreenOff()
-        L_0x0172:
+        L_0x01a7:
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: com.nothing.systemui.statusbar.phone.CentralSurfacesImplEx.updateRevealEffectEx(com.android.systemui.statusbar.SysuiStatusBarStateController, android.util.DisplayMetrics, com.android.systemui.keyguard.WakefulnessLifecycle, boolean, android.graphics.PointF, com.android.systemui.statusbar.LightRevealScrim, com.android.systemui.statusbar.PowerButtonReveal, boolean):void");
@@ -305,7 +348,7 @@ public class CentralSurfacesImplEx {
             java.lang.StringBuilder r7 = r7.append((java.lang.String) r8)     // Catch:{ Exception -> 0x00d7 }
             java.lang.StringBuilder r7 = r7.append((java.lang.String) r5)     // Catch:{ Exception -> 0x00d7 }
             java.lang.String r7 = r7.toString()     // Catch:{ Exception -> 0x00d7 }
-            com.nothing.systemui.util.NTLogUtil.m1680d(r6, r7)     // Catch:{ Exception -> 0x00d7 }
+            com.nothing.systemui.util.NTLogUtil.m1686d(r6, r7)     // Catch:{ Exception -> 0x00d7 }
             if (r4 != 0) goto L_0x003d
             r0 = r5
             goto L_0x0041
@@ -327,7 +370,7 @@ public class CentralSurfacesImplEx {
             java.lang.StringBuilder r5 = r5.append((java.lang.String) r6)     // Catch:{ Exception -> 0x00d7 }
             java.lang.StringBuilder r5 = r5.append((java.lang.String) r3)     // Catch:{ Exception -> 0x00d7 }
             java.lang.String r5 = r5.toString()     // Catch:{ Exception -> 0x00d7 }
-            com.nothing.systemui.util.NTLogUtil.m1680d(r4, r5)     // Catch:{ Exception -> 0x00d7 }
+            com.nothing.systemui.util.NTLogUtil.m1686d(r4, r5)     // Catch:{ Exception -> 0x00d7 }
             r4 = 2
             java.lang.String r0 = r0.substring(r4)     // Catch:{ Exception -> 0x00d7 }
             java.lang.String r3 = r3.substring(r4)     // Catch:{ Exception -> 0x00d7 }
@@ -341,7 +384,7 @@ public class CentralSurfacesImplEx {
             java.lang.StringBuilder r5 = r5.append((java.lang.String) r6)     // Catch:{ Exception -> 0x00d7 }
             java.lang.StringBuilder r5 = r5.append((java.lang.String) r3)     // Catch:{ Exception -> 0x00d7 }
             java.lang.String r5 = r5.toString()     // Catch:{ Exception -> 0x00d7 }
-            com.nothing.systemui.util.NTLogUtil.m1680d(r4, r5)     // Catch:{ Exception -> 0x00d7 }
+            com.nothing.systemui.util.NTLogUtil.m1686d(r4, r5)     // Catch:{ Exception -> 0x00d7 }
             r4 = 16
             int r0 = java.lang.Integer.parseInt(r0, r4)     // Catch:{ Exception -> 0x00d7 }
             int r3 = java.lang.Integer.parseInt(r3, r4)     // Catch:{ Exception -> 0x00d7 }
@@ -355,7 +398,7 @@ public class CentralSurfacesImplEx {
             java.lang.StringBuilder r5 = r5.append((java.lang.String) r6)     // Catch:{ Exception -> 0x00d7 }
             java.lang.StringBuilder r5 = r5.append((int) r3)     // Catch:{ Exception -> 0x00d7 }
             java.lang.String r5 = r5.toString()     // Catch:{ Exception -> 0x00d7 }
-            com.nothing.systemui.util.NTLogUtil.m1680d(r4, r5)     // Catch:{ Exception -> 0x00d7 }
+            com.nothing.systemui.util.NTLogUtil.m1686d(r4, r5)     // Catch:{ Exception -> 0x00d7 }
             android.graphics.Point r4 = new android.graphics.Point     // Catch:{ Exception -> 0x00d7 }
             r4.<init>(r0, r3)     // Catch:{ Exception -> 0x00d7 }
             r1.close()     // Catch:{ IOException -> 0x00c9 }
@@ -444,7 +487,7 @@ public class CentralSurfacesImplEx {
     public void onTapWakeUp() {
         this.mIsTapWakeUp = true;
         if (((LiftWakeGestureController) NTDependencyEx.get(LiftWakeGestureController.class)).isNear()) {
-            NTLogUtil.m1682i(TAG, "retrun on onTapWake, don't wake up.");
+            NTLogUtil.m1688i(TAG, "retrun on onTapWake, don't wake up.");
         } else if (((AODController) NTDependencyEx.get(AODController.class)).isTapWakeEnable()) {
             this.mPowerManager.wakeUp(SystemClock.uptimeMillis(), 6, "com.android.systemui:NODOZE");
         } else if (this.mDozeServiceHost != null) {
@@ -453,7 +496,7 @@ public class CentralSurfacesImplEx {
     }
 
     public void onFinishedGoingToSleep() {
-        NTLogUtil.m1682i(TAG, "onFinishedGoingToSleep: " + this.mLiftWakeGestureController);
+        NTLogUtil.m1688i(TAG, "onFinishedGoingToSleep: " + this.mLiftWakeGestureController);
         if (this.mLiftWakeGestureController != null && shouldEnableProximity()) {
             this.mLiftWakeGestureController.requestProximityTrigger();
         }
@@ -472,14 +515,14 @@ public class CentralSurfacesImplEx {
     }
 
     public void onStartedWakingUp() {
-        NTLogUtil.m1682i(TAG, "onStartedWakingUp: " + this.mLiftWakeGestureController);
+        NTLogUtil.m1688i(TAG, "onStartedWakingUp: " + this.mLiftWakeGestureController);
+        this.mPanelCollapsedByDream = false;
         LiftWakeGestureController liftWakeGestureController = this.mLiftWakeGestureController;
         if (liftWakeGestureController != null) {
             liftWakeGestureController.cancelProximityTrigger();
             this.mLiftWakeGestureController.cancelWakeUpTrigger();
             this.mLiftWakeGestureController.cancelMotionTrigger();
         }
-        this.mNeedDelayShowAod = false;
         resetTapSleepPoint();
     }
 
@@ -497,7 +540,7 @@ public class CentralSurfacesImplEx {
 
     public void setNotificationPanelViewAlpha(final float f) {
         if (this.mNotificationPanelViewController != null) {
-            NTLogUtil.m1680d(TAG, "setNotificationPanelViewAlpha:  alpha = " + f + ", cb: " + Debug.getCallers(3));
+            NTLogUtil.m1686d(TAG, "setNotificationPanelViewAlpha:  alpha = " + f + ", cb: " + Debug.getCallers(3));
             this.mMainHandler.post(new Runnable() {
                 public void run() {
                     CentralSurfacesImplEx.this.mNotificationPanelViewController.setAlpha(f);
@@ -539,23 +582,8 @@ public class CentralSurfacesImplEx {
     }
 
     public void onDozingChanged(boolean z, int i) {
-        boolean shouldShowAODView = ((AODController) NTDependencyEx.get(AODController.class)).shouldShowAODView();
-        NTLogUtil.m1680d(TAG, "onDozingChanged:  showAod = " + shouldShowAODView);
-        if (z) {
-            if (!shouldShowAODView) {
-                setNotificationPanelViewAlpha(0.0f);
-            } else if (this.mNeedDelayShowAod) {
-                setNotificationPanelViewAlpha(0.0f);
-                this.mMainHandler.postDelayed(new Runnable() {
-                    public void run() {
-                        CentralSurfacesImplEx.this.setNotificationPanelViewAlpha(1.0f);
-                    }
-                }, (long) DELAY_SHOW_AOD_DURATION);
-            } else {
-                setNotificationPanelViewAlpha(1.0f);
-            }
-        } else if (i != 0 && !isWakeAndUnlock()) {
-            setNotificationPanelViewAlpha(1.0f);
+        if (z && i == 1 && !((AODController) NTDependencyEx.get(AODController.class)).shouldShowAODView()) {
+            setNotificationPanelViewAlpha(0.0f);
         }
     }
 
@@ -581,7 +609,19 @@ public class CentralSurfacesImplEx {
         return this.mCurShouldPlayOnOffAnimation;
     }
 
-    public void setDelayToShowAod(boolean z) {
-        this.mNeedDelayShowAod = z;
+    public void onScreenTurningOn() {
+        boolean isInteractive = this.mPowerManager.isInteractive();
+        NTLogUtil.m1686d(TAG, "onScreenTurningOn, interactive: " + isInteractive);
+        if (!isInteractive && !((AODController) NTDependencyEx.get(AODController.class)).shouldShowAODView()) {
+            setNotificationPanelViewAlpha(0.0f);
+        }
+    }
+
+    public void setPanelCollapsedByDream(boolean z) {
+        this.mPanelCollapsedByDream = z;
+    }
+
+    public boolean isPanelCollapsedByDream() {
+        return this.mPanelCollapsedByDream;
     }
 }

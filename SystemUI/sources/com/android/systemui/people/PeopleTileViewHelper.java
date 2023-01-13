@@ -27,7 +27,7 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.core.math.MathUtils;
 import com.android.launcher3.icons.FastBitmapDrawable;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.people.widget.LaunchConversationActivity;
 import com.android.systemui.people.widget.PeopleSpaceWidgetProvider;
 import com.android.systemui.people.widget.PeopleTileKey;
@@ -111,8 +111,8 @@ public class PeopleTileViewHelper {
         if (parcelableArrayList != null && !parcelableArrayList.isEmpty()) {
             return parcelableArrayList;
         }
-        int sizeInDp = getSizeInDp(context, C1893R.dimen.default_width, f);
-        int sizeInDp2 = getSizeInDp(context, C1893R.dimen.default_height, f);
+        int sizeInDp = getSizeInDp(context, C1894R.dimen.default_width, f);
+        int sizeInDp2 = getSizeInDp(context, C1894R.dimen.default_height, f);
         ArrayList arrayList = new ArrayList(2);
         arrayList.add(new SizeF((float) bundle.getInt("appWidgetMinWidth", sizeInDp), (float) bundle.getInt("appWidgetMaxHeight", sizeInDp2)));
         arrayList.add(new SizeF((float) bundle.getInt("appWidgetMaxWidth", sizeInDp), (float) bundle.getInt("appWidgetMinHeight", sizeInDp2)));
@@ -179,13 +179,13 @@ public class PeopleTileViewHelper {
         RemoteViews remoteViews;
         PeopleSpaceTile peopleSpaceTile = this.mTile;
         if (peopleSpaceTile == null || !peopleSpaceTile.isUserQuieted()) {
-            remoteViews = new RemoteViews(this.mContext.getPackageName(), C1893R.layout.people_tile_suppressed_layout);
+            remoteViews = new RemoteViews(this.mContext.getPackageName(), C1894R.layout.people_tile_suppressed_layout);
         } else {
-            remoteViews = new RemoteViews(this.mContext.getPackageName(), C1893R.layout.people_tile_work_profile_quiet_layout);
+            remoteViews = new RemoteViews(this.mContext.getPackageName(), C1894R.layout.people_tile_work_profile_quiet_layout);
         }
-        Drawable mutate = this.mContext.getDrawable(C1893R.C1895drawable.ic_conversation_icon).mutate();
+        Drawable mutate = this.mContext.getDrawable(C1894R.C1896drawable.ic_conversation_icon).mutate();
         mutate.setColorFilter(FastBitmapDrawable.getDisabledColorFilter());
-        remoteViews.setImageViewBitmap(C1893R.C1897id.icon, PeopleSpaceUtils.convertDrawableToBitmap(mutate));
+        remoteViews.setImageViewBitmap(C1894R.C1898id.icon, PeopleSpaceUtils.convertDrawableToBitmap(mutate));
         return remoteViews;
     }
 
@@ -193,17 +193,17 @@ public class PeopleTileViewHelper {
         int i;
         int i2;
         if (this.mLayoutSize == 2) {
-            i2 = getLineHeightFromResource(C1893R.dimen.name_text_size_for_large_content);
-            i = C1893R.dimen.content_text_size_for_large;
+            i2 = getLineHeightFromResource(C1894R.dimen.name_text_size_for_large_content);
+            i = C1894R.dimen.content_text_size_for_large;
         } else {
-            i2 = getLineHeightFromResource(C1893R.dimen.name_text_size_for_medium_content);
-            i = C1893R.dimen.content_text_size_for_medium;
+            i2 = getLineHeightFromResource(C1894R.dimen.name_text_size_for_medium_content);
+            i = C1894R.dimen.content_text_size_for_medium;
         }
-        int max = Math.max(2, Math.floorDiv(getContentHeightForLayout(i2, remoteViews.getLayoutId() == C1893R.layout.people_tile_large_with_status_content), getLineHeightFromResource(i)));
+        int max = Math.max(2, Math.floorDiv(getContentHeightForLayout(i2, remoteViews.getLayoutId() == C1894R.layout.people_tile_large_with_status_content), getLineHeightFromResource(i)));
         if (z) {
             max--;
         }
-        remoteViews.setInt(C1893R.C1897id.text_content, "setMaxLines", max);
+        remoteViews.setInt(C1894R.C1898id.text_content, "setMaxLines", max);
     }
 
     private int getLineHeightFromResource(int i) {
@@ -214,7 +214,7 @@ public class PeopleTileViewHelper {
             return (int) (((float) textView.getLineHeight()) / this.mDensity);
         } catch (Exception e) {
             Log.e(TAG, "Could not create text view: " + e);
-            return this.getSizeInDp(C1893R.dimen.content_text_size_for_medium);
+            return this.getSizeInDp(C1894R.dimen.content_text_size_for_medium);
         }
     }
 
@@ -234,48 +234,48 @@ public class PeopleTileViewHelper {
         if (i2 != 2) {
             return -1;
         }
-        return this.mHeight - ((getSizeInDp(C1893R.dimen.max_people_avatar_size_for_large_content) + i) + (z ? 76 : 62));
+        return this.mHeight - ((getSizeInDp(C1894R.dimen.max_people_avatar_size_for_large_content) + i) + (z ? 76 : 62));
     }
 
     private int getLayoutSize() {
-        if (this.mHeight >= getSizeInDp(C1893R.dimen.required_height_for_large) && this.mWidth >= getSizeInDp(C1893R.dimen.required_width_for_large)) {
+        if (this.mHeight >= getSizeInDp(C1894R.dimen.required_height_for_large) && this.mWidth >= getSizeInDp(C1894R.dimen.required_width_for_large)) {
             return 2;
         }
-        if (this.mHeight < getSizeInDp(C1893R.dimen.required_height_for_medium) || this.mWidth < getSizeInDp(C1893R.dimen.required_width_for_medium)) {
+        if (this.mHeight < getSizeInDp(C1894R.dimen.required_height_for_medium) || this.mWidth < getSizeInDp(C1894R.dimen.required_width_for_medium)) {
             return 0;
         }
-        this.mMediumVerticalPadding = Math.max(4, Math.min(Math.floorDiv(this.mHeight - ((getSizeInDp(C1893R.dimen.avatar_size_for_medium) + 4) + getLineHeightFromResource(C1893R.dimen.name_text_size_for_medium_content)), 2), 16));
+        this.mMediumVerticalPadding = Math.max(4, Math.min(Math.floorDiv(this.mHeight - ((getSizeInDp(C1894R.dimen.avatar_size_for_medium) + 4) + getLineHeightFromResource(C1894R.dimen.name_text_size_for_medium_content)), 2), 16));
         return 1;
     }
 
     private int getMaxAvatarSize(RemoteViews remoteViews) {
         int layoutId = remoteViews.getLayoutId();
-        int sizeInDp = getSizeInDp(C1893R.dimen.avatar_size_for_medium);
-        if (layoutId == C1893R.layout.people_tile_medium_empty) {
-            return getSizeInDp(C1893R.dimen.max_people_avatar_size_for_large_content);
+        int sizeInDp = getSizeInDp(C1894R.dimen.avatar_size_for_medium);
+        if (layoutId == C1894R.layout.people_tile_medium_empty) {
+            return getSizeInDp(C1894R.dimen.max_people_avatar_size_for_large_content);
         }
-        if (layoutId == C1893R.layout.people_tile_medium_with_content) {
-            return getSizeInDp(C1893R.dimen.avatar_size_for_medium);
+        if (layoutId == C1894R.layout.people_tile_medium_with_content) {
+            return getSizeInDp(C1894R.dimen.avatar_size_for_medium);
         }
-        if (layoutId == C1893R.layout.people_tile_small) {
-            sizeInDp = Math.min(this.mHeight - (Math.max(18, getLineHeightFromResource(C1893R.dimen.name_text_size_for_small)) + 18), this.mWidth - 8);
+        if (layoutId == C1894R.layout.people_tile_small) {
+            sizeInDp = Math.min(this.mHeight - (Math.max(18, getLineHeightFromResource(C1894R.dimen.name_text_size_for_small)) + 18), this.mWidth - 8);
         }
-        if (layoutId == C1893R.layout.people_tile_small_horizontal) {
+        if (layoutId == C1894R.layout.people_tile_small_horizontal) {
             sizeInDp = Math.min(this.mHeight - 10, this.mWidth - 16);
         }
-        if (layoutId == C1893R.layout.people_tile_large_with_notification_content) {
-            return Math.min(this.mHeight - ((getLineHeightFromResource(C1893R.dimen.content_text_size_for_large) * 3) + 62), getSizeInDp(C1893R.dimen.max_people_avatar_size_for_large_content));
+        if (layoutId == C1894R.layout.people_tile_large_with_notification_content) {
+            return Math.min(this.mHeight - ((getLineHeightFromResource(C1894R.dimen.content_text_size_for_large) * 3) + 62), getSizeInDp(C1894R.dimen.max_people_avatar_size_for_large_content));
         }
-        if (layoutId == C1893R.layout.people_tile_large_with_status_content) {
-            return Math.min(this.mHeight - ((getLineHeightFromResource(C1893R.dimen.content_text_size_for_large) * 3) + 76), getSizeInDp(C1893R.dimen.max_people_avatar_size_for_large_content));
+        if (layoutId == C1894R.layout.people_tile_large_with_status_content) {
+            return Math.min(this.mHeight - ((getLineHeightFromResource(C1894R.dimen.content_text_size_for_large) * 3) + 76), getSizeInDp(C1894R.dimen.max_people_avatar_size_for_large_content));
         }
-        if (layoutId == C1893R.layout.people_tile_large_empty) {
-            sizeInDp = Math.min(this.mHeight - (((((getLineHeightFromResource(C1893R.dimen.name_text_size_for_large) + 28) + getLineHeightFromResource(C1893R.dimen.content_text_size_for_large)) + 16) + 10) + 16), this.mWidth - 28);
+        if (layoutId == C1894R.layout.people_tile_large_empty) {
+            sizeInDp = Math.min(this.mHeight - (((((getLineHeightFromResource(C1894R.dimen.name_text_size_for_large) + 28) + getLineHeightFromResource(C1894R.dimen.content_text_size_for_large)) + 16) + 10) + 16), this.mWidth - 28);
         }
         if (isDndBlockingTileData(this.mTile) && this.mLayoutSize != 0) {
             sizeInDp = createDndRemoteViews().mAvatarSize;
         }
-        return Math.min(sizeInDp, getSizeInDp(C1893R.dimen.max_people_avatar_size));
+        return Math.min(sizeInDp, getSizeInDp(C1894R.dimen.max_people_avatar_size));
     }
 
     private RemoteViews setCommonRemoteViewsFields(RemoteViews remoteViews, int i) {
@@ -286,21 +286,21 @@ public class PeopleTileViewHelper {
                 return remoteViews;
             }
             if (peopleSpaceTile.getStatuses() != null && this.mTile.getStatuses().stream().anyMatch(new PeopleTileViewHelper$$ExternalSyntheticLambda6())) {
-                remoteViews.setViewVisibility(C1893R.C1897id.availability, 0);
-                i2 = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.availability_dot_shown_padding);
-                remoteViews.setContentDescription(C1893R.C1897id.availability, this.mContext.getString(C1893R.string.person_available));
+                remoteViews.setViewVisibility(C1894R.C1898id.availability, 0);
+                i2 = this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.availability_dot_shown_padding);
+                remoteViews.setContentDescription(C1894R.C1898id.availability, this.mContext.getString(C1894R.string.person_available));
             } else {
-                remoteViews.setViewVisibility(C1893R.C1897id.availability, 8);
-                i2 = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.availability_dot_missing_padding);
+                remoteViews.setViewVisibility(C1894R.C1898id.availability, 8);
+                i2 = this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.availability_dot_missing_padding);
             }
             boolean z = TextUtils.getLayoutDirectionFromLocale(Locale.getDefault()) == 0;
-            remoteViews.setViewPadding(C1893R.C1897id.padding_before_availability, z ? i2 : 0, 0, z ? 0 : i2, 0);
+            remoteViews.setViewPadding(C1894R.C1898id.padding_before_availability, z ? i2 : 0, 0, z ? 0 : i2, 0);
             boolean hasNewStory = getHasNewStory(this.mTile);
-            remoteViews.setImageViewBitmap(C1893R.C1897id.person_icon, getPersonIconBitmap(this.mContext, this.mTile, i, hasNewStory));
+            remoteViews.setImageViewBitmap(C1894R.C1898id.person_icon, getPersonIconBitmap(this.mContext, this.mTile, i, hasNewStory));
             if (hasNewStory) {
-                remoteViews.setContentDescription(C1893R.C1897id.person_icon, this.mContext.getString(C1893R.string.new_story_status_content_description, new Object[]{this.mTile.getUserName()}));
+                remoteViews.setContentDescription(C1894R.C1898id.person_icon, this.mContext.getString(C1894R.string.new_story_status_content_description, new Object[]{this.mTile.getUserName()}));
             } else {
-                remoteViews.setContentDescription(C1893R.C1897id.person_icon, (CharSequence) null);
+                remoteViews.setContentDescription(C1894R.C1898id.person_icon, (CharSequence) null);
             }
             return remoteViews;
         } catch (Exception e) {
@@ -345,39 +345,39 @@ public class PeopleTileViewHelper {
     private RemoteViewsAndSizes createDndRemoteViews() {
         int i;
         RemoteViews remoteViews = new RemoteViews(this.mContext.getPackageName(), getViewForDndRemoteViews());
-        int sizeInDp = getSizeInDp(C1893R.dimen.avatar_size_for_medium_empty);
-        int sizeInDp2 = getSizeInDp(C1893R.dimen.max_people_avatar_size);
-        String string = this.mContext.getString(C1893R.string.paused_by_dnd);
-        remoteViews.setTextViewText(C1893R.C1897id.text_content, string);
-        int i2 = this.mLayoutSize == 2 ? C1893R.dimen.content_text_size_for_large : C1893R.dimen.content_text_size_for_medium;
-        remoteViews.setTextViewTextSize(C1893R.C1897id.text_content, 0, this.mContext.getResources().getDimension(i2));
+        int sizeInDp = getSizeInDp(C1894R.dimen.avatar_size_for_medium_empty);
+        int sizeInDp2 = getSizeInDp(C1894R.dimen.max_people_avatar_size);
+        String string = this.mContext.getString(C1894R.string.paused_by_dnd);
+        remoteViews.setTextViewText(C1894R.C1898id.text_content, string);
+        int i2 = this.mLayoutSize == 2 ? C1894R.dimen.content_text_size_for_large : C1894R.dimen.content_text_size_for_medium;
+        remoteViews.setTextViewTextSize(C1894R.C1898id.text_content, 0, this.mContext.getResources().getDimension(i2));
         int lineHeightFromResource = getLineHeightFromResource(i2);
         if (this.mLayoutSize == 1) {
-            remoteViews.setInt(C1893R.C1897id.text_content, "setMaxLines", (this.mHeight - 16) / lineHeightFromResource);
+            remoteViews.setInt(C1894R.C1898id.text_content, "setMaxLines", (this.mHeight - 16) / lineHeightFromResource);
         } else {
             int dpToPx = dpToPx((float) 16);
             int dpToPx2 = dpToPx((float) 14);
-            int sizeInDp3 = getSizeInDp(this.mLayoutSize == 0 ? C1893R.dimen.regular_predefined_icon : C1893R.dimen.largest_predefined_icon);
+            int sizeInDp3 = getSizeInDp(this.mLayoutSize == 0 ? C1894R.dimen.regular_predefined_icon : C1894R.dimen.largest_predefined_icon);
             int i3 = (this.mHeight - 32) - sizeInDp3;
-            int sizeInDp4 = getSizeInDp(C1893R.dimen.padding_between_suppressed_layout_items) * 2;
+            int sizeInDp4 = getSizeInDp(C1894R.dimen.padding_between_suppressed_layout_items) * 2;
             int i4 = (i3 - sizeInDp) - sizeInDp4;
             int estimateTextHeight = estimateTextHeight(string, i2, this.mWidth - 32);
             if (estimateTextHeight > i4 || this.mLayoutSize != 2) {
-                i = C1893R.C1897id.predefined_icon;
+                i = C1894R.C1898id.predefined_icon;
                 if (this.mLayoutSize != 0) {
-                    remoteViews = new RemoteViews(this.mContext.getPackageName(), C1893R.layout.people_tile_small);
+                    remoteViews = new RemoteViews(this.mContext.getPackageName(), C1894R.layout.people_tile_small);
                 }
                 int maxAvatarSize = getMaxAvatarSize(remoteViews);
-                remoteViews.setViewVisibility(C1893R.C1897id.messages_count, 8);
-                remoteViews.setViewVisibility(C1893R.C1897id.name, 8);
-                remoteViews.setContentDescription(C1893R.C1897id.predefined_icon, string);
+                remoteViews.setViewVisibility(C1894R.C1898id.messages_count, 8);
+                remoteViews.setViewVisibility(C1894R.C1898id.name, 8);
+                remoteViews.setContentDescription(C1894R.C1898id.predefined_icon, string);
                 sizeInDp = maxAvatarSize;
             } else {
-                remoteViews.setViewVisibility(C1893R.C1897id.text_content, 0);
-                remoteViews.setInt(C1893R.C1897id.text_content, "setMaxLines", i4 / lineHeightFromResource);
-                remoteViews.setContentDescription(C1893R.C1897id.predefined_icon, (CharSequence) null);
+                remoteViews.setViewVisibility(C1894R.C1898id.text_content, 0);
+                remoteViews.setInt(C1894R.C1898id.text_content, "setMaxLines", i4 / lineHeightFromResource);
+                remoteViews.setContentDescription(C1894R.C1898id.predefined_icon, (CharSequence) null);
                 int clamp = MathUtils.clamp(Math.min(this.mWidth - 32, (i3 - estimateTextHeight) - sizeInDp4), dpToPx(10.0f), sizeInDp2);
-                i = C1893R.C1897id.predefined_icon;
+                i = C1894R.C1898id.predefined_icon;
                 remoteViews.setViewPadding(16908288, dpToPx, dpToPx2, dpToPx, dpToPx);
                 float f = (float) sizeInDp3;
                 remoteViews.setViewLayoutWidth(i, f, 1);
@@ -385,7 +385,7 @@ public class PeopleTileViewHelper {
                 sizeInDp = clamp;
             }
             remoteViews.setViewVisibility(i, 0);
-            remoteViews.setImageViewResource(i, C1893R.C1895drawable.ic_qs_dnd_on);
+            remoteViews.setImageViewResource(i, C1894R.C1896drawable.ic_qs_dnd_on);
         }
         return new RemoteViewsAndSizes(remoteViews, sizeInDp);
     }
@@ -393,30 +393,30 @@ public class PeopleTileViewHelper {
     private RemoteViews createMissedCallRemoteViews() {
         RemoteViews viewForContentLayout = setViewForContentLayout(new RemoteViews(this.mContext.getPackageName(), getLayoutForContent()));
         setPredefinedIconVisible(viewForContentLayout);
-        viewForContentLayout.setViewVisibility(C1893R.C1897id.text_content, 0);
-        viewForContentLayout.setViewVisibility(C1893R.C1897id.messages_count, 8);
+        viewForContentLayout.setViewVisibility(C1894R.C1898id.text_content, 0);
+        viewForContentLayout.setViewVisibility(C1894R.C1898id.messages_count, 8);
         setMaxLines(viewForContentLayout, false);
         CharSequence notificationContent = this.mTile.getNotificationContent();
-        viewForContentLayout.setTextViewText(C1893R.C1897id.text_content, notificationContent);
+        viewForContentLayout.setTextViewText(C1894R.C1898id.text_content, notificationContent);
         setContentDescriptionForNotificationTextContent(viewForContentLayout, notificationContent, this.mTile.getUserName());
-        viewForContentLayout.setColorAttr(C1893R.C1897id.text_content, "setTextColor", 16844099);
-        viewForContentLayout.setColorAttr(C1893R.C1897id.predefined_icon, "setColorFilter", 16844099);
-        viewForContentLayout.setImageViewResource(C1893R.C1897id.predefined_icon, C1893R.C1895drawable.ic_phone_missed);
+        viewForContentLayout.setColorAttr(C1894R.C1898id.text_content, "setTextColor", 16844099);
+        viewForContentLayout.setColorAttr(C1894R.C1898id.predefined_icon, "setColorFilter", 16844099);
+        viewForContentLayout.setImageViewResource(C1894R.C1898id.predefined_icon, C1894R.C1896drawable.ic_phone_missed);
         if (this.mLayoutSize == 2) {
-            viewForContentLayout.setInt(C1893R.C1897id.content, "setGravity", 80);
-            viewForContentLayout.setViewLayoutHeightDimen(C1893R.C1897id.predefined_icon, C1893R.dimen.larger_predefined_icon);
-            viewForContentLayout.setViewLayoutWidthDimen(C1893R.C1897id.predefined_icon, C1893R.dimen.larger_predefined_icon);
+            viewForContentLayout.setInt(C1894R.C1898id.content, "setGravity", 80);
+            viewForContentLayout.setViewLayoutHeightDimen(C1894R.C1898id.predefined_icon, C1894R.dimen.larger_predefined_icon);
+            viewForContentLayout.setViewLayoutWidthDimen(C1894R.C1898id.predefined_icon, C1894R.dimen.larger_predefined_icon);
         }
-        setAvailabilityDotPadding(viewForContentLayout, C1893R.dimen.availability_dot_notification_padding);
+        setAvailabilityDotPadding(viewForContentLayout, C1894R.dimen.availability_dot_notification_padding);
         return viewForContentLayout;
     }
 
     private void setPredefinedIconVisible(RemoteViews remoteViews) {
-        remoteViews.setViewVisibility(C1893R.C1897id.predefined_icon, 0);
+        remoteViews.setViewVisibility(C1894R.C1898id.predefined_icon, 0);
         if (this.mLayoutSize == 1) {
-            int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.before_predefined_icon_padding);
+            int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.before_predefined_icon_padding);
             boolean z = this.mIsLeftToRight;
-            remoteViews.setViewPadding(C1893R.C1897id.name, z ? 0 : dimensionPixelSize, 0, z ? dimensionPixelSize : 0, 0);
+            remoteViews.setViewPadding(C1894R.C1898id.name, z ? 0 : dimensionPixelSize, 0, z ? dimensionPixelSize : 0, 0);
         }
     }
 
@@ -426,17 +426,17 @@ public class PeopleTileViewHelper {
         CharSequence notificationSender = this.mTile.getNotificationSender();
         Uri notificationDataUri = this.mTile.getNotificationDataUri();
         if (notificationDataUri != null) {
-            String string = this.mContext.getString(C1893R.string.new_notification_image_content_description, new Object[]{this.mTile.getUserName()});
-            viewForContentLayout.setContentDescription(C1893R.C1897id.image, string);
-            viewForContentLayout.setViewVisibility(C1893R.C1897id.image, 0);
-            viewForContentLayout.setViewVisibility(C1893R.C1897id.text_content, 8);
+            String string = this.mContext.getString(C1894R.string.new_notification_image_content_description, new Object[]{this.mTile.getUserName()});
+            viewForContentLayout.setContentDescription(C1894R.C1898id.image, string);
+            viewForContentLayout.setViewVisibility(C1894R.C1898id.image, 0);
+            viewForContentLayout.setViewVisibility(C1894R.C1898id.text_content, 8);
             try {
-                viewForContentLayout.setImageViewBitmap(C1893R.C1897id.image, PeopleSpaceUtils.convertDrawableToBitmap(resolveImage(notificationDataUri, this.mContext)));
+                viewForContentLayout.setImageViewBitmap(C1894R.C1898id.image, PeopleSpaceUtils.convertDrawableToBitmap(resolveImage(notificationDataUri, this.mContext)));
             } catch (IOException | SecurityException e) {
                 Log.e(TAG, "Could not decode image: " + e);
-                viewForContentLayout.setTextViewText(C1893R.C1897id.text_content, string);
-                viewForContentLayout.setViewVisibility(C1893R.C1897id.text_content, 0);
-                viewForContentLayout.setViewVisibility(C1893R.C1897id.image, 8);
+                viewForContentLayout.setTextViewText(C1894R.C1898id.text_content, string);
+                viewForContentLayout.setViewVisibility(C1894R.C1898id.text_content, 0);
+                viewForContentLayout.setViewVisibility(C1894R.C1898id.image, 8);
             }
         } else {
             setMaxLines(viewForContentLayout, !TextUtils.isEmpty(notificationSender));
@@ -448,33 +448,33 @@ public class PeopleTileViewHelper {
             }
             setContentDescriptionForNotificationTextContent(viewForContentLayout, notificationContent, charSequence);
             viewForContentLayout = decorateBackground(viewForContentLayout, notificationContent);
-            viewForContentLayout.setColorAttr(C1893R.C1897id.text_content, "setTextColor", 16842806);
-            viewForContentLayout.setTextViewText(C1893R.C1897id.text_content, this.mTile.getNotificationContent());
+            viewForContentLayout.setColorAttr(C1894R.C1898id.text_content, "setTextColor", 16842806);
+            viewForContentLayout.setTextViewText(C1894R.C1898id.text_content, this.mTile.getNotificationContent());
             if (this.mLayoutSize == 2) {
-                viewForContentLayout.setViewPadding(C1893R.C1897id.name, 0, 0, 0, this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.above_notification_text_padding));
+                viewForContentLayout.setViewPadding(C1894R.C1898id.name, 0, 0, 0, this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.above_notification_text_padding));
             }
-            viewForContentLayout.setViewVisibility(C1893R.C1897id.image, 8);
-            viewForContentLayout.setImageViewResource(C1893R.C1897id.predefined_icon, C1893R.C1895drawable.ic_message);
+            viewForContentLayout.setViewVisibility(C1894R.C1898id.image, 8);
+            viewForContentLayout.setImageViewResource(C1894R.C1898id.predefined_icon, C1894R.C1896drawable.ic_message);
         }
         if (this.mTile.getMessagesCount() > 1) {
             if (this.mLayoutSize == 1) {
-                int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.before_messages_count_padding);
+                int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.before_messages_count_padding);
                 boolean z = this.mIsLeftToRight;
-                viewForContentLayout.setViewPadding(C1893R.C1897id.name, z ? 0 : dimensionPixelSize, 0, z ? dimensionPixelSize : 0, 0);
+                viewForContentLayout.setViewPadding(C1894R.C1898id.name, z ? 0 : dimensionPixelSize, 0, z ? dimensionPixelSize : 0, 0);
             }
-            viewForContentLayout.setViewVisibility(C1893R.C1897id.messages_count, 0);
-            viewForContentLayout.setTextViewText(C1893R.C1897id.messages_count, getMessagesCountText(this.mTile.getMessagesCount()));
+            viewForContentLayout.setViewVisibility(C1894R.C1898id.messages_count, 0);
+            viewForContentLayout.setTextViewText(C1894R.C1898id.messages_count, getMessagesCountText(this.mTile.getMessagesCount()));
             if (this.mLayoutSize == 0) {
-                viewForContentLayout.setViewVisibility(C1893R.C1897id.predefined_icon, 8);
+                viewForContentLayout.setViewVisibility(C1894R.C1898id.predefined_icon, 8);
             }
         }
         if (!TextUtils.isEmpty(notificationSender)) {
-            viewForContentLayout.setViewVisibility(C1893R.C1897id.subtext, 0);
-            viewForContentLayout.setTextViewText(C1893R.C1897id.subtext, notificationSender);
+            viewForContentLayout.setViewVisibility(C1894R.C1898id.subtext, 0);
+            viewForContentLayout.setTextViewText(C1894R.C1898id.subtext, notificationSender);
         } else {
-            viewForContentLayout.setViewVisibility(C1893R.C1897id.subtext, 8);
+            viewForContentLayout.setViewVisibility(C1894R.C1898id.subtext, 8);
         }
-        setAvailabilityDotPadding(viewForContentLayout, C1893R.dimen.availability_dot_notification_padding);
+        setAvailabilityDotPadding(viewForContentLayout, C1894R.dimen.availability_dot_notification_padding);
         return viewForContentLayout;
     }
 
@@ -489,7 +489,7 @@ public class PeopleTileViewHelper {
 
     /* access modifiers changed from: private */
     /* renamed from: onHeaderDecoded */
-    public void mo35149x44fa7855(ImageDecoder imageDecoder, ImageDecoder.ImageInfo imageInfo, ImageDecoder.Source source) {
+    public void mo35153x44fa7855(ImageDecoder imageDecoder, ImageDecoder.ImageInfo imageInfo, ImageDecoder.Source source) {
         int applyDimension = (int) TypedValue.applyDimension(1, (float) this.mWidth, this.mContext.getResources().getDisplayMetrics());
         int applyDimension2 = (int) TypedValue.applyDimension(1, (float) this.mHeight, this.mContext.getResources().getDisplayMetrics());
         int max = Math.max(applyDimension, applyDimension2);
@@ -503,12 +503,12 @@ public class PeopleTileViewHelper {
     }
 
     private void setContentDescriptionForNotificationTextContent(RemoteViews remoteViews, CharSequence charSequence, CharSequence charSequence2) {
-        remoteViews.setContentDescription(this.mLayoutSize == 0 ? C1893R.C1897id.predefined_icon : C1893R.C1897id.text_content, this.mContext.getString(C1893R.string.new_notification_text_content_description, new Object[]{charSequence2, charSequence}));
+        remoteViews.setContentDescription(this.mLayoutSize == 0 ? C1894R.C1898id.predefined_icon : C1894R.C1898id.text_content, this.mContext.getString(C1894R.string.new_notification_text_content_description, new Object[]{charSequence2, charSequence}));
     }
 
     private String getMessagesCountText(int i) {
         if (i >= 6) {
-            return this.mContext.getResources().getString(C1893R.string.messages_count_overflow_indicator, new Object[]{6});
+            return this.mContext.getResources().getString(C1894R.string.messages_count_overflow_indicator, new Object[]{6});
         }
         Locale locale = this.mContext.getResources().getConfiguration().getLocales().get(0);
         if (!locale.equals(this.mLocale)) {
@@ -525,42 +525,42 @@ public class PeopleTileViewHelper {
             description = getStatusTextByType(conversationStatus.getActivity());
         }
         setPredefinedIconVisible(viewForContentLayout);
-        int i = C1893R.C1897id.text_content;
-        viewForContentLayout.setTextViewText(C1893R.C1897id.text_content, description);
+        int i = C1894R.C1898id.text_content;
+        viewForContentLayout.setTextViewText(C1894R.C1898id.text_content, description);
         if (conversationStatus.getActivity() == 1 || conversationStatus.getActivity() == 8) {
             setEmojiBackground(viewForContentLayout, EMOJI_CAKE);
         }
         Icon icon = conversationStatus.getIcon();
         if (icon != null) {
-            viewForContentLayout.setViewVisibility(C1893R.C1897id.scrim_layout, 0);
-            viewForContentLayout.setImageViewIcon(C1893R.C1897id.status_icon, icon);
+            viewForContentLayout.setViewVisibility(C1894R.C1898id.scrim_layout, 0);
+            viewForContentLayout.setImageViewIcon(C1894R.C1898id.status_icon, icon);
             int i2 = this.mLayoutSize;
             if (i2 == 2) {
-                viewForContentLayout.setInt(C1893R.C1897id.content, "setGravity", 80);
-                viewForContentLayout.setViewVisibility(C1893R.C1897id.name, 8);
-                viewForContentLayout.setColorAttr(C1893R.C1897id.text_content, "setTextColor", 16842806);
+                viewForContentLayout.setInt(C1894R.C1898id.content, "setGravity", 80);
+                viewForContentLayout.setViewVisibility(C1894R.C1898id.name, 8);
+                viewForContentLayout.setColorAttr(C1894R.C1898id.text_content, "setTextColor", 16842806);
             } else if (i2 == 1) {
-                viewForContentLayout.setViewVisibility(C1893R.C1897id.text_content, 8);
-                viewForContentLayout.setTextViewText(C1893R.C1897id.name, description);
+                viewForContentLayout.setViewVisibility(C1894R.C1898id.text_content, 8);
+                viewForContentLayout.setTextViewText(C1894R.C1898id.name, description);
             }
         } else {
-            viewForContentLayout.setColorAttr(C1893R.C1897id.text_content, "setTextColor", 16842808);
+            viewForContentLayout.setColorAttr(C1894R.C1898id.text_content, "setTextColor", 16842808);
             setMaxLines(viewForContentLayout, false);
         }
-        setAvailabilityDotPadding(viewForContentLayout, C1893R.dimen.availability_dot_status_padding);
-        viewForContentLayout.setImageViewResource(C1893R.C1897id.predefined_icon, getDrawableForStatus(conversationStatus));
+        setAvailabilityDotPadding(viewForContentLayout, C1894R.dimen.availability_dot_status_padding);
+        viewForContentLayout.setImageViewResource(C1894R.C1898id.predefined_icon, getDrawableForStatus(conversationStatus));
         CharSequence contentDescriptionForStatus = getContentDescriptionForStatus(conversationStatus);
-        String string = this.mContext.getString(C1893R.string.new_status_content_description, new Object[]{this.mTile.getUserName(), contentDescriptionForStatus});
+        String string = this.mContext.getString(C1894R.string.new_status_content_description, new Object[]{this.mTile.getUserName(), contentDescriptionForStatus});
         int i3 = this.mLayoutSize;
         if (i3 == 0) {
-            viewForContentLayout.setContentDescription(C1893R.C1897id.predefined_icon, string);
+            viewForContentLayout.setContentDescription(C1894R.C1898id.predefined_icon, string);
         } else if (i3 == 1) {
             if (icon != null) {
-                i = C1893R.C1897id.name;
+                i = C1894R.C1898id.name;
             }
             viewForContentLayout.setContentDescription(i, string);
         } else if (i3 == 2) {
-            viewForContentLayout.setContentDescription(C1893R.C1897id.text_content, string);
+            viewForContentLayout.setContentDescription(C1894R.C1898id.text_content, string);
         }
         return viewForContentLayout;
     }
@@ -572,21 +572,21 @@ public class PeopleTileViewHelper {
         }
         switch (conversationStatus.getActivity()) {
             case 1:
-                return this.mContext.getString(C1893R.string.birthday_status_content_description, new Object[]{userName});
+                return this.mContext.getString(C1894R.string.birthday_status_content_description, new Object[]{userName});
             case 2:
-                return this.mContext.getString(C1893R.string.anniversary_status_content_description, new Object[]{userName});
+                return this.mContext.getString(C1894R.string.anniversary_status_content_description, new Object[]{userName});
             case 3:
-                return this.mContext.getString(C1893R.string.new_story_status_content_description, new Object[]{userName});
+                return this.mContext.getString(C1894R.string.new_story_status_content_description, new Object[]{userName});
             case 4:
-                return this.mContext.getString(C1893R.string.audio_status);
+                return this.mContext.getString(C1894R.string.audio_status);
             case 5:
-                return this.mContext.getString(C1893R.string.video_status);
+                return this.mContext.getString(C1894R.string.video_status);
             case 6:
-                return this.mContext.getString(C1893R.string.game_status);
+                return this.mContext.getString(C1894R.string.game_status);
             case 7:
-                return this.mContext.getString(C1893R.string.location_status_content_description, new Object[]{userName});
+                return this.mContext.getString(C1894R.string.location_status_content_description, new Object[]{userName});
             case 8:
-                return this.mContext.getString(C1893R.string.upcoming_birthday_status_content_description, new Object[]{userName});
+                return this.mContext.getString(C1894R.string.upcoming_birthday_status_content_description, new Object[]{userName});
             default:
                 return "";
         }
@@ -595,31 +595,31 @@ public class PeopleTileViewHelper {
     private int getDrawableForStatus(ConversationStatus conversationStatus) {
         switch (conversationStatus.getActivity()) {
             case 1:
-                return C1893R.C1895drawable.ic_cake;
+                return C1894R.C1896drawable.ic_cake;
             case 2:
-                return C1893R.C1895drawable.ic_celebration;
+                return C1894R.C1896drawable.ic_celebration;
             case 3:
-                return C1893R.C1895drawable.ic_pages;
+                return C1894R.C1896drawable.ic_pages;
             case 4:
-                return C1893R.C1895drawable.ic_music_note;
+                return C1894R.C1896drawable.ic_music_note;
             case 5:
-                return C1893R.C1895drawable.ic_video;
+                return C1894R.C1896drawable.ic_video;
             case 6:
-                return C1893R.C1895drawable.ic_play_games;
+                return C1894R.C1896drawable.ic_play_games;
             case 7:
-                return C1893R.C1895drawable.ic_location;
+                return C1894R.C1896drawable.ic_location;
             case 8:
-                return C1893R.C1895drawable.ic_gift;
+                return C1894R.C1896drawable.ic_gift;
             default:
-                return C1893R.C1895drawable.ic_person;
+                return C1894R.C1896drawable.ic_person;
         }
     }
 
     private void setAvailabilityDotPadding(RemoteViews remoteViews, int i) {
         int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(i);
-        int dimensionPixelSize2 = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.medium_content_padding_above_name);
+        int dimensionPixelSize2 = this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.medium_content_padding_above_name);
         boolean z = this.mIsLeftToRight;
-        remoteViews.setViewPadding(C1893R.C1897id.medium_content, z ? dimensionPixelSize : 0, 0, z ? 0 : dimensionPixelSize, dimensionPixelSize2);
+        remoteViews.setViewPadding(C1894R.C1898id.medium_content, z ? dimensionPixelSize : 0, 0, z ? 0 : dimensionPixelSize, dimensionPixelSize2);
     }
 
     private ConversationStatus getBirthdayStatus(List<ConversationStatus> list) {
@@ -639,7 +639,7 @@ public class PeopleTileViewHelper {
 
     /* access modifiers changed from: private */
     /* renamed from: isStatusValidForEntireStatusView */
-    public boolean mo35148xe68ae94c(ConversationStatus conversationStatus) {
+    public boolean mo35152xe68ae94c(ConversationStatus conversationStatus) {
         int activity = conversationStatus.getActivity();
         if (activity == 1 || activity == 2 || !TextUtils.isEmpty(conversationStatus.getDescription()) || conversationStatus.getIcon() != null) {
             return true;
@@ -650,21 +650,21 @@ public class PeopleTileViewHelper {
     private String getStatusTextByType(int i) {
         switch (i) {
             case 1:
-                return this.mContext.getString(C1893R.string.birthday_status);
+                return this.mContext.getString(C1894R.string.birthday_status);
             case 2:
-                return this.mContext.getString(C1893R.string.anniversary_status);
+                return this.mContext.getString(C1894R.string.anniversary_status);
             case 3:
-                return this.mContext.getString(C1893R.string.new_story_status);
+                return this.mContext.getString(C1894R.string.new_story_status);
             case 4:
-                return this.mContext.getString(C1893R.string.audio_status);
+                return this.mContext.getString(C1894R.string.audio_status);
             case 5:
-                return this.mContext.getString(C1893R.string.video_status);
+                return this.mContext.getString(C1894R.string.video_status);
             case 6:
-                return this.mContext.getString(C1893R.string.game_status);
+                return this.mContext.getString(C1894R.string.game_status);
             case 7:
-                return this.mContext.getString(C1893R.string.location_status);
+                return this.mContext.getString(C1894R.string.location_status);
             case 8:
-                return this.mContext.getString(C1893R.string.upcoming_birthday_status);
+                return this.mContext.getString(C1894R.string.upcoming_birthday_status);
             default:
                 return "";
         }
@@ -685,28 +685,28 @@ public class PeopleTileViewHelper {
 
     private RemoteViews setEmojiBackground(RemoteViews remoteViews, CharSequence charSequence) {
         if (TextUtils.isEmpty(charSequence)) {
-            remoteViews.setViewVisibility(C1893R.C1897id.emojis, 8);
+            remoteViews.setViewVisibility(C1894R.C1898id.emojis, 8);
             return remoteViews;
         }
-        remoteViews.setTextViewText(C1893R.C1897id.emoji1, charSequence);
-        remoteViews.setTextViewText(C1893R.C1897id.emoji2, charSequence);
-        remoteViews.setTextViewText(C1893R.C1897id.emoji3, charSequence);
-        remoteViews.setViewVisibility(C1893R.C1897id.emojis, 0);
+        remoteViews.setTextViewText(C1894R.C1898id.emoji1, charSequence);
+        remoteViews.setTextViewText(C1894R.C1898id.emoji2, charSequence);
+        remoteViews.setTextViewText(C1894R.C1898id.emoji3, charSequence);
+        remoteViews.setViewVisibility(C1894R.C1898id.emojis, 0);
         return remoteViews;
     }
 
     private RemoteViews setPunctuationBackground(RemoteViews remoteViews, CharSequence charSequence) {
         if (TextUtils.isEmpty(charSequence)) {
-            remoteViews.setViewVisibility(C1893R.C1897id.punctuations, 8);
+            remoteViews.setViewVisibility(C1894R.C1898id.punctuations, 8);
             return remoteViews;
         }
-        remoteViews.setTextViewText(C1893R.C1897id.punctuation1, charSequence);
-        remoteViews.setTextViewText(C1893R.C1897id.punctuation2, charSequence);
-        remoteViews.setTextViewText(C1893R.C1897id.punctuation3, charSequence);
-        remoteViews.setTextViewText(C1893R.C1897id.punctuation4, charSequence);
-        remoteViews.setTextViewText(C1893R.C1897id.punctuation5, charSequence);
-        remoteViews.setTextViewText(C1893R.C1897id.punctuation6, charSequence);
-        remoteViews.setViewVisibility(C1893R.C1897id.punctuations, 0);
+        remoteViews.setTextViewText(C1894R.C1898id.punctuation1, charSequence);
+        remoteViews.setTextViewText(C1894R.C1898id.punctuation2, charSequence);
+        remoteViews.setTextViewText(C1894R.C1898id.punctuation3, charSequence);
+        remoteViews.setTextViewText(C1894R.C1898id.punctuation4, charSequence);
+        remoteViews.setTextViewText(C1894R.C1898id.punctuation5, charSequence);
+        remoteViews.setTextViewText(C1894R.C1898id.punctuation6, charSequence);
+        remoteViews.setViewVisibility(C1894R.C1898id.punctuations, 0);
         return remoteViews;
     }
 
@@ -754,64 +754,64 @@ public class PeopleTileViewHelper {
 
     private RemoteViews setViewForContentLayout(RemoteViews remoteViews) {
         RemoteViews decorateBackground = decorateBackground(remoteViews, "");
-        decorateBackground.setContentDescription(C1893R.C1897id.predefined_icon, (CharSequence) null);
-        decorateBackground.setContentDescription(C1893R.C1897id.text_content, (CharSequence) null);
-        decorateBackground.setContentDescription(C1893R.C1897id.name, (CharSequence) null);
-        decorateBackground.setContentDescription(C1893R.C1897id.image, (CharSequence) null);
-        decorateBackground.setAccessibilityTraversalAfter(C1893R.C1897id.text_content, C1893R.C1897id.name);
+        decorateBackground.setContentDescription(C1894R.C1898id.predefined_icon, (CharSequence) null);
+        decorateBackground.setContentDescription(C1894R.C1898id.text_content, (CharSequence) null);
+        decorateBackground.setContentDescription(C1894R.C1898id.name, (CharSequence) null);
+        decorateBackground.setContentDescription(C1894R.C1898id.image, (CharSequence) null);
+        decorateBackground.setAccessibilityTraversalAfter(C1894R.C1898id.text_content, C1894R.C1898id.name);
         if (this.mLayoutSize == 0) {
-            decorateBackground.setViewVisibility(C1893R.C1897id.predefined_icon, 0);
-            decorateBackground.setViewVisibility(C1893R.C1897id.name, 8);
+            decorateBackground.setViewVisibility(C1894R.C1898id.predefined_icon, 0);
+            decorateBackground.setViewVisibility(C1894R.C1898id.name, 8);
         } else {
-            decorateBackground.setViewVisibility(C1893R.C1897id.predefined_icon, 8);
-            decorateBackground.setViewVisibility(C1893R.C1897id.name, 0);
-            decorateBackground.setViewVisibility(C1893R.C1897id.text_content, 0);
-            decorateBackground.setViewVisibility(C1893R.C1897id.subtext, 8);
-            decorateBackground.setViewVisibility(C1893R.C1897id.image, 8);
-            decorateBackground.setViewVisibility(C1893R.C1897id.scrim_layout, 8);
+            decorateBackground.setViewVisibility(C1894R.C1898id.predefined_icon, 8);
+            decorateBackground.setViewVisibility(C1894R.C1898id.name, 0);
+            decorateBackground.setViewVisibility(C1894R.C1898id.text_content, 0);
+            decorateBackground.setViewVisibility(C1894R.C1898id.subtext, 8);
+            decorateBackground.setViewVisibility(C1894R.C1898id.image, 8);
+            decorateBackground.setViewVisibility(C1894R.C1898id.scrim_layout, 8);
         }
         if (this.mLayoutSize == 1) {
             int floor = (int) Math.floor((double) (this.mDensity * 16.0f));
             int floor2 = (int) Math.floor((double) (((float) this.mMediumVerticalPadding) * this.mDensity));
             RemoteViews remoteViews2 = decorateBackground;
-            remoteViews2.setViewPadding(C1893R.C1897id.content, floor, floor2, floor, floor2);
-            remoteViews2.setViewPadding(C1893R.C1897id.name, 0, 0, 0, 0);
-            if (this.mHeight > ((int) (this.mContext.getResources().getDimension(C1893R.dimen.medium_height_for_max_name_text_size) / this.mDensity))) {
-                decorateBackground.setTextViewTextSize(C1893R.C1897id.name, 0, (float) ((int) this.mContext.getResources().getDimension(C1893R.dimen.max_name_text_size_for_medium)));
+            remoteViews2.setViewPadding(C1894R.C1898id.content, floor, floor2, floor, floor2);
+            remoteViews2.setViewPadding(C1894R.C1898id.name, 0, 0, 0, 0);
+            if (this.mHeight > ((int) (this.mContext.getResources().getDimension(C1894R.dimen.medium_height_for_max_name_text_size) / this.mDensity))) {
+                decorateBackground.setTextViewTextSize(C1894R.C1898id.name, 0, (float) ((int) this.mContext.getResources().getDimension(C1894R.dimen.max_name_text_size_for_medium)));
             }
         }
         if (this.mLayoutSize == 2) {
-            decorateBackground.setViewPadding(C1893R.C1897id.name, 0, 0, 0, this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.below_name_text_padding));
-            decorateBackground.setInt(C1893R.C1897id.content, "setGravity", 48);
+            decorateBackground.setViewPadding(C1894R.C1898id.name, 0, 0, 0, this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.below_name_text_padding));
+            decorateBackground.setInt(C1894R.C1898id.content, "setGravity", 48);
         }
-        decorateBackground.setViewLayoutHeightDimen(C1893R.C1897id.predefined_icon, C1893R.dimen.regular_predefined_icon);
-        decorateBackground.setViewLayoutWidthDimen(C1893R.C1897id.predefined_icon, C1893R.dimen.regular_predefined_icon);
-        decorateBackground.setViewVisibility(C1893R.C1897id.messages_count, 8);
+        decorateBackground.setViewLayoutHeightDimen(C1894R.C1898id.predefined_icon, C1894R.dimen.regular_predefined_icon);
+        decorateBackground.setViewLayoutWidthDimen(C1894R.C1898id.predefined_icon, C1894R.dimen.regular_predefined_icon);
+        decorateBackground.setViewVisibility(C1894R.C1898id.messages_count, 8);
         if (this.mTile.getUserName() != null) {
-            decorateBackground.setTextViewText(C1893R.C1897id.name, this.mTile.getUserName());
+            decorateBackground.setTextViewText(C1894R.C1898id.name, this.mTile.getUserName());
         }
         return decorateBackground;
     }
 
     private RemoteViews createLastInteractionRemoteViews() {
         RemoteViews remoteViews = new RemoteViews(this.mContext.getPackageName(), getEmptyLayout());
-        remoteViews.setInt(C1893R.C1897id.name, "setMaxLines", 1);
+        remoteViews.setInt(C1894R.C1898id.name, "setMaxLines", 1);
         if (this.mLayoutSize == 0) {
-            remoteViews.setViewVisibility(C1893R.C1897id.name, 0);
-            remoteViews.setViewVisibility(C1893R.C1897id.predefined_icon, 8);
-            remoteViews.setViewVisibility(C1893R.C1897id.messages_count, 8);
+            remoteViews.setViewVisibility(C1894R.C1898id.name, 0);
+            remoteViews.setViewVisibility(C1894R.C1898id.predefined_icon, 8);
+            remoteViews.setViewVisibility(C1894R.C1898id.messages_count, 8);
         }
         if (this.mTile.getUserName() != null) {
-            remoteViews.setTextViewText(C1893R.C1897id.name, this.mTile.getUserName());
+            remoteViews.setTextViewText(C1894R.C1898id.name, this.mTile.getUserName());
         }
         String lastInteractionString = getLastInteractionString(this.mContext, this.mTile.getLastInteractionTimestamp());
         if (lastInteractionString != null) {
-            remoteViews.setViewVisibility(C1893R.C1897id.last_interaction, 0);
-            remoteViews.setTextViewText(C1893R.C1897id.last_interaction, lastInteractionString);
+            remoteViews.setViewVisibility(C1894R.C1898id.last_interaction, 0);
+            remoteViews.setTextViewText(C1894R.C1898id.last_interaction, lastInteractionString);
         } else {
-            remoteViews.setViewVisibility(C1893R.C1897id.last_interaction, 8);
+            remoteViews.setViewVisibility(C1894R.C1898id.last_interaction, 8);
             if (this.mLayoutSize == 1) {
-                remoteViews.setInt(C1893R.C1897id.name, "setMaxLines", 3);
+                remoteViews.setInt(C1894R.C1898id.name, "setMaxLines", 3);
             }
         }
         return remoteViews;
@@ -820,37 +820,37 @@ public class PeopleTileViewHelper {
     private int getEmptyLayout() {
         int i = this.mLayoutSize;
         if (i != 1) {
-            return i != 2 ? getLayoutSmallByHeight() : C1893R.layout.people_tile_large_empty;
+            return i != 2 ? getLayoutSmallByHeight() : C1894R.layout.people_tile_large_empty;
         }
-        return C1893R.layout.people_tile_medium_empty;
+        return C1894R.layout.people_tile_medium_empty;
     }
 
     private int getLayoutForNotificationContent() {
         int i = this.mLayoutSize;
         if (i != 1) {
-            return i != 2 ? getLayoutSmallByHeight() : C1893R.layout.people_tile_large_with_notification_content;
+            return i != 2 ? getLayoutSmallByHeight() : C1894R.layout.people_tile_large_with_notification_content;
         }
-        return C1893R.layout.people_tile_medium_with_content;
+        return C1894R.layout.people_tile_medium_with_content;
     }
 
     private int getLayoutForContent() {
         int i = this.mLayoutSize;
         if (i != 1) {
-            return i != 2 ? getLayoutSmallByHeight() : C1893R.layout.people_tile_large_with_status_content;
+            return i != 2 ? getLayoutSmallByHeight() : C1894R.layout.people_tile_large_with_status_content;
         }
-        return C1893R.layout.people_tile_medium_with_content;
+        return C1894R.layout.people_tile_medium_with_content;
     }
 
     private int getViewForDndRemoteViews() {
         int i = this.mLayoutSize;
         if (i != 1) {
-            return i != 2 ? getLayoutSmallByHeight() : C1893R.layout.people_tile_with_suppression_detail_content_vertical;
+            return i != 2 ? getLayoutSmallByHeight() : C1894R.layout.people_tile_with_suppression_detail_content_vertical;
         }
-        return C1893R.layout.people_tile_with_suppression_detail_content_horizontal;
+        return C1894R.layout.people_tile_with_suppression_detail_content_horizontal;
     }
 
     private int getLayoutSmallByHeight() {
-        return this.mHeight >= getSizeInDp(C1893R.dimen.required_height_for_medium) ? C1893R.layout.people_tile_small : C1893R.layout.people_tile_small_horizontal;
+        return this.mHeight >= getSizeInDp(C1894R.dimen.required_height_for_medium) ? C1894R.layout.people_tile_small : C1894R.layout.people_tile_small_horizontal;
     }
 
     public static Bitmap getPersonIconBitmap(Context context, PeopleSpaceTile peopleSpaceTile, int i) {
@@ -860,7 +860,7 @@ public class PeopleTileViewHelper {
     private static Bitmap getPersonIconBitmap(Context context, PeopleSpaceTile peopleSpaceTile, int i, boolean z) {
         Icon userIcon = peopleSpaceTile.getUserIcon();
         if (userIcon == null) {
-            Drawable mutate = context.getDrawable(C1893R.C1895drawable.ic_avatar_with_badge).mutate();
+            Drawable mutate = context.getDrawable(C1894R.C1896drawable.ic_avatar_with_badge).mutate();
             mutate.setColorFilter(FastBitmapDrawable.getDisabledColorFilter());
             return PeopleSpaceUtils.convertDrawableToBitmap(mutate);
         }
@@ -883,17 +883,17 @@ public class PeopleTileViewHelper {
             return null;
         }
         if (ofMillis.toDays() < 7) {
-            return context.getString(C1893R.string.days_timestamp, new Object[]{Long.valueOf(ofMillis.toDays())});
+            return context.getString(C1894R.string.days_timestamp, new Object[]{Long.valueOf(ofMillis.toDays())});
         } else if (ofMillis.toDays() == 7) {
-            return context.getString(C1893R.string.one_week_timestamp);
+            return context.getString(C1894R.string.one_week_timestamp);
         } else {
             if (ofMillis.toDays() < 14) {
-                return context.getString(C1893R.string.over_one_week_timestamp);
+                return context.getString(C1894R.string.over_one_week_timestamp);
             }
             if (ofMillis.toDays() == 14) {
-                return context.getString(C1893R.string.two_weeks_timestamp);
+                return context.getString(C1894R.string.two_weeks_timestamp);
             }
-            return context.getString(C1893R.string.over_two_weeks_timestamp);
+            return context.getString(C1894R.string.over_two_weeks_timestamp);
         }
     }
 

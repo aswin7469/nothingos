@@ -10,6 +10,6 @@ public final /* synthetic */ class BadgedImageView$$ExternalSyntheticLambda0 imp
     }
 
     public final void run() {
-        this.f$0.mo48239x5bd4d39b();
+        this.f$0.mo48248x5bd4d39b();
     }
 }

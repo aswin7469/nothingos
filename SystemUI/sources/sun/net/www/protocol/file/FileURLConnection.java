@@ -38,7 +38,7 @@ public class FileURLConnection extends URLConnection {
     private boolean initializedHeaders = false;
 
     /* renamed from: is */
-    InputStream f869is;
+    InputStream f867is;
     boolean isDirectory = false;
     long lastModified = 0;
     long length = -1;
@@ -63,9 +63,9 @@ public class FileURLConnection extends URLConnection {
                         throw new FileNotFoundException(this.filename + " exists, but is not accessible");
                     }
                 } else {
-                    this.f869is = new BufferedInputStream(new FileInputStream(this.filename));
+                    this.f867is = new BufferedInputStream(new FileInputStream(this.filename));
                     if (ProgressMonitor.getDefault().shouldMeterInput(this.url, "GET")) {
-                        this.f869is = new MeteredStream(this.f869is, new ProgressSource(this.url, "GET", this.file.length()), this.file.length());
+                        this.f867is = new MeteredStream(this.f867is, new ProgressSource(this.url, "GET", this.file.length()), this.file.length());
                     }
                 }
                 this.connected = true;
@@ -93,7 +93,7 @@ public class FileURLConnection extends URLConnection {
                 this.properties.add(CONTENT_LENGTH, String.valueOf(this.length));
                 if (this.lastModified != 0) {
                     Date date = new Date(this.lastModified);
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss 'GMT'", Locale.f700US);
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss 'GMT'", Locale.f698US);
                     simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
                     this.properties.add(LAST_MODIFIED, simpleDateFormat.format(date));
                 }
@@ -145,7 +145,7 @@ public class FileURLConnection extends URLConnection {
 
     public synchronized InputStream getInputStream() throws IOException {
         connect();
-        if (this.f869is == null) {
+        if (this.f867is == null) {
             if (this.isDirectory) {
                 java.net.URLConnection.getFileNameMap();
                 StringBuffer stringBuffer = new StringBuffer();
@@ -156,7 +156,7 @@ public class FileURLConnection extends URLConnection {
                         stringBuffer.append(this.files.get(i));
                         stringBuffer.append("\n");
                     }
-                    this.f869is = new ByteArrayInputStream(stringBuffer.toString().getBytes());
+                    this.f867is = new ByteArrayInputStream(stringBuffer.toString().getBytes());
                 } else {
                     throw new FileNotFoundException(this.filename);
                 }
@@ -164,7 +164,7 @@ public class FileURLConnection extends URLConnection {
                 throw new FileNotFoundException(this.filename);
             }
         }
-        return this.f869is;
+        return this.f867is;
     }
 
     public Permission getPermission() throws IOException {

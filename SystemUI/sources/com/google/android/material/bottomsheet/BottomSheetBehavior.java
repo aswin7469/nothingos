@@ -24,7 +24,7 @@ import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import androidx.core.view.accessibility.AccessibilityViewCommand;
 import androidx.customview.view.AbsSavedState;
 import androidx.customview.widget.ViewDragHelper;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.internal.ViewUtils;
 import com.google.android.material.resources.MaterialResources;
 import com.google.android.material.shape.MaterialShapeDrawable;
@@ -38,7 +38,7 @@ import java.util.Map;
 
 public class BottomSheetBehavior<V extends View> extends CoordinatorLayout.Behavior<V> {
     private static final int CORNER_ANIMATION_DURATION = 500;
-    private static final int DEF_STYLE_RES = C3621R.style.Widget_Design_BottomSheet_Modal;
+    private static final int DEF_STYLE_RES = C3631R.style.Widget_Design_BottomSheet_Modal;
     private static final float HIDE_FRICTION = 0.1f;
     private static final float HIDE_THRESHOLD = 0.5f;
     private static final int NO_MAX_SIZE = -1;
@@ -275,7 +275,7 @@ public class BottomSheetBehavior<V extends View> extends CoordinatorLayout.Behav
                 r7.startSettling(r8, r2, r9)
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: com.google.android.material.bottomsheet.BottomSheetBehavior.C36614.onViewReleased(android.view.View, float, float):void");
+            throw new UnsupportedOperationException("Method not decompiled: com.google.android.material.bottomsheet.BottomSheetBehavior.C36714.onViewReleased(android.view.View, float, float):void");
         }
 
         public int clampViewPositionVertical(View view, int i, int i2) {
@@ -406,49 +406,49 @@ public class BottomSheetBehavior<V extends View> extends CoordinatorLayout.Behav
 
     public BottomSheetBehavior(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        this.peekHeightGestureInsetBuffer = context.getResources().getDimensionPixelSize(C3621R.dimen.mtrl_min_touch_target_size);
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C3621R.styleable.BottomSheetBehavior_Layout);
-        if (obtainStyledAttributes.hasValue(C3621R.styleable.BottomSheetBehavior_Layout_backgroundTint)) {
-            this.backgroundTint = MaterialResources.getColorStateList(context, obtainStyledAttributes, C3621R.styleable.BottomSheetBehavior_Layout_backgroundTint);
+        this.peekHeightGestureInsetBuffer = context.getResources().getDimensionPixelSize(C3631R.dimen.mtrl_min_touch_target_size);
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C3631R.styleable.BottomSheetBehavior_Layout);
+        if (obtainStyledAttributes.hasValue(C3631R.styleable.BottomSheetBehavior_Layout_backgroundTint)) {
+            this.backgroundTint = MaterialResources.getColorStateList(context, obtainStyledAttributes, C3631R.styleable.BottomSheetBehavior_Layout_backgroundTint);
         }
-        if (obtainStyledAttributes.hasValue(C3621R.styleable.BottomSheetBehavior_Layout_shapeAppearance)) {
-            this.shapeAppearanceModelDefault = ShapeAppearanceModel.builder(context, attributeSet, C3621R.attr.bottomSheetStyle, DEF_STYLE_RES).build();
+        if (obtainStyledAttributes.hasValue(C3631R.styleable.BottomSheetBehavior_Layout_shapeAppearance)) {
+            this.shapeAppearanceModelDefault = ShapeAppearanceModel.builder(context, attributeSet, C3631R.attr.bottomSheetStyle, DEF_STYLE_RES).build();
         }
         createMaterialShapeDrawableIfNeeded(context);
         createShapeValueAnimator();
-        this.elevation = obtainStyledAttributes.getDimension(C3621R.styleable.BottomSheetBehavior_Layout_android_elevation, -1.0f);
-        if (obtainStyledAttributes.hasValue(C3621R.styleable.BottomSheetBehavior_Layout_android_maxWidth)) {
-            setMaxWidth(obtainStyledAttributes.getDimensionPixelSize(C3621R.styleable.BottomSheetBehavior_Layout_android_maxWidth, -1));
+        this.elevation = obtainStyledAttributes.getDimension(C3631R.styleable.BottomSheetBehavior_Layout_android_elevation, -1.0f);
+        if (obtainStyledAttributes.hasValue(C3631R.styleable.BottomSheetBehavior_Layout_android_maxWidth)) {
+            setMaxWidth(obtainStyledAttributes.getDimensionPixelSize(C3631R.styleable.BottomSheetBehavior_Layout_android_maxWidth, -1));
         }
-        if (obtainStyledAttributes.hasValue(C3621R.styleable.BottomSheetBehavior_Layout_android_maxHeight)) {
-            setMaxHeight(obtainStyledAttributes.getDimensionPixelSize(C3621R.styleable.BottomSheetBehavior_Layout_android_maxHeight, -1));
+        if (obtainStyledAttributes.hasValue(C3631R.styleable.BottomSheetBehavior_Layout_android_maxHeight)) {
+            setMaxHeight(obtainStyledAttributes.getDimensionPixelSize(C3631R.styleable.BottomSheetBehavior_Layout_android_maxHeight, -1));
         }
-        TypedValue peekValue = obtainStyledAttributes.peekValue(C3621R.styleable.BottomSheetBehavior_Layout_behavior_peekHeight);
+        TypedValue peekValue = obtainStyledAttributes.peekValue(C3631R.styleable.BottomSheetBehavior_Layout_behavior_peekHeight);
         if (peekValue == null || peekValue.data != -1) {
-            setPeekHeight(obtainStyledAttributes.getDimensionPixelSize(C3621R.styleable.BottomSheetBehavior_Layout_behavior_peekHeight, -1));
+            setPeekHeight(obtainStyledAttributes.getDimensionPixelSize(C3631R.styleable.BottomSheetBehavior_Layout_behavior_peekHeight, -1));
         } else {
             setPeekHeight(peekValue.data);
         }
-        setHideable(obtainStyledAttributes.getBoolean(C3621R.styleable.BottomSheetBehavior_Layout_behavior_hideable, false));
-        setGestureInsetBottomIgnored(obtainStyledAttributes.getBoolean(C3621R.styleable.BottomSheetBehavior_Layout_gestureInsetBottomIgnored, false));
-        setFitToContents(obtainStyledAttributes.getBoolean(C3621R.styleable.BottomSheetBehavior_Layout_behavior_fitToContents, true));
-        setSkipCollapsed(obtainStyledAttributes.getBoolean(C3621R.styleable.BottomSheetBehavior_Layout_behavior_skipCollapsed, false));
-        setDraggable(obtainStyledAttributes.getBoolean(C3621R.styleable.BottomSheetBehavior_Layout_behavior_draggable, true));
-        setSaveFlags(obtainStyledAttributes.getInt(C3621R.styleable.BottomSheetBehavior_Layout_behavior_saveFlags, 0));
-        setHalfExpandedRatio(obtainStyledAttributes.getFloat(C3621R.styleable.BottomSheetBehavior_Layout_behavior_halfExpandedRatio, 0.5f));
-        TypedValue peekValue2 = obtainStyledAttributes.peekValue(C3621R.styleable.BottomSheetBehavior_Layout_behavior_expandedOffset);
+        setHideable(obtainStyledAttributes.getBoolean(C3631R.styleable.BottomSheetBehavior_Layout_behavior_hideable, false));
+        setGestureInsetBottomIgnored(obtainStyledAttributes.getBoolean(C3631R.styleable.BottomSheetBehavior_Layout_gestureInsetBottomIgnored, false));
+        setFitToContents(obtainStyledAttributes.getBoolean(C3631R.styleable.BottomSheetBehavior_Layout_behavior_fitToContents, true));
+        setSkipCollapsed(obtainStyledAttributes.getBoolean(C3631R.styleable.BottomSheetBehavior_Layout_behavior_skipCollapsed, false));
+        setDraggable(obtainStyledAttributes.getBoolean(C3631R.styleable.BottomSheetBehavior_Layout_behavior_draggable, true));
+        setSaveFlags(obtainStyledAttributes.getInt(C3631R.styleable.BottomSheetBehavior_Layout_behavior_saveFlags, 0));
+        setHalfExpandedRatio(obtainStyledAttributes.getFloat(C3631R.styleable.BottomSheetBehavior_Layout_behavior_halfExpandedRatio, 0.5f));
+        TypedValue peekValue2 = obtainStyledAttributes.peekValue(C3631R.styleable.BottomSheetBehavior_Layout_behavior_expandedOffset);
         if (peekValue2 == null || peekValue2.type != 16) {
-            setExpandedOffset(obtainStyledAttributes.getDimensionPixelOffset(C3621R.styleable.BottomSheetBehavior_Layout_behavior_expandedOffset, 0));
+            setExpandedOffset(obtainStyledAttributes.getDimensionPixelOffset(C3631R.styleable.BottomSheetBehavior_Layout_behavior_expandedOffset, 0));
         } else {
             setExpandedOffset(peekValue2.data);
         }
-        this.paddingBottomSystemWindowInsets = obtainStyledAttributes.getBoolean(C3621R.styleable.BottomSheetBehavior_Layout_paddingBottomSystemWindowInsets, false);
-        this.paddingLeftSystemWindowInsets = obtainStyledAttributes.getBoolean(C3621R.styleable.BottomSheetBehavior_Layout_paddingLeftSystemWindowInsets, false);
-        this.paddingRightSystemWindowInsets = obtainStyledAttributes.getBoolean(C3621R.styleable.BottomSheetBehavior_Layout_paddingRightSystemWindowInsets, false);
-        this.paddingTopSystemWindowInsets = obtainStyledAttributes.getBoolean(C3621R.styleable.BottomSheetBehavior_Layout_paddingTopSystemWindowInsets, true);
-        this.marginLeftSystemWindowInsets = obtainStyledAttributes.getBoolean(C3621R.styleable.BottomSheetBehavior_Layout_marginLeftSystemWindowInsets, false);
-        this.marginRightSystemWindowInsets = obtainStyledAttributes.getBoolean(C3621R.styleable.BottomSheetBehavior_Layout_marginRightSystemWindowInsets, false);
-        this.marginTopSystemWindowInsets = obtainStyledAttributes.getBoolean(C3621R.styleable.BottomSheetBehavior_Layout_marginTopSystemWindowInsets, false);
+        this.paddingBottomSystemWindowInsets = obtainStyledAttributes.getBoolean(C3631R.styleable.BottomSheetBehavior_Layout_paddingBottomSystemWindowInsets, false);
+        this.paddingLeftSystemWindowInsets = obtainStyledAttributes.getBoolean(C3631R.styleable.BottomSheetBehavior_Layout_paddingLeftSystemWindowInsets, false);
+        this.paddingRightSystemWindowInsets = obtainStyledAttributes.getBoolean(C3631R.styleable.BottomSheetBehavior_Layout_paddingRightSystemWindowInsets, false);
+        this.paddingTopSystemWindowInsets = obtainStyledAttributes.getBoolean(C3631R.styleable.BottomSheetBehavior_Layout_paddingTopSystemWindowInsets, true);
+        this.marginLeftSystemWindowInsets = obtainStyledAttributes.getBoolean(C3631R.styleable.BottomSheetBehavior_Layout_marginLeftSystemWindowInsets, false);
+        this.marginRightSystemWindowInsets = obtainStyledAttributes.getBoolean(C3631R.styleable.BottomSheetBehavior_Layout_marginRightSystemWindowInsets, false);
+        this.marginTopSystemWindowInsets = obtainStyledAttributes.getBoolean(C3631R.styleable.BottomSheetBehavior_Layout_marginTopSystemWindowInsets, false);
         obtainStyledAttributes.recycle();
         this.maximumVelocity = (float) ViewConfiguration.get(context).getScaledMaximumFlingVelocity();
     }
@@ -510,7 +510,7 @@ public class BottomSheetBehavior<V extends View> extends CoordinatorLayout.Behav
             v.setFitsSystemWindows(true);
         }
         if (this.viewRef == null) {
-            this.peekHeightMin = coordinatorLayout.getResources().getDimensionPixelSize(C3621R.dimen.design_bottom_sheet_peek_height_min);
+            this.peekHeightMin = coordinatorLayout.getResources().getDimensionPixelSize(C3631R.dimen.design_bottom_sheet_peek_height_min);
             setWindowInsetsListener(v);
             this.viewRef = new WeakReference<>(v);
             MaterialShapeDrawable materialShapeDrawable2 = this.materialShapeDrawable;
@@ -1519,7 +1519,7 @@ public class BottomSheetBehavior<V extends View> extends CoordinatorLayout.Behav
             }
             int i2 = 6;
             if (!this.fitToContents && this.state != 6) {
-                this.expandHalfwayActionId = addAccessibilityActionForState(view, C3621R.string.bottomsheet_action_expand_halfway, 6);
+                this.expandHalfwayActionId = addAccessibilityActionForState(view, C3631R.string.bottomsheet_action_expand_halfway, 6);
             }
             if (this.hideable && this.state != 5) {
                 replaceAccessibilityActionForState(view, AccessibilityNodeInfoCompat.AccessibilityActionCompat.ACTION_DISMISS, 5);

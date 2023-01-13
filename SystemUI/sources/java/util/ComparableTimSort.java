@@ -7,7 +7,7 @@ class ComparableTimSort {
     private static final int MIN_MERGE = 32;
 
     /* renamed from: a */
-    private final Object[] f674a;
+    private final Object[] f672a;
     private int minGallop = 7;
     private final int[] runBase;
     private final int[] runLen;
@@ -26,7 +26,7 @@ class ComparableTimSort {
     }
 
     private ComparableTimSort(Object[] objArr, Object[] objArr2, int i, int i2) {
-        this.f674a = objArr;
+        this.f672a = objArr;
         int length = objArr.length;
         int i3 = length < 512 ? length >>> 1 : 256;
         if (objArr2 == null || i2 < i3 || i + i3 > objArr2.length) {
@@ -313,12 +313,12 @@ class ComparableTimSort {
             iArr2[i4] = iArr2[i8];
         }
         this.stackSize = i7 - 1;
-        Object[] objArr = this.f674a;
+        Object[] objArr = this.f672a;
         int gallopRight = gallopRight((Comparable) objArr[i5], objArr, i2, i3, 0);
         int i9 = i2 + gallopRight;
         int i10 = i3 - gallopRight;
         if (i10 != 0) {
-            Object[] objArr2 = this.f674a;
+            Object[] objArr2 = this.f672a;
             int gallopLeft = gallopLeft((Comparable) objArr2[(i9 + i10) - 1], objArr2, i5, i6, i6 - 1);
             if (gallopLeft != 0) {
                 if (i10 <= gallopLeft) {
@@ -559,7 +559,7 @@ class ComparableTimSort {
     private void mergeLo(int r12, int r13, int r14, int r15) {
         /*
             r11 = this;
-            java.lang.Object[] r0 = r11.f674a
+            java.lang.Object[] r0 = r11.f672a
             java.lang.Object[] r1 = r11.ensureCapacity(r13)
             int r2 = r11.tmpBase
             java.lang.System.arraycopy((java.lang.Object) r0, (int) r12, (java.lang.Object) r1, (int) r2, (int) r13)
@@ -843,7 +843,7 @@ class ComparableTimSort {
             r1 = r17
             r2 = r19
             r3 = r20
-            java.lang.Object[] r4 = r0.f674a
+            java.lang.Object[] r4 = r0.f672a
             java.lang.Object[] r5 = r0.ensureCapacity(r3)
             int r6 = r0.tmpBase
             java.lang.System.arraycopy((java.lang.Object) r4, (int) r2, (java.lang.Object) r5, (int) r6, (int) r3)
@@ -1039,7 +1039,7 @@ class ComparableTimSort {
         if (this.tmpLen < i) {
             int numberOfLeadingZeros = (-1 >>> Integer.numberOfLeadingZeros(i)) + 1;
             if (numberOfLeadingZeros >= 0) {
-                i = Math.min(numberOfLeadingZeros, this.f674a.length >>> 1);
+                i = Math.min(numberOfLeadingZeros, this.f672a.length >>> 1);
             }
             this.tmp = new Object[i];
             this.tmpLen = i;

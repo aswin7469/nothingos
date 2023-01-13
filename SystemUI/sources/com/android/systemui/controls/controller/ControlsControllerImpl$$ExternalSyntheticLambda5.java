@@ -13,6 +13,6 @@ public final /* synthetic */ class ControlsControllerImpl$$ExternalSyntheticLamb
     }
 
     public final void run() {
-        ControlsControllerImpl.m2613addSeedingFavoritesCallback$lambda2(this.f$0, this.f$1);
+        ControlsControllerImpl.m2618addSeedingFavoritesCallback$lambda2(this.f$0, this.f$1);
     }
 }

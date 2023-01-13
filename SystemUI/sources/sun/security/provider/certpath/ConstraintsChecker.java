@@ -22,7 +22,7 @@ class ConstraintsChecker extends PKIXCertPathChecker {
     private final int certPathLength;
 
     /* renamed from: i */
-    private int f915i;
+    private int f913i;
     private int maxPathLength;
     private NameConstraintsExtension prevNC;
     private Set<String> supportedExts;
@@ -37,7 +37,7 @@ class ConstraintsChecker extends PKIXCertPathChecker {
 
     public void init(boolean z) throws CertPathValidatorException {
         if (!z) {
-            this.f915i = 0;
+            this.f913i = 0;
             this.maxPathLength = this.certPathLength;
             this.prevNC = null;
             return;
@@ -58,7 +58,7 @@ class ConstraintsChecker extends PKIXCertPathChecker {
 
     public void check(Certificate certificate, Collection<String> collection) throws CertPathValidatorException {
         X509Certificate x509Certificate = (X509Certificate) certificate;
-        this.f915i++;
+        this.f913i++;
         checkBasicConstraints(x509Certificate);
         verifyNameConstraints(x509Certificate);
         if (collection != null && !collection.isEmpty()) {
@@ -72,7 +72,7 @@ class ConstraintsChecker extends PKIXCertPathChecker {
         if (debug2 != null) {
             debug2.println("---checking name constraints...");
         }
-        if (this.prevNC != null && (this.f915i == this.certPathLength || !X509CertImpl.isSelfIssued(x509Certificate))) {
+        if (this.prevNC != null && (this.f913i == this.certPathLength || !X509CertImpl.isSelfIssued(x509Certificate))) {
             if (debug2 != null) {
                 debug2.println("prevNC = " + this.prevNC + ", currDN = " + x509Certificate.getSubjectX500Principal());
             }
@@ -125,11 +125,11 @@ class ConstraintsChecker extends PKIXCertPathChecker {
         Debug debug2 = debug;
         if (debug2 != null) {
             debug2.println("---checking basic constraints...");
-            debug2.println("i = " + this.f915i + ", maxPathLength = " + this.maxPathLength);
+            debug2.println("i = " + this.f913i + ", maxPathLength = " + this.maxPathLength);
         }
-        if (this.f915i < this.certPathLength) {
+        if (this.f913i < this.certPathLength) {
             if (x509Certificate.getVersion() < 3) {
-                i = (this.f915i != 1 || !X509CertImpl.isSelfIssued(x509Certificate)) ? -1 : Integer.MAX_VALUE;
+                i = (this.f913i != 1 || !X509CertImpl.isSelfIssued(x509Certificate)) ? -1 : Integer.MAX_VALUE;
             } else {
                 i = x509Certificate.getBasicConstraints();
             }

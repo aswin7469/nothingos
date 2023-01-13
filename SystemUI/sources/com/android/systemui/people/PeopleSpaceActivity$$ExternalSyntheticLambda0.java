@@ -17,6 +17,6 @@ public final /* synthetic */ class PeopleSpaceActivity$$ExternalSyntheticLambda0
     }
 
     public final void onClick(View view) {
-        this.f$0.mo35123xf6054568(this.f$1, this.f$2, view);
+        this.f$0.mo35127xf6054568(this.f$1, this.f$2, view);
     }
 }

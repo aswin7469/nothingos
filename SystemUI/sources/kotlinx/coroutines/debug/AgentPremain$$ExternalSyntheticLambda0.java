@@ -6,6 +6,6 @@ import sun.misc.SignalHandler;
 /* compiled from: D8$$SyntheticClass */
 public final /* synthetic */ class AgentPremain$$ExternalSyntheticLambda0 implements SignalHandler {
     public final void handle(Signal signal) {
-        AgentPremain.m5458installSignalHandler$lambda1(signal);
+        AgentPremain.m5476installSignalHandler$lambda1(signal);
     }
 }

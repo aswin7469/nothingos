@@ -23,7 +23,7 @@ import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Ref;
 
-@Metadata(mo64986d1 = {"\u0000x\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\u0010\b\n\u0002\b\u0005\n\u0002\u0010#\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u000b\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\u0010\u001e\n\u0000\n\u0002\u0010\u000e\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\b\u0018\u0000 52\u00020\u0001:\u0003567B\u0017\b\u0016\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005¢\u0006\u0002\u0010\u0006B\u001d\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0007\u001a\u00020\b\u0012\u0006\u0010\u0004\u001a\u00020\u0005¢\u0006\u0002\u0010\tJ\u001c\u0010\u001a\u001a\u00020\u001b2\n\u0010\u001c\u001a\u0006\u0012\u0002\b\u00030\u001d2\u0006\u0010\u001e\u001a\u00020\u001fH\u0016J\u0010\u0010 \u001a\u00020!2\u0006\u0010\"\u001a\u00020\fH\u0002J\u001e\u0010#\u001a\u00020\u001b2\u0006\u0010\"\u001a\u00020\f2\u000e\u0010$\u001a\n\u0012\u0004\u0012\u00020\u0015\u0018\u00010\u000bJ\u000e\u0010%\u001a\u00020\u001b2\u0006\u0010\"\u001a\u00020\fJ\u0016\u0010&\u001a\u0012\u0012\u000e\u0012\f\u0012\b\u0012\u0006\u0012\u0002\b\u00030\u001d0(0'J\u000e\u0010)\u001a\u00020*2\u0006\u0010\"\u001a\u00020\fJ\u0015\u0010+\u001a\u0004\u0018\u00010\u00152\u0006\u0010\"\u001a\u00020\f¢\u0006\u0002\u0010,J)\u0010-\u001a\u0004\u0018\u0001H.\"\u0004\b\u0000\u0010.2\u0006\u0010\"\u001a\u00020\f2\f\u0010/\u001a\b\u0012\u0004\u0012\u0002H.00¢\u0006\u0002\u00101J\u0010\u00102\u001a\u00020\u001b2\u0006\u0010\u001e\u001a\u00020\u001fH\u0016J\u0016\u00103\u001a\u00020\u001b2\u0006\u0010\"\u001a\u00020\f2\u0006\u00104\u001a\u00020\u0015R\"\u0010\n\u001a\n\u0012\u0004\u0012\u00020\f\u0018\u00010\u000bX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\r\u0010\u000e\"\u0004\b\u000f\u0010\u0010R\u000e\u0010\u0002\u001a\u00020\u0003X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0004\u001a\u00020\u0005X\u0004¢\u0006\u0002\n\u0000R\u0014\u0010\u0011\u001a\b\u0012\u0004\u0012\u00020\u00130\u0012X\u0004¢\u0006\u0002\n\u0000R\"\u0010\u0014\u001a\n\u0012\u0004\u0012\u00020\u0015\u0018\u00010\u000bX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0016\u0010\u000e\"\u0004\b\u0017\u0010\u0010R\u000e\u0010\u0007\u001a\u00020\bX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0018\u001a\u00020\u0019X\u0004¢\u0006\u0002\n\u0000¨\u00068"}, mo64987d2 = {"Lcom/android/systemui/flags/FlagManager;", "Lcom/android/systemui/flags/FlagListenable;", "context", "Landroid/content/Context;", "handler", "Landroid/os/Handler;", "(Landroid/content/Context;Landroid/os/Handler;)V", "settings", "Lcom/android/systemui/flags/FlagSettingsHelper;", "(Landroid/content/Context;Lcom/android/systemui/flags/FlagSettingsHelper;Landroid/os/Handler;)V", "clearCacheAction", "Ljava/util/function/Consumer;", "", "getClearCacheAction", "()Ljava/util/function/Consumer;", "setClearCacheAction", "(Ljava/util/function/Consumer;)V", "listeners", "", "Lcom/android/systemui/flags/FlagManager$PerFlagListener;", "onSettingsChangedAction", "", "getOnSettingsChangedAction", "setOnSettingsChangedAction", "settingsObserver", "Landroid/database/ContentObserver;", "addListener", "", "flag", "Lcom/android/systemui/flags/Flag;", "listener", "Lcom/android/systemui/flags/FlagListenable$Listener;", "createIntent", "Landroid/content/Intent;", "id", "dispatchListenersAndMaybeRestart", "restartAction", "eraseFlag", "getFlagsFuture", "Lcom/google/common/util/concurrent/ListenableFuture;", "", "idToSettingsKey", "", "isEnabled", "(I)Ljava/lang/Boolean;", "readFlagValue", "T", "serializer", "Lcom/android/systemui/flags/FlagSerializer;", "(ILcom/android/systemui/flags/FlagSerializer;)Ljava/lang/Object;", "removeListener", "setFlagValue", "enabled", "Companion", "PerFlagListener", "SettingsObserver", "shared_release"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000x\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\u0010\b\n\u0002\b\u0005\n\u0002\u0010#\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u000b\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\u0010\u001e\n\u0000\n\u0002\u0010\u000e\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\b\u0018\u0000 52\u00020\u0001:\u0003567B\u0017\b\u0016\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005¢\u0006\u0002\u0010\u0006B\u001d\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0007\u001a\u00020\b\u0012\u0006\u0010\u0004\u001a\u00020\u0005¢\u0006\u0002\u0010\tJ\u001c\u0010\u001a\u001a\u00020\u001b2\n\u0010\u001c\u001a\u0006\u0012\u0002\b\u00030\u001d2\u0006\u0010\u001e\u001a\u00020\u001fH\u0016J\u0010\u0010 \u001a\u00020!2\u0006\u0010\"\u001a\u00020\fH\u0002J\u001e\u0010#\u001a\u00020\u001b2\u0006\u0010\"\u001a\u00020\f2\u000e\u0010$\u001a\n\u0012\u0004\u0012\u00020\u0015\u0018\u00010\u000bJ\u000e\u0010%\u001a\u00020\u001b2\u0006\u0010\"\u001a\u00020\fJ\u0016\u0010&\u001a\u0012\u0012\u000e\u0012\f\u0012\b\u0012\u0006\u0012\u0002\b\u00030\u001d0(0'J\u000e\u0010)\u001a\u00020*2\u0006\u0010\"\u001a\u00020\fJ\u0015\u0010+\u001a\u0004\u0018\u00010\u00152\u0006\u0010\"\u001a\u00020\f¢\u0006\u0002\u0010,J)\u0010-\u001a\u0004\u0018\u0001H.\"\u0004\b\u0000\u0010.2\u0006\u0010\"\u001a\u00020\f2\f\u0010/\u001a\b\u0012\u0004\u0012\u0002H.00¢\u0006\u0002\u00101J\u0010\u00102\u001a\u00020\u001b2\u0006\u0010\u001e\u001a\u00020\u001fH\u0016J\u0016\u00103\u001a\u00020\u001b2\u0006\u0010\"\u001a\u00020\f2\u0006\u00104\u001a\u00020\u0015R\"\u0010\n\u001a\n\u0012\u0004\u0012\u00020\f\u0018\u00010\u000bX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\r\u0010\u000e\"\u0004\b\u000f\u0010\u0010R\u000e\u0010\u0002\u001a\u00020\u0003X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0004\u001a\u00020\u0005X\u0004¢\u0006\u0002\n\u0000R\u0014\u0010\u0011\u001a\b\u0012\u0004\u0012\u00020\u00130\u0012X\u0004¢\u0006\u0002\n\u0000R\"\u0010\u0014\u001a\n\u0012\u0004\u0012\u00020\u0015\u0018\u00010\u000bX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0016\u0010\u000e\"\u0004\b\u0017\u0010\u0010R\u000e\u0010\u0007\u001a\u00020\bX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0018\u001a\u00020\u0019X\u0004¢\u0006\u0002\n\u0000¨\u00068"}, mo65043d2 = {"Lcom/android/systemui/flags/FlagManager;", "Lcom/android/systemui/flags/FlagListenable;", "context", "Landroid/content/Context;", "handler", "Landroid/os/Handler;", "(Landroid/content/Context;Landroid/os/Handler;)V", "settings", "Lcom/android/systemui/flags/FlagSettingsHelper;", "(Landroid/content/Context;Lcom/android/systemui/flags/FlagSettingsHelper;Landroid/os/Handler;)V", "clearCacheAction", "Ljava/util/function/Consumer;", "", "getClearCacheAction", "()Ljava/util/function/Consumer;", "setClearCacheAction", "(Ljava/util/function/Consumer;)V", "listeners", "", "Lcom/android/systemui/flags/FlagManager$PerFlagListener;", "onSettingsChangedAction", "", "getOnSettingsChangedAction", "setOnSettingsChangedAction", "settingsObserver", "Landroid/database/ContentObserver;", "addListener", "", "flag", "Lcom/android/systemui/flags/Flag;", "listener", "Lcom/android/systemui/flags/FlagListenable$Listener;", "createIntent", "Landroid/content/Intent;", "id", "dispatchListenersAndMaybeRestart", "restartAction", "eraseFlag", "getFlagsFuture", "Lcom/google/common/util/concurrent/ListenableFuture;", "", "idToSettingsKey", "", "isEnabled", "(I)Ljava/lang/Boolean;", "readFlagValue", "T", "serializer", "Lcom/android/systemui/flags/FlagSerializer;", "(ILcom/android/systemui/flags/FlagSerializer;)Ljava/lang/Object;", "removeListener", "setFlagValue", "enabled", "Companion", "PerFlagListener", "SettingsObserver", "shared_release"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* compiled from: FlagManager.kt */
 public final class FlagManager implements FlagListenable {
     public static final String ACTION_GET_FLAGS = "com.android.systemui.action.GET_FLAGS";
@@ -55,7 +55,7 @@ public final class FlagManager implements FlagListenable {
         this.settingsObserver = new SettingsObserver();
     }
 
-    @Metadata(mo64986d1 = {"\u0000\u0014\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\u000e\n\u0002\b\b\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u000e\u0010\u0003\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0005\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0006\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0007\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\b\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\t\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\n\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u000b\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000¨\u0006\f"}, mo64987d2 = {"Lcom/android/systemui/flags/FlagManager$Companion;", "", "()V", "ACTION_GET_FLAGS", "", "ACTION_SET_FLAG", "EXTRA_FLAGS", "EXTRA_ID", "EXTRA_VALUE", "FLAGS_PERMISSION", "RECEIVING_PACKAGE", "SETTINGS_PREFIX", "shared_release"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u0000\u0014\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\u000e\n\u0002\b\b\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u000e\u0010\u0003\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0005\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0006\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0007\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\b\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\t\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\n\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u000b\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000¨\u0006\f"}, mo65043d2 = {"Lcom/android/systemui/flags/FlagManager$Companion;", "", "()V", "ACTION_GET_FLAGS", "", "ACTION_SET_FLAG", "EXTRA_FLAGS", "EXTRA_ID", "EXTRA_VALUE", "FLAGS_PERMISSION", "RECEIVING_PACKAGE", "SETTINGS_PREFIX", "shared_release"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* compiled from: FlagManager.kt */
     public static final class Companion {
         public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
@@ -112,7 +112,7 @@ public final class FlagManager implements FlagListenable {
 
     /* access modifiers changed from: private */
     /* renamed from: getFlagsFuture$lambda-0  reason: not valid java name */
-    public static final Object m2752getFlagsFuture$lambda0(FlagManager flagManager, Intent intent, CallbackToFutureAdapter.Completer completer) {
+    public static final Object m2757getFlagsFuture$lambda0(FlagManager flagManager, Intent intent, CallbackToFutureAdapter.Completer completer) {
         Intrinsics.checkNotNullParameter(flagManager, "this$0");
         Intrinsics.checkNotNullParameter(intent, "$intent");
         Intrinsics.checkNotNullParameter(completer, "completer");
@@ -167,7 +167,7 @@ public final class FlagManager implements FlagListenable {
 
     /* access modifiers changed from: private */
     /* renamed from: removeListener$lambda-3$lambda-2  reason: not valid java name */
-    public static final boolean m2753removeListener$lambda3$lambda2(FlagListenable.Listener listener, PerFlagListener perFlagListener) {
+    public static final boolean m2758removeListener$lambda3$lambda2(FlagListenable.Listener listener, PerFlagListener perFlagListener) {
         Intrinsics.checkNotNullParameter(listener, "$listener");
         Intrinsics.checkNotNullParameter(perFlagListener, "it");
         return Intrinsics.areEqual((Object) perFlagListener.getListener(), (Object) listener);
@@ -184,7 +184,7 @@ public final class FlagManager implements FlagListenable {
         return "systemui/flags/" + i;
     }
 
-    @Metadata(mo64986d1 = {"\u0000\u001e\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u0002\n\u0000\n\u0002\u0010\u000b\n\u0000\n\u0002\u0018\u0002\n\u0000\b\u0004\u0018\u00002\u00020\u0001B\u0005¢\u0006\u0002\u0010\u0002J\u001a\u0010\u0003\u001a\u00020\u00042\u0006\u0010\u0005\u001a\u00020\u00062\b\u0010\u0007\u001a\u0004\u0018\u00010\bH\u0016¨\u0006\t"}, mo64987d2 = {"Lcom/android/systemui/flags/FlagManager$SettingsObserver;", "Landroid/database/ContentObserver;", "(Lcom/android/systemui/flags/FlagManager;)V", "onChange", "", "selfChange", "", "uri", "Landroid/net/Uri;", "shared_release"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u0000\u001e\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u0002\n\u0000\n\u0002\u0010\u000b\n\u0000\n\u0002\u0018\u0002\n\u0000\b\u0004\u0018\u00002\u00020\u0001B\u0005¢\u0006\u0002\u0010\u0002J\u001a\u0010\u0003\u001a\u00020\u00042\u0006\u0010\u0005\u001a\u00020\u00062\b\u0010\u0007\u001a\u0004\u0018\u00010\bH\u0016¨\u0006\t"}, mo65043d2 = {"Lcom/android/systemui/flags/FlagManager$SettingsObserver;", "Landroid/database/ContentObserver;", "(Lcom/android/systemui/flags/FlagManager;)V", "onChange", "", "selfChange", "", "uri", "Landroid/net/Uri;", "shared_release"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* compiled from: FlagManager.kt */
     public final class SettingsObserver extends ContentObserver {
         public SettingsObserver() {
@@ -228,7 +228,7 @@ public final class FlagManager implements FlagListenable {
             Collection arrayList2 = new ArrayList(CollectionsKt.collectionSizeOrDefault(iterable, 10));
             for (FlagListenable.Listener onFlagChanged : iterable) {
                 Ref.BooleanRef booleanRef = new Ref.BooleanRef();
-                onFlagChanged.onFlagChanged(new C2108xfff10460(i, booleanRef));
+                onFlagChanged.onFlagChanged(new C2110xfff10460(i, booleanRef));
                 arrayList2.add(Boolean.valueOf(booleanRef.element));
             }
             Iterable iterable2 = (List) arrayList2;
@@ -253,17 +253,17 @@ public final class FlagManager implements FlagListenable {
         }
     }
 
-    @Metadata(mo64986d1 = {"\u0000&\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0018\u0002\n\u0002\b\t\n\u0002\u0010\u000b\n\u0002\b\u0003\n\u0002\u0010\u000e\n\u0000\b\b\u0018\u00002\u00020\u0001B\u0015\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005¢\u0006\u0002\u0010\u0006J\t\u0010\u000b\u001a\u00020\u0003HÆ\u0003J\t\u0010\f\u001a\u00020\u0005HÆ\u0003J\u001d\u0010\r\u001a\u00020\u00002\b\b\u0002\u0010\u0002\u001a\u00020\u00032\b\b\u0002\u0010\u0004\u001a\u00020\u0005HÆ\u0001J\u0013\u0010\u000e\u001a\u00020\u000f2\b\u0010\u0010\u001a\u0004\u0018\u00010\u0001HÖ\u0003J\t\u0010\u0011\u001a\u00020\u0003HÖ\u0001J\t\u0010\u0012\u001a\u00020\u0013HÖ\u0001R\u0011\u0010\u0002\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\u0007\u0010\bR\u0011\u0010\u0004\u001a\u00020\u0005¢\u0006\b\n\u0000\u001a\u0004\b\t\u0010\n¨\u0006\u0014"}, mo64987d2 = {"Lcom/android/systemui/flags/FlagManager$PerFlagListener;", "", "id", "", "listener", "Lcom/android/systemui/flags/FlagListenable$Listener;", "(ILcom/android/systemui/flags/FlagListenable$Listener;)V", "getId", "()I", "getListener", "()Lcom/android/systemui/flags/FlagListenable$Listener;", "component1", "component2", "copy", "equals", "", "other", "hashCode", "toString", "", "shared_release"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u0000&\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0018\u0002\n\u0002\b\t\n\u0002\u0010\u000b\n\u0002\b\u0003\n\u0002\u0010\u000e\n\u0000\b\b\u0018\u00002\u00020\u0001B\u0015\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005¢\u0006\u0002\u0010\u0006J\t\u0010\u000b\u001a\u00020\u0003HÆ\u0003J\t\u0010\f\u001a\u00020\u0005HÆ\u0003J\u001d\u0010\r\u001a\u00020\u00002\b\b\u0002\u0010\u0002\u001a\u00020\u00032\b\b\u0002\u0010\u0004\u001a\u00020\u0005HÆ\u0001J\u0013\u0010\u000e\u001a\u00020\u000f2\b\u0010\u0010\u001a\u0004\u0018\u00010\u0001HÖ\u0003J\t\u0010\u0011\u001a\u00020\u0003HÖ\u0001J\t\u0010\u0012\u001a\u00020\u0013HÖ\u0001R\u0011\u0010\u0002\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\u0007\u0010\bR\u0011\u0010\u0004\u001a\u00020\u0005¢\u0006\b\n\u0000\u001a\u0004\b\t\u0010\n¨\u0006\u0014"}, mo65043d2 = {"Lcom/android/systemui/flags/FlagManager$PerFlagListener;", "", "id", "", "listener", "Lcom/android/systemui/flags/FlagListenable$Listener;", "(ILcom/android/systemui/flags/FlagListenable$Listener;)V", "getId", "()I", "getListener", "()Lcom/android/systemui/flags/FlagListenable$Listener;", "component1", "component2", "copy", "equals", "", "other", "hashCode", "toString", "", "shared_release"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* compiled from: FlagManager.kt */
     private static final class PerFlagListener {
 
         /* renamed from: id */
-        private final int f305id;
+        private final int f304id;
         private final FlagListenable.Listener listener;
 
         public static /* synthetic */ PerFlagListener copy$default(PerFlagListener perFlagListener, int i, FlagListenable.Listener listener2, int i2, Object obj) {
             if ((i2 & 1) != 0) {
-                i = perFlagListener.f305id;
+                i = perFlagListener.f304id;
             }
             if ((i2 & 2) != 0) {
                 listener2 = perFlagListener.listener;
@@ -272,7 +272,7 @@ public final class FlagManager implements FlagListenable {
         }
 
         public final int component1() {
-            return this.f305id;
+            return this.f304id;
         }
 
         public final FlagListenable.Listener component2() {
@@ -292,25 +292,25 @@ public final class FlagManager implements FlagListenable {
                 return false;
             }
             PerFlagListener perFlagListener = (PerFlagListener) obj;
-            return this.f305id == perFlagListener.f305id && Intrinsics.areEqual((Object) this.listener, (Object) perFlagListener.listener);
+            return this.f304id == perFlagListener.f304id && Intrinsics.areEqual((Object) this.listener, (Object) perFlagListener.listener);
         }
 
         public int hashCode() {
-            return (Integer.hashCode(this.f305id) * 31) + this.listener.hashCode();
+            return (Integer.hashCode(this.f304id) * 31) + this.listener.hashCode();
         }
 
         public String toString() {
-            return "PerFlagListener(id=" + this.f305id + ", listener=" + this.listener + ')';
+            return "PerFlagListener(id=" + this.f304id + ", listener=" + this.listener + ')';
         }
 
         public PerFlagListener(int i, FlagListenable.Listener listener2) {
             Intrinsics.checkNotNullParameter(listener2, "listener");
-            this.f305id = i;
+            this.f304id = i;
             this.listener = listener2;
         }
 
         public final int getId() {
-            return this.f305id;
+            return this.f304id;
         }
 
         public final FlagListenable.Listener getListener() {

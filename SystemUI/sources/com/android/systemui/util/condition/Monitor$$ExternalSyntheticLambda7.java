@@ -11,6 +11,6 @@ public final /* synthetic */ class Monitor$$ExternalSyntheticLambda7 implements 
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo46970xa85fcf1b((Condition) obj);
+        this.f$0.mo46982xa85fcf1b((Condition) obj);
     }
 }

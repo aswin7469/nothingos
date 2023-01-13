@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.SystemClock;
 import android.util.Slog;
 import android.widget.Toast;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.SysUIToast;
 
 public class ScreenPinningNotify {
@@ -19,11 +19,11 @@ public class ScreenPinningNotify {
     }
 
     public void showPinningStartToast() {
-        makeAllUserToastAndShow(C1893R.string.screen_pinning_start);
+        makeAllUserToastAndShow(C1894R.string.screen_pinning_start);
     }
 
     public void showPinningExitToast() {
-        makeAllUserToastAndShow(C1893R.string.screen_pinning_exit);
+        makeAllUserToastAndShow(C1894R.string.screen_pinning_exit);
     }
 
     public void showEscapeToast(boolean z, boolean z2) {
@@ -36,7 +36,7 @@ public class ScreenPinningNotify {
         if (toast != null) {
             toast.cancel();
         }
-        this.mLastToast = makeAllUserToastAndShow(z ? C1893R.string.screen_pinning_toast_gesture_nav : z2 ? C1893R.string.screen_pinning_toast : C1893R.string.screen_pinning_toast_recents_invisible);
+        this.mLastToast = makeAllUserToastAndShow(z ? C1894R.string.screen_pinning_toast_gesture_nav : z2 ? C1894R.string.screen_pinning_toast : C1894R.string.screen_pinning_toast_recents_invisible);
         this.mLastShowToastTime = elapsedRealtime;
     }
 

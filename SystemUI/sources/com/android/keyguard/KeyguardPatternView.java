@@ -15,7 +15,7 @@ import com.android.internal.widget.LockPatternView;
 import com.android.settingslib.animation.AppearAnimationCreator;
 import com.android.settingslib.animation.AppearAnimationUtils;
 import com.android.settingslib.animation.DisappearAnimationUtils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 
 public class KeyguardPatternView extends KeyguardInputView implements AppearAnimationCreator<LockPatternView.CellState> {
     private static final boolean DEBUG = KeyguardConstants.DEBUG;
@@ -57,22 +57,22 @@ public class KeyguardPatternView extends KeyguardInputView implements AppearAnim
 
     /* access modifiers changed from: package-private */
     public void onDevicePostureChanged(int i) {
-        float f = this.mContext.getResources().getFloat(C1893R.dimen.half_opened_bouncer_height_ratio);
+        float f = this.mContext.getResources().getFloat(C1894R.dimen.half_opened_bouncer_height_ratio);
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(this.mContainer);
         if (i != 2) {
             f = 0.0f;
         }
-        constraintSet.setGuidelinePercent(C1893R.C1897id.pattern_top_guideline, f);
+        constraintSet.setGuidelinePercent(C1894R.C1898id.pattern_top_guideline, f);
         constraintSet.applyTo(this.mContainer);
     }
 
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mLockPatternView = findViewById(C1893R.C1897id.lockPatternView);
-        this.mEcaView = findViewById(C1893R.C1897id.keyguard_selector_fade_container);
-        this.mContainer = (ConstraintLayout) findViewById(C1893R.C1897id.pattern_container);
+        this.mLockPatternView = findViewById(C1894R.C1898id.lockPatternView);
+        this.mEcaView = findViewById(C1894R.C1898id.keyguard_selector_fade_container);
+        this.mContainer = (ConstraintLayout) findViewById(C1894R.C1898id.pattern_container);
     }
 
     /* access modifiers changed from: protected */

@@ -14,6 +14,6 @@ public final /* synthetic */ class ControlsUiControllerImpl$$ExternalSyntheticLa
     }
 
     public final void run() {
-        ControlsUiControllerImpl.m2707onRefreshState$lambda23$lambda22$lambda21$lambda20(this.f$0, this.f$1, this.f$2);
+        ControlsUiControllerImpl.m2712onRefreshState$lambda23$lambda22$lambda21$lambda20(this.f$0, this.f$1, this.f$2);
     }
 }

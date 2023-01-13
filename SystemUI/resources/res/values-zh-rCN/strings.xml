@@ -705,13 +705,16 @@
     <string name="force_rtl_layout_all_locales">强制使用从右到左的布局方向</string>
     <string name="force_rtl_layout_all_locales_summary">强制将所有语言区域的屏幕布局方向改为从右到左</string>
     <string name="forced_resizable_secondary_display">应用可能无法在辅显示屏上正常运行。</string>
-    <string name="game_mode">游戏模式</string>
-    <string name="game_mode_notification_content">点击进入设置</string>
-    <string name="game_mode_notification_title">游戏模式已开启</string>
     <string name="game_status">正在玩游戏</string>
+    <string name="gamemode_description">游戏模式会判断您是否在游戏中并且自动运行。</string>
+    <string name="gamemode_gamedashboard_title">游戏信息中心</string>
+    <string name="gamemode_notification_content">点击进入设置</string>
+    <string name="gamemode_notification_title">游戏模式正在运行</string>
     <string name="global_action_lock_message">解锁手机即可查看更多选项</string>
     <string name="global_action_screenshot">屏幕截图</string>
     <string name="global_action_smart_lock_disabled">Smart Lock 已停用</string>
+    <string name="gm_guide_status_on">打开</string>
+    <string name="gm_notification_title">游戏模式</string>
     <string name="go_to_web">转到浏览器</string>
     <string name="got_it">知道了</string>
     <string name="guest_exit_guest">移除访客</string>
@@ -1203,7 +1206,6 @@
     <string name="oem_unlock_enable">OEM 解锁</string>
     <string name="oem_unlock_enable_summary">允许解锁引导加载程序</string>
     <string name="okay">确定</string>
-    <string name="on">开启</string>
     <string name="one_handed_tutorial_description">如需退出，请从屏幕底部向上滑动，或点按应用上方的任意位置</string>
     <string name="one_handed_tutorial_title">使用单手模式</string>
     <string name="one_week_timestamp">1 周前</string>

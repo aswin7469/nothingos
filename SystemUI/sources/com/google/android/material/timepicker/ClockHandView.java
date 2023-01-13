@@ -16,7 +16,7 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import androidx.core.view.ViewCompat;
 import com.android.systemui.statusbar.notification.stack.StackStateAnimator;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,7 +53,7 @@ class ClockHandView extends View {
     }
 
     public ClockHandView(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, C3621R.attr.materialClockStyle);
+        this(context, attributeSet, C3631R.attr.materialClockStyle);
     }
 
     public ClockHandView(Context context, AttributeSet attributeSet, int i) {
@@ -62,13 +62,13 @@ class ClockHandView extends View {
         Paint paint2 = new Paint();
         this.paint = paint2;
         this.selectorBox = new RectF();
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C3621R.styleable.ClockHandView, i, C3621R.style.Widget_MaterialComponents_TimePicker_Clock);
-        this.circleRadius = obtainStyledAttributes.getDimensionPixelSize(C3621R.styleable.ClockHandView_materialCircleRadius, 0);
-        this.selectorRadius = obtainStyledAttributes.getDimensionPixelSize(C3621R.styleable.ClockHandView_selectorSize, 0);
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C3631R.styleable.ClockHandView, i, C3631R.style.Widget_MaterialComponents_TimePicker_Clock);
+        this.circleRadius = obtainStyledAttributes.getDimensionPixelSize(C3631R.styleable.ClockHandView_materialCircleRadius, 0);
+        this.selectorRadius = obtainStyledAttributes.getDimensionPixelSize(C3631R.styleable.ClockHandView_selectorSize, 0);
         Resources resources = getResources();
-        this.selectorStrokeWidth = resources.getDimensionPixelSize(C3621R.dimen.material_clock_hand_stroke_width);
-        this.centerDotRadius = (float) resources.getDimensionPixelSize(C3621R.dimen.material_clock_hand_center_dot_radius);
-        int color = obtainStyledAttributes.getColor(C3621R.styleable.ClockHandView_clockHandColor, 0);
+        this.selectorStrokeWidth = resources.getDimensionPixelSize(C3631R.dimen.material_clock_hand_stroke_width);
+        this.centerDotRadius = (float) resources.getDimensionPixelSize(C3631R.dimen.material_clock_hand_center_dot_radius);
+        int color = obtainStyledAttributes.getColor(C3631R.styleable.ClockHandView_clockHandColor, 0);
         paint2.setAntiAlias(true);
         paint2.setColor(color);
         setHandRotation(0.0f);

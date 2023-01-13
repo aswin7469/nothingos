@@ -10,7 +10,7 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 import com.android.internal.app.AlertActivity;
 import com.android.internal.app.AlertController;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 
 abstract class UsbDialogActivity extends AlertActivity implements DialogInterface.OnClickListener, CompoundButton.OnCheckedChangeListener {
     private static final String TAG = "UsbDialogActivity";
@@ -89,9 +89,9 @@ abstract class UsbDialogActivity extends AlertActivity implements DialogInterfac
         alertParams.mView = ((LayoutInflater) getSystemService(LayoutInflater.class)).inflate(17367093, (ViewGroup) null);
         this.mAlwaysUse = (CheckBox) alertParams.mView.findViewById(16908774);
         if (this.mDialogHelper.isUsbAccessory()) {
-            this.mAlwaysUse.setText(getString(C1893R.string.always_use_accessory, new Object[]{this.mDialogHelper.getAppName(), this.mDialogHelper.getDeviceDescription()}));
+            this.mAlwaysUse.setText(getString(C1894R.string.always_use_accessory, new Object[]{this.mDialogHelper.getAppName(), this.mDialogHelper.getDeviceDescription()}));
         } else {
-            this.mAlwaysUse.setText(getString(C1893R.string.always_use_device, new Object[]{this.mDialogHelper.getAppName(), this.mDialogHelper.getDeviceDescription()}));
+            this.mAlwaysUse.setText(getString(C1894R.string.always_use_device, new Object[]{this.mDialogHelper.getAppName(), this.mDialogHelper.getDeviceDescription()}));
         }
         this.mAlwaysUse.setOnCheckedChangeListener(this);
         TextView textView = (TextView) alertParams.mView.findViewById(16908878);

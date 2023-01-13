@@ -20,8 +20,7 @@ public class NTFingerprintDimLayer {
     private static FingerprintDimLayerController mFDC;
     private Context mContext;
     private final DisplayManagerInternal mDisplayManagerInternal = ((DisplayManagerInternal) LocalServices.getService(DisplayManagerInternal.class));
-    /* access modifiers changed from: private */
-    public UdfpsController mUdfpsController;
+    private UdfpsController mUdfpsController;
 
     public NTFingerprintDimLayer(Context context, UdfpsController udfpsController) {
         this.mContext = context;
@@ -73,7 +72,7 @@ public class NTFingerprintDimLayer {
             int i2 = point.y;
             this.mDisplayHeight = Math.max(i, i2);
             this.mDisplayWidth = Math.min(i, i2);
-            NTLogUtil.m1682i(NTFingerprintDimLayer.TAG, "FingerprintDimLayerController mDisplayWidth=" + this.mDisplayWidth + ", mDisplayHeight=" + this.mDisplayHeight);
+            NTLogUtil.m1688i(NTFingerprintDimLayer.TAG, "FingerprintDimLayerController mDisplayWidth=" + this.mDisplayWidth + ", mDisplayHeight=" + this.mDisplayHeight);
         }
 
         public void dismiss() {
@@ -95,7 +94,7 @@ public class NTFingerprintDimLayer {
         }
 
         public void draw(float f) {
-            NTLogUtil.m1680d(NTFingerprintDimLayer.TAG, "draw alpha=" + f);
+            NTLogUtil.m1686d(NTFingerprintDimLayer.TAG, "draw alpha=" + f);
             if (f == 0.0f && this.mIsScreenOn) {
                 dismiss();
             } else if (this.mSurfaceControl == null) {
@@ -113,7 +112,7 @@ public class NTFingerprintDimLayer {
                 SurfaceControl.openTransaction();
                 try {
                     if (this.mSurfaceControl == null) {
-                        NTLogUtil.m1680d(NTFingerprintDimLayer.TAG, "===createSurface===");
+                        NTLogUtil.m1686d(NTFingerprintDimLayer.TAG, "===createSurface===");
                         SurfaceControl.Builder builder = new SurfaceControl.Builder(this.mSurfaceSession);
                         builder.setName("NTFingerprintDimLayer");
                         builder.setFormat(-1);
@@ -127,7 +126,7 @@ public class NTFingerprintDimLayer {
                         showSurface(f, false);
                     }
                 } catch (Surface.OutOfResourcesException e) {
-                    NTLogUtil.m1681e(NTFingerprintDimLayer.TAG, "Unable to create surface." + e);
+                    NTLogUtil.m1687e(NTFingerprintDimLayer.TAG, "Unable to create surface." + e);
                 } catch (Throwable th) {
                     SurfaceControl.closeTransaction();
                     throw th;
@@ -139,7 +138,7 @@ public class NTFingerprintDimLayer {
         private void destroySurface() {
             synchronized (this.mLock) {
                 if (this.mSurfaceControl != null) {
-                    NTLogUtil.m1680d(NTFingerprintDimLayer.TAG, "===destroySurface===");
+                    NTLogUtil.m1686d(NTFingerprintDimLayer.TAG, "===destroySurface===");
                     new SurfaceControl.Transaction().remove(this.mSurfaceControl).apply();
                     Surface surface = this.mSurface;
                     if (surface != null) {
@@ -148,9 +147,6 @@ public class NTFingerprintDimLayer {
                     this.mSurfaceControl = null;
                     this.mSurfaceAlpha = 0.0f;
                 }
-            }
-            if (NTFingerprintDimLayer.this.mUdfpsController != null) {
-                NTFingerprintDimLayer.this.mUdfpsController.checkToReattachView();
             }
         }
 
@@ -168,7 +164,7 @@ public class NTFingerprintDimLayer {
                 r2.<init>((java.lang.String) r3)
                 java.lang.StringBuilder r2 = r2.append((float) r7)
                 java.lang.String r2 = r2.toString()
-                com.nothing.systemui.util.NTLogUtil.m1680d(r1, r2)
+                com.nothing.systemui.util.NTLogUtil.m1686d(r1, r2)
                 java.lang.Object r1 = r6.mLock
                 monitor-enter(r1)
                 r2 = 1
@@ -189,7 +185,7 @@ public class NTFingerprintDimLayer {
                 r5.<init>((java.lang.String) r0)     // Catch:{ all -> 0x0069 }
                 java.lang.StringBuilder r0 = r5.append((float) r7)     // Catch:{ all -> 0x0069 }
                 java.lang.String r0 = r0.toString()     // Catch:{ all -> 0x0069 }
-                com.nothing.systemui.util.NTLogUtil.m1682i(r8, r0)     // Catch:{ all -> 0x0069 }
+                com.nothing.systemui.util.NTLogUtil.m1688i(r8, r0)     // Catch:{ all -> 0x0069 }
                 android.view.SurfaceControl$Transaction r8 = new android.view.SurfaceControl$Transaction     // Catch:{ all -> 0x0069 }
                 r8.<init>()     // Catch:{ all -> 0x0069 }
                 android.view.SurfaceControl r0 = r6.mSurfaceControl     // Catch:{ all -> 0x0069 }
@@ -218,7 +214,7 @@ public class NTFingerprintDimLayer {
 
         /* JADX INFO: finally extract failed */
         public void updateAlpha(float f) {
-            NTLogUtil.m1680d(NTFingerprintDimLayer.TAG, "updateAlpha alpha=" + f);
+            NTLogUtil.m1686d(NTFingerprintDimLayer.TAG, "updateAlpha alpha=" + f);
             if (this.mSurfaceControl != null) {
                 synchronized (this.mLock) {
                     if (!TextUtils.equals(String.valueOf(this.mSurfaceAlpha), String.valueOf(f))) {

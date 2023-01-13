@@ -26,7 +26,7 @@ public class GroupExpansionManagerImpl implements GroupExpansionManager, Coordin
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$1$com-android-systemui-statusbar-notification-collection-render-GroupExpansionManagerImpl */
-    public /* synthetic */ void mo40590x9a4c005b(List list) {
+    public /* synthetic */ void mo40593x9a4c005b(List list) {
         HashSet hashSet = new HashSet();
         Iterator it = list.iterator();
         while (it.hasNext()) {

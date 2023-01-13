@@ -169,7 +169,7 @@ class StatusBarNotificationActivityStarter implements NotificationActivityStarte
                 final NotificationEntry notificationEntry2 = notificationEntry;
                 final ExpandableNotificationRow expandableNotificationRow2 = expandableNotificationRow;
                 final boolean z5 = z4;
-                C30903 r1 = new ActivityStarter.OnDismissAction() {
+                C31003 r1 = new ActivityStarter.OnDismissAction() {
                     public boolean onDismiss() {
                         return StatusBarNotificationActivityStarter.this.handleNotificationClickAfterKeyguardDismissed(notificationEntry2, expandableNotificationRow2, pendingIntent2, z, z3, z5);
                     }
@@ -213,7 +213,7 @@ class StatusBarNotificationActivityStarter implements NotificationActivityStarte
 
     /* access modifiers changed from: private */
     /* renamed from: handleNotificationClickAfterPanelCollapsed */
-    public void mo45297xb52b7566(NotificationEntry notificationEntry, ExpandableNotificationRow expandableNotificationRow, PendingIntent pendingIntent, boolean z, boolean z2) {
+    public void mo45309xb52b7566(NotificationEntry notificationEntry, ExpandableNotificationRow expandableNotificationRow, PendingIntent pendingIntent, boolean z, boolean z2) {
         String key = notificationEntry.getKey();
         this.mLogger.logHandleClickAfterPanelCollapsed(notificationEntry);
         try {
@@ -255,7 +255,7 @@ class StatusBarNotificationActivityStarter implements NotificationActivityStarte
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$handleNotificationClickAfterPanelCollapsed$1$com-android-systemui-statusbar-phone-StatusBarNotificationActivityStarter */
-    public /* synthetic */ void mo45298x4097d2ff(Runnable runnable) {
+    public /* synthetic */ void mo45310x4097d2ff(Runnable runnable) {
         if (this.mPresenter.isCollapsing()) {
             this.mShadeController.addPostCollapseAction(runnable);
         } else {
@@ -275,7 +275,7 @@ class StatusBarNotificationActivityStarter implements NotificationActivityStarte
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onDragSuccess$2$com-android-systemui-statusbar-phone-StatusBarNotificationActivityStarter */
-    public /* synthetic */ void mo45299x9701841c(Runnable runnable) {
+    public /* synthetic */ void mo45311x9701841c(Runnable runnable) {
         if (this.mPresenter.isCollapsing()) {
             this.mShadeController.addPostCollapseAction(runnable);
         } else {
@@ -286,7 +286,7 @@ class StatusBarNotificationActivityStarter implements NotificationActivityStarte
     private void expandBubbleStackOnMainThread(NotificationEntry notificationEntry) {
         if (this.mBubblesManagerOptional.isPresent()) {
             if (Looper.getMainLooper().isCurrentThread()) {
-                mo45295x44bb15f1(notificationEntry);
+                mo45307x44bb15f1(notificationEntry);
             } else {
                 this.mMainThreadHandler.post(new StatusBarNotificationActivityStarter$$ExternalSyntheticLambda3(this, notificationEntry));
             }
@@ -295,7 +295,7 @@ class StatusBarNotificationActivityStarter implements NotificationActivityStarte
 
     /* access modifiers changed from: private */
     /* renamed from: expandBubbleStack */
-    public void mo45295x44bb15f1(NotificationEntry notificationEntry) {
+    public void mo45307x44bb15f1(NotificationEntry notificationEntry) {
         this.mBubblesManagerOptional.get().expandStackAndSelectBubble(notificationEntry);
         this.mShadeController.collapsePanel();
     }
@@ -311,7 +311,7 @@ class StatusBarNotificationActivityStarter implements NotificationActivityStarte
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startNotificationIntent$4$com-android-systemui-statusbar-phone-StatusBarNotificationActivityStarter */
-    public /* synthetic */ int mo45300x41549ef7(ExpandableNotificationRow expandableNotificationRow, PendingIntent pendingIntent, Intent intent, NotificationEntry notificationEntry, RemoteAnimationAdapter remoteAnimationAdapter) throws PendingIntent.CanceledException {
+    public /* synthetic */ int mo45312x41549ef7(ExpandableNotificationRow expandableNotificationRow, PendingIntent pendingIntent, Intent intent, NotificationEntry notificationEntry, RemoteAnimationAdapter remoteAnimationAdapter) throws PendingIntent.CanceledException {
         Bundle bundle;
         long andResetLastActionUpTime = expandableNotificationRow.getAndResetLastActionUpTime();
         if (andResetLastActionUpTime > 0) {
@@ -338,13 +338,13 @@ class StatusBarNotificationActivityStarter implements NotificationActivityStarte
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onDismiss$1$com-android-systemui-statusbar-phone-StatusBarNotificationActivityStarter$4 */
-            public /* synthetic */ void mo45302xc4764c46(ExpandableNotificationRow expandableNotificationRow, boolean z, Intent intent, int i) {
+            public /* synthetic */ void mo45314xc4764c46(ExpandableNotificationRow expandableNotificationRow, boolean z, Intent intent, int i) {
                 StatusBarNotificationActivityStarter.this.mActivityLaunchAnimator.startIntentWithAnimation(new StatusBarLaunchAnimatorController(StatusBarNotificationActivityStarter.this.mNotificationAnimationProvider.getAnimatorController(expandableNotificationRow), StatusBarNotificationActivityStarter.this.mCentralSurfaces, true), z, intent.getPackage(), new StatusBarNotificationActivityStarter$4$$ExternalSyntheticLambda0(this, intent, i));
             }
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onDismiss$0$com-android-systemui-statusbar-phone-StatusBarNotificationActivityStarter$4 */
-            public /* synthetic */ Integer mo45301xc3a7cdc5(Intent intent, int i, RemoteAnimationAdapter remoteAnimationAdapter) {
+            public /* synthetic */ Integer mo45313xc3a7cdc5(Intent intent, int i, RemoteAnimationAdapter remoteAnimationAdapter) {
                 return Integer.valueOf(TaskStackBuilder.create(StatusBarNotificationActivityStarter.this.mContext).addNextIntentWithParentStack(intent).startActivities(CentralSurfaces.getActivityOptions(StatusBarNotificationActivityStarter.this.mCentralSurfaces.getDisplayId(), remoteAnimationAdapter), new UserHandle(UserHandle.getUserId(i))));
             }
 
@@ -364,7 +364,7 @@ class StatusBarNotificationActivityStarter implements NotificationActivityStarte
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onDismiss$1$com-android-systemui-statusbar-phone-StatusBarNotificationActivityStarter$5 */
-            public /* synthetic */ void mo45304xc4764c47(boolean z, View view, boolean z2) {
+            public /* synthetic */ void mo45316xc4764c47(boolean z, View view, boolean z2) {
                 Intent intent;
                 StatusBarLaunchAnimatorController statusBarLaunchAnimatorController;
                 if (z) {
@@ -387,7 +387,7 @@ class StatusBarNotificationActivityStarter implements NotificationActivityStarte
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onDismiss$0$com-android-systemui-statusbar-phone-StatusBarNotificationActivityStarter$5 */
-            public /* synthetic */ Integer mo45303xc3a7cdc6(TaskStackBuilder taskStackBuilder, RemoteAnimationAdapter remoteAnimationAdapter) {
+            public /* synthetic */ Integer mo45315xc3a7cdc6(TaskStackBuilder taskStackBuilder, RemoteAnimationAdapter remoteAnimationAdapter) {
                 return Integer.valueOf(taskStackBuilder.startActivities(CentralSurfaces.getActivityOptions(StatusBarNotificationActivityStarter.this.mCentralSurfaces.getDisplayId(), remoteAnimationAdapter), UserHandle.CURRENT));
             }
 
@@ -434,7 +434,7 @@ class StatusBarNotificationActivityStarter implements NotificationActivityStarte
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$handleFullScreenIntent$5$com-android-systemui-statusbar-phone-StatusBarNotificationActivityStarter */
-    public /* synthetic */ void mo45296x5a69f648() {
+    public /* synthetic */ void mo45308x5a69f648() {
         try {
             this.mDreamManager.awaken();
         } catch (RemoteException e) {

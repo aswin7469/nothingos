@@ -53,7 +53,7 @@ public class HdmiCecSetMenuLanguageHelper {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$acceptLocale$0$com-android-systemui-hdmi-HdmiCecSetMenuLanguageHelper */
-    public /* synthetic */ void mo33082x62d654ec() {
+    public /* synthetic */ void mo33092x62d654ec() {
         LocalePicker.updateLocale(this.mLocale);
     }
 

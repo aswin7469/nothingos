@@ -12,6 +12,6 @@ public final /* synthetic */ class QSTileHostEx$$ExternalSyntheticLambda0 implem
     }
 
     public final void run() {
-        QSTileHostEx.m3510onInternetTuningChanged$lambda0(this.f$0, this.f$1);
+        QSTileHostEx.m3516onInternetTuningChanged$lambda0(this.f$0, this.f$1);
     }
 }

@@ -9,6 +9,6 @@ public final /* synthetic */ class BatteryControllerImpl$$ExternalSyntheticLambd
     }
 
     public final void run() {
-        this.f$0.mo45592x36c6f824();
+        this.f$0.mo45604x36c6f824();
     }
 }

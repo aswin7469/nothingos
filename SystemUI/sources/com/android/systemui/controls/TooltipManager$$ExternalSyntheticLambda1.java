@@ -11,6 +11,6 @@ public final /* synthetic */ class TooltipManager$$ExternalSyntheticLambda1 impl
     }
 
     public final void run() {
-        TooltipManager.m2600hide$lambda5(this.f$0, this.f$1);
+        TooltipManager.m2605hide$lambda5(this.f$0, this.f$1);
     }
 }

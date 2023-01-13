@@ -6,8 +6,8 @@ import kotlin.coroutines.intrinsics.IntrinsicsKt;
 import kotlin.coroutines.jvm.internal.ContinuationImpl;
 import kotlin.coroutines.jvm.internal.DebugMetadata;
 
-@Metadata(mo64988k = 3, mo64989mv = {1, 5, 1}, mo64991xi = 48)
-@DebugMetadata(mo65240c = "kotlinx.coroutines.channels.AbstractChannel", mo65241f = "AbstractChannel.kt", mo65242i = {}, mo65243l = {632}, mo65244m = "receiveCatching-JP2dKIU", mo65245n = {}, mo65246s = {})
+@Metadata(mo65044k = 3, mo65045mv = {1, 5, 1}, mo65047xi = 48)
+@DebugMetadata(mo65296c = "kotlinx.coroutines.channels.AbstractChannel", mo65297f = "AbstractChannel.kt", mo65298i = {}, mo65299l = {632}, mo65300m = "receiveCatching-JP2dKIU", mo65301n = {}, mo65302s = {})
 /* compiled from: AbstractChannel.kt */
 final class AbstractChannel$receiveCatching$1 extends ContinuationImpl {
     int label;
@@ -23,7 +23,7 @@ final class AbstractChannel$receiveCatching$1 extends ContinuationImpl {
     public final Object invokeSuspend(Object obj) {
         this.result = obj;
         this.label |= Integer.MIN_VALUE;
-        Object r1 = this.this$0.m5424receiveCatchingJP2dKIU(this);
-        return r1 == IntrinsicsKt.getCOROUTINE_SUSPENDED() ? r1 : ChannelResult.m5435boximpl(r1);
+        Object r1 = this.this$0.m5442receiveCatchingJP2dKIU(this);
+        return r1 == IntrinsicsKt.getCOROUTINE_SUSPENDED() ? r1 : ChannelResult.m5453boximpl(r1);
     }
 }

@@ -14,6 +14,6 @@ public final /* synthetic */ class WMShell$$ExternalSyntheticLambda0 implements 
     }
 
     public final void onSystemUiStateChanged(int i) {
-        this.f$0.m3326lambda$initPip$0$comandroidsystemuiwmshellWMShell(this.f$1, i);
+        this.f$0.m3330lambda$initPip$0$comandroidsystemuiwmshellWMShell(this.f$1, i);
     }
 }

@@ -29,7 +29,7 @@ public class KeyguardPreviewContainer extends FrameLayout {
 
     public KeyguardPreviewContainer(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        C29811 r1 = new Drawable() {
+        C29911 r1 = new Drawable() {
             public int getOpacity() {
                 return -1;
             }

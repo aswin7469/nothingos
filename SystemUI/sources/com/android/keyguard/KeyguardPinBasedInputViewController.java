@@ -8,7 +8,7 @@ import com.android.internal.widget.LockPatternUtils;
 import com.android.keyguard.KeyguardMessageAreaController;
 import com.android.keyguard.KeyguardPinBasedInputView;
 import com.android.keyguard.KeyguardSecurityModel;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.classifier.FalsingCollector;
 
 public abstract class KeyguardPinBasedInputViewController<T extends KeyguardPinBasedInputView> extends KeyguardAbsKeyInputViewController<T> {
@@ -53,11 +53,11 @@ public abstract class KeyguardPinBasedInputViewController<T extends KeyguardPinB
         }
         this.mPasswordEntry.setOnKeyListener(this.mOnKeyListener);
         this.mPasswordEntry.setUserActivityListener(new KeyguardPinBasedInputViewController$$ExternalSyntheticLambda1(this));
-        View findViewById = ((KeyguardPinBasedInputView) this.mView).findViewById(C1893R.C1897id.delete_button);
+        View findViewById = ((KeyguardPinBasedInputView) this.mView).findViewById(C1894R.C1898id.delete_button);
         findViewById.setOnTouchListener(this.mActionButtonTouchListener);
         findViewById.setOnClickListener(new KeyguardPinBasedInputViewController$$ExternalSyntheticLambda2(this));
         findViewById.setOnLongClickListener(new KeyguardPinBasedInputViewController$$ExternalSyntheticLambda3(this));
-        View findViewById2 = ((KeyguardPinBasedInputView) this.mView).findViewById(C1893R.C1897id.key_enter);
+        View findViewById2 = ((KeyguardPinBasedInputView) this.mView).findViewById(C1894R.C1898id.key_enter);
         if (findViewById2 != null) {
             findViewById2.setOnTouchListener(this.mActionButtonTouchListener);
             findViewById2.setOnClickListener(new View.OnClickListener() {

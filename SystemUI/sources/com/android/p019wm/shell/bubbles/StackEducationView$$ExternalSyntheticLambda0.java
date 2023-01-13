@@ -16,6 +16,6 @@ public final /* synthetic */ class StackEducationView$$ExternalSyntheticLambda0 
     }
 
     public final void run() {
-        StackEducationView.m3438show$lambda1(this.f$0, this.f$1, this.f$2);
+        StackEducationView.m3442show$lambda1(this.f$0, this.f$1, this.f$2);
     }
 }

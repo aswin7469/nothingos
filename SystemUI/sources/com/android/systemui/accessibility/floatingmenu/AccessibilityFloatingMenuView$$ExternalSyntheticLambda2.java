@@ -12,6 +12,6 @@ public final /* synthetic */ class AccessibilityFloatingMenuView$$ExternalSynthe
     }
 
     public final WindowInsets onApplyWindowInsets(View view, WindowInsets windowInsets) {
-        return this.f$0.mo30054xebc882d2(view, windowInsets);
+        return this.f$0.mo30064xebc882d2(view, windowInsets);
     }
 }

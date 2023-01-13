@@ -20,7 +20,7 @@ import android.provider.ContactsContract;
 import android.util.Log;
 import com.android.internal.util.UserIcons;
 import com.android.settingslib.drawable.UserIconDrawable;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.statusbar.policy.UserInfoController;
 import java.util.ArrayList;
@@ -46,7 +46,7 @@ public class UserInfoControllerImpl implements UserInfoController {
 
     @Inject
     public UserInfoControllerImpl(Context context) {
-        C31911 r0 = new BroadcastReceiver() {
+        C32011 r0 = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
                 if ("android.intent.action.USER_SWITCHED".equals(intent.getAction())) {
                     UserInfoControllerImpl.this.reloadUserInfo();
@@ -54,7 +54,7 @@ public class UserInfoControllerImpl implements UserInfoController {
             }
         };
         this.mReceiver = r0;
-        C31922 r2 = new BroadcastReceiver() {
+        C32022 r2 = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
                 if ("android.provider.Contacts.PROFILE_CHANGED".equals(action) || "android.intent.action.USER_INFO_CHANGED".equals(action)) {
@@ -106,8 +106,8 @@ public class UserInfoControllerImpl implements UserInfoController {
             final String str = currentUser.name;
             final boolean z = this.mContext.getThemeResId() != 2132018221;
             Resources resources = this.mContext.getResources();
-            final int max = Math.max(resources.getDimensionPixelSize(C1893R.dimen.multi_user_avatar_expanded_size), resources.getDimensionPixelSize(C1893R.dimen.multi_user_avatar_keyguard_size));
-            C31933 r6 = new AsyncTask<Void, Void, UserInfoQueryResult>() {
+            final int max = Math.max(resources.getDimensionPixelSize(C1894R.dimen.multi_user_avatar_expanded_size), resources.getDimensionPixelSize(C1894R.dimen.multi_user_avatar_keyguard_size));
+            C32033 r6 = new AsyncTask<Void, Void, UserInfoQueryResult>() {
                 /* access modifiers changed from: protected */
                 public UserInfoQueryResult doInBackground(Void... voidArr) {
                     Drawable drawable;

@@ -732,7 +732,7 @@ public class ApplicationsState {
     public void ensureLabelDescription(AppEntry appEntry) {
         if (appEntry.labelDescription == null) {
             synchronized (appEntry) {
-                appEntry.mo27985x3d24fd27(this.mContext);
+                appEntry.mo27990x3d24fd27(this.mContext);
             }
         }
     }
@@ -748,7 +748,7 @@ public class ApplicationsState {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$requestSize$0$com-android-settingslib-applications-ApplicationsState */
-    public /* synthetic */ void mo27965xde7da91e(AppEntry appEntry, String str, int i) {
+    public /* synthetic */ void mo27970xde7da91e(AppEntry appEntry, String str, int i) {
         try {
             StorageStats queryStatsForPackage = this.mStats.queryStatsForPackage(appEntry.info.storageUuid, str, UserHandle.of(i));
             long cacheQuotaBytes = this.mStats.getCacheQuotaBytes(appEntry.info.storageUuid.toString(), appEntry.info.uid);
@@ -2162,7 +2162,7 @@ public class ApplicationsState {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$handleMessage$0$com-android-settingslib-applications-ApplicationsState$BackgroundHandler */
-        public /* synthetic */ void mo27987x363bbbe7() {
+        public /* synthetic */ void mo27992x363bbbe7() {
             try {
                 StorageStats queryStatsForPackage = ApplicationsState.this.mStats.queryStatsForPackage(ApplicationsState.this.mCurComputingSizeUuid, ApplicationsState.this.mCurComputingSizePkg, UserHandle.of(ApplicationsState.this.mCurComputingSizeUserId));
                 PackageStats packageStats = new PackageStats(ApplicationsState.this.mCurComputingSizePkg, ApplicationsState.this.mCurComputingSizeUserId);
@@ -2350,7 +2350,7 @@ public class ApplicationsState {
         }
 
         /* renamed from: ensureLabelDescriptionLocked */
-        public void mo27985x3d24fd27(Context context) {
+        public void mo27990x3d24fd27(Context context) {
             if (UserManager.get(context).isManagedProfile(UserHandle.getUserId(this.info.uid))) {
                 this.labelDescription = context.getString(C1757R.string.accessibility_work_profile_app_description, new Object[]{this.label});
                 return;

@@ -8,7 +8,7 @@ import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
 import android.text.format.DateFormat;
 import android.util.PluralsMessageFormatter;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.dreams.DreamOverlayNotificationCountProvider;
 import com.android.systemui.dreams.dagger.DreamOverlayComponent;
@@ -62,19 +62,19 @@ public class DreamOverlayStatusBarViewController extends ViewController<DreamOve
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-dreams-DreamOverlayStatusBarViewController */
-    public /* synthetic */ void mo32541x78901be3(int i, boolean z) {
+    public /* synthetic */ void mo32552x78901be3(int i, boolean z) {
         updateMicCameraBlockedStatusIcon();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$1$com-android-systemui-dreams-DreamOverlayStatusBarViewController */
-    public /* synthetic */ void mo32542xc64f93e4(AlarmManager.AlarmClockInfo alarmClockInfo) {
+    public /* synthetic */ void mo32553xc64f93e4(AlarmManager.AlarmClockInfo alarmClockInfo) {
         updateAlarmStatusIcon();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$2$com-android-systemui-dreams-DreamOverlayStatusBarViewController */
-    public /* synthetic */ void mo32543x140f0be5(int i) {
+    public /* synthetic */ void mo32554x140f0be5(int i) {
         showIcon(0, i > 0, i > 0 ? buildNotificationsContentDescription(i) : null);
     }
 
@@ -134,7 +134,7 @@ public class DreamOverlayStatusBarViewController extends ViewController<DreamOve
     }
 
     private String buildAlarmContentDescription(AlarmManager.AlarmClockInfo alarmClockInfo) {
-        return this.mResources.getString(C1893R.string.accessibility_quick_settings_alarm, new Object[]{DateFormat.format(DateFormat.getBestDateTimePattern(Locale.getDefault(), this.mDateFormatUtil.is24HourFormat() ? "EHm" : "Ehma"), alarmClockInfo.getTriggerTime()).toString()});
+        return this.mResources.getString(C1894R.string.accessibility_quick_settings_alarm, new Object[]{DateFormat.format(DateFormat.getBestDateTimePattern(Locale.getDefault(), this.mDateFormatUtil.is24HourFormat() ? "EHm" : "Ehma"), alarmClockInfo.getTriggerTime()).toString()});
     }
 
     private void updateMicCameraBlockedStatusIcon() {
@@ -148,7 +148,7 @@ public class DreamOverlayStatusBarViewController extends ViewController<DreamOve
     }
 
     private String buildNotificationsContentDescription(int i) {
-        return PluralsMessageFormatter.format(this.mResources, Map.m1735of("count", Integer.valueOf(i)), C1893R.string.dream_overlay_status_bar_notification_indicator);
+        return PluralsMessageFormatter.format(this.mResources, Map.m1741of("count", Integer.valueOf(i)), C1894R.string.dream_overlay_status_bar_notification_indicator);
     }
 
     /* access modifiers changed from: private */
@@ -166,7 +166,7 @@ public class DreamOverlayStatusBarViewController extends ViewController<DreamOve
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$showIcon$3$com-android-systemui-dreams-DreamOverlayStatusBarViewController */
-    public /* synthetic */ void mo32545x9a9bfdf6(int i, boolean z, String str) {
+    public /* synthetic */ void mo32556x9a9bfdf6(int i, boolean z, String str) {
         if (this.mIsAttached) {
             ((DreamOverlayStatusBarView) this.mView).showIcon(i, z, str);
         }
@@ -179,7 +179,7 @@ public class DreamOverlayStatusBarViewController extends ViewController<DreamOve
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onSystemStatusBarStateChanged$4$com-android-systemui-dreams-DreamOverlayStatusBarViewController */
-    public /* synthetic */ void mo32544x376678fd(int i) {
+    public /* synthetic */ void mo32555x376678fd(int i) {
         if (this.mIsAttached) {
             if (i == 0) {
                 ((DreamOverlayStatusBarView) this.mView).setVisibility(4);

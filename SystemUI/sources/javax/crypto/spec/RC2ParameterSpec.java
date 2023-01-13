@@ -7,10 +7,10 @@ public class RC2ParameterSpec implements AlgorithmParameterSpec {
     private int effectiveKeyBits;
 
     /* renamed from: iv */
-    private byte[] f825iv;
+    private byte[] f823iv;
 
     public RC2ParameterSpec(int i) {
-        this.f825iv = null;
+        this.f823iv = null;
         this.effectiveKeyBits = i;
     }
 
@@ -19,13 +19,13 @@ public class RC2ParameterSpec implements AlgorithmParameterSpec {
     }
 
     public RC2ParameterSpec(int i, byte[] bArr, int i2) {
-        this.f825iv = null;
+        this.f823iv = null;
         this.effectiveKeyBits = i;
         if (bArr == null) {
             throw new IllegalArgumentException("IV missing");
         } else if (bArr.length - i2 >= 8) {
             byte[] bArr2 = new byte[8];
-            this.f825iv = bArr2;
+            this.f823iv = bArr2;
             System.arraycopy((Object) bArr, i2, (Object) bArr2, 0, 8);
         } else {
             throw new IllegalArgumentException("IV too short");
@@ -37,7 +37,7 @@ public class RC2ParameterSpec implements AlgorithmParameterSpec {
     }
 
     public byte[] getIV() {
-        byte[] bArr = this.f825iv;
+        byte[] bArr = this.f823iv;
         if (bArr == null) {
             return null;
         }
@@ -52,7 +52,7 @@ public class RC2ParameterSpec implements AlgorithmParameterSpec {
             return false;
         }
         RC2ParameterSpec rC2ParameterSpec = (RC2ParameterSpec) obj;
-        if (this.effectiveKeyBits != rC2ParameterSpec.effectiveKeyBits || !Arrays.equals(this.f825iv, rC2ParameterSpec.f825iv)) {
+        if (this.effectiveKeyBits != rC2ParameterSpec.effectiveKeyBits || !Arrays.equals(this.f823iv, rC2ParameterSpec.f823iv)) {
             return false;
         }
         return true;
@@ -60,10 +60,10 @@ public class RC2ParameterSpec implements AlgorithmParameterSpec {
 
     public int hashCode() {
         int i = 0;
-        if (this.f825iv != null) {
+        if (this.f823iv != null) {
             int i2 = 1;
             while (true) {
-                byte[] bArr = this.f825iv;
+                byte[] bArr = this.f823iv;
                 if (i2 >= bArr.length) {
                     break;
                 }

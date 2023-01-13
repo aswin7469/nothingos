@@ -22,7 +22,7 @@ import android.util.LongSparseArray;
 import android.view.View;
 import androidx.exifinterface.media.ExifInterface;
 import com.android.internal.logging.MetricsLogger;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.CoreStartable;
 import com.android.systemui.Dumpable;
 import com.android.systemui.dagger.SysUISingleton;
@@ -96,7 +96,7 @@ public class GarbageMonitor implements Dumpable {
         this.mDumpTruck = new DumpTruck(applicationContext, this);
         dumpManager.registerDumpable(getClass().getSimpleName(), this);
         if (ENABLE_AM_HEAP_LIMIT) {
-            this.mHeapLimit = (long) Settings.Global.getInt(context.getContentResolver(), SETTINGS_KEY_AM_HEAP_LIMIT, applicationContext.getResources().getInteger(C1893R.integer.watch_heap_limit));
+            this.mHeapLimit = (long) Settings.Global.getInt(context.getContentResolver(), SETTINGS_KEY_AM_HEAP_LIMIT, applicationContext.getResources().getInteger(C1894R.integer.watch_heap_limit));
         }
     }
 
@@ -115,7 +115,7 @@ public class GarbageMonitor implements Dumpable {
         if (this.mTrackedGarbage.countOldGarbage() <= 5) {
             return false;
         }
-        Runtime.getRuntime().mo59631gc();
+        Runtime.getRuntime().mo59687gc();
         return true;
     }
 
@@ -245,7 +245,7 @@ public class GarbageMonitor implements Dumpable {
         final Drawable baseIcon;
 
         /* renamed from: dp */
-        final float f400dp;
+        final float f399dp;
         long limit;
         final Paint paint;
         long rss;
@@ -257,8 +257,8 @@ public class GarbageMonitor implements Dumpable {
         MemoryIconDrawable(Context context) {
             Paint paint2 = new Paint();
             this.paint = paint2;
-            this.baseIcon = context.getDrawable(C1893R.C1895drawable.ic_memory).mutate();
-            this.f400dp = context.getResources().getDisplayMetrics().density;
+            this.baseIcon = context.getDrawable(C1894R.C1896drawable.ic_memory).mutate();
+            this.f399dp = context.getResources().getDisplayMetrics().density;
             paint2.setColor(QSIconViewImpl.getIconColorForState(context, 2));
         }
 
@@ -284,8 +284,8 @@ public class GarbageMonitor implements Dumpable {
                 if (j2 > 0) {
                     float min = Math.min(1.0f, ((float) j2) / ((float) j));
                     Rect bounds = getBounds();
-                    canvas.translate(((float) bounds.left) + (this.f400dp * 8.0f), ((float) bounds.top) + (this.f400dp * 5.0f));
-                    float f = this.f400dp;
+                    canvas.translate(((float) bounds.left) + (this.f399dp * 8.0f), ((float) bounds.top) + (this.f399dp * 5.0f));
+                    float f = this.f399dp;
                     canvas.drawRect(0.0f, f * 14.0f * (1.0f - min), (8.0f * f) + 1.0f, (f * 14.0f) + 1.0f, this.paint);
                 }
             }
@@ -359,7 +359,7 @@ public class GarbageMonitor implements Dumpable {
         /* access modifiers changed from: private */
 
         /* renamed from: gm */
-        public final GarbageMonitor f401gm;
+        public final GarbageMonitor f400gm;
         private ProcessMemInfo pmi;
 
         public int getMetricsCategory() {
@@ -369,7 +369,7 @@ public class GarbageMonitor implements Dumpable {
         @Inject
         public MemoryTile(QSHost qSHost, @Background Looper looper, @Main Handler handler, FalsingManager falsingManager, MetricsLogger metricsLogger, StatusBarStateController statusBarStateController, ActivityStarter activityStarter, QSLogger qSLogger, GarbageMonitor garbageMonitor) {
             super(qSHost, looper, handler, falsingManager, metricsLogger, statusBarStateController, activityStarter, qSLogger);
-            this.f401gm = garbageMonitor;
+            this.f400gm = garbageMonitor;
         }
 
         public QSTile.State newTileState() {
@@ -391,12 +391,12 @@ public class GarbageMonitor implements Dumpable {
                             Thread.sleep(500);
                         } catch (InterruptedException unused) {
                         }
-                        MemoryTile.this.mHandler.post(new GarbageMonitor$MemoryTile$1$$ExternalSyntheticLambda0(this, MemoryTile.this.f401gm.dumpHprofAndGetShareIntent()));
+                        MemoryTile.this.mHandler.post(new GarbageMonitor$MemoryTile$1$$ExternalSyntheticLambda0(this, MemoryTile.this.f400gm.dumpHprofAndGetShareIntent()));
                     }
 
                     /* access modifiers changed from: package-private */
                     /* renamed from: lambda$run$0$com-android-systemui-util-leak-GarbageMonitor$MemoryTile$1 */
-                    public /* synthetic */ void mo47012x51b69d46(Intent intent) {
+                    public /* synthetic */ void mo47024x51b69d46(Intent intent) {
                         boolean unused = MemoryTile.this.dumpInProgress = false;
                         MemoryTile.this.refreshState();
                         MemoryTile.this.getHost().collapsePanels();
@@ -408,15 +408,15 @@ public class GarbageMonitor implements Dumpable {
 
         public void handleSetListening(boolean z) {
             super.handleSetListening(z);
-            GarbageMonitor garbageMonitor = this.f401gm;
+            GarbageMonitor garbageMonitor = this.f400gm;
             if (garbageMonitor != null) {
                 garbageMonitor.setTile(z ? this : null);
             }
             ActivityManager activityManager = (ActivityManager) this.mContext.getSystemService(ActivityManager.class);
-            if (!z || this.f401gm.mHeapLimit <= 0) {
+            if (!z || this.f400gm.mHeapLimit <= 0) {
                 activityManager.clearWatchHeapLimit();
             } else {
-                activityManager.setWatchHeapLimit(this.f401gm.mHeapLimit * 1024);
+                activityManager.setWatchHeapLimit(this.f400gm.mHeapLimit * 1024);
             }
         }
 
@@ -427,20 +427,20 @@ public class GarbageMonitor implements Dumpable {
         /* access modifiers changed from: protected */
         public void handleUpdateState(QSTile.State state, Object obj) {
             String str;
-            this.pmi = this.f401gm.getMemInfo(Process.myPid());
+            this.pmi = this.f400gm.getMemInfo(Process.myPid());
             MemoryGraphIcon memoryGraphIcon = new MemoryGraphIcon();
-            memoryGraphIcon.setHeapLimit(this.f401gm.mHeapLimit);
+            memoryGraphIcon.setHeapLimit(this.f400gm.mHeapLimit);
             state.state = this.dumpInProgress ? 0 : 2;
             if (this.dumpInProgress) {
                 str = "Dumping...";
             } else {
-                str = this.mContext.getString(C1893R.string.heap_dump_tile_name);
+                str = this.mContext.getString(C1894R.string.heap_dump_tile_name);
             }
             state.label = str;
             ProcessMemInfo processMemInfo = this.pmi;
             if (processMemInfo != null) {
                 memoryGraphIcon.setRss(processMemInfo.currentRss);
-                state.secondaryLabel = String.format("rss: %s / %s", GarbageMonitor.formatBytes(this.pmi.currentRss * 1024), GarbageMonitor.formatBytes(this.f401gm.mHeapLimit * 1024));
+                state.secondaryLabel = String.format("rss: %s / %s", GarbageMonitor.formatBytes(this.pmi.currentRss * 1024), GarbageMonitor.formatBytes(this.f400gm.mHeapLimit * 1024));
             } else {
                 memoryGraphIcon.setRss(0);
                 state.secondaryLabel = null;
@@ -461,7 +461,7 @@ public class GarbageMonitor implements Dumpable {
         }
 
         public long getHeapLimit() {
-            GarbageMonitor garbageMonitor = this.f401gm;
+            GarbageMonitor garbageMonitor = this.f400gm;
             if (garbageMonitor != null) {
                 return garbageMonitor.mHeapLimit;
             }

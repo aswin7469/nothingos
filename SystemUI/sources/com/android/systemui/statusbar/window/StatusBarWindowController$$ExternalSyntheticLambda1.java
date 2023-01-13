@@ -11,6 +11,6 @@ public final /* synthetic */ class StatusBarWindowController$$ExternalSyntheticL
     }
 
     public final Object get() {
-        return this.f$0.mo46271x94375907();
+        return this.f$0.mo46283x94375907();
     }
 }

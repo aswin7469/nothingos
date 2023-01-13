@@ -11,6 +11,6 @@ public final /* synthetic */ class Monitor$$ExternalSyntheticLambda0 implements 
     }
 
     public final void run() {
-        this.f$0.mo46974x48bc2f61(this.f$1);
+        this.f$0.mo46986x48bc2f61(this.f$1);
     }
 }

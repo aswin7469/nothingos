@@ -14,7 +14,7 @@ import com.android.internal.statusbar.StatusBarIcon;
 import com.android.internal.util.ContrastColorUtil;
 import com.android.p019wm.shell.bubbles.Bubbles;
 import com.android.settingslib.Utils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.animation.Interpolators;
 import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.demomode.DemoMode;
@@ -59,7 +59,7 @@ public class NotificationIconAreaController implements DarkIconDispatcher.DarkRe
     private int mIconSize;
     private int mIconTint = -1;
     private final NotificationMediaManager mMediaManager;
-    private List<ListEntry> mNotificationEntries = List.m1722of();
+    private List<ListEntry> mNotificationEntries = List.m1728of();
     protected View mNotificationIconArea;
     private NotificationIconContainer mNotificationIcons;
     private final ScreenOffAnimationController mScreenOffAnimationController;
@@ -75,7 +75,7 @@ public class NotificationIconAreaController implements DarkIconDispatcher.DarkRe
 
     @Inject
     public NotificationIconAreaController(Context context, StatusBarStateController statusBarStateController, NotificationWakeUpCoordinator notificationWakeUpCoordinator, KeyguardBypassController keyguardBypassController, NotificationMediaManager notificationMediaManager, NotificationListener notificationListener, DozeParameters dozeParameters, Optional<Bubbles> optional, DemoModeController demoModeController, DarkIconDispatcher darkIconDispatcher, StatusBarWindowController statusBarWindowController, ScreenOffAnimationController screenOffAnimationController) {
-        C30051 r0 = new NotificationListener.NotificationSettingsListener() {
+        C30151 r0 = new NotificationListener.NotificationSettingsListener() {
             public void onStatusBarIconsBehaviorChanged(boolean z) {
                 boolean unused = NotificationIconAreaController.this.mShowLowPriority = !z;
                 NotificationIconAreaController.this.updateStatusBarIcons();
@@ -104,7 +104,7 @@ public class NotificationIconAreaController implements DarkIconDispatcher.DarkRe
 
     /* access modifiers changed from: protected */
     public View inflateIconArea(LayoutInflater layoutInflater) {
-        return layoutInflater.inflate(C1893R.layout.notification_icon_area, (ViewGroup) null);
+        return layoutInflater.inflate(C1894R.layout.notification_icon_area, (ViewGroup) null);
     }
 
     /* access modifiers changed from: protected */
@@ -112,7 +112,7 @@ public class NotificationIconAreaController implements DarkIconDispatcher.DarkRe
         reloadDimens(context);
         View inflateIconArea = inflateIconArea(LayoutInflater.from(context));
         this.mNotificationIconArea = inflateIconArea;
-        this.mNotificationIcons = (NotificationIconContainer) inflateIconArea.findViewById(C1893R.C1897id.notificationIcons);
+        this.mNotificationIcons = (NotificationIconContainer) inflateIconArea.findViewById(C1894R.C1898id.notificationIcons);
     }
 
     public void setupAodIcons(NotificationIconContainer notificationIconContainer) {
@@ -173,8 +173,8 @@ public class NotificationIconAreaController implements DarkIconDispatcher.DarkRe
     private void reloadDimens(Context context) {
         Resources resources = context.getResources();
         this.mIconSize = resources.getDimensionPixelSize(17105552);
-        this.mIconHPadding = resources.getDimensionPixelSize(C1893R.dimen.status_bar_icon_padding);
-        this.mAodIconAppearTranslation = resources.getDimensionPixelSize(C1893R.dimen.shelf_appear_translation);
+        this.mIconHPadding = resources.getDimensionPixelSize(C1894R.dimen.status_bar_icon_padding);
+        this.mAodIconAppearTranslation = resources.getDimensionPixelSize(C1894R.dimen.shelf_appear_translation);
     }
 
     public View getNotificationInnerAreaView() {
@@ -353,13 +353,13 @@ public class NotificationIconAreaController implements DarkIconDispatcher.DarkRe
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$applyNotificationIconsTint$3$com-android-systemui-statusbar-phone-NotificationIconAreaController */
-    public /* synthetic */ void mo44463x2555e5bc(StatusBarIconView statusBarIconView) {
+    public /* synthetic */ void mo44478x2555e5bc(StatusBarIconView statusBarIconView) {
         updateTintForIcon(statusBarIconView, this.mIconTint);
     }
 
     private void updateTintForIcon(StatusBarIconView statusBarIconView, int i) {
         int i2 = 0;
-        if (!Boolean.TRUE.equals(statusBarIconView.getTag(C1893R.C1897id.icon_is_pre_L)) || NotificationUtils.isGrayscale(statusBarIconView, this.mContrastColorUtil)) {
+        if (!Boolean.TRUE.equals(statusBarIconView.getTag(C1894R.C1898id.icon_is_pre_L)) || NotificationUtils.isGrayscale(statusBarIconView, this.mContrastColorUtil)) {
             i2 = DarkIconDispatcher.getTint(this.mTintAreas, statusBarIconView, i);
         }
         statusBarIconView.setStaticDrawableColor(i2);
@@ -436,7 +436,7 @@ public class NotificationIconAreaController implements DarkIconDispatcher.DarkRe
     }
 
     private void reloadAodColor() {
-        this.mAodIconTint = Utils.getColorAttrDefaultColor(this.mContext, C1893R.attr.wallpaperTextColor);
+        this.mAodIconTint = Utils.getColorAttrDefaultColor(this.mContext, C1894R.attr.wallpaperTextColor);
     }
 
     private void updateAodIconColors() {
@@ -454,7 +454,7 @@ public class NotificationIconAreaController implements DarkIconDispatcher.DarkRe
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateAodIconColors$4$com-android-systemui-statusbar-phone-NotificationIconAreaController */
-    public /* synthetic */ void mo44464x70773fbd(StatusBarIconView statusBarIconView) {
+    public /* synthetic */ void mo44479x70773fbd(StatusBarIconView statusBarIconView) {
         updateTintForIcon(statusBarIconView, this.mAodIconTint);
     }
 

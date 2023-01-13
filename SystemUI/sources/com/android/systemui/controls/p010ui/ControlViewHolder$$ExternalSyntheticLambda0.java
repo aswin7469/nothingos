@@ -25,6 +25,6 @@ public final /* synthetic */ class ControlViewHolder$$ExternalSyntheticLambda0 i
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        ControlViewHolder.m2686startBackgroundAnimation$lambda10$lambda9(this.f$0, this.f$1, this.f$2, this.f$3, this.f$4, this.f$5, this.f$6, valueAnimator);
+        ControlViewHolder.m2691startBackgroundAnimation$lambda10$lambda9(this.f$0, this.f$1, this.f$2, this.f$3, this.f$4, this.f$5, this.f$6, valueAnimator);
     }
 }

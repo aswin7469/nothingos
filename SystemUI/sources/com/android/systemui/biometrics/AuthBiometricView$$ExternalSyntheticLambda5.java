@@ -9,6 +9,6 @@ public final /* synthetic */ class AuthBiometricView$$ExternalSyntheticLambda5 i
     }
 
     public final void run() {
-        this.f$0.m2554lambda$new$2$comandroidsystemuibiometricsAuthBiometricView();
+        this.f$0.m2560lambda$new$2$comandroidsystemuibiometricsAuthBiometricView();
     }
 }

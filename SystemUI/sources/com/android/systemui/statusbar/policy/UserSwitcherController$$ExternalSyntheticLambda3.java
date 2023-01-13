@@ -14,6 +14,6 @@ public final /* synthetic */ class UserSwitcherController$$ExternalSyntheticLamb
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo46158x71aedde9(this.f$1, (Integer) obj);
+        this.f$0.mo46170x71aedde9(this.f$1, (Integer) obj);
     }
 }

@@ -1617,7 +1617,7 @@ public final class MediaRouter {
             Log.w(MediaRouter.TAG, "Either " + str + " isn't unique in " + flattenToShortString + " or we're trying to assign a unique ID for an already added route");
             int i = 2;
             while (true) {
-                String format = String.format(Locale.f700US, "%s_%d", str2, Integer.valueOf(i));
+                String format = String.format(Locale.f698US, "%s_%d", str2, Integer.valueOf(i));
                 if (findRouteByUniqueId(format) < 0) {
                     this.mUniqueIdMap.put(new Pair(flattenToShortString, str), format);
                     return format;

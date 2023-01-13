@@ -100,7 +100,7 @@ public final class CivicLocation implements Parcelable {
         if (!this.mIsValid) {
             return null;
         }
-        Address address = new Address(Locale.f700US);
+        Address address = new Address(Locale.f698US);
         String formatAddressElement = formatAddressElement("Room: ", getCivicElementValue(28));
         String formatAddressElement2 = formatAddressElement(" Desk: ", getCivicElementValue(33));
         String formatAddressElement3 = formatAddressElement(", Flr: ", getCivicElementValue(27));

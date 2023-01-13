@@ -10,7 +10,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import androidx.core.graphics.ColorUtils;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.animation.AnimationUtils;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.internal.TextDrawableHelper;
@@ -23,8 +23,8 @@ import com.google.android.material.shape.MaterialShapeDrawable;
 import com.google.android.material.shape.OffsetEdgeTreatment;
 
 public class TooltipDrawable extends MaterialShapeDrawable implements TextDrawableHelper.TextDrawableDelegate {
-    private static final int DEFAULT_STYLE = C3621R.style.Widget_MaterialComponents_Tooltip;
-    private static final int DEFAULT_THEME_ATTR = C3621R.attr.tooltipStyle;
+    private static final int DEFAULT_STYLE = C3631R.style.Widget_MaterialComponents_Tooltip;
+    private static final int DEFAULT_THEME_ATTR = C3631R.attr.tooltipStyle;
     private int arrowSize;
     private final View.OnLayoutChangeListener attachedViewLayoutChangeListener;
     private final Context context;
@@ -78,22 +78,22 @@ public class TooltipDrawable extends MaterialShapeDrawable implements TextDrawab
     }
 
     private void loadFromAttributes(AttributeSet attributeSet, int i, int i2) {
-        TypedArray obtainStyledAttributes = ThemeEnforcement.obtainStyledAttributes(this.context, attributeSet, C3621R.styleable.Tooltip, i, i2, new int[0]);
-        this.arrowSize = this.context.getResources().getDimensionPixelSize(C3621R.dimen.mtrl_tooltip_arrowSize);
+        TypedArray obtainStyledAttributes = ThemeEnforcement.obtainStyledAttributes(this.context, attributeSet, C3631R.styleable.Tooltip, i, i2, new int[0]);
+        this.arrowSize = this.context.getResources().getDimensionPixelSize(C3631R.dimen.mtrl_tooltip_arrowSize);
         setShapeAppearanceModel(getShapeAppearanceModel().toBuilder().setBottomEdge(createMarkerEdge()).build());
-        setText(obtainStyledAttributes.getText(C3621R.styleable.Tooltip_android_text));
-        TextAppearance textAppearance = MaterialResources.getTextAppearance(this.context, obtainStyledAttributes, C3621R.styleable.Tooltip_android_textAppearance);
-        if (textAppearance != null && obtainStyledAttributes.hasValue(C3621R.styleable.Tooltip_android_textColor)) {
-            textAppearance.setTextColor(MaterialResources.getColorStateList(this.context, obtainStyledAttributes, C3621R.styleable.Tooltip_android_textColor));
+        setText(obtainStyledAttributes.getText(C3631R.styleable.Tooltip_android_text));
+        TextAppearance textAppearance = MaterialResources.getTextAppearance(this.context, obtainStyledAttributes, C3631R.styleable.Tooltip_android_textAppearance);
+        if (textAppearance != null && obtainStyledAttributes.hasValue(C3631R.styleable.Tooltip_android_textColor)) {
+            textAppearance.setTextColor(MaterialResources.getColorStateList(this.context, obtainStyledAttributes, C3631R.styleable.Tooltip_android_textColor));
         }
         setTextAppearance(textAppearance);
         Class<TooltipDrawable> cls = TooltipDrawable.class;
-        setFillColor(ColorStateList.valueOf(obtainStyledAttributes.getColor(C3621R.styleable.Tooltip_backgroundTint, MaterialColors.layer(ColorUtils.setAlphaComponent(MaterialColors.getColor(this.context, 16842801, cls.getCanonicalName()), 229), ColorUtils.setAlphaComponent(MaterialColors.getColor(this.context, C3621R.attr.colorOnBackground, cls.getCanonicalName()), 153)))));
-        setStrokeColor(ColorStateList.valueOf(MaterialColors.getColor(this.context, C3621R.attr.colorSurface, cls.getCanonicalName())));
-        this.padding = obtainStyledAttributes.getDimensionPixelSize(C3621R.styleable.Tooltip_android_padding, 0);
-        this.minWidth = obtainStyledAttributes.getDimensionPixelSize(C3621R.styleable.Tooltip_android_minWidth, 0);
-        this.minHeight = obtainStyledAttributes.getDimensionPixelSize(C3621R.styleable.Tooltip_android_minHeight, 0);
-        this.layoutMargin = obtainStyledAttributes.getDimensionPixelSize(C3621R.styleable.Tooltip_android_layout_margin, 0);
+        setFillColor(ColorStateList.valueOf(obtainStyledAttributes.getColor(C3631R.styleable.Tooltip_backgroundTint, MaterialColors.layer(ColorUtils.setAlphaComponent(MaterialColors.getColor(this.context, 16842801, cls.getCanonicalName()), 229), ColorUtils.setAlphaComponent(MaterialColors.getColor(this.context, C3631R.attr.colorOnBackground, cls.getCanonicalName()), 153)))));
+        setStrokeColor(ColorStateList.valueOf(MaterialColors.getColor(this.context, C3631R.attr.colorSurface, cls.getCanonicalName())));
+        this.padding = obtainStyledAttributes.getDimensionPixelSize(C3631R.styleable.Tooltip_android_padding, 0);
+        this.minWidth = obtainStyledAttributes.getDimensionPixelSize(C3631R.styleable.Tooltip_android_minWidth, 0);
+        this.minHeight = obtainStyledAttributes.getDimensionPixelSize(C3631R.styleable.Tooltip_android_minHeight, 0);
+        this.layoutMargin = obtainStyledAttributes.getDimensionPixelSize(C3631R.styleable.Tooltip_android_layout_margin, 0);
         obtainStyledAttributes.recycle();
     }
 

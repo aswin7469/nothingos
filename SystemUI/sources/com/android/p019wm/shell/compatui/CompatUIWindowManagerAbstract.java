@@ -101,7 +101,7 @@ public abstract class CompatUIWindowManagerAbstract extends WindowlessWindowMana
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$initSurface$0$com-android-wm-shell-compatui-CompatUIWindowManagerAbstract */
-    public /* synthetic */ void mo49422xe1721304(SurfaceControl surfaceControl, int i, SurfaceControl.Transaction transaction) {
+    public /* synthetic */ void mo49431xe1721304(SurfaceControl surfaceControl, int i, SurfaceControl.Transaction transaction) {
         if (surfaceControl == null || !surfaceControl.isValid()) {
             Log.w(getTag(), "The leash has been released.");
         } else {
@@ -221,7 +221,7 @@ public abstract class CompatUIWindowManagerAbstract extends WindowlessWindowMana
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateSurfacePosition$2$com-android-wm-shell-compatui-CompatUIWindowManagerAbstract */
-    public /* synthetic */ void mo49423xb3cca3b6(int i, int i2, SurfaceControl.Transaction transaction) {
+    public /* synthetic */ void mo49432xb3cca3b6(int i, int i2, SurfaceControl.Transaction transaction) {
         SurfaceControl surfaceControl = this.mLeash;
         if (surfaceControl == null || !surfaceControl.isValid()) {
             Log.w(getTag(), "The leash has been released.");

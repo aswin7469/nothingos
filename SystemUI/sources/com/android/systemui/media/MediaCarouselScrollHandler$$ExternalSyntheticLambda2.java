@@ -9,6 +9,6 @@ public final /* synthetic */ class MediaCarouselScrollHandler$$ExternalSynthetic
     }
 
     public final void run() {
-        MediaCarouselScrollHandler.m2772onFling$lambda2(this.f$0);
+        MediaCarouselScrollHandler.m2777onFling$lambda2(this.f$0);
     }
 }

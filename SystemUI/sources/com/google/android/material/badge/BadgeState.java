@@ -6,7 +6,7 @@ import android.content.res.TypedArray;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.drawable.DrawableUtils;
 import com.google.android.material.internal.ThemeEnforcement;
 import com.google.android.material.resources.MaterialResources;
@@ -41,24 +41,24 @@ public final class BadgeState {
         }
         TypedArray generateTypedArray = generateTypedArray(context, state.badgeResId, i2, i3);
         Resources resources = context.getResources();
-        this.badgeRadius = (float) generateTypedArray.getDimensionPixelSize(C3621R.styleable.Badge_badgeRadius, resources.getDimensionPixelSize(C3621R.dimen.mtrl_badge_radius));
-        this.badgeWidePadding = (float) generateTypedArray.getDimensionPixelSize(C3621R.styleable.Badge_badgeWidePadding, resources.getDimensionPixelSize(C3621R.dimen.mtrl_badge_long_text_horizontal_padding));
-        this.badgeWithTextRadius = (float) generateTypedArray.getDimensionPixelSize(C3621R.styleable.Badge_badgeWithTextRadius, resources.getDimensionPixelSize(C3621R.dimen.mtrl_badge_with_text_radius));
+        this.badgeRadius = (float) generateTypedArray.getDimensionPixelSize(C3631R.styleable.Badge_badgeRadius, resources.getDimensionPixelSize(C3631R.dimen.mtrl_badge_radius));
+        this.badgeWidePadding = (float) generateTypedArray.getDimensionPixelSize(C3631R.styleable.Badge_badgeWidePadding, resources.getDimensionPixelSize(C3631R.dimen.mtrl_badge_long_text_horizontal_padding));
+        this.badgeWithTextRadius = (float) generateTypedArray.getDimensionPixelSize(C3631R.styleable.Badge_badgeWithTextRadius, resources.getDimensionPixelSize(C3631R.dimen.mtrl_badge_with_text_radius));
         int unused2 = state2.alpha = state.alpha == -2 ? 255 : state.alpha;
         if (state.contentDescriptionNumberless == null) {
-            charSequence = context.getString(C3621R.string.mtrl_badge_numberless_content_description);
+            charSequence = context.getString(C3631R.string.mtrl_badge_numberless_content_description);
         } else {
             charSequence = state.contentDescriptionNumberless;
         }
         CharSequence unused3 = state2.contentDescriptionNumberless = charSequence;
         if (state.contentDescriptionQuantityStrings == 0) {
-            i4 = C3621R.plurals.mtrl_badge_content_description;
+            i4 = C3631R.plurals.mtrl_badge_content_description;
         } else {
             i4 = state.contentDescriptionQuantityStrings;
         }
         int unused4 = state2.contentDescriptionQuantityStrings = i4;
         if (state.contentDescriptionExceedsMaxBadgeNumberRes == 0) {
-            i5 = C3621R.string.mtrl_exceed_max_badge_number_content_description;
+            i5 = C3631R.string.mtrl_exceed_max_badge_number_content_description;
         } else {
             i5 = state.contentDescriptionExceedsMaxBadgeNumberRes;
         }
@@ -66,57 +66,57 @@ public final class BadgeState {
         int i13 = 0;
         Boolean unused6 = state2.isVisible = Boolean.valueOf(state.isVisible == null || state.isVisible.booleanValue());
         if (state.maxCharacterCount == -2) {
-            i6 = generateTypedArray.getInt(C3621R.styleable.Badge_maxCharacterCount, 4);
+            i6 = generateTypedArray.getInt(C3631R.styleable.Badge_maxCharacterCount, 4);
         } else {
             i6 = state.maxCharacterCount;
         }
         int unused7 = state2.maxCharacterCount = i6;
         if (state.number != -2) {
             int unused8 = state2.number = state.number;
-        } else if (generateTypedArray.hasValue(C3621R.styleable.Badge_number)) {
-            int unused9 = state2.number = generateTypedArray.getInt(C3621R.styleable.Badge_number, 0);
+        } else if (generateTypedArray.hasValue(C3631R.styleable.Badge_number)) {
+            int unused9 = state2.number = generateTypedArray.getInt(C3631R.styleable.Badge_number, 0);
         } else {
             int unused10 = state2.number = -1;
         }
         if (state.backgroundColor == null) {
-            i7 = readColorFromAttributes(context, generateTypedArray, C3621R.styleable.Badge_backgroundColor);
+            i7 = readColorFromAttributes(context, generateTypedArray, C3631R.styleable.Badge_backgroundColor);
         } else {
             i7 = state.backgroundColor.intValue();
         }
         Integer unused11 = state2.backgroundColor = Integer.valueOf(i7);
         if (state.badgeTextColor != null) {
             Integer unused12 = state2.badgeTextColor = state.badgeTextColor;
-        } else if (generateTypedArray.hasValue(C3621R.styleable.Badge_badgeTextColor)) {
-            Integer unused13 = state2.badgeTextColor = Integer.valueOf(readColorFromAttributes(context, generateTypedArray, C3621R.styleable.Badge_badgeTextColor));
+        } else if (generateTypedArray.hasValue(C3631R.styleable.Badge_badgeTextColor)) {
+            Integer unused13 = state2.badgeTextColor = Integer.valueOf(readColorFromAttributes(context, generateTypedArray, C3631R.styleable.Badge_badgeTextColor));
         } else {
-            Integer unused14 = state2.badgeTextColor = Integer.valueOf(new TextAppearance(context, C3621R.style.TextAppearance_MaterialComponents_Badge).getTextColor().getDefaultColor());
+            Integer unused14 = state2.badgeTextColor = Integer.valueOf(new TextAppearance(context, C3631R.style.TextAppearance_MaterialComponents_Badge).getTextColor().getDefaultColor());
         }
         if (state.badgeGravity == null) {
-            i8 = generateTypedArray.getInt(C3621R.styleable.Badge_badgeGravity, 8388661);
+            i8 = generateTypedArray.getInt(C3631R.styleable.Badge_badgeGravity, 8388661);
         } else {
             i8 = state.badgeGravity.intValue();
         }
         Integer unused15 = state2.badgeGravity = Integer.valueOf(i8);
         if (state.horizontalOffsetWithoutText == null) {
-            i9 = generateTypedArray.getDimensionPixelOffset(C3621R.styleable.Badge_horizontalOffset, 0);
+            i9 = generateTypedArray.getDimensionPixelOffset(C3631R.styleable.Badge_horizontalOffset, 0);
         } else {
             i9 = state.horizontalOffsetWithoutText.intValue();
         }
         Integer unused16 = state2.horizontalOffsetWithoutText = Integer.valueOf(i9);
         if (state.horizontalOffsetWithoutText == null) {
-            i10 = generateTypedArray.getDimensionPixelOffset(C3621R.styleable.Badge_verticalOffset, 0);
+            i10 = generateTypedArray.getDimensionPixelOffset(C3631R.styleable.Badge_verticalOffset, 0);
         } else {
             i10 = state.verticalOffsetWithoutText.intValue();
         }
         Integer unused17 = state2.verticalOffsetWithoutText = Integer.valueOf(i10);
         if (state.horizontalOffsetWithText == null) {
-            i11 = generateTypedArray.getDimensionPixelOffset(C3621R.styleable.Badge_horizontalOffsetWithText, state2.horizontalOffsetWithoutText.intValue());
+            i11 = generateTypedArray.getDimensionPixelOffset(C3631R.styleable.Badge_horizontalOffsetWithText, state2.horizontalOffsetWithoutText.intValue());
         } else {
             i11 = state.horizontalOffsetWithText.intValue();
         }
         Integer unused18 = state2.horizontalOffsetWithText = Integer.valueOf(i11);
         if (state.verticalOffsetWithText == null) {
-            i12 = generateTypedArray.getDimensionPixelOffset(C3621R.styleable.Badge_verticalOffsetWithText, state2.verticalOffsetWithoutText.intValue());
+            i12 = generateTypedArray.getDimensionPixelOffset(C3631R.styleable.Badge_verticalOffsetWithText, state2.verticalOffsetWithoutText.intValue());
         } else {
             i12 = state.verticalOffsetWithText.intValue();
         }
@@ -142,7 +142,7 @@ public final class BadgeState {
             attributeSet = null;
             i4 = 0;
         }
-        return ThemeEnforcement.obtainStyledAttributes(context, attributeSet, C3621R.styleable.Badge, i2, i4 == 0 ? i3 : i4, new int[0]);
+        return ThemeEnforcement.obtainStyledAttributes(context, attributeSet, C3631R.styleable.Badge, i2, i4 == 0 ? i3 : i4, new int[0]);
     }
 
     /* access modifiers changed from: package-private */

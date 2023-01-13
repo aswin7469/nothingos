@@ -67,13 +67,13 @@ public class StatusBarHeadsUpChangeListener implements OnHeadsUpChangedListener 
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onHeadsUpPinnedModeChanged$0$com-android-systemui-statusbar-phone-StatusBarHeadsUpChangeListener */
-    public /* synthetic */ void mo45163x590764eb() {
+    public /* synthetic */ void mo45175x590764eb() {
         this.mNotificationShadeWindowController.setForceWindowCollapsed(false);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onHeadsUpPinnedModeChanged$1$com-android-systemui-statusbar-phone-StatusBarHeadsUpChangeListener */
-    public /* synthetic */ void mo45164x4a58f46c() {
+    public /* synthetic */ void mo45176x4a58f46c() {
         if (!this.mHeadsUpManager.hasPinnedHeadsUp()) {
             this.mNotificationShadeWindowController.setHeadsUpShowing(false);
             this.mHeadsUpManager.setHeadsUpGoingAway(false);

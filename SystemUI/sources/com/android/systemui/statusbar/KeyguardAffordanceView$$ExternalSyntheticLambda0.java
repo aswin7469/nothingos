@@ -14,6 +14,6 @@ public final /* synthetic */ class KeyguardAffordanceView$$ExternalSyntheticLamb
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        this.f$0.mo38551xe0befb6(this.f$1, valueAnimator);
+        this.f$0.mo38552xe0befb6(this.f$1, valueAnimator);
     }
 }

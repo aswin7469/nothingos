@@ -11,6 +11,6 @@ public final /* synthetic */ class PrimarySwitchPreference$$ExternalSyntheticLam
     }
 
     public final void onClick(View view) {
-        this.f$0.mo27864x7457526e(view);
+        this.f$0.mo27865x7457526e(view);
     }
 }

@@ -16,7 +16,6 @@ import android.telephony.SignalStrength;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyDisplayInfo;
 import android.telephony.TelephonyManager;
-import android.text.Html;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
@@ -36,7 +35,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.internal.logging.UiEventLogger;
 import com.android.settingslib.Utils;
 import com.android.settingslib.wifi.WifiEnterpriseRestrictionUtils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Prefs;
 import com.android.systemui.accessibility.floatingmenu.AnnotationLinkSpan;
 import com.android.systemui.dagger.SysUISingleton;
@@ -48,6 +47,7 @@ import com.android.systemui.statusbar.policy.KeyguardStateController;
 import com.android.wifitrackerlib.WifiEntry;
 import com.nothing.systemui.NTDependencyEx;
 import com.nothing.systemui.p024qs.QSFragmentEx;
+import com.nothing.systemui.p024qs.tileimpl.QSTileImplEx;
 import com.nothing.systemui.p024qs.tiles.InternetTileEx;
 import java.sql.Types;
 import java.util.List;
@@ -98,7 +98,6 @@ public class InternetDialog extends SystemUIDialog implements InternetDialogCont
     private Switch mMobileDataToggle;
     private LinearLayout mMobileNetworkLayout;
     private TextView mMobileSummaryText;
-    private LinearLayout mMobileTitleLayout;
     private TextView mMobileTitleText;
     private View mMobileToggleDivider;
     private ProgressBar mProgressBar;
@@ -119,13 +118,13 @@ public class InternetDialog extends SystemUIDialog implements InternetDialogCont
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-qs-tiles-dialog-InternetDialog  reason: not valid java name */
-    public /* synthetic */ void m2987lambda$new$0$comandroidsystemuiqstilesdialogInternetDialog() {
+    public /* synthetic */ void m2991lambda$new$0$comandroidsystemuiqstilesdialogInternetDialog() {
         setProgressBarVisible(false);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$1$com-android-systemui-qs-tiles-dialog-InternetDialog  reason: not valid java name */
-    public /* synthetic */ void m2988lambda$new$1$comandroidsystemuiqstilesdialogInternetDialog() {
+    public /* synthetic */ void m2992lambda$new$1$comandroidsystemuiqstilesdialogInternetDialog() {
         this.mIsSearchingHidden = true;
         this.mInternetDialogSubTitle.setText(getSubtitleText());
     }
@@ -161,41 +160,41 @@ public class InternetDialog extends SystemUIDialog implements InternetDialogCont
             Log.d(TAG, "onCreate");
         }
         this.mUiEventLogger.log(InternetDialogEvent.INTERNET_DIALOG_SHOW);
-        this.mDialogView = LayoutInflater.from(this.mContext).inflate(C1893R.layout.internet_connectivity_dialog, (ViewGroup) null);
+        this.mDialogView = LayoutInflater.from(this.mContext).inflate(C1894R.layout.internet_connectivity_dialog, (ViewGroup) null);
         Window window = getWindow();
         window.setContentView(this.mDialogView);
-        window.setWindowAnimations(C1893R.style.Animation_InternetDialog);
-        window.setBackgroundDrawable(this.mContext.getResources().getDrawable(C1893R.C1895drawable.nt_settings_panel_rounded_top_corner_background));
-        this.mInternetTileEx.updateWindowSize(this.mContext, window, this.mInternetDialogController, true);
-        this.mWifiNetworkHeight = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.internet_dialog_wifi_network_height);
-        this.mInternetDialogLayout = (LinearLayout) this.mDialogView.requireViewById(C1893R.C1897id.internet_connectivity_dialog);
-        this.mInternetDialogTitle = (TextView) this.mDialogView.requireViewById(C1893R.C1897id.internet_dialog_title);
-        this.mInternetDialogSubTitle = (TextView) this.mDialogView.requireViewById(C1893R.C1897id.internet_dialog_subtitle);
-        this.mDivider = this.mDialogView.requireViewById(C1893R.C1897id.divider);
-        this.mProgressBar = (ProgressBar) this.mDialogView.requireViewById(C1893R.C1897id.wifi_searching_progress);
-        this.mEthernetLayout = (LinearLayout) this.mDialogView.requireViewById(C1893R.C1897id.ethernet_layout);
-        this.mMobileNetworkLayout = (LinearLayout) this.mDialogView.requireViewById(C1893R.C1897id.mobile_network_layout);
-        this.mTurnWifiOnLayout = (LinearLayout) this.mDialogView.requireViewById(C1893R.C1897id.turn_on_wifi_layout);
-        this.mWifiToggleTitleText = (TextView) this.mDialogView.requireViewById(C1893R.C1897id.wifi_toggle_title);
-        this.mWifiScanNotifyLayout = (LinearLayout) this.mDialogView.requireViewById(C1893R.C1897id.wifi_scan_notify_layout);
-        this.mWifiScanNotifyText = (TextView) this.mDialogView.requireViewById(C1893R.C1897id.wifi_scan_notify_text);
-        this.mConnectedWifListLayout = (LinearLayout) this.mDialogView.requireViewById(C1893R.C1897id.wifi_connected_layout);
-        this.mConnectedWifiIcon = (ImageView) this.mDialogView.requireViewById(C1893R.C1897id.wifi_connected_icon);
-        this.mConnectedWifiTitleText = (TextView) this.mDialogView.requireViewById(C1893R.C1897id.wifi_connected_title);
-        this.mConnectedWifiSummaryText = (TextView) this.mDialogView.requireViewById(C1893R.C1897id.wifi_connected_summary);
-        this.mWifiSettingsIcon = (ImageView) this.mDialogView.requireViewById(C1893R.C1897id.wifi_settings_icon);
-        this.mWifiRecyclerView = (RecyclerView) this.mDialogView.requireViewById(C1893R.C1897id.wifi_list_layout);
-        this.mSeeAllLayout = (LinearLayout) this.mDialogView.requireViewById(C1893R.C1897id.see_all_layout);
-        this.mDoneButton = (Button) this.mDialogView.requireViewById(C1893R.C1897id.done_button);
-        this.mMobileTitleLayout = (LinearLayout) this.mDialogView.requireViewById(C1893R.C1897id.mobile_title_layout);
-        this.mSignalIcon = (ImageView) this.mDialogView.requireViewById(C1893R.C1897id.signal_icon);
-        this.mMobileTitleText = (TextView) this.mDialogView.requireViewById(C1893R.C1897id.mobile_title);
-        this.mMobileSummaryText = (TextView) this.mDialogView.requireViewById(C1893R.C1897id.mobile_summary);
-        this.mAirplaneModeSummaryText = (TextView) this.mDialogView.requireViewById(C1893R.C1897id.airplane_mode_summary);
-        this.mMobileToggleDivider = this.mDialogView.requireViewById(C1893R.C1897id.mobile_toggle_divider);
-        this.mMobileDataToggle = (Switch) this.mDialogView.requireViewById(C1893R.C1897id.mobile_toggle);
-        this.mWiFiToggle = (Switch) this.mDialogView.requireViewById(C1893R.C1897id.wifi_toggle);
-        this.mBackgroundOn = this.mContext.getDrawable(C1893R.C1895drawable.settingslib_switch_bar_bg_on);
+        window.setWindowAnimations(C1894R.style.Animation_InternetDialog);
+        this.mInternetTileEx.init(this, this.mDialogView, this.mInternetDialogController, this.mHandler, this.mBackgroundExecutor, this.mContext);
+        window.setBackgroundDrawable(this.mContext.getResources().getDrawable(C1894R.C1896drawable.nt_settings_panel_rounded_top_corner_background));
+        this.mInternetTileEx.updateWindowSize(window, true);
+        this.mWifiNetworkHeight = this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.internet_dialog_wifi_network_height);
+        this.mInternetDialogLayout = (LinearLayout) this.mDialogView.requireViewById(C1894R.C1898id.internet_connectivity_dialog);
+        this.mInternetDialogTitle = (TextView) this.mDialogView.requireViewById(C1894R.C1898id.internet_dialog_title);
+        this.mInternetDialogSubTitle = (TextView) this.mDialogView.requireViewById(C1894R.C1898id.internet_dialog_subtitle);
+        this.mDivider = this.mDialogView.requireViewById(C1894R.C1898id.divider);
+        this.mProgressBar = (ProgressBar) this.mDialogView.requireViewById(C1894R.C1898id.wifi_searching_progress);
+        this.mEthernetLayout = (LinearLayout) this.mDialogView.requireViewById(C1894R.C1898id.ethernet_layout);
+        this.mMobileNetworkLayout = (LinearLayout) this.mDialogView.requireViewById(C1894R.C1898id.mobile_network_layout);
+        this.mTurnWifiOnLayout = (LinearLayout) this.mDialogView.requireViewById(C1894R.C1898id.turn_on_wifi_layout);
+        this.mWifiToggleTitleText = (TextView) this.mDialogView.requireViewById(C1894R.C1898id.wifi_toggle_title);
+        this.mWifiScanNotifyLayout = (LinearLayout) this.mDialogView.requireViewById(C1894R.C1898id.wifi_scan_notify_layout);
+        this.mWifiScanNotifyText = (TextView) this.mDialogView.requireViewById(C1894R.C1898id.wifi_scan_notify_text);
+        this.mConnectedWifListLayout = (LinearLayout) this.mDialogView.requireViewById(C1894R.C1898id.wifi_connected_layout);
+        this.mConnectedWifiIcon = (ImageView) this.mDialogView.requireViewById(C1894R.C1898id.wifi_connected_icon);
+        this.mConnectedWifiTitleText = (TextView) this.mDialogView.requireViewById(C1894R.C1898id.wifi_connected_title);
+        this.mConnectedWifiSummaryText = (TextView) this.mDialogView.requireViewById(C1894R.C1898id.wifi_connected_summary);
+        this.mWifiSettingsIcon = (ImageView) this.mDialogView.requireViewById(C1894R.C1898id.wifi_settings_icon);
+        this.mWifiRecyclerView = (RecyclerView) this.mDialogView.requireViewById(C1894R.C1898id.wifi_list_layout);
+        this.mSeeAllLayout = (LinearLayout) this.mDialogView.requireViewById(C1894R.C1898id.see_all_layout);
+        this.mDoneButton = (Button) this.mDialogView.requireViewById(C1894R.C1898id.done_button);
+        this.mSignalIcon = (ImageView) this.mDialogView.requireViewById(C1894R.C1898id.signal_icon);
+        this.mMobileTitleText = (TextView) this.mDialogView.requireViewById(C1894R.C1898id.mobile_title);
+        this.mMobileSummaryText = (TextView) this.mDialogView.requireViewById(C1894R.C1898id.mobile_summary);
+        this.mAirplaneModeSummaryText = (TextView) this.mDialogView.requireViewById(C1894R.C1898id.airplane_mode_summary);
+        this.mMobileToggleDivider = this.mDialogView.requireViewById(C1894R.C1898id.mobile_toggle_divider);
+        this.mMobileDataToggle = (Switch) this.mDialogView.requireViewById(C1894R.C1898id.mobile_toggle);
+        this.mWiFiToggle = (Switch) this.mDialogView.requireViewById(C1894R.C1898id.wifi_toggle);
+        this.mBackgroundOn = this.mContext.getDrawable(C1894R.C1896drawable.settingslib_switch_bar_bg_on);
         this.mInternetDialogTitle.setText(getDialogTitleText());
         this.mInternetDialogTitle.setGravity(8388627);
         TypedArray obtainStyledAttributes = this.mContext.obtainStyledAttributes(new int[]{16843534});
@@ -218,6 +217,7 @@ public class InternetDialog extends SystemUIDialog implements InternetDialogCont
             Log.d(TAG, "onStart");
         }
         this.mInternetDialogController.onStart(this, this.mCanConfigWifi);
+        updateDialog(true);
         if (!this.mCanConfigWifi) {
             hideWifiViews();
         }
@@ -245,7 +245,7 @@ public class InternetDialog extends SystemUIDialog implements InternetDialogCont
         this.mSeeAllLayout.setOnClickListener((View.OnClickListener) null);
         this.mWiFiToggle.setOnCheckedChangeListener((CompoundButton.OnCheckedChangeListener) null);
         this.mDoneButton.setOnClickListener((View.OnClickListener) null);
-        this.mInternetTileEx.resetHeaderOnClickListener(this.mMobileTitleLayout, this.mTurnWifiOnLayout);
+        this.mInternetTileEx.resetListeners(this.mTurnWifiOnLayout);
         this.mInternetDialogController.onStop();
         this.mInternetDialogFactory.destroyDialog();
     }
@@ -278,22 +278,23 @@ public class InternetDialog extends SystemUIDialog implements InternetDialogCont
             updateConnectedWifi(isWifiEnabled, isDeviceLocked);
             updateWifiListAndSeeAll(isWifiEnabled, isDeviceLocked);
             updateWifiScanNotify(isWifiEnabled, isWifiScanEnabled, isDeviceLocked);
+            this.mInternetTileEx.updateWindowSize(getWindow(), false);
         }
     }
 
     private void setOnClickListener() {
         this.mMobileNetworkLayout.setOnClickListener(new InternetDialog$$ExternalSyntheticLambda11(this));
-        this.mMobileDataToggle.setOnCheckedChangeListener(new InternetDialog$$ExternalSyntheticLambda18(this));
-        this.mConnectedWifListLayout.setOnClickListener(new InternetDialog$$ExternalSyntheticLambda19(this));
-        this.mSeeAllLayout.setOnClickListener(new InternetDialog$$ExternalSyntheticLambda20(this));
-        this.mWiFiToggle.setOnCheckedChangeListener(new InternetDialog$$ExternalSyntheticLambda21(this));
-        this.mDoneButton.setOnClickListener(new InternetDialog$$ExternalSyntheticLambda22(this));
-        this.mInternetTileEx.setHeaderOnClickListener(this, this.mMobileTitleLayout, this.mTurnWifiOnLayout, this.mInternetDialogController);
+        this.mMobileDataToggle.setOnCheckedChangeListener(new InternetDialog$$ExternalSyntheticLambda16(this));
+        this.mConnectedWifListLayout.setOnClickListener(new InternetDialog$$ExternalSyntheticLambda17(this));
+        this.mSeeAllLayout.setOnClickListener(new InternetDialog$$ExternalSyntheticLambda18(this));
+        this.mWiFiToggle.setOnCheckedChangeListener(new InternetDialog$$ExternalSyntheticLambda19(this));
+        this.mDoneButton.setOnClickListener(new InternetDialog$$ExternalSyntheticLambda20(this));
+        this.mInternetTileEx.setListeners(this.mTurnWifiOnLayout);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setOnClickListener$2$com-android-systemui-qs-tiles-dialog-InternetDialog */
-    public /* synthetic */ void mo36992xc283f0fd(View view) {
+    public /* synthetic */ void mo36988xc283f0fd(View view) {
         if (this.mInternetDialogController.isMobileDataEnabled() && !this.mInternetDialogController.isDeviceLocked() && !this.mInternetDialogController.activeNetworkIsCellular()) {
             this.mInternetDialogController.connectCarrierNetwork();
         }
@@ -301,17 +302,22 @@ public class InternetDialog extends SystemUIDialog implements InternetDialogCont
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setOnClickListener$3$com-android-systemui-qs-tiles-dialog-InternetDialog */
-    public /* synthetic */ void mo36993x4fbea27e(CompoundButton compoundButton, boolean z) {
+    public /* synthetic */ void mo36989x4fbea27e(CompoundButton compoundButton, boolean z) {
         if (!z && shouldShowMobileDialog()) {
             showTurnOffMobileDialog();
-        } else if (!shouldShowMobileDialog()) {
-            this.mInternetDialogController.setMobileDataEnabled(this.mContext, this.mDefaultDataSubId, z, false);
+        } else if (shouldShowMobileDialog()) {
+        } else {
+            if (this.mInternetTileEx.isCheckedChange()) {
+                this.mMobileDataToggle.setChecked(!z);
+            } else {
+                this.mInternetDialogController.setMobileDataEnabled(this.mContext, this.mDefaultDataSubId, z, false);
+            }
         }
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setOnClickListener$4$com-android-systemui-qs-tiles-dialog-InternetDialog */
-    public /* synthetic */ void mo36994xdcf953ff(CompoundButton compoundButton, boolean z) {
+    public /* synthetic */ void mo36990xdcf953ff(CompoundButton compoundButton, boolean z) {
         if (this.mInternetDialogController.isWifiEnabled() != z) {
             this.mInternetDialogController.setWifiEnabled(z);
         }
@@ -319,7 +325,7 @@ public class InternetDialog extends SystemUIDialog implements InternetDialogCont
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setOnClickListener$5$com-android-systemui-qs-tiles-dialog-InternetDialog */
-    public /* synthetic */ void mo36995x6a340580(View view) {
+    public /* synthetic */ void mo36991x6a340580(View view) {
         dismiss();
     }
 
@@ -348,72 +354,51 @@ public class InternetDialog extends SystemUIDialog implements InternetDialogCont
             this.mMobileNetworkLayout.setVisibility(0);
             this.mMobileDataToggle.setChecked(this.mInternetDialogController.isMobileDataEnabled());
             this.mMobileTitleText.setText(getMobileNetworkTitle());
-            String mobileNetworkSummary = getMobileNetworkSummary();
-            if (!TextUtils.isEmpty(mobileNetworkSummary)) {
-                this.mMobileSummaryText.setText(Html.fromHtml(mobileNetworkSummary, 0));
-                this.mMobileSummaryText.setVisibility(0);
-            } else {
-                this.mMobileSummaryText.setVisibility(8);
+            if (!this.mInternetTileEx.shouldUpdateMultiSIMLayout(this.mDefaultDataSubId, this.mMobileNetworkLayout, this.mMobileSummaryText, this.mSignalIcon)) {
+                if (!TextUtils.isEmpty(getMobileNetworkSummary())) {
+                    this.mMobileSummaryText.setText(((QSTileImplEx) NTDependencyEx.get(QSTileImplEx.class)).getDataUsage(this.mDefaultDataSubId, this.mContext));
+                    this.mMobileSummaryText.setVisibility(0);
+                } else {
+                    this.mMobileSummaryText.setVisibility(8);
+                }
+                this.mSignalIcon.setVisibility(0);
+                this.mSignalIcon.setImageDrawable(getSignalStrengthDrawable(this.mDefaultDataSubId));
+                this.mInternetTileEx.hideMultiSIMLayout();
             }
-            this.mBackgroundExecutor.execute(new InternetDialog$$ExternalSyntheticLambda16(this));
-            this.mMobileTitleText.setTextAppearance(z3 ? C1893R.style.TextAppearance_InternetDialog_Active : C1893R.style.TextAppearance_InternetDialog);
-            int i2 = z3 ? C1893R.style.TextAppearance_InternetDialog_Secondary_Active : C1893R.style.TextAppearance_InternetDialog_Secondary;
-            this.mMobileSummaryText.setTextAppearance(i2);
+            int i2 = z3 ? C1894R.style.TextAppearance_InternetDialog_Secondary_Active : C1894R.style.TextAppearance_InternetDialog_Secondary;
             if (this.mInternetDialogController.isAirplaneModeEnabled()) {
                 this.mAirplaneModeSummaryText.setVisibility(0);
-                this.mAirplaneModeSummaryText.setText(this.mContext.getText(C1893R.string.airplane_mode));
+                this.mAirplaneModeSummaryText.setText(this.mContext.getText(C1894R.string.airplane_mode));
                 this.mAirplaneModeSummaryText.setTextAppearance(i2);
             } else {
                 this.mAirplaneModeSummaryText.setVisibility(8);
             }
-            this.mMobileNetworkLayout.setBackground(z3 ? this.mBackgroundOn : this.mBackgroundOff);
-            TypedArray obtainStyledAttributes = this.mContext.obtainStyledAttributes(C1893R.style.InternetDialog_Divider_Active, new int[]{16842964});
-            int colorAttrDefaultColor = Utils.getColorAttrDefaultColor(this.mContext, 16842808);
-            View view = this.mMobileToggleDivider;
-            if (z3) {
-                colorAttrDefaultColor = obtainStyledAttributes.getColor(0, colorAttrDefaultColor);
-            }
-            view.setBackgroundColor(colorAttrDefaultColor);
+            TypedArray obtainStyledAttributes = this.mContext.obtainStyledAttributes(C1894R.style.InternetDialog_Divider_Active, new int[]{16842964});
+            Utils.getColorAttrDefaultColor(this.mContext, 16842808);
             obtainStyledAttributes.recycle();
             this.mMobileDataToggle.setVisibility(this.mCanConfigMobileData ? 0 : 4);
-            View view2 = this.mMobileToggleDivider;
+            View view = this.mMobileToggleDivider;
             if (!this.mCanConfigMobileData) {
                 i = 4;
             }
-            view2.setVisibility(i);
+            view.setVisibility(i);
             return;
         }
         this.mMobileNetworkLayout.setVisibility(8);
-    }
-
-    /* access modifiers changed from: package-private */
-    /* renamed from: lambda$setMobileDataLayout$7$com-android-systemui-qs-tiles-dialog-InternetDialog */
-    public /* synthetic */ void mo36991xb18aa025() {
-        this.mHandler.post(new InternetDialog$$ExternalSyntheticLambda10(this, getSignalStrengthDrawable()));
-    }
-
-    /* access modifiers changed from: package-private */
-    /* renamed from: lambda$setMobileDataLayout$6$com-android-systemui-qs-tiles-dialog-InternetDialog */
-    public /* synthetic */ void mo36990x244feea4(Drawable drawable) {
-        this.mSignalIcon.setImageDrawable(drawable);
+        this.mInternetTileEx.hideMultiSIMLayout();
     }
 
     private void updateWifiToggle(boolean z, boolean z2) {
         if (this.mWiFiToggle.isChecked() != z) {
             this.mWiFiToggle.setChecked(z);
         }
-        if (z2) {
-            this.mWifiToggleTitleText.setTextAppearance(this.mConnectedWifiEntry != null ? C1893R.style.TextAppearance_InternetDialog_Active : C1893R.style.TextAppearance_InternetDialog);
-        }
-        this.mTurnWifiOnLayout.setBackground((!z2 || this.mConnectedWifiEntry == null) ? null : this.mBackgroundOn);
         if (!this.mCanChangeWifiState && this.mWiFiToggle.isEnabled()) {
             this.mWiFiToggle.setEnabled(false);
             this.mWifiToggleTitleText.setEnabled(false);
-            TextView textView = (TextView) this.mDialogView.requireViewById(C1893R.C1897id.wifi_toggle_summary);
+            TextView textView = (TextView) this.mDialogView.requireViewById(C1894R.C1898id.wifi_toggle_summary);
             textView.setEnabled(false);
             textView.setVisibility(0);
         }
-        this.mInternetTileEx.updateWindowSize(this.mContext, getWindow(), this.mInternetDialogController, false);
     }
 
     private void updateConnectedWifi(boolean z, boolean z2) {
@@ -425,7 +410,8 @@ public class InternetDialog extends SystemUIDialog implements InternetDialogCont
         this.mConnectedWifiTitleText.setText(this.mConnectedWifiEntry.getTitle());
         this.mConnectedWifiSummaryText.setText(this.mConnectedWifiEntry.getSummary(false));
         this.mConnectedWifiIcon.setImageDrawable(this.mInternetDialogController.getInternetWifiDrawable(this.mConnectedWifiEntry));
-        this.mWifiSettingsIcon.setColorFilter(this.mContext.getColor(C1893R.C1894color.connected_network_primary_color));
+        this.mConnectedWifiTitleText.setTextAppearance(C1894R.style.TextAppearance_InternetDialog);
+        this.mConnectedWifiSummaryText.setTextAppearance(C1894R.style.TextAppearance_InternetDialog_Secondary);
     }
 
     private void updateWifiListAndSeeAll(boolean z, boolean z2) {
@@ -464,7 +450,7 @@ public class InternetDialog extends SystemUIDialog implements InternetDialogCont
             InternetDialogController internetDialogController = this.mInternetDialogController;
             Objects.requireNonNull(internetDialogController);
             AnnotationLinkSpan.LinkInfo linkInfo = new AnnotationLinkSpan.LinkInfo(AnnotationLinkSpan.LinkInfo.DEFAULT_ANNOTATION, new InternetDialog$$ExternalSyntheticLambda4(internetDialogController));
-            this.mWifiScanNotifyText.setText(AnnotationLinkSpan.linkify(getContext().getText(C1893R.string.wifi_scan_notify_message), linkInfo));
+            this.mWifiScanNotifyText.setText(AnnotationLinkSpan.linkify(getContext().getText(C1894R.string.wifi_scan_notify_message), linkInfo));
             this.mWifiScanNotifyText.setMovementMethod(LinkMovementMethod.getInstance());
         }
         this.mWifiScanNotifyLayout.setVisibility(0);
@@ -493,19 +479,21 @@ public class InternetDialog extends SystemUIDialog implements InternetDialogCont
         return this.mInternetDialogController.getSubtitleText(this.mIsProgressBarVisible && !this.mIsSearchingHidden);
     }
 
-    private Drawable getSignalStrengthDrawable() {
-        return this.mInternetDialogController.getSignalStrengthDrawable();
+    private Drawable getSignalStrengthDrawable(int i) {
+        return this.mInternetDialogController.getSignalStrengthDrawable(i);
     }
 
     /* access modifiers changed from: package-private */
     public CharSequence getMobileNetworkTitle() {
+        if (this.mInternetDialogController.getNumberOfActiveSubscriptions() > 1) {
+            return this.mContext.getString(C1894R.string.mobile_data);
+        }
         return this.mInternetDialogController.getMobileNetworkTitle();
     }
 
-    /* access modifiers changed from: package-private */
     public String getMobileNetworkSummary() {
         if (shouldDisallowUserToDisableMobileData()) {
-            return this.mContext.getString(C1893R.string.mobile_data_summary_not_allowed_to_disable_data);
+            return this.mContext.getString(C1894R.string.mobile_data_summary_not_allowed_to_disable_data);
         }
         return this.mInternetDialogController.getMobileNetworkSummary();
     }
@@ -553,7 +541,7 @@ public class InternetDialog extends SystemUIDialog implements InternetDialogCont
         CharSequence mobileNetworkTitle = getMobileNetworkTitle();
         boolean isVoiceStateInService = this.mInternetDialogController.isVoiceStateInService();
         if (TextUtils.isEmpty(mobileNetworkTitle) || !isVoiceStateInService) {
-            mobileNetworkTitle = this.mContext.getString(C1893R.string.mobile_data_disable_message_default_carrier);
+            mobileNetworkTitle = this.mContext.getString(C1894R.string.mobile_data_disable_message_default_carrier);
         }
         boolean z2 = this.mTelephonyManager.getCallState() == 0;
         try {
@@ -561,13 +549,13 @@ public class InternetDialog extends SystemUIDialog implements InternetDialogCont
                 z = true;
                 Log.d(TAG, "isCallIdle=" + z2 + ", isImsRegisteredOverCiwlan=" + z);
                 if (!z2 || !z) {
-                    str = this.mContext.getString(C1893R.string.mobile_data_disable_message, new Object[]{mobileNetworkTitle});
+                    str = this.mContext.getString(C1894R.string.mobile_data_disable_message, new Object[]{mobileNetworkTitle});
                 } else {
-                    str = this.mContext.getString(C1893R.string.mobile_data_disable_ciwlan_call_message);
+                    str = this.mContext.getString(C1894R.string.mobile_data_disable_ciwlan_call_message);
                 }
-                AlertDialog create = new AlertDialog.Builder(this.mContext).setTitle(C1893R.string.mobile_data_disable_title).setMessage(str).setNegativeButton(17039360, new InternetDialog$$ExternalSyntheticLambda23(this)).setPositiveButton(17039659, new InternetDialog$$ExternalSyntheticLambda24(this)).create();
+                AlertDialog create = new AlertDialog.Builder(this.mContext).setTitle(C1894R.string.mobile_data_disable_title).setMessage(str).setNegativeButton(17039360, new InternetDialog$$ExternalSyntheticLambda21(this)).setPositiveButton(17039659, new InternetDialog$$ExternalSyntheticLambda22(this)).create();
                 this.mAlertDialog = create;
-                create.setOnCancelListener(new InternetDialog$$ExternalSyntheticLambda25(this));
+                create.setOnCancelListener(new InternetDialog$$ExternalSyntheticLambda23(this));
                 this.mAlertDialog.getWindow().setType(Types.SQLXML);
                 SystemUIDialog.setShowForAllUsers(this.mAlertDialog, true);
                 SystemUIDialog.registerDismissListener(this.mAlertDialog);
@@ -581,10 +569,10 @@ public class InternetDialog extends SystemUIDialog implements InternetDialogCont
         Log.d(TAG, "isCallIdle=" + z2 + ", isImsRegisteredOverCiwlan=" + z);
         if (!z2) {
         }
-        str = this.mContext.getString(C1893R.string.mobile_data_disable_message, new Object[]{mobileNetworkTitle});
-        AlertDialog create2 = new AlertDialog.Builder(this.mContext).setTitle(C1893R.string.mobile_data_disable_title).setMessage(str).setNegativeButton(17039360, new InternetDialog$$ExternalSyntheticLambda23(this)).setPositiveButton(17039659, new InternetDialog$$ExternalSyntheticLambda24(this)).create();
+        str = this.mContext.getString(C1894R.string.mobile_data_disable_message, new Object[]{mobileNetworkTitle});
+        AlertDialog create2 = new AlertDialog.Builder(this.mContext).setTitle(C1894R.string.mobile_data_disable_title).setMessage(str).setNegativeButton(17039360, new InternetDialog$$ExternalSyntheticLambda21(this)).setPositiveButton(17039659, new InternetDialog$$ExternalSyntheticLambda22(this)).create();
         this.mAlertDialog = create2;
-        create2.setOnCancelListener(new InternetDialog$$ExternalSyntheticLambda25(this));
+        create2.setOnCancelListener(new InternetDialog$$ExternalSyntheticLambda23(this));
         this.mAlertDialog.getWindow().setType(Types.SQLXML);
         SystemUIDialog.setShowForAllUsers(this.mAlertDialog, true);
         SystemUIDialog.registerDismissListener(this.mAlertDialog);
@@ -593,28 +581,28 @@ public class InternetDialog extends SystemUIDialog implements InternetDialogCont
     }
 
     /* access modifiers changed from: package-private */
-    /* renamed from: lambda$showTurnOffMobileDialog$8$com-android-systemui-qs-tiles-dialog-InternetDialog */
-    public /* synthetic */ void mo36997xc3dc1cd(DialogInterface dialogInterface, int i) {
+    /* renamed from: lambda$showTurnOffMobileDialog$6$com-android-systemui-qs-tiles-dialog-InternetDialog */
+    public /* synthetic */ void mo36992xf1c85ecb(DialogInterface dialogInterface, int i) {
         this.mMobileDataToggle.setChecked(true);
     }
 
     /* access modifiers changed from: package-private */
-    /* renamed from: lambda$showTurnOffMobileDialog$9$com-android-systemui-qs-tiles-dialog-InternetDialog */
-    public /* synthetic */ void mo36998x9978734e(DialogInterface dialogInterface, int i) {
+    /* renamed from: lambda$showTurnOffMobileDialog$7$com-android-systemui-qs-tiles-dialog-InternetDialog */
+    public /* synthetic */ void mo36993x7f03104c(DialogInterface dialogInterface, int i) {
         this.mInternetDialogController.setMobileDataEnabled(this.mContext, this.mDefaultDataSubId, false, false);
         this.mMobileDataToggle.setChecked(false);
         Prefs.putBoolean(this.mContext, Prefs.Key.QS_HAS_TURNED_OFF_MOBILE_DATA, true);
     }
 
     /* access modifiers changed from: package-private */
-    /* renamed from: lambda$showTurnOffMobileDialog$10$com-android-systemui-qs-tiles-dialog-InternetDialog */
-    public /* synthetic */ void mo36996x849651b8(DialogInterface dialogInterface) {
+    /* renamed from: lambda$showTurnOffMobileDialog$8$com-android-systemui-qs-tiles-dialog-InternetDialog */
+    public /* synthetic */ void mo36994xc3dc1cd(DialogInterface dialogInterface) {
         this.mMobileDataToggle.setChecked(true);
     }
 
     /* access modifiers changed from: package-private */
-    /* renamed from: lambda$onRefreshCarrierInfo$11$com-android-systemui-qs-tiles-dialog-InternetDialog */
-    public /* synthetic */ void mo36984xdfe8d7f4() {
+    /* renamed from: lambda$onRefreshCarrierInfo$9$com-android-systemui-qs-tiles-dialog-InternetDialog */
+    public /* synthetic */ void mo36982x3d059b33() {
         updateDialog(true);
     }
 
@@ -623,28 +611,28 @@ public class InternetDialog extends SystemUIDialog implements InternetDialogCont
     }
 
     /* access modifiers changed from: package-private */
-    /* renamed from: lambda$onSimStateChanged$12$com-android-systemui-qs-tiles-dialog-InternetDialog */
-    public /* synthetic */ void mo36987x56714a9e() {
+    /* renamed from: lambda$onSimStateChanged$10$com-android-systemui-qs-tiles-dialog-InternetDialog */
+    public /* synthetic */ void mo36985x3bfbe79c() {
         updateDialog(true);
     }
 
     public void onSimStateChanged() {
-        this.mHandler.post(new InternetDialog$$ExternalSyntheticLambda12(this));
+        this.mHandler.post(new InternetDialog$$ExternalSyntheticLambda10(this));
     }
 
     /* access modifiers changed from: package-private */
-    /* renamed from: lambda$onCapabilitiesChanged$13$com-android-systemui-qs-tiles-dialog-InternetDialog */
-    public /* synthetic */ void mo36979xf4f706db() {
+    /* renamed from: lambda$onCapabilitiesChanged$11$com-android-systemui-qs-tiles-dialog-InternetDialog */
+    public /* synthetic */ void mo36977xda81a3d9() {
         updateDialog(true);
     }
 
     public void onCapabilitiesChanged(Network network, NetworkCapabilities networkCapabilities) {
-        this.mHandler.post(new InternetDialog$$ExternalSyntheticLambda13(this));
+        this.mHandler.post(new InternetDialog$$ExternalSyntheticLambda12(this));
     }
 
     /* access modifiers changed from: package-private */
-    /* renamed from: lambda$onLost$14$com-android-systemui-qs-tiles-dialog-InternetDialog */
-    public /* synthetic */ void mo36982x735f7a1e() {
+    /* renamed from: lambda$onLost$12$com-android-systemui-qs-tiles-dialog-InternetDialog */
+    public /* synthetic */ void mo36980x58ea171c() {
         updateDialog(true);
     }
 
@@ -659,24 +647,24 @@ public class InternetDialog extends SystemUIDialog implements InternetDialogCont
     }
 
     /* access modifiers changed from: package-private */
-    /* renamed from: lambda$onSubscriptionsChanged$15$com-android-systemui-qs-tiles-dialog-InternetDialog */
-    public /* synthetic */ void mo36988x6352b2a5() {
+    /* renamed from: lambda$onSubscriptionsChanged$13$com-android-systemui-qs-tiles-dialog-InternetDialog */
+    public /* synthetic */ void mo36986x48dd4fa3() {
         updateDialog(true);
     }
 
     /* access modifiers changed from: package-private */
-    /* renamed from: lambda$onUserMobileDataStateChanged$16$com-android-systemui-qs-tiles-dialog-InternetDialog */
-    public /* synthetic */ void mo36989x79d5e86a() {
+    /* renamed from: lambda$onUserMobileDataStateChanged$14$com-android-systemui-qs-tiles-dialog-InternetDialog */
+    public /* synthetic */ void mo36987x5f608568() {
         updateDialog(true);
     }
 
     public void onUserMobileDataStateChanged(boolean z) {
-        this.mHandler.post(new InternetDialog$$ExternalSyntheticLambda17(this));
+        this.mHandler.post(new InternetDialog$$ExternalSyntheticLambda15(this));
     }
 
     /* access modifiers changed from: package-private */
-    /* renamed from: lambda$onServiceStateChanged$17$com-android-systemui-qs-tiles-dialog-InternetDialog */
-    public /* synthetic */ void mo36985xf8bd1585() {
+    /* renamed from: lambda$onServiceStateChanged$15$com-android-systemui-qs-tiles-dialog-InternetDialog */
+    public /* synthetic */ void mo36983xde47b283() {
         updateDialog(true);
     }
 
@@ -685,18 +673,18 @@ public class InternetDialog extends SystemUIDialog implements InternetDialogCont
     }
 
     /* access modifiers changed from: package-private */
-    /* renamed from: lambda$onDataConnectionStateChanged$18$com-android-systemui-qs-tiles-dialog-InternetDialog */
-    public /* synthetic */ void mo36980xe006193b() {
+    /* renamed from: lambda$onDataConnectionStateChanged$16$com-android-systemui-qs-tiles-dialog-InternetDialog */
+    public /* synthetic */ void mo36978xc590b639() {
         updateDialog(true);
     }
 
     public void onDataConnectionStateChanged(int i, int i2) {
-        this.mHandler.post(new InternetDialog$$ExternalSyntheticLambda15(this));
+        this.mHandler.post(new InternetDialog$$ExternalSyntheticLambda14(this));
     }
 
     /* access modifiers changed from: package-private */
-    /* renamed from: lambda$onSignalStrengthsChanged$19$com-android-systemui-qs-tiles-dialog-InternetDialog */
-    public /* synthetic */ void mo36986x6381b83d() {
+    /* renamed from: lambda$onSignalStrengthsChanged$17$com-android-systemui-qs-tiles-dialog-InternetDialog */
+    public /* synthetic */ void mo36984x490c553b() {
         updateDialog(true);
     }
 
@@ -705,8 +693,8 @@ public class InternetDialog extends SystemUIDialog implements InternetDialogCont
     }
 
     /* access modifiers changed from: package-private */
-    /* renamed from: lambda$onDisplayInfoChanged$20$com-android-systemui-qs-tiles-dialog-InternetDialog */
-    public /* synthetic */ void mo36981xa9764ed9() {
+    /* renamed from: lambda$onDisplayInfoChanged$18$com-android-systemui-qs-tiles-dialog-InternetDialog */
+    public /* synthetic */ void mo36979xf9305c42() {
         updateDialog(true);
     }
 
@@ -715,8 +703,8 @@ public class InternetDialog extends SystemUIDialog implements InternetDialogCont
     }
 
     /* access modifiers changed from: package-private */
-    /* renamed from: lambda$onNonDdsCallStateChanged$21$com-android-systemui-qs-tiles-dialog-InternetDialog */
-    public /* synthetic */ void mo36983xd4e84697() {
+    /* renamed from: lambda$onNonDdsCallStateChanged$19$com-android-systemui-qs-tiles-dialog-InternetDialog */
+    public /* synthetic */ void mo36981x24a25400() {
         updateDialog(true);
     }
 
@@ -725,12 +713,12 @@ public class InternetDialog extends SystemUIDialog implements InternetDialogCont
     }
 
     public void onAccessPointsChanged(List<WifiEntry> list, WifiEntry wifiEntry, boolean z) {
-        this.mHandler.post(new InternetDialog$$ExternalSyntheticLambda14(this, wifiEntry, list, z, this.mMobileNetworkLayout.getVisibility() == 0 && this.mInternetDialogController.isAirplaneModeEnabled()));
+        this.mHandler.post(new InternetDialog$$ExternalSyntheticLambda13(this, wifiEntry, list, z, this.mMobileNetworkLayout.getVisibility() == 0 && this.mInternetDialogController.isAirplaneModeEnabled()));
     }
 
     /* access modifiers changed from: package-private */
-    /* renamed from: lambda$onAccessPointsChanged$22$com-android-systemui-qs-tiles-dialog-InternetDialog */
-    public /* synthetic */ void mo36978x64ea57ea(WifiEntry wifiEntry, List list, boolean z, boolean z2) {
+    /* renamed from: lambda$onAccessPointsChanged$20$com-android-systemui-qs-tiles-dialog-InternetDialog */
+    public /* synthetic */ void mo36976x4a74f4e8(WifiEntry wifiEntry, List list, boolean z, boolean z2) {
         int i;
         this.mConnectedWifiEntry = wifiEntry;
         if (list == null) {
@@ -754,7 +742,7 @@ public class InternetDialog extends SystemUIDialog implements InternetDialogCont
     }
 
     public void onConfigurationChanged(Configuration configuration) {
-        this.mInternetTileEx.updateWindowSize(this.mContext, getWindow(), this.mInternetDialogController, false);
+        this.mInternetTileEx.updateWindowSize(getWindow(), false);
     }
 
     /* renamed from: com.android.systemui.qs.tiles.dialog.InternetDialog$InternetDialogEvent */

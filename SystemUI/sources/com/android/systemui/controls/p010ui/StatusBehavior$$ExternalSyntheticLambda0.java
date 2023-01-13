@@ -17,6 +17,6 @@ public final /* synthetic */ class StatusBehavior$$ExternalSyntheticLambda0 impl
     }
 
     public final void onClick(DialogInterface dialogInterface, int i) {
-        StatusBehavior.m2720showNotFoundDialog$lambda4$lambda2(this.f$0, this.f$1, this.f$2, dialogInterface, i);
+        StatusBehavior.m2725showNotFoundDialog$lambda4$lambda2(this.f$0, this.f$1, this.f$2, dialogInterface, i);
     }
 }

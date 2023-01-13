@@ -11,6 +11,6 @@ public final /* synthetic */ class KeyguardQsUserSwitchController$$ExternalSynth
     }
 
     public final void onClick(View view) {
-        this.f$0.mo45832xa1a946be(view);
+        this.f$0.mo45844xa1a946be(view);
     }
 }

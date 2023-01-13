@@ -11,6 +11,6 @@ public final /* synthetic */ class FalsingManagerProxy$$ExternalSyntheticLambda0
     }
 
     public final void onPropertiesChanged(DeviceConfig.Properties properties) {
-        this.f$0.m2597lambda$new$0$comandroidsystemuiclassifierFalsingManagerProxy(properties);
+        this.f$0.m2602lambda$new$0$comandroidsystemuiclassifierFalsingManagerProxy(properties);
     }
 }

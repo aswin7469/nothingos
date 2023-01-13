@@ -11,6 +11,6 @@ public final /* synthetic */ class MediaOutputBaseDialog$$ExternalSyntheticLambd
     }
 
     public final void onClick(View view) {
-        this.f$0.mo34322x1c9e2806(view);
+        this.f$0.mo34326x1c9e2806(view);
     }
 }

@@ -20,7 +20,7 @@ import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import androidx.transition.AutoTransition;
 import androidx.transition.TransitionManager;
 import androidx.transition.TransitionSet;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.animation.AnimationUtils;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.internal.TextScale;
@@ -96,8 +96,8 @@ public abstract class NavigationBarMenuView extends ViewGroup implements MenuVie
             AutoTransition autoTransition = new AutoTransition();
             this.set = autoTransition;
             autoTransition.setOrdering(0);
-            autoTransition.setDuration((long) MotionUtils.resolveThemeDuration(getContext(), C3621R.attr.motionDurationLong1, getResources().getInteger(C3621R.integer.material_motion_duration_long_1)));
-            autoTransition.setInterpolator(MotionUtils.resolveThemeInterpolator(getContext(), C3621R.attr.motionEasingStandard, AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR));
+            autoTransition.setDuration((long) MotionUtils.resolveThemeDuration(getContext(), C3631R.attr.motionDurationLong1, getResources().getInteger(C3631R.integer.material_motion_duration_long_1)));
+            autoTransition.setInterpolator(MotionUtils.resolveThemeInterpolator(getContext(), C3631R.attr.motionEasingStandard, AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR));
             autoTransition.addTransition(new TextScale());
         }
         this.onClickListener = new View.OnClickListener() {

@@ -197,7 +197,7 @@ public enum Wrapper {
     }
 
     /* renamed from: sun.invoke.util.Wrapper$1 */
-    static /* synthetic */ class C47301 {
+    static /* synthetic */ class C47421 {
         static final /* synthetic */ int[] $SwitchMap$sun$invoke$util$Wrapper = null;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(20:0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|(3:19|20|22)) */
@@ -279,12 +279,12 @@ public enum Wrapper {
             L_0x0078:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: sun.invoke.util.Wrapper.C47301.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: sun.invoke.util.Wrapper.C47421.<clinit>():void");
         }
     }
 
     public Object zero() {
-        switch (C47301.$SwitchMap$sun$invoke$util$Wrapper[ordinal()]) {
+        switch (C47421.$SwitchMap$sun$invoke$util$Wrapper[ordinal()]) {
             case 1:
                 return Boolean.FALSE;
             case 2:

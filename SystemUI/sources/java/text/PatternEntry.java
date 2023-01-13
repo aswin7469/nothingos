@@ -161,14 +161,14 @@ class PatternEntry {
     static class Parser {
 
         /* renamed from: i */
-        private int f377i;
+        private int f376i;
         private StringBuffer newChars = new StringBuffer();
         private StringBuffer newExtension = new StringBuffer();
         private String pattern;
 
         public Parser(String str) {
             this.pattern = str;
-            this.f377i = 0;
+            this.f376i = 0;
         }
 
         /* JADX WARNING: Removed duplicated region for block: B:65:0x011f A[RETURN] */
@@ -188,13 +188,13 @@ class PatternEntry {
                 r3 = r1
                 r5 = r2
             L_0x0010:
-                int r6 = r10.f377i
+                int r6 = r10.f376i
                 java.lang.String r7 = r10.pattern
                 int r7 = r7.length()
                 r8 = 10
                 if (r6 >= r7) goto L_0x011d
                 java.lang.String r6 = r10.pattern
-                int r7 = r10.f377i
+                int r7 = r10.f376i
                 char r6 = r6.charAt(r7)
                 r7 = 39
                 if (r3 == 0) goto L_0x004c
@@ -247,11 +247,11 @@ class PatternEntry {
                 java.lang.String r2 = "missing char (=,;<&) : "
                 r1.<init>((java.lang.String) r2)
                 java.lang.String r2 = r10.pattern
-                int r3 = r10.f377i
+                int r3 = r10.f376i
                 int r4 = r3 + 10
                 int r5 = r2.length()
                 if (r4 >= r5) goto L_0x008a
-                int r4 = r10.f377i
+                int r4 = r10.f376i
                 int r4 = r4 + r8
                 goto L_0x0090
             L_0x008a:
@@ -261,7 +261,7 @@ class PatternEntry {
                 java.lang.String r2 = r2.substring(r3, r4)
                 r1.append((java.lang.String) r2)
                 java.lang.String r1 = r1.toString()
-                int r10 = r10.f377i
+                int r10 = r10.f376i
                 r0.<init>(r1, r10)
                 throw r0
             L_0x00a1:
@@ -278,7 +278,7 @@ class PatternEntry {
                 java.lang.String r2 = java.lang.Integer.toString(r6, r2)
                 r1.append((java.lang.String) r2)
                 java.lang.String r1 = r1.toString()
-                int r10 = r10.f377i
+                int r10 = r10.f376i
                 r0.<init>(r1, r10)
                 throw r0
             L_0x00c6:
@@ -310,9 +310,9 @@ class PatternEntry {
                 goto L_0x0116
             L_0x00e3:
                 java.lang.String r3 = r10.pattern
-                int r6 = r10.f377i
+                int r6 = r10.f376i
                 int r6 = r6 + r2
-                r10.f377i = r6
+                r10.f376i = r6
                 char r3 = r3.charAt(r6)
                 java.lang.StringBuffer r6 = r10.newChars
                 int r6 = r6.length()
@@ -346,9 +346,9 @@ class PatternEntry {
             L_0x0115:
                 r4 = 2
             L_0x0116:
-                int r6 = r10.f377i
+                int r6 = r10.f376i
                 int r6 = r6 + r2
-                r10.f377i = r6
+                r10.f376i = r6
                 goto L_0x0010
             L_0x011d:
                 if (r4 != r0) goto L_0x0121
@@ -363,11 +363,11 @@ class PatternEntry {
                 java.lang.String r2 = "missing chars (=,;<&): "
                 r1.<init>((java.lang.String) r2)
                 java.lang.String r2 = r10.pattern
-                int r3 = r10.f377i
+                int r3 = r10.f376i
                 int r4 = r3 + 10
                 int r5 = r2.length()
                 if (r4 >= r5) goto L_0x0142
-                int r4 = r10.f377i
+                int r4 = r10.f376i
                 int r4 = r4 + r8
                 goto L_0x0148
             L_0x0142:
@@ -377,7 +377,7 @@ class PatternEntry {
                 java.lang.String r2 = r2.substring(r3, r4)
                 r1.append((java.lang.String) r2)
                 java.lang.String r1 = r1.toString()
-                int r10 = r10.f377i
+                int r10 = r10.f376i
                 r0.<init>(r1, r10)
                 throw r0
             L_0x0159:

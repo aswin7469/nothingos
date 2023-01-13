@@ -10,7 +10,7 @@ public class PushbackInputStream extends FilterInputStream {
     }
 
     private void ensureOpen() throws IOException {
-        if (this.f521in == null) {
+        if (this.f519in == null) {
             throw new IOException("Stream closed");
         }
     }
@@ -140,9 +140,9 @@ public class PushbackInputStream extends FilterInputStream {
     }
 
     public synchronized void close() throws IOException {
-        if (this.f521in != null) {
-            this.f521in.close();
-            this.f521in = null;
+        if (this.f519in != null) {
+            this.f519in.close();
+            this.f519in = null;
             this.buf = null;
         }
     }

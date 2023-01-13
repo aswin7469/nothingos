@@ -12,6 +12,6 @@ public final /* synthetic */ class ForcedResizableInfoActivityController$$Extern
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo49662xa8212b06((Boolean) obj);
+        this.f$0.mo49671xa8212b06((Boolean) obj);
     }
 }

@@ -15,6 +15,6 @@ public final /* synthetic */ class TetheringManager$$ExternalSyntheticLambda7 im
     }
 
     public final void onConnectorAvailable(ITetheringConnector iTetheringConnector) {
-        this.f$0.m1949lambda$stopTethering$7$androidnetTetheringManager(this.f$1, this.f$2, iTetheringConnector);
+        this.f$0.m1955lambda$stopTethering$7$androidnetTetheringManager(this.f$1, this.f$2, iTetheringConnector);
     }
 }

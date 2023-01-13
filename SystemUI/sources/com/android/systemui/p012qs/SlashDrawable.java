@@ -133,7 +133,7 @@ public class SlashDrawable extends Drawable {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setSlashed$0$com-android-systemui-qs-SlashDrawable  reason: not valid java name */
-    public /* synthetic */ void m2944lambda$setSlashed$0$comandroidsystemuiqsSlashDrawable(ValueAnimator valueAnimator) {
+    public /* synthetic */ void m2949lambda$setSlashed$0$comandroidsystemuiqsSlashDrawable(ValueAnimator valueAnimator) {
         invalidateSelf();
     }
 

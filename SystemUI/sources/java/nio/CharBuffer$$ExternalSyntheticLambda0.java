@@ -11,6 +11,6 @@ public final /* synthetic */ class CharBuffer$$ExternalSyntheticLambda0 implemen
     }
 
     public final Object get() {
-        return this.f$0.m3704lambda$chars$0$javanioCharBuffer();
+        return this.f$0.m3722lambda$chars$0$javanioCharBuffer();
     }
 }

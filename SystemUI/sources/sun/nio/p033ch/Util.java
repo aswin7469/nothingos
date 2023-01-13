@@ -6,7 +6,7 @@ import java.security.PrivilegedAction;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
-import sun.misc.C4740VM;
+import sun.misc.C4752VM;
 import sun.misc.Cleaner;
 import sun.misc.Unsafe;
 import sun.security.action.GetPropertyAction;
@@ -288,7 +288,7 @@ public class Util {
 
     static boolean atBugLevel(String str) {
         if (bugLevel == null) {
-            if (!C4740VM.isBooted()) {
+            if (!C4752VM.isBooted()) {
                 return false;
             }
             String str2 = (String) AccessController.doPrivileged(new GetPropertyAction("sun.nio.ch.bugLevel"));

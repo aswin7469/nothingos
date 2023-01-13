@@ -161,14 +161,14 @@ public class BubblesManager implements Dumpable {
             }
         });
         final SysUiState sysUiState2 = sysUiState;
-        C33135 r2 = new Bubbles.SysuiProxy() {
+        C33235 r2 = new Bubbles.SysuiProxy() {
             public void isNotificationShadeExpand(Consumer<Boolean> consumer) {
                 executor2.execute(new BubblesManager$5$$ExternalSyntheticLambda10(this, consumer));
             }
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$isNotificationShadeExpand$0$com-android-systemui-wmshell-BubblesManager$5 */
-            public /* synthetic */ void mo47530x44d3fe27(Consumer consumer) {
+            public /* synthetic */ void mo47539x44d3fe27(Consumer consumer) {
                 consumer.accept(Boolean.valueOf(BubblesManager.this.mNotificationShadeWindowController.getPanelExpanded()));
             }
 
@@ -178,7 +178,7 @@ public class BubblesManager implements Dumpable {
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$getPendingOrActiveEntry$1$com-android-systemui-wmshell-BubblesManager$5 */
-            public /* synthetic */ void mo47528x36666bbe(String str, Consumer consumer) {
+            public /* synthetic */ void mo47537x36666bbe(String str, Consumer consumer) {
                 BubbleEntry bubbleEntry;
                 NotificationEntry entry = BubblesManager.this.mCommonNotifCollection.getEntry(str);
                 if (entry == null) {
@@ -195,7 +195,7 @@ public class BubblesManager implements Dumpable {
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$getShouldRestoredEntries$2$com-android-systemui-wmshell-BubblesManager$5 */
-            public /* synthetic */ void mo47529x236e7d02(ArraySet arraySet, Consumer consumer) {
+            public /* synthetic */ void mo47538x236e7d02(ArraySet arraySet, Consumer consumer) {
                 ArrayList arrayList = new ArrayList();
                 for (NotificationEntry next : BubblesManager.this.mCommonNotifCollection.getAllNotifs()) {
                     if (BubblesManager.this.mNotifUserManager.isCurrentProfile(next.getSbn().getUserId()) && arraySet.contains(next.getKey()) && BubblesManager.this.mNotificationInterruptStateProvider.shouldBubbleUp(next) && next.isBubble()) {
@@ -211,7 +211,7 @@ public class BubblesManager implements Dumpable {
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$setNotificationInterruption$3$com-android-systemui-wmshell-BubblesManager$5 */
-            public /* synthetic */ void mo47539xc680b14a(String str) {
+            public /* synthetic */ void mo47548xc680b14a(String str) {
                 NotificationEntry entry = BubblesManager.this.mCommonNotifCollection.getEntry(str);
                 if (entry != null && entry.getImportance() >= 4) {
                     entry.setInterruption();
@@ -224,7 +224,7 @@ public class BubblesManager implements Dumpable {
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$requestNotificationShadeTopUi$4$com-android-systemui-wmshell-BubblesManager$5 */
-            public /* synthetic */ void mo47538x9733de4f(boolean z, String str) {
+            public /* synthetic */ void mo47547x9733de4f(boolean z, String str) {
                 BubblesManager.this.mNotificationShadeWindowController.setRequestTopUi(z, str);
             }
 
@@ -234,7 +234,7 @@ public class BubblesManager implements Dumpable {
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$notifyRemoveNotification$5$com-android-systemui-wmshell-BubblesManager$5 */
-            public /* synthetic */ void mo47533xe8f2c84c(String str, int i) {
+            public /* synthetic */ void mo47542xe8f2c84c(String str, int i) {
                 NotificationEntry entry = BubblesManager.this.mCommonNotifCollection.getEntry(str);
                 if (entry != null) {
                     for (NotifCallback removeNotification : BubblesManager.this.mCallbacks) {
@@ -249,7 +249,7 @@ public class BubblesManager implements Dumpable {
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$notifyInvalidateNotifications$6$com-android-systemui-wmshell-BubblesManager$5 */
-            public /* synthetic */ void mo47531xd424cb5f(String str) {
+            public /* synthetic */ void mo47540xd424cb5f(String str) {
                 for (NotifCallback invalidateNotifications : BubblesManager.this.mCallbacks) {
                     invalidateNotifications.invalidateNotifications(str);
                 }
@@ -261,7 +261,7 @@ public class BubblesManager implements Dumpable {
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$notifyMaybeCancelSummary$7$com-android-systemui-wmshell-BubblesManager$5 */
-            public /* synthetic */ void mo47532x4d542783(String str) {
+            public /* synthetic */ void mo47541x4d542783(String str) {
                 NotificationEntry entry = BubblesManager.this.mCommonNotifCollection.getEntry(str);
                 if (entry != null) {
                     for (NotifCallback maybeCancelSummary : BubblesManager.this.mCallbacks) {
@@ -276,7 +276,7 @@ public class BubblesManager implements Dumpable {
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$removeNotificationEntry$8$com-android-systemui-wmshell-BubblesManager$5 */
-            public /* synthetic */ void mo47537xfbf16460(String str) {
+            public /* synthetic */ void mo47546xfbf16460(String str) {
                 NotificationEntry entry = BubblesManager.this.mCommonNotifCollection.getEntry(str);
                 if (entry != null) {
                     BubblesManager.this.mNotificationGroupManager.onEntryRemoved(entry);
@@ -289,7 +289,7 @@ public class BubblesManager implements Dumpable {
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$updateNotificationBubbleButton$9$com-android-systemui-wmshell-BubblesManager$5 */
-            public /* synthetic */ void mo47540x23fe562a(String str) {
+            public /* synthetic */ void mo47549x23fe562a(String str) {
                 NotificationEntry entry = BubblesManager.this.mCommonNotifCollection.getEntry(str);
                 if (entry != null && entry.getRow() != null) {
                     entry.getRow().updateBubbleButton();
@@ -302,7 +302,7 @@ public class BubblesManager implements Dumpable {
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$updateNotificationSuppression$10$com-android-systemui-wmshell-BubblesManager$5 */
-            public /* synthetic */ void mo47541xedeae2a7(String str) {
+            public /* synthetic */ void mo47550xedeae2a7(String str) {
                 NotificationEntry entry = BubblesManager.this.mCommonNotifCollection.getEntry(str);
                 if (entry != null) {
                     BubblesManager.this.mNotificationGroupManager.updateSuppression(entry);
@@ -315,7 +315,7 @@ public class BubblesManager implements Dumpable {
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onStackExpandChanged$11$com-android-systemui-wmshell-BubblesManager$5 */
-            public /* synthetic */ void mo47535xb1dbe87c(SysUiState sysUiState, boolean z) {
+            public /* synthetic */ void mo47544xb1dbe87c(SysUiState sysUiState, boolean z) {
                 sysUiState.setFlag(16384, z).commitUpdate(BubblesManager.this.mContext.getDisplayId());
                 if (!z) {
                     sysUiState.setFlag(8388608, false).commitUpdate(BubblesManager.this.mContext.getDisplayId());
@@ -328,7 +328,7 @@ public class BubblesManager implements Dumpable {
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onManageMenuExpandChanged$12$com-android-systemui-wmshell-BubblesManager$5 */
-            public /* synthetic */ void mo47534xf713ad11(SysUiState sysUiState, boolean z) {
+            public /* synthetic */ void mo47543xf713ad11(SysUiState sysUiState, boolean z) {
                 sysUiState.setFlag(8388608, z).commitUpdate(BubblesManager.this.mContext.getDisplayId());
             }
 
@@ -338,7 +338,7 @@ public class BubblesManager implements Dumpable {
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onUnbubbleConversation$13$com-android-systemui-wmshell-BubblesManager$5 */
-            public /* synthetic */ void mo47536x1a7cee48(String str) {
+            public /* synthetic */ void mo47545x1a7cee48(String str) {
                 NotificationEntry entry = BubblesManager.this.mCommonNotifCollection.getEntry(str);
                 if (entry != null) {
                     BubblesManager.this.onUserChangedBubble(entry, false);
@@ -405,7 +405,7 @@ public class BubblesManager implements Dumpable {
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$maybeCancelSummary$0$com-android-systemui-wmshell-BubblesManager$8 */
-            public /* synthetic */ void mo47553xe0003056(String str) {
+            public /* synthetic */ void mo47562xe0003056(String str) {
                 NotificationEntry activeNotificationUnfiltered = BubblesManager.this.mNotificationEntryManager.getActiveNotificationUnfiltered(str);
                 if (activeNotificationUnfiltered != null) {
                     BubblesManager.this.mNotificationEntryManager.performRemoveNotification(activeNotificationUnfiltered.getSbn(), BubblesManager.this.getDismissedByUserStats(activeNotificationUnfiltered, false), 0);
@@ -416,7 +416,7 @@ public class BubblesManager implements Dumpable {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setupNEM$0$com-android-systemui-wmshell-BubblesManager  reason: not valid java name */
-    public /* synthetic */ boolean m3325lambda$setupNEM$0$comandroidsystemuiwmshellBubblesManager(String str, NotificationEntry notificationEntry, int i) {
+    public /* synthetic */ boolean m3329lambda$setupNEM$0$comandroidsystemuiwmshellBubblesManager(String str, NotificationEntry notificationEntry, int i) {
         boolean z = true;
         boolean z2 = i == 3;
         boolean z3 = i == 2 || i == 1;
@@ -514,7 +514,7 @@ public class BubblesManager implements Dumpable {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$handleDismissalInterception$1$com-android-systemui-wmshell-BubblesManager */
-    public /* synthetic */ void mo47516x200aa1f8(List list, NotificationEntry notificationEntry, int i) {
+    public /* synthetic */ void mo47525x200aa1f8(List list, NotificationEntry notificationEntry, int i) {
         if (i >= 0) {
             for (NotifCallback removeNotification : this.mCallbacks) {
                 removeNotification.removeNotification((NotificationEntry) list.get(i), getDismissedByUserStats((NotificationEntry) list.get(i), true), 12);

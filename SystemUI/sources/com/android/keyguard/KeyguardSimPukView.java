@@ -7,7 +7,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.ImageView;
 import androidx.core.graphics.drawable.DrawableCompat;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dependency;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +20,7 @@ public class KeyguardSimPukView extends KeyguardPinBasedInputView {
 
     /* access modifiers changed from: protected */
     public int getPasswordTextViewId() {
-        return C1893R.C1897id.pukEntry;
+        return C1894R.C1898id.pukEntry;
     }
 
     /* access modifiers changed from: protected */
@@ -43,7 +43,7 @@ public class KeyguardSimPukView extends KeyguardPinBasedInputView {
 
     /* access modifiers changed from: package-private */
     public void updateWrongPukMessageMap(Context context) {
-        String[] stringArray = context.getResources().getStringArray(C1893R.array.kg_wrong_puk_code_message_list);
+        String[] stringArray = context.getResources().getStringArray(C1894R.array.kg_wrong_puk_code_message_list);
         if (stringArray.length == 0) {
             Log.d("KeyguardSimPukView", "There is no customization PUK prompt");
             return;
@@ -72,15 +72,15 @@ public class KeyguardSimPukView extends KeyguardPinBasedInputView {
         if (i == 0) {
             str = getMessageTextForWrongPukCode(i2);
             if (str == null) {
-                str = getContext().getString(C1893R.string.kg_password_wrong_puk_code_dead);
+                str = getContext().getString(C1894R.string.kg_password_wrong_puk_code_dead);
             }
         } else if (i > 0) {
-            str = getContext().getResources().getQuantityString(z ? C1893R.plurals.kg_password_default_puk_message : C1893R.plurals.kg_password_wrong_puk_code, i, new Object[]{Integer.valueOf(i)});
+            str = getContext().getResources().getQuantityString(z ? C1894R.plurals.kg_password_default_puk_message : C1894R.plurals.kg_password_wrong_puk_code, i, new Object[]{Integer.valueOf(i)});
         } else {
-            str = getContext().getString(z ? C1893R.string.kg_puk_enter_puk_hint : C1893R.string.kg_password_puk_failed);
+            str = getContext().getString(z ? C1894R.string.kg_puk_enter_puk_hint : C1894R.string.kg_password_puk_failed);
         }
         if (z2) {
-            str = getResources().getString(C1893R.string.kg_sim_lock_esim_instructions, new Object[]{str});
+            str = getResources().getString(C1894R.string.kg_sim_lock_esim_instructions, new Object[]{str});
         }
         if (DEBUG) {
             Log.d("KeyguardSimPukView", "getPukPasswordErrorMessage: attemptsRemaining=" + i + " displayMessage=" + str);
@@ -90,7 +90,7 @@ public class KeyguardSimPukView extends KeyguardPinBasedInputView {
 
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
-        this.mSimImageView = (ImageView) findViewById(C1893R.C1897id.keyguard_sim);
+        this.mSimImageView = (ImageView) findViewById(C1894R.C1898id.keyguard_sim);
         super.onFinishInflate();
         if (this.mEcaView instanceof EmergencyCarrierArea) {
             ((EmergencyCarrierArea) this.mEcaView).setCarrierTextVisible(true);

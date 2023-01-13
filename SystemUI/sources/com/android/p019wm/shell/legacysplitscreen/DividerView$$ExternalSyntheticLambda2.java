@@ -15,6 +15,6 @@ public final /* synthetic */ class DividerView$$ExternalSyntheticLambda2 impleme
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo49620x8e9fed0(this.f$1, (Boolean) obj);
+        this.f$0.mo49629x8e9fed0(this.f$1, (Boolean) obj);
     }
 }

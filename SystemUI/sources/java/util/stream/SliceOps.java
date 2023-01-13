@@ -35,7 +35,7 @@ final class SliceOps {
     }
 
     /* renamed from: java.util.stream.SliceOps$5 */
-    static /* synthetic */ class C45405 {
+    static /* synthetic */ class C45525 {
         static final /* synthetic */ int[] $SwitchMap$java$util$stream$StreamShape;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(8:0|1|2|3|4|5|6|(3:7|8|10)) */
@@ -74,14 +74,14 @@ final class SliceOps {
             L_0x0033:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: java.util.stream.SliceOps.C45405.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: java.util.stream.SliceOps.C45525.<clinit>():void");
         }
     }
 
     /* access modifiers changed from: private */
     public static <P_IN> Spliterator<P_IN> sliceSpliterator(StreamShape streamShape, Spliterator<P_IN> spliterator, long j, long j2) {
         long calcSliceFence = calcSliceFence(j, j2);
-        int i = C45405.$SwitchMap$java$util$stream$StreamShape[streamShape.ordinal()];
+        int i = C45525.$SwitchMap$java$util$stream$StreamShape[streamShape.ordinal()];
         if (i == 1) {
             return new StreamSpliterators.SliceSpliterator.OfRef(spliterator, j, calcSliceFence);
         }
@@ -180,7 +180,7 @@ final class SliceOps {
                         java.util.Spliterator r0 = r0.spliterator()
                         return r0
                     */
-                    throw new UnsupportedOperationException("Method not decompiled: java.util.stream.SliceOps.C45321.opEvaluateParallelLazy(java.util.stream.PipelineHelper, java.util.Spliterator):java.util.Spliterator");
+                    throw new UnsupportedOperationException("Method not decompiled: java.util.stream.SliceOps.C45441.opEvaluateParallelLazy(java.util.stream.PipelineHelper, java.util.Spliterator):java.util.Spliterator");
                 }
 
                 /* JADX WARNING: type inference failed for: r19v0, types: [java.util.Spliterator, java.util.Spliterator<P_IN>] */
@@ -242,43 +242,43 @@ final class SliceOps {
                         java.util.stream.Node r0 = (java.util.stream.Node) r0
                         return r0
                     */
-                    throw new UnsupportedOperationException("Method not decompiled: java.util.stream.SliceOps.C45321.opEvaluateParallel(java.util.stream.PipelineHelper, java.util.Spliterator, java.util.function.IntFunction):java.util.stream.Node");
+                    throw new UnsupportedOperationException("Method not decompiled: java.util.stream.SliceOps.C45441.opEvaluateParallel(java.util.stream.PipelineHelper, java.util.Spliterator, java.util.function.IntFunction):java.util.stream.Node");
                 }
 
                 public Sink<T> opWrapSink(int i, Sink<T> sink) {
                     return new Sink.ChainedReference<T, T>(sink) {
 
                         /* renamed from: m */
-                        long f783m;
+                        long f781m;
 
                         /* renamed from: n */
-                        long f784n;
+                        long f782n;
 
                         {
-                            this.f784n = j3;
-                            this.f783m = j4 >= 0 ? j4 : Long.MAX_VALUE;
+                            this.f782n = j3;
+                            this.f781m = j4 >= 0 ? j4 : Long.MAX_VALUE;
                         }
 
                         public void begin(long j) {
-                            this.downstream.begin(SliceOps.calcSize(j, j3, this.f783m));
+                            this.downstream.begin(SliceOps.calcSize(j, j3, this.f781m));
                         }
 
                         public void accept(T t) {
-                            long j = this.f784n;
+                            long j = this.f782n;
                             if (j == 0) {
-                                long j2 = this.f783m;
+                                long j2 = this.f781m;
                                 if (j2 > 0) {
-                                    this.f783m = j2 - 1;
+                                    this.f781m = j2 - 1;
                                     this.downstream.accept(t);
                                     return;
                                 }
                                 return;
                             }
-                            this.f784n = j - 1;
+                            this.f782n = j - 1;
                         }
 
                         public boolean cancellationRequested() {
-                            return this.f783m == 0 || this.downstream.cancellationRequested();
+                            return this.f781m == 0 || this.downstream.cancellationRequested();
                         }
                     };
                 }
@@ -366,7 +366,7 @@ final class SliceOps {
                         java.util.Spliterator r0 = r0.spliterator()
                         return r0
                     */
-                    throw new UnsupportedOperationException("Method not decompiled: java.util.stream.SliceOps.C45342.opEvaluateParallelLazy(java.util.stream.PipelineHelper, java.util.Spliterator):java.util.Spliterator");
+                    throw new UnsupportedOperationException("Method not decompiled: java.util.stream.SliceOps.C45462.opEvaluateParallelLazy(java.util.stream.PipelineHelper, java.util.Spliterator):java.util.Spliterator");
                 }
 
                 static /* synthetic */ Integer[] lambda$opEvaluateParallelLazy$0(int i) {
@@ -432,43 +432,43 @@ final class SliceOps {
                         java.util.stream.Node r0 = (java.util.stream.Node) r0
                         return r0
                     */
-                    throw new UnsupportedOperationException("Method not decompiled: java.util.stream.SliceOps.C45342.opEvaluateParallel(java.util.stream.PipelineHelper, java.util.Spliterator, java.util.function.IntFunction):java.util.stream.Node");
+                    throw new UnsupportedOperationException("Method not decompiled: java.util.stream.SliceOps.C45462.opEvaluateParallel(java.util.stream.PipelineHelper, java.util.Spliterator, java.util.function.IntFunction):java.util.stream.Node");
                 }
 
                 public Sink<Integer> opWrapSink(int i, Sink<Integer> sink) {
                     return new Sink.ChainedInt<Integer>(sink) {
 
                         /* renamed from: m */
-                        long f785m;
+                        long f783m;
 
                         /* renamed from: n */
-                        long f786n;
+                        long f784n;
 
                         {
-                            this.f786n = j3;
-                            this.f785m = j4 >= 0 ? j4 : Long.MAX_VALUE;
+                            this.f784n = j3;
+                            this.f783m = j4 >= 0 ? j4 : Long.MAX_VALUE;
                         }
 
                         public void begin(long j) {
-                            this.downstream.begin(SliceOps.calcSize(j, j3, this.f785m));
+                            this.downstream.begin(SliceOps.calcSize(j, j3, this.f783m));
                         }
 
                         public void accept(int i) {
-                            long j = this.f786n;
+                            long j = this.f784n;
                             if (j == 0) {
-                                long j2 = this.f785m;
+                                long j2 = this.f783m;
                                 if (j2 > 0) {
-                                    this.f785m = j2 - 1;
+                                    this.f783m = j2 - 1;
                                     this.downstream.accept(i);
                                     return;
                                 }
                                 return;
                             }
-                            this.f786n = j - 1;
+                            this.f784n = j - 1;
                         }
 
                         public boolean cancellationRequested() {
-                            return this.f785m == 0 || this.downstream.cancellationRequested();
+                            return this.f783m == 0 || this.downstream.cancellationRequested();
                         }
                     };
                 }
@@ -556,7 +556,7 @@ final class SliceOps {
                         java.util.Spliterator r0 = r0.spliterator()
                         return r0
                     */
-                    throw new UnsupportedOperationException("Method not decompiled: java.util.stream.SliceOps.C45363.opEvaluateParallelLazy(java.util.stream.PipelineHelper, java.util.Spliterator):java.util.Spliterator");
+                    throw new UnsupportedOperationException("Method not decompiled: java.util.stream.SliceOps.C45483.opEvaluateParallelLazy(java.util.stream.PipelineHelper, java.util.Spliterator):java.util.Spliterator");
                 }
 
                 static /* synthetic */ Long[] lambda$opEvaluateParallelLazy$0(int i) {
@@ -622,43 +622,43 @@ final class SliceOps {
                         java.util.stream.Node r0 = (java.util.stream.Node) r0
                         return r0
                     */
-                    throw new UnsupportedOperationException("Method not decompiled: java.util.stream.SliceOps.C45363.opEvaluateParallel(java.util.stream.PipelineHelper, java.util.Spliterator, java.util.function.IntFunction):java.util.stream.Node");
+                    throw new UnsupportedOperationException("Method not decompiled: java.util.stream.SliceOps.C45483.opEvaluateParallel(java.util.stream.PipelineHelper, java.util.Spliterator, java.util.function.IntFunction):java.util.stream.Node");
                 }
 
                 public Sink<Long> opWrapSink(int i, Sink<Long> sink) {
                     return new Sink.ChainedLong<Long>(sink) {
 
                         /* renamed from: m */
-                        long f787m;
+                        long f785m;
 
                         /* renamed from: n */
-                        long f788n;
+                        long f786n;
 
                         {
-                            this.f788n = j3;
-                            this.f787m = j4 >= 0 ? j4 : Long.MAX_VALUE;
+                            this.f786n = j3;
+                            this.f785m = j4 >= 0 ? j4 : Long.MAX_VALUE;
                         }
 
                         public void begin(long j) {
-                            this.downstream.begin(SliceOps.calcSize(j, j3, this.f787m));
+                            this.downstream.begin(SliceOps.calcSize(j, j3, this.f785m));
                         }
 
                         public void accept(long j) {
-                            long j2 = this.f788n;
+                            long j2 = this.f786n;
                             if (j2 == 0) {
-                                long j3 = this.f787m;
+                                long j3 = this.f785m;
                                 if (j3 > 0) {
-                                    this.f787m = j3 - 1;
+                                    this.f785m = j3 - 1;
                                     this.downstream.accept(j);
                                     return;
                                 }
                                 return;
                             }
-                            this.f788n = j2 - 1;
+                            this.f786n = j2 - 1;
                         }
 
                         public boolean cancellationRequested() {
-                            return this.f787m == 0 || this.downstream.cancellationRequested();
+                            return this.f785m == 0 || this.downstream.cancellationRequested();
                         }
                     };
                 }
@@ -746,7 +746,7 @@ final class SliceOps {
                         java.util.Spliterator r0 = r0.spliterator()
                         return r0
                     */
-                    throw new UnsupportedOperationException("Method not decompiled: java.util.stream.SliceOps.C45384.opEvaluateParallelLazy(java.util.stream.PipelineHelper, java.util.Spliterator):java.util.Spliterator");
+                    throw new UnsupportedOperationException("Method not decompiled: java.util.stream.SliceOps.C45504.opEvaluateParallelLazy(java.util.stream.PipelineHelper, java.util.Spliterator):java.util.Spliterator");
                 }
 
                 static /* synthetic */ Double[] lambda$opEvaluateParallelLazy$0(int i) {
@@ -812,43 +812,43 @@ final class SliceOps {
                         java.util.stream.Node r0 = (java.util.stream.Node) r0
                         return r0
                     */
-                    throw new UnsupportedOperationException("Method not decompiled: java.util.stream.SliceOps.C45384.opEvaluateParallel(java.util.stream.PipelineHelper, java.util.Spliterator, java.util.function.IntFunction):java.util.stream.Node");
+                    throw new UnsupportedOperationException("Method not decompiled: java.util.stream.SliceOps.C45504.opEvaluateParallel(java.util.stream.PipelineHelper, java.util.Spliterator, java.util.function.IntFunction):java.util.stream.Node");
                 }
 
                 public Sink<Double> opWrapSink(int i, Sink<Double> sink) {
                     return new Sink.ChainedDouble<Double>(sink) {
 
                         /* renamed from: m */
-                        long f789m;
+                        long f787m;
 
                         /* renamed from: n */
-                        long f790n;
+                        long f788n;
 
                         {
-                            this.f790n = j3;
-                            this.f789m = j4 >= 0 ? j4 : Long.MAX_VALUE;
+                            this.f788n = j3;
+                            this.f787m = j4 >= 0 ? j4 : Long.MAX_VALUE;
                         }
 
                         public void begin(long j) {
-                            this.downstream.begin(SliceOps.calcSize(j, j3, this.f789m));
+                            this.downstream.begin(SliceOps.calcSize(j, j3, this.f787m));
                         }
 
                         public void accept(double d) {
-                            long j = this.f790n;
+                            long j = this.f788n;
                             if (j == 0) {
-                                long j2 = this.f789m;
+                                long j2 = this.f787m;
                                 if (j2 > 0) {
-                                    this.f789m = j2 - 1;
+                                    this.f787m = j2 - 1;
                                     this.downstream.accept(d);
                                     return;
                                 }
                                 return;
                             }
-                            this.f790n = j - 1;
+                            this.f788n = j - 1;
                         }
 
                         public boolean cancellationRequested() {
-                            return this.f789m == 0 || this.downstream.cancellationRequested();
+                            return this.f787m == 0 || this.downstream.cancellationRequested();
                         }
                     };
                 }
@@ -866,14 +866,14 @@ final class SliceOps {
         private final IntFunction<P_OUT[]> generator;
 
         /* renamed from: op */
-        private final AbstractPipeline<P_OUT, P_OUT, ?> f791op;
+        private final AbstractPipeline<P_OUT, P_OUT, ?> f789op;
         private final long targetOffset;
         private final long targetSize;
         private long thisNodeSize;
 
         SliceTask(AbstractPipeline<P_OUT, P_OUT, ?> abstractPipeline, PipelineHelper<P_OUT> pipelineHelper, Spliterator<P_IN> spliterator, IntFunction<P_OUT[]> intFunction, long j, long j2) {
             super(pipelineHelper, spliterator);
-            this.f791op = abstractPipeline;
+            this.f789op = abstractPipeline;
             this.generator = intFunction;
             this.targetOffset = j;
             this.targetSize = j2;
@@ -881,7 +881,7 @@ final class SliceOps {
 
         SliceTask(SliceTask<P_IN, P_OUT> sliceTask, Spliterator<P_IN> spliterator) {
             super(sliceTask, spliterator);
-            this.f791op = sliceTask.f791op;
+            this.f789op = sliceTask.f789op;
             this.generator = sliceTask.generator;
             this.targetOffset = sliceTask.targetOffset;
             this.targetSize = sliceTask.targetSize;
@@ -894,18 +894,18 @@ final class SliceOps {
 
         /* access modifiers changed from: protected */
         public final Node<P_OUT> getEmptyResult() {
-            return Nodes.emptyNode(this.f791op.getOutputShape());
+            return Nodes.emptyNode(this.f789op.getOutputShape());
         }
 
         /* access modifiers changed from: protected */
         public final Node<P_OUT> doLeaf() {
             long j = -1;
             if (isRoot()) {
-                if (StreamOpFlag.SIZED.isPreserved(this.f791op.sourceOrOpFlags)) {
-                    j = this.f791op.exactOutputSizeIfKnown(this.spliterator);
+                if (StreamOpFlag.SIZED.isPreserved(this.f789op.sourceOrOpFlags)) {
+                    j = this.f789op.exactOutputSizeIfKnown(this.spliterator);
                 }
-                Node.Builder<P_OUT> makeNodeBuilder = this.f791op.makeNodeBuilder(j, this.generator);
-                this.helper.copyIntoWithCancel(this.helper.wrapSink(this.f791op.opWrapSink(this.helper.getStreamAndOpFlags(), makeNodeBuilder)), this.spliterator);
+                Node.Builder<P_OUT> makeNodeBuilder = this.f789op.makeNodeBuilder(j, this.generator);
+                this.helper.copyIntoWithCancel(this.helper.wrapSink(this.f789op.opWrapSink(this.helper.getStreamAndOpFlags(), makeNodeBuilder)), this.spliterator);
                 return makeNodeBuilder.build();
             }
             Node<P_OUT> build = ((Node.Builder) this.helper.wrapAndCopyInto(this.helper.makeNodeBuilder(-1, this.generator), this.spliterator)).build();
@@ -927,7 +927,7 @@ final class SliceOps {
                 } else if (((SliceTask) this.leftChild).thisNodeSize == 0) {
                     node = (Node) ((SliceTask) this.rightChild).getLocalResult();
                 } else {
-                    node = Nodes.conc(this.f791op.getOutputShape(), (Node) ((SliceTask) this.leftChild).getLocalResult(), (Node) ((SliceTask) this.rightChild).getLocalResult());
+                    node = Nodes.conc(this.f789op.getOutputShape(), (Node) ((SliceTask) this.leftChild).getLocalResult(), (Node) ((SliceTask) this.rightChild).getLocalResult());
                 }
                 if (isRoot()) {
                     node = doTruncate(node);

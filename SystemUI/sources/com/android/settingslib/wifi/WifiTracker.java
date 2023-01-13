@@ -719,7 +719,7 @@ public class WifiTracker implements LifecycleObserver, OnStart, OnStop, OnDestro
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onWifiStateChanged$0$com-android-settingslib-wifi-WifiTracker$WifiListenerExecutor */
-        public /* synthetic */ void mo29461x2ba4b5bc(int i) {
+        public /* synthetic */ void mo29471x2ba4b5bc(int i) {
             this.mDelegatee.onWifiStateChanged(i);
         }
 
@@ -745,7 +745,7 @@ public class WifiTracker implements LifecycleObserver, OnStart, OnStop, OnDestro
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$runAndLog$1$com-android-settingslib-wifi-WifiTracker$WifiListenerExecutor */
-        public /* synthetic */ void mo29462x749f0124(String str, Runnable runnable) {
+        public /* synthetic */ void mo29472x749f0124(String str, Runnable runnable) {
             if (WifiTracker.this.mRegistered) {
                 if (WifiTracker.isVerboseLoggingEnabled()) {
                     Log.i(WifiTracker.TAG, str);

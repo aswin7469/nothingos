@@ -15,6 +15,6 @@ public final /* synthetic */ class StackStateAnimator$$ExternalSyntheticLambda1 
     }
 
     public final void run() {
-        this.f$0.mo42623x5b6566b8(this.f$1, this.f$2);
+        this.f$0.mo42631x5b6566b8(this.f$1, this.f$2);
     }
 }

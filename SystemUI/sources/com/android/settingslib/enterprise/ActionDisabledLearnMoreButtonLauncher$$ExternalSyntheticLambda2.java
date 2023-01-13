@@ -18,6 +18,6 @@ public final /* synthetic */ class ActionDisabledLearnMoreButtonLauncher$$Extern
     }
 
     public final void run() {
-        this.f$0.mo28694xbb0b65cf(this.f$1, this.f$2, this.f$3);
+        this.f$0.mo28699xbb0b65cf(this.f$1, this.f$2, this.f$3);
     }
 }

@@ -11,6 +11,6 @@ public final /* synthetic */ class GlobalActionsDialogLite$LockDownAction$$Exter
     }
 
     public final void run() {
-        this.f$0.mo32952x29220999();
+        this.f$0.mo32962x29220999();
     }
 }

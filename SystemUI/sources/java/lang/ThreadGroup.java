@@ -5,7 +5,7 @@ import com.android.systemui.navigationbar.NavigationBarInflaterView;
 import java.lang.Thread;
 import java.p026io.PrintStream;
 import java.util.Arrays;
-import sun.misc.C4740VM;
+import sun.misc.C4752VM;
 
 public class ThreadGroup implements Thread.UncaughtExceptionHandler {
     static final ThreadGroup mainThreadGroup;
@@ -727,7 +727,7 @@ public class ThreadGroup implements Thread.UncaughtExceptionHandler {
         if (z) {
             return true;
         }
-        C4740VM.unsuspendSomeThreads();
+        C4752VM.unsuspendSomeThreads();
         return true;
     }
 

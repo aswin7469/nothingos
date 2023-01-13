@@ -12,12 +12,12 @@ import com.android.launcher3.icons.BaseIconFactory;
 import com.android.launcher3.icons.BitmapInfo;
 import com.android.launcher3.icons.C1693R;
 import com.android.launcher3.icons.ShadowGenerator;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 
 /* renamed from: com.android.wm.shell.bubbles.BubbleBadgeIconFactory */
 public class BubbleBadgeIconFactory extends BaseIconFactory {
     public BubbleBadgeIconFactory(Context context) {
-        super(context, context.getResources().getConfiguration().densityDpi, context.getResources().getDimensionPixelSize(C3343R.dimen.bubble_badge_size));
+        super(context, context.getResources().getConfiguration().densityDpi, context.getResources().getDimensionPixelSize(C3353R.dimen.bubble_badge_size));
     }
 
     /* access modifiers changed from: package-private */

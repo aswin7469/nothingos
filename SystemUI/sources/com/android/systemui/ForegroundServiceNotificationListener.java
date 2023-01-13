@@ -86,7 +86,7 @@ public class ForegroundServiceNotificationListener {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateNotification$0$com-android-systemui-ForegroundServiceNotificationListener */
-    public /* synthetic */ boolean mo29637x855961b8(StatusBarNotification statusBarNotification, int i, ForegroundServicesUserState foregroundServicesUserState) {
+    public /* synthetic */ boolean mo29647x855961b8(StatusBarNotification statusBarNotification, int i, ForegroundServicesUserState foregroundServicesUserState) {
         if (this.mForegroundServiceController.isDisclosureNotification(statusBarNotification)) {
             Bundle bundle = statusBarNotification.getNotification().extras;
             if (bundle != null) {

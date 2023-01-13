@@ -9,6 +9,6 @@ public final /* synthetic */ class HdmiCecSetMenuLanguageHelper$$ExternalSynthet
     }
 
     public final void run() {
-        this.f$0.mo33082x62d654ec();
+        this.f$0.mo33092x62d654ec();
     }
 }

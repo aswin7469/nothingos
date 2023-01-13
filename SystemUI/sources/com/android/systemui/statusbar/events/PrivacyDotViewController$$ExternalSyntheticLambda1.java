@@ -13,6 +13,6 @@ public final /* synthetic */ class PrivacyDotViewController$$ExternalSyntheticLa
     }
 
     public final void run() {
-        PrivacyDotViewController.m3058hideDotView$lambda3(this.f$0, this.f$1);
+        PrivacyDotViewController.m3062hideDotView$lambda3(this.f$0, this.f$1);
     }
 }

@@ -13,6 +13,6 @@ public final /* synthetic */ class TooltipManager$$ExternalSyntheticLambda0 impl
     }
 
     public final void run() {
-        TooltipManager.m2601show$lambda4(this.f$0, this.f$1, this.f$2);
+        TooltipManager.m2606show$lambda4(this.f$0, this.f$1, this.f$2);
     }
 }

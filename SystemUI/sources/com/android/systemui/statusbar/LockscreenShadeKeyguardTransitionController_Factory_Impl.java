@@ -6,9 +6,9 @@ import dagger.internal.InstanceFactory;
 import javax.inject.Provider;
 
 public final class LockscreenShadeKeyguardTransitionController_Factory_Impl implements LockscreenShadeKeyguardTransitionController.Factory {
-    private final C4823LockscreenShadeKeyguardTransitionController_Factory delegateFactory;
+    private final C4835LockscreenShadeKeyguardTransitionController_Factory delegateFactory;
 
-    LockscreenShadeKeyguardTransitionController_Factory_Impl(C4823LockscreenShadeKeyguardTransitionController_Factory lockscreenShadeKeyguardTransitionController_Factory) {
+    LockscreenShadeKeyguardTransitionController_Factory_Impl(C4835LockscreenShadeKeyguardTransitionController_Factory lockscreenShadeKeyguardTransitionController_Factory) {
         this.delegateFactory = lockscreenShadeKeyguardTransitionController_Factory;
     }
 
@@ -16,7 +16,7 @@ public final class LockscreenShadeKeyguardTransitionController_Factory_Impl impl
         return this.delegateFactory.get(notificationPanelViewController);
     }
 
-    public static Provider<LockscreenShadeKeyguardTransitionController.Factory> create(C4823LockscreenShadeKeyguardTransitionController_Factory lockscreenShadeKeyguardTransitionController_Factory) {
+    public static Provider<LockscreenShadeKeyguardTransitionController.Factory> create(C4835LockscreenShadeKeyguardTransitionController_Factory lockscreenShadeKeyguardTransitionController_Factory) {
         return InstanceFactory.create(new LockscreenShadeKeyguardTransitionController_Factory_Impl(lockscreenShadeKeyguardTransitionController_Factory));
     }
 }

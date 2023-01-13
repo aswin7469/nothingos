@@ -708,9 +708,15 @@
     <string name="force_rtl_layout_all_locales_summary">Jõusta kõikides lokaatides paremalt vasakule ekraanipaigutus</string>
     <string name="forced_resizable_secondary_display">Rakendus ei pruugi teisesel ekraanil töötada.</string>
     <string name="game_status">Mängimas</string>
+    <string name="gamemode_description">Mängurežiim määrab kindlaks, kas olete mängus ja lülitub automaatselt sisse</string>
+    <string name="gamemode_gamedashboard_title">Mängu esipaneel</string>
+    <string name="gamemode_notification_content">Puudutage seadetesse minemiseks</string>
+    <string name="gamemode_notification_title">Mängurežiim on hetkel sisselülitatud</string>
     <string name="global_action_lock_message">Lisavalikute nägemiseks avage oma telefon</string>
     <string name="global_action_screenshot">Ekraanipilt</string>
     <string name="global_action_smart_lock_disabled">Smart Lock on keelatud</string>
+    <string name="gm_guide_status_on">SEES</string>
+    <string name="gm_notification_title">Mängurežiim</string>
     <string name="go_to_web">Ava brauser</string>
     <string name="got_it">Selge</string>
     <string name="guest_exit_guest">Eemalda külaline</string>

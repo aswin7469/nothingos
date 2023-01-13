@@ -8,7 +8,7 @@ import android.os.RemoteException;
 import android.util.Log;
 import android.view.accessibility.IRemoteMagnificationAnimationCallback;
 import android.view.animation.AccelerateInterpolator;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
@@ -132,7 +132,7 @@ class WindowMagnificationAnimationController implements ValueAnimator.AnimatorUp
                 this.mStartSpec.set(1.0f, f2, f3);
                 AnimationSpec animationSpec = this.mEndSpec;
                 if (Float.isNaN(f)) {
-                    f = (float) this.mContext.getResources().getInteger(C1893R.integer.magnification_default_scale);
+                    f = (float) this.mContext.getResources().getInteger(C1894R.integer.magnification_default_scale);
                 }
                 animationSpec.set(f, f2, f3);
             } else {

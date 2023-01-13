@@ -31,7 +31,7 @@ public class MediaSessions {
     public final Callbacks mCallbacks;
     private final Context mContext;
     /* access modifiers changed from: private */
-    public final C1859H mHandler;
+    public final C1860H mHandler;
     private final HandlerExecutor mHandlerExecutor;
     private boolean mInit;
     /* access modifiers changed from: private */
@@ -62,7 +62,7 @@ public class MediaSessions {
 
     public MediaSessions(Context context, Looper looper, Callbacks callbacks) {
         this.mContext = context;
-        C1859H h = new C1859H(looper);
+        C1860H h = new C1860H(looper);
         this.mHandler = h;
         this.mHandlerExecutor = new HandlerExecutor(h);
         this.mMgr = (MediaSessionManager) context.getSystemService("media_session");
@@ -83,7 +83,7 @@ public class MediaSessions {
     }
 
     public void init() {
-        if (C1856D.BUG) {
+        if (C1857D.BUG) {
             Log.d(TAG, "init");
         }
         this.mMgr.addOnActiveSessionsChangedListener(this.mSessionsListener, (ComponentName) null, this.mHandler);
@@ -100,7 +100,7 @@ public class MediaSessions {
     }
 
     public void destroy() {
-        if (C1856D.BUG) {
+        if (C1857D.BUG) {
             Log.d(TAG, "destroy");
         }
         this.mInit = false;
@@ -114,7 +114,7 @@ public class MediaSessions {
             Log.w(TAG, "setVolume: No record found for token " + token);
             return;
         }
-        if (C1856D.BUG) {
+        if (C1857D.BUG) {
             Log.d(TAG, "Setting level to " + i);
         }
         mediaControllerRecord.controller.setVolumeTo(i, 0);
@@ -123,7 +123,7 @@ public class MediaSessions {
     /* access modifiers changed from: private */
     public void onRemoteVolumeChangedH(MediaSession.Token token, int i) {
         MediaController mediaController = new MediaController(this.mContext, token);
-        if (C1856D.BUG) {
+        if (C1857D.BUG) {
             Log.d(TAG, "remoteVolumeChangedH " + mediaController.getPackageName() + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + Util.audioManagerFlagsToString(i));
         }
         this.mCallbacks.onRemoteVolumeChanged(mediaController.getSessionToken(), i);
@@ -136,7 +136,7 @@ public class MediaSessions {
         if (mediaController != null) {
             str = mediaController.getPackageName();
         }
-        if (C1856D.BUG) {
+        if (C1857D.BUG) {
             Log.d(TAG, "onUpdateRemoteSessionListH " + str);
         }
         postUpdateSessions();
@@ -144,7 +144,7 @@ public class MediaSessions {
 
     /* access modifiers changed from: protected */
     public void onActiveSessionsUpdatedH(List<MediaController> list) {
-        if (C1856D.BUG) {
+        if (C1857D.BUG) {
             Log.d(TAG, "onActiveSessionsUpdatedH n=" + list.size());
         }
         HashSet<MediaSession.Token> hashSet = new HashSet<>(this.mRecords.keySet());
@@ -168,7 +168,7 @@ public class MediaSessions {
             MediaControllerRecord mediaControllerRecord3 = this.mRecords.get(token);
             mediaControllerRecord3.controller.unregisterCallback(mediaControllerRecord3);
             this.mRecords.remove(token);
-            if (C1856D.BUG) {
+            if (C1857D.BUG) {
                 Log.d(TAG, "Removing " + mediaControllerRecord3.name + " sentRemote=" + mediaControllerRecord3.sentRemote);
             }
             if (mediaControllerRecord3.sentRemote) {
@@ -255,7 +255,7 @@ public class MediaSessions {
         }
 
         public void onAudioInfoChanged(MediaController.PlaybackInfo playbackInfo) {
-            if (C1856D.BUG) {
+            if (C1857D.BUG) {
                 Log.d(MediaSessions.TAG, m239cb("onAudioInfoChanged") + Util.playbackInfoToString(playbackInfo) + " sentRemote=" + this.sentRemote);
             }
             boolean access$300 = MediaSessions.isRemote(playbackInfo);
@@ -269,55 +269,55 @@ public class MediaSessions {
         }
 
         public void onExtrasChanged(Bundle bundle) {
-            if (C1856D.BUG) {
+            if (C1857D.BUG) {
                 Log.d(MediaSessions.TAG, m239cb("onExtrasChanged") + bundle);
             }
         }
 
         public void onMetadataChanged(MediaMetadata mediaMetadata) {
-            if (C1856D.BUG) {
+            if (C1857D.BUG) {
                 Log.d(MediaSessions.TAG, m239cb("onMetadataChanged") + Util.mediaMetadataToString(mediaMetadata));
             }
         }
 
         public void onPlaybackStateChanged(PlaybackState playbackState) {
-            if (C1856D.BUG) {
+            if (C1857D.BUG) {
                 Log.d(MediaSessions.TAG, m239cb("onPlaybackStateChanged") + Util.playbackStateToString(playbackState));
             }
         }
 
         public void onQueueChanged(List<MediaSession.QueueItem> list) {
-            if (C1856D.BUG) {
+            if (C1857D.BUG) {
                 Log.d(MediaSessions.TAG, m239cb("onQueueChanged") + list);
             }
         }
 
         public void onQueueTitleChanged(CharSequence charSequence) {
-            if (C1856D.BUG) {
+            if (C1857D.BUG) {
                 Log.d(MediaSessions.TAG, m239cb("onQueueTitleChanged") + charSequence);
             }
         }
 
         public void onSessionDestroyed() {
-            if (C1856D.BUG) {
+            if (C1857D.BUG) {
                 Log.d(MediaSessions.TAG, m239cb("onSessionDestroyed"));
             }
         }
 
         public void onSessionEvent(String str, Bundle bundle) {
-            if (C1856D.BUG) {
+            if (C1857D.BUG) {
                 Log.d(MediaSessions.TAG, m239cb("onSessionEvent") + "event=" + str + " extras=" + bundle);
             }
         }
     }
 
     /* renamed from: com.android.settingslib.volume.MediaSessions$H */
-    private final class C1859H extends Handler {
+    private final class C1860H extends Handler {
         private static final int REMOTE_VOLUME_CHANGED = 2;
         private static final int UPDATE_REMOTE_SESSION_LIST = 3;
         private static final int UPDATE_SESSIONS = 1;
 
-        private C1859H(Looper looper) {
+        private C1860H(Looper looper) {
             super(looper);
         }
 

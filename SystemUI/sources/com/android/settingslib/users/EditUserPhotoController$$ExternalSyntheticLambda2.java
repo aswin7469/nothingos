@@ -11,6 +11,6 @@ public final /* synthetic */ class EditUserPhotoController$$ExternalSyntheticLam
     }
 
     public final void onClick(View view) {
-        this.f$0.mo29237x883584ca(view);
+        this.f$0.mo29242x883584ca(view);
     }
 }

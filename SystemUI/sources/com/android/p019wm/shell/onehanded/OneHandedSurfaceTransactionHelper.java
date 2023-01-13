@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.view.SurfaceControl;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import java.p026io.PrintWriter;
 
 /* renamed from: com.android.wm.shell.onehanded.OneHandedSurfaceTransactionHelper */
@@ -24,7 +24,7 @@ public class OneHandedSurfaceTransactionHelper {
         float dimension = resources.getDimension(17105510);
         this.mCornerRadiusAdjustment = dimension;
         this.mCornerRadius = resources.getDimension(17105509) - dimension;
-        this.mEnableCornerRadius = resources.getBoolean(C3343R.bool.config_one_handed_enable_round_corner);
+        this.mEnableCornerRadius = resources.getBoolean(C3353R.bool.config_one_handed_enable_round_corner);
     }
 
     /* access modifiers changed from: package-private */

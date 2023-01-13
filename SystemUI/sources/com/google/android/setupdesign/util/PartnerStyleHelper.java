@@ -4,13 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.view.View;
-import com.google.android.setupcompat.C3931R;
+import com.google.android.setupcompat.C3941R;
 import com.google.android.setupcompat.PartnerCustomizationLayout;
 import com.google.android.setupcompat.internal.TemplateLayout;
 import com.google.android.setupcompat.partnerconfig.PartnerConfig;
 import com.google.android.setupcompat.partnerconfig.PartnerConfigHelper;
 import com.google.android.setupcompat.util.WizardManagerHelper;
-import com.google.android.setupdesign.C3953R;
+import com.google.android.setupdesign.C3963R;
 import com.google.android.setupdesign.GlifLayout;
 import java.util.Locale;
 
@@ -73,7 +73,7 @@ public final class PartnerStyleHelper {
         } catch (ClassCastException | IllegalArgumentException unused) {
         }
         boolean isAnySetupWizard = activity != null ? WizardManagerHelper.isAnySetupWizard(activity.getIntent()) : false;
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(new int[]{C3953R.attr.sucUsePartnerResource});
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(new int[]{C3963R.attr.sucUsePartnerResource});
         boolean z = obtainStyledAttributes.getBoolean(0, true);
         obtainStyledAttributes.recycle();
         if (isAnySetupWizard || z) {
@@ -100,7 +100,7 @@ public final class PartnerStyleHelper {
             }
         } catch (ClassCastException | IllegalArgumentException unused) {
         }
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(new int[]{C3953R.attr.sudUsePartnerHeavyTheme});
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(new int[]{C3963R.attr.sudUsePartnerHeavyTheme});
         boolean z = obtainStyledAttributes.getBoolean(0, false);
         obtainStyledAttributes.recycle();
         boolean z2 = z || PartnerConfigHelper.shouldApplyExtendedPartnerConfig(context);
@@ -125,15 +125,15 @@ public final class PartnerStyleHelper {
             }
         } catch (ClassCastException | IllegalArgumentException unused) {
         }
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(new int[]{C3953R.attr.sucFullDynamicColor});
-        boolean hasValue = obtainStyledAttributes.hasValue(C3931R.styleable.SucPartnerCustomizationLayout_sucFullDynamicColor);
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(new int[]{C3963R.attr.sucFullDynamicColor});
+        boolean hasValue = obtainStyledAttributes.hasValue(C3941R.styleable.SucPartnerCustomizationLayout_sucFullDynamicColor);
         obtainStyledAttributes.recycle();
         return hasValue;
     }
 
     private static TemplateLayout findLayoutFromActivity(Activity activity) {
         View findViewById;
-        if (activity == null || (findViewById = activity.findViewById(C3953R.C3956id.suc_layout_status)) == null) {
+        if (activity == null || (findViewById = activity.findViewById(C3963R.C3966id.suc_layout_status)) == null) {
             return null;
         }
         return (TemplateLayout) findViewById.getParent();

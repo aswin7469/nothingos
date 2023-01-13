@@ -44,7 +44,7 @@ public class LocationControllerImpl extends BroadcastReceiver implements Locatio
     private final ContentObserver mContentObserver;
     private final Context mContext;
     private final DeviceConfigProxy mDeviceConfigProxy;
-    private final C3175H mHandler;
+    private final C3185H mHandler;
     private final PackageManager mPackageManager;
     private final SecureSettings mSecureSettings;
     private boolean mShouldDisplayAllAccesses = getAllAccessesSetting();
@@ -60,14 +60,14 @@ public class LocationControllerImpl extends BroadcastReceiver implements Locatio
         this.mAppOpsController = appOpsController;
         this.mDeviceConfigProxy = deviceConfigProxy;
         this.mBootCompleteCache = bootCompleteCache;
-        C3175H h = new C3175H(looper);
+        C3185H h = new C3185H(looper);
         this.mHandler = h;
         this.mUserTracker = userTracker;
         this.mUiEventLogger = uiEventLogger;
         this.mSecureSettings = secureSettings;
         this.mBackgroundHandler = handler;
         this.mPackageManager = packageManager;
-        C31741 r4 = new ContentObserver(handler) {
+        C31841 r4 = new ContentObserver(handler) {
             public void onChange(boolean z) {
                 LocationControllerImpl locationControllerImpl = LocationControllerImpl.this;
                 boolean unused = locationControllerImpl.mShowSystemAccessesSetting = locationControllerImpl.getShowSystemSetting();
@@ -86,7 +86,7 @@ public class LocationControllerImpl extends BroadcastReceiver implements Locatio
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-statusbar-policy-LocationControllerImpl */
-    public /* synthetic */ void mo45921x5109b535(DeviceConfig.Properties properties) {
+    public /* synthetic */ void mo45933x5109b535(DeviceConfig.Properties properties) {
         this.mShouldDisplayAllAccesses = getAllAccessesSetting();
         this.mShowSystemAccessesFlag = getShowSystemSetting();
         updateActiveLocationRequests();
@@ -245,14 +245,14 @@ public class LocationControllerImpl extends BroadcastReceiver implements Locatio
     }
 
     /* renamed from: com.android.systemui.statusbar.policy.LocationControllerImpl$H */
-    private final class C3175H extends Handler {
+    private final class C3185H extends Handler {
         private static final int MSG_ADD_CALLBACK = 3;
         private static final int MSG_LOCATION_ACTIVE_CHANGED = 2;
         private static final int MSG_LOCATION_SETTINGS_CHANGED = 1;
         private static final int MSG_REMOVE_CALLBACK = 4;
         private ArrayList<LocationController.LocationChangeCallback> mSettingsChangeCallbacks = new ArrayList<>();
 
-        C3175H(Looper looper) {
+        C3185H(Looper looper) {
             super(looper);
         }
 
@@ -275,7 +275,7 @@ public class LocationControllerImpl extends BroadcastReceiver implements Locatio
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$locationActiveChanged$0$com-android-systemui-statusbar-policy-LocationControllerImpl$H */
-        public /* synthetic */ void mo45926xb1ea6500(LocationController.LocationChangeCallback locationChangeCallback) {
+        public /* synthetic */ void mo45938xb1ea6500(LocationController.LocationChangeCallback locationChangeCallback) {
             locationChangeCallback.onLocationActiveChanged(LocationControllerImpl.this.mAreActiveLocationRequests);
         }
 

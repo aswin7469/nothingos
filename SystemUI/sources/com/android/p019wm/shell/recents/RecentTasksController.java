@@ -196,7 +196,7 @@ public class RecentTasksController implements TaskStackListenerCallback, RemoteC
         public final SingleInstanceRemoteListener<RecentTasksController, IRecentTasksListener> mListener;
         private final Runnable mRecentTasksListener = new Runnable() {
             public void run() {
-                IRecentTasksImpl.this.mListener.call(new C3550x6ba2c7fb());
+                IRecentTasksImpl.this.mListener.call(new C3560x6ba2c7fb());
             }
         };
 
@@ -207,13 +207,13 @@ public class RecentTasksController implements TaskStackListenerCallback, RemoteC
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$new$0$com-android-wm-shell-recents-RecentTasksController$IRecentTasksImpl */
-        public /* synthetic */ void mo50717x2087de69(RecentTasksController recentTasksController) {
+        public /* synthetic */ void mo50726x2087de69(RecentTasksController recentTasksController) {
             recentTasksController.registerRecentTasksListener(this.mRecentTasksListener);
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$new$1$com-android-wm-shell-recents-RecentTasksController$IRecentTasksImpl */
-        public /* synthetic */ void mo50718x11d96dea(RecentTasksController recentTasksController) {
+        public /* synthetic */ void mo50727x11d96dea(RecentTasksController recentTasksController) {
             recentTasksController.unregisterRecentTasksListener(this.mRecentTasksListener);
         }
 
@@ -228,7 +228,7 @@ public class RecentTasksController implements TaskStackListenerCallback, RemoteC
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$registerRecentTasksListener$2$com-android-wm-shell-recents-RecentTasksController$IRecentTasksImpl */
-        public /* synthetic */ void mo50719x8012ebef(IRecentTasksListener iRecentTasksListener, RecentTasksController recentTasksController) {
+        public /* synthetic */ void mo50728x8012ebef(IRecentTasksListener iRecentTasksListener, RecentTasksController recentTasksController) {
             this.mListener.register(iRecentTasksListener);
         }
 
@@ -238,7 +238,7 @@ public class RecentTasksController implements TaskStackListenerCallback, RemoteC
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$unregisterRecentTasksListener$3$com-android-wm-shell-recents-RecentTasksController$IRecentTasksImpl */
-        public /* synthetic */ void mo50720xd1249f37(RecentTasksController recentTasksController) {
+        public /* synthetic */ void mo50729xd1249f37(RecentTasksController recentTasksController) {
             this.mListener.unregister();
         }
 

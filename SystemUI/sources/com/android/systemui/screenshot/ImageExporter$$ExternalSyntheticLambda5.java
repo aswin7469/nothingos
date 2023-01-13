@@ -20,6 +20,6 @@ public final /* synthetic */ class ImageExporter$$ExternalSyntheticLambda5 imple
     }
 
     public final Object attachCompleter(CallbackToFutureAdapter.Completer completer) {
-        return this.f$0.mo37338xb44b94b6(this.f$1, this.f$2, this.f$3, completer);
+        return this.f$0.mo37339xb44b94b6(this.f$1, this.f$2, this.f$3, completer);
     }
 }

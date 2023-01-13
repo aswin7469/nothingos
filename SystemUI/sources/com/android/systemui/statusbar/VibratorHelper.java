@@ -30,7 +30,7 @@ public class VibratorHelper {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$vibrate$0$com-android-systemui-statusbar-VibratorHelper  reason: not valid java name */
-    public /* synthetic */ void m3043lambda$vibrate$0$comandroidsystemuistatusbarVibratorHelper(int i) {
+    public /* synthetic */ void m3047lambda$vibrate$0$comandroidsystemuistatusbarVibratorHelper(int i) {
         this.mVibrator.vibrate(VibrationEffect.get(i, false), TOUCH_VIBRATION_ATTRIBUTES);
     }
 
@@ -42,7 +42,7 @@ public class VibratorHelper {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$vibrate$1$com-android-systemui-statusbar-VibratorHelper  reason: not valid java name */
-    public /* synthetic */ void m3044lambda$vibrate$1$comandroidsystemuistatusbarVibratorHelper(int i, String str, VibrationEffect vibrationEffect, String str2, VibrationAttributes vibrationAttributes) {
+    public /* synthetic */ void m3048lambda$vibrate$1$comandroidsystemuistatusbarVibratorHelper(int i, String str, VibrationEffect vibrationEffect, String str2, VibrationAttributes vibrationAttributes) {
         this.mVibrator.vibrate(i, str, vibrationEffect, str2, vibrationAttributes);
     }
 
@@ -54,7 +54,7 @@ public class VibratorHelper {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$vibrate$2$com-android-systemui-statusbar-VibratorHelper  reason: not valid java name */
-    public /* synthetic */ void m3045lambda$vibrate$2$comandroidsystemuistatusbarVibratorHelper(VibrationEffect vibrationEffect, AudioAttributes audioAttributes) {
+    public /* synthetic */ void m3049lambda$vibrate$2$comandroidsystemuistatusbarVibratorHelper(VibrationEffect vibrationEffect, AudioAttributes audioAttributes) {
         this.mVibrator.vibrate(vibrationEffect, audioAttributes);
     }
 
@@ -66,7 +66,7 @@ public class VibratorHelper {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$vibrate$3$com-android-systemui-statusbar-VibratorHelper  reason: not valid java name */
-    public /* synthetic */ void m3046lambda$vibrate$3$comandroidsystemuistatusbarVibratorHelper(VibrationEffect vibrationEffect) {
+    public /* synthetic */ void m3050lambda$vibrate$3$comandroidsystemuistatusbarVibratorHelper(VibrationEffect vibrationEffect) {
         this.mVibrator.vibrate(vibrationEffect);
     }
 

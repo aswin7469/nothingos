@@ -10,16 +10,16 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewOutlineProvider;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.statusbar.notification.AnimatableProperty;
 import com.android.systemui.statusbar.notification.PropertyAnimator;
 import com.android.systemui.statusbar.notification.stack.AnimationProperties;
 
 public abstract class ExpandableOutlineView extends ExpandableView {
-    private static final AnimatableProperty BOTTOM_ROUNDNESS = AnimatableProperty.from("bottomRoundness", new ExpandableOutlineView$$ExternalSyntheticLambda2(), new ExpandableOutlineView$$ExternalSyntheticLambda3(), C1893R.C1897id.bottom_roundess_animator_tag, C1893R.C1897id.bottom_roundess_animator_end_tag, C1893R.C1897id.bottom_roundess_animator_start_tag);
+    private static final AnimatableProperty BOTTOM_ROUNDNESS = AnimatableProperty.from("bottomRoundness", new ExpandableOutlineView$$ExternalSyntheticLambda2(), new ExpandableOutlineView$$ExternalSyntheticLambda3(), C1894R.C1898id.bottom_roundess_animator_tag, C1894R.C1898id.bottom_roundess_animator_end_tag, C1894R.C1898id.bottom_roundess_animator_start_tag);
     private static final Path EMPTY_PATH = new Path();
     private static final AnimationProperties ROUNDNESS_PROPERTIES = new AnimationProperties().setDuration(200);
-    private static final AnimatableProperty TOP_ROUNDNESS = AnimatableProperty.from("topRoundness", new ExpandableOutlineView$$ExternalSyntheticLambda0(), new ExpandableOutlineView$$ExternalSyntheticLambda1(), C1893R.C1897id.top_roundess_animator_tag, C1893R.C1897id.top_roundess_animator_end_tag, C1893R.C1897id.top_roundess_animator_start_tag);
+    private static final AnimatableProperty TOP_ROUNDNESS = AnimatableProperty.from("topRoundness", new ExpandableOutlineView$$ExternalSyntheticLambda0(), new ExpandableOutlineView$$ExternalSyntheticLambda1(), C1894R.C1898id.top_roundess_animator_tag, C1894R.C1898id.top_roundess_animator_end_tag, C1894R.C1898id.top_roundess_animator_start_tag);
     /* access modifiers changed from: private */
     public boolean mAlwaysRoundBothCorners;
     /* access modifiers changed from: private */
@@ -109,7 +109,7 @@ public abstract class ExpandableOutlineView extends ExpandableView {
 
     public ExpandableOutlineView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        C27501 r1 = new ViewOutlineProvider() {
+        C27561 r1 = new ViewOutlineProvider() {
             public void getOutline(View view, Outline outline) {
                 if (ExpandableOutlineView.this.mCustomOutline || ExpandableOutlineView.this.getCurrentTopRoundness() != 0.0f || ExpandableOutlineView.this.getCurrentBottomRoundness() != 0.0f || ExpandableOutlineView.this.mAlwaysRoundBothCorners) {
                     Path clipPath = ExpandableOutlineView.this.getClipPath(false);
@@ -168,11 +168,11 @@ public abstract class ExpandableOutlineView extends ExpandableView {
 
     private void initDimens() {
         Resources resources = getResources();
-        this.mOutlineRadius = resources.getDimension(C1893R.dimen.notification_shadow_radius);
-        boolean z = resources.getBoolean(C1893R.bool.config_clipNotificationsToOutline);
+        this.mOutlineRadius = resources.getDimension(C1894R.dimen.notification_shadow_radius);
+        boolean z = resources.getBoolean(C1894R.bool.config_clipNotificationsToOutline);
         this.mAlwaysRoundBothCorners = z;
         if (!z) {
-            this.mOutlineRadius = (float) resources.getDimensionPixelSize(C1893R.dimen.notification_corner_radius);
+            this.mOutlineRadius = (float) resources.getDimensionPixelSize(C1894R.dimen.notification_corner_radius);
         }
         setClipToOutline(this.mAlwaysRoundBothCorners);
     }

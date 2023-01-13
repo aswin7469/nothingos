@@ -5,7 +5,7 @@ import android.os.Handler;
 import android.provider.DeviceConfig;
 import android.service.notification.NotificationListenerService;
 import android.util.SparseArray;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
@@ -29,7 +29,7 @@ public class AssistantFeedbackController {
 
     @Inject
     public AssistantFeedbackController(@Main Handler handler, Context context, DeviceConfigProxy deviceConfigProxy) {
-        C26451 r0 = new DeviceConfig.OnPropertiesChangedListener() {
+        C26511 r0 = new DeviceConfig.OnPropertiesChangedListener() {
             public void onPropertiesChanged(DeviceConfig.Properties properties) {
                 if (properties.getKeyset().contains("enable_nas_feedback")) {
                     boolean unused = AssistantFeedbackController.this.mFeedbackEnabled = properties.getBoolean("enable_nas_feedback", false);
@@ -88,14 +88,14 @@ public class AssistantFeedbackController {
     public int getInlineDescriptionResource(NotificationEntry notificationEntry) {
         int feedbackStatus = getFeedbackStatus(notificationEntry);
         if (feedbackStatus == 1) {
-            return C1893R.string.notification_channel_summary_automatic_alerted;
+            return C1894R.string.notification_channel_summary_automatic_alerted;
         }
         if (feedbackStatus == 2) {
-            return C1893R.string.notification_channel_summary_automatic_silenced;
+            return C1894R.string.notification_channel_summary_automatic_silenced;
         }
         if (feedbackStatus != 3) {
-            return feedbackStatus != 4 ? C1893R.string.notification_channel_summary_automatic : C1893R.string.notification_channel_summary_automatic_demoted;
+            return feedbackStatus != 4 ? C1894R.string.notification_channel_summary_automatic : C1894R.string.notification_channel_summary_automatic_demoted;
         }
-        return C1893R.string.notification_channel_summary_automatic_promoted;
+        return C1894R.string.notification_channel_summary_automatic_promoted;
     }
 }

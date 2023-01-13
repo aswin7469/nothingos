@@ -22,7 +22,7 @@ import android.view.Window;
 import android.view.WindowInsets;
 import android.view.WindowManager;
 import com.android.settingslib.Utils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dependency;
 import com.android.systemui.animation.DialogLaunchAnimator;
 import com.android.systemui.broadcast.BroadcastDispatcher;
@@ -200,13 +200,13 @@ public class SystemUIDialog extends AlertDialog implements ViewRootImpl.ConfigCh
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setButton$1$com-android-systemui-statusbar-phone-SystemUIDialog */
-    public /* synthetic */ void mo45372x5d25f216(int i, DialogInterface.OnClickListener onClickListener) {
+    public /* synthetic */ void mo45384x5d25f216(int i, DialogInterface.OnClickListener onClickListener) {
         getButton(i).setOnClickListener(new SystemUIDialog$$ExternalSyntheticLambda0(this, onClickListener, i));
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setButton$0$com-android-systemui-statusbar-phone-SystemUIDialog */
-    public /* synthetic */ void mo45371xcfeb4095(DialogInterface.OnClickListener onClickListener, int i, View view) {
+    public /* synthetic */ void mo45383xcfeb4095(DialogInterface.OnClickListener onClickListener, int i, View view) {
         onClickListener.onClick(this, i);
     }
 
@@ -268,7 +268,7 @@ public class SystemUIDialog extends AlertDialog implements ViewRootImpl.ConfigCh
         if (i > 0) {
             return calculateDialogWidthWithInsets(dialog, i);
         }
-        int dimensionPixelSize = context.getResources().getDimensionPixelSize(C1893R.dimen.large_dialog_width);
+        int dimensionPixelSize = context.getResources().getDimensionPixelSize(C1894R.dimen.large_dialog_width);
         return dimensionPixelSize > 0 ? dimensionPixelSize + getHorizontalInsets(dialog) : dimensionPixelSize;
     }
 
@@ -293,7 +293,7 @@ public class SystemUIDialog extends AlertDialog implements ViewRootImpl.ConfigCh
     }
 
     static /* synthetic */ boolean lambda$getHorizontalInsets$3(View view) {
-        return view.getTag(C1893R.C1897id.tag_dialog_background) != null;
+        return view.getTag(C1894R.C1898id.tag_dialog_background) != null;
     }
 
     private static class DismissReceiver extends BroadcastReceiver {

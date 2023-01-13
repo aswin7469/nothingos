@@ -15,6 +15,6 @@ public final /* synthetic */ class SocketKeepalive$1$$ExternalSyntheticLambda2 i
     }
 
     public final void run() {
-        this.f$0.m1933lambda$onStarted$0$androidnetSocketKeepalive$1(this.f$1, this.f$2);
+        this.f$0.m1939lambda$onStarted$0$androidnetSocketKeepalive$1(this.f$1, this.f$2);
     }
 }

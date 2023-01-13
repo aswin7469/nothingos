@@ -8,7 +8,7 @@ import android.icu.text.NumberFormat;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardUpdateMonitorCallback;
 import com.android.settingslib.Utils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.policy.BatteryController;
@@ -93,8 +93,8 @@ public class NTKeyguardClockViewLargeController extends ViewController<NTKeyguar
         this.mKeyguardUpdateMonitor = keyguardUpdateMonitor;
         this.mBatteryController = batteryController;
         this.mBurmeseNumerals = instance.format(1234567890);
-        this.mBurmeseLineSpacing = getContext().getResources().getFloat(C1893R.dimen.keyguard_clock_line_spacing_scale_burmese);
-        this.mDefaultLineSpacing = getContext().getResources().getFloat(C1893R.dimen.keyguard_clock_line_spacing_scale);
+        this.mBurmeseLineSpacing = getContext().getResources().getFloat(C1894R.dimen.keyguard_clock_line_spacing_scale_burmese);
+        this.mDefaultLineSpacing = getContext().getResources().getFloat(C1894R.dimen.keyguard_clock_line_spacing_scale);
     }
 
     /* access modifiers changed from: protected */
@@ -152,6 +152,6 @@ public class NTKeyguardClockViewLargeController extends ViewController<NTKeyguar
     }
 
     private void initColors() {
-        this.mLockScreenColor = Utils.getColorAttrDefaultColor(getContext(), C1893R.attr.wallpaperTextColorAccent);
+        this.mLockScreenColor = Utils.getColorAttrDefaultColor(getContext(), C1894R.attr.wallpaperTextColorAccent);
     }
 }

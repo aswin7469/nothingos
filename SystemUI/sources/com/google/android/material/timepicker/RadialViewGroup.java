@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.view.ViewCompat;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.shape.CornerSize;
 import com.google.android.material.shape.MaterialShapeDrawable;
 import com.google.android.material.shape.RelativeCornerSize;
@@ -33,10 +33,10 @@ class RadialViewGroup extends ConstraintLayout {
 
     public RadialViewGroup(Context context, AttributeSet attributeSet, int i) {
         super(context, attributeSet, i);
-        LayoutInflater.from(context).inflate(C3621R.layout.material_radial_view_group, this);
+        LayoutInflater.from(context).inflate(C3631R.layout.material_radial_view_group, this);
         ViewCompat.setBackground(this, createBackground());
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C3621R.styleable.RadialViewGroup, i, 0);
-        this.radius = obtainStyledAttributes.getDimensionPixelSize(C3621R.styleable.RadialViewGroup_materialCircleRadius, 0);
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C3631R.styleable.RadialViewGroup, i, 0);
+        this.radius = obtainStyledAttributes.getDimensionPixelSize(C3631R.styleable.RadialViewGroup_materialCircleRadius, 0);
         this.updateLayoutParametersRunnable = new Runnable() {
             public void run() {
                 RadialViewGroup.this.updateLayoutParams();
@@ -98,8 +98,8 @@ class RadialViewGroup extends ConstraintLayout {
         float f = 0.0f;
         for (int i3 = 0; i3 < childCount; i3++) {
             View childAt = getChildAt(i3);
-            if (childAt.getId() != C3621R.C3624id.circle_center && !shouldSkipView(childAt)) {
-                constraintSet.constrainCircle(childAt.getId(), C3621R.C3624id.circle_center, this.radius, f);
+            if (childAt.getId() != C3631R.C3634id.circle_center && !shouldSkipView(childAt)) {
+                constraintSet.constrainCircle(childAt.getId(), C3631R.C3634id.circle_center, this.radius, f);
                 f += 360.0f / ((float) (childCount - i));
             }
         }

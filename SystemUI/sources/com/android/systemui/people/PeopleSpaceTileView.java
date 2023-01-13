@@ -12,7 +12,7 @@ import android.view.ViewOverlay;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 
 public class PeopleSpaceTileView extends LinearLayout {
     private TextView mNameView;
@@ -43,16 +43,16 @@ public class PeopleSpaceTileView extends LinearLayout {
         this.mTileView = findViewWithTag;
         if (findViewWithTag == null) {
             LayoutInflater from = LayoutInflater.from(context);
-            View inflate = from.inflate(C1893R.layout.people_space_tile_view, viewGroup, false);
+            View inflate = from.inflate(C1894R.layout.people_space_tile_view, viewGroup, false);
             this.mTileView = inflate;
             viewGroup.addView(inflate, -1, -1);
             this.mTileView.setTag(str);
             if (!z) {
-                from.inflate(C1893R.layout.people_space_activity_list_divider, viewGroup, true);
+                from.inflate(C1894R.layout.people_space_activity_list_divider, viewGroup, true);
             }
         }
-        this.mNameView = (TextView) this.mTileView.findViewById(C1893R.C1897id.tile_view_name);
-        this.mPersonIconView = (ImageView) this.mTileView.findViewById(C1893R.C1897id.tile_view_person_icon);
+        this.mNameView = (TextView) this.mTileView.findViewById(C1894R.C1898id.tile_view_name);
+        this.mPersonIconView = (ImageView) this.mTileView.findViewById(C1894R.C1898id.tile_view_person_icon);
     }
 
     public void setName(String str) {

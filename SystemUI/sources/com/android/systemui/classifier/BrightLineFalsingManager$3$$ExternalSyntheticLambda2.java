@@ -7,6 +7,6 @@ import java.util.function.Function;
 /* compiled from: D8$$SyntheticClass */
 public final /* synthetic */ class BrightLineFalsingManager$3$$ExternalSyntheticLambda2 implements Function {
     public final Object apply(Object obj) {
-        return BrightLineFalsingManager.C20073.lambda$onGestureFinalized$1((MotionEvent) obj);
+        return BrightLineFalsingManager.C20093.lambda$onGestureFinalized$1((MotionEvent) obj);
     }
 }

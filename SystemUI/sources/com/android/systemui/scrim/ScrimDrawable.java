@@ -68,7 +68,7 @@ public class ScrimDrawable extends Drawable {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setColor$0$com-android-systemui-scrim-ScrimDrawable  reason: not valid java name */
-    public /* synthetic */ void m3004lambda$setColor$0$comandroidsystemuiscrimScrimDrawable(int i, int i2, ValueAnimator valueAnimator) {
+    public /* synthetic */ void m3008lambda$setColor$0$comandroidsystemuiscrimScrimDrawable(int i, int i2, ValueAnimator valueAnimator) {
         this.mMainColor = ColorUtils.blendARGB(i, i2, ((Float) valueAnimator.getAnimatedValue()).floatValue());
         invalidateSelf();
     }

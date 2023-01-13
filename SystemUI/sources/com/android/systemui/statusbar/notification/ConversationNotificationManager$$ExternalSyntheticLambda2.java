@@ -15,6 +15,6 @@ public final /* synthetic */ class ConversationNotificationManager$$ExternalSynt
     }
 
     public final void run() {
-        ConversationNotificationManager.m3088onEntryViewBound$lambda3$lambda2(this.f$0, this.f$1, this.f$2);
+        ConversationNotificationManager.m3092onEntryViewBound$lambda3$lambda2(this.f$0, this.f$1, this.f$2);
     }
 }

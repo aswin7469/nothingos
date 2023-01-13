@@ -7,7 +7,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.core.view.ViewCompat;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.color.MaterialColors;
 
 public class SnackbarContentLayout extends LinearLayout implements ContentViewCallback {
@@ -26,8 +26,8 @@ public class SnackbarContentLayout extends LinearLayout implements ContentViewCa
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.messageView = (TextView) findViewById(C3621R.C3624id.snackbar_text);
-        this.actionView = (Button) findViewById(C3621R.C3624id.snackbar_action);
+        this.messageView = (TextView) findViewById(C3631R.C3634id.snackbar_text);
+        this.actionView = (Button) findViewById(C3631R.C3634id.snackbar_action);
     }
 
     public TextView getMessageView() {
@@ -41,7 +41,7 @@ public class SnackbarContentLayout extends LinearLayout implements ContentViewCa
     /* access modifiers changed from: package-private */
     public void updateActionTextColorAlphaIfNeeded(float f) {
         if (f != 1.0f) {
-            this.actionView.setTextColor(MaterialColors.layer(MaterialColors.getColor(this, C3621R.attr.colorSurface), this.actionView.getCurrentTextColor(), f));
+            this.actionView.setTextColor(MaterialColors.layer(MaterialColors.getColor(this, C3631R.attr.colorSurface), this.actionView.getCurrentTextColor(), f));
         }
     }
 
@@ -63,10 +63,10 @@ public class SnackbarContentLayout extends LinearLayout implements ContentViewCa
             return
         L_0x000b:
             android.content.res.Resources r0 = r7.getResources()
-            int r2 = com.google.android.material.C3621R.dimen.design_snackbar_padding_vertical_2lines
+            int r2 = com.google.android.material.C3631R.dimen.design_snackbar_padding_vertical_2lines
             int r0 = r0.getDimensionPixelSize(r2)
             android.content.res.Resources r2 = r7.getResources()
-            int r3 = com.google.android.material.C3621R.dimen.design_snackbar_padding_vertical
+            int r3 = com.google.android.material.C3631R.dimen.design_snackbar_padding_vertical
             int r2 = r2.getDimensionPixelSize(r3)
             android.widget.TextView r3 = r7.messageView
             android.text.Layout r3 = r3.getLayout()

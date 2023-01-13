@@ -14,7 +14,7 @@ import android.util.Log;
 import android.view.View;
 import com.android.internal.logging.MetricsLogger;
 import com.android.keyguard.dagger.KeyguardBouncerScope;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.DejankUtils;
 import com.android.systemui.statusbar.phone.ShadeController;
 import com.android.systemui.statusbar.policy.ConfigurationController;
@@ -145,7 +145,7 @@ public class EmergencyButtonController extends ViewController<EmergencyButton> {
 
     /* access modifiers changed from: private */
     public void requestCellInfoUpdate() {
-        if (getContext().getResources().getBoolean(C1893R.bool.kg_hide_emgcy_btn_when_oos)) {
+        if (getContext().getResources().getBoolean(C1894R.bool.kg_hide_emgcy_btn_when_oos)) {
             try {
                 this.mTelephonyManager.createForSubscriptionId(-1).requestCellInfoUpdate(getContext().getMainExecutor(), new TelephonyManager.CellInfoCallback() {
                     public void onCellInfo(List<CellInfo> list) {

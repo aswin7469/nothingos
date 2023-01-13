@@ -134,7 +134,7 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
     }
 
     /* renamed from: ix */
-    private long m1704ix(int i) {
+    private long m1710ix(int i) {
         return this.address + ((long) i);
     }
 
@@ -144,14 +144,14 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
 
     public final byte get() {
         if (this.memoryRef.isAccessible) {
-            return get(m1704ix(nextGetIndex()));
+            return get(m1710ix(nextGetIndex()));
         }
         throw new IllegalStateException("buffer is inaccessible");
     }
 
     public final byte get(int i) {
         if (this.memoryRef.isAccessible) {
-            return get(m1704ix(checkIndex(i)));
+            return get(m1710ix(checkIndex(i)));
         }
         throw new IllegalStateException("buffer is inaccessible");
     }
@@ -162,7 +162,7 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
             int position = position();
             int limit = limit();
             if (i2 <= (position <= limit ? limit - position : 0)) {
-                Memory.peekByteArray(m1704ix(position), bArr, i, i2);
+                Memory.peekByteArray(m1710ix(position), bArr, i, i2);
                 this.position = position + i2;
                 return this;
             }
@@ -187,7 +187,7 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
         if (!this.memoryRef.isAccessible) {
             throw new IllegalStateException("buffer is inaccessible");
         } else if (!this.isReadOnly) {
-            put(m1704ix(nextPutIndex()), b);
+            put(m1710ix(nextPutIndex()), b);
             return this;
         } else {
             throw new ReadOnlyBufferException();
@@ -198,7 +198,7 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
         if (!this.memoryRef.isAccessible) {
             throw new IllegalStateException("buffer is inaccessible");
         } else if (!this.isReadOnly) {
-            put(m1704ix(checkIndex(i)), b);
+            put(m1710ix(checkIndex(i)), b);
             return this;
         } else {
             throw new ReadOnlyBufferException();
@@ -213,7 +213,7 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
             int position = position();
             int limit = limit();
             if (i2 <= (position <= limit ? limit - position : 0)) {
-                Memory.pokeByteArray(m1704ix(position), bArr, i, i2);
+                Memory.pokeByteArray(m1710ix(position), bArr, i, i2);
                 this.position = position + i2;
                 return this;
             }
@@ -230,7 +230,7 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
             int position = position();
             int limit = limit();
             int i = position <= limit ? limit - position : 0;
-            System.arraycopy((Object) this.f560hb, this.position + this.offset, (Object) this.f560hb, this.offset, remaining());
+            System.arraycopy((Object) this.f558hb, this.position + this.offset, (Object) this.f558hb, this.offset, remaining());
             position(i);
             limit(capacity());
             discardMark();
@@ -258,7 +258,7 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
         if (this.memoryRef.isAccessible) {
             int i = this.position + 2;
             if (i <= limit()) {
-                char peekShort = (char) Memory.peekShort(m1704ix(this.position), !this.nativeByteOrder);
+                char peekShort = (char) Memory.peekShort(m1710ix(this.position), !this.nativeByteOrder);
                 this.position = i;
                 return peekShort;
             }
@@ -270,7 +270,7 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
     public final char getChar(int i) {
         if (this.memoryRef.isAccessible) {
             checkIndex(i, 2);
-            return (char) Memory.peekShort(m1704ix(i), !this.nativeByteOrder);
+            return (char) Memory.peekShort(m1710ix(i), !this.nativeByteOrder);
         }
         throw new IllegalStateException("buffer is inaccessible");
     }
@@ -278,7 +278,7 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
     /* access modifiers changed from: package-private */
     public char getCharUnchecked(int i) {
         if (this.memoryRef.isAccessible) {
-            return (char) Memory.peekShort(m1704ix(i), !this.nativeByteOrder);
+            return (char) Memory.peekShort(m1710ix(i), !this.nativeByteOrder);
         }
         throw new IllegalStateException("buffer is inaccessible");
     }
@@ -286,7 +286,7 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
     /* access modifiers changed from: package-private */
     public void getUnchecked(int i, char[] cArr, int i2, int i3) {
         if (this.memoryRef.isAccessible) {
-            Memory.peekCharArray(m1704ix(i), cArr, i2, i3, !this.nativeByteOrder);
+            Memory.peekCharArray(m1710ix(i), cArr, i2, i3, !this.nativeByteOrder);
             return;
         }
         throw new IllegalStateException("buffer is inaccessible");
@@ -301,7 +301,7 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
         if (!this.memoryRef.isAccessible) {
             throw new IllegalStateException("buffer is inaccessible");
         } else if (!this.isReadOnly) {
-            putChar(m1704ix(nextPutIndex(2)), c);
+            putChar(m1710ix(nextPutIndex(2)), c);
             return this;
         } else {
             throw new ReadOnlyBufferException();
@@ -312,7 +312,7 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
         if (!this.memoryRef.isAccessible) {
             throw new IllegalStateException("buffer is inaccessible");
         } else if (!this.isReadOnly) {
-            putChar(m1704ix(checkIndex(i, 2)), c);
+            putChar(m1710ix(checkIndex(i, 2)), c);
             return this;
         } else {
             throw new ReadOnlyBufferException();
@@ -322,7 +322,7 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
     /* access modifiers changed from: package-private */
     public void putCharUnchecked(int i, char c) {
         if (this.memoryRef.isAccessible) {
-            putChar(m1704ix(i), c);
+            putChar(m1710ix(i), c);
             return;
         }
         throw new IllegalStateException("buffer is inaccessible");
@@ -331,7 +331,7 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
     /* access modifiers changed from: package-private */
     public void putUnchecked(int i, char[] cArr, int i2, int i3) {
         if (this.memoryRef.isAccessible) {
-            Memory.pokeCharArray(m1704ix(i), cArr, i2, i3, !this.nativeByteOrder);
+            Memory.pokeCharArray(m1710ix(i), cArr, i2, i3, !this.nativeByteOrder);
             return;
         }
         throw new IllegalStateException("buffer is inaccessible");
@@ -353,14 +353,14 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
 
     public final short getShort() {
         if (this.memoryRef.isAccessible) {
-            return getShort(m1704ix(nextGetIndex(2)));
+            return getShort(m1710ix(nextGetIndex(2)));
         }
         throw new IllegalStateException("buffer is inaccessible");
     }
 
     public final short getShort(int i) {
         if (this.memoryRef.isAccessible) {
-            return getShort(m1704ix(checkIndex(i, 2)));
+            return getShort(m1710ix(checkIndex(i, 2)));
         }
         throw new IllegalStateException("buffer is inaccessible");
     }
@@ -368,7 +368,7 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
     /* access modifiers changed from: package-private */
     public short getShortUnchecked(int i) {
         if (this.memoryRef.isAccessible) {
-            return getShort(m1704ix(i));
+            return getShort(m1710ix(i));
         }
         throw new IllegalStateException("buffer is inaccessible");
     }
@@ -376,7 +376,7 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
     /* access modifiers changed from: package-private */
     public void getUnchecked(int i, short[] sArr, int i2, int i3) {
         if (this.memoryRef.isAccessible) {
-            Memory.peekShortArray(m1704ix(i), sArr, i2, i3, !this.nativeByteOrder);
+            Memory.peekShortArray(m1710ix(i), sArr, i2, i3, !this.nativeByteOrder);
             return;
         }
         throw new IllegalStateException("buffer is inaccessible");
@@ -391,7 +391,7 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
         if (!this.memoryRef.isAccessible) {
             throw new IllegalStateException("buffer is inaccessible");
         } else if (!this.isReadOnly) {
-            putShort(m1704ix(nextPutIndex(2)), s);
+            putShort(m1710ix(nextPutIndex(2)), s);
             return this;
         } else {
             throw new ReadOnlyBufferException();
@@ -402,7 +402,7 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
         if (!this.memoryRef.isAccessible) {
             throw new IllegalStateException("buffer is inaccessible");
         } else if (!this.isReadOnly) {
-            putShort(m1704ix(checkIndex(i, 2)), s);
+            putShort(m1710ix(checkIndex(i, 2)), s);
             return this;
         } else {
             throw new ReadOnlyBufferException();
@@ -412,7 +412,7 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
     /* access modifiers changed from: package-private */
     public void putShortUnchecked(int i, short s) {
         if (this.memoryRef.isAccessible) {
-            putShort(m1704ix(i), s);
+            putShort(m1710ix(i), s);
             return;
         }
         throw new IllegalStateException("buffer is inaccessible");
@@ -421,7 +421,7 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
     /* access modifiers changed from: package-private */
     public void putUnchecked(int i, short[] sArr, int i2, int i3) {
         if (this.memoryRef.isAccessible) {
-            Memory.pokeShortArray(m1704ix(i), sArr, i2, i3, !this.nativeByteOrder);
+            Memory.pokeShortArray(m1710ix(i), sArr, i2, i3, !this.nativeByteOrder);
             return;
         }
         throw new IllegalStateException("buffer is inaccessible");
@@ -443,14 +443,14 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
 
     public int getInt() {
         if (this.memoryRef.isAccessible) {
-            return getInt(m1704ix(nextGetIndex(4)));
+            return getInt(m1710ix(nextGetIndex(4)));
         }
         throw new IllegalStateException("buffer is inaccessible");
     }
 
     public int getInt(int i) {
         if (this.memoryRef.isAccessible) {
-            return getInt(m1704ix(checkIndex(i, 4)));
+            return getInt(m1710ix(checkIndex(i, 4)));
         }
         throw new IllegalStateException("buffer is inaccessible");
     }
@@ -458,7 +458,7 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
     /* access modifiers changed from: package-private */
     public final int getIntUnchecked(int i) {
         if (this.memoryRef.isAccessible) {
-            return getInt(m1704ix(i));
+            return getInt(m1710ix(i));
         }
         throw new IllegalStateException("buffer is inaccessible");
     }
@@ -466,7 +466,7 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
     /* access modifiers changed from: package-private */
     public final void getUnchecked(int i, int[] iArr, int i2, int i3) {
         if (this.memoryRef.isAccessible) {
-            Memory.peekIntArray(m1704ix(i), iArr, i2, i3, !this.nativeByteOrder);
+            Memory.peekIntArray(m1710ix(i), iArr, i2, i3, !this.nativeByteOrder);
             return;
         }
         throw new IllegalStateException("buffer is inaccessible");
@@ -481,7 +481,7 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
         if (!this.memoryRef.isAccessible) {
             throw new IllegalStateException("buffer is inaccessible");
         } else if (!this.isReadOnly) {
-            putInt(m1704ix(nextPutIndex(4)), i);
+            putInt(m1710ix(nextPutIndex(4)), i);
             return this;
         } else {
             throw new ReadOnlyBufferException();
@@ -492,7 +492,7 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
         if (!this.memoryRef.isAccessible) {
             throw new IllegalStateException("buffer is inaccessible");
         } else if (!this.isReadOnly) {
-            putInt(m1704ix(checkIndex(i, 4)), i2);
+            putInt(m1710ix(checkIndex(i, 4)), i2);
             return this;
         } else {
             throw new ReadOnlyBufferException();
@@ -502,7 +502,7 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
     /* access modifiers changed from: package-private */
     public final void putIntUnchecked(int i, int i2) {
         if (this.memoryRef.isAccessible) {
-            putInt(m1704ix(i), i2);
+            putInt(m1710ix(i), i2);
             return;
         }
         throw new IllegalStateException("buffer is inaccessible");
@@ -511,7 +511,7 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
     /* access modifiers changed from: package-private */
     public final void putUnchecked(int i, int[] iArr, int i2, int i3) {
         if (this.memoryRef.isAccessible) {
-            Memory.pokeIntArray(m1704ix(i), iArr, i2, i3, !this.nativeByteOrder);
+            Memory.pokeIntArray(m1710ix(i), iArr, i2, i3, !this.nativeByteOrder);
             return;
         }
         throw new IllegalStateException("buffer is inaccessible");
@@ -533,14 +533,14 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
 
     public final long getLong() {
         if (this.memoryRef.isAccessible) {
-            return getLong(m1704ix(nextGetIndex(8)));
+            return getLong(m1710ix(nextGetIndex(8)));
         }
         throw new IllegalStateException("buffer is inaccessible");
     }
 
     public final long getLong(int i) {
         if (this.memoryRef.isAccessible) {
-            return getLong(m1704ix(checkIndex(i, 8)));
+            return getLong(m1710ix(checkIndex(i, 8)));
         }
         throw new IllegalStateException("buffer is inaccessible");
     }
@@ -548,7 +548,7 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
     /* access modifiers changed from: package-private */
     public final long getLongUnchecked(int i) {
         if (this.memoryRef.isAccessible) {
-            return getLong(m1704ix(i));
+            return getLong(m1710ix(i));
         }
         throw new IllegalStateException("buffer is inaccessible");
     }
@@ -556,7 +556,7 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
     /* access modifiers changed from: package-private */
     public final void getUnchecked(int i, long[] jArr, int i2, int i3) {
         if (this.memoryRef.isAccessible) {
-            Memory.peekLongArray(m1704ix(i), jArr, i2, i3, !this.nativeByteOrder);
+            Memory.peekLongArray(m1710ix(i), jArr, i2, i3, !this.nativeByteOrder);
             return;
         }
         throw new IllegalStateException("buffer is inaccessible");
@@ -571,7 +571,7 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
         if (!this.memoryRef.isAccessible) {
             throw new IllegalStateException("buffer is inaccessible");
         } else if (!this.isReadOnly) {
-            putLong(m1704ix(nextPutIndex(8)), j);
+            putLong(m1710ix(nextPutIndex(8)), j);
             return this;
         } else {
             throw new ReadOnlyBufferException();
@@ -582,7 +582,7 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
         if (!this.memoryRef.isAccessible) {
             throw new IllegalStateException("buffer is inaccessible");
         } else if (!this.isReadOnly) {
-            putLong(m1704ix(checkIndex(i, 8)), j);
+            putLong(m1710ix(checkIndex(i, 8)), j);
             return this;
         } else {
             throw new ReadOnlyBufferException();
@@ -592,7 +592,7 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
     /* access modifiers changed from: package-private */
     public final void putLongUnchecked(int i, long j) {
         if (this.memoryRef.isAccessible) {
-            putLong(m1704ix(i), j);
+            putLong(m1710ix(i), j);
             return;
         }
         throw new IllegalStateException("buffer is inaccessible");
@@ -601,7 +601,7 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
     /* access modifiers changed from: package-private */
     public final void putUnchecked(int i, long[] jArr, int i2, int i3) {
         if (this.memoryRef.isAccessible) {
-            Memory.pokeLongArray(m1704ix(i), jArr, i2, i3, !this.nativeByteOrder);
+            Memory.pokeLongArray(m1710ix(i), jArr, i2, i3, !this.nativeByteOrder);
             return;
         }
         throw new IllegalStateException("buffer is inaccessible");
@@ -623,14 +623,14 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
 
     public final float getFloat() {
         if (this.memoryRef.isAccessible) {
-            return getFloat(m1704ix(nextGetIndex(4)));
+            return getFloat(m1710ix(nextGetIndex(4)));
         }
         throw new IllegalStateException("buffer is inaccessible");
     }
 
     public final float getFloat(int i) {
         if (this.memoryRef.isAccessible) {
-            return getFloat(m1704ix(checkIndex(i, 4)));
+            return getFloat(m1710ix(checkIndex(i, 4)));
         }
         throw new IllegalStateException("buffer is inaccessible");
     }
@@ -638,7 +638,7 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
     /* access modifiers changed from: package-private */
     public final float getFloatUnchecked(int i) {
         if (this.memoryRef.isAccessible) {
-            return getFloat(m1704ix(i));
+            return getFloat(m1710ix(i));
         }
         throw new IllegalStateException("buffer is inaccessible");
     }
@@ -646,7 +646,7 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
     /* access modifiers changed from: package-private */
     public final void getUnchecked(int i, float[] fArr, int i2, int i3) {
         if (this.memoryRef.isAccessible) {
-            Memory.peekFloatArray(m1704ix(i), fArr, i2, i3, !this.nativeByteOrder);
+            Memory.peekFloatArray(m1710ix(i), fArr, i2, i3, !this.nativeByteOrder);
             return;
         }
         throw new IllegalStateException("buffer is inaccessible");
@@ -661,7 +661,7 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
         if (!this.memoryRef.isAccessible) {
             throw new IllegalStateException("buffer is inaccessible");
         } else if (!this.isReadOnly) {
-            putFloat(m1704ix(nextPutIndex(4)), f);
+            putFloat(m1710ix(nextPutIndex(4)), f);
             return this;
         } else {
             throw new ReadOnlyBufferException();
@@ -672,7 +672,7 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
         if (!this.memoryRef.isAccessible) {
             throw new IllegalStateException("buffer is inaccessible");
         } else if (!this.isReadOnly) {
-            putFloat(m1704ix(checkIndex(i, 4)), f);
+            putFloat(m1710ix(checkIndex(i, 4)), f);
             return this;
         } else {
             throw new ReadOnlyBufferException();
@@ -682,7 +682,7 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
     /* access modifiers changed from: package-private */
     public final void putFloatUnchecked(int i, float f) {
         if (this.memoryRef.isAccessible) {
-            putFloat(m1704ix(i), f);
+            putFloat(m1710ix(i), f);
             return;
         }
         throw new IllegalStateException("buffer is inaccessible");
@@ -691,7 +691,7 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
     /* access modifiers changed from: package-private */
     public final void putUnchecked(int i, float[] fArr, int i2, int i3) {
         if (this.memoryRef.isAccessible) {
-            Memory.pokeFloatArray(m1704ix(i), fArr, i2, i3, !this.nativeByteOrder);
+            Memory.pokeFloatArray(m1710ix(i), fArr, i2, i3, !this.nativeByteOrder);
             return;
         }
         throw new IllegalStateException("buffer is inaccessible");
@@ -713,14 +713,14 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
 
     public final double getDouble() {
         if (this.memoryRef.isAccessible) {
-            return getDouble(m1704ix(nextGetIndex(8)));
+            return getDouble(m1710ix(nextGetIndex(8)));
         }
         throw new IllegalStateException("buffer is inaccessible");
     }
 
     public final double getDouble(int i) {
         if (this.memoryRef.isAccessible) {
-            return getDouble(m1704ix(checkIndex(i, 8)));
+            return getDouble(m1710ix(checkIndex(i, 8)));
         }
         throw new IllegalStateException("buffer is inaccessible");
     }
@@ -728,7 +728,7 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
     /* access modifiers changed from: package-private */
     public final double getDoubleUnchecked(int i) {
         if (this.memoryRef.isAccessible) {
-            return getDouble(m1704ix(i));
+            return getDouble(m1710ix(i));
         }
         throw new IllegalStateException("buffer is inaccessible");
     }
@@ -736,7 +736,7 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
     /* access modifiers changed from: package-private */
     public final void getUnchecked(int i, double[] dArr, int i2, int i3) {
         if (this.memoryRef.isAccessible) {
-            Memory.peekDoubleArray(m1704ix(i), dArr, i2, i3, !this.nativeByteOrder);
+            Memory.peekDoubleArray(m1710ix(i), dArr, i2, i3, !this.nativeByteOrder);
             return;
         }
         throw new IllegalStateException("buffer is inaccessible");
@@ -751,7 +751,7 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
         if (!this.memoryRef.isAccessible) {
             throw new IllegalStateException("buffer is inaccessible");
         } else if (!this.isReadOnly) {
-            putDouble(m1704ix(nextPutIndex(8)), d);
+            putDouble(m1710ix(nextPutIndex(8)), d);
             return this;
         } else {
             throw new ReadOnlyBufferException();
@@ -762,7 +762,7 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
         if (!this.memoryRef.isAccessible) {
             throw new IllegalStateException("buffer is inaccessible");
         } else if (!this.isReadOnly) {
-            putDouble(m1704ix(checkIndex(i, 8)), d);
+            putDouble(m1710ix(checkIndex(i, 8)), d);
             return this;
         } else {
             throw new ReadOnlyBufferException();
@@ -772,7 +772,7 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
     /* access modifiers changed from: package-private */
     public final void putDoubleUnchecked(int i, double d) {
         if (this.memoryRef.isAccessible) {
-            putDouble(m1704ix(i), d);
+            putDouble(m1710ix(i), d);
             return;
         }
         throw new IllegalStateException("buffer is inaccessible");
@@ -781,7 +781,7 @@ public class DirectByteBuffer extends MappedByteBuffer implements DirectBuffer {
     /* access modifiers changed from: package-private */
     public final void putUnchecked(int i, double[] dArr, int i2, int i3) {
         if (this.memoryRef.isAccessible) {
-            Memory.pokeDoubleArray(m1704ix(i), dArr, i2, i3, !this.nativeByteOrder);
+            Memory.pokeDoubleArray(m1710ix(i), dArr, i2, i3, !this.nativeByteOrder);
             return;
         }
         throw new IllegalStateException("buffer is inaccessible");

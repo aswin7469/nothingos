@@ -12,6 +12,6 @@ public final /* synthetic */ class ScrimController$$ExternalSyntheticLambda2 imp
     }
 
     public final void onPanelExpansionChanged(PanelExpansionChangeEvent panelExpansionChangeEvent) {
-        this.f$0.mo45047x8c817aac(panelExpansionChangeEvent);
+        this.f$0.mo45062x8c817aac(panelExpansionChangeEvent);
     }
 }

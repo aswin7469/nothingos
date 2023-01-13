@@ -11,6 +11,6 @@ public final /* synthetic */ class StatusBarSystemEventAnimator$$ExternalSynthet
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        StatusBarSystemEventAnimator.m3201onSystemEventAnimationFinish$lambda3(this.f$0, valueAnimator);
+        StatusBarSystemEventAnimator.m3206onSystemEventAnimationFinish$lambda3(this.f$0, valueAnimator);
     }
 }

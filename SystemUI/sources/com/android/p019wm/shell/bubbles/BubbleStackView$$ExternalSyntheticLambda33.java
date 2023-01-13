@@ -14,6 +14,6 @@ public final /* synthetic */ class BubbleStackView$$ExternalSyntheticLambda33 im
     }
 
     public final void onAnimationUpdateForProperty(Object obj, ArrayMap arrayMap) {
-        this.f$0.mo48685x8b25b239((AnimatableScaleMatrix) obj, arrayMap);
+        this.f$0.mo48694x8b25b239((AnimatableScaleMatrix) obj, arrayMap);
     }
 }

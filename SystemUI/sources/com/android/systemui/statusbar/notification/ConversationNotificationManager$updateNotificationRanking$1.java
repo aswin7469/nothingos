@@ -8,7 +8,7 @@ import kotlin.jvm.internal.FunctionReferenceImpl;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.sequences.Sequence;
 
-@Metadata(mo64988k = 3, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65044k = 3, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* compiled from: ConversationNotifications.kt */
 /* synthetic */ class ConversationNotificationManager$updateNotificationRanking$1 extends FunctionReferenceImpl implements Function1<NotificationContentView, Sequence<? extends View>> {
     public static final ConversationNotificationManager$updateNotificationRanking$1 INSTANCE = new ConversationNotificationManager$updateNotificationRanking$1();

@@ -3,6 +3,7 @@ package com.android.systemui.p012qs.tiles;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -14,8 +15,9 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Switch;
 import com.android.internal.logging.MetricsLogger;
+import com.android.settingslib.Utils;
 import com.android.settingslib.notification.EnableZenModeDialog;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Prefs;
 import com.android.systemui.animation.DialogLaunchAnimator;
 import com.android.systemui.dagger.qualifiers.Background;
@@ -60,7 +62,7 @@ public class DndTile extends QSTileImpl<QSTile.BooleanState> {
     @Inject
     public DndTile(QSHost qSHost, @Background Looper looper, @Main Handler handler, FalsingManager falsingManager, MetricsLogger metricsLogger, StatusBarStateController statusBarStateController, ActivityStarter activityStarter, QSLogger qSLogger, ZenModeController zenModeController, @Main SharedPreferences sharedPreferences, SecureSettings secureSettings, DialogLaunchAnimator dialogLaunchAnimator) {
         super(qSHost, looper, handler, falsingManager, metricsLogger, statusBarStateController, activityStarter, qSLogger);
-        C23973 r1 = new ZenModeController.Callback() {
+        C24024 r1 = new ZenModeController.Callback() {
             public void onZenChanged(int i) {
                 DndTile.this.refreshState(Integer.valueOf(i));
             }
@@ -137,7 +139,7 @@ public class DndTile extends QSTileImpl<QSTile.BooleanState> {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$enableZenMode$0$com-android-systemui-qs-tiles-DndTile  reason: not valid java name */
-    public /* synthetic */ void m2977lambda$enableZenMode$0$comandroidsystemuiqstilesDndTile(View view) {
+    public /* synthetic */ void m2981lambda$enableZenMode$0$comandroidsystemuiqstilesDndTile(View view) {
         Dialog makeZenModeDialog = makeZenModeDialog();
         if (view != null) {
             this.mDialogLaunchAnimator.showFromView(makeZenModeDialog, view, false);
@@ -147,8 +149,15 @@ public class DndTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     private Dialog makeZenModeDialog() {
-        AlertDialog createDialog = new EnableZenModeDialog(this.mContext, C1893R.style.Theme_SystemUI_Dialog, true, this.mQSZenDialogMetricsLogger).createDialog();
+        AlertDialog createDialog = new EnableZenModeDialog(this.mContext, C1894R.style.Theme_SystemUI_Dialog, true, this.mQSZenDialogMetricsLogger).createDialog();
         SystemUIDialog.applyFlags(createDialog);
+        createDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            public void onShow(DialogInterface dialogInterface) {
+                if (dialogInterface instanceof AlertDialog) {
+                    ((AlertDialog) dialogInterface).getButton(-1).setTextColor(Utils.getColorAttr(DndTile.this.mContext, 17957103));
+                }
+            }
+        });
         SystemUIDialog.setShowForAllUsers(createDialog, true);
         SystemUIDialog.registerDismissListener(createDialog);
         SystemUIDialog.setDialogSize(createDialog);
@@ -161,7 +170,7 @@ public class DndTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     public CharSequence getTileLabel() {
-        return this.mContext.getString(C1893R.string.quick_settings_dnd_label);
+        return this.mContext.getString(C1894R.string.quick_settings_dnd_label);
     }
 
     /* access modifiers changed from: protected */
@@ -184,15 +193,15 @@ public class DndTile extends QSTileImpl<QSTile.BooleanState> {
             booleanState.icon = QSTileImpl.ResourceIcon.get(17302831);
             checkIfRestrictionEnforcedByAdminOnly(booleanState, "no_adjust_volume");
             if (intValue == 1) {
-                booleanState.contentDescription = this.mContext.getString(C1893R.string.accessibility_quick_settings_dnd) + ", " + booleanState.secondaryLabel;
+                booleanState.contentDescription = this.mContext.getString(C1894R.string.accessibility_quick_settings_dnd) + ", " + booleanState.secondaryLabel;
             } else if (intValue == 2) {
-                booleanState.contentDescription = this.mContext.getString(C1893R.string.accessibility_quick_settings_dnd) + ", " + this.mContext.getString(C1893R.string.accessibility_quick_settings_dnd_none_on) + ", " + booleanState.secondaryLabel;
+                booleanState.contentDescription = this.mContext.getString(C1894R.string.accessibility_quick_settings_dnd) + ", " + this.mContext.getString(C1894R.string.accessibility_quick_settings_dnd_none_on) + ", " + booleanState.secondaryLabel;
             } else if (intValue != 3) {
-                booleanState.contentDescription = this.mContext.getString(C1893R.string.accessibility_quick_settings_dnd);
+                booleanState.contentDescription = this.mContext.getString(C1894R.string.accessibility_quick_settings_dnd);
             } else {
-                booleanState.contentDescription = this.mContext.getString(C1893R.string.accessibility_quick_settings_dnd) + ", " + this.mContext.getString(C1893R.string.accessibility_quick_settings_dnd_alarms_on) + ", " + booleanState.secondaryLabel;
+                booleanState.contentDescription = this.mContext.getString(C1894R.string.accessibility_quick_settings_dnd) + ", " + this.mContext.getString(C1894R.string.accessibility_quick_settings_dnd_alarms_on) + ", " + booleanState.secondaryLabel;
             }
-            booleanState.dualLabelContentDescription = this.mContext.getResources().getString(C1893R.string.accessibility_quick_settings_open_settings, new Object[]{getTileLabel()});
+            booleanState.dualLabelContentDescription = this.mContext.getResources().getString(C1894R.string.accessibility_quick_settings_open_settings, new Object[]{getTileLabel()});
             booleanState.expandedAccessibilityClassName = Switch.class.getName();
             if (this.mSettingZenDuration.getValue() == -1) {
                 z = true;

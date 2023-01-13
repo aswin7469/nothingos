@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewOverlay;
 import android.widget.LinearLayout;
-import com.google.android.setupcompat.C3931R;
+import com.google.android.setupcompat.C3941R;
 import com.google.android.setupcompat.partnerconfig.PartnerConfigHelper;
 import com.google.android.setupcompat.template.FooterActionButton;
 
@@ -74,11 +74,11 @@ public class ButtonBarLayout extends LinearLayout {
                 View childAt = getChildAt(i);
                 LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) childAt.getLayoutParams();
                 if (z) {
-                    childAt.setTag(C3931R.C3933id.suc_customization_original_weight, Float.valueOf(layoutParams.weight));
+                    childAt.setTag(C3941R.C3943id.suc_customization_original_weight, Float.valueOf(layoutParams.weight));
                     layoutParams.weight = 0.0f;
                     layoutParams.leftMargin = 0;
                 } else {
-                    Float f = (Float) childAt.getTag(C3931R.C3933id.suc_customization_original_weight);
+                    Float f = (Float) childAt.getTag(C3941R.C3943id.suc_customization_original_weight);
                     if (f != null) {
                         layoutParams.weight = f.floatValue();
                     }

@@ -10,6 +10,6 @@ public final /* synthetic */ class QuickStatusBarHeader$$ExternalSyntheticLambda
     }
 
     public final void run() {
-        this.f$0.mo36337xebd8adeb();
+        this.f$0.mo36341xebd8adeb();
     }
 }

@@ -10,6 +10,6 @@ public final /* synthetic */ class StackAnimationController$$ExternalSyntheticLa
     }
 
     public final void run() {
-        this.f$0.mo48955x4820ad95();
+        this.f$0.mo48964x4820ad95();
     }
 }

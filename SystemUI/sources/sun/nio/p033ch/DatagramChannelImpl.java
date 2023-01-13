@@ -40,13 +40,13 @@ class DatagramChannelImpl extends DatagramChannel implements SelChImpl {
     private static final int ST_UNINITIALIZED = -1;
 
     /* renamed from: nd */
-    private static NativeDispatcher f879nd = new DatagramDispatcher();
+    private static NativeDispatcher f877nd = new DatagramDispatcher();
     private InetAddress cachedSenderInetAddress;
     private int cachedSenderPort;
     private final ProtocolFamily family;
 
     /* renamed from: fd */
-    final FileDescriptor f880fd;
+    final FileDescriptor f878fd;
     private final int fdVal;
     private final CloseGuard guard;
     private boolean isReuseAddress;
@@ -84,7 +84,7 @@ class DatagramChannelImpl extends DatagramChannel implements SelChImpl {
             StandardProtocolFamily standardProtocolFamily = Net.isIPv6Available() ? StandardProtocolFamily.INET6 : StandardProtocolFamily.INET;
             this.family = standardProtocolFamily;
             FileDescriptor socket2 = Net.socket(standardProtocolFamily, false);
-            this.f880fd = socket2;
+            this.f878fd = socket2;
             this.fdVal = IOUtil.fdVal(socket2);
             this.state = 0;
             if (socket2 != null && socket2.valid()) {
@@ -104,7 +104,7 @@ class DatagramChannelImpl extends DatagramChannel implements SelChImpl {
             if (family2 != StandardProtocolFamily.INET6 || Net.isIPv6Available()) {
                 this.family = family2;
                 FileDescriptor socket2 = Net.socket(family2, false);
-                this.f880fd = socket2;
+                this.f878fd = socket2;
                 this.fdVal = IOUtil.fdVal(socket2);
                 this.state = 0;
                 if (socket2 != null && socket2.valid()) {
@@ -126,7 +126,7 @@ class DatagramChannelImpl extends DatagramChannel implements SelChImpl {
         CloseGuard closeGuard = CloseGuard.get();
         this.guard = closeGuard;
         this.family = Net.isIPv6Available() ? StandardProtocolFamily.INET6 : StandardProtocolFamily.INET;
-        this.f880fd = fd;
+        this.f878fd = fd;
         this.fdVal = IOUtil.fdVal(fd);
         this.state = 0;
         this.localAddress = Net.localAddress(fd);
@@ -203,12 +203,12 @@ class DatagramChannelImpl extends DatagramChannel implements SelChImpl {
             int r2 = r1.getIndex()     // Catch:{ all -> 0x00a2 }
             r3 = -1
             if (r2 == r3) goto L_0x004b
-            java.io.FileDescriptor r3 = r6.f880fd     // Catch:{ all -> 0x00a2 }
+            java.io.FileDescriptor r3 = r6.f878fd     // Catch:{ all -> 0x00a2 }
             sun.nio.p033ch.Net.setInterface6(r3, r2)     // Catch:{ all -> 0x00a2 }
             java.net.Inet4Address r3 = sun.nio.p033ch.Net.anyInet4Address(r1)     // Catch:{ all -> 0x00a2 }
             if (r3 == 0) goto L_0x004a
             int r4 = sun.nio.p033ch.Net.inet4AsInt(r3)     // Catch:{ all -> 0x00a2 }
-            java.io.FileDescriptor r5 = r6.f880fd     // Catch:{ all -> 0x00a2 }
+            java.io.FileDescriptor r5 = r6.f878fd     // Catch:{ all -> 0x00a2 }
             sun.nio.p033ch.Net.setInterface4(r5, r4)     // Catch:{ all -> 0x00a2 }
         L_0x004a:
             goto L_0x0062
@@ -221,7 +221,7 @@ class DatagramChannelImpl extends DatagramChannel implements SelChImpl {
             java.net.Inet4Address r2 = sun.nio.p033ch.Net.anyInet4Address(r1)     // Catch:{ all -> 0x00a2 }
             if (r2 == 0) goto L_0x0065
             int r3 = sun.nio.p033ch.Net.inet4AsInt(r2)     // Catch:{ all -> 0x00a2 }
-            java.io.FileDescriptor r4 = r6.f880fd     // Catch:{ all -> 0x00a2 }
+            java.io.FileDescriptor r4 = r6.f878fd     // Catch:{ all -> 0x00a2 }
             sun.nio.p033ch.Net.setInterface4(r4, r3)     // Catch:{ all -> 0x00a2 }
         L_0x0062:
             monitor-exit(r0)     // Catch:{ all -> 0x00a2 }
@@ -250,13 +250,13 @@ class DatagramChannelImpl extends DatagramChannel implements SelChImpl {
             boolean r1 = r1.booleanValue()     // Catch:{ all -> 0x00a2 }
             r6.isReuseAddress = r1     // Catch:{ all -> 0x00a2 }
         L_0x008f:
-            java.io.FileDescriptor r1 = r6.f880fd     // Catch:{ all -> 0x00a2 }
+            java.io.FileDescriptor r1 = r6.f878fd     // Catch:{ all -> 0x00a2 }
             java.net.ProtocolFamily r2 = sun.nio.p033ch.Net.UNSPEC     // Catch:{ all -> 0x00a2 }
             sun.nio.p033ch.Net.setSocketOption(r1, r2, r7, r8)     // Catch:{ all -> 0x00a2 }
             monitor-exit(r0)     // Catch:{ all -> 0x00a2 }
             return r6
         L_0x0099:
-            java.io.FileDescriptor r1 = r6.f880fd     // Catch:{ all -> 0x00a2 }
+            java.io.FileDescriptor r1 = r6.f878fd     // Catch:{ all -> 0x00a2 }
             java.net.ProtocolFamily r2 = r6.family     // Catch:{ all -> 0x00a2 }
             sun.nio.p033ch.Net.setSocketOption(r1, r2, r7, r8)     // Catch:{ all -> 0x00a2 }
             monitor-exit(r0)     // Catch:{ all -> 0x00a2 }
@@ -295,7 +295,7 @@ class DatagramChannelImpl extends DatagramChannel implements SelChImpl {
                     if (socketOption != StandardSocketOptions.IP_MULTICAST_LOOP) {
                         if (socketOption == StandardSocketOptions.IP_MULTICAST_IF) {
                             if (this.family == StandardProtocolFamily.INET) {
-                                int interface4 = Net.getInterface4(this.f880fd);
+                                int interface4 = Net.getInterface4(this.f878fd);
                                 if (interface4 == 0) {
                                     return null;
                                 }
@@ -305,7 +305,7 @@ class DatagramChannelImpl extends DatagramChannel implements SelChImpl {
                                 }
                                 throw new IOException("Unable to map address to interface");
                             }
-                            int interface6 = Net.getInterface6(this.f880fd);
+                            int interface6 = Net.getInterface6(this.f878fd);
                             if (interface6 == 0) {
                                 return null;
                             }
@@ -315,7 +315,7 @@ class DatagramChannelImpl extends DatagramChannel implements SelChImpl {
                             }
                             throw new IOException("Unable to map index to interface");
                         } else if (socketOption != StandardSocketOptions.SO_REUSEADDR || !this.reuseAddressEmulated) {
-                            T socketOption2 = Net.getSocketOption(this.f880fd, Net.UNSPEC, socketOption);
+                            T socketOption2 = Net.getSocketOption(this.f878fd, Net.UNSPEC, socketOption);
                             return socketOption2;
                         } else {
                             T valueOf = Boolean.valueOf(this.isReuseAddress);
@@ -323,7 +323,7 @@ class DatagramChannelImpl extends DatagramChannel implements SelChImpl {
                         }
                     }
                 }
-                T socketOption3 = Net.getSocketOption(this.f880fd, this.family, socketOption);
+                T socketOption3 = Net.getSocketOption(this.f878fd, this.family, socketOption);
                 return socketOption3;
             }
         } else {
@@ -446,7 +446,7 @@ class DatagramChannelImpl extends DatagramChannel implements SelChImpl {
             java.nio.ByteBuffer r10 = sun.nio.p033ch.Util.getTemporaryDirectBuffer(r10)     // Catch:{ all -> 0x00d9 }
             r3 = r10
         L_0x0057:
-            java.io.FileDescriptor r10 = r14.f880fd     // Catch:{ all -> 0x00d9 }
+            java.io.FileDescriptor r10 = r14.f878fd     // Catch:{ all -> 0x00d9 }
             int r10 = r14.receive(r10, r3)     // Catch:{ all -> 0x00d9 }
             r1 = r10
             if (r1 != r11) goto L_0x0067
@@ -482,7 +482,7 @@ class DatagramChannelImpl extends DatagramChannel implements SelChImpl {
             r1 = 0
             goto L_0x0057
         L_0x009e:
-            java.io.FileDescriptor r10 = r14.f880fd     // Catch:{ all -> 0x00d9 }
+            java.io.FileDescriptor r10 = r14.f878fd     // Catch:{ all -> 0x00d9 }
             int r10 = r14.receive(r10, r15)     // Catch:{ all -> 0x00d9 }
             r1 = r10
             if (r1 != r11) goto L_0x00af
@@ -612,7 +612,7 @@ class DatagramChannelImpl extends DatagramChannel implements SelChImpl {
         dalvik.system.BlockGuard.getThreadPolicy().onNetwork();
      */
     /* JADX WARNING: Code restructure failed: missing block: B:34:0x0065, code lost:
-        r3 = send(r11.f880fd, r12, r1);
+        r3 = send(r11.f878fd, r12, r1);
      */
     /* JADX WARNING: Code restructure failed: missing block: B:35:0x006e, code lost:
         if (r3 != -3) goto L_0x0076;
@@ -633,7 +633,7 @@ class DatagramChannelImpl extends DatagramChannel implements SelChImpl {
         if (r11.localAddress != null) goto L_0x008c;
      */
     /* JADX WARNING: Code restructure failed: missing block: B:45:0x0083, code lost:
-        r11.localAddress = sun.nio.p033ch.Net.localAddress(r11.f880fd);
+        r11.localAddress = sun.nio.p033ch.Net.localAddress(r11.f878fd);
      */
     /* JADX WARNING: Code restructure failed: missing block: B:46:0x008c, code lost:
         monitor-exit(r9);
@@ -732,7 +732,7 @@ class DatagramChannelImpl extends DatagramChannel implements SelChImpl {
             dalvik.system.BlockGuard$Policy r9 = dalvik.system.BlockGuard.getThreadPolicy()     // Catch:{ all -> 0x00a1 }
             r9.onNetwork()     // Catch:{ all -> 0x00a1 }
         L_0x0065:
-            java.io.FileDescriptor r9 = r11.f880fd     // Catch:{ all -> 0x00a1 }
+            java.io.FileDescriptor r9 = r11.f878fd     // Catch:{ all -> 0x00a1 }
             int r9 = r11.send(r9, r12, r1)     // Catch:{ all -> 0x00a1 }
             r3 = r9
             r9 = -3
@@ -746,7 +746,7 @@ class DatagramChannelImpl extends DatagramChannel implements SelChImpl {
             if (r10 == 0) goto L_0x008b
             java.net.InetSocketAddress r10 = r11.localAddress     // Catch:{ all -> 0x009e }
             if (r10 != 0) goto L_0x008b
-            java.io.FileDescriptor r10 = r11.f880fd     // Catch:{ all -> 0x009e }
+            java.io.FileDescriptor r10 = r11.f878fd     // Catch:{ all -> 0x009e }
             java.net.InetSocketAddress r10 = sun.nio.p033ch.Net.localAddress(r10)     // Catch:{ all -> 0x009e }
             r11.localAddress = r10     // Catch:{ all -> 0x009e }
         L_0x008b:
@@ -885,11 +885,11 @@ class DatagramChannelImpl extends DatagramChannel implements SelChImpl {
                     }
                     this.readerThread = NativeThread.current();
                     do {
-                        c = IOUtil.read(this.f880fd, buf, -1, f879nd);
+                        c = IOUtil.read(this.f878fd, buf, -1, f877nd);
                         if (c != -3 || !isOpen()) {
                             int normalize = IOStatus.normalize(c);
                         }
-                        c = IOUtil.read(this.f880fd, buf, -1, f879nd);
+                        c = IOUtil.read(this.f878fd, buf, -1, f877nd);
                         break;
                     } while (!isOpen());
                     int normalize2 = IOStatus.normalize(c);
@@ -939,11 +939,11 @@ class DatagramChannelImpl extends DatagramChannel implements SelChImpl {
                 }
                 this.readerThread = NativeThread.current();
                 do {
-                    j = IOUtil.read(this.f880fd, dsts, offset, length, f879nd);
+                    j = IOUtil.read(this.f878fd, dsts, offset, length, f877nd);
                     if (j != -3 || !isOpen()) {
                         long normalize = IOStatus.normalize(j);
                     }
-                    j = IOUtil.read(this.f880fd, dsts, offset, length, f879nd);
+                    j = IOUtil.read(this.f878fd, dsts, offset, length, f877nd);
                     break;
                 } while (!isOpen());
                 long normalize2 = IOStatus.normalize(j);
@@ -983,11 +983,11 @@ class DatagramChannelImpl extends DatagramChannel implements SelChImpl {
                     }
                     this.writerThread = NativeThread.current();
                     do {
-                        c = IOUtil.write(this.f880fd, buf, -1, f879nd);
+                        c = IOUtil.write(this.f878fd, buf, -1, f877nd);
                         if (c != -3 || !isOpen()) {
                             int normalize = IOStatus.normalize(c);
                         }
-                        c = IOUtil.write(this.f880fd, buf, -1, f879nd);
+                        c = IOUtil.write(this.f878fd, buf, -1, f877nd);
                         break;
                     } while (!isOpen());
                     int normalize2 = IOStatus.normalize(c);
@@ -1037,11 +1037,11 @@ class DatagramChannelImpl extends DatagramChannel implements SelChImpl {
                 }
                 this.writerThread = NativeThread.current();
                 do {
-                    j = IOUtil.write(this.f880fd, srcs, offset, length, f879nd);
+                    j = IOUtil.write(this.f878fd, srcs, offset, length, f877nd);
                     if (j != -3 || !isOpen()) {
                         long normalize = IOStatus.normalize(j);
                     }
-                    j = IOUtil.write(this.f880fd, srcs, offset, length, f879nd);
+                    j = IOUtil.write(this.f878fd, srcs, offset, length, f877nd);
                     break;
                 } while (!isOpen());
                 long normalize2 = IOStatus.normalize(j);
@@ -1058,7 +1058,7 @@ class DatagramChannelImpl extends DatagramChannel implements SelChImpl {
 
     /* access modifiers changed from: protected */
     public void implConfigureBlocking(boolean block) throws IOException {
-        IOUtil.configureBlocking(this.f880fd, block);
+        IOUtil.configureBlocking(this.f878fd, block);
     }
 
     public SocketAddress localAddress() {
@@ -1098,8 +1098,8 @@ class DatagramChannelImpl extends DatagramChannel implements SelChImpl {
                         if (securityManager != null) {
                             securityManager.checkListen(checkAddress.getPort());
                         }
-                        Net.bind(this.family, this.f880fd, checkAddress.getAddress(), checkAddress.getPort());
-                        this.localAddress = Net.localAddress(this.f880fd);
+                        Net.bind(this.family, this.f878fd, checkAddress.getAddress(), checkAddress.getPort());
+                        this.localAddress = Net.localAddress(this.f878fd);
                     } else {
                         throw new AlreadyBoundException();
                     }
@@ -1141,13 +1141,13 @@ class DatagramChannelImpl extends DatagramChannel implements SelChImpl {
                     if (securityManager != null) {
                         securityManager.checkConnect(checkAddress.getAddress().getHostAddress(), checkAddress.getPort());
                     }
-                    if (Net.connect(this.family, this.f880fd, checkAddress.getAddress(), checkAddress.getPort()) > 0) {
+                    if (Net.connect(this.family, this.f878fd, checkAddress.getAddress(), checkAddress.getPort()) > 0) {
                         this.state = 1;
                         this.remoteAddress = checkAddress;
                         this.sender = checkAddress;
                         this.cachedSenderInetAddress = checkAddress.getAddress();
                         this.cachedSenderPort = checkAddress.getPort();
-                        this.localAddress = Net.localAddress(this.f880fd);
+                        this.localAddress = Net.localAddress(this.f878fd);
                         synchronized (blockingLock()) {
                             try {
                                 boolean isBlocking = isBlocking();
@@ -1188,10 +1188,10 @@ class DatagramChannelImpl extends DatagramChannel implements SelChImpl {
                             if (securityManager != null) {
                                 securityManager.checkConnect(inetSocketAddress.getAddress().getHostAddress(), inetSocketAddress.getPort());
                             }
-                            disconnect0(this.f880fd, this.family == StandardProtocolFamily.INET6);
+                            disconnect0(this.f878fd, this.family == StandardProtocolFamily.INET6);
                             this.remoteAddress = null;
                             this.state = 0;
-                            this.localAddress = Net.localAddress(this.f880fd);
+                            this.localAddress = Net.localAddress(this.f878fd);
                             return this;
                         }
                     }
@@ -1303,7 +1303,7 @@ class DatagramChannelImpl extends DatagramChannel implements SelChImpl {
             byte[] r1 = sun.nio.p033ch.Net.inet6AsByteArray(r23)     // Catch:{ all -> 0x014b }
         L_0x00b0:
             r8 = r1
-            java.io.FileDescriptor r1 = r9.f880fd     // Catch:{ all -> 0x014b }
+            java.io.FileDescriptor r1 = r9.f878fd     // Catch:{ all -> 0x014b }
             int r1 = sun.nio.p033ch.Net.join6(r1, r15, r0, r8)     // Catch:{ all -> 0x014b }
             r7 = r1
             if (r7 == r2) goto L_0x00d2
@@ -1345,7 +1345,7 @@ class DatagramChannelImpl extends DatagramChannel implements SelChImpl {
             int r1 = sun.nio.p033ch.Net.inet4AsInt(r23)     // Catch:{ all -> 0x014b }
         L_0x00fd:
             r7 = r1
-            java.io.FileDescriptor r1 = r9.f880fd     // Catch:{ all -> 0x014b }
+            java.io.FileDescriptor r1 = r9.f878fd     // Catch:{ all -> 0x014b }
             int r1 = sun.nio.p033ch.Net.join4(r1, r15, r8, r7)     // Catch:{ all -> 0x014b }
             r6 = r1
             if (r6 == r2) goto L_0x012a
@@ -1435,10 +1435,10 @@ class DatagramChannelImpl extends DatagramChannel implements SelChImpl {
                 try {
                     if (key instanceof MembershipKeyImpl.Type6) {
                         MembershipKeyImpl.Type6 type6 = (MembershipKeyImpl.Type6) key;
-                        Net.drop6(this.f880fd, type6.groupAddress(), type6.index(), type6.source());
+                        Net.drop6(this.f878fd, type6.groupAddress(), type6.index(), type6.source());
                     } else {
                         MembershipKeyImpl.Type4 type4 = (MembershipKeyImpl.Type4) key;
-                        Net.drop4(this.f880fd, type4.groupAddress(), type4.interfaceAddress(), type4.source());
+                        Net.drop4(this.f878fd, type4.groupAddress(), type4.interfaceAddress(), type4.source());
                     }
                     key.invalidate();
                     this.registry.remove(key);
@@ -1462,10 +1462,10 @@ class DatagramChannelImpl extends DatagramChannel implements SelChImpl {
             } else if (source.getClass() == key.group().getClass()) {
                 if (key instanceof MembershipKeyImpl.Type6) {
                     MembershipKeyImpl.Type6 type6 = (MembershipKeyImpl.Type6) key;
-                    i = Net.block6(this.f880fd, type6.groupAddress(), type6.index(), Net.inet6AsByteArray(source));
+                    i = Net.block6(this.f878fd, type6.groupAddress(), type6.index(), Net.inet6AsByteArray(source));
                 } else {
                     MembershipKeyImpl.Type4 type4 = (MembershipKeyImpl.Type4) key;
-                    i = Net.block4(this.f880fd, type4.groupAddress(), type4.interfaceAddress(), Net.inet4AsInt(source));
+                    i = Net.block4(this.f878fd, type4.groupAddress(), type4.interfaceAddress(), Net.inet4AsInt(source));
                 }
                 if (i == -2) {
                     throw new UnsupportedOperationException();
@@ -1483,10 +1483,10 @@ class DatagramChannelImpl extends DatagramChannel implements SelChImpl {
                 try {
                     if (key instanceof MembershipKeyImpl.Type6) {
                         MembershipKeyImpl.Type6 type6 = (MembershipKeyImpl.Type6) key;
-                        Net.unblock6(this.f880fd, type6.groupAddress(), type6.index(), Net.inet6AsByteArray(source));
+                        Net.unblock6(this.f878fd, type6.groupAddress(), type6.index(), Net.inet6AsByteArray(source));
                     } else {
                         MembershipKeyImpl.Type4 type4 = (MembershipKeyImpl.Type4) key;
-                        Net.unblock4(this.f880fd, type4.groupAddress(), type4.interfaceAddress(), Net.inet4AsInt(source));
+                        Net.unblock4(this.f878fd, type4.groupAddress(), type4.interfaceAddress(), Net.inet4AsInt(source));
                     }
                 } catch (IOException e) {
                     throw new AssertionError((Object) e);
@@ -1502,7 +1502,7 @@ class DatagramChannelImpl extends DatagramChannel implements SelChImpl {
         synchronized (this.stateLock) {
             this.guard.close();
             if (this.state != 2) {
-                f879nd.preClose(this.f880fd);
+                f877nd.preClose(this.f878fd);
             }
             ResourceManager.afterUdpClose();
             MembershipRegistry membershipRegistry = this.registry;
@@ -1533,7 +1533,7 @@ class DatagramChannelImpl extends DatagramChannel implements SelChImpl {
                     this.state = 2;
                     return;
                 }
-                f879nd.close(this.f880fd);
+                f877nd.close(this.f878fd);
                 this.state = 2;
             }
         }
@@ -1546,7 +1546,7 @@ class DatagramChannelImpl extends DatagramChannel implements SelChImpl {
             if (closeGuard != null) {
                 closeGuard.warnIfOpen();
             }
-            if (this.f880fd != null) {
+            if (this.f878fd != null) {
                 close();
             }
         } finally {
@@ -1607,7 +1607,7 @@ class DatagramChannelImpl extends DatagramChannel implements SelChImpl {
         return 0;
      */
     /* JADX WARNING: Code restructure failed: missing block: B:23:0x002e, code lost:
-        r1 = sun.nio.p033ch.Net.poll(r9.f880fd, r10, r11);
+        r1 = sun.nio.p033ch.Net.poll(r9.f878fd, r10, r11);
      */
     /* JADX WARNING: Code restructure failed: missing block: B:25:?, code lost:
         r9.readerThread = 0;
@@ -1653,7 +1653,7 @@ class DatagramChannelImpl extends DatagramChannel implements SelChImpl {
             long r7 = sun.nio.p033ch.NativeThread.current()     // Catch:{ all -> 0x003b }
             r9.readerThread = r7     // Catch:{ all -> 0x003b }
             monitor-exit(r6)     // Catch:{ all -> 0x003b }
-            java.io.FileDescriptor r6 = r9.f880fd     // Catch:{ all -> 0x003e }
+            java.io.FileDescriptor r6 = r9.f878fd     // Catch:{ all -> 0x003e }
             int r6 = sun.nio.p033ch.Net.poll(r6, r10, r11)     // Catch:{ all -> 0x003e }
             r1 = r6
             r9.readerThread = r3     // Catch:{ all -> 0x0049 }
@@ -1702,7 +1702,7 @@ class DatagramChannelImpl extends DatagramChannel implements SelChImpl {
     }
 
     public FileDescriptor getFD() {
-        return this.f880fd;
+        return this.f878fd;
     }
 
     public int getFDVal() {

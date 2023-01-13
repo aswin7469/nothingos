@@ -12,6 +12,6 @@ public final /* synthetic */ class ImageWallpaperRenderer$$ExternalSyntheticLamb
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo33070x4ff2f7f9((Bitmap) obj);
+        this.f$0.mo33080x4ff2f7f9((Bitmap) obj);
     }
 }

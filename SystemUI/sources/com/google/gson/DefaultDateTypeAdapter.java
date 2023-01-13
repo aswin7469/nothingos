@@ -26,8 +26,8 @@ final class DefaultDateTypeAdapter extends TypeAdapter<Date> {
         ArrayList arrayList = new ArrayList();
         this.dateFormats = arrayList;
         this.dateType = verifyDateType(cls);
-        arrayList.add(DateFormat.getDateTimeInstance(2, 2, Locale.f700US));
-        if (!Locale.getDefault().equals(Locale.f700US)) {
+        arrayList.add(DateFormat.getDateTimeInstance(2, 2, Locale.f698US));
+        if (!Locale.getDefault().equals(Locale.f698US)) {
             arrayList.add(DateFormat.getDateTimeInstance(2, 2));
         }
         if (JavaVersion.isJava9OrLater()) {
@@ -39,8 +39,8 @@ final class DefaultDateTypeAdapter extends TypeAdapter<Date> {
         ArrayList arrayList = new ArrayList();
         this.dateFormats = arrayList;
         this.dateType = verifyDateType(cls);
-        arrayList.add(new SimpleDateFormat(str, Locale.f700US));
-        if (!Locale.getDefault().equals(Locale.f700US)) {
+        arrayList.add(new SimpleDateFormat(str, Locale.f698US));
+        if (!Locale.getDefault().equals(Locale.f698US)) {
             arrayList.add(new SimpleDateFormat(str));
         }
     }
@@ -49,8 +49,8 @@ final class DefaultDateTypeAdapter extends TypeAdapter<Date> {
         ArrayList arrayList = new ArrayList();
         this.dateFormats = arrayList;
         this.dateType = verifyDateType(cls);
-        arrayList.add(DateFormat.getDateInstance(i, Locale.f700US));
-        if (!Locale.getDefault().equals(Locale.f700US)) {
+        arrayList.add(DateFormat.getDateInstance(i, Locale.f698US));
+        if (!Locale.getDefault().equals(Locale.f698US)) {
             arrayList.add(DateFormat.getDateInstance(i));
         }
         if (JavaVersion.isJava9OrLater()) {
@@ -66,8 +66,8 @@ final class DefaultDateTypeAdapter extends TypeAdapter<Date> {
         ArrayList arrayList = new ArrayList();
         this.dateFormats = arrayList;
         this.dateType = verifyDateType(cls);
-        arrayList.add(DateFormat.getDateTimeInstance(i, i2, Locale.f700US));
-        if (!Locale.getDefault().equals(Locale.f700US)) {
+        arrayList.add(DateFormat.getDateTimeInstance(i, i2, Locale.f698US));
+        if (!Locale.getDefault().equals(Locale.f698US)) {
             arrayList.add(DateFormat.getDateTimeInstance(i, i2));
         }
         if (JavaVersion.isJava9OrLater()) {

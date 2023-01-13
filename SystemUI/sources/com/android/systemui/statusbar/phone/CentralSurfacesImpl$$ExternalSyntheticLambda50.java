@@ -12,6 +12,6 @@ public final /* synthetic */ class CentralSurfacesImpl$$ExternalSyntheticLambda5
     }
 
     public final void onMessage(Object obj) {
-        this.f$0.mo43893x1f653fe1((CentralSurfaces.KeyboardShortcutsMessage) obj);
+        this.f$0.mo43902x1f653fe1((CentralSurfaces.KeyboardShortcutsMessage) obj);
     }
 }

@@ -10,7 +10,7 @@ import android.os.Looper;
 import android.view.View;
 import android.widget.Switch;
 import com.android.internal.logging.MetricsLogger;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.dagger.qualifiers.Background;
 import com.android.systemui.dagger.qualifiers.Main;
@@ -31,7 +31,7 @@ public class NfcTile extends QSTileImpl<QSTile.BooleanState> {
     private NfcAdapter mAdapter;
     private BroadcastDispatcher mBroadcastDispatcher;
     private final NfcController.CallBack mCallBack;
-    private final QSTile.Icon mIcon = QSTileImpl.ResourceIcon.get(C1893R.C1895drawable.ic_qs_nfc);
+    private final QSTile.Icon mIcon = QSTileImpl.ResourceIcon.get(C1894R.C1896drawable.ic_qs_nfc);
     private boolean mListening;
     /* access modifiers changed from: private */
     public final NfcController mNfcController;
@@ -52,15 +52,15 @@ public class NfcTile extends QSTileImpl<QSTile.BooleanState> {
     @Inject
     public NfcTile(QSHost qSHost, @Background Looper looper, @Main Handler handler, FalsingManager falsingManager, MetricsLogger metricsLogger, StatusBarStateController statusBarStateController, ActivityStarter activityStarter, QSLogger qSLogger, BroadcastDispatcher broadcastDispatcher, NfcController nfcController) {
         super(qSHost, looper, handler, falsingManager, metricsLogger, statusBarStateController, activityStarter, qSLogger);
-        C24022 r1 = new NfcController.CallBack() {
+        C24072 r1 = new NfcController.CallBack() {
             public void onBatteryWirelessChange() {
-                NTLogUtil.m1680d(NfcTile.this.TAG, "isWirelessCharging: " + NfcTile.this.mNfcController.isWirelessCharging());
+                NTLogUtil.m1686d(NfcTile.this.TAG, "isWirelessCharging: " + NfcTile.this.mNfcController.isWirelessCharging());
                 NfcTile.this.mHandler.postDelayed(new NfcTile$2$$ExternalSyntheticLambda0(this), 1000);
             }
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onBatteryWirelessChange$0$com-android-systemui-qs-tiles-NfcTile$2 */
-            public /* synthetic */ void mo36900xbc94029b() {
+            public /* synthetic */ void mo36898xbc94029b() {
                 NfcTile.this.refreshState();
             }
         };
@@ -85,7 +85,7 @@ public class NfcTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     public boolean isAvailable() {
-        if (this.mContext.getString(C1893R.string.quick_settings_tiles_stock).contains(NFC)) {
+        if (this.mContext.getString(C1894R.string.quick_settings_tiles_stock).contains(NFC)) {
             return this.mContext.getPackageManager().hasSystemFeature("android.hardware.nfc");
         }
         return false;
@@ -109,12 +109,12 @@ public class NfcTile extends QSTileImpl<QSTile.BooleanState> {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$handleClick$0$com-android-systemui-qs-tiles-NfcTile  reason: not valid java name */
-    public /* synthetic */ void m2980lambda$handleClick$0$comandroidsystemuiqstilesNfcTile() {
+    public /* synthetic */ void m2984lambda$handleClick$0$comandroidsystemuiqstilesNfcTile() {
         refreshState();
     }
 
     public CharSequence getTileLabel() {
-        return this.mContext.getString(C1893R.string.quick_settings_nfc_label);
+        return this.mContext.getString(C1894R.string.quick_settings_nfc_label);
     }
 
     /* access modifiers changed from: protected */
@@ -128,7 +128,7 @@ public class NfcTile extends QSTileImpl<QSTile.BooleanState> {
         }
         booleanState.state = i;
         booleanState.icon = this.mIcon;
-        booleanState.label = this.mContext.getString(C1893R.string.quick_settings_nfc_label);
+        booleanState.label = this.mContext.getString(C1894R.string.quick_settings_nfc_label);
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
         booleanState.contentDescription = booleanState.label;
     }

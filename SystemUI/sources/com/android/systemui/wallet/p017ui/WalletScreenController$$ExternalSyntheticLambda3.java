@@ -15,6 +15,6 @@ public final /* synthetic */ class WalletScreenController$$ExternalSyntheticLamb
     }
 
     public final void onClick(View view) {
-        this.f$0.mo47467xc1231213(this.f$1, view);
+        this.f$0.mo47476xc1231213(this.f$1, view);
     }
 }

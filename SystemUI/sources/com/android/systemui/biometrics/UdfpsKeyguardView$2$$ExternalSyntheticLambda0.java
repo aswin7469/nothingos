@@ -13,6 +13,6 @@ public final /* synthetic */ class UdfpsKeyguardView$2$$ExternalSyntheticLambda0
     }
 
     public final Object getValue(LottieFrameInfo lottieFrameInfo) {
-        return this.f$0.mo30974xc49f4e46(lottieFrameInfo);
+        return this.f$0.mo30984xc49f4e46(lottieFrameInfo);
     }
 }

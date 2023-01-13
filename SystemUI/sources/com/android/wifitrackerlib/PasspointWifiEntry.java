@@ -36,7 +36,7 @@ public class PasspointWifiEntry extends WifiEntry implements WifiEntry.WifiEntry
     private PasspointConfiguration mPasspointConfig;
     private boolean mShouldAutoOpenCaptivePortal = false;
     protected long mSubscriptionExpirationTimeInMillis;
-    private List<Integer> mTargetSecurityTypes = List.m1724of(11, 12);
+    private List<Integer> mTargetSecurityTypes = List.m1730of(11, 12);
     private WifiConfiguration mWifiConfig;
 
     /* access modifiers changed from: protected */
@@ -95,13 +95,13 @@ public class PasspointWifiEntry extends WifiEntry implements WifiEntry.WifiEntry
     public synchronized String getSummary(boolean z) {
         StringJoiner stringJoiner;
         String str;
-        stringJoiner = new StringJoiner(this.mContext.getString(C3341R.string.wifitrackerlib_summary_separator));
+        stringJoiner = new StringJoiner(this.mContext.getString(C3351R.string.wifitrackerlib_summary_separator));
         if (isExpired()) {
             OsuWifiEntry osuWifiEntry = this.mOsuWifiEntry;
             if (osuWifiEntry != null) {
                 stringJoiner.add(osuWifiEntry.getSummary(z));
             } else {
-                stringJoiner.add(this.mContext.getString(C3341R.string.wifitrackerlib_wifi_passpoint_expired));
+                stringJoiner.add(this.mContext.getString(C3351R.string.wifitrackerlib_wifi_passpoint_expired));
             }
         } else {
             int connectedState = getConnectedState();
@@ -308,7 +308,7 @@ public class PasspointWifiEntry extends WifiEntry implements WifiEntry.WifiEntry
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$disconnect$0$com-android-wifitrackerlib-PasspointWifiEntry */
-    public /* synthetic */ void mo47831xb18ecc00(WifiEntry.DisconnectCallback disconnectCallback) {
+    public /* synthetic */ void mo47840xb18ecc00(WifiEntry.DisconnectCallback disconnectCallback) {
         if (disconnectCallback != null && this.mCalledDisconnect) {
             disconnectCallback.onDisconnectResult(1);
         }
@@ -466,7 +466,7 @@ public class PasspointWifiEntry extends WifiEntry implements WifiEntry.WifiEntry
     }
 
     public String getSecurityString(boolean z) {
-        return this.mContext.getString(C3341R.string.wifitrackerlib_wifi_security_passpoint);
+        return this.mContext.getString(C3351R.string.wifitrackerlib_wifi_security_passpoint);
     }
 
     public synchronized String getStandardString() {

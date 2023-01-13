@@ -15,10 +15,10 @@ class SourceChannelImpl extends Pipe.SourceChannel implements SelChImpl {
     private static final int ST_UNINITIALIZED = -1;
 
     /* renamed from: nd */
-    private static final NativeDispatcher f896nd = new FileDispatcherImpl();
+    private static final NativeDispatcher f894nd = new FileDispatcherImpl();
 
     /* renamed from: fd */
-    FileDescriptor f897fd;
+    FileDescriptor f895fd;
     int fdVal;
     private final Object lock = new Object();
     private volatile int state = -1;
@@ -26,7 +26,7 @@ class SourceChannelImpl extends Pipe.SourceChannel implements SelChImpl {
     private volatile long thread = 0;
 
     public FileDescriptor getFD() {
-        return this.f897fd;
+        return this.f895fd;
     }
 
     public int getFDVal() {
@@ -35,7 +35,7 @@ class SourceChannelImpl extends Pipe.SourceChannel implements SelChImpl {
 
     SourceChannelImpl(SelectorProvider selectorProvider, FileDescriptor fileDescriptor) {
         super(selectorProvider);
-        this.f897fd = fileDescriptor;
+        this.f895fd = fileDescriptor;
         this.fdVal = IOUtil.fdVal(fileDescriptor);
         this.state = 0;
     }
@@ -44,7 +44,7 @@ class SourceChannelImpl extends Pipe.SourceChannel implements SelChImpl {
     public void implCloseSelectableChannel() throws IOException {
         synchronized (this.stateLock) {
             if (this.state != 1) {
-                f896nd.preClose(this.f897fd);
+                f894nd.preClose(this.f895fd);
             }
             long j = this.thread;
             if (j != 0) {
@@ -63,7 +63,7 @@ class SourceChannelImpl extends Pipe.SourceChannel implements SelChImpl {
                     this.state = 1;
                     return;
                 }
-                f896nd.close(this.f897fd);
+                f894nd.close(this.f895fd);
                 this.state = 1;
             }
         }
@@ -71,7 +71,7 @@ class SourceChannelImpl extends Pipe.SourceChannel implements SelChImpl {
 
     /* access modifiers changed from: protected */
     public void implConfigureBlocking(boolean z) throws IOException {
-        IOUtil.configureBlocking(this.f897fd, z);
+        IOUtil.configureBlocking(this.f895fd, z);
     }
 
     public boolean translateReadyOps(int i, int i2, SelectionKeyImpl selectionKeyImpl) {
@@ -143,8 +143,8 @@ class SourceChannelImpl extends Pipe.SourceChannel implements SelChImpl {
             r11.thread = r6     // Catch:{ all -> 0x004b }
             r6 = r5
         L_0x0025:
-            java.io.FileDescriptor r7 = r11.f897fd     // Catch:{ all -> 0x0049 }
-            sun.nio.ch.NativeDispatcher r8 = f896nd     // Catch:{ all -> 0x0049 }
+            java.io.FileDescriptor r7 = r11.f895fd     // Catch:{ all -> 0x0049 }
+            sun.nio.ch.NativeDispatcher r8 = f894nd     // Catch:{ all -> 0x0049 }
             r9 = -1
             int r6 = sun.nio.p033ch.IOUtil.read(r7, r12, r9, r8)     // Catch:{ all -> 0x0049 }
             r7 = -3
@@ -219,8 +219,8 @@ class SourceChannelImpl extends Pipe.SourceChannel implements SelChImpl {
             r11.thread = r7     // Catch:{ all -> 0x0051 }
             r7 = r5
         L_0x0026:
-            java.io.FileDescriptor r9 = r11.f897fd     // Catch:{ all -> 0x004f }
-            sun.nio.ch.NativeDispatcher r10 = f896nd     // Catch:{ all -> 0x004f }
+            java.io.FileDescriptor r9 = r11.f895fd     // Catch:{ all -> 0x004f }
+            sun.nio.ch.NativeDispatcher r10 = f894nd     // Catch:{ all -> 0x004f }
             long r7 = sun.nio.p033ch.IOUtil.read(r9, r12, r10)     // Catch:{ all -> 0x004f }
             r9 = -3
             int r9 = (r7 > r9 ? 1 : (r7 == r9 ? 0 : -1))

@@ -10,7 +10,7 @@ import android.telephony.TelephonyCallback;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.qualifiers.Background;
 import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.keyguard.WakefulnessLifecycle;
@@ -156,10 +156,10 @@ public class CarrierTextManager {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-keyguard-CarrierTextManager  reason: not valid java name */
-    public /* synthetic */ void m2279lambda$new$0$comandroidkeyguardCarrierTextManager() {
+    public /* synthetic */ void m2285lambda$new$0$comandroidkeyguardCarrierTextManager() {
         boolean hasSystemFeature = this.mContext.getPackageManager().hasSystemFeature("android.hardware.telephony");
         if (hasSystemFeature && this.mNetworkSupported.compareAndSet(false, hasSystemFeature)) {
-            m2280lambda$setListening$4$comandroidkeyguardCarrierTextManager(this.mCarrierTextCallback);
+            m2286lambda$setListening$4$comandroidkeyguardCarrierTextManager(this.mCarrierTextCallback);
         }
     }
 
@@ -187,7 +187,7 @@ public class CarrierTextManager {
 
     /* access modifiers changed from: private */
     /* renamed from: handleSetListening */
-    public void m2280lambda$setListening$4$comandroidkeyguardCarrierTextManager(CarrierTextCallback carrierTextCallback) {
+    public void m2286lambda$setListening$4$comandroidkeyguardCarrierTextManager(CarrierTextCallback carrierTextCallback) {
         if (carrierTextCallback != null) {
             this.mCarrierTextCallback = carrierTextCallback;
             if (this.mNetworkSupported.get()) {
@@ -481,11 +481,11 @@ public class CarrierTextManager {
     }
 
     private String getMissingSimMessage() {
-        return (!this.mShowMissingSim || !this.mTelephonyCapable) ? "" : getContext().getString(C1893R.string.keyguard_missing_sim_message_short);
+        return (!this.mShowMissingSim || !this.mTelephonyCapable) ? "" : getContext().getString(C1894R.string.keyguard_missing_sim_message_short);
     }
 
     private String getAirplaneModeMessage() {
-        return this.mShowAirplaneMode ? getContext().getString(C1893R.string.airplane_mode) : "";
+        return this.mShowAirplaneMode ? getContext().getString(C1894R.string.airplane_mode) : "";
     }
 
     /* renamed from: com.android.keyguard.CarrierTextManager$4 */
@@ -582,15 +582,15 @@ public class CarrierTextManager {
             case 2:
                 return "";
             case 3:
-                return makeCarrierStringOnEmergencyCapable(this.mContext.getText(C1893R.string.keyguard_network_locked_message), charSequence);
+                return makeCarrierStringOnEmergencyCapable(this.mContext.getText(C1894R.string.keyguard_network_locked_message), charSequence);
             case 5:
-                return makeCarrierStringOnEmergencyCapable(getContext().getText(C1893R.string.keyguard_permanent_disabled_sim_message_short), charSequence);
+                return makeCarrierStringOnEmergencyCapable(getContext().getText(C1894R.string.keyguard_permanent_disabled_sim_message_short), charSequence);
             case 7:
-                return makeCarrierStringOnLocked(getContext().getText(C1893R.string.keyguard_sim_locked_message), charSequence);
+                return makeCarrierStringOnLocked(getContext().getText(C1894R.string.keyguard_sim_locked_message), charSequence);
             case 8:
-                return makeCarrierStringOnLocked(getContext().getText(C1893R.string.keyguard_sim_puk_locked_message), charSequence);
+                return makeCarrierStringOnLocked(getContext().getText(C1894R.string.keyguard_sim_puk_locked_message), charSequence);
             case 9:
-                return makeCarrierStringOnEmergencyCapable(getContext().getText(C1893R.string.keyguard_sim_error_message_short), charSequence);
+                return makeCarrierStringOnEmergencyCapable(getContext().getText(C1894R.string.keyguard_sim_error_message_short), charSequence);
             default:
                 return null;
         }
@@ -604,7 +604,7 @@ public class CarrierTextManager {
         boolean z = !TextUtils.isEmpty(charSequence);
         boolean z2 = !TextUtils.isEmpty(charSequence2);
         if (z && z2) {
-            return this.mContext.getString(C1893R.string.keyguard_carrier_name_with_sim_locked_template, new Object[]{charSequence2, charSequence});
+            return this.mContext.getString(C1894R.string.keyguard_carrier_name_with_sim_locked_template, new Object[]{charSequence2, charSequence});
         } else if (z) {
             return charSequence;
         } else {
@@ -729,7 +729,7 @@ public class CarrierTextManager {
 
     private CharSequence getCarrierHelpTextForSimState(int i, String str, String str2) {
         int i2 = C15844.$SwitchMap$com$android$keyguard$CarrierTextManager$StatusMode[getStatusForIccState(i).ordinal()];
-        return this.mContext.getText(i2 != 3 ? i2 != 4 ? i2 != 5 ? i2 != 6 ? 0 : C1893R.string.keyguard_missing_sim_instructions : C1893R.string.keyguard_permanent_disabled_sim_instructions : C1893R.string.keyguard_missing_sim_instructions_long : C1893R.string.keyguard_instructions_when_pattern_disabled);
+        return this.mContext.getText(i2 != 3 ? i2 != 4 ? i2 != 5 ? i2 != 6 ? 0 : C1894R.string.keyguard_missing_sim_instructions : C1894R.string.keyguard_permanent_disabled_sim_instructions : C1894R.string.keyguard_missing_sim_instructions_long : C1894R.string.keyguard_instructions_when_pattern_disabled);
     }
 
     public static class Builder {
@@ -806,7 +806,7 @@ public class CarrierTextManager {
         if (!TextUtils.isEmpty(charSequence)) {
             String[] split = charSequence.toString().split(this.mSeparator.toString(), 2);
             for (int i = 0; i < split.length; i++) {
-                String localString = getLocalString(split[i], C1893R.array.origin_carrier_names, C1893R.array.locale_carrier_names);
+                String localString = getLocalString(split[i], C1894R.array.origin_carrier_names, C1894R.array.locale_carrier_names);
                 split[i] = localString;
                 if (!TextUtils.isEmpty(localString)) {
                     if (!TextUtils.isEmpty(networkTypeToString)) {
@@ -846,12 +846,12 @@ public class CarrierTextManager {
 
     private String networkTypeToString(int i) {
         long bitMaskForNetworkType = TelephonyManager.getBitMaskForNetworkType(i);
-        return getContext().getResources().getString((32843 & bitMaskForNetworkType) != 0 ? C1893R.string.config_rat_2g : (93108 & bitMaskForNetworkType) != 0 ? C1893R.string.config_rat_3g : (bitMaskForNetworkType & 397312) != 0 ? C1893R.string.config_rat_4g : C1893R.string.config_rat_unknown);
+        return getContext().getResources().getString((32843 & bitMaskForNetworkType) != 0 ? C1894R.string.config_rat_2g : (93108 & bitMaskForNetworkType) != 0 ? C1894R.string.config_rat_3g : (bitMaskForNetworkType & 397312) != 0 ? C1894R.string.config_rat_4g : C1894R.string.config_rat_unknown);
     }
 
     private String get5GNetworkClass(SubscriptionInfo subscriptionInfo, int i) {
         if (i == 20) {
-            return this.mContext.getResources().getString(C1893R.string.data_connection_5g);
+            return this.mContext.getResources().getString(C1894R.string.data_connection_5g);
         }
         int simSlotIndex = subscriptionInfo.getSimSlotIndex();
         int subscriptionId = subscriptionInfo.getSubscriptionId();
@@ -863,7 +863,7 @@ public class CarrierTextManager {
         if (!this.mFiveGServiceClient.getCurrentServiceState(simSlotIndex).isNrIconTypeValid() || !isDataRegisteredOnLte(subscriptionId)) {
             return null;
         }
-        return this.mContext.getResources().getString(C1893R.string.data_connection_5g);
+        return this.mContext.getResources().getString(C1894R.string.data_connection_5g);
     }
 
     private boolean isDataRegisteredOnLte(int i) {

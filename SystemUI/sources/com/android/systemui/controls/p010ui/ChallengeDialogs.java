@@ -16,14 +16,14 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import kotlin.Metadata;
 import kotlin.Pair;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 import kotlin.jvm.internal.Intrinsics;
 
-@Metadata(mo64986d1 = {"\u0000J\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\b\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u000e\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\u0010\u0002\n\u0002\b\u0002\n\u0002\u0010\u000b\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0002\bÆ\u0002\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002J\u0018\u0010\u0006\u001a\u00020\u00072\u0006\u0010\b\u001a\u00020\u00072\u0006\u0010\t\u001a\u00020\nH\u0002J\u001e\u0010\u000b\u001a\u0004\u0018\u00010\f2\u0006\u0010\r\u001a\u00020\u000e2\f\u0010\u000f\u001a\b\u0012\u0004\u0012\u00020\u00110\u0010J.\u0010\u0012\u001a\u0004\u0018\u00010\f2\u0006\u0010\r\u001a\u00020\u000e2\u0006\u0010\u0013\u001a\u00020\u00142\u0006\u0010\u0015\u001a\u00020\u00142\f\u0010\u000f\u001a\b\u0012\u0004\u0012\u00020\u00110\u0010J\u0018\u0010\u0016\u001a\u00020\u00112\u0006\u0010\u0017\u001a\u00020\u00182\u0006\u0010\u0019\u001a\u00020\u0014H\u0002R\u000e\u0010\u0003\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0005\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000¨\u0006\u001a"}, mo64987d2 = {"Lcom/android/systemui/controls/ui/ChallengeDialogs;", "", "()V", "STYLE", "", "WINDOW_TYPE", "addChallengeValue", "Landroid/service/controls/actions/ControlAction;", "action", "challengeValue", "", "createConfirmationDialog", "Landroid/app/Dialog;", "cvh", "Lcom/android/systemui/controls/ui/ControlViewHolder;", "onCancel", "Lkotlin/Function0;", "", "createPinDialog", "useAlphaNumeric", "", "useRetryStrings", "setInputType", "editText", "Landroid/widget/EditText;", "useTextInput", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000J\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\b\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u000e\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\u0010\u0002\n\u0002\b\u0002\n\u0002\u0010\u000b\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0002\bÆ\u0002\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002J\u0018\u0010\u0006\u001a\u00020\u00072\u0006\u0010\b\u001a\u00020\u00072\u0006\u0010\t\u001a\u00020\nH\u0002J\u001e\u0010\u000b\u001a\u0004\u0018\u00010\f2\u0006\u0010\r\u001a\u00020\u000e2\f\u0010\u000f\u001a\b\u0012\u0004\u0012\u00020\u00110\u0010J.\u0010\u0012\u001a\u0004\u0018\u00010\f2\u0006\u0010\r\u001a\u00020\u000e2\u0006\u0010\u0013\u001a\u00020\u00142\u0006\u0010\u0015\u001a\u00020\u00142\f\u0010\u000f\u001a\b\u0012\u0004\u0012\u00020\u00110\u0010J\u0018\u0010\u0016\u001a\u00020\u00112\u0006\u0010\u0017\u001a\u00020\u00182\u0006\u0010\u0019\u001a\u00020\u0014H\u0002R\u000e\u0010\u0003\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0005\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000¨\u0006\u001a"}, mo65043d2 = {"Lcom/android/systemui/controls/ui/ChallengeDialogs;", "", "()V", "STYLE", "", "WINDOW_TYPE", "addChallengeValue", "Landroid/service/controls/actions/ControlAction;", "action", "challengeValue", "", "createConfirmationDialog", "Landroid/app/Dialog;", "cvh", "Lcom/android/systemui/controls/ui/ControlViewHolder;", "onCancel", "Lkotlin/Function0;", "", "createPinDialog", "useAlphaNumeric", "", "useRetryStrings", "setInputType", "editText", "Landroid/widget/EditText;", "useTextInput", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* renamed from: com.android.systemui.controls.ui.ChallengeDialogs */
 /* compiled from: ChallengeDialogs.kt */
 public final class ChallengeDialogs {
@@ -45,14 +45,14 @@ public final class ChallengeDialogs {
         }
         Resources resources = controlViewHolder.getContext().getResources();
         if (z2) {
-            pair = new Pair(resources.getString(C1893R.string.controls_pin_wrong), Integer.valueOf((int) C1893R.string.controls_pin_instructions_retry));
+            pair = new Pair(resources.getString(C1894R.string.controls_pin_wrong), Integer.valueOf((int) C1894R.string.controls_pin_instructions_retry));
         } else {
-            pair = new Pair(resources.getString(C1893R.string.controls_pin_verify, new Object[]{controlViewHolder.getTitle().getText()}), Integer.valueOf((int) C1893R.string.controls_pin_instructions));
+            pair = new Pair(resources.getString(C1894R.string.controls_pin_verify, new Object[]{controlViewHolder.getTitle().getText()}), Integer.valueOf((int) C1894R.string.controls_pin_instructions));
         }
         int intValue = ((Number) pair.component2()).intValue();
         ChallengeDialogs$createPinDialog$1 challengeDialogs$createPinDialog$1 = new ChallengeDialogs$createPinDialog$1(controlViewHolder.getContext());
         challengeDialogs$createPinDialog$1.setTitle((String) pair.component1());
-        challengeDialogs$createPinDialog$1.setView(LayoutInflater.from(challengeDialogs$createPinDialog$1.getContext()).inflate(C1893R.layout.controls_dialog_pin, (ViewGroup) null));
+        challengeDialogs$createPinDialog$1.setView(LayoutInflater.from(challengeDialogs$createPinDialog$1.getContext()).inflate(C1894R.layout.controls_dialog_pin, (ViewGroup) null));
         challengeDialogs$createPinDialog$1.setButton(-1, challengeDialogs$createPinDialog$1.getContext().getText(17039370), new ChallengeDialogs$$ExternalSyntheticLambda3(controlViewHolder, lastAction));
         challengeDialogs$createPinDialog$1.setButton(-2, challengeDialogs$createPinDialog$1.getContext().getText(17039360), new ChallengeDialogs$$ExternalSyntheticLambda4(function0));
         Window window = challengeDialogs$createPinDialog$1.getWindow();
@@ -64,19 +64,19 @@ public final class ChallengeDialogs {
 
     /* access modifiers changed from: private */
     /* renamed from: createPinDialog$lambda-5$lambda-0  reason: not valid java name */
-    public static final void m2666createPinDialog$lambda5$lambda0(ControlViewHolder controlViewHolder, ControlAction controlAction, DialogInterface dialogInterface, int i) {
+    public static final void m2671createPinDialog$lambda5$lambda0(ControlViewHolder controlViewHolder, ControlAction controlAction, DialogInterface dialogInterface, int i) {
         Intrinsics.checkNotNullParameter(controlViewHolder, "$cvh");
         if (dialogInterface instanceof Dialog) {
             Dialog dialog = (Dialog) dialogInterface;
-            dialog.requireViewById(C1893R.C1897id.controls_pin_input);
-            controlViewHolder.action(INSTANCE.addChallengeValue(controlAction, ((EditText) dialog.requireViewById(C1893R.C1897id.controls_pin_input)).getText().toString()));
+            dialog.requireViewById(C1894R.C1898id.controls_pin_input);
+            controlViewHolder.action(INSTANCE.addChallengeValue(controlAction, ((EditText) dialog.requireViewById(C1894R.C1898id.controls_pin_input)).getText().toString()));
             dialogInterface.dismiss();
         }
     }
 
     /* access modifiers changed from: private */
     /* renamed from: createPinDialog$lambda-5$lambda-1  reason: not valid java name */
-    public static final void m2667createPinDialog$lambda5$lambda1(Function0 function0, DialogInterface dialogInterface, int i) {
+    public static final void m2672createPinDialog$lambda5$lambda1(Function0 function0, DialogInterface dialogInterface, int i) {
         Intrinsics.checkNotNullParameter(function0, "$onCancel");
         function0.invoke();
         dialogInterface.cancel();
@@ -84,22 +84,22 @@ public final class ChallengeDialogs {
 
     /* access modifiers changed from: private */
     /* renamed from: createPinDialog$lambda-5$lambda-4  reason: not valid java name */
-    public static final void m2668createPinDialog$lambda5$lambda4(ChallengeDialogs$createPinDialog$1 challengeDialogs$createPinDialog$1, int i, boolean z, DialogInterface dialogInterface) {
+    public static final void m2673createPinDialog$lambda5$lambda4(ChallengeDialogs$createPinDialog$1 challengeDialogs$createPinDialog$1, int i, boolean z, DialogInterface dialogInterface) {
         Intrinsics.checkNotNullParameter(challengeDialogs$createPinDialog$1, "$this_apply");
-        EditText editText = (EditText) challengeDialogs$createPinDialog$1.requireViewById(C1893R.C1897id.controls_pin_input);
+        EditText editText = (EditText) challengeDialogs$createPinDialog$1.requireViewById(C1894R.C1898id.controls_pin_input);
         editText.setHint(i);
-        CheckBox checkBox = (CheckBox) challengeDialogs$createPinDialog$1.requireViewById(C1893R.C1897id.controls_pin_use_alpha);
+        CheckBox checkBox = (CheckBox) challengeDialogs$createPinDialog$1.requireViewById(C1894R.C1898id.controls_pin_use_alpha);
         checkBox.setChecked(z);
         ChallengeDialogs challengeDialogs = INSTANCE;
         Intrinsics.checkNotNullExpressionValue(editText, "editText");
         challengeDialogs.setInputType(editText, checkBox.isChecked());
-        ((CheckBox) challengeDialogs$createPinDialog$1.requireViewById(C1893R.C1897id.controls_pin_use_alpha)).setOnClickListener(new ChallengeDialogs$$ExternalSyntheticLambda2(editText, checkBox));
+        ((CheckBox) challengeDialogs$createPinDialog$1.requireViewById(C1894R.C1898id.controls_pin_use_alpha)).setOnClickListener(new ChallengeDialogs$$ExternalSyntheticLambda2(editText, checkBox));
         editText.requestFocus();
     }
 
     /* access modifiers changed from: private */
     /* renamed from: createPinDialog$lambda-5$lambda-4$lambda-3  reason: not valid java name */
-    public static final void m2669createPinDialog$lambda5$lambda4$lambda3(EditText editText, CheckBox checkBox, View view) {
+    public static final void m2674createPinDialog$lambda5$lambda4$lambda3(EditText editText, CheckBox checkBox, View view) {
         ChallengeDialogs challengeDialogs = INSTANCE;
         Intrinsics.checkNotNullExpressionValue(editText, "editText");
         challengeDialogs.setInputType(editText, checkBox.isChecked());
@@ -114,7 +114,7 @@ public final class ChallengeDialogs {
             return null;
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(controlViewHolder.getContext(), STYLE);
-        builder.setTitle(controlViewHolder.getContext().getResources().getString(C1893R.string.controls_confirmation_message, new Object[]{controlViewHolder.getTitle().getText()}));
+        builder.setTitle(controlViewHolder.getContext().getResources().getString(C1894R.string.controls_confirmation_message, new Object[]{controlViewHolder.getTitle().getText()}));
         builder.setPositiveButton(17039370, new ChallengeDialogs$$ExternalSyntheticLambda0(controlViewHolder, lastAction));
         builder.setNegativeButton(17039360, new ChallengeDialogs$$ExternalSyntheticLambda1(function0));
         AlertDialog create = builder.create();
@@ -124,7 +124,7 @@ public final class ChallengeDialogs {
 
     /* access modifiers changed from: private */
     /* renamed from: createConfirmationDialog$lambda-8$lambda-6  reason: not valid java name */
-    public static final void m2664createConfirmationDialog$lambda8$lambda6(ControlViewHolder controlViewHolder, ControlAction controlAction, DialogInterface dialogInterface, int i) {
+    public static final void m2669createConfirmationDialog$lambda8$lambda6(ControlViewHolder controlViewHolder, ControlAction controlAction, DialogInterface dialogInterface, int i) {
         Intrinsics.checkNotNullParameter(controlViewHolder, "$cvh");
         controlViewHolder.action(INSTANCE.addChallengeValue(controlAction, "true"));
         dialogInterface.dismiss();
@@ -132,7 +132,7 @@ public final class ChallengeDialogs {
 
     /* access modifiers changed from: private */
     /* renamed from: createConfirmationDialog$lambda-8$lambda-7  reason: not valid java name */
-    public static final void m2665createConfirmationDialog$lambda8$lambda7(Function0 function0, DialogInterface dialogInterface, int i) {
+    public static final void m2670createConfirmationDialog$lambda8$lambda7(Function0 function0, DialogInterface dialogInterface, int i) {
         Intrinsics.checkNotNullParameter(function0, "$onCancel");
         function0.invoke();
         dialogInterface.cancel();

@@ -11,6 +11,6 @@ public final /* synthetic */ class MediaTimeoutListener$$ExternalSyntheticLambda
     }
 
     public final void run() {
-        MediaTimeoutListener.m2826onMediaDataLoaded$lambda2$lambda1(this.f$0, this.f$1);
+        MediaTimeoutListener.m2831onMediaDataLoaded$lambda2$lambda1(this.f$0, this.f$1);
     }
 }

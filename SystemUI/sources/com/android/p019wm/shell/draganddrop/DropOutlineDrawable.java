@@ -16,7 +16,7 @@ import androidx.constraintlayout.motion.widget.Key;
 import com.android.internal.graphics.ColorUtils;
 import com.android.internal.policy.ScreenDecorationsUtils;
 import com.android.internal.protolog.common.ProtoLog;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.protolog.ShellProtoLogGroup;
 
 /* renamed from: com.android.wm.shell.draganddrop.DropOutlineDrawable */
@@ -50,7 +50,7 @@ public class DropOutlineDrawable extends Drawable {
     }
 
     public DropOutlineDrawable(Context context) {
-        C34571 r0 = new IntProperty<DropOutlineDrawable>(Key.ALPHA) {
+        C34671 r0 = new IntProperty<DropOutlineDrawable>(Key.ALPHA) {
             public /* bridge */ /* synthetic */ void set(Object obj, Object obj2) {
                 super.set(obj, (Integer) obj2);
             }
@@ -65,7 +65,7 @@ public class DropOutlineDrawable extends Drawable {
         };
         this.ALPHA = r0;
         this.mCornerRadius = ScreenDecorationsUtils.getWindowCornerRadius(context);
-        int color = context.getColor(C3343R.C3344color.drop_outline_background);
+        int color = context.getColor(C3353R.C3354color.drop_outline_background);
         this.mColor = color;
         this.mMaxAlpha = Color.alpha(color);
         r0.set(this, 0);

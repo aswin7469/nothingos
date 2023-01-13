@@ -18,7 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import com.android.keyguard.dagger.KeyguardStatusViewComponent;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.qualifiers.UiBackground;
 import com.android.systemui.navigationbar.NavigationBarController;
 import com.android.systemui.navigationbar.NavigationBarInflaterView;
@@ -104,7 +104,7 @@ public class KeyguardDisplayManager {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-keyguard-KeyguardDisplayManager  reason: not valid java name */
-    public /* synthetic */ void m2285lambda$new$0$comandroidkeyguardKeyguardDisplayManager() {
+    public /* synthetic */ void m2291lambda$new$0$comandroidkeyguardKeyguardDisplayManager() {
         this.mMediaRouter = (MediaRouter) this.mContext.getSystemService(MediaRouter.class);
     }
 
@@ -278,7 +278,7 @@ public class KeyguardDisplayManager {
         }
 
         KeyguardPresentation(Context context, Display display, KeyguardStatusViewComponent.Factory factory) {
-            super(context, display, C1893R.style.Theme_SystemUI_KeyguardPresentation, Types.SQLXML);
+            super(context, display, C1894R.style.Theme_SystemUI_KeyguardPresentation, Types.SQLXML);
             this.mKeyguardStatusViewComponentFactory = factory;
             setCancelable(false);
         }
@@ -296,15 +296,15 @@ public class KeyguardDisplayManager {
         public void onCreate(Bundle bundle) {
             super.onCreate(bundle);
             updateBounds();
-            setContentView(LayoutInflater.from(getContext()).inflate(C1893R.layout.keyguard_presentation, (ViewGroup) null));
+            setContentView(LayoutInflater.from(getContext()).inflate(C1894R.layout.keyguard_presentation, (ViewGroup) null));
             getWindow().getDecorView().setSystemUiVisibility(1792);
             getWindow().getAttributes().setFitInsetsTypes(0);
             getWindow().setNavigationBarContrastEnforced(false);
             getWindow().setNavigationBarColor(0);
-            View findViewById = findViewById(C1893R.C1897id.clock);
+            View findViewById = findViewById(C1894R.C1898id.clock);
             this.mClock = findViewById;
             findViewById.post(this.mMoveTextRunnable);
-            KeyguardClockSwitchController keyguardClockSwitchController = this.mKeyguardStatusViewComponentFactory.build((KeyguardStatusView) findViewById(C1893R.C1897id.clock)).getKeyguardClockSwitchController();
+            KeyguardClockSwitchController keyguardClockSwitchController = this.mKeyguardStatusViewComponentFactory.build((KeyguardStatusView) findViewById(C1894R.C1898id.clock)).getKeyguardClockSwitchController();
             this.mKeyguardClockSwitchController = keyguardClockSwitchController;
             keyguardClockSwitchController.setOnlyClock(true);
             this.mKeyguardClockSwitchController.init();

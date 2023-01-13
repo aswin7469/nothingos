@@ -8,7 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 import com.android.settingslib.drawable.UserIconDrawable;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 
 public class UserAvatarView extends View {
     private final UserIconDrawable mDrawable;
@@ -16,7 +16,7 @@ public class UserAvatarView extends View {
     public UserAvatarView(Context context, AttributeSet attributeSet, int i, int i2) {
         super(context, attributeSet, i, i2);
         this.mDrawable = new UserIconDrawable();
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C1893R.styleable.UserAvatarView, i, i2);
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C1894R.styleable.UserAvatarView, i, i2);
         int indexCount = obtainStyledAttributes.getIndexCount();
         for (int i3 = 0; i3 < indexCount; i3++) {
             int index = obtainStyledAttributes.getIndex(i3);

@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 import com.android.keyguard.LockIconView;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.battery.BatteryMeterView;
 import com.android.systemui.battery.BatteryMeterViewController;
 import com.android.systemui.biometrics.AuthRippleView;
@@ -63,7 +63,7 @@ public abstract class StatusBarViewModule {
     @CentralSurfacesComponent.CentralSurfacesScope
     @Provides
     public static NotificationShadeWindowView providesNotificationShadeWindowView(LayoutInflater layoutInflater) {
-        NotificationShadeWindowView notificationShadeWindowView = (NotificationShadeWindowView) layoutInflater.inflate(C1893R.layout.super_notification_shade, (ViewGroup) null);
+        NotificationShadeWindowView notificationShadeWindowView = (NotificationShadeWindowView) layoutInflater.inflate(C1894R.layout.super_notification_shade, (ViewGroup) null);
         if (notificationShadeWindowView != null) {
             return notificationShadeWindowView;
         }
@@ -73,13 +73,13 @@ public abstract class StatusBarViewModule {
     @CentralSurfacesComponent.CentralSurfacesScope
     @Provides
     public static NotificationStackScrollLayout providesNotificationStackScrollLayout(NotificationShadeWindowView notificationShadeWindowView) {
-        return (NotificationStackScrollLayout) notificationShadeWindowView.findViewById(C1893R.C1897id.notification_stack_scroller);
+        return (NotificationStackScrollLayout) notificationShadeWindowView.findViewById(C1894R.C1898id.notification_stack_scroller);
     }
 
     @CentralSurfacesComponent.CentralSurfacesScope
     @Provides
     public static NotificationShelf providesNotificationShelf(LayoutInflater layoutInflater, NotificationStackScrollLayout notificationStackScrollLayout) {
-        NotificationShelf notificationShelf = (NotificationShelf) layoutInflater.inflate(C1893R.layout.status_bar_notification_shelf, notificationStackScrollLayout, false);
+        NotificationShelf notificationShelf = (NotificationShelf) layoutInflater.inflate(C1894R.layout.status_bar_notification_shelf, notificationStackScrollLayout, false);
         if (notificationShelf != null) {
             return notificationShelf;
         }
@@ -103,41 +103,41 @@ public abstract class StatusBarViewModule {
     @CentralSurfacesComponent.CentralSurfacesScope
     @Provides
     public static LockIconView getLockIconView(NotificationShadeWindowView notificationShadeWindowView) {
-        return (LockIconView) notificationShadeWindowView.findViewById(C1893R.C1897id.lock_icon_view);
+        return (LockIconView) notificationShadeWindowView.findViewById(C1894R.C1898id.lock_icon_view);
     }
 
     @CentralSurfacesComponent.CentralSurfacesScope
     @Provides
     public static AuthRippleView getAuthRippleView(NotificationShadeWindowView notificationShadeWindowView) {
-        return (AuthRippleView) notificationShadeWindowView.findViewById(C1893R.C1897id.auth_ripple);
+        return (AuthRippleView) notificationShadeWindowView.findViewById(C1894R.C1898id.auth_ripple);
     }
 
     @CentralSurfacesComponent.CentralSurfacesScope
     @Provides
     @Named("large_screen_shade_header")
     public static View getLargeScreenShadeHeaderBarView(NotificationShadeWindowView notificationShadeWindowView, FeatureFlags featureFlags) {
-        ViewStub viewStub = (ViewStub) notificationShadeWindowView.findViewById(C1893R.C1897id.qs_header_stub);
-        viewStub.setLayoutResource(featureFlags.isEnabled(Flags.COMBINED_QS_HEADERS) ? C1893R.layout.combined_qs_header : C1893R.layout.large_screen_shade_header);
+        ViewStub viewStub = (ViewStub) notificationShadeWindowView.findViewById(C1894R.C1898id.qs_header_stub);
+        viewStub.setLayoutResource(featureFlags.isEnabled(Flags.COMBINED_QS_HEADERS) ? C1894R.layout.combined_qs_header : C1894R.layout.large_screen_shade_header);
         return viewStub.inflate();
     }
 
     @CentralSurfacesComponent.CentralSurfacesScope
     @Provides
     public static OngoingPrivacyChip getSplitShadeOngoingPrivacyChip(@Named("large_screen_shade_header") View view) {
-        return (OngoingPrivacyChip) view.findViewById(C1893R.C1897id.privacy_chip);
+        return (OngoingPrivacyChip) view.findViewById(C1894R.C1898id.privacy_chip);
     }
 
     @CentralSurfacesComponent.CentralSurfacesScope
     @Provides
     static StatusIconContainer providesStatusIconContainer(@Named("large_screen_shade_header") View view) {
-        return (StatusIconContainer) view.findViewById(C1893R.C1897id.statusIcons);
+        return (StatusIconContainer) view.findViewById(C1894R.C1898id.statusIcons);
     }
 
     @CentralSurfacesComponent.CentralSurfacesScope
     @Provides
     @Named("split_shade_battery_view")
     static BatteryMeterView getBatteryMeterView(@Named("large_screen_shade_header") View view) {
-        return (BatteryMeterView) view.findViewById(C1893R.C1897id.batteryRemainingIcon);
+        return (BatteryMeterView) view.findViewById(C1894R.C1898id.batteryRemainingIcon);
     }
 
     @CentralSurfacesComponent.CentralSurfacesScope
@@ -156,7 +156,7 @@ public abstract class StatusBarViewModule {
     @CentralSurfacesComponent.CentralSurfacesScope
     @Provides
     public static NotificationsQuickSettingsContainer getNotificationsQuickSettingsContainer(NotificationShadeWindowView notificationShadeWindowView) {
-        return (NotificationsQuickSettingsContainer) notificationShadeWindowView.findViewById(C1893R.C1897id.notification_container_parent);
+        return (NotificationsQuickSettingsContainer) notificationShadeWindowView.findViewById(C1894R.C1898id.notification_container_parent);
     }
 
     @Provides
@@ -167,13 +167,13 @@ public abstract class StatusBarViewModule {
 
     @Provides
     static NTQSStatusBar providesNTQSStatusBar(NotificationPanelView notificationPanelView) {
-        return (NTQSStatusBar) notificationPanelView.findViewById(C1893R.C1897id.qs_status_bar_layout);
+        return (NTQSStatusBar) notificationPanelView.findViewById(C1894R.C1898id.qs_status_bar_layout);
     }
 
     @Provides
     @Named("nt_qs_header_battery_meter_view")
     static BatteryMeterView createBatteryMeterView(NotificationPanelView notificationPanelView) {
-        return (BatteryMeterView) notificationPanelView.findViewById(C1893R.C1897id.qs_batteryRemainingIcon);
+        return (BatteryMeterView) notificationPanelView.findViewById(C1894R.C1898id.qs_batteryRemainingIcon);
     }
 
     @Provides

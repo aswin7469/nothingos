@@ -11,6 +11,6 @@ public final /* synthetic */ class MediaDeviceManager$Entry$$ExternalSyntheticLa
     }
 
     public final void run() {
-        MediaDeviceManager.Entry.m2806onSelectedDeviceStateChanged$lambda7(this.f$0);
+        MediaDeviceManager.Entry.m2811onSelectedDeviceStateChanged$lambda7(this.f$0);
     }
 }

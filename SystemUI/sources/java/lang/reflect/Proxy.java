@@ -43,7 +43,7 @@ public class Proxy implements Serializable {
     private static final long serialVersionUID = -2222568056686623797L;
 
     /* renamed from: h */
-    protected InvocationHandler f552h;
+    protected InvocationHandler f550h;
 
     /* access modifiers changed from: private */
     public static native Class<?> generateProxy(String str, Class<?>[] clsArr, ClassLoader classLoader, Method[] methodArr, Class<?>[][] clsArr2);
@@ -53,7 +53,7 @@ public class Proxy implements Serializable {
 
     protected Proxy(InvocationHandler invocationHandler) {
         Objects.requireNonNull(invocationHandler);
-        this.f552h = invocationHandler;
+        this.f550h = invocationHandler;
     }
 
     @CallerSensitive
@@ -451,12 +451,12 @@ public class Proxy implements Serializable {
     @CallerSensitive
     public static InvocationHandler getInvocationHandler(Object obj) throws IllegalArgumentException {
         if (isProxyClass(obj.getClass())) {
-            return ((Proxy) obj).f552h;
+            return ((Proxy) obj).f550h;
         }
         throw new IllegalArgumentException("not a proxy instance");
     }
 
     private static Object invoke(Proxy proxy, Method method, Object[] objArr) throws Throwable {
-        return proxy.f552h.invoke(proxy, method, objArr);
+        return proxy.f550h.invoke(proxy, method, objArr);
     }
 }

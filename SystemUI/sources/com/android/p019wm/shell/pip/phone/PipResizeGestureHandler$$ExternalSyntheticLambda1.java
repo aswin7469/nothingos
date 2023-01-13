@@ -13,6 +13,6 @@ public final /* synthetic */ class PipResizeGestureHandler$$ExternalSyntheticLam
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo50456x522235c0((Rect) obj);
+        this.f$0.mo50465x522235c0((Rect) obj);
     }
 }

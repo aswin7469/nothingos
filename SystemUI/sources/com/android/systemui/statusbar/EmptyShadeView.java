@@ -5,14 +5,14 @@ import android.content.res.Configuration;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.statusbar.notification.row.StackScrollerDecorView;
 import com.android.systemui.statusbar.notification.stack.ExpandableViewState;
 
 public class EmptyShadeView extends StackScrollerDecorView {
     /* access modifiers changed from: private */
     public TextView mEmptyText;
-    private int mText = C1893R.string.empty_shade_text;
+    private int mText = C1894R.string.empty_shade_text;
 
     /* access modifiers changed from: protected */
     public View findSecondaryView() {
@@ -31,7 +31,7 @@ public class EmptyShadeView extends StackScrollerDecorView {
 
     /* access modifiers changed from: protected */
     public View findContentView() {
-        return findViewById(C1893R.C1897id.no_notifications);
+        return findViewById(C1894R.C1898id.no_notifications);
     }
 
     public void setTextColor(int i) {

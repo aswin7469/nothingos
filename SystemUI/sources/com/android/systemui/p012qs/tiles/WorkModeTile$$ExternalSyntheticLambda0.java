@@ -12,6 +12,6 @@ public final /* synthetic */ class WorkModeTile$$ExternalSyntheticLambda0 implem
     }
 
     public final Object get() {
-        return this.f$0.m2986lambda$getTileLabel$0$comandroidsystemuiqstilesWorkModeTile();
+        return this.f$0.m2990lambda$getTileLabel$0$comandroidsystemuiqstilesWorkModeTile();
     }
 }

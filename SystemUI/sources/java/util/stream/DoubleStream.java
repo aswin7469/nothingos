@@ -97,12 +97,12 @@ public interface DoubleStream extends BaseStream<Double, DoubleStream> {
     }
 
     /* renamed from: of */
-    static DoubleStream m1774of(double d) {
+    static DoubleStream m1780of(double d) {
         return StreamSupport.doubleStream(new Streams.DoubleStreamBuilderImpl(d), false);
     }
 
     /* renamed from: of */
-    static DoubleStream m1775of(double... dArr) {
+    static DoubleStream m1781of(double... dArr) {
         return Arrays.stream(dArr);
     }
 
@@ -111,7 +111,7 @@ public interface DoubleStream extends BaseStream<Double, DoubleStream> {
         return StreamSupport.doubleStream(Spliterators.spliteratorUnknownSize((PrimitiveIterator.OfDouble) new PrimitiveIterator.OfDouble(d, doubleUnaryOperator) {
 
             /* renamed from: t */
-            double f776t;
+            double f774t;
             final /* synthetic */ DoubleUnaryOperator val$f;
             final /* synthetic */ double val$seed;
 
@@ -122,12 +122,12 @@ public interface DoubleStream extends BaseStream<Double, DoubleStream> {
             {
                 this.val$seed = r1;
                 this.val$f = r3;
-                this.f776t = r1;
+                this.f774t = r1;
             }
 
             public double nextDouble() {
-                double d = this.f776t;
-                this.f776t = this.val$f.applyAsDouble(d);
+                double d = this.f774t;
+                this.f774t = this.val$f.applyAsDouble(d);
                 return d;
             }
         }, 1296), false);

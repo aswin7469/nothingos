@@ -29,7 +29,7 @@ public class QSTileRevealController {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$run$0$com-android-systemui-qs-QSTileRevealController$1  reason: not valid java name */
-        public /* synthetic */ void m2942lambda$run$0$comandroidsystemuiqsQSTileRevealController$1() {
+        public /* synthetic */ void m2947lambda$run$0$comandroidsystemuiqsQSTileRevealController$1() {
             if (QSTileRevealController.this.mQSPanelController.isExpanded()) {
                 QSTileRevealController qSTileRevealController = QSTileRevealController.this;
                 qSTileRevealController.addTileSpecsToRevealed(qSTileRevealController.mTilesToReveal);

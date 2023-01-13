@@ -11,6 +11,6 @@ public final /* synthetic */ class SectionHeaderNodeControllerImpl$$ExternalSynt
     }
 
     public final void onClick(View view) {
-        SectionHeaderNodeControllerImpl.m3118onHeaderClickListener$lambda0(this.f$0, view);
+        SectionHeaderNodeControllerImpl.m3122onHeaderClickListener$lambda0(this.f$0, view);
     }
 }

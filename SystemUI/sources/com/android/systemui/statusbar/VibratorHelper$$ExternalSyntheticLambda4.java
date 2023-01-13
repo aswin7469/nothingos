@@ -22,6 +22,6 @@ public final /* synthetic */ class VibratorHelper$$ExternalSyntheticLambda4 impl
     }
 
     public final void run() {
-        this.f$0.m3044lambda$vibrate$1$comandroidsystemuistatusbarVibratorHelper(this.f$1, this.f$2, this.f$3, this.f$4, this.f$5);
+        this.f$0.m3048lambda$vibrate$1$comandroidsystemuistatusbarVibratorHelper(this.f$1, this.f$2, this.f$3, this.f$4, this.f$5);
     }
 }

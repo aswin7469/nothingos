@@ -10,6 +10,6 @@ public final /* synthetic */ class LocationTile$$ExternalSyntheticLambda0 implem
     }
 
     public final void run() {
-        this.f$0.m2979lambda$handleClick$0$comandroidsystemuiqstilesLocationTile();
+        this.f$0.m2983lambda$handleClick$0$comandroidsystemuiqstilesLocationTile();
     }
 }

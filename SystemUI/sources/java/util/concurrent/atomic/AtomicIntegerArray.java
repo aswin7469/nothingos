@@ -10,7 +10,7 @@ import java.util.function.IntUnaryOperator;
 public class AtomicIntegerArray implements Serializable {
 
     /* renamed from: AA */
-    private static final VarHandle f762AA = MethodHandles.arrayElementVarHandle(int[].class);
+    private static final VarHandle f760AA = MethodHandles.arrayElementVarHandle(int[].class);
     private static final long serialVersionUID = 2862133569453604235L;
     private final int[] array;
 

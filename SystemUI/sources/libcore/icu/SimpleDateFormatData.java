@@ -48,7 +48,7 @@ public class SimpleDateFormatData {
 
     public static void initializeCacheInZygote() {
         getInstance(Locale.ROOT);
-        getInstance(Locale.f700US);
+        getInstance(Locale.f698US);
         getInstance(Locale.getDefault());
     }
 

@@ -34,7 +34,7 @@ public class InetAddressUtils {
         StructAddrinfo structAddrinfo = new StructAddrinfo();
         structAddrinfo.ai_flags = OsConstants.AI_NUMERICHOST;
         try {
-            inetAddressArr = Libcore.f857os.android_getaddrinfo(str, structAddrinfo, 0);
+            inetAddressArr = Libcore.f855os.android_getaddrinfo(str, structAddrinfo, 0);
         } catch (GaiException unused) {
             inetAddressArr = null;
         }

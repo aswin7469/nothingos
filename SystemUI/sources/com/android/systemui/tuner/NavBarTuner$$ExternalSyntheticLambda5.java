@@ -24,6 +24,6 @@ public final /* synthetic */ class NavBarTuner$$ExternalSyntheticLambda5 impleme
     }
 
     public final void onClick(DialogInterface dialogInterface, int i) {
-        this.f$0.m3257lambda$bindButton$8$comandroidsystemuitunerNavBarTuner(this.f$1, this.f$2, this.f$3, this.f$4, this.f$5, dialogInterface, i);
+        this.f$0.m3262lambda$bindButton$8$comandroidsystemuitunerNavBarTuner(this.f$1, this.f$2, this.f$3, this.f$4, this.f$5, dialogInterface, i);
     }
 }

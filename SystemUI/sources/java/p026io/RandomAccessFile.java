@@ -22,7 +22,7 @@ public class RandomAccessFile implements DataOutput, DataInput, Closeable {
     private volatile boolean closed;
 
     /* renamed from: fd */
-    private FileDescriptor f530fd;
+    private FileDescriptor f528fd;
     private int flushAfterWrite;
     private final CloseGuard guard;
     private final IoTracker ioTracker;
@@ -30,7 +30,7 @@ public class RandomAccessFile implements DataOutput, DataInput, Closeable {
     private final String path;
 
     /* renamed from: rw */
-    private boolean f531rw;
+    private boolean f529rw;
     private final byte[] scratch;
 
     /* JADX INFO: this call moved to the top of the method (can break code semantics) */
@@ -54,7 +54,7 @@ public class RandomAccessFile implements DataOutput, DataInput, Closeable {
             i = OsConstants.O_RDONLY;
         } else if (mode2.startsWith("rw")) {
             i = OsConstants.O_RDWR | OsConstants.O_CREAT;
-            this.f531rw = true;
+            this.f529rw = true;
             if (mode2.length() > 2) {
                 if (mode2.equals("rws")) {
                     this.flushAfterWrite = 1;
@@ -73,7 +73,7 @@ public class RandomAccessFile implements DataOutput, DataInput, Closeable {
             this.path = path2;
             this.mode = i;
             FileDescriptor open = IoBridge.open(path2, i);
-            this.f530fd = open;
+            this.f528fd = open;
             IoUtils.setFdOwner(open, this);
             maybeSync();
             closeGuard.open("close");
@@ -86,19 +86,19 @@ public class RandomAccessFile implements DataOutput, DataInput, Closeable {
         int i = this.flushAfterWrite;
         if (i == 1) {
             try {
-                this.f530fd.sync();
+                this.f528fd.sync();
             } catch (IOException e) {
             }
         } else if (i == 2) {
             try {
-                C0308Os.fdatasync(this.f530fd);
+                C0308Os.fdatasync(this.f528fd);
             } catch (ErrnoException e2) {
             }
         }
     }
 
     public final FileDescriptor getFD() throws IOException {
-        FileDescriptor fileDescriptor = this.f530fd;
+        FileDescriptor fileDescriptor = this.f528fd;
         if (fileDescriptor != null) {
             return fileDescriptor;
         }
@@ -109,7 +109,7 @@ public class RandomAccessFile implements DataOutput, DataInput, Closeable {
         FileChannel fileChannel;
         synchronized (this) {
             if (this.channel == null) {
-                this.channel = FileChannelImpl.open(this.f530fd, this.path, true, this.f531rw, this);
+                this.channel = FileChannelImpl.open(this.f528fd, this.path, true, this.f529rw, this);
             }
             fileChannel = this.channel;
         }
@@ -125,7 +125,7 @@ public class RandomAccessFile implements DataOutput, DataInput, Closeable {
 
     private int readBytes(byte[] b, int off, int len) throws IOException {
         this.ioTracker.trackIo(len, IoTracker.Mode.READ);
-        return IoBridge.read(this.f530fd, b, off, len);
+        return IoBridge.read(this.f528fd, b, off, len);
     }
 
     public int read(byte[] b, int off, int len) throws IOException {
@@ -174,7 +174,7 @@ public class RandomAccessFile implements DataOutput, DataInput, Closeable {
 
     private void writeBytes(byte[] b, int off, int len) throws IOException {
         this.ioTracker.trackIo(len, IoTracker.Mode.WRITE);
-        IoBridge.write(this.f530fd, b, off, len);
+        IoBridge.write(this.f528fd, b, off, len);
         maybeSync();
     }
 
@@ -188,7 +188,7 @@ public class RandomAccessFile implements DataOutput, DataInput, Closeable {
 
     public long getFilePointer() throws IOException {
         try {
-            return Libcore.f857os.lseek(this.f530fd, 0, OsConstants.SEEK_CUR);
+            return Libcore.f855os.lseek(this.f528fd, 0, OsConstants.SEEK_CUR);
         } catch (ErrnoException e) {
             throw e.rethrowAsIOException();
         }
@@ -197,7 +197,7 @@ public class RandomAccessFile implements DataOutput, DataInput, Closeable {
     public void seek(long pos) throws IOException {
         if (pos >= 0) {
             try {
-                Libcore.f857os.lseek(this.f530fd, pos, OsConstants.SEEK_SET);
+                Libcore.f855os.lseek(this.f528fd, pos, OsConstants.SEEK_SET);
                 this.ioTracker.reset();
             } catch (ErrnoException e) {
                 throw e.rethrowAsIOException();
@@ -209,7 +209,7 @@ public class RandomAccessFile implements DataOutput, DataInput, Closeable {
 
     public long length() throws IOException {
         try {
-            return Libcore.f857os.fstat(this.f530fd).st_size;
+            return Libcore.f855os.fstat(this.f528fd).st_size;
         } catch (ErrnoException e) {
             throw e.rethrowAsIOException();
         }
@@ -218,7 +218,7 @@ public class RandomAccessFile implements DataOutput, DataInput, Closeable {
     public void setLength(long newLength) throws IOException {
         if (newLength >= 0) {
             try {
-                Libcore.f857os.ftruncate(this.f530fd, newLength);
+                Libcore.f855os.ftruncate(this.f528fd, newLength);
                 if (getFilePointer() > newLength) {
                     seek(newLength);
                 }
@@ -241,7 +241,7 @@ public class RandomAccessFile implements DataOutput, DataInput, Closeable {
         r2.channel.close();
      */
     /* JADX WARNING: Code restructure failed: missing block: B:14:0x0021, code lost:
-        libcore.p030io.IoBridge.closeAndSignalBlockedThreads(r2.f530fd);
+        libcore.p030io.IoBridge.closeAndSignalBlockedThreads(r2.f528fd);
      */
     /* JADX WARNING: Code restructure failed: missing block: B:15:0x0026, code lost:
         return;
@@ -272,7 +272,7 @@ public class RandomAccessFile implements DataOutput, DataInput, Closeable {
             java.nio.channels.FileChannel r0 = r2.channel
             r0.close()
         L_0x0021:
-            java.io.FileDescriptor r0 = r2.f530fd
+            java.io.FileDescriptor r0 = r2.f528fd
             libcore.p030io.IoBridge.closeAndSignalBlockedThreads(r0)
             return
         L_0x0027:

@@ -558,10 +558,10 @@ public class ExifInterface {
         ASCII = forName;
         IDENTIFIER_EXIF_APP1 = "Exif\u0000\u0000".getBytes(forName);
         IDENTIFIER_XMP_APP1 = "http://ns.adobe.com/xap/1.0/\u0000".getBytes(forName);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss", Locale.f700US);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss", Locale.f698US);
         sFormatterPrimary = simpleDateFormat;
         simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-        SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.f700US);
+        SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.f698US);
         sFormatterSecondary = simpleDateFormat2;
         simpleDateFormat2.setTimeZone(TimeZone.getTimeZone("UTC"));
         int i = 0;

@@ -7,7 +7,7 @@ import android.os.Looper;
 import android.view.View;
 import android.widget.Switch;
 import com.android.internal.logging.MetricsLogger;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.qualifiers.Background;
 import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.p012qs.QSHost;
@@ -22,7 +22,7 @@ import javax.inject.Inject;
 
 /* renamed from: com.android.systemui.qs.tiles.WorkModeTile */
 public class WorkModeTile extends QSTileImpl<QSTile.BooleanState> implements ManagedProfileController.Callback {
-    private final QSTile.Icon mIcon = QSTileImpl.ResourceIcon.get(C1893R.C1895drawable.stat_sys_managed_profile_status);
+    private final QSTile.Icon mIcon = QSTileImpl.ResourceIcon.get(C1894R.C1896drawable.stat_sys_managed_profile_status);
     private final ManagedProfileController mProfileController;
 
     public int getMetricsCategory() {
@@ -67,8 +67,8 @@ public class WorkModeTile extends QSTileImpl<QSTile.BooleanState> implements Man
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$getTileLabel$0$com-android-systemui-qs-tiles-WorkModeTile  reason: not valid java name */
-    public /* synthetic */ String m2986lambda$getTileLabel$0$comandroidsystemuiqstilesWorkModeTile() {
-        return this.mContext.getString(C1893R.string.quick_settings_work_mode_label);
+    public /* synthetic */ String m2990lambda$getTileLabel$0$comandroidsystemuiqstilesWorkModeTile() {
+        return this.mContext.getString(C1894R.string.quick_settings_work_mode_label);
     }
 
     /* access modifiers changed from: protected */

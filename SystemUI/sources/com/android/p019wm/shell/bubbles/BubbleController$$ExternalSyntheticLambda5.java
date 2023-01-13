@@ -12,6 +12,6 @@ public final /* synthetic */ class BubbleController$$ExternalSyntheticLambda5 im
     }
 
     public final void onPendingIntentCanceled(Bubble bubble) {
-        this.f$0.mo48348xbb0fdd6e(bubble);
+        this.f$0.mo48357xbb0fdd6e(bubble);
     }
 }

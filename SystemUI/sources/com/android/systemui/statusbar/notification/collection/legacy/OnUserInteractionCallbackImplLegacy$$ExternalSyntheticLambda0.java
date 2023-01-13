@@ -17,6 +17,6 @@ public final /* synthetic */ class OnUserInteractionCallbackImplLegacy$$External
     }
 
     public final void run() {
-        this.f$0.mo40393xbaba125(this.f$1, this.f$2, this.f$3);
+        this.f$0.mo40396xbaba125(this.f$1, this.f$2, this.f$3);
     }
 }

@@ -9,6 +9,6 @@ public final /* synthetic */ class CreateUserActivity$$ExternalSyntheticLambda4 
     }
 
     public final void run() {
-        this.f$0.m3292lambda$addUserNow$2$comandroidsystemuiuserCreateUserActivity();
+        this.f$0.m3297lambda$addUserNow$2$comandroidsystemuiuserCreateUserActivity();
     }
 }

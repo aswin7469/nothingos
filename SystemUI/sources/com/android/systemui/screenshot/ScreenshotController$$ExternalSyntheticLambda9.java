@@ -13,6 +13,6 @@ public final /* synthetic */ class ScreenshotController$$ExternalSyntheticLambda
     }
 
     public final void run() {
-        this.f$0.mo37428x79cdd634(this.f$1);
+        this.f$0.mo37429x79cdd634(this.f$1);
     }
 }

@@ -10,8 +10,8 @@ import kotlin.jvm.functions.Function3;
 import kotlinx.coroutines.channels.ReceiveChannel;
 import kotlinx.coroutines.flow.FlowCollector;
 
-@Metadata(mo64986d1 = {"\u0000\n\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0004\u0010\u0000\u001a\u00020\u0001\"\u0004\b\u0000\u0010\u0002\"\u0004\b\u0001\u0010\u0003\"\u0004\b\u0002\u0010\u00042\u0006\u0010\u0005\u001a\u00020\u0001H@"}, mo64987d2 = {"<anonymous>", "", "T1", "T2", "R", "it"}, mo64988k = 3, mo64989mv = {1, 5, 1}, mo64991xi = 48)
-@DebugMetadata(mo65240c = "kotlinx.coroutines.flow.internal.CombineKt$zipImpl$1$1$2$1$1", mo65241f = "Combine.kt", mo65242i = {}, mo65243l = {132, 135, 135}, mo65244m = "invokeSuspend", mo65245n = {}, mo65246s = {})
+@Metadata(mo65042d1 = {"\u0000\n\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0004\u0010\u0000\u001a\u00020\u0001\"\u0004\b\u0000\u0010\u0002\"\u0004\b\u0001\u0010\u0003\"\u0004\b\u0002\u0010\u00042\u0006\u0010\u0005\u001a\u00020\u0001H@"}, mo65043d2 = {"<anonymous>", "", "T1", "T2", "R", "it"}, mo65044k = 3, mo65045mv = {1, 5, 1}, mo65047xi = 48)
+@DebugMetadata(mo65296c = "kotlinx.coroutines.flow.internal.CombineKt$zipImpl$1$1$2$1$1", mo65297f = "Combine.kt", mo65298i = {}, mo65299l = {132, 135, 135}, mo65300m = "invokeSuspend", mo65301n = {}, mo65302s = {})
 /* compiled from: Combine.kt */
 final class CombineKt$zipImpl$1$1$2$1$1 extends SuspendLambda implements Function2<Unit, Continuation<? super Unit>, Object> {
     final /* synthetic */ ReceiveChannel<Object> $second;
@@ -68,7 +68,7 @@ final class CombineKt$zipImpl$1$1$2$1$1 extends SuspendLambda implements Functio
         L_0x0026:
             kotlin.ResultKt.throwOnFailure(r9)
             kotlinx.coroutines.channels.ChannelResult r9 = (kotlinx.coroutines.channels.ChannelResult) r9
-            java.lang.Object r9 = r9.m5447unboximpl()
+            java.lang.Object r9 = r9.m5465unboximpl()
             goto L_0x0041
         L_0x0030:
             kotlin.ResultKt.throwOnFailure(r9)
@@ -76,14 +76,14 @@ final class CombineKt$zipImpl$1$1$2$1$1 extends SuspendLambda implements Functio
             r1 = r8
             kotlin.coroutines.Continuation r1 = (kotlin.coroutines.Continuation) r1
             r8.label = r5
-            java.lang.Object r9 = r9.m5454receiveCatchingJP2dKIU(r1)
+            java.lang.Object r9 = r9.m5472receiveCatchingJP2dKIU(r1)
             if (r9 != r0) goto L_0x0041
             return r0
         L_0x0041:
             kotlinx.coroutines.flow.FlowCollector<R> r1 = r8.$this_unsafeFlow
             boolean r5 = r9 instanceof kotlinx.coroutines.channels.ChannelResult.Failed
             if (r5 == 0) goto L_0x0055
-            java.lang.Throwable r8 = kotlinx.coroutines.channels.ChannelResult.m5439exceptionOrNullimpl(r9)
+            java.lang.Throwable r8 = kotlinx.coroutines.channels.ChannelResult.m5457exceptionOrNullimpl(r9)
             if (r8 != 0) goto L_0x0054
             kotlinx.coroutines.flow.internal.AbortFlowException r8 = new kotlinx.coroutines.flow.internal.AbortFlowException
             r8.<init>(r1)

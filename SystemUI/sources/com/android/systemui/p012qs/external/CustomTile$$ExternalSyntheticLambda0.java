@@ -14,6 +14,6 @@ public final /* synthetic */ class CustomTile$$ExternalSyntheticLambda0 implemen
     }
 
     public final void run() {
-        this.f$0.mo36569x95f2ff5b(this.f$1);
+        this.f$0.mo36573x95f2ff5b(this.f$1);
     }
 }

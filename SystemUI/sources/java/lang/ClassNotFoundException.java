@@ -4,7 +4,7 @@ public class ClassNotFoundException extends ReflectiveOperationException {
     private static final long serialVersionUID = 9176873029745254542L;
 
     /* renamed from: ex */
-    private Throwable f535ex;
+    private Throwable f533ex;
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     public ClassNotFoundException() {
@@ -18,14 +18,14 @@ public class ClassNotFoundException extends ReflectiveOperationException {
 
     public ClassNotFoundException(String str, Throwable th) {
         super(str, (Throwable) null);
-        this.f535ex = th;
+        this.f533ex = th;
     }
 
     public Throwable getException() {
-        return this.f535ex;
+        return this.f533ex;
     }
 
     public Throwable getCause() {
-        return this.f535ex;
+        return this.f533ex;
     }
 }

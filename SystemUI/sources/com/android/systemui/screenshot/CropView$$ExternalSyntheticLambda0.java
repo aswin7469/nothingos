@@ -18,6 +18,6 @@ public final /* synthetic */ class CropView$$ExternalSyntheticLambda0 implements
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        this.f$0.mo37287x648c44ab(this.f$1, this.f$2, this.f$3, valueAnimator);
+        this.f$0.mo37288x648c44ab(this.f$1, this.f$2, this.f$3, valueAnimator);
     }
 }

@@ -11,6 +11,6 @@ public final /* synthetic */ class UdfpsAnimationViewController$$ExternalSynthet
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        UdfpsAnimationViewController.m2581runDialogAlphaAnimator$lambda3$lambda2(this.f$0, valueAnimator);
+        UdfpsAnimationViewController.m2587runDialogAlphaAnimator$lambda3$lambda2(this.f$0, valueAnimator);
     }
 }

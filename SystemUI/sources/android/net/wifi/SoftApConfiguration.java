@@ -880,7 +880,7 @@ public final class SoftApConfiguration implements Parcelable {
                         throw new IllegalArgumentException("Invalid channel to setAllowedAcsChannels: band: " + i + "channel: " + i3);
                     }
                 }
-                HashSet hashSet = (HashSet) IntStream.m1777of(iArr).boxed().collect(Collectors.toCollection(new SoftApConfiguration$Builder$$ExternalSyntheticLambda0()));
+                HashSet hashSet = (HashSet) IntStream.m1783of(iArr).boxed().collect(Collectors.toCollection(new SoftApConfiguration$Builder$$ExternalSyntheticLambda0()));
                 if (i == 1) {
                     this.mAllowedAcsChannels2g = hashSet;
                 } else if (i == 2) {

@@ -2,7 +2,7 @@ package com.android.systemui.p012qs;
 
 import android.os.Bundle;
 import com.android.internal.colorextraction.ColorExtractor;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.battery.BatteryMeterViewController;
 import com.android.systemui.colorextraction.SysuiColorExtractor;
 import com.android.systemui.demomode.DemoMode;
@@ -56,13 +56,13 @@ class QuickStatusBarHeaderController extends ViewController<QuickStatusBarHeader
         this.mFeatureFlags = featureFlags;
         this.mBatteryMeterViewController = batteryMeterViewController;
         this.mInsetsProvider = statusBarContentInsetsProvider;
-        this.mQSCarrierGroupController = builder.setQSCarrierGroup((QSCarrierGroup) ((QuickStatusBarHeader) this.mView).findViewById(C1893R.C1897id.carrier_group)).build();
-        Clock clock = (Clock) ((QuickStatusBarHeader) this.mView).findViewById(C1893R.C1897id.clock);
+        this.mQSCarrierGroupController = builder.setQSCarrierGroup((QSCarrierGroup) ((QuickStatusBarHeader) this.mView).findViewById(C1894R.C1898id.carrier_group)).build();
+        Clock clock = (Clock) ((QuickStatusBarHeader) this.mView).findViewById(C1894R.C1898id.clock);
         this.mClockView = clock;
-        StatusIconContainer statusIconContainer = (StatusIconContainer) ((QuickStatusBarHeader) this.mView).findViewById(C1893R.C1897id.statusIcons);
+        StatusIconContainer statusIconContainer = (StatusIconContainer) ((QuickStatusBarHeader) this.mView).findViewById(C1894R.C1898id.statusIcons);
         this.mIconContainer = statusIconContainer;
-        this.mVariableDateViewControllerDateView = factory.create((VariableDateView) ((QuickStatusBarHeader) this.mView).requireViewById(C1893R.C1897id.date));
-        this.mVariableDateViewControllerClockDateView = factory.create((VariableDateView) ((QuickStatusBarHeader) this.mView).requireViewById(C1893R.C1897id.date_clock));
+        this.mVariableDateViewControllerDateView = factory.create((VariableDateView) ((QuickStatusBarHeader) this.mView).requireViewById(C1894R.C1898id.date));
+        this.mVariableDateViewControllerClockDateView = factory.create((VariableDateView) ((QuickStatusBarHeader) this.mView).requireViewById(C1894R.C1898id.date_clock));
         this.mIconManager = new StatusBarIconController.TintedIconManager(statusIconContainer, featureFlags);
         this.mDemoModeReceiver = new ClockDemoModeReceiver(clock);
         this.mColorExtractor = sysuiColorExtractor;
@@ -74,7 +74,7 @@ class QuickStatusBarHeaderController extends ViewController<QuickStatusBarHeader
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-qs-QuickStatusBarHeaderController */
-    public /* synthetic */ void mo36351x3675a37d(ColorExtractor colorExtractor, int i) {
+    public /* synthetic */ void mo36355x3675a37d(ColorExtractor colorExtractor, int i) {
         this.mClockView.onColorsChanged(this.mColorExtractor.getNeutralColors().supportsDarkText());
     }
 
@@ -94,9 +94,9 @@ class QuickStatusBarHeaderController extends ViewController<QuickStatusBarHeader
         Objects.requireNonNull(quickStatusBarHeader);
         qSCarrierGroupController.setOnSingleCarrierChangedListener(new QuickStatusBarHeaderController$$ExternalSyntheticLambda1(quickStatusBarHeader));
         if (this.mFeatureFlags.isEnabled(Flags.COMBINED_STATUS_BAR_SIGNAL_ICONS)) {
-            list = List.m1724of(getResources().getString(17041574), getResources().getString(17041557));
+            list = List.m1730of(getResources().getString(17041574), getResources().getString(17041557));
         } else {
-            list = List.m1723of(getResources().getString(17041571));
+            list = List.m1729of(getResources().getString(17041571));
         }
         ((QuickStatusBarHeader) this.mView).onAttach(this.mIconManager, this.mQSExpansionPathInterpolator, list, this.mInsetsProvider, this.mFeatureFlags.isEnabled(Flags.COMBINED_QS_HEADERS));
         this.mDemoModeController.addCallback(this.mDemoModeReceiver);
@@ -138,7 +138,7 @@ class QuickStatusBarHeaderController extends ViewController<QuickStatusBarHeader
         private Clock mClockView;
 
         public List<String> demoCommands() {
-            return List.m1723of(DemoMode.COMMAND_CLOCK);
+            return List.m1729of(DemoMode.COMMAND_CLOCK);
         }
 
         ClockDemoModeReceiver(Clock clock) {

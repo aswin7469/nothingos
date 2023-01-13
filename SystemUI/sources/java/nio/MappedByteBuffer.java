@@ -7,7 +7,7 @@ public abstract class MappedByteBuffer extends ByteBuffer {
     private static byte unused;
 
     /* renamed from: fd */
-    private final FileDescriptor f572fd;
+    private final FileDescriptor f570fd;
 
     private native void force0(FileDescriptor fileDescriptor, long j, long j2);
 
@@ -17,21 +17,21 @@ public abstract class MappedByteBuffer extends ByteBuffer {
 
     MappedByteBuffer(int i, int i2, int i3, int i4, FileDescriptor fileDescriptor) {
         super(i, i2, i3, i4);
-        this.f572fd = fileDescriptor;
+        this.f570fd = fileDescriptor;
     }
 
     MappedByteBuffer(int i, int i2, int i3, int i4, byte[] bArr, int i5) {
         super(i, i2, i3, i4, bArr, i5);
-        this.f572fd = null;
+        this.f570fd = null;
     }
 
     MappedByteBuffer(int i, int i2, int i3, int i4) {
         super(i, i2, i3, i4);
-        this.f572fd = null;
+        this.f570fd = null;
     }
 
     private void checkMapped() {
-        if (this.f572fd == null) {
+        if (this.f570fd == null) {
             throw new UnsupportedOperationException();
         }
     }
@@ -86,7 +86,7 @@ public abstract class MappedByteBuffer extends ByteBuffer {
         checkMapped();
         if (!(this.address == 0 || capacity() == 0)) {
             long mappingOffset = mappingOffset();
-            force0(this.f572fd, mappingAddress(mappingOffset), mappingLength(mappingOffset));
+            force0(this.f570fd, mappingAddress(mappingOffset), mappingLength(mappingOffset));
         }
         return this;
     }

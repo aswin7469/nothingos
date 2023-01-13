@@ -8,7 +8,7 @@ public class JulianCalendar extends BaseCalendar {
     private static final int BCE = 0;
 
     /* renamed from: CE */
-    private static final int f937CE = 1;
+    private static final int f935CE = 1;
     private static final int JULIAN_EPOCH = -1;
     /* access modifiers changed from: private */
     public static final Era[] eras = {new Era("BeforeCommonEra", "B.C.E.", Long.MIN_VALUE, false), new Era("CommonEra", "C.E.", -62135709175808L, true)};

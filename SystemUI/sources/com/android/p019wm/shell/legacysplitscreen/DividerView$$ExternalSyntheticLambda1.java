@@ -17,6 +17,6 @@ public final /* synthetic */ class DividerView$$ExternalSyntheticLambda1 impleme
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        this.f$0.mo49619xdb116471(this.f$1, this.f$2, valueAnimator);
+        this.f$0.mo49628xdb116471(this.f$1, this.f$2, valueAnimator);
     }
 }

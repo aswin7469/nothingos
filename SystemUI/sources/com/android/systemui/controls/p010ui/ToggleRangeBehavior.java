@@ -16,7 +16,7 @@ import android.util.MathUtils;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.animation.Interpolators;
 import java.util.Arrays;
 import java.util.IllegalFormatException;
@@ -25,7 +25,7 @@ import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.StringCompanionObject;
 
-@Metadata(mo64986d1 = {"\u0000\u0001\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0010\b\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0010\u000e\n\u0002\b\u0005\n\u0002\u0010\r\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0010\u000b\n\u0002\b\u0006\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\b\n\u0002\u0010\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u0007\n\u0002\b\n\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0007\u0018\u0000 X2\u00020\u0001:\u0002XYB\u0005¢\u0006\u0002\u0010\u0002J\u0006\u0010?\u001a\u00020@J\u0018\u0010A\u001a\u00020@2\u0006\u0010B\u001a\u00020C2\u0006\u0010\t\u001a\u00020\nH\u0016J\u0006\u0010D\u001a\u00020@J\u000e\u0010E\u001a\u00020F2\u0006\u0010G\u001a\u00020FJ \u0010H\u001a\u00020\u001c2\u0006\u0010I\u001a\u00020\u001c2\u0006\u0010J\u001a\u00020\u001c2\u0006\u0010G\u001a\u00020FH\u0002J\u0010\u0010K\u001a\u00020@2\u0006\u0010'\u001a\u00020(H\u0016J\u0010\u0010L\u001a\u00020F2\u0006\u0010M\u001a\u00020\nH\u0002J\u0010\u0010N\u001a\u00020\n2\u0006\u0010M\u001a\u00020FH\u0002J\u0010\u0010O\u001a\u00020@2\u0006\u0010P\u001a\u000207H\u0002J\u0010\u0010O\u001a\u00020@2\u0006\u0010P\u001a\u00020QH\u0002J\u0010\u0010R\u001a\u00020.2\u0006\u0010P\u001a\u00020SH\u0002J\u001e\u0010T\u001a\u00020@2\u0006\u0010U\u001a\u00020\n2\u0006\u0010V\u001a\u00020.2\u0006\u0010W\u001a\u00020.R\u001a\u0010\u0003\u001a\u00020\u0004X.¢\u0006\u000e\n\u0000\u001a\u0004\b\u0005\u0010\u0006\"\u0004\b\u0007\u0010\bR\u001a\u0010\t\u001a\u00020\nX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u000b\u0010\f\"\u0004\b\r\u0010\u000eR\u001a\u0010\u000f\u001a\u00020\u0010X.¢\u0006\u000e\n\u0000\u001a\u0004\b\u0011\u0010\u0012\"\u0004\b\u0013\u0010\u0014R\u001a\u0010\u0015\u001a\u00020\u0016X.¢\u0006\u000e\n\u0000\u001a\u0004\b\u0017\u0010\u0018\"\u0004\b\u0019\u0010\u001aR\u001a\u0010\u001b\u001a\u00020\u001cX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u001d\u0010\u001e\"\u0004\b\u001f\u0010 R\u001a\u0010!\u001a\u00020\"X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b#\u0010$\"\u0004\b%\u0010&R\u001a\u0010'\u001a\u00020(X.¢\u0006\u000e\n\u0000\u001a\u0004\b)\u0010*\"\u0004\b+\u0010,R\u001a\u0010-\u001a\u00020.X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b-\u0010/\"\u0004\b0\u00101R\u001a\u00102\u001a\u00020.X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b2\u0010/\"\u0004\b3\u00101R\u0010\u00104\u001a\u0004\u0018\u000105X\u000e¢\u0006\u0002\n\u0000R\u001a\u00106\u001a\u000207X.¢\u0006\u000e\n\u0000\u001a\u0004\b8\u00109\"\u0004\b:\u0010;R\u001a\u0010<\u001a\u00020\u001cX.¢\u0006\u000e\n\u0000\u001a\u0004\b=\u0010\u001e\"\u0004\b>\u0010 ¨\u0006Z"}, mo64987d2 = {"Lcom/android/systemui/controls/ui/ToggleRangeBehavior;", "Lcom/android/systemui/controls/ui/Behavior;", "()V", "clipLayer", "Landroid/graphics/drawable/Drawable;", "getClipLayer", "()Landroid/graphics/drawable/Drawable;", "setClipLayer", "(Landroid/graphics/drawable/Drawable;)V", "colorOffset", "", "getColorOffset", "()I", "setColorOffset", "(I)V", "context", "Landroid/content/Context;", "getContext", "()Landroid/content/Context;", "setContext", "(Landroid/content/Context;)V", "control", "Landroid/service/controls/Control;", "getControl", "()Landroid/service/controls/Control;", "setControl", "(Landroid/service/controls/Control;)V", "currentRangeValue", "", "getCurrentRangeValue", "()Ljava/lang/String;", "setCurrentRangeValue", "(Ljava/lang/String;)V", "currentStatusText", "", "getCurrentStatusText", "()Ljava/lang/CharSequence;", "setCurrentStatusText", "(Ljava/lang/CharSequence;)V", "cvh", "Lcom/android/systemui/controls/ui/ControlViewHolder;", "getCvh", "()Lcom/android/systemui/controls/ui/ControlViewHolder;", "setCvh", "(Lcom/android/systemui/controls/ui/ControlViewHolder;)V", "isChecked", "", "()Z", "setChecked", "(Z)V", "isToggleable", "setToggleable", "rangeAnimator", "Landroid/animation/ValueAnimator;", "rangeTemplate", "Landroid/service/controls/templates/RangeTemplate;", "getRangeTemplate", "()Landroid/service/controls/templates/RangeTemplate;", "setRangeTemplate", "(Landroid/service/controls/templates/RangeTemplate;)V", "templateId", "getTemplateId", "setTemplateId", "beginUpdateRange", "", "bind", "cws", "Lcom/android/systemui/controls/ui/ControlWithState;", "endUpdateRange", "findNearestStep", "", "value", "format", "primaryFormat", "backupFormat", "initialize", "levelToRangeValue", "i", "rangeToLevelValue", "setup", "template", "Landroid/service/controls/templates/ToggleRangeTemplate;", "setupTemplate", "Landroid/service/controls/templates/ControlTemplate;", "updateRange", "level", "checked", "isDragging", "Companion", "ToggleRangeGestureListener", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000\u0001\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0010\b\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0010\u000e\n\u0002\b\u0005\n\u0002\u0010\r\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0010\u000b\n\u0002\b\u0006\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\b\n\u0002\u0010\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u0007\n\u0002\b\n\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0007\u0018\u0000 X2\u00020\u0001:\u0002XYB\u0005¢\u0006\u0002\u0010\u0002J\u0006\u0010?\u001a\u00020@J\u0018\u0010A\u001a\u00020@2\u0006\u0010B\u001a\u00020C2\u0006\u0010\t\u001a\u00020\nH\u0016J\u0006\u0010D\u001a\u00020@J\u000e\u0010E\u001a\u00020F2\u0006\u0010G\u001a\u00020FJ \u0010H\u001a\u00020\u001c2\u0006\u0010I\u001a\u00020\u001c2\u0006\u0010J\u001a\u00020\u001c2\u0006\u0010G\u001a\u00020FH\u0002J\u0010\u0010K\u001a\u00020@2\u0006\u0010'\u001a\u00020(H\u0016J\u0010\u0010L\u001a\u00020F2\u0006\u0010M\u001a\u00020\nH\u0002J\u0010\u0010N\u001a\u00020\n2\u0006\u0010M\u001a\u00020FH\u0002J\u0010\u0010O\u001a\u00020@2\u0006\u0010P\u001a\u000207H\u0002J\u0010\u0010O\u001a\u00020@2\u0006\u0010P\u001a\u00020QH\u0002J\u0010\u0010R\u001a\u00020.2\u0006\u0010P\u001a\u00020SH\u0002J\u001e\u0010T\u001a\u00020@2\u0006\u0010U\u001a\u00020\n2\u0006\u0010V\u001a\u00020.2\u0006\u0010W\u001a\u00020.R\u001a\u0010\u0003\u001a\u00020\u0004X.¢\u0006\u000e\n\u0000\u001a\u0004\b\u0005\u0010\u0006\"\u0004\b\u0007\u0010\bR\u001a\u0010\t\u001a\u00020\nX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u000b\u0010\f\"\u0004\b\r\u0010\u000eR\u001a\u0010\u000f\u001a\u00020\u0010X.¢\u0006\u000e\n\u0000\u001a\u0004\b\u0011\u0010\u0012\"\u0004\b\u0013\u0010\u0014R\u001a\u0010\u0015\u001a\u00020\u0016X.¢\u0006\u000e\n\u0000\u001a\u0004\b\u0017\u0010\u0018\"\u0004\b\u0019\u0010\u001aR\u001a\u0010\u001b\u001a\u00020\u001cX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u001d\u0010\u001e\"\u0004\b\u001f\u0010 R\u001a\u0010!\u001a\u00020\"X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b#\u0010$\"\u0004\b%\u0010&R\u001a\u0010'\u001a\u00020(X.¢\u0006\u000e\n\u0000\u001a\u0004\b)\u0010*\"\u0004\b+\u0010,R\u001a\u0010-\u001a\u00020.X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b-\u0010/\"\u0004\b0\u00101R\u001a\u00102\u001a\u00020.X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b2\u0010/\"\u0004\b3\u00101R\u0010\u00104\u001a\u0004\u0018\u000105X\u000e¢\u0006\u0002\n\u0000R\u001a\u00106\u001a\u000207X.¢\u0006\u000e\n\u0000\u001a\u0004\b8\u00109\"\u0004\b:\u0010;R\u001a\u0010<\u001a\u00020\u001cX.¢\u0006\u000e\n\u0000\u001a\u0004\b=\u0010\u001e\"\u0004\b>\u0010 ¨\u0006Z"}, mo65043d2 = {"Lcom/android/systemui/controls/ui/ToggleRangeBehavior;", "Lcom/android/systemui/controls/ui/Behavior;", "()V", "clipLayer", "Landroid/graphics/drawable/Drawable;", "getClipLayer", "()Landroid/graphics/drawable/Drawable;", "setClipLayer", "(Landroid/graphics/drawable/Drawable;)V", "colorOffset", "", "getColorOffset", "()I", "setColorOffset", "(I)V", "context", "Landroid/content/Context;", "getContext", "()Landroid/content/Context;", "setContext", "(Landroid/content/Context;)V", "control", "Landroid/service/controls/Control;", "getControl", "()Landroid/service/controls/Control;", "setControl", "(Landroid/service/controls/Control;)V", "currentRangeValue", "", "getCurrentRangeValue", "()Ljava/lang/String;", "setCurrentRangeValue", "(Ljava/lang/String;)V", "currentStatusText", "", "getCurrentStatusText", "()Ljava/lang/CharSequence;", "setCurrentStatusText", "(Ljava/lang/CharSequence;)V", "cvh", "Lcom/android/systemui/controls/ui/ControlViewHolder;", "getCvh", "()Lcom/android/systemui/controls/ui/ControlViewHolder;", "setCvh", "(Lcom/android/systemui/controls/ui/ControlViewHolder;)V", "isChecked", "", "()Z", "setChecked", "(Z)V", "isToggleable", "setToggleable", "rangeAnimator", "Landroid/animation/ValueAnimator;", "rangeTemplate", "Landroid/service/controls/templates/RangeTemplate;", "getRangeTemplate", "()Landroid/service/controls/templates/RangeTemplate;", "setRangeTemplate", "(Landroid/service/controls/templates/RangeTemplate;)V", "templateId", "getTemplateId", "setTemplateId", "beginUpdateRange", "", "bind", "cws", "Lcom/android/systemui/controls/ui/ControlWithState;", "endUpdateRange", "findNearestStep", "", "value", "format", "primaryFormat", "backupFormat", "initialize", "levelToRangeValue", "i", "rangeToLevelValue", "setup", "template", "Landroid/service/controls/templates/ToggleRangeTemplate;", "setupTemplate", "Landroid/service/controls/templates/ControlTemplate;", "updateRange", "level", "checked", "isDragging", "Companion", "ToggleRangeGestureListener", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* renamed from: com.android.systemui.controls.ui.ToggleRangeBehavior */
 /* compiled from: ToggleRangeBehavior.kt */
 public final class ToggleRangeBehavior implements Behavior {
@@ -171,7 +171,7 @@ public final class ToggleRangeBehavior implements Behavior {
         this.colorOffset = i;
     }
 
-    @Metadata(mo64986d1 = {"\u0000\u0012\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\u000e\n\u0000\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u000e\u0010\u0003\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000¨\u0006\u0005"}, mo64987d2 = {"Lcom/android/systemui/controls/ui/ToggleRangeBehavior$Companion;", "", "()V", "DEFAULT_FORMAT", "", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u0000\u0012\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\u000e\n\u0000\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u000e\u0010\u0003\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000¨\u0006\u0005"}, mo65043d2 = {"Lcom/android/systemui/controls/ui/ToggleRangeBehavior$Companion;", "", "()V", "DEFAULT_FORMAT", "", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* renamed from: com.android.systemui.controls.ui.ToggleRangeBehavior$Companion */
     /* compiled from: ToggleRangeBehavior.kt */
     public static final class Companion {
@@ -193,7 +193,7 @@ public final class ToggleRangeBehavior implements Behavior {
 
     /* access modifiers changed from: private */
     /* renamed from: initialize$lambda-0  reason: not valid java name */
-    public static final boolean m2731initialize$lambda0(GestureDetector gestureDetector, ToggleRangeGestureListener toggleRangeGestureListener, ToggleRangeBehavior toggleRangeBehavior, View view, MotionEvent motionEvent) {
+    public static final boolean m2736initialize$lambda0(GestureDetector gestureDetector, ToggleRangeGestureListener toggleRangeGestureListener, ToggleRangeBehavior toggleRangeBehavior, View view, MotionEvent motionEvent) {
         Intrinsics.checkNotNullParameter(gestureDetector, "$gestureDetector");
         Intrinsics.checkNotNullParameter(toggleRangeGestureListener, "$gestureListener");
         Intrinsics.checkNotNullParameter(toggleRangeBehavior, "this$0");
@@ -249,7 +249,7 @@ public final class ToggleRangeBehavior implements Behavior {
         getCvh().getLayout().setOnLongClickListener((View.OnLongClickListener) null);
         Drawable background = getCvh().getLayout().getBackground();
         if (background != null) {
-            Drawable findDrawableByLayerId = ((LayerDrawable) background).findDrawableByLayerId(C1893R.C1897id.clip_layer);
+            Drawable findDrawableByLayerId = ((LayerDrawable) background).findDrawableByLayerId(C1894R.C1898id.clip_layer);
             Intrinsics.checkNotNullExpressionValue(findDrawableByLayerId, "ld.findDrawableByLayerId(R.id.clip_layer)");
             setClipLayer(findDrawableByLayerId);
             ControlTemplate controlTemplate = getControl().getControlTemplate();
@@ -270,7 +270,7 @@ public final class ToggleRangeBehavior implements Behavior {
 
     public final void beginUpdateRange() {
         getCvh().setUserInteractionInProgress(true);
-        getCvh().setStatusTextSize((float) getContext().getResources().getDimensionPixelSize(C1893R.dimen.control_status_expanded));
+        getCvh().setStatusTextSize((float) getContext().getResources().getDimensionPixelSize(C1894R.dimen.control_status_expanded));
     }
 
     public final void updateRange(int i, boolean z, boolean z2) {
@@ -311,7 +311,7 @@ public final class ToggleRangeBehavior implements Behavior {
 
     /* access modifiers changed from: private */
     /* renamed from: updateRange$lambda-2$lambda-1  reason: not valid java name */
-    public static final void m2732updateRange$lambda2$lambda1(ToggleRangeBehavior toggleRangeBehavior, ValueAnimator valueAnimator) {
+    public static final void m2737updateRange$lambda2$lambda1(ToggleRangeBehavior toggleRangeBehavior, ValueAnimator valueAnimator) {
         Intrinsics.checkNotNullParameter(toggleRangeBehavior, "this$0");
         ClipDrawable clipLayer2 = toggleRangeBehavior.getCvh().getClipLayer();
         Object animatedValue = valueAnimator.getAnimatedValue();
@@ -348,7 +348,7 @@ public final class ToggleRangeBehavior implements Behavior {
     }
 
     public final void endUpdateRange() {
-        getCvh().setStatusTextSize((float) getContext().getResources().getDimensionPixelSize(C1893R.dimen.control_status_normal));
+        getCvh().setStatusTextSize((float) getContext().getResources().getDimensionPixelSize(C1894R.dimen.control_status_normal));
         getCvh().setStatusText(this.currentStatusText + ' ' + this.currentRangeValue, true);
         ControlActionCoordinator controlActionCoordinator = getCvh().getControlActionCoordinator();
         ControlViewHolder cvh2 = getCvh();
@@ -372,7 +372,7 @@ public final class ToggleRangeBehavior implements Behavior {
         return getRangeTemplate().getMaxValue();
     }
 
-    @Metadata(mo64986d1 = {"\u00000\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u000b\n\u0002\b\u0007\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0004\n\u0002\u0010\u0007\n\u0002\b\u0003\b\u0004\u0018\u00002\u00020\u0001B\r\u0012\u0006\u0010\u0002\u001a\u00020\u0003¢\u0006\u0002\u0010\u0004J\u0010\u0010\f\u001a\u00020\u00062\u0006\u0010\r\u001a\u00020\u000eH\u0016J\u0010\u0010\u000f\u001a\u00020\u00102\u0006\u0010\r\u001a\u00020\u000eH\u0016J(\u0010\u0011\u001a\u00020\u00062\u0006\u0010\u0012\u001a\u00020\u000e2\u0006\u0010\u0013\u001a\u00020\u000e2\u0006\u0010\u0014\u001a\u00020\u00152\u0006\u0010\u0016\u001a\u00020\u0015H\u0016J\u0010\u0010\u0017\u001a\u00020\u00062\u0006\u0010\r\u001a\u00020\u000eH\u0016R\u001a\u0010\u0005\u001a\u00020\u0006X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0005\u0010\u0007\"\u0004\b\b\u0010\tR\u0011\u0010\u0002\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\n\u0010\u000b¨\u0006\u0018"}, mo64987d2 = {"Lcom/android/systemui/controls/ui/ToggleRangeBehavior$ToggleRangeGestureListener;", "Landroid/view/GestureDetector$SimpleOnGestureListener;", "v", "Landroid/view/View;", "(Lcom/android/systemui/controls/ui/ToggleRangeBehavior;Landroid/view/View;)V", "isDragging", "", "()Z", "setDragging", "(Z)V", "getV", "()Landroid/view/View;", "onDown", "e", "Landroid/view/MotionEvent;", "onLongPress", "", "onScroll", "e1", "e2", "xDiff", "", "yDiff", "onSingleTapUp", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u00000\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u000b\n\u0002\b\u0007\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0004\n\u0002\u0010\u0007\n\u0002\b\u0003\b\u0004\u0018\u00002\u00020\u0001B\r\u0012\u0006\u0010\u0002\u001a\u00020\u0003¢\u0006\u0002\u0010\u0004J\u0010\u0010\f\u001a\u00020\u00062\u0006\u0010\r\u001a\u00020\u000eH\u0016J\u0010\u0010\u000f\u001a\u00020\u00102\u0006\u0010\r\u001a\u00020\u000eH\u0016J(\u0010\u0011\u001a\u00020\u00062\u0006\u0010\u0012\u001a\u00020\u000e2\u0006\u0010\u0013\u001a\u00020\u000e2\u0006\u0010\u0014\u001a\u00020\u00152\u0006\u0010\u0016\u001a\u00020\u0015H\u0016J\u0010\u0010\u0017\u001a\u00020\u00062\u0006\u0010\r\u001a\u00020\u000eH\u0016R\u001a\u0010\u0005\u001a\u00020\u0006X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0005\u0010\u0007\"\u0004\b\b\u0010\tR\u0011\u0010\u0002\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\n\u0010\u000b¨\u0006\u0018"}, mo65043d2 = {"Lcom/android/systemui/controls/ui/ToggleRangeBehavior$ToggleRangeGestureListener;", "Landroid/view/GestureDetector$SimpleOnGestureListener;", "v", "Landroid/view/View;", "(Lcom/android/systemui/controls/ui/ToggleRangeBehavior;Landroid/view/View;)V", "isDragging", "", "()Z", "setDragging", "(Z)V", "getV", "()Landroid/view/View;", "onDown", "e", "Landroid/view/MotionEvent;", "onLongPress", "", "onScroll", "e1", "e2", "xDiff", "", "yDiff", "onSingleTapUp", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* renamed from: com.android.systemui.controls.ui.ToggleRangeBehavior$ToggleRangeGestureListener */
     /* compiled from: ToggleRangeBehavior.kt */
     public final class ToggleRangeGestureListener extends GestureDetector.SimpleOnGestureListener {
@@ -380,7 +380,7 @@ public final class ToggleRangeBehavior implements Behavior {
         final /* synthetic */ ToggleRangeBehavior this$0;
 
         /* renamed from: v */
-        private final View f301v;
+        private final View f300v;
 
         public boolean onDown(MotionEvent motionEvent) {
             Intrinsics.checkNotNullParameter(motionEvent, "e");
@@ -390,11 +390,11 @@ public final class ToggleRangeBehavior implements Behavior {
         public ToggleRangeGestureListener(ToggleRangeBehavior toggleRangeBehavior, View view) {
             Intrinsics.checkNotNullParameter(view, DateFormat.ABBR_GENERIC_TZ);
             this.this$0 = toggleRangeBehavior;
-            this.f301v = view;
+            this.f300v = view;
         }
 
         public final View getV() {
-            return this.f301v;
+            return this.f300v;
         }
 
         public final boolean isDragging() {
@@ -416,12 +416,12 @@ public final class ToggleRangeBehavior implements Behavior {
             Intrinsics.checkNotNullParameter(motionEvent, "e1");
             Intrinsics.checkNotNullParameter(motionEvent2, "e2");
             if (!this.isDragging) {
-                this.f301v.getParent().requestDisallowInterceptTouchEvent(true);
+                this.f300v.getParent().requestDisallowInterceptTouchEvent(true);
                 this.this$0.beginUpdateRange();
                 this.isDragging = true;
             }
             ToggleRangeBehavior toggleRangeBehavior = this.this$0;
-            toggleRangeBehavior.updateRange(toggleRangeBehavior.getClipLayer().getLevel() + ((int) (((float) 10000) * ((-f) / ((float) this.f301v.getWidth())))), true, true);
+            toggleRangeBehavior.updateRange(toggleRangeBehavior.getClipLayer().getLevel() + ((int) (((float) 10000) * ((-f) / ((float) this.f300v.getWidth())))), true, true);
             return true;
         }
 

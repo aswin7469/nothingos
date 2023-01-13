@@ -15,6 +15,6 @@ public final /* synthetic */ class QrCamera$DecodingTask$$ExternalSyntheticLambd
     }
 
     public final void onPreviewFrame(byte[] bArr, Camera camera) {
-        this.f$0.mo29111x41d99441(this.f$1, bArr, camera);
+        this.f$0.mo29116x41d99441(this.f$1, bArr, camera);
     }
 }

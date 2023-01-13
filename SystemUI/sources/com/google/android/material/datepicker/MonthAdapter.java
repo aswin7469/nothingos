@@ -53,7 +53,7 @@ class MonthAdapter extends BaseAdapter {
             if (r7 != 0) goto L_0x001e
             android.content.Context r7 = r8.getContext()
             android.view.LayoutInflater r7 = android.view.LayoutInflater.from(r7)
-            int r0 = com.google.android.material.C3621R.layout.mtrl_calendar_day
+            int r0 = com.google.android.material.C3631R.layout.mtrl_calendar_day
             android.view.View r7 = r7.inflate(r0, r8, r1)
             r0 = r7
             android.widget.TextView r0 = (android.widget.TextView) r0

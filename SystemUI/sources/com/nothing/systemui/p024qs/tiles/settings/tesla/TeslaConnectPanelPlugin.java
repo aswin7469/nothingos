@@ -7,7 +7,7 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.text.TextUtils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.google.gson.Gson;
 import com.nothing.systemui.util.NTLogUtil;
 import com.nothing.tesla.service.CmdObject;
@@ -30,7 +30,7 @@ public class TeslaConnectPanelPlugin {
     private static final String TESLA_SERVICE = "com.nothing.experimental.TESLA_SERVICE";
     ICallback mCallback = new ICallback.Stub() {
         public void callback(int i, int i2, String str) throws RemoteException {
-            NTLogUtil.m1680d(TeslaConnectPanelPlugin.TAG, "Callback cmd: " + i + ", result: " + i2 + ", newValue: " + str + ", (lists != null): " + (TeslaConnectPanelPlugin.this.mLists != null));
+            NTLogUtil.m1686d(TeslaConnectPanelPlugin.TAG, "Callback cmd: " + i + ", result: " + i2 + ", newValue: " + str + ", (lists != null): " + (TeslaConnectPanelPlugin.this.mLists != null));
             if (TeslaConnectPanelPlugin.this.mLists != null) {
                 List<CmdObject> cmdObjects = TeslaConnectPanelPlugin.this.mLists.getCmdObjects();
                 for (CmdObject next : cmdObjects) {
@@ -66,7 +66,7 @@ public class TeslaConnectPanelPlugin {
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             TeslaConnectPanelPlugin.this.mService = ITeslaControlService.Stub.asInterface(iBinder);
             try {
-                NTLogUtil.m1680d(TeslaConnectPanelPlugin.TAG, "onServiceConnected");
+                NTLogUtil.m1686d(TeslaConnectPanelPlugin.TAG, "onServiceConnected");
                 TeslaConnectPanelPlugin.this.mService.registerCallback(TeslaConnectPanelPlugin.this.mCallback);
                 TeslaConnectPanelPlugin.this.mService.syncStatus();
             } catch (RemoteException e) {
@@ -77,7 +77,7 @@ public class TeslaConnectPanelPlugin {
         public void onServiceDisconnected(ComponentName componentName) {
             if (TeslaConnectPanelPlugin.this.mService != null) {
                 try {
-                    NTLogUtil.m1680d(TeslaConnectPanelPlugin.TAG, "onServiceDisconnected");
+                    NTLogUtil.m1686d(TeslaConnectPanelPlugin.TAG, "onServiceDisconnected");
                     TeslaConnectPanelPlugin.this.mService.unregisterCallback(TeslaConnectPanelPlugin.this.mCallback);
                 } catch (RemoteException e) {
                     e.printStackTrace();
@@ -123,21 +123,21 @@ public class TeslaConnectPanelPlugin {
         CMD_ICON_ON = hashMap2;
         HashMap<Integer, Integer> hashMap3 = new HashMap<>();
         CAR_IMAGE_MAPPING = hashMap3;
-        hashMap.put(100, Integer.valueOf((int) C1893R.C1895drawable.ic_tesla_lock));
-        hashMap.put(200, Integer.valueOf((int) C1893R.C1895drawable.ic_tesla_ac));
-        hashMap.put(300, Integer.valueOf((int) C1893R.C1895drawable.ic_tesla_front_trunk));
-        hashMap.put(301, Integer.valueOf((int) C1893R.C1895drawable.ic_tesla_rear_trunk));
-        hashMap.put(400, Integer.valueOf((int) C1893R.C1895drawable.ic_tesla_honk));
-        hashMap.put(401, Integer.valueOf((int) C1893R.C1895drawable.ic_tesla_flash));
-        hashMap.put(500, Integer.valueOf((int) C1893R.C1895drawable.ic_tesla_vent_off));
-        hashMap2.put(100, Integer.valueOf((int) C1893R.C1895drawable.ic_tesla_unlocked));
-        hashMap2.put(200, Integer.valueOf((int) C1893R.C1895drawable.ic_tesla_ac_on));
-        hashMap2.put(500, Integer.valueOf((int) C1893R.C1895drawable.ic_tesla_vent));
-        hashMap2.put(301, Integer.valueOf((int) C1893R.C1895drawable.ic_tesla_rear_trunk_on));
-        hashMap3.put(0, Integer.valueOf((int) C1893R.C1895drawable.ic_tesla_model3));
-        hashMap3.put(1, Integer.valueOf((int) C1893R.C1895drawable.ic_tesla_model_y));
-        hashMap3.put(2, Integer.valueOf((int) C1893R.C1895drawable.ic_tesla_models));
-        hashMap3.put(3, Integer.valueOf((int) C1893R.C1895drawable.ic_tesla_modelx));
+        hashMap.put(100, Integer.valueOf((int) C1894R.C1896drawable.ic_tesla_lock));
+        hashMap.put(200, Integer.valueOf((int) C1894R.C1896drawable.ic_tesla_ac));
+        hashMap.put(300, Integer.valueOf((int) C1894R.C1896drawable.ic_tesla_front_trunk));
+        hashMap.put(301, Integer.valueOf((int) C1894R.C1896drawable.ic_tesla_rear_trunk));
+        hashMap.put(400, Integer.valueOf((int) C1894R.C1896drawable.ic_tesla_honk));
+        hashMap.put(401, Integer.valueOf((int) C1894R.C1896drawable.ic_tesla_flash));
+        hashMap.put(500, Integer.valueOf((int) C1894R.C1896drawable.ic_tesla_vent_off));
+        hashMap2.put(100, Integer.valueOf((int) C1894R.C1896drawable.ic_tesla_unlocked));
+        hashMap2.put(200, Integer.valueOf((int) C1894R.C1896drawable.ic_tesla_ac_on));
+        hashMap2.put(500, Integer.valueOf((int) C1894R.C1896drawable.ic_tesla_vent));
+        hashMap2.put(301, Integer.valueOf((int) C1894R.C1896drawable.ic_tesla_rear_trunk_on));
+        hashMap3.put(0, Integer.valueOf((int) C1894R.C1896drawable.ic_tesla_model3));
+        hashMap3.put(1, Integer.valueOf((int) C1894R.C1896drawable.ic_tesla_model_y));
+        hashMap3.put(2, Integer.valueOf((int) C1894R.C1896drawable.ic_tesla_models));
+        hashMap3.put(3, Integer.valueOf((int) C1894R.C1896drawable.ic_tesla_modelx));
     }
 
     public TeslaConnectPanelPlugin(Context context) {

@@ -13,6 +13,6 @@ public final /* synthetic */ class QuickQSPanelController$$ExternalSyntheticLamb
     }
 
     public final void onConfigurationChange(Configuration configuration) {
-        this.f$0.m2943lambda$new$0$comandroidsystemuiqsQuickQSPanelController(configuration);
+        this.f$0.m2948lambda$new$0$comandroidsystemuiqsQuickQSPanelController(configuration);
     }
 }

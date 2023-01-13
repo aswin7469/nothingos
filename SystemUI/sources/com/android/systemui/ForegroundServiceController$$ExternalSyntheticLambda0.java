@@ -17,6 +17,6 @@ public final /* synthetic */ class ForegroundServiceController$$ExternalSyntheti
     }
 
     public final void run() {
-        this.f$0.m2515lambda$new$0$comandroidsystemuiForegroundServiceController(this.f$1, this.f$2, this.f$3, this.f$4);
+        this.f$0.m2521lambda$new$0$comandroidsystemuiForegroundServiceController(this.f$1, this.f$2, this.f$3, this.f$4);
     }
 }

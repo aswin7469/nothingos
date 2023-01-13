@@ -6,7 +6,7 @@ import android.provider.Settings;
 import android.util.AttributeSet;
 import androidx.preference.SwitchPreference;
 import com.android.internal.logging.MetricsLogger;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dependency;
 import com.android.systemui.navigationbar.NavigationBarInflaterView;
 import com.android.systemui.tuner.TunerService;
@@ -17,7 +17,7 @@ public class TunerSwitch extends SwitchPreference implements TunerService.Tunabl
 
     public TunerSwitch(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C1893R.styleable.TunerSwitch);
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C1894R.styleable.TunerSwitch);
         this.mDefault = obtainStyledAttributes.getBoolean(0, false);
         this.mAction = obtainStyledAttributes.getInt(1, -1);
         obtainStyledAttributes.recycle();

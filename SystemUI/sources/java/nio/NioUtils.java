@@ -24,7 +24,7 @@ public final class NioUtils {
     }
 
     public static FileDescriptor getFD(FileChannel fileChannel) {
-        return ((FileChannelImpl) fileChannel).f883fd;
+        return ((FileChannelImpl) fileChannel).f881fd;
     }
 
     public static FileChannel newFileChannel(Closeable closeable, FileDescriptor fileDescriptor, int i) {

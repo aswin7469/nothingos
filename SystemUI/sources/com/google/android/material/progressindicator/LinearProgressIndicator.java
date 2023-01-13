@@ -3,12 +3,12 @@ package com.google.android.material.progressindicator;
 import android.content.Context;
 import android.util.AttributeSet;
 import androidx.core.view.ViewCompat;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 public final class LinearProgressIndicator extends BaseProgressIndicator<LinearProgressIndicatorSpec> {
-    public static final int DEF_STYLE_RES = C3621R.style.Widget_MaterialComponents_LinearProgressIndicator;
+    public static final int DEF_STYLE_RES = C3631R.style.Widget_MaterialComponents_LinearProgressIndicator;
     public static final int INDETERMINATE_ANIMATION_TYPE_CONTIGUOUS = 0;
     public static final int INDETERMINATE_ANIMATION_TYPE_DISJOINT = 1;
     public static final int INDICATOR_DIRECTION_END_TO_START = 3;
@@ -29,7 +29,7 @@ public final class LinearProgressIndicator extends BaseProgressIndicator<LinearP
     }
 
     public LinearProgressIndicator(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, C3621R.attr.linearProgressIndicatorStyle);
+        this(context, attributeSet, C3631R.attr.linearProgressIndicatorStyle);
     }
 
     public LinearProgressIndicator(Context context, AttributeSet attributeSet, int i) {

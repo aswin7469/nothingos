@@ -13,6 +13,6 @@ public final /* synthetic */ class DeviceControlsTile$$ExternalSyntheticLambda1 
     }
 
     public final void accept(Object obj) {
-        DeviceControlsTile.m2975_init_$lambda0(this.f$0, (ControlsListingController) obj);
+        DeviceControlsTile.m2979_init_$lambda0(this.f$0, (ControlsListingController) obj);
     }
 }

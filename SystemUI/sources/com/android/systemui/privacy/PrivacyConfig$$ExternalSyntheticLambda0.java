@@ -11,6 +11,6 @@ public final /* synthetic */ class PrivacyConfig$$ExternalSyntheticLambda0 imple
     }
 
     public final void onPropertiesChanged(DeviceConfig.Properties properties) {
-        PrivacyConfig.m2867devicePropertiesChangedListener$lambda3(this.f$0, properties);
+        PrivacyConfig.m2872devicePropertiesChangedListener$lambda3(this.f$0, properties);
     }
 }

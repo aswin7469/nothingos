@@ -422,7 +422,7 @@ import com.android.systemui.dagger.AndroidInternalsModule_ProvideLockPatternUtil
 import com.android.systemui.dagger.AndroidInternalsModule_ProvideMetricsLoggerFactory;
 import com.android.systemui.dagger.AndroidInternalsModule_ProvideNotificationMessagingUtilFactory;
 import com.android.systemui.dagger.AndroidInternalsModule_ProvideUiEventLoggerFactory;
-import com.android.systemui.dagger.C2053x19afde28;
+import com.android.systemui.dagger.C2055x19afde28;
 import com.android.systemui.dagger.ContextComponentHelper;
 import com.android.systemui.dagger.ContextComponentResolver;
 import com.android.systemui.dagger.ContextComponentResolver_Factory;
@@ -567,10 +567,10 @@ import com.android.systemui.dreams.complication.ComplicationViewModel;
 import com.android.systemui.dreams.complication.ComplicationViewModelProvider;
 import com.android.systemui.dreams.complication.ComplicationViewModelTransformer;
 import com.android.systemui.dreams.complication.ComplicationViewModelTransformer_Factory;
-import com.android.systemui.dreams.complication.dagger.C2089xa92fda9a;
-import com.android.systemui.dreams.complication.dagger.C2090x3242d31f;
-import com.android.systemui.dreams.complication.dagger.C2091x4a872b5c;
-import com.android.systemui.dreams.complication.dagger.C2092x1653c7a9;
+import com.android.systemui.dreams.complication.dagger.C2091xa92fda9a;
+import com.android.systemui.dreams.complication.dagger.C2092x3242d31f;
+import com.android.systemui.dreams.complication.dagger.C2093x4a872b5c;
+import com.android.systemui.dreams.complication.dagger.C2094x1653c7a9;
 import com.android.systemui.dreams.complication.dagger.ComplicationHostViewModule_ProvidesComplicationHostViewFactory;
 import com.android.systemui.dreams.complication.dagger.ComplicationHostViewModule_ProvidesComplicationPaddingFactory;
 import com.android.systemui.dreams.complication.dagger.ComplicationModule_ProvidesVisibilityControllerFactory;
@@ -597,9 +597,9 @@ import com.android.systemui.dreams.touch.dagger.BouncerSwipeModule;
 import com.android.systemui.dreams.touch.dagger.BouncerSwipeModule_ProvidesBouncerSwipeTouchHandlerFactory;
 import com.android.systemui.dreams.touch.dagger.BouncerSwipeModule_ProvidesValueAnimatorCreatorFactory;
 import com.android.systemui.dreams.touch.dagger.BouncerSwipeModule_ProvidesVelocityTrackerFactoryFactory;
-import com.android.systemui.dreams.touch.dagger.C2102x4f80e514;
-import com.android.systemui.dreams.touch.dagger.C2103x6a8a7f11;
-import com.android.systemui.dreams.touch.dagger.C2104xc6ed12da;
+import com.android.systemui.dreams.touch.dagger.C2104x4f80e514;
+import com.android.systemui.dreams.touch.dagger.C2105x6a8a7f11;
+import com.android.systemui.dreams.touch.dagger.C2106xc6ed12da;
 import com.android.systemui.dreams.touch.dagger.InputSessionComponent;
 import com.android.systemui.dump.DumpHandler;
 import com.android.systemui.dump.DumpHandler_Factory;
@@ -838,7 +838,7 @@ import com.android.systemui.p012qs.QuickStatusBarHeader;
 import com.android.systemui.p012qs.QuickStatusBarHeaderController_Factory;
 import com.android.systemui.p012qs.ReduceBrightColorsController;
 import com.android.systemui.p012qs.ReduceBrightColorsController_Factory;
-import com.android.systemui.p012qs.carrier.C2356xf95dc14f;
+import com.android.systemui.p012qs.carrier.C2359xf95dc14f;
 import com.android.systemui.p012qs.carrier.QSCarrierGroupController;
 import com.android.systemui.p012qs.carrier.QSCarrierGroupController_Builder_Factory;
 import com.android.systemui.p012qs.customize.QSCustomizer;
@@ -873,7 +873,7 @@ import com.android.systemui.p012qs.dagger.QSFragmentModule_ProvidesQuickQSPanelF
 import com.android.systemui.p012qs.dagger.QSFragmentModule_ProvidesQuickStatusBarHeaderFactory;
 import com.android.systemui.p012qs.dagger.QSFragmentModule_ProvidesStatusIconContainerFactory;
 import com.android.systemui.p012qs.dagger.QSModule_ProvideAutoTileManagerFactory;
-import com.android.systemui.p012qs.external.C4822TileLifecycleManager_Factory;
+import com.android.systemui.p012qs.external.C4834TileLifecycleManager_Factory;
 import com.android.systemui.p012qs.external.CustomTile;
 import com.android.systemui.p012qs.external.CustomTileStatePersister;
 import com.android.systemui.p012qs.external.CustomTileStatePersister_Factory;
@@ -1079,9 +1079,9 @@ import com.android.systemui.statusbar.ActionClickLogger;
 import com.android.systemui.statusbar.ActionClickLogger_Factory;
 import com.android.systemui.statusbar.BlurUtils;
 import com.android.systemui.statusbar.BlurUtils_Factory;
-import com.android.systemui.statusbar.C4823LockscreenShadeKeyguardTransitionController_Factory;
-import com.android.systemui.statusbar.C4824SingleShadeLockScreenOverScroller_Factory;
-import com.android.systemui.statusbar.C4825SplitShadeLockScreenOverScroller_Factory;
+import com.android.systemui.statusbar.C4835LockscreenShadeKeyguardTransitionController_Factory;
+import com.android.systemui.statusbar.C4836SingleShadeLockScreenOverScroller_Factory;
+import com.android.systemui.statusbar.C4837SplitShadeLockScreenOverScroller_Factory;
 import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.DisableFlagsLogger;
 import com.android.systemui.statusbar.DisableFlagsLogger_Factory;
@@ -1131,12 +1131,12 @@ import com.android.systemui.statusbar.connectivity.NetworkControllerImpl;
 import com.android.systemui.statusbar.connectivity.NetworkControllerImpl_Factory;
 import com.android.systemui.statusbar.connectivity.WifiStatusTrackerFactory;
 import com.android.systemui.statusbar.connectivity.WifiStatusTrackerFactory_Factory;
-import com.android.systemui.statusbar.dagger.C2625x512569cf;
-import com.android.systemui.statusbar.dagger.C2626x721ac0b6;
-import com.android.systemui.statusbar.dagger.C2627xbcfb28e4;
-import com.android.systemui.statusbar.dagger.C2628xa11cf5e4;
-import com.android.systemui.statusbar.dagger.C2629x5356ea10;
-import com.android.systemui.statusbar.dagger.C2631xc35bee5b;
+import com.android.systemui.statusbar.dagger.C2631x512569cf;
+import com.android.systemui.statusbar.dagger.C2632x721ac0b6;
+import com.android.systemui.statusbar.dagger.C2633xbcfb28e4;
+import com.android.systemui.statusbar.dagger.C2634xa11cf5e4;
+import com.android.systemui.statusbar.dagger.C2635x5356ea10;
+import com.android.systemui.statusbar.dagger.C2637xc35bee5b;
 import com.android.systemui.statusbar.dagger.CentralSurfacesDependenciesModule_ProvideCommandQueueFactory;
 import com.android.systemui.statusbar.events.PrivacyDotViewController;
 import com.android.systemui.statusbar.events.PrivacyDotViewController_Factory;
@@ -1218,14 +1218,14 @@ import com.android.systemui.statusbar.notification.collection.render.RenderStage
 import com.android.systemui.statusbar.notification.collection.render.SectionHeaderController;
 import com.android.systemui.statusbar.notification.collection.render.SectionHeaderNodeControllerImpl;
 import com.android.systemui.statusbar.notification.collection.render.SectionHeaderNodeControllerImpl_Factory;
-import com.android.systemui.statusbar.notification.dagger.C2709x41b9fd82;
-import com.android.systemui.statusbar.notification.dagger.C2711x3fd4641;
-import com.android.systemui.statusbar.notification.dagger.C2712x340f4262;
-import com.android.systemui.statusbar.notification.dagger.C2714xb614d321;
-import com.android.systemui.statusbar.notification.dagger.C2715x812edf99;
-import com.android.systemui.statusbar.notification.dagger.C2717x39c1fe98;
-import com.android.systemui.statusbar.notification.dagger.C2718xcc90df13;
-import com.android.systemui.statusbar.notification.dagger.C2720x34a20792;
+import com.android.systemui.statusbar.notification.dagger.C2715x41b9fd82;
+import com.android.systemui.statusbar.notification.dagger.C2717x3fd4641;
+import com.android.systemui.statusbar.notification.dagger.C2718x340f4262;
+import com.android.systemui.statusbar.notification.dagger.C2720xb614d321;
+import com.android.systemui.statusbar.notification.dagger.C2721x812edf99;
+import com.android.systemui.statusbar.notification.dagger.C2723x39c1fe98;
+import com.android.systemui.statusbar.notification.dagger.C2724xcc90df13;
+import com.android.systemui.statusbar.notification.dagger.C2726x34a20792;
 import com.android.systemui.statusbar.notification.dagger.NotificationsModule_ProvideCommonNotifCollectionFactory;
 import com.android.systemui.statusbar.notification.dagger.NotificationsModule_ProvideGroupExpansionManagerFactory;
 import com.android.systemui.statusbar.notification.dagger.NotificationsModule_ProvideGroupMembershipManagerFactory;
@@ -1291,9 +1291,9 @@ import com.android.systemui.statusbar.notification.row.RowContentBindStageLogger
 import com.android.systemui.statusbar.notification.row.RowContentBindStageLogger_Factory;
 import com.android.systemui.statusbar.notification.row.RowContentBindStage_Factory;
 import com.android.systemui.statusbar.notification.row.RowInflaterTask_Factory;
-import com.android.systemui.statusbar.notification.row.dagger.C2771x3e2d0aca;
-import com.android.systemui.statusbar.notification.row.dagger.C2772xdc9a80a2;
-import com.android.systemui.statusbar.notification.row.dagger.C2773xc255c3ca;
+import com.android.systemui.statusbar.notification.row.dagger.C2777x3e2d0aca;
+import com.android.systemui.statusbar.notification.row.dagger.C2778xdc9a80a2;
+import com.android.systemui.statusbar.notification.row.dagger.C2779xc255c3ca;
 import com.android.systemui.statusbar.notification.row.dagger.ExpandableNotificationRowComponent;
 import com.android.systemui.statusbar.notification.stack.AmbientState;
 import com.android.systemui.statusbar.notification.stack.AmbientState_Factory;
@@ -1318,9 +1318,9 @@ import com.android.systemui.statusbar.phone.AutoHideController_Factory_Factory;
 import com.android.systemui.statusbar.phone.AutoTileManager;
 import com.android.systemui.statusbar.phone.BiometricUnlockController;
 import com.android.systemui.statusbar.phone.BiometricUnlockController_Factory;
-import com.android.systemui.statusbar.phone.C4826AutoHideController_Factory;
-import com.android.systemui.statusbar.phone.C4827LightBarController_Factory;
-import com.android.systemui.statusbar.phone.C4828LightBarTransitionsController_Factory;
+import com.android.systemui.statusbar.phone.C4838AutoHideController_Factory;
+import com.android.systemui.statusbar.phone.C4839LightBarController_Factory;
+import com.android.systemui.statusbar.phone.C4840LightBarTransitionsController_Factory;
 import com.android.systemui.statusbar.phone.CentralSurfaces;
 import com.android.systemui.statusbar.phone.ConfigurationControllerImpl;
 import com.android.systemui.statusbar.phone.ConfigurationControllerImpl_Factory;
@@ -1459,7 +1459,7 @@ import com.android.systemui.statusbar.policy.WalletControllerImpl;
 import com.android.systemui.statusbar.policy.WalletControllerImpl_Factory;
 import com.android.systemui.statusbar.policy.ZenModeControllerImpl;
 import com.android.systemui.statusbar.policy.ZenModeControllerImpl_Factory;
-import com.android.systemui.statusbar.policy.dagger.C3205xe335f1e6;
+import com.android.systemui.statusbar.policy.dagger.C3215xe335f1e6;
 import com.android.systemui.statusbar.policy.dagger.RemoteInputViewSubcomponent;
 import com.android.systemui.statusbar.policy.dagger.StatusBarPolicyModule_ProvideAccessPointControllerImplFactory;
 import com.android.systemui.statusbar.policy.dagger.StatusBarPolicyModule_ProvideAutoRotateSettingsManagerFactory;
@@ -1494,8 +1494,8 @@ import com.android.systemui.tuner.TunerActivity;
 import com.android.systemui.tuner.TunerActivity_Factory;
 import com.android.systemui.tuner.TunerServiceImpl;
 import com.android.systemui.tuner.TunerServiceImpl_Factory;
-import com.android.systemui.unfold.C3239xd9485442;
-import com.android.systemui.unfold.C3240x6e72e9f0;
+import com.android.systemui.unfold.C3249xd9485442;
+import com.android.systemui.unfold.C3250x6e72e9f0;
 import com.android.systemui.unfold.FoldAodAnimationController;
 import com.android.systemui.unfold.FoldAodAnimationController_Factory;
 import com.android.systemui.unfold.FoldStateLogger;
@@ -1529,7 +1529,7 @@ import com.android.systemui.unfold.updates.hinge.HingeAngleProvider;
 import com.android.systemui.unfold.updates.screen.ScreenStatusProvider;
 import com.android.systemui.unfold.util.ATraceLoggerTransitionProgressListener;
 import com.android.systemui.unfold.util.ATraceLoggerTransitionProgressListener_Factory;
-import com.android.systemui.unfold.util.C4830ScaleAwareTransitionProgressProvider_Factory;
+import com.android.systemui.unfold.util.C4842ScaleAwareTransitionProgressProvider_Factory;
 import com.android.systemui.unfold.util.NaturalRotationUnfoldProgressProvider;
 import com.android.systemui.unfold.util.ScaleAwareTransitionProgressProvider;
 import com.android.systemui.unfold.util.ScaleAwareTransitionProgressProvider_Factory_Impl;
@@ -1564,7 +1564,7 @@ import com.android.systemui.util.RingerModeTrackerImpl;
 import com.android.systemui.util.RingerModeTrackerImpl_Factory;
 import com.android.systemui.util.WallpaperController;
 import com.android.systemui.util.WallpaperController_Factory;
-import com.android.systemui.util.concurrency.C3249xb8fd9db4;
+import com.android.systemui.util.concurrency.C3259xb8fd9db4;
 import com.android.systemui.util.concurrency.DelayableExecutor;
 import com.android.systemui.util.concurrency.Execution;
 import com.android.systemui.util.concurrency.ExecutionImpl_Factory;
@@ -1600,7 +1600,7 @@ import com.android.systemui.util.p016io.Files;
 import com.android.systemui.util.p016io.Files_Factory;
 import com.android.systemui.util.sensors.AsyncSensorManager;
 import com.android.systemui.util.sensors.AsyncSensorManager_Factory;
-import com.android.systemui.util.sensors.C3256xe478f0bc;
+import com.android.systemui.util.sensors.C3266xe478f0bc;
 import com.android.systemui.util.sensors.PostureDependentProximitySensor_Factory;
 import com.android.systemui.util.sensors.ProximityCheck;
 import com.android.systemui.util.sensors.ProximitySensor;
@@ -1650,6 +1650,10 @@ import com.nothing.gamemode.NTGameModeHelper_Factory;
 import com.nothing.keyguard.LockIconViewControllerEx_Factory;
 import com.nothing.systemui.NTDependencyEx;
 import com.nothing.systemui.NTDependencyEx_Factory;
+import com.nothing.systemui.assist.AssistManagerEx;
+import com.nothing.systemui.assist.AssistManagerEx_Factory;
+import com.nothing.systemui.biometrics.AuthRippleControllerEx;
+import com.nothing.systemui.biometrics.AuthRippleControllerEx_Factory;
 import com.nothing.systemui.biometrics.NTColorController;
 import com.nothing.systemui.biometrics.NTColorController_Factory;
 import com.nothing.systemui.biometrics.NTUdfpsHbmModule_OptionalUdfpsHbmProviderFactory;
@@ -1765,12 +1769,12 @@ public final class DaggerTvGlobalRootComponent {
         }
 
         public Optional<T> get() {
-            return Optional.m1745of(this.delegate.get());
+            return Optional.m1751of(this.delegate.get());
         }
 
         /* access modifiers changed from: private */
         /* renamed from: of */
-        public static <T> Provider<Optional<T>> m1191of(Provider<T> provider) {
+        public static <T> Provider<Optional<T>> m1189of(Provider<T> provider) {
             return new PresentJdkOptionalInstanceProvider(provider);
         }
     }
@@ -2491,7 +2495,7 @@ public final class DaggerTvGlobalRootComponent {
             this.optionalOfPipTouchHandlerProvider = DaggerTvGlobalRootComponent.absentJdkOptionalProvider();
             this.dynamicOverrideOptionalOfFullscreenTaskListenerProvider = DaggerTvGlobalRootComponent.absentJdkOptionalProvider();
             this.dynamicOverrideOptionalOfFullscreenUnfoldControllerProvider = DaggerTvGlobalRootComponent.absentJdkOptionalProvider();
-            Provider<Optional<ShellUnfoldProgressProvider>> access$2200 = PresentJdkOptionalInstanceProvider.m1191of(this.tvGlobalRootComponentImpl.provideShellProgressProvider);
+            Provider<Optional<ShellUnfoldProgressProvider>> access$2200 = PresentJdkOptionalInstanceProvider.m1189of(this.tvGlobalRootComponentImpl.provideShellProgressProvider);
             this.optionalOfShellUnfoldProgressProvider = access$2200;
             Provider<Optional<FullscreenUnfoldController>> provider = DoubleCheck.provider(WMShellBaseModule_ProvideFullscreenUnfoldControllerFactory.create(this.dynamicOverrideOptionalOfFullscreenUnfoldControllerProvider, access$2200));
             this.provideFullscreenUnfoldControllerProvider = provider;
@@ -2503,7 +2507,7 @@ public final class DaggerTvGlobalRootComponent {
             this.provideSplashScreenExecutorProvider = DoubleCheck.provider(WMShellConcurrencyModule_ProvideSplashScreenExecutorFactory.create());
             Provider<StartingWindowTypeAlgorithm> provider2 = DoubleCheck.provider(TvWMShellModule_ProvideStartingWindowTypeAlgorithmFactory.create());
             this.provideStartingWindowTypeAlgorithmProvider = provider2;
-            Provider<Optional<StartingWindowTypeAlgorithm>> access$22002 = PresentJdkOptionalInstanceProvider.m1191of(provider2);
+            Provider<Optional<StartingWindowTypeAlgorithm>> access$22002 = PresentJdkOptionalInstanceProvider.m1189of(provider2);
             this.dynamicOverrideOptionalOfStartingWindowTypeAlgorithmProvider = access$22002;
             this.provideStartingWindowTypeAlgorithmProvider2 = DoubleCheck.provider(WMShellBaseModule_ProvideStartingWindowTypeAlgorithmFactory.create(access$22002));
             Provider<StartingWindowController> provider3 = DoubleCheck.provider(WMShellBaseModule_ProvideStartingWindowControllerFactory.create(this.tvGlobalRootComponentImpl.contextProvider, this.provideSplashScreenExecutorProvider, this.provideStartingWindowTypeAlgorithmProvider2, this.provideIconProvider, this.provideTransactionPoolProvider));
@@ -2778,9 +2782,9 @@ public final class DaggerTvGlobalRootComponent {
             this.listContainerProvider = InstanceFactory.create(notificationListContainer);
             Factory create3 = InstanceFactory.create(notificationEntry2);
             this.notificationEntryProvider = create3;
-            this.provideStatusBarNotificationProvider = C2773xc255c3ca.create(create3);
-            this.provideAppNameProvider = C2771x3e2d0aca.create(this.tvGlobalRootComponentImpl.contextProvider, this.provideStatusBarNotificationProvider);
-            this.provideNotificationKeyProvider = C2772xdc9a80a2.create(this.provideStatusBarNotificationProvider);
+            this.provideStatusBarNotificationProvider = C2779xc255c3ca.create(create3);
+            this.provideAppNameProvider = C2777x3e2d0aca.create(this.tvGlobalRootComponentImpl.contextProvider, this.provideStatusBarNotificationProvider);
+            this.provideNotificationKeyProvider = C2778xdc9a80a2.create(this.provideStatusBarNotificationProvider);
             this.onExpandClickListenerProvider = InstanceFactory.create(onExpandClickListener);
             this.expandableNotificationRowDragControllerProvider = ExpandableNotificationRowDragController_Factory.create(this.tvGlobalRootComponentImpl.contextProvider, this.tvSysUIComponentImpl.provideHeadsUpManagerPhoneProvider, this.tvSysUIComponentImpl.shadeControllerImplProvider);
             this.expandableNotificationRowControllerProvider = DoubleCheck.provider(ExpandableNotificationRowController_Factory.create(this.expandableNotificationRowProvider, this.activatableNotificationViewControllerProvider, this.remoteInputViewSubcomponentFactoryProvider, this.tvGlobalRootComponentImpl.provideMetricsLoggerProvider, this.listContainerProvider, this.tvSysUIComponentImpl.provideNotificationMediaManagerProvider, this.tvSysUIComponentImpl.smartReplyConstantsProvider, this.tvSysUIComponentImpl.provideSmartReplyControllerProvider, this.tvGlobalRootComponentImpl.providesPluginManagerProvider, this.tvSysUIComponentImpl.bindSystemClockProvider, this.provideAppNameProvider, this.provideNotificationKeyProvider, this.tvSysUIComponentImpl.keyguardBypassControllerProvider, this.tvSysUIComponentImpl.provideGroupMembershipManagerProvider, this.tvSysUIComponentImpl.provideGroupExpansionManagerProvider, this.tvSysUIComponentImpl.rowContentBindStageProvider, this.tvSysUIComponentImpl.provideNotificationLoggerProvider, this.tvSysUIComponentImpl.provideHeadsUpManagerPhoneProvider, this.onExpandClickListenerProvider, this.tvSysUIComponentImpl.statusBarStateControllerImplProvider, this.tvSysUIComponentImpl.provideNotificationGutsManagerProvider, this.tvSysUIComponentImpl.provideAllowNotificationLongPressProvider, this.tvSysUIComponentImpl.provideOnUserInteractionCallbackProvider, this.tvSysUIComponentImpl.falsingManagerProxyProvider, this.tvSysUIComponentImpl.falsingCollectorImplProvider, this.tvSysUIComponentImpl.featureFlagsReleaseProvider, this.tvSysUIComponentImpl.peopleNotificationIdentifierImplProvider, this.tvSysUIComponentImpl.provideBubblesManagerProvider, this.expandableNotificationRowDragControllerProvider));
@@ -3021,7 +3025,7 @@ public final class DaggerTvGlobalRootComponent {
         private final DreamOverlayComponentImpl dreamOverlayComponentImpl;
 
         /* renamed from: id */
-        private final ComplicationId f397id;
+        private final ComplicationId f396id;
         private final TvGlobalRootComponentImpl tvGlobalRootComponentImpl;
         private final TvSysUIComponentImpl tvSysUIComponentImpl;
 
@@ -3031,11 +3035,11 @@ public final class DaggerTvGlobalRootComponent {
             this.tvSysUIComponentImpl = tvSysUIComponentImpl2;
             this.dreamOverlayComponentImpl = dreamOverlayComponentImpl2;
             this.complication = complication2;
-            this.f397id = complicationId;
+            this.f396id = complicationId;
         }
 
         private ComplicationViewModel complicationViewModel() {
-            return new ComplicationViewModel(this.complication, this.f397id, this.dreamOverlayComponentImpl.host);
+            return new ComplicationViewModel(this.complication, this.f396id, this.dreamOverlayComponentImpl.host);
         }
 
         public ComplicationViewModelProvider getViewModelProvider() {
@@ -3121,11 +3125,11 @@ public final class DaggerTvGlobalRootComponent {
         }
 
         private FlingAnimationUtils namedFlingAnimationUtils() {
-            return C2103x6a8a7f11.providesSwipeToBouncerFlingAnimationUtilsOpening(this.builderProvider);
+            return C2105x6a8a7f11.providesSwipeToBouncerFlingAnimationUtilsOpening(this.builderProvider);
         }
 
         private FlingAnimationUtils namedFlingAnimationUtils2() {
-            return C2102x4f80e514.providesSwipeToBouncerFlingAnimationUtilsClosing(this.builderProvider);
+            return C2104x4f80e514.providesSwipeToBouncerFlingAnimationUtilsClosing(this.builderProvider);
         }
 
         private float namedFloat() {
@@ -3149,7 +3153,7 @@ public final class DaggerTvGlobalRootComponent {
         }
 
         private DreamTouchHandler providesHideComplicationTouchHandler() {
-            return C2104xc6ed12da.providesHideComplicationTouchHandler(hideComplicationTouchHandler());
+            return C2106xc6ed12da.providesHideComplicationTouchHandler(hideComplicationTouchHandler());
         }
 
         private Set<DreamTouchHandler> setOfDreamTouchHandler() {
@@ -3163,8 +3167,8 @@ public final class DaggerTvGlobalRootComponent {
             Provider<TouchInsetManager> provider = DoubleCheck.provider(DreamOverlayModule_ProvidesTouchInsetManagerFactory.create(this.tvGlobalRootComponentImpl.provideMainExecutorProvider, this.providesDreamOverlayContainerViewProvider));
             this.providesTouchInsetManagerProvider = provider;
             this.providesTouchInsetSessionProvider = DreamOverlayModule_ProvidesTouchInsetSessionFactory.create(provider);
-            this.providesComplicationsFadeInDurationProvider = DoubleCheck.provider(C2089xa92fda9a.create(this.tvGlobalRootComponentImpl.provideResourcesProvider));
-            Provider<Integer> provider2 = DoubleCheck.provider(C2090x3242d31f.create(this.tvGlobalRootComponentImpl.provideResourcesProvider));
+            this.providesComplicationsFadeInDurationProvider = DoubleCheck.provider(C2091xa92fda9a.create(this.tvGlobalRootComponentImpl.provideResourcesProvider));
+            Provider<Integer> provider2 = DoubleCheck.provider(C2092x3242d31f.create(this.tvGlobalRootComponentImpl.provideResourcesProvider));
             this.providesComplicationsFadeOutDurationProvider = provider2;
             this.complicationLayoutEngineProvider = DoubleCheck.provider(ComplicationLayoutEngine_Factory.create(this.providesComplicationHostViewProvider, this.providesComplicationPaddingProvider, this.providesTouchInsetSessionProvider, this.providesComplicationsFadeInDurationProvider, provider2));
             DelegateFactory delegateFactory = new DelegateFactory();
@@ -3174,7 +3178,7 @@ public final class DaggerTvGlobalRootComponent {
             DelegateFactory.setDelegate(this.providesLifecycleOwnerProvider, DoubleCheck.provider(DreamOverlayModule_ProvidesLifecycleOwnerFactory.create(provider3)));
             this.storeProvider = InstanceFactory.create(viewModelStore);
             this.complicationCollectionLiveDataProvider = ComplicationCollectionLiveData_Factory.create(this.tvSysUIComponentImpl.dreamOverlayStateControllerProvider);
-            C32251 r13 = new Provider<ComplicationViewModelComponent.Factory>() {
+            C32351 r13 = new Provider<ComplicationViewModelComponent.Factory>() {
                 public ComplicationViewModelComponent.Factory get() {
                     return new ComplicationViewModelComponentFactory(DreamOverlayComponentImpl.this.tvGlobalRootComponentImpl, DreamOverlayComponentImpl.this.tvSysUIComponentImpl, DreamOverlayComponentImpl.this.dreamOverlayComponentImpl);
                 }
@@ -3184,7 +3188,7 @@ public final class DaggerTvGlobalRootComponent {
             this.complicationViewModelTransformerProvider = create;
             ComplicationCollectionViewModel_Factory create2 = ComplicationCollectionViewModel_Factory.create(this.complicationCollectionLiveDataProvider, create);
             this.complicationCollectionViewModelProvider = create2;
-            C2092x1653c7a9 create3 = C2092x1653c7a9.create(this.storeProvider, create2);
+            C2094x1653c7a9 create3 = C2094x1653c7a9.create(this.storeProvider, create2);
             this.providesComplicationCollectionViewModelProvider = create3;
             this.complicationHostViewControllerProvider = ComplicationHostViewController_Factory.create(this.providesComplicationHostViewProvider, this.complicationLayoutEngineProvider, this.providesLifecycleOwnerProvider, create3);
             this.providesDreamOverlayContentViewProvider = DoubleCheck.provider(DreamOverlayModule_ProvidesDreamOverlayContentViewFactory.create(this.providesDreamOverlayContainerViewProvider));
@@ -3197,7 +3201,7 @@ public final class DaggerTvGlobalRootComponent {
             this.dreamOverlayContainerViewControllerProvider = DoubleCheck.provider(DreamOverlayContainerViewController_Factory.create(this.providesDreamOverlayContainerViewProvider, this.complicationHostViewControllerProvider, this.providesDreamOverlayContentViewProvider, this.dreamOverlayStatusBarViewControllerProvider, this.tvSysUIComponentImpl.statusBarKeyguardViewManagerProvider, this.tvSysUIComponentImpl.blurUtilsProvider, this.tvGlobalRootComponentImpl.provideMainHandlerProvider, this.tvGlobalRootComponentImpl.provideResourcesProvider, this.providesMaxBurnInOffsetProvider, this.providesBurnInProtectionUpdateIntervalProvider, this.providesMillisUntilFullJitterProvider));
             this.providesLifecycleProvider = DoubleCheck.provider(DreamOverlayModule_ProvidesLifecycleFactory.create(this.providesLifecycleOwnerProvider));
             this.builderProvider = FlingAnimationUtils_Builder_Factory.create(this.tvGlobalRootComponentImpl.provideDisplayMetricsProvider);
-            this.providesComplicationsRestoreTimeoutProvider = DoubleCheck.provider(C2091x4a872b5c.create(this.tvGlobalRootComponentImpl.provideResourcesProvider));
+            this.providesComplicationsRestoreTimeoutProvider = DoubleCheck.provider(C2093x4a872b5c.create(this.tvGlobalRootComponentImpl.provideResourcesProvider));
         }
 
         public DreamOverlayContainerViewController getDreamOverlayContainerViewController() {
@@ -3418,6 +3422,7 @@ public final class DaggerTvGlobalRootComponent {
         public Provider<AppOpsControllerImpl> appOpsControllerImplProvider;
         private Provider<AppOpsPrivacyItemMonitor> appOpsPrivacyItemMonitorProvider;
         private Provider<AssistLogger> assistLoggerProvider;
+        private Provider<AssistManagerEx> assistManagerExProvider;
         /* access modifiers changed from: private */
         public Provider<AssistManager> assistManagerProvider;
         private Provider<AssistantFeedbackController> assistantFeedbackControllerProvider;
@@ -3636,12 +3641,12 @@ public final class DaggerTvGlobalRootComponent {
         private Provider<LiftWakeGestureController> liftWakeGestureControllerProvider;
         /* access modifiers changed from: private */
         public Provider<LightBarController> lightBarControllerProvider;
-        private C4828LightBarTransitionsController_Factory lightBarTransitionsControllerProvider;
+        private C4840LightBarTransitionsController_Factory lightBarTransitionsControllerProvider;
         private Provider<LocalMediaManagerFactory> localMediaManagerFactoryProvider;
         private Provider<LocationControllerImpl> locationControllerImplProvider;
         private Provider<LocationTile> locationTileProvider;
         private Provider<LockscreenGestureLogger> lockscreenGestureLoggerProvider;
-        private C4823LockscreenShadeKeyguardTransitionController_Factory lockscreenShadeKeyguardTransitionControllerProvider;
+        private C4835LockscreenShadeKeyguardTransitionController_Factory lockscreenShadeKeyguardTransitionControllerProvider;
         private Provider<LockscreenShadeScrimTransitionController> lockscreenShadeScrimTransitionControllerProvider;
         private Provider<LockscreenShadeTransitionController> lockscreenShadeTransitionControllerProvider;
         /* access modifiers changed from: private */
@@ -4008,7 +4013,7 @@ public final class DaggerTvGlobalRootComponent {
         private Provider<ShadeListBuilder> shadeListBuilderProvider;
         private Provider<ShortcutKeyDispatcher> shortcutKeyDispatcherProvider;
         private Provider<SidefpsController> sidefpsControllerProvider;
-        private C4824SingleShadeLockScreenOverScroller_Factory singleShadeLockScreenOverScrollerProvider;
+        private C4836SingleShadeLockScreenOverScroller_Factory singleShadeLockScreenOverScrollerProvider;
         private Provider<SingleTapClassifier> singleTapClassifierProvider;
         private Provider<SliceBroadcastRelayHandler> sliceBroadcastRelayHandlerProvider;
         private Provider<SmartActionInflaterImpl> smartActionInflaterImplProvider;
@@ -4017,7 +4022,7 @@ public final class DaggerTvGlobalRootComponent {
         public Provider<SmartReplyConstants> smartReplyConstantsProvider;
         private Provider<SmartReplyInflaterImpl> smartReplyInflaterImplProvider;
         private Provider<SmartReplyStateInflaterImpl> smartReplyStateInflaterImplProvider;
-        private C4825SplitShadeLockScreenOverScroller_Factory splitShadeLockScreenOverScrollerProvider;
+        private C4837SplitShadeLockScreenOverScroller_Factory splitShadeLockScreenOverScrollerProvider;
         /* access modifiers changed from: private */
         public Provider<StatusBarContentInsetsProvider> statusBarContentInsetsProvider;
         /* access modifiers changed from: private */
@@ -4053,7 +4058,7 @@ public final class DaggerTvGlobalRootComponent {
         private Provider<TeslaInfoControllerImpl> teslaInfoControllerImplProvider;
         private Provider<ThemeOverlayApplier> themeOverlayApplierProvider;
         private Provider<ThemeOverlayController> themeOverlayControllerProvider;
-        private C4822TileLifecycleManager_Factory tileLifecycleManagerProvider;
+        private C4834TileLifecycleManager_Factory tileLifecycleManagerProvider;
         private Provider<TileServices> tileServicesProvider;
         private Provider<TimeoutHandler> timeoutHandlerProvider;
         private Provider<ToastFactory> toastFactoryProvider;
@@ -4199,7 +4204,7 @@ public final class DaggerTvGlobalRootComponent {
             ThresholdSensorImpl_BuilderFactory_Factory create6 = ThresholdSensorImpl_BuilderFactory_Factory.create(this.tvGlobalRootComponentImpl.provideResourcesProvider, this.asyncSensorManagerProvider, this.tvGlobalRootComponentImpl.provideExecutionProvider);
             this.builderFactoryProvider = create6;
             this.providePostureToProximitySensorMappingProvider = SensorModule_ProvidePostureToProximitySensorMappingFactory.create(create6, this.tvGlobalRootComponentImpl.provideResourcesProvider);
-            this.providePostureToSecondaryProximitySensorMappingProvider = C3256xe478f0bc.create(this.builderFactoryProvider, this.tvGlobalRootComponentImpl.provideResourcesProvider);
+            this.providePostureToSecondaryProximitySensorMappingProvider = C3266xe478f0bc.create(this.builderFactoryProvider, this.tvGlobalRootComponentImpl.provideResourcesProvider);
             this.devicePostureControllerImplProvider = DoubleCheck.provider(DevicePostureControllerImpl_Factory.create(this.tvGlobalRootComponentImpl.contextProvider, this.tvGlobalRootComponentImpl.provideDeviceStateManagerProvider, this.tvGlobalRootComponentImpl.provideMainExecutorProvider));
             this.postureDependentProximitySensorProvider = PostureDependentProximitySensor_Factory.create(this.providePostureToProximitySensorMappingProvider, this.providePostureToSecondaryProximitySensorMappingProvider, this.tvGlobalRootComponentImpl.provideMainDelayableExecutorProvider, this.tvGlobalRootComponentImpl.provideExecutionProvider, this.devicePostureControllerImplProvider);
             this.builderProvider = ThresholdSensorImpl_Builder_Factory.create(this.tvGlobalRootComponentImpl.provideResourcesProvider, this.asyncSensorManagerProvider, this.tvGlobalRootComponentImpl.provideExecutionProvider);
@@ -4229,7 +4234,7 @@ public final class DaggerTvGlobalRootComponent {
             Provider<Looper> provider10 = DoubleCheck.provider(SysUIConcurrencyModule_ProvideLongRunningLooperFactory.create());
             this.provideLongRunningLooperProvider = provider10;
             this.provideLongRunningExecutorProvider = DoubleCheck.provider(SysUIConcurrencyModule_ProvideLongRunningExecutorFactory.create(provider10));
-            this.provideDialogLaunchAnimatorProvider = DoubleCheck.provider(C2626x721ac0b6.create(this.tvGlobalRootComponentImpl.provideIDreamManagerProvider));
+            this.provideDialogLaunchAnimatorProvider = DoubleCheck.provider(C2632x721ac0b6.create(this.tvGlobalRootComponentImpl.provideIDreamManagerProvider));
             this.userSwitcherControllerProvider = DoubleCheck.provider(UserSwitcherController_Factory.create(this.tvGlobalRootComponentImpl.contextProvider, this.tvGlobalRootComponentImpl.provideIActivityManagerProvider, this.tvGlobalRootComponentImpl.provideUserManagerProvider, this.provideUserTrackerProvider, this.keyguardStateControllerImplProvider, this.providesDeviceProvisionedControllerProvider, this.tvGlobalRootComponentImpl.provideDevicePolicyManagerProvider, this.tvGlobalRootComponentImpl.provideMainHandlerProvider, this.provideActivityStarterProvider, this.broadcastDispatcherProvider, this.broadcastSenderProvider, this.tvGlobalRootComponentImpl.provideUiEventLoggerProvider, this.falsingManagerProxyProvider, this.telephonyListenerManagerProvider, this.secureSettingsImplProvider, this.globalSettingsImplProvider, this.provideBackgroundExecutorProvider, this.provideLongRunningExecutorProvider, this.tvGlobalRootComponentImpl.provideMainExecutorProvider, this.tvGlobalRootComponentImpl.provideInteractionJankMonitorProvider, this.tvGlobalRootComponentImpl.provideLatencyTrackerProvider, this.tvGlobalRootComponentImpl.dumpManagerProvider, this.provideDialogLaunchAnimatorProvider));
             this.navigationModeControllerProvider = DoubleCheck.provider(NavigationModeController_Factory.create(this.tvGlobalRootComponentImpl.contextProvider, this.providesDeviceProvisionedControllerProvider, this.configurationControllerImplProvider, this.tvGlobalRootComponentImpl.provideUiBackgroundExecutorProvider, this.tvGlobalRootComponentImpl.dumpManagerProvider));
             this.navigationBarControllerProvider = new DelegateFactory();
@@ -4277,14 +4282,14 @@ public final class DaggerTvGlobalRootComponent {
             DelegateFactory.setDelegate(this.notificationGroupManagerLegacyProvider, DoubleCheck.provider(NotificationGroupManagerLegacy_Factory.create(this.statusBarStateControllerImplProvider, this.peopleNotificationIdentifierImplProvider, create, this.tvGlobalRootComponentImpl.dumpManagerProvider)));
             this.notificationLockscreenUserManagerImplProvider = new DelegateFactory();
             this.provideNotificationVisibilityProvider = new DelegateFactory();
-            this.provideSmartReplyControllerProvider = DoubleCheck.provider(C2631xc35bee5b.create(this.tvGlobalRootComponentImpl.dumpManagerProvider, this.provideNotificationVisibilityProvider, this.tvGlobalRootComponentImpl.provideIStatusBarServiceProvider, this.notificationClickNotifierProvider));
+            this.provideSmartReplyControllerProvider = DoubleCheck.provider(C2637xc35bee5b.create(this.tvGlobalRootComponentImpl.dumpManagerProvider, this.provideNotificationVisibilityProvider, this.tvGlobalRootComponentImpl.provideIStatusBarServiceProvider, this.notificationClickNotifierProvider));
             this.provideNotificationEntryManagerProvider = new DelegateFactory();
             this.remoteInputNotificationRebuilderProvider = DoubleCheck.provider(RemoteInputNotificationRebuilder_Factory.create(this.tvGlobalRootComponentImpl.contextProvider));
             this.remoteInputUriControllerProvider = DoubleCheck.provider(RemoteInputUriController_Factory.create(this.tvGlobalRootComponentImpl.provideIStatusBarServiceProvider));
             Provider<LogBuffer> provider = DoubleCheck.provider(LogModule_ProvideNotifInteractionLogBufferFactory.create(this.logBufferFactoryProvider));
             this.provideNotifInteractionLogBufferProvider = provider;
             this.actionClickLoggerProvider = ActionClickLogger_Factory.create(provider);
-            this.provideNotificationRemoteInputManagerProvider = DoubleCheck.provider(C2628xa11cf5e4.create(this.tvGlobalRootComponentImpl.contextProvider, this.notifPipelineFlagsProvider, this.notificationLockscreenUserManagerImplProvider, this.provideSmartReplyControllerProvider, this.provideNotificationVisibilityProvider, this.provideNotificationEntryManagerProvider, this.remoteInputNotificationRebuilderProvider, this.optionalOfCentralSurfacesProvider, this.statusBarStateControllerImplProvider, GlobalConcurrencyModule_ProvideHandlerFactory.create(), this.remoteInputUriControllerProvider, this.notificationClickNotifierProvider, this.actionClickLoggerProvider, this.tvGlobalRootComponentImpl.dumpManagerProvider));
+            this.provideNotificationRemoteInputManagerProvider = DoubleCheck.provider(C2634xa11cf5e4.create(this.tvGlobalRootComponentImpl.contextProvider, this.notifPipelineFlagsProvider, this.notificationLockscreenUserManagerImplProvider, this.provideSmartReplyControllerProvider, this.provideNotificationVisibilityProvider, this.provideNotificationEntryManagerProvider, this.remoteInputNotificationRebuilderProvider, this.optionalOfCentralSurfacesProvider, this.statusBarStateControllerImplProvider, GlobalConcurrencyModule_ProvideHandlerFactory.create(), this.remoteInputUriControllerProvider, this.notificationClickNotifierProvider, this.actionClickLoggerProvider, this.tvGlobalRootComponentImpl.dumpManagerProvider));
             this.provideCommonNotifCollectionProvider = new DelegateFactory();
             NotifBindPipelineLogger_Factory create2 = NotifBindPipelineLogger_Factory.create(this.provideNotificationsLogBufferProvider);
             this.notifBindPipelineLoggerProvider = create2;
@@ -4359,11 +4364,11 @@ public final class DaggerTvGlobalRootComponent {
             Provider<DozeLog> provider10 = DoubleCheck.provider(DozeLog_Factory.create(this.keyguardUpdateMonitorProvider, this.tvGlobalRootComponentImpl.dumpManagerProvider, this.dozeLoggerProvider));
             this.dozeLogProvider = provider10;
             this.dozeScrimControllerProvider = DoubleCheck.provider(DozeScrimController_Factory.create(this.dozeParametersProvider, provider10, this.statusBarStateControllerImplProvider));
-            C4828LightBarTransitionsController_Factory create7 = C4828LightBarTransitionsController_Factory.create(this.tvGlobalRootComponentImpl.contextProvider, this.provideCommandQueueProvider, this.keyguardStateControllerImplProvider, this.statusBarStateControllerImplProvider);
+            C4840LightBarTransitionsController_Factory create7 = C4840LightBarTransitionsController_Factory.create(this.tvGlobalRootComponentImpl.contextProvider, this.provideCommandQueueProvider, this.keyguardStateControllerImplProvider, this.statusBarStateControllerImplProvider);
             this.lightBarTransitionsControllerProvider = create7;
             this.factoryProvider = LightBarTransitionsController_Factory_Impl.create(create7);
             this.darkIconDispatcherImplProvider = DoubleCheck.provider(DarkIconDispatcherImpl_Factory.create(this.tvGlobalRootComponentImpl.contextProvider, this.factoryProvider, this.tvGlobalRootComponentImpl.dumpManagerProvider));
-            this.lightBarControllerProvider = DoubleCheck.provider(C4827LightBarController_Factory.create(this.tvGlobalRootComponentImpl.contextProvider, this.darkIconDispatcherImplProvider, this.provideBatteryControllerProvider, this.navigationModeControllerProvider, this.tvGlobalRootComponentImpl.dumpManagerProvider));
+            this.lightBarControllerProvider = DoubleCheck.provider(C4839LightBarController_Factory.create(this.tvGlobalRootComponentImpl.contextProvider, this.darkIconDispatcherImplProvider, this.provideBatteryControllerProvider, this.navigationModeControllerProvider, this.tvGlobalRootComponentImpl.dumpManagerProvider));
             this.builderProvider3 = DelayedWakeLock_Builder_Factory.create(this.tvGlobalRootComponentImpl.contextProvider);
             this.keyguardUnlockAnimationControllerProvider = new DelegateFactory();
             this.scrimControllerProvider = DoubleCheck.provider(ScrimController_Factory.create(this.lightBarControllerProvider, this.dozeParametersProvider, this.tvGlobalRootComponentImpl.provideAlarmManagerProvider, this.keyguardStateControllerImplProvider, this.builderProvider3, GlobalConcurrencyModule_ProvideHandlerFactory.create(), this.keyguardUpdateMonitorProvider, this.dockManagerImplProvider, this.configurationControllerImplProvider, this.tvGlobalRootComponentImpl.provideMainExecutorProvider, this.screenOffAnimationControllerProvider, this.panelExpansionStateManagerProvider, this.keyguardUnlockAnimationControllerProvider, this.statusBarKeyguardViewManagerProvider));
@@ -4402,7 +4407,7 @@ public final class DaggerTvGlobalRootComponent {
             this.mediaUiEventLoggerProvider = DoubleCheck.provider(MediaUiEventLogger_Factory.create(this.tvGlobalRootComponentImpl.provideUiEventLoggerProvider));
             this.mediaDataFilterProvider = MediaDataFilter_Factory.create(this.tvGlobalRootComponentImpl.contextProvider, this.broadcastDispatcherProvider, this.broadcastSenderProvider, this.notificationLockscreenUserManagerImplProvider, this.tvGlobalRootComponentImpl.provideMainExecutorProvider, this.bindSystemClockProvider, this.mediaUiEventLoggerProvider);
             this.mediaDataManagerProvider = DoubleCheck.provider(MediaDataManager_Factory.create(this.tvGlobalRootComponentImpl.contextProvider, this.provideBackgroundExecutorProvider, this.tvGlobalRootComponentImpl.provideMainDelayableExecutorProvider, this.mediaControllerFactoryProvider, this.tvGlobalRootComponentImpl.dumpManagerProvider, this.broadcastDispatcherProvider, this.mediaTimeoutListenerProvider, this.mediaResumeListenerProvider, this.mediaSessionBasedFilterProvider, this.mediaDeviceManagerProvider, MediaDataCombineLatest_Factory.create(), this.mediaDataFilterProvider, this.provideActivityStarterProvider, SmartspaceMediaDataProvider_Factory.create(), this.bindSystemClockProvider, this.tunerServiceImplProvider, this.mediaFlagsProvider, this.mediaUiEventLoggerProvider));
-            this.provideNotificationMediaManagerProvider = DoubleCheck.provider(C2627xbcfb28e4.create(this.tvGlobalRootComponentImpl.contextProvider, this.optionalOfCentralSurfacesProvider, this.notificationShadeWindowControllerImplProvider, this.provideNotificationVisibilityProvider, this.provideNotificationEntryManagerProvider, this.mediaArtworkProcessorProvider, this.keyguardBypassControllerProvider, this.notifPipelineProvider, this.notifCollectionProvider, this.notifPipelineFlagsProvider, this.tvGlobalRootComponentImpl.provideMainDelayableExecutorProvider, this.mediaDataManagerProvider, this.tvGlobalRootComponentImpl.dumpManagerProvider));
+            this.provideNotificationMediaManagerProvider = DoubleCheck.provider(C2633xbcfb28e4.create(this.tvGlobalRootComponentImpl.contextProvider, this.optionalOfCentralSurfacesProvider, this.notificationShadeWindowControllerImplProvider, this.provideNotificationVisibilityProvider, this.provideNotificationEntryManagerProvider, this.mediaArtworkProcessorProvider, this.keyguardBypassControllerProvider, this.notifPipelineProvider, this.notifCollectionProvider, this.notifPipelineFlagsProvider, this.tvGlobalRootComponentImpl.provideMainDelayableExecutorProvider, this.mediaDataManagerProvider, this.tvGlobalRootComponentImpl.dumpManagerProvider));
             this.sessionTrackerProvider = DoubleCheck.provider(SessionTracker_Factory.create(this.tvGlobalRootComponentImpl.contextProvider, this.tvGlobalRootComponentImpl.provideIStatusBarServiceProvider, this.authControllerProvider, this.keyguardUpdateMonitorProvider, this.keyguardStateControllerImplProvider));
             this.biometricUnlockControllerProvider = DoubleCheck.provider(BiometricUnlockController_Factory.create(this.dozeScrimControllerProvider, this.newKeyguardViewMediatorProvider, this.scrimControllerProvider, this.shadeControllerImplProvider, this.notificationShadeWindowControllerImplProvider, this.keyguardStateControllerImplProvider, GlobalConcurrencyModule_ProvideHandlerFactory.create(), this.keyguardUpdateMonitorProvider, this.tvGlobalRootComponentImpl.provideResourcesProvider, this.keyguardBypassControllerProvider, this.dozeParametersProvider, this.tvGlobalRootComponentImpl.provideMetricsLoggerProvider, this.tvGlobalRootComponentImpl.dumpManagerProvider, this.tvGlobalRootComponentImpl.providePowerManagerProvider, this.provideNotificationMediaManagerProvider, this.wakefulnessLifecycleProvider, this.tvGlobalRootComponentImpl.screenLifecycleProvider, this.authControllerProvider, this.statusBarStateControllerImplProvider, this.keyguardUnlockAnimationControllerProvider, this.sessionTrackerProvider, this.tvGlobalRootComponentImpl.provideLatencyTrackerProvider, this.screenOffAnimationControllerProvider));
             DelegateFactory.setDelegate(this.keyguardUnlockAnimationControllerProvider, DoubleCheck.provider(KeyguardUnlockAnimationController_Factory.create(this.tvGlobalRootComponentImpl.contextProvider, this.keyguardStateControllerImplProvider, this.newKeyguardViewMediatorProvider, this.statusBarKeyguardViewManagerProvider, this.featureFlagsReleaseProvider, this.biometricUnlockControllerProvider, this.statusBarStateControllerImplProvider, this.notificationShadeWindowControllerImplProvider)));
@@ -4413,7 +4418,7 @@ public final class DaggerTvGlobalRootComponent {
             this.provideRecentsImplProvider = RecentsModule_ProvideRecentsImplFactory.create(this.tvGlobalRootComponentImpl.contextProvider, this.contextComponentResolverProvider);
             Provider<Recents> provider = DoubleCheck.provider(TvSystemUIModule_ProvideRecentsFactory.create(this.tvGlobalRootComponentImpl.contextProvider, this.provideRecentsImplProvider, this.provideCommandQueueProvider));
             this.provideRecentsProvider = provider;
-            this.optionalOfRecentsProvider = PresentJdkOptionalInstanceProvider.m1191of(provider);
+            this.optionalOfRecentsProvider = PresentJdkOptionalInstanceProvider.m1189of(provider);
             this.systemActionsProvider = DoubleCheck.provider(SystemActions_Factory.create(this.tvGlobalRootComponentImpl.contextProvider, this.notificationShadeWindowControllerImplProvider, this.optionalOfCentralSurfacesProvider, this.optionalOfRecentsProvider));
             this.navBarHelperProvider = DoubleCheck.provider(NavBarHelper_Factory.create(this.tvGlobalRootComponentImpl.contextProvider, this.tvGlobalRootComponentImpl.provideAccessibilityManagerProvider, this.accessibilityButtonModeObserverProvider, this.accessibilityButtonTargetsObserverProvider, this.systemActionsProvider, this.overviewProxyServiceProvider, this.assistManagerProvider, this.optionalOfCentralSurfacesProvider, this.navigationModeControllerProvider, this.provideUserTrackerProvider, this.tvGlobalRootComponentImpl.dumpManagerProvider));
             this.factoryProvider2 = EdgeBackGestureHandler_Factory_Factory.create(this.overviewProxyServiceProvider, this.provideSysUiStateProvider, this.tvGlobalRootComponentImpl.providesPluginManagerProvider, this.tvGlobalRootComponentImpl.provideMainExecutorProvider, this.broadcastDispatcherProvider, this.protoTracerProvider, this.navigationModeControllerProvider, this.tvGlobalRootComponentImpl.provideViewConfigurationProvider, this.tvGlobalRootComponentImpl.provideWindowManagerProvider, this.tvGlobalRootComponentImpl.provideIWindowManagerProvider, this.falsingManagerProxyProvider, this.tvGlobalRootComponentImpl.provideLatencyTrackerProvider);
@@ -4423,7 +4428,7 @@ public final class DaggerTvGlobalRootComponent {
                     return new NavigationBarComponentFactory(TvSysUIComponentImpl.this.tvGlobalRootComponentImpl, TvSysUIComponentImpl.this.tvSysUIComponentImpl);
                 }
             };
-            this.autoHideControllerProvider = DoubleCheck.provider(C4826AutoHideController_Factory.create(this.tvGlobalRootComponentImpl.contextProvider, this.tvGlobalRootComponentImpl.provideMainHandlerProvider, this.tvGlobalRootComponentImpl.provideIWindowManagerProvider));
+            this.autoHideControllerProvider = DoubleCheck.provider(C4838AutoHideController_Factory.create(this.tvGlobalRootComponentImpl.contextProvider, this.tvGlobalRootComponentImpl.provideMainHandlerProvider, this.tvGlobalRootComponentImpl.provideIWindowManagerProvider));
             Provider<NavigationBarController> provider2 = this.navigationBarControllerProvider;
             Provider<NavigationBarController> provider3 = provider2;
             DelegateFactory.setDelegate(provider3, DoubleCheck.provider(NavigationBarController_Factory.create(this.tvGlobalRootComponentImpl.contextProvider, this.overviewProxyServiceProvider, this.navigationModeControllerProvider, this.provideSysUiStateProvider, this.provideCommandQueueProvider, this.tvGlobalRootComponentImpl.provideMainHandlerProvider, this.configurationControllerImplProvider, this.navBarHelperProvider, this.taskbarDelegateProvider, this.navigationBarComponentFactoryProvider, this.statusBarKeyguardViewManagerProvider, this.tvGlobalRootComponentImpl.dumpManagerProvider, this.autoHideControllerProvider, this.lightBarControllerProvider, this.setPipProvider, this.setBackAnimationProvider)));
@@ -4438,7 +4443,7 @@ public final class DaggerTvGlobalRootComponent {
             this.notificationShadeDepthControllerProvider = DoubleCheck.provider(NotificationShadeDepthController_Factory.create(this.statusBarStateControllerImplProvider, this.blurUtilsProvider, this.biometricUnlockControllerProvider, this.keyguardStateControllerImplProvider, this.tvGlobalRootComponentImpl.providesChoreographerProvider, this.wallpaperControllerProvider, this.notificationShadeWindowControllerImplProvider, this.dozeParametersProvider, this.tvGlobalRootComponentImpl.contextProvider, this.tvGlobalRootComponentImpl.dumpManagerProvider, this.configurationControllerImplProvider));
             this.screenOnCoordinatorProvider = DoubleCheck.provider(ScreenOnCoordinator_Factory.create(this.tvGlobalRootComponentImpl.screenLifecycleProvider, this.provideSysUIUnfoldComponentProvider, this.tvGlobalRootComponentImpl.provideExecutionProvider));
             this.dreamOverlayStateControllerProvider = DoubleCheck.provider(DreamOverlayStateController_Factory.create(this.tvGlobalRootComponentImpl.provideMainExecutorProvider));
-            this.provideActivityLaunchAnimatorProvider = DoubleCheck.provider(C2625x512569cf.create());
+            this.provideActivityLaunchAnimatorProvider = DoubleCheck.provider(C2631x512569cf.create());
             DelegateFactory.setDelegate(this.newKeyguardViewMediatorProvider, DoubleCheck.provider(KeyguardModule_NewKeyguardViewMediatorFactory.create(this.tvGlobalRootComponentImpl.contextProvider, this.falsingCollectorImplProvider, this.tvGlobalRootComponentImpl.provideLockPatternUtilsProvider, this.broadcastDispatcherProvider, this.statusBarKeyguardViewManagerProvider, this.dismissCallbackRegistryProvider, this.keyguardUpdateMonitorProvider, this.tvGlobalRootComponentImpl.dumpManagerProvider, this.tvGlobalRootComponentImpl.providePowerManagerProvider, this.tvGlobalRootComponentImpl.provideTrustManagerProvider, this.userSwitcherControllerProvider, this.tvGlobalRootComponentImpl.provideUiBackgroundExecutorProvider, this.deviceConfigProxyProvider, this.navigationModeControllerProvider, this.keyguardDisplayManagerProvider, this.dozeParametersProvider, this.statusBarStateControllerImplProvider, this.keyguardStateControllerImplProvider, this.keyguardUnlockAnimationControllerProvider, this.screenOffAnimationControllerProvider, this.notificationShadeDepthControllerProvider, this.screenOnCoordinatorProvider, this.tvGlobalRootComponentImpl.provideInteractionJankMonitorProvider, this.dreamOverlayStateControllerProvider, this.notificationShadeWindowControllerImplProvider, this.provideActivityLaunchAnimatorProvider)));
             this.providesViewMediatorCallbackProvider = KeyguardModule_ProvidesViewMediatorCallbackFactory.create(keyguardModule, this.newKeyguardViewMediatorProvider);
             this.keyguardSecurityModelProvider = DoubleCheck.provider(KeyguardSecurityModel_Factory.create(this.tvGlobalRootComponentImpl.provideResourcesProvider, this.tvGlobalRootComponentImpl.provideLockPatternUtilsProvider, this.keyguardUpdateMonitorProvider));
@@ -4461,7 +4466,7 @@ public final class DaggerTvGlobalRootComponent {
             this.mediaViewControllerProvider = MediaViewController_Factory.create(this.tvGlobalRootComponentImpl.contextProvider, this.configurationControllerImplProvider, this.mediaHostStatesManagerProvider, this.mediaViewLoggerProvider);
             Provider<DelayableExecutor> provider6 = DoubleCheck.provider(SysUIConcurrencyModule_ProvideBackgroundDelayableExecutorFactory.create(this.provideBgLooperProvider));
             this.provideBackgroundDelayableExecutorProvider = provider6;
-            Provider<RepeatableExecutor> provider7 = DoubleCheck.provider(C3249xb8fd9db4.create(provider6));
+            Provider<RepeatableExecutor> provider7 = DoubleCheck.provider(C3259xb8fd9db4.create(provider6));
             this.provideBackgroundRepeatableExecutorProvider = provider7;
             this.seekBarViewModelProvider = SeekBarViewModel_Factory.create(provider7);
             Provider<LogBuffer> provider8 = DoubleCheck.provider(LogModule_ProvideNearbyMediaDevicesLogBufferFactory.create(this.logBufferFactoryProvider));
@@ -4489,35 +4494,35 @@ public final class DaggerTvGlobalRootComponent {
             this.provideNotificationSectionLogBufferProvider = provider13;
             this.notificationSectionsLoggerProvider = DoubleCheck.provider(NotificationSectionsLogger_Factory.create(provider13));
             this.mediaContainerControllerProvider = DoubleCheck.provider(MediaContainerController_Factory.create(this.tvGlobalRootComponentImpl.providerLayoutInflaterProvider));
-            C32326 r1 = new Provider<SectionHeaderControllerSubcomponent.Builder>() {
+            C32426 r1 = new Provider<SectionHeaderControllerSubcomponent.Builder>() {
                 public SectionHeaderControllerSubcomponent.Builder get() {
                     return new SectionHeaderControllerSubcomponentBuilder(TvSysUIComponentImpl.this.tvGlobalRootComponentImpl, TvSysUIComponentImpl.this.tvSysUIComponentImpl);
                 }
             };
             this.sectionHeaderControllerSubcomponentBuilderProvider = r1;
-            Provider<SectionHeaderControllerSubcomponent> provider14 = DoubleCheck.provider(C2714xb614d321.create(r1));
+            Provider<SectionHeaderControllerSubcomponent> provider14 = DoubleCheck.provider(C2720xb614d321.create(r1));
             this.providesIncomingHeaderSubcomponentProvider = provider14;
-            this.providesIncomingHeaderControllerProvider = C2712x340f4262.create(provider14);
-            Provider<SectionHeaderControllerSubcomponent> provider15 = DoubleCheck.provider(C2717x39c1fe98.create(this.sectionHeaderControllerSubcomponentBuilderProvider));
+            this.providesIncomingHeaderControllerProvider = C2718x340f4262.create(provider14);
+            Provider<SectionHeaderControllerSubcomponent> provider15 = DoubleCheck.provider(C2723x39c1fe98.create(this.sectionHeaderControllerSubcomponentBuilderProvider));
             this.providesPeopleHeaderSubcomponentProvider = provider15;
-            this.providesPeopleHeaderControllerProvider = C2715x812edf99.create(provider15);
-            Provider<SectionHeaderControllerSubcomponent> provider16 = DoubleCheck.provider(C2711x3fd4641.create(this.sectionHeaderControllerSubcomponentBuilderProvider));
+            this.providesPeopleHeaderControllerProvider = C2721x812edf99.create(provider15);
+            Provider<SectionHeaderControllerSubcomponent> provider16 = DoubleCheck.provider(C2717x3fd4641.create(this.sectionHeaderControllerSubcomponentBuilderProvider));
             this.providesAlertingHeaderSubcomponentProvider = provider16;
-            this.providesAlertingHeaderControllerProvider = C2709x41b9fd82.create(provider16);
-            Provider<SectionHeaderControllerSubcomponent> provider17 = DoubleCheck.provider(C2720x34a20792.create(this.sectionHeaderControllerSubcomponentBuilderProvider));
+            this.providesAlertingHeaderControllerProvider = C2715x41b9fd82.create(provider16);
+            Provider<SectionHeaderControllerSubcomponent> provider17 = DoubleCheck.provider(C2726x34a20792.create(this.sectionHeaderControllerSubcomponentBuilderProvider));
             this.providesSilentHeaderSubcomponentProvider = provider17;
-            C2718xcc90df13 create = C2718xcc90df13.create(provider17);
+            C2724xcc90df13 create = C2724xcc90df13.create(provider17);
             this.providesSilentHeaderControllerProvider = create;
             this.notificationSectionsManagerProvider = NotificationSectionsManager_Factory.create(this.statusBarStateControllerImplProvider, this.configurationControllerImplProvider, this.keyguardMediaControllerProvider, this.notificationSectionsFeatureManagerProvider, this.notificationSectionsLoggerProvider, this.notifPipelineFlagsProvider, this.mediaContainerControllerProvider, this.providesIncomingHeaderControllerProvider, this.providesPeopleHeaderControllerProvider, this.providesAlertingHeaderControllerProvider, create);
             this.ambientStateProvider = DoubleCheck.provider(AmbientState_Factory.create(this.tvGlobalRootComponentImpl.contextProvider, this.tvGlobalRootComponentImpl.dumpManagerProvider, this.notificationSectionsManagerProvider, this.keyguardBypassControllerProvider, this.statusBarKeyguardViewManagerProvider));
             this.lockscreenShadeScrimTransitionControllerProvider = LockscreenShadeScrimTransitionController_Factory.create(this.scrimControllerProvider, this.tvGlobalRootComponentImpl.contextProvider, this.configurationControllerImplProvider, this.tvGlobalRootComponentImpl.dumpManagerProvider);
-            C4823LockscreenShadeKeyguardTransitionController_Factory create2 = C4823LockscreenShadeKeyguardTransitionController_Factory.create(this.mediaHierarchyManagerProvider, this.tvGlobalRootComponentImpl.contextProvider, this.configurationControllerImplProvider, this.tvGlobalRootComponentImpl.dumpManagerProvider);
+            C4835LockscreenShadeKeyguardTransitionController_Factory create2 = C4835LockscreenShadeKeyguardTransitionController_Factory.create(this.mediaHierarchyManagerProvider, this.tvGlobalRootComponentImpl.contextProvider, this.configurationControllerImplProvider, this.tvGlobalRootComponentImpl.dumpManagerProvider);
             this.lockscreenShadeKeyguardTransitionControllerProvider = create2;
             this.factoryProvider5 = LockscreenShadeKeyguardTransitionController_Factory_Impl.create(create2);
-            C4825SplitShadeLockScreenOverScroller_Factory create3 = C4825SplitShadeLockScreenOverScroller_Factory.create(this.configurationControllerImplProvider, this.tvGlobalRootComponentImpl.contextProvider, this.scrimControllerProvider, this.statusBarStateControllerImplProvider);
+            C4837SplitShadeLockScreenOverScroller_Factory create3 = C4837SplitShadeLockScreenOverScroller_Factory.create(this.configurationControllerImplProvider, this.tvGlobalRootComponentImpl.contextProvider, this.scrimControllerProvider, this.statusBarStateControllerImplProvider);
             this.splitShadeLockScreenOverScrollerProvider = create3;
             this.factoryProvider6 = SplitShadeLockScreenOverScroller_Factory_Impl.create(create3);
-            C4824SingleShadeLockScreenOverScroller_Factory create4 = C4824SingleShadeLockScreenOverScroller_Factory.create(this.configurationControllerImplProvider, this.tvGlobalRootComponentImpl.contextProvider, this.statusBarStateControllerImplProvider);
+            C4836SingleShadeLockScreenOverScroller_Factory create4 = C4836SingleShadeLockScreenOverScroller_Factory.create(this.configurationControllerImplProvider, this.tvGlobalRootComponentImpl.contextProvider, this.statusBarStateControllerImplProvider);
             this.singleShadeLockScreenOverScrollerProvider = create4;
             this.factoryProvider7 = SingleShadeLockScreenOverScroller_Factory_Impl.create(create4);
             this.lockscreenShadeTransitionControllerProvider = DoubleCheck.provider(LockscreenShadeTransitionController_Factory.create(this.statusBarStateControllerImplProvider, this.lSShadeTransitionLoggerProvider, this.keyguardBypassControllerProvider, this.notificationLockscreenUserManagerImplProvider, this.falsingCollectorImplProvider, this.ambientStateProvider, this.mediaHierarchyManagerProvider, this.lockscreenShadeScrimTransitionControllerProvider, this.factoryProvider5, this.notificationShadeDepthControllerProvider, this.tvGlobalRootComponentImpl.contextProvider, this.factoryProvider6, this.factoryProvider7, this.wakefulnessLifecycleProvider, this.configurationControllerImplProvider, this.falsingManagerProxyProvider, this.tvGlobalRootComponentImpl.dumpManagerProvider));
@@ -4525,7 +4530,7 @@ public final class DaggerTvGlobalRootComponent {
             this.vibratorHelperProvider = provider18;
             this.udfpsHapticsSimulatorProvider = DoubleCheck.provider(UdfpsHapticsSimulator_Factory.create(this.commandRegistryProvider, provider18, this.keyguardUpdateMonitorProvider));
             this.udfpsShellProvider = DoubleCheck.provider(UdfpsShell_Factory.create(this.commandRegistryProvider));
-            this.optionalOfUdfpsHbmProvider = PresentJdkOptionalInstanceProvider.m1191of(NTUdfpsHbmModule_OptionalUdfpsHbmProviderFactory.create());
+            this.optionalOfUdfpsHbmProvider = PresentJdkOptionalInstanceProvider.m1189of(NTUdfpsHbmModule_OptionalUdfpsHbmProviderFactory.create());
             this.systemUIDialogManagerProvider = DoubleCheck.provider(SystemUIDialogManager_Factory.create(this.tvGlobalRootComponentImpl.dumpManagerProvider, this.statusBarKeyguardViewManagerProvider));
             this.optionalOfAlternateUdfpsTouchProvider = DaggerTvGlobalRootComponent.absentJdkOptionalProvider();
             this.providesPluginExecutorProvider = DoubleCheck.provider(BiometricsModule_ProvidesPluginExecutorFactory.create(ThreadFactoryImpl_Factory.create()));
@@ -4616,7 +4621,7 @@ public final class DaggerTvGlobalRootComponent {
             this.userSwitcherActivityProvider = UserSwitcherActivity_Factory.create(this.userSwitcherControllerProvider, this.broadcastDispatcherProvider, this.tvGlobalRootComponentImpl.providerLayoutInflaterProvider, this.falsingManagerProxyProvider, this.tvGlobalRootComponentImpl.provideUserManagerProvider, this.provideUserTrackerProvider);
             this.walletActivityProvider = WalletActivity_Factory.create(this.keyguardStateControllerImplProvider, this.keyguardDismissUtilProvider, this.provideActivityStarterProvider, this.provideBackgroundExecutorProvider, this.tvGlobalRootComponentImpl.provideMainHandlerProvider, this.falsingManagerProxyProvider, this.falsingCollectorImplProvider, this.provideUserTrackerProvider, this.keyguardUpdateMonitorProvider, this.statusBarKeyguardViewManagerProvider, this.tvGlobalRootComponentImpl.provideUiEventLoggerProvider);
             this.mapOfClassOfAndProviderOfActivityProvider = MapProviderFactory.builder(24).put((Object) TunerActivity.class, (Provider) this.tunerActivityProvider).put((Object) ForegroundServicesDialog.class, (Provider) this.foregroundServicesDialogProvider).put((Object) WorkLockActivity.class, (Provider) this.workLockActivityProvider).put((Object) BrightnessDialog.class, (Provider) this.brightnessDialogProvider).put((Object) UsbDebuggingActivity.class, (Provider) this.usbDebuggingActivityProvider).put((Object) UsbDebuggingSecondaryUserActivity.class, (Provider) this.usbDebuggingSecondaryUserActivityProvider).put((Object) UsbPermissionActivity.class, (Provider) this.usbPermissionActivityProvider).put((Object) UsbConfirmActivity.class, (Provider) this.usbConfirmActivityProvider).put((Object) CreateUserActivity.class, (Provider) this.createUserActivityProvider).put((Object) TvNotificationPanelActivity.class, (Provider) this.tvNotificationPanelActivityProvider).put((Object) PeopleSpaceActivity.class, (Provider) this.peopleSpaceActivityProvider).put((Object) LongScreenshotActivity.class, (Provider) this.longScreenshotActivityProvider).put((Object) LaunchConversationActivity.class, (Provider) this.launchConversationActivityProvider).put((Object) SensorUseStartedActivity.class, (Provider) this.sensorUseStartedActivityProvider).put((Object) TvUnblockSensorActivity.class, (Provider) this.tvUnblockSensorActivityProvider).put((Object) HdmiCecSetMenuLanguageActivity.class, (Provider) this.hdmiCecSetMenuLanguageActivityProvider).put((Object) NTCriticalTemperatureWarning.class, (Provider) NTCriticalTemperatureWarning_Factory.create()).put((Object) ControlsProviderSelectorActivity.class, (Provider) this.controlsProviderSelectorActivityProvider).put((Object) ControlsFavoritingActivity.class, (Provider) this.controlsFavoritingActivityProvider).put((Object) ControlsEditingActivity.class, (Provider) this.controlsEditingActivityProvider).put((Object) ControlsRequestDialog.class, (Provider) this.controlsRequestDialogProvider).put((Object) ControlsActivity.class, (Provider) this.controlsActivityProvider).put((Object) UserSwitcherActivity.class, (Provider) this.userSwitcherActivityProvider).put((Object) WalletActivity.class, (Provider) this.walletActivityProvider).build();
-            C32337 r1 = new Provider<DozeComponent.Builder>() {
+            C32437 r1 = new Provider<DozeComponent.Builder>() {
                 public DozeComponent.Builder get() {
                     return new DozeComponentFactory(TvSysUIComponentImpl.this.tvGlobalRootComponentImpl, TvSysUIComponentImpl.this.tvSysUIComponentImpl);
                 }
@@ -4728,7 +4733,7 @@ public final class DaggerTvGlobalRootComponent {
             this.bindRotationPolicyWrapperProvider = DoubleCheck.provider(create3);
             this.provideAutoRotateSettingsManagerProvider = DoubleCheck.provider(StatusBarPolicyModule_ProvideAutoRotateSettingsManagerFactory.create(this.tvGlobalRootComponentImpl.contextProvider));
             this.deviceStateRotationLockSettingControllerProvider = DoubleCheck.provider(DeviceStateRotationLockSettingController_Factory.create(this.bindRotationPolicyWrapperProvider, this.tvGlobalRootComponentImpl.provideDeviceStateManagerProvider, this.tvGlobalRootComponentImpl.provideMainExecutorProvider, this.provideAutoRotateSettingsManagerProvider));
-            C3205xe335f1e6 create4 = C3205xe335f1e6.create(this.tvGlobalRootComponentImpl.provideResourcesProvider);
+            C3215xe335f1e6 create4 = C3215xe335f1e6.create(this.tvGlobalRootComponentImpl.provideResourcesProvider);
             this.providesDeviceStateRotationLockDefaultsProvider = create4;
             this.rotationLockControllerImplProvider = DoubleCheck.provider(RotationLockControllerImpl_Factory.create(this.bindRotationPolicyWrapperProvider, this.deviceStateRotationLockSettingControllerProvider, create4));
             this.hotspotControllerImplProvider = DoubleCheck.provider(HotspotControllerImpl_Factory.create(this.tvGlobalRootComponentImpl.contextProvider, this.tvGlobalRootComponentImpl.provideMainHandlerProvider, this.provideBgHandlerProvider, this.tvGlobalRootComponentImpl.dumpManagerProvider));
@@ -4760,7 +4765,7 @@ public final class DaggerTvGlobalRootComponent {
             this.statusBarContentInsetsProvider = DoubleCheck.provider(StatusBarContentInsetsProvider_Factory.create(this.tvGlobalRootComponentImpl.contextProvider, this.configurationControllerImplProvider, this.tvGlobalRootComponentImpl.dumpManagerProvider));
             this.statusBarWindowControllerProvider = DoubleCheck.provider(StatusBarWindowController_Factory.create(this.tvGlobalRootComponentImpl.contextProvider, this.providesStatusBarWindowViewProvider, this.tvGlobalRootComponentImpl.provideWindowManagerProvider, this.tvGlobalRootComponentImpl.provideIWindowManagerProvider, this.statusBarContentInsetsProvider, this.tvGlobalRootComponentImpl.provideResourcesProvider, this.tvGlobalRootComponentImpl.unfoldTransitionProgressProvider));
             this.statusBarIconControllerImplProvider = DoubleCheck.provider(StatusBarIconControllerImpl_Factory.create(this.tvGlobalRootComponentImpl.contextProvider, this.provideCommandQueueProvider, this.provideDemoModeControllerProvider, this.configurationControllerImplProvider, this.tunerServiceImplProvider, this.tvGlobalRootComponentImpl.dumpManagerProvider));
-            C32359 r1 = new Provider<FragmentService.FragmentCreator.Factory>() {
+            C32459 r1 = new Provider<FragmentService.FragmentCreator.Factory>() {
                 public FragmentService.FragmentCreator.Factory get() {
                     return new FragmentCreatorFactory(TvSysUIComponentImpl.this.tvGlobalRootComponentImpl, TvSysUIComponentImpl.this.tvSysUIComponentImpl);
                 }
@@ -4786,7 +4791,7 @@ public final class DaggerTvGlobalRootComponent {
             this.provideNotificationLoggerProvider = DoubleCheck.provider(NotificationsModule_ProvideNotificationLoggerFactory.create(this.notificationListenerProvider, this.tvGlobalRootComponentImpl.provideUiBackgroundExecutorProvider, this.notifPipelineFlagsProvider, this.notifLiveDataStoreImplProvider, this.provideNotificationVisibilityProvider, this.provideNotificationEntryManagerProvider, this.notifPipelineProvider, this.statusBarStateControllerImplProvider, this.expansionStateLoggerProvider, this.provideNotificationPanelLoggerProvider));
             this.dynamicPrivacyControllerProvider = DoubleCheck.provider(DynamicPrivacyController_Factory.create(this.notificationLockscreenUserManagerImplProvider, this.keyguardStateControllerImplProvider, this.statusBarStateControllerImplProvider));
             this.dynamicChildBindControllerProvider = DynamicChildBindController_Factory.create(this.rowContentBindStageProvider);
-            this.provideNotificationViewHierarchyManagerProvider = DoubleCheck.provider(C2629x5356ea10.create(this.tvGlobalRootComponentImpl.contextProvider, this.tvGlobalRootComponentImpl.provideMainHandlerProvider, this.featureFlagsReleaseProvider, this.notificationLockscreenUserManagerImplProvider, this.notificationGroupManagerLegacyProvider, this.provideVisualStabilityManagerProvider, this.statusBarStateControllerImplProvider, this.provideNotificationEntryManagerProvider, this.keyguardBypassControllerProvider, this.setBubblesProvider, this.dynamicPrivacyControllerProvider, this.dynamicChildBindControllerProvider, this.lowPriorityInflationHelperProvider, this.assistantFeedbackControllerProvider, this.notifPipelineFlagsProvider, this.keyguardUpdateMonitorProvider, this.keyguardStateControllerImplProvider));
+            this.provideNotificationViewHierarchyManagerProvider = DoubleCheck.provider(C2635x5356ea10.create(this.tvGlobalRootComponentImpl.contextProvider, this.tvGlobalRootComponentImpl.provideMainHandlerProvider, this.featureFlagsReleaseProvider, this.notificationLockscreenUserManagerImplProvider, this.notificationGroupManagerLegacyProvider, this.provideVisualStabilityManagerProvider, this.statusBarStateControllerImplProvider, this.provideNotificationEntryManagerProvider, this.keyguardBypassControllerProvider, this.setBubblesProvider, this.dynamicPrivacyControllerProvider, this.dynamicChildBindControllerProvider, this.lowPriorityInflationHelperProvider, this.assistantFeedbackControllerProvider, this.notifPipelineFlagsProvider, this.keyguardUpdateMonitorProvider, this.keyguardStateControllerImplProvider));
             this.remoteInputQuickSettingsDisablerProvider = DoubleCheck.provider(RemoteInputQuickSettingsDisabler_Factory.create(this.tvGlobalRootComponentImpl.contextProvider, this.provideCommandQueueProvider, this.configurationControllerImplProvider));
             this.foregroundServiceNotificationListenerProvider = DoubleCheck.provider(ForegroundServiceNotificationListener_Factory.create(this.tvGlobalRootComponentImpl.contextProvider, this.foregroundServiceControllerProvider, this.provideNotificationEntryManagerProvider, this.notifPipelineProvider, this.bindSystemClockProvider));
             this.provideTimeTickHandlerProvider = DoubleCheck.provider(SysUIConcurrencyModule_ProvideTimeTickHandlerFactory.create());
@@ -4821,7 +4826,9 @@ public final class DaggerTvGlobalRootComponent {
             this.ambientStateExProvider = DoubleCheck.provider(AmbientStateEx_Factory.create());
             this.commandQueueExProvider = CommandQueueEx_Factory.create(this.provideCommandQueueProvider);
             this.calendarManagerProvider = DoubleCheck.provider(CalendarManager_Factory.create(this.tvGlobalRootComponentImpl.contextProvider, this.tvGlobalRootComponentImpl.provideMainHandlerProvider, this.keyguardUpdateMonitorProvider));
-            this.nTDependencyExProvider = DoubleCheck.provider(NTDependencyEx_Factory.create(this.tvGlobalRootComponentImpl.dumpManagerProvider, BatteryControllerImplEx_Factory.create(), BluetoothTileEx_Factory.create(), BrightnessControllerEx_Factory.create(), InternetTileEx_Factory.create(), this.nTColorControllerProvider, VolumeDialogImplEx_Factory.create(), WifiSignalControllerEx_Factory.create(), OngoingPrivacyChipEx_Factory.create(), PrivacyDialogEx_Factory.create(), PrivacyDialogControllerEx_Factory.create(), QSFragmentEx_Factory.create(), QSIconViewImplEx_Factory.create(), QSTileHostEx_Factory.create(), QSTileImplEx_Factory.create(), QSTileViewImplEx_Factory.create(), QuickStatusBarHeaderEx_Factory.create(), TileLayoutEx_Factory.create(), NavigationBarControllerEx_Factory.create(), NavigationBarEx_Factory.create(), NavigationBarViewEx_Factory.create(), NavigationBarInflaterViewEx_Factory.create(), NavigationModeControllerEx_Factory.create(), KeyButtonViewEx_Factory.create(), EdgeBackGestureHandlerEx_Factory.create(), this.keyguardWeatherControllerImplProvider, this.tvGlobalRootComponentImpl.aODControllerProvider, this.liftWakeGestureControllerProvider, this.centralSurfacesImplExProvider, DozeServiceHostEx_Factory.create(), this.nfcControllerImplProvider, this.teslaInfoControllerImplProvider, this.tvGlobalRootComponentImpl.keyguardUpdateMonitorExProvider, this.tvGlobalRootComponentImpl.keyguardViewMediatorExProvider, this.faceRecognitionControllerProvider, this.nTLightweightHeadsupManagerProvider, this.nTGameModeHelperProvider, this.headsUpControllerExProvider, this.falsingManagerProxyProvider, this.temperatureControllerProvider, this.keyguardIndicationControllerExProvider, MobileSignalControllerEx_Factory.create(), this.ambientStateExProvider, this.commandQueueExProvider, this.lockscreenShadeTransitionControllerProvider, this.scrimControllerProvider, this.calendarManagerProvider, LockIconViewControllerEx_Factory.create(), this.mediaDataManagerProvider, this.configurationControllerImplProvider));
+            this.assistManagerExProvider = DoubleCheck.provider(AssistManagerEx_Factory.create(this.tvGlobalRootComponentImpl.contextProvider));
+            this.notificationRoundnessManagerProvider = DoubleCheck.provider(NotificationRoundnessManager_Factory.create(this.notificationSectionsFeatureManagerProvider));
+            this.nTDependencyExProvider = DoubleCheck.provider(NTDependencyEx_Factory.create(this.tvGlobalRootComponentImpl.dumpManagerProvider, BatteryControllerImplEx_Factory.create(), BluetoothTileEx_Factory.create(), BrightnessControllerEx_Factory.create(), InternetTileEx_Factory.create(), this.nTColorControllerProvider, VolumeDialogImplEx_Factory.create(), WifiSignalControllerEx_Factory.create(), OngoingPrivacyChipEx_Factory.create(), PrivacyDialogEx_Factory.create(), PrivacyDialogControllerEx_Factory.create(), QSFragmentEx_Factory.create(), QSIconViewImplEx_Factory.create(), QSTileHostEx_Factory.create(), QSTileImplEx_Factory.create(), QSTileViewImplEx_Factory.create(), QuickStatusBarHeaderEx_Factory.create(), TileLayoutEx_Factory.create(), NavigationBarControllerEx_Factory.create(), NavigationBarEx_Factory.create(), NavigationBarViewEx_Factory.create(), NavigationBarInflaterViewEx_Factory.create(), NavigationModeControllerEx_Factory.create(), KeyButtonViewEx_Factory.create(), EdgeBackGestureHandlerEx_Factory.create(), this.keyguardWeatherControllerImplProvider, this.tvGlobalRootComponentImpl.aODControllerProvider, this.liftWakeGestureControllerProvider, this.centralSurfacesImplExProvider, DozeServiceHostEx_Factory.create(), this.nfcControllerImplProvider, this.teslaInfoControllerImplProvider, this.tvGlobalRootComponentImpl.keyguardUpdateMonitorExProvider, this.tvGlobalRootComponentImpl.keyguardViewMediatorExProvider, this.faceRecognitionControllerProvider, this.nTLightweightHeadsupManagerProvider, this.nTGameModeHelperProvider, this.headsUpControllerExProvider, this.falsingManagerProxyProvider, this.temperatureControllerProvider, this.keyguardIndicationControllerExProvider, MobileSignalControllerEx_Factory.create(), this.ambientStateExProvider, this.commandQueueExProvider, this.lockscreenShadeTransitionControllerProvider, this.scrimControllerProvider, this.calendarManagerProvider, LockIconViewControllerEx_Factory.create(), this.mediaDataManagerProvider, this.configurationControllerImplProvider, this.assistManagerExProvider, this.notificationRoundnessManagerProvider, this.tvGlobalRootComponentImpl.authRippleControllerExProvider));
             this.initControllerProvider = DoubleCheck.provider(InitController_Factory.create());
             this.mediaTttFlagsProvider = DoubleCheck.provider(MediaTttFlags_Factory.create(this.featureFlagsReleaseProvider));
             Provider<LogBuffer> provider3 = DoubleCheck.provider(LogModule_ProvideMediaTttSenderLogBufferFactory.create(this.logBufferFactoryProvider));
@@ -4854,7 +4861,6 @@ public final class DaggerTvGlobalRootComponent {
             this.notificationIconAreaControllerProvider = DoubleCheck.provider(NotificationIconAreaController_Factory.create(this.tvGlobalRootComponentImpl.contextProvider, this.statusBarStateControllerImplProvider, this.notificationWakeUpCoordinatorProvider, this.keyguardBypassControllerProvider, this.provideNotificationMediaManagerProvider, this.notificationListenerProvider, this.dozeParametersProvider, this.setBubblesProvider, this.provideDemoModeControllerProvider, this.darkIconDispatcherImplProvider, this.statusBarWindowControllerProvider, this.screenOffAnimationControllerProvider));
             this.optionalOfBcSmartspaceDataPluginProvider = DaggerTvGlobalRootComponent.absentJdkOptionalProvider();
             this.lockscreenSmartspaceControllerProvider = DoubleCheck.provider(LockscreenSmartspaceController_Factory.create(this.tvGlobalRootComponentImpl.contextProvider, this.featureFlagsReleaseProvider, this.tvGlobalRootComponentImpl.provideSmartspaceManagerProvider, this.provideActivityStarterProvider, this.falsingManagerProxyProvider, this.secureSettingsImplProvider, this.provideUserTrackerProvider, this.tvGlobalRootComponentImpl.provideContentResolverProvider, this.configurationControllerImplProvider, this.statusBarStateControllerImplProvider, this.providesDeviceProvisionedControllerProvider, this.tvGlobalRootComponentImpl.provideExecutionProvider, this.tvGlobalRootComponentImpl.provideMainExecutorProvider, this.tvGlobalRootComponentImpl.provideMainHandlerProvider, this.optionalOfBcSmartspaceDataPluginProvider));
-            this.notificationRoundnessManagerProvider = DoubleCheck.provider(NotificationRoundnessManager_Factory.create(this.notificationSectionsFeatureManagerProvider));
             this.pulseExpansionHandlerProvider = DoubleCheck.provider(PulseExpansionHandler_Factory.create(this.tvGlobalRootComponentImpl.contextProvider, this.notificationWakeUpCoordinatorProvider, this.keyguardBypassControllerProvider, this.provideHeadsUpManagerPhoneProvider, this.notificationRoundnessManagerProvider, this.configurationControllerImplProvider, this.statusBarStateControllerImplProvider, this.falsingManagerProxyProvider, this.lockscreenShadeTransitionControllerProvider, this.falsingCollectorImplProvider, this.tvGlobalRootComponentImpl.dumpManagerProvider));
             this.dozeServiceHostProvider = DoubleCheck.provider(DozeServiceHost_Factory.create(this.dozeLogProvider, this.tvGlobalRootComponentImpl.providePowerManagerProvider, this.wakefulnessLifecycleProvider, this.statusBarStateControllerImplProvider, this.providesDeviceProvisionedControllerProvider, this.provideHeadsUpManagerPhoneProvider, this.provideBatteryControllerProvider, this.scrimControllerProvider, this.biometricUnlockControllerProvider, this.newKeyguardViewMediatorProvider, this.assistManagerProvider, this.dozeScrimControllerProvider, this.keyguardUpdateMonitorProvider, this.pulseExpansionHandlerProvider, this.provideSysUIUnfoldComponentProvider, this.notificationShadeWindowControllerImplProvider, this.notificationWakeUpCoordinatorProvider, this.authControllerProvider, this.notificationIconAreaControllerProvider));
             this.provideProximityCheckProvider = SensorModule_ProvideProximityCheckFactory.create(this.provideProximitySensorProvider, this.tvGlobalRootComponentImpl.provideMainDelayableExecutorProvider);
@@ -4906,10 +4912,10 @@ public final class DaggerTvGlobalRootComponent {
             this.oneHandedModeTileProvider = OneHandedModeTile_Factory.create(this.qSTileHostProvider, this.provideBgLooperProvider, this.tvGlobalRootComponentImpl.provideMainHandlerProvider, this.falsingManagerProxyProvider, this.tvGlobalRootComponentImpl.provideMetricsLoggerProvider, this.statusBarStateControllerImplProvider, this.provideActivityStarterProvider, this.qSLoggerProvider, this.provideUserTrackerProvider, this.secureSettingsImplProvider);
             this.batteryShareControllerImplProvider = DoubleCheck.provider(BatteryShareControllerImpl_Factory.create(this.tvGlobalRootComponentImpl.contextProvider, this.provideBatteryControllerProvider));
             this.batteryShareTileProvider = BatteryShareTile_Factory.create(this.qSTileHostProvider, this.provideBgLooperProvider, this.tvGlobalRootComponentImpl.provideMainHandlerProvider, this.falsingManagerProxyProvider, this.tvGlobalRootComponentImpl.provideMetricsLoggerProvider, this.statusBarStateControllerImplProvider, this.provideActivityStarterProvider, this.qSLoggerProvider, this.batteryShareControllerImplProvider);
-            this.glyphsControllerImplProvider = DoubleCheck.provider(GlyphsControllerImpl_Factory.create(this.tvGlobalRootComponentImpl.contextProvider));
         }
 
         private void initialize7(LeakModule leakModule, NightDisplayListenerModule nightDisplayListenerModule, SharedLibraryModule sharedLibraryModule, KeyguardModule keyguardModule, SysUIUnfoldModule sysUIUnfoldModule, Optional<Pip> optional, Optional<LegacySplitScreen> optional2, Optional<SplitScreen> optional3, Optional<AppPairs> optional4, Optional<OneHanded> optional5, Optional<Bubbles> optional6, Optional<TaskViewFactory> optional7, Optional<HideDisplayCutout> optional8, Optional<ShellCommandHandler> optional9, ShellTransitions shellTransitions, Optional<StartingSurface> optional10, Optional<DisplayAreaHelper> optional11, Optional<TaskSurfaceHelper> optional12, Optional<RecentTasks> optional13, Optional<CompatUI> optional14, Optional<DragAndDrop> optional15, Optional<BackAnimation> optional16) {
+            this.glyphsControllerImplProvider = DoubleCheck.provider(GlyphsControllerImpl_Factory.create(this.tvGlobalRootComponentImpl.contextProvider));
             this.glyphsTileProvider = GlyphsTile_Factory.create(this.qSTileHostProvider, this.provideBgLooperProvider, this.tvGlobalRootComponentImpl.provideMainHandlerProvider, this.falsingManagerProxyProvider, this.tvGlobalRootComponentImpl.provideMetricsLoggerProvider, this.statusBarStateControllerImplProvider, this.provideActivityStarterProvider, this.qSLoggerProvider, this.glyphsControllerImplProvider);
             ColorCorrectionTile_Factory create = ColorCorrectionTile_Factory.create(this.qSTileHostProvider, this.provideBgLooperProvider, this.tvGlobalRootComponentImpl.provideMainHandlerProvider, this.falsingManagerProxyProvider, this.tvGlobalRootComponentImpl.provideMetricsLoggerProvider, this.statusBarStateControllerImplProvider, this.provideActivityStarterProvider, this.qSLoggerProvider, this.provideUserTrackerProvider, this.secureSettingsImplProvider);
             this.colorCorrectionTileProvider = create;
@@ -4921,7 +4927,7 @@ public final class DaggerTvGlobalRootComponent {
             this.provideAutoTileManagerProvider = QSModule_ProvideAutoTileManagerFactory.create(this.tvGlobalRootComponentImpl.contextProvider, this.builderProvider6, this.qSTileHostProvider, this.provideBgHandlerProvider, this.secureSettingsImplProvider, this.hotspotControllerImplProvider, this.provideDataSaverControllerProvider, this.managedProfileControllerImplProvider, this.provideNightDisplayListenerProvider, this.castControllerImplProvider, this.reduceBrightColorsControllerProvider, this.deviceControlsControllerImplProvider, this.walletControllerImplProvider, this.safetyControllerProvider, this.isReduceBrightColorsAvailableProvider);
             this.builderProvider7 = DoubleCheck.provider(TileServiceRequestController_Builder_Factory.create(this.provideCommandQueueProvider, this.commandRegistryProvider));
             this.packageManagerAdapterProvider = PackageManagerAdapter_Factory.create(this.tvGlobalRootComponentImpl.contextProvider);
-            C4822TileLifecycleManager_Factory create2 = C4822TileLifecycleManager_Factory.create(this.tvGlobalRootComponentImpl.provideMainHandlerProvider, this.tvGlobalRootComponentImpl.contextProvider, this.tileServicesProvider, this.packageManagerAdapterProvider, this.broadcastDispatcherProvider);
+            C4834TileLifecycleManager_Factory create2 = C4834TileLifecycleManager_Factory.create(this.tvGlobalRootComponentImpl.provideMainHandlerProvider, this.tvGlobalRootComponentImpl.contextProvider, this.tileServicesProvider, this.packageManagerAdapterProvider, this.broadcastDispatcherProvider);
             this.tileLifecycleManagerProvider = create2;
             this.factoryProvider9 = TileLifecycleManager_Factory_Impl.create(create2);
             DelegateFactory.setDelegate(this.qSTileHostProvider, DoubleCheck.provider(QSTileHost_Factory.create(this.tvGlobalRootComponentImpl.contextProvider, this.statusBarIconControllerImplProvider, this.qSFactoryImplProvider, this.tvGlobalRootComponentImpl.provideMainHandlerProvider, this.provideBgLooperProvider, this.tvGlobalRootComponentImpl.providesPluginManagerProvider, this.tunerServiceImplProvider, this.provideAutoTileManagerProvider, this.tvGlobalRootComponentImpl.dumpManagerProvider, this.broadcastDispatcherProvider, this.optionalOfCentralSurfacesProvider, this.qSLoggerProvider, this.tvGlobalRootComponentImpl.provideUiEventLoggerProvider, this.provideUserTrackerProvider, this.secureSettingsImplProvider, this.customTileStatePersisterProvider, this.builderProvider7, this.factoryProvider9)));
@@ -4930,7 +4936,7 @@ public final class DaggerTvGlobalRootComponent {
             this.provideQSFragmentDisableLogBufferProvider = DoubleCheck.provider(LogModule_ProvideQSFragmentDisableLogBufferFactory.create(this.logBufferFactoryProvider));
             this.disableFlagsLoggerProvider = DoubleCheck.provider(DisableFlagsLogger_Factory.create());
             this.privacyDialogControllerProvider = DoubleCheck.provider(PrivacyDialogController_Factory.create(this.tvGlobalRootComponentImpl.providePermissionManagerProvider, this.tvGlobalRootComponentImpl.providePackageManagerProvider, this.privacyItemControllerProvider, this.provideUserTrackerProvider, this.provideActivityStarterProvider, this.provideBackgroundExecutorProvider, this.tvGlobalRootComponentImpl.provideMainExecutorProvider, this.privacyLoggerProvider, this.keyguardStateControllerImplProvider, this.appOpsControllerImplProvider, this.tvGlobalRootComponentImpl.provideUiEventLoggerProvider));
-            this.subscriptionManagerSlotIndexResolverProvider = DoubleCheck.provider(C2356xf95dc14f.create());
+            this.subscriptionManagerSlotIndexResolverProvider = DoubleCheck.provider(C2359xf95dc14f.create());
             UserDetailView_Adapter_Factory create3 = UserDetailView_Adapter_Factory.create(this.tvGlobalRootComponentImpl.contextProvider, this.userSwitcherControllerProvider, this.tvGlobalRootComponentImpl.provideUiEventLoggerProvider, this.falsingManagerProxyProvider);
             this.adapterProvider = create3;
             this.userSwitchDialogControllerProvider = DoubleCheck.provider(UserSwitchDialogController_Factory.create(create3, this.provideActivityStarterProvider, this.falsingManagerProxyProvider, this.provideDialogLaunchAnimatorProvider, this.tvGlobalRootComponentImpl.provideUiEventLoggerProvider));
@@ -5066,6 +5072,8 @@ public final class DaggerTvGlobalRootComponent {
         /* access modifiers changed from: private */
         public Provider<AODController> aODControllerProvider;
         private Provider<ATraceLoggerTransitionProgressListener> aTraceLoggerTransitionProgressListenerProvider;
+        /* access modifiers changed from: private */
+        public Provider<AuthRippleControllerEx> authRippleControllerExProvider;
         private final Context context;
         /* access modifiers changed from: private */
         public Provider<Context> contextProvider;
@@ -5248,7 +5256,7 @@ public final class DaggerTvGlobalRootComponent {
         public Provider<SensorManager> providesSensorManagerProvider;
         /* access modifiers changed from: private */
         public Provider<QSExpansionPathInterpolator> qSExpansionPathInterpolatorProvider;
-        private C4830ScaleAwareTransitionProgressProvider_Factory scaleAwareTransitionProgressProvider;
+        private C4842ScaleAwareTransitionProgressProvider_Factory scaleAwareTransitionProgressProvider;
         /* access modifiers changed from: private */
         public Provider<ScreenLifecycle> screenLifecycleProvider;
         private Provider<ScreenStatusProvider> screenStatusProvider;
@@ -5289,7 +5297,7 @@ public final class DaggerTvGlobalRootComponent {
             this.provideUnfoldTransitionConfigProvider = DoubleCheck.provider(UnfoldTransitionModule_ProvideUnfoldTransitionConfigFactory.create(unfoldTransitionModule, this.contextProvider));
             Provider<ContentResolver> provider = DoubleCheck.provider(FrameworkServicesModule_ProvideContentResolverFactory.create(this.contextProvider));
             this.provideContentResolverProvider = provider;
-            C4830ScaleAwareTransitionProgressProvider_Factory create = C4830ScaleAwareTransitionProgressProvider_Factory.create(provider);
+            C4842ScaleAwareTransitionProgressProvider_Factory create = C4842ScaleAwareTransitionProgressProvider_Factory.create(provider);
             this.scaleAwareTransitionProgressProvider = create;
             this.factoryProvider = ScaleAwareTransitionProgressProvider_Factory_Impl.create(create);
             UnfoldTransitionModule_TracingTagPrefixFactory create2 = UnfoldTransitionModule_TracingTagPrefixFactory.create(unfoldTransitionModule);
@@ -5352,10 +5360,10 @@ public final class DaggerTvGlobalRootComponent {
             this.provideTelephonyManagerProvider = DoubleCheck.provider(FrameworkServicesModule_ProvideTelephonyManagerFactory.create(this.contextProvider));
             this.provideLatencyTrackerProvider = DoubleCheck.provider(FrameworkServicesModule_ProvideLatencyTrackerFactory.create(this.contextProvider));
             this.provideIDreamManagerProvider = DoubleCheck.provider(FrameworkServicesModule_ProvideIDreamManagerFactory.create());
-            this.provideAmbientDisplayConfigurationProvider = C2053x19afde28.create(frameworkServicesModule, this.contextProvider);
-            Provider<Optional<NaturalRotationUnfoldProgressProvider>> provider9 = DoubleCheck.provider(C3239xd9485442.create(unfoldTransitionModule, this.contextProvider, this.provideIWindowManagerProvider, this.unfoldTransitionProgressProvider));
+            this.provideAmbientDisplayConfigurationProvider = C2055x19afde28.create(frameworkServicesModule, this.contextProvider);
+            Provider<Optional<NaturalRotationUnfoldProgressProvider>> provider9 = DoubleCheck.provider(C3249xd9485442.create(unfoldTransitionModule, this.contextProvider, this.provideIWindowManagerProvider, this.unfoldTransitionProgressProvider));
             this.provideNaturalRotationProgressProvider = provider9;
-            this.provideStatusBarScopedTransitionProvider = DoubleCheck.provider(C3240x6e72e9f0.create(unfoldTransitionModule, provider9));
+            this.provideStatusBarScopedTransitionProvider = DoubleCheck.provider(C3250x6e72e9f0.create(unfoldTransitionModule, provider9));
             this.provideIStatusBarServiceProvider = DoubleCheck.provider(FrameworkServicesModule_ProvideIStatusBarServiceFactory.create());
             this.providesChoreographerProvider = DoubleCheck.provider(FrameworkServicesModule_ProvidesChoreographerFactory.create(frameworkServicesModule));
             this.provideNotificationMessagingUtilProvider = AndroidInternalsModule_ProvideNotificationMessagingUtilFactory.create(androidInternalsModule, this.contextProvider);
@@ -5395,13 +5403,14 @@ public final class DaggerTvGlobalRootComponent {
             Provider<KeyguardUpdateMonitorEx> provider11 = DoubleCheck.provider(KeyguardUpdateMonitorEx_Factory.create());
             this.keyguardUpdateMonitorExProvider = provider11;
             this.keyguardViewMediatorExProvider = DoubleCheck.provider(KeyguardViewMediatorEx_Factory.create(this.providePowerManagerProvider, provider11));
+            this.authRippleControllerExProvider = DoubleCheck.provider(AuthRippleControllerEx_Factory.create(this.contextProvider));
             this.provideOptionalTelecomManagerProvider = DoubleCheck.provider(FrameworkServicesModule_ProvideOptionalTelecomManagerFactory.create(this.contextProvider));
             this.provideInputMethodManagerProvider = DoubleCheck.provider(FrameworkServicesModule_ProvideInputMethodManagerFactory.create(this.contextProvider));
             this.provideSmartspaceManagerProvider = DoubleCheck.provider(FrameworkServicesModule_ProvideSmartspaceManagerFactory.create(this.contextProvider));
-            this.provideUiModeManagerProvider = DoubleCheck.provider(FrameworkServicesModule_ProvideUiModeManagerFactory.create(this.contextProvider));
         }
 
         private void initialize2(GlobalModule globalModule2, AndroidInternalsModule androidInternalsModule, FrameworkServicesModule frameworkServicesModule, UnfoldTransitionModule unfoldTransitionModule, UnfoldSharedModule unfoldSharedModule, Context context2) {
+            this.provideUiModeManagerProvider = DoubleCheck.provider(FrameworkServicesModule_ProvideUiModeManagerFactory.create(this.contextProvider));
             this.provideDisplayIdProvider = FrameworkServicesModule_ProvideDisplayIdFactory.create(this.contextProvider);
             this.provideSafetyCenterManagerProvider = DoubleCheck.provider(FrameworkServicesModule_ProvideSafetyCenterManagerFactory.create(this.contextProvider));
             this.qSExpansionPathInterpolatorProvider = DoubleCheck.provider(QSExpansionPathInterpolator_Factory.create());

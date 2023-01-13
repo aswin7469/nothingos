@@ -11,6 +11,6 @@ public final /* synthetic */ class SidefpsController$1$$ExternalSyntheticLambda1
     }
 
     public final void run() {
-        SidefpsController.C19731.m2575hide$lambda1(this.f$0);
+        SidefpsController.C19741.m2581hide$lambda1(this.f$0);
     }
 }

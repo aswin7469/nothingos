@@ -11,6 +11,6 @@ public final /* synthetic */ class RemoteInputView$$ExternalSyntheticLambda0 imp
     }
 
     public final void onClick(View view) {
-        this.f$0.mo45959xd8e6eb5a(view);
+        this.f$0.mo45971xd8e6eb5a(view);
     }
 }

@@ -10,6 +10,6 @@ public final /* synthetic */ class BackAnimationController$$ExternalSyntheticLam
     }
 
     public final void run() {
-        this.f$0.m3407lambda$new$0$comandroidwmshellbackBackAnimationController();
+        this.f$0.m3411lambda$new$0$comandroidwmshellbackBackAnimationController();
     }
 }

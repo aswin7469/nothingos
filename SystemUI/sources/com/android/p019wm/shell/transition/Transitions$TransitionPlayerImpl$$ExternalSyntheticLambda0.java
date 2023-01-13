@@ -23,6 +23,6 @@ public final /* synthetic */ class Transitions$TransitionPlayerImpl$$ExternalSyn
     }
 
     public final void run() {
-        this.f$0.mo51300x7172b0d0(this.f$1, this.f$2, this.f$3, this.f$4);
+        this.f$0.mo51311x7172b0d0(this.f$1, this.f$2, this.f$3, this.f$4);
     }
 }

@@ -11,6 +11,6 @@ public final /* synthetic */ class PeopleHubManager$$ExternalSyntheticLambda0 im
     }
 
     public final boolean test(Object obj) {
-        return PeopleHubManager.m3130addActivePerson$lambda1(this.f$0, (PersonModel) obj);
+        return PeopleHubManager.m3134addActivePerson$lambda1(this.f$0, (PersonModel) obj);
     }
 }

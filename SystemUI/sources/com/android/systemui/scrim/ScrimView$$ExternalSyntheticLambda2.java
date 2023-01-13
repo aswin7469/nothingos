@@ -9,6 +9,6 @@ public final /* synthetic */ class ScrimView$$ExternalSyntheticLambda2 implement
     }
 
     public final void run() {
-        this.f$0.m3005lambda$new$0$comandroidsystemuiscrimScrimView();
+        this.f$0.m3009lambda$new$0$comandroidsystemuiscrimScrimView();
     }
 }

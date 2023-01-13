@@ -12,6 +12,6 @@ public final /* synthetic */ class KeyguardWeatherControllerImpl$$ExternalSynthe
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo57465x5218f0f((KeyguardWeatherController.Callback) obj);
+        this.f$0.mo57486x5218f0f((KeyguardWeatherController.Callback) obj);
     }
 }

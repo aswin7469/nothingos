@@ -11,6 +11,6 @@ public final /* synthetic */ class AuthController$$ExternalSyntheticLambda1 impl
     }
 
     public final Object invoke() {
-        return this.f$0.m2557lambda$new$0$comandroidsystemuibiometricsAuthController();
+        return this.f$0.m2563lambda$new$0$comandroidsystemuibiometricsAuthController();
     }
 }

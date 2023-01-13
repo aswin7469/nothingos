@@ -12,6 +12,6 @@ public final /* synthetic */ class AndroidFuture$ThenCombine$$ExternalSyntheticL
     }
 
     public final void accept(Object obj, Object obj2) {
-        this.f$0.mo27776x5f255859(obj, (Throwable) obj2);
+        this.f$0.mo27777x5f255859(obj, (Throwable) obj2);
     }
 }

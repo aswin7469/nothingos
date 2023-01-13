@@ -10,6 +10,6 @@ public final /* synthetic */ class PipTouchHandler$$ExternalSyntheticLambda2 imp
     }
 
     public final void run() {
-        this.f$0.m3476lambda$new$0$comandroidwmshellpipphonePipTouchHandler();
+        this.f$0.m3480lambda$new$0$comandroidwmshellpipphonePipTouchHandler();
     }
 }

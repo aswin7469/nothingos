@@ -707,13 +707,16 @@
     <string name="force_rtl_layout_all_locales">強制使用從右至左的版面配置方向</string>
     <string name="force_rtl_layout_all_locales_summary">強制將所有語言代碼的畫面配置方向改為從右至左</string>
     <string name="forced_resizable_secondary_display">應用程式可能無法在次要顯示屏上運作。</string>
-    <string name="game_mode">遊戲模式</string>
-    <string name="game_mode_notification_content">點擊至設定</string>
-    <string name="game_mode_notification_title">遊戲模式運行中</string>
     <string name="game_status">正在玩遊戲</string>
+    <string name="gamemode_description">遊戲模式會確定您是否正在遊戲，並會自動為您啟用</string>
+    <string name="gamemode_gamedashboard_title">遊戲儀表板</string>
+    <string name="gamemode_notification_content">輕觸以前往「設定」</string>
+    <string name="gamemode_notification_title">遊戲模式目前處於啟用狀態</string>
     <string name="global_action_lock_message">解鎖手機以存取更多選項</string>
     <string name="global_action_screenshot">螢幕截圖</string>
     <string name="global_action_smart_lock_disabled">Smart Lock 已停用</string>
+    <string name="gm_guide_status_on">開</string>
+    <string name="gm_notification_title">遊戲模式</string>
     <string name="go_to_web">前往瀏覽器</string>
     <string name="got_it">知道了</string>
     <string name="guest_exit_guest">移除訪客</string>
@@ -1204,7 +1207,6 @@
     <string name="oem_unlock_enable">原始設備製造商 (OEM) 解鎖</string>
     <string name="oem_unlock_enable_summary">允許 Bootloader 被解鎖</string>
     <string name="okay">確定</string>
-    <string name="on">開啟</string>
     <string name="one_handed_tutorial_description">如要退出，請從螢幕底部向上滑動，或輕按應用程式上方的任何位置</string>
     <string name="one_handed_tutorial_title">使用單手模式</string>
     <string name="one_week_timestamp">1 週前</string>

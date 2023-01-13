@@ -122,14 +122,14 @@ public class VisualStabilityCoordinator implements Coordinator, Dumpable, NotifP
         }
     };
 
-    /* JADX WARNING: type inference failed for: r2v2, types: [byte, boolean] */
+    /* JADX WARNING: type inference failed for: r2v2, types: [boolean, byte] */
     static /* synthetic */ boolean access$076(VisualStabilityCoordinator visualStabilityCoordinator, int i) {
         ? r2 = (byte) (i | visualStabilityCoordinator.mIsSuppressingPipelineRun);
         visualStabilityCoordinator.mIsSuppressingPipelineRun = r2;
         return r2;
     }
 
-    /* JADX WARNING: type inference failed for: r2v2, types: [byte, boolean] */
+    /* JADX WARNING: type inference failed for: r2v2, types: [boolean, byte] */
     static /* synthetic */ boolean access$176(VisualStabilityCoordinator visualStabilityCoordinator, int i) {
         ? r2 = (byte) (i | visualStabilityCoordinator.mIsSuppressingGroupChange);
         visualStabilityCoordinator.mIsSuppressingGroupChange = r2;
@@ -197,7 +197,7 @@ public class VisualStabilityCoordinator implements Coordinator, Dumpable, NotifP
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$temporarilyAllowSectionChanges$0$com-android-systemui-statusbar-notification-collection-coordinator-VisualStabilityCoordinator */
-    public /* synthetic */ void mo40310x23f5a63b(String str) {
+    public /* synthetic */ void mo40313x23f5a63b(String str) {
         this.mEntriesThatCanChangeSection.remove(str);
     }
 

@@ -249,7 +249,7 @@ public class InetAddress implements Serializable {
     }
 
     public static InetAddress getLocalHost() throws UnknownHostException {
-        return impl.lookupAllHostAddr(Libcore.f857os.uname().nodename, 0)[0];
+        return impl.lookupAllHostAddr(Libcore.f855os.uname().nodename, 0)[0];
     }
 
     static InetAddress anyLocalAddress() {

@@ -102,7 +102,7 @@ class DateTimeTextProvider {
         if (chronology == IsoChronology.INSTANCE || !(temporalField instanceof ChronoField)) {
             return getTextIterator(temporalField, textStyle, locale);
         }
-        int i2 = C28832.$SwitchMap$java$time$temporal$ChronoField[((ChronoField) temporalField).ordinal()];
+        int i2 = C28892.$SwitchMap$java$time$temporal$ChronoField[((ChronoField) temporalField).ordinal()];
         int i3 = 0;
         if (i2 == 1) {
             i = 0;
@@ -148,7 +148,7 @@ class DateTimeTextProvider {
     }
 
     /* renamed from: java.time.format.DateTimeTextProvider$2 */
-    static /* synthetic */ class C28832 {
+    static /* synthetic */ class C28892 {
         static final /* synthetic */ int[] $SwitchMap$java$time$temporal$ChronoField;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(8:0|1|2|3|4|5|6|(3:7|8|10)) */
@@ -187,7 +187,7 @@ class DateTimeTextProvider {
             L_0x0033:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: java.time.format.DateTimeTextProvider.C28832.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: java.time.format.DateTimeTextProvider.C28892.<clinit>():void");
         }
     }
 

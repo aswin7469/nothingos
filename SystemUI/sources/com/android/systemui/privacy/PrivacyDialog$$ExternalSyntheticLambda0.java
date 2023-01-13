@@ -12,6 +12,6 @@ public final /* synthetic */ class PrivacyDialog$$ExternalSyntheticLambda0 imple
     }
 
     public final void onClick(View view) {
-        PrivacyDialog.m2871clickListener$lambda4(this.f$0, view);
+        PrivacyDialog.m2876clickListener$lambda4(this.f$0, view);
     }
 }

@@ -13,6 +13,6 @@ public final /* synthetic */ class InternetDialogController$$ExternalSyntheticLa
     }
 
     public final Object apply(Object obj) {
-        return this.f$0.mo37059x3d598bed((SubscriptionInfo) obj);
+        return this.f$0.mo37058x3d598bed((SubscriptionInfo) obj);
     }
 }

@@ -11,6 +11,6 @@ public final /* synthetic */ class AuthBiometricView$$ExternalSyntheticLambda3 i
     }
 
     public final void onClick(View view) {
-        this.f$0.m2552lambda$new$0$comandroidsystemuibiometricsAuthBiometricView(view);
+        this.f$0.m2558lambda$new$0$comandroidsystemuibiometricsAuthBiometricView(view);
     }
 }

@@ -126,19 +126,19 @@ class NumPadAnimator {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$createAnimators$0$com-android-keyguard-NumPadAnimator  reason: not valid java name */
-    public /* synthetic */ void m2304lambda$createAnimators$0$comandroidkeyguardNumPadAnimator(ValueAnimator valueAnimator) {
+    public /* synthetic */ void m2310lambda$createAnimators$0$comandroidkeyguardNumPadAnimator(ValueAnimator valueAnimator) {
         this.mBackground.setCornerRadius(((Float) valueAnimator.getAnimatedValue()).floatValue());
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$createAnimators$1$com-android-keyguard-NumPadAnimator  reason: not valid java name */
-    public /* synthetic */ void m2305lambda$createAnimators$1$comandroidkeyguardNumPadAnimator(ValueAnimator valueAnimator) {
+    public /* synthetic */ void m2311lambda$createAnimators$1$comandroidkeyguardNumPadAnimator(ValueAnimator valueAnimator) {
         this.mBackground.setColor(((Integer) valueAnimator.getAnimatedValue()).intValue());
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$createAnimators$2$com-android-keyguard-NumPadAnimator  reason: not valid java name */
-    public /* synthetic */ void m2306lambda$createAnimators$2$comandroidkeyguardNumPadAnimator(ValueAnimator valueAnimator) {
+    public /* synthetic */ void m2312lambda$createAnimators$2$comandroidkeyguardNumPadAnimator(ValueAnimator valueAnimator) {
         TextView textView = this.mDigitTextView;
         if (textView != null) {
             textView.setTextColor(((Integer) valueAnimator.getAnimatedValue()).intValue());
@@ -151,19 +151,19 @@ class NumPadAnimator {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$createAnimators$3$com-android-keyguard-NumPadAnimator  reason: not valid java name */
-    public /* synthetic */ void m2307lambda$createAnimators$3$comandroidkeyguardNumPadAnimator(ValueAnimator valueAnimator) {
+    public /* synthetic */ void m2313lambda$createAnimators$3$comandroidkeyguardNumPadAnimator(ValueAnimator valueAnimator) {
         this.mBackground.setCornerRadius(((Float) valueAnimator.getAnimatedValue()).floatValue());
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$createAnimators$4$com-android-keyguard-NumPadAnimator  reason: not valid java name */
-    public /* synthetic */ void m2308lambda$createAnimators$4$comandroidkeyguardNumPadAnimator(ValueAnimator valueAnimator) {
+    public /* synthetic */ void m2314lambda$createAnimators$4$comandroidkeyguardNumPadAnimator(ValueAnimator valueAnimator) {
         this.mBackground.setColor(((Integer) valueAnimator.getAnimatedValue()).intValue());
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$createAnimators$5$com-android-keyguard-NumPadAnimator  reason: not valid java name */
-    public /* synthetic */ void m2309lambda$createAnimators$5$comandroidkeyguardNumPadAnimator(ValueAnimator valueAnimator) {
+    public /* synthetic */ void m2315lambda$createAnimators$5$comandroidkeyguardNumPadAnimator(ValueAnimator valueAnimator) {
         TextView textView = this.mDigitTextView;
         if (textView != null) {
             textView.setTextColor(((Integer) valueAnimator.getAnimatedValue()).intValue());

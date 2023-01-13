@@ -11,6 +11,6 @@ public final /* synthetic */ class NotifUiAdjustmentProvider$$ExternalSyntheticL
     }
 
     public final void onNotificationStateChanged() {
-        NotifUiAdjustmentProvider.m3116notifStateChangedListener$lambda0(this.f$0);
+        NotifUiAdjustmentProvider.m3120notifStateChangedListener$lambda0(this.f$0);
     }
 }

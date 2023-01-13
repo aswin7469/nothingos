@@ -708,9 +708,15 @@
     <string name="force_rtl_layout_all_locales_summary">सभी भाषाओं के लिए स्क्रीन लेआउट की दिशा दाएं से बाएं रखें</string>
     <string name="forced_resizable_secondary_display">हो सकता है कि ऐप प्राइमरी (मुख्य) डिस्प्ले के अलावा बाकी दूसरे डिस्प्ले पर काम न करे.</string>
     <string name="game_status">खेला जा रहा है</string>
+    <string name="gamemode_description">गेम मोड निर्धारित करेगा कि आप गेम में हैं या नहीं और स्वचालित रूप से आपके लिए चालू हो जाएगा</string>
+    <string name="gamemode_gamedashboard_title">गेम डैशबोर्ड</string>
+    <string name="gamemode_notification_content">सेटिंग पर जाने के लिए टैप करें</string>
+    <string name="gamemode_notification_title">गेम मोड वर्तमान में चालू है</string>
     <string name="global_action_lock_message">ज़्यादा विकल्प देखने के लिए, अपना फ़ोन अनलॉक करें</string>
     <string name="global_action_screenshot">स्क्रीनशॉट</string>
     <string name="global_action_smart_lock_disabled">Smart Lock की सुविधा बंद कर दी गई है</string>
+    <string name="gm_guide_status_on">चालू</string>
+    <string name="gm_notification_title">गेम मोड</string>
     <string name="go_to_web">ब्राउज़र पर जाएं</string>
     <string name="got_it">ठीक है</string>
     <string name="guest_exit_guest">मेहमान हटाएं</string>

@@ -7,7 +7,7 @@ import java.util.function.Function;
 public class Preconditions {
     private static RuntimeException outOfBounds(BiFunction<String, List<Integer>, ? extends RuntimeException> biFunction, String str, Integer... numArr) {
         RuntimeException runtimeException;
-        List of = List.m1733of((E[]) numArr);
+        List of = List.m1739of((E[]) numArr);
         if (biFunction == null) {
             runtimeException = null;
         } else {

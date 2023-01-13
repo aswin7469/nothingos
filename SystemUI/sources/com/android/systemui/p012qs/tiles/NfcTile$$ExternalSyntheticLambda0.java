@@ -10,6 +10,6 @@ public final /* synthetic */ class NfcTile$$ExternalSyntheticLambda0 implements 
     }
 
     public final void run() {
-        this.f$0.m2980lambda$handleClick$0$comandroidsystemuiqstilesNfcTile();
+        this.f$0.m2984lambda$handleClick$0$comandroidsystemuiqstilesNfcTile();
     }
 }

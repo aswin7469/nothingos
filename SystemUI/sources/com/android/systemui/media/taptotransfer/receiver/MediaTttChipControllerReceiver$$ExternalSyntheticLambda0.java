@@ -17,6 +17,6 @@ public final /* synthetic */ class MediaTttChipControllerReceiver$$ExternalSynth
     }
 
     public final void onDrawableLoaded(Drawable drawable) {
-        MediaTttChipControllerReceiver.m2844updateMediaTapToTransferReceiverDisplay$lambda0(this.f$0, this.f$1, this.f$2, drawable);
+        MediaTttChipControllerReceiver.m2849updateMediaTapToTransferReceiverDisplay$lambda0(this.f$0, this.f$1, this.f$2, drawable);
     }
 }

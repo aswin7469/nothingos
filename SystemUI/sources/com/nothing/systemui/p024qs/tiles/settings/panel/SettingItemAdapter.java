@@ -1,6 +1,7 @@
 package com.nothing.systemui.p024qs.tiles.settings.panel;
 
 import android.content.Context;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,9 +19,8 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
-import com.android.settingslib.Utils;
 import com.android.settingslib.bluetooth.CachedBluetoothDevice;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.nothing.p023os.device.DeviceConstant;
 import com.nothing.systemui.NTDependencyEx;
 import com.nothing.systemui.p024qs.tiles.BluetoothTileEx;
@@ -60,7 +60,7 @@ public class SettingItemAdapter extends RecyclerView.Adapter<SettingItemViewHold
         }
 
         public void onDeviceServiceDisConnected() {
-            NTLogUtil.m1680d(SettingItemAdapter.TAG, "onDeviceServiceDisConnected isAnimShow: " + SettingItemAdapter.this.mIsBtPanelAnimating);
+            NTLogUtil.m1686d(SettingItemAdapter.TAG, "onDeviceServiceDisConnected isAnimShow: " + SettingItemAdapter.this.mIsBtPanelAnimating);
             if (!SettingItemAdapter.this.mIsBtPanelAnimating) {
                 SettingItemAdapter.this.notifyDataSetChanged();
             }
@@ -69,12 +69,12 @@ public class SettingItemAdapter extends RecyclerView.Adapter<SettingItemViewHold
         /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v0, resolved type: java.lang.String} */
         /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v0, resolved type: com.nothing.systemui.qs.tiles.settings.panel.BluetoothQuickPanelSoundLayout} */
         /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v1, resolved type: java.lang.String} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v41, resolved type: com.nothing.systemui.qs.tiles.settings.panel.BluetoothQuickPanelSoundLayout} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v7, resolved type: java.lang.String} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v44, resolved type: com.nothing.systemui.qs.tiles.settings.panel.BluetoothQuickPanelSoundLayout} */
+        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v31, resolved type: com.nothing.systemui.qs.tiles.settings.panel.BluetoothQuickPanelSoundLayout} */
+        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v2, resolved type: java.lang.String} */
+        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v34, resolved type: com.nothing.systemui.qs.tiles.settings.panel.BluetoothQuickPanelSoundLayout} */
+        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v3, resolved type: java.lang.String} */
         /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v8, resolved type: java.lang.String} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v13, resolved type: java.lang.String} */
-        /* JADX WARNING: type inference failed for: r0v12, types: [com.nothing.systemui.qs.tiles.settings.panel.BluetoothQuickPanelSoundLayout] */
+        /* JADX WARNING: type inference failed for: r0v7, types: [com.nothing.systemui.qs.tiles.settings.panel.BluetoothQuickPanelSoundLayout] */
         /* JADX WARNING: Multi-variable type inference failed */
         /* Code decompiled incorrectly, please refer to instructions dump. */
         public void onSuccess(int r12, android.os.Bundle r13) {
@@ -102,7 +102,7 @@ public class SettingItemAdapter extends RecyclerView.Adapter<SettingItemViewHold
                 r4 = 3
                 r5 = 610(0x262, float:8.55E-43)
                 r6 = 6
-                if (r12 != 0) goto L_0x00e8
+                if (r12 != 0) goto L_0x00f0
                 com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter r12 = com.nothing.systemui.p024qs.tiles.settings.panel.SettingItemAdapter.this
                 java.util.Map<java.lang.String, java.lang.Boolean> r12 = r12.mAddressMapDisServiceConnect
                 java.lang.Boolean r13 = java.lang.Boolean.FALSE
@@ -113,77 +113,77 @@ public class SettingItemAdapter extends RecyclerView.Adapter<SettingItemViewHold
                 java.util.Iterator r12 = r12.iterator()
             L_0x0037:
                 boolean r13 = r12.hasNext()
-                if (r13 == 0) goto L_0x0264
+                if (r13 == 0) goto L_0x01ef
                 java.lang.Object r13 = r12.next()
                 java.util.Map$Entry r13 = (java.util.Map.Entry) r13
                 java.lang.Object r13 = r13.getValue()
                 com.android.settingslib.bluetooth.CachedBluetoothDevice r13 = (com.android.settingslib.bluetooth.CachedBluetoothDevice) r13
-                com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter r1 = com.nothing.systemui.p024qs.tiles.settings.panel.SettingItemAdapter.this     // Catch:{ Exception -> 0x00e2 }
-                com.nothing.systemui.qs.tiles.BluetoothTileEx r1 = r1.mBluetoothTileEx     // Catch:{ Exception -> 0x00e2 }
-                java.lang.String r7 = r13.getAddress()     // Catch:{ Exception -> 0x00e2 }
-                r1.getCommand(r6, r7)     // Catch:{ Exception -> 0x00e2 }
-                com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter r1 = com.nothing.systemui.p024qs.tiles.settings.panel.SettingItemAdapter.this     // Catch:{ Exception -> 0x00e2 }
-                com.nothing.systemui.qs.tiles.BluetoothTileEx r1 = r1.mBluetoothTileEx     // Catch:{ Exception -> 0x00e2 }
-                java.lang.String r7 = r13.getAddress()     // Catch:{ Exception -> 0x00e2 }
-                r1.getCommand(r5, r7)     // Catch:{ Exception -> 0x00e2 }
-                com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter r1 = com.nothing.systemui.p024qs.tiles.settings.panel.SettingItemAdapter.this     // Catch:{ Exception -> 0x00e2 }
-                java.util.Map<java.lang.String, java.lang.Integer> r1 = r1.mBatteryLeft     // Catch:{ Exception -> 0x00e2 }
-                java.lang.String r7 = r13.getAddress()     // Catch:{ Exception -> 0x00e2 }
+                com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter r1 = com.nothing.systemui.p024qs.tiles.settings.panel.SettingItemAdapter.this     // Catch:{ Exception -> 0x00ea }
+                com.nothing.systemui.qs.tiles.BluetoothTileEx r1 = r1.mBluetoothTileEx     // Catch:{ Exception -> 0x00ea }
+                java.lang.String r7 = r13.getAddress()     // Catch:{ Exception -> 0x00ea }
+                r1.getCommand(r6, r7)     // Catch:{ Exception -> 0x00ea }
+                com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter r1 = com.nothing.systemui.p024qs.tiles.settings.panel.SettingItemAdapter.this     // Catch:{ Exception -> 0x00ea }
+                com.nothing.systemui.qs.tiles.BluetoothTileEx r1 = r1.mBluetoothTileEx     // Catch:{ Exception -> 0x00ea }
+                java.lang.String r7 = r13.getAddress()     // Catch:{ Exception -> 0x00ea }
+                r1.getCommand(r5, r7)     // Catch:{ Exception -> 0x00ea }
+                com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter r1 = com.nothing.systemui.p024qs.tiles.settings.panel.SettingItemAdapter.this     // Catch:{ Exception -> 0x00ea }
+                java.util.Map<java.lang.String, java.lang.Integer> r1 = r1.mBatteryLeft     // Catch:{ Exception -> 0x00ea }
+                java.lang.String r7 = r13.getAddress()     // Catch:{ Exception -> 0x00ea }
                 r8 = -1
-                java.lang.Integer r9 = java.lang.Integer.valueOf((int) r8)     // Catch:{ Exception -> 0x00e2 }
-                java.lang.Object r1 = r1.getOrDefault(r7, r9)     // Catch:{ Exception -> 0x00e2 }
-                java.lang.Integer r1 = (java.lang.Integer) r1     // Catch:{ Exception -> 0x00e2 }
-                int r1 = r1.intValue()     // Catch:{ Exception -> 0x00e2 }
+                java.lang.Integer r9 = java.lang.Integer.valueOf((int) r8)     // Catch:{ Exception -> 0x00ea }
+                java.lang.Object r1 = r1.getOrDefault(r7, r9)     // Catch:{ Exception -> 0x00ea }
+                java.lang.Integer r1 = (java.lang.Integer) r1     // Catch:{ Exception -> 0x00ea }
+                int r1 = r1.intValue()     // Catch:{ Exception -> 0x00ea }
                 if (r1 == r8) goto L_0x0094
-                com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter r1 = com.nothing.systemui.p024qs.tiles.settings.panel.SettingItemAdapter.this     // Catch:{ Exception -> 0x00e2 }
-                java.util.Map<java.lang.String, java.lang.Integer> r1 = r1.mBatteryRight     // Catch:{ Exception -> 0x00e2 }
-                java.lang.String r7 = r13.getAddress()     // Catch:{ Exception -> 0x00e2 }
-                java.lang.Integer r9 = java.lang.Integer.valueOf((int) r8)     // Catch:{ Exception -> 0x00e2 }
-                java.lang.Object r1 = r1.getOrDefault(r7, r9)     // Catch:{ Exception -> 0x00e2 }
-                java.lang.Integer r1 = (java.lang.Integer) r1     // Catch:{ Exception -> 0x00e2 }
-                int r1 = r1.intValue()     // Catch:{ Exception -> 0x00e2 }
+                com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter r1 = com.nothing.systemui.p024qs.tiles.settings.panel.SettingItemAdapter.this     // Catch:{ Exception -> 0x00ea }
+                java.util.Map<java.lang.String, java.lang.Integer> r1 = r1.mBatteryRight     // Catch:{ Exception -> 0x00ea }
+                java.lang.String r7 = r13.getAddress()     // Catch:{ Exception -> 0x00ea }
+                java.lang.Integer r9 = java.lang.Integer.valueOf((int) r8)     // Catch:{ Exception -> 0x00ea }
+                java.lang.Object r1 = r1.getOrDefault(r7, r9)     // Catch:{ Exception -> 0x00ea }
+                java.lang.Integer r1 = (java.lang.Integer) r1     // Catch:{ Exception -> 0x00ea }
+                int r1 = r1.intValue()     // Catch:{ Exception -> 0x00ea }
                 if (r1 != r8) goto L_0x00a1
             L_0x0094:
-                com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter r1 = com.nothing.systemui.p024qs.tiles.settings.panel.SettingItemAdapter.this     // Catch:{ Exception -> 0x00e2 }
-                com.nothing.systemui.qs.tiles.BluetoothTileEx r1 = r1.mBluetoothTileEx     // Catch:{ Exception -> 0x00e2 }
-                java.lang.String r7 = r13.getAddress()     // Catch:{ Exception -> 0x00e2 }
-                r1.getCommand(r3, r7)     // Catch:{ Exception -> 0x00e2 }
+                com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter r1 = com.nothing.systemui.p024qs.tiles.settings.panel.SettingItemAdapter.this     // Catch:{ Exception -> 0x00ea }
+                com.nothing.systemui.qs.tiles.BluetoothTileEx r1 = r1.mBluetoothTileEx     // Catch:{ Exception -> 0x00ea }
+                java.lang.String r7 = r13.getAddress()     // Catch:{ Exception -> 0x00ea }
+                r1.getCommand(r3, r7)     // Catch:{ Exception -> 0x00ea }
             L_0x00a1:
-                com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter r1 = com.nothing.systemui.p024qs.tiles.settings.panel.SettingItemAdapter.this     // Catch:{ Exception -> 0x00e2 }
-                java.util.Map<java.lang.String, android.graphics.drawable.Drawable> r1 = r1.mIconCache     // Catch:{ Exception -> 0x00e2 }
-                int r1 = r1.size()     // Catch:{ Exception -> 0x00e2 }
-                if (r1 == 0) goto L_0x00c9
-                com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter r1 = com.nothing.systemui.p024qs.tiles.settings.panel.SettingItemAdapter.this     // Catch:{ Exception -> 0x00e2 }
-                java.util.Map<java.lang.String, android.graphics.drawable.Drawable> r1 = r1.mIconCache     // Catch:{ Exception -> 0x00e2 }
-                int r1 = r1.size()     // Catch:{ Exception -> 0x00e2 }
-                if (r1 <= 0) goto L_0x0037
-                com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter r1 = com.nothing.systemui.p024qs.tiles.settings.panel.SettingItemAdapter.this     // Catch:{ Exception -> 0x00e2 }
-                java.util.Map<java.lang.String, android.graphics.drawable.Drawable> r1 = r1.mIconCache     // Catch:{ Exception -> 0x00e2 }
-                com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter r7 = com.nothing.systemui.p024qs.tiles.settings.panel.SettingItemAdapter.this     // Catch:{ Exception -> 0x00e2 }
-                com.nothing.systemui.qs.tiles.BluetoothTileEx r7 = r7.mBluetoothTileEx     // Catch:{ Exception -> 0x00e2 }
-                java.lang.String r7 = r7.getModeID(r0)     // Catch:{ Exception -> 0x00e2 }
-                java.lang.Object r1 = r1.get(r7)     // Catch:{ Exception -> 0x00e2 }
-                if (r1 != 0) goto L_0x0037
-            L_0x00c9:
-                com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter r1 = com.nothing.systemui.p024qs.tiles.settings.panel.SettingItemAdapter.this     // Catch:{ Exception -> 0x00e2 }
-                com.nothing.systemui.qs.tiles.BluetoothTileEx r1 = r1.mBluetoothTileEx     // Catch:{ Exception -> 0x00e2 }
-                java.lang.String r13 = r13.getAddress()     // Catch:{ Exception -> 0x00e2 }
-                com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter r7 = com.nothing.systemui.p024qs.tiles.settings.panel.SettingItemAdapter.this     // Catch:{ Exception -> 0x00e2 }
-                com.nothing.systemui.qs.tiles.BluetoothTileEx r7 = r7.mBluetoothTileEx     // Catch:{ Exception -> 0x00e2 }
-                java.lang.String r7 = r7.getModeID(r0)     // Catch:{ Exception -> 0x00e2 }
-                r1.getCommand(r4, r13, r2, r7)     // Catch:{ Exception -> 0x00e2 }
+                com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter r1 = com.nothing.systemui.p024qs.tiles.settings.panel.SettingItemAdapter.this     // Catch:{ Exception -> 0x00ea }
+                com.nothing.systemui.qs.tiles.BluetoothTileEx r1 = r1.mBluetoothTileEx     // Catch:{ Exception -> 0x00ea }
+                java.lang.String r1 = r1.getModeID(r0)     // Catch:{ Exception -> 0x00ea }
+                com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter r7 = com.nothing.systemui.p024qs.tiles.settings.panel.SettingItemAdapter.this     // Catch:{ Exception -> 0x00ea }
+                com.nothing.systemui.qs.tiles.BluetoothTileEx r7 = r7.mBluetoothTileEx     // Catch:{ Exception -> 0x00ea }
+                java.util.HashMap r7 = r7.getIconCache()     // Catch:{ Exception -> 0x00ea }
+                int r7 = r7.size()     // Catch:{ Exception -> 0x00ea }
+                if (r7 == 0) goto L_0x00db
+                com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter r7 = com.nothing.systemui.p024qs.tiles.settings.panel.SettingItemAdapter.this     // Catch:{ Exception -> 0x00ea }
+                com.nothing.systemui.qs.tiles.BluetoothTileEx r7 = r7.mBluetoothTileEx     // Catch:{ Exception -> 0x00ea }
+                java.util.HashMap r7 = r7.getIconCache()     // Catch:{ Exception -> 0x00ea }
+                int r7 = r7.size()     // Catch:{ Exception -> 0x00ea }
+                if (r7 <= 0) goto L_0x0037
+                com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter r7 = com.nothing.systemui.p024qs.tiles.settings.panel.SettingItemAdapter.this     // Catch:{ Exception -> 0x00ea }
+                com.nothing.systemui.qs.tiles.BluetoothTileEx r7 = r7.mBluetoothTileEx     // Catch:{ Exception -> 0x00ea }
+                java.util.HashMap r7 = r7.getIconCache()     // Catch:{ Exception -> 0x00ea }
+                java.lang.Object r7 = r7.get(r1)     // Catch:{ Exception -> 0x00ea }
+                if (r7 != 0) goto L_0x0037
+            L_0x00db:
+                com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter r7 = com.nothing.systemui.p024qs.tiles.settings.panel.SettingItemAdapter.this     // Catch:{ Exception -> 0x00ea }
+                com.nothing.systemui.qs.tiles.BluetoothTileEx r7 = r7.mBluetoothTileEx     // Catch:{ Exception -> 0x00ea }
+                java.lang.String r13 = r13.getAddress()     // Catch:{ Exception -> 0x00ea }
+                r7.getCommand(r4, r13, r2, r1)     // Catch:{ Exception -> 0x00ea }
                 goto L_0x0037
-            L_0x00e2:
+            L_0x00ea:
                 r13 = move-exception
                 r13.printStackTrace()
                 goto L_0x0037
-            L_0x00e8:
-                if (r12 == r6) goto L_0x0259
+            L_0x00f0:
+                if (r12 == r6) goto L_0x01e4
                 java.lang.String r6 = "BtSettingItemAdapter"
-                if (r12 != r5) goto L_0x0119
-                if (r1 == 0) goto L_0x00f3
+                if (r12 != r5) goto L_0x0121
+                if (r1 == 0) goto L_0x00fb
                 r1.setRemoteDataAndUpdateUI(r13)
-            L_0x00f3:
+            L_0x00fb:
                 java.lang.StringBuilder r11 = new java.lang.StringBuilder
                 java.lang.String r12 = "---ORDER_ANC result:"
                 r11.<init>((java.lang.String) r12)
@@ -195,32 +195,32 @@ public class SettingItemAdapter extends RecyclerView.Adapter<SettingItemViewHold
                 java.lang.StringBuilder r11 = r11.append((java.lang.String) r12)
                 java.lang.StringBuilder r11 = r11.append((java.lang.String) r0)
                 java.lang.String r11 = r11.toString()
-                com.nothing.systemui.util.NTLogUtil.m1680d(r6, r11)
-                goto L_0x0264
-            L_0x0119:
+                com.nothing.systemui.util.NTLogUtil.m1686d(r6, r11)
+                goto L_0x01ef
+            L_0x0121:
                 r1 = 2
-                if (r12 != r1) goto L_0x0173
+                if (r12 != r1) goto L_0x017a
                 java.lang.StringBuilder r12 = new java.lang.StringBuilder
                 java.lang.String r13 = "onSuccess DISCONNECT address:"
                 r12.<init>((java.lang.String) r13)
                 java.lang.StringBuilder r12 = r12.append((java.lang.String) r0)
                 java.lang.String r12 = r12.toString()
-                com.nothing.systemui.util.NTLogUtil.m1680d(r6, r12)
+                com.nothing.systemui.util.NTLogUtil.m1686d(r6, r12)
                 com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter r12 = com.nothing.systemui.p024qs.tiles.settings.panel.SettingItemAdapter.this
                 java.util.Map<java.lang.String, java.lang.Boolean> r12 = r12.mAddressMapDisServiceConnect
                 java.lang.Boolean r13 = java.lang.Boolean.TRUE
                 r12.put(r0, r13)
                 com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter r12 = com.nothing.systemui.p024qs.tiles.settings.panel.SettingItemAdapter.this
                 java.util.Map<java.lang.String, com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter$SettingItemViewHolder> r12 = r12.mAddressMapCachedSettingItemViewHolders
-                if (r12 == 0) goto L_0x0264
+                if (r12 == 0) goto L_0x01ef
                 com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter r12 = com.nothing.systemui.p024qs.tiles.settings.panel.SettingItemAdapter.this
                 java.util.Map<java.lang.String, com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter$SettingItemViewHolder> r12 = r12.mAddressMapCachedSettingItemViewHolders
                 int r12 = r12.size()
-                if (r12 <= 0) goto L_0x0264
+                if (r12 <= 0) goto L_0x01ef
                 com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter r12 = com.nothing.systemui.p024qs.tiles.settings.panel.SettingItemAdapter.this
                 java.util.Map<java.lang.String, com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter$SettingItemViewHolder> r12 = r12.mAddressMapCachedSettingItemViewHolders
                 java.lang.Object r12 = r12.get(r0)
-                if (r12 == 0) goto L_0x0264
+                if (r12 == 0) goto L_0x01ef
                 com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter r12 = com.nothing.systemui.p024qs.tiles.settings.panel.SettingItemAdapter.this
                 java.util.Map<java.lang.String, com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter$SettingItemViewHolder> r12 = r12.mAddressMapCachedSettingItemViewHolders
                 java.lang.Object r12 = r12.get(r0)
@@ -234,17 +234,17 @@ public class SettingItemAdapter extends RecyclerView.Adapter<SettingItemViewHold
                 android.view.View r11 = r11.mBluetoothExpandIconContainer
                 r12 = 8
                 r11.setVisibility(r12)
-                goto L_0x0264
-            L_0x0173:
-                if (r12 == r4) goto L_0x01de
-                if (r12 != r3) goto L_0x0264
+                goto L_0x01ef
+            L_0x017a:
+                if (r12 == r4) goto L_0x01ef
+                if (r12 != r3) goto L_0x01ef
                 java.lang.StringBuilder r12 = new java.lang.StringBuilder
                 java.lang.String r1 = "onSuccess DeviceConstant.GET_BATTERY address:"
                 r12.<init>((java.lang.String) r1)
                 java.lang.StringBuilder r12 = r12.append((java.lang.String) r0)
                 java.lang.String r12 = r12.toString()
-                com.nothing.systemui.util.NTLogUtil.m1680d(r6, r12)
-                if (r0 == 0) goto L_0x0264
+                com.nothing.systemui.util.NTLogUtil.m1686d(r6, r12)
+                if (r0 == 0) goto L_0x01ef
                 java.lang.String r12 = "KEY_BATTERY_LEFT"
                 int r12 = r13.getInt(r12)
                 java.lang.String r1 = "KEY_BATTERY_RIGHT"
@@ -257,7 +257,7 @@ public class SettingItemAdapter extends RecyclerView.Adapter<SettingItemViewHold
                 java.lang.StringBuilder r1 = r1.append((java.lang.String) r2)
                 java.lang.StringBuilder r1 = r1.append((int) r13)
                 java.lang.String r1 = r1.toString()
-                com.nothing.systemui.util.NTLogUtil.m1680d(r6, r1)
+                com.nothing.systemui.util.NTLogUtil.m1686d(r6, r1)
                 com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter r1 = com.nothing.systemui.p024qs.tiles.settings.panel.SettingItemAdapter.this
                 java.util.Map<java.lang.String, java.lang.Integer> r1 = r1.mBatteryLeft
                 java.lang.Integer r12 = java.lang.Integer.valueOf((int) r12)
@@ -268,77 +268,36 @@ public class SettingItemAdapter extends RecyclerView.Adapter<SettingItemViewHold
                 r12.put(r0, r13)
                 com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter r12 = com.nothing.systemui.p024qs.tiles.settings.panel.SettingItemAdapter.this
                 boolean r12 = r12.mIsBtPanelAnimating
-                if (r12 == 0) goto L_0x01d7
+                if (r12 == 0) goto L_0x01de
                 java.lang.String r11 = "GET_BATTERY isAnimShow"
-                com.nothing.systemui.util.NTLogUtil.m1680d(r6, r11)
+                com.nothing.systemui.util.NTLogUtil.m1686d(r6, r11)
                 return
-            L_0x01d7:
+            L_0x01de:
                 com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter r11 = com.nothing.systemui.p024qs.tiles.settings.panel.SettingItemAdapter.this
                 r11.notifyDataSetChanged()
-                goto L_0x0264
-            L_0x01de:
-                if (r0 == 0) goto L_0x0264
-                com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter r12 = com.nothing.systemui.p024qs.tiles.settings.panel.SettingItemAdapter.this     // Catch:{ Exception -> 0x0264 }
-                com.nothing.systemui.qs.tiles.BluetoothTileEx r12 = r12.mBluetoothTileEx     // Catch:{ Exception -> 0x0264 }
-                java.lang.String r12 = r12.getModeID(r0)     // Catch:{ Exception -> 0x0264 }
-                java.lang.String r1 = "KEY_BITMAP"
-                android.os.IBinder r13 = r13.getBinder(r1)     // Catch:{ Exception -> 0x0264 }
-                com.nothing.os.device.IDeviceBitmap r13 = com.nothing.p023os.device.IDeviceBitmap.Stub.asInterface(r13)     // Catch:{ Exception -> 0x0264 }
-                android.graphics.Bitmap r13 = r13.getCaseBitmap()     // Catch:{ Exception -> 0x0264 }
-                android.graphics.drawable.BitmapDrawable r1 = new android.graphics.drawable.BitmapDrawable     // Catch:{ Exception -> 0x0264 }
-                r1.<init>(r13)     // Catch:{ Exception -> 0x0264 }
-                com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter r2 = com.nothing.systemui.p024qs.tiles.settings.panel.SettingItemAdapter.this     // Catch:{ Exception -> 0x0264 }
-                java.util.Map<java.lang.String, com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter$SettingItemViewHolder> r2 = r2.mAddressMapCachedSettingItemViewHolders     // Catch:{ Exception -> 0x0264 }
-                int r2 = r2.size()     // Catch:{ Exception -> 0x0264 }
-                if (r2 <= 0) goto L_0x0264
-                com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter r2 = com.nothing.systemui.p024qs.tiles.settings.panel.SettingItemAdapter.this     // Catch:{ Exception -> 0x0264 }
-                java.util.Map<java.lang.String, com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter$SettingItemViewHolder> r2 = r2.mAddressMapCachedSettingItemViewHolders     // Catch:{ Exception -> 0x0264 }
-                java.lang.Object r2 = r2.get(r0)     // Catch:{ Exception -> 0x0264 }
-                if (r2 == 0) goto L_0x0264
-                com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter r2 = com.nothing.systemui.p024qs.tiles.settings.panel.SettingItemAdapter.this     // Catch:{ Exception -> 0x0264 }
-                java.util.Map<java.lang.String, android.graphics.drawable.Drawable> r2 = r2.mIconCache     // Catch:{ Exception -> 0x0264 }
-                int r2 = r2.size()     // Catch:{ Exception -> 0x0264 }
-                if (r2 <= 0) goto L_0x0225
-                com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter r2 = com.nothing.systemui.p024qs.tiles.settings.panel.SettingItemAdapter.this     // Catch:{ Exception -> 0x0264 }
-                java.util.Map<java.lang.String, android.graphics.drawable.Drawable> r2 = r2.mIconCache     // Catch:{ Exception -> 0x0264 }
-                java.lang.Object r2 = r2.get(r12)     // Catch:{ Exception -> 0x0264 }
-                if (r2 != 0) goto L_0x0264
-            L_0x0225:
-                com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter r2 = com.nothing.systemui.p024qs.tiles.settings.panel.SettingItemAdapter.this     // Catch:{ Exception -> 0x0264 }
-                java.util.Map<java.lang.String, com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter$SettingItemViewHolder> r2 = r2.mAddressMapCachedSettingItemViewHolders     // Catch:{ Exception -> 0x0264 }
-                java.lang.Object r0 = r2.get(r0)     // Catch:{ Exception -> 0x0264 }
-                com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter$SettingItemViewHolder r0 = (com.nothing.systemui.p024qs.tiles.settings.panel.SettingItemAdapter.SettingItemViewHolder) r0     // Catch:{ Exception -> 0x0264 }
-                android.widget.ImageView r0 = r0.mTitleIcon     // Catch:{ Exception -> 0x0264 }
-                r0.setImageDrawable(r1)     // Catch:{ Exception -> 0x0264 }
-                com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter r0 = com.nothing.systemui.p024qs.tiles.settings.panel.SettingItemAdapter.this     // Catch:{ Exception -> 0x0264 }
-                com.nothing.systemui.qs.tiles.BluetoothTileEx r0 = r0.mBluetoothTileEx     // Catch:{ Exception -> 0x0264 }
-                r0.saveModuleIDEarBitmap(r13, r12)     // Catch:{ Exception -> 0x0264 }
-                com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter r13 = com.nothing.systemui.p024qs.tiles.settings.panel.SettingItemAdapter.this     // Catch:{ Exception -> 0x0264 }
-                java.util.Map<java.lang.String, android.graphics.drawable.Drawable> r13 = r13.mIconCache     // Catch:{ Exception -> 0x0264 }
-                int r13 = r13.size()     // Catch:{ Exception -> 0x0264 }
-                if (r13 <= 0) goto L_0x0251
-                com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter r13 = com.nothing.systemui.p024qs.tiles.settings.panel.SettingItemAdapter.this     // Catch:{ Exception -> 0x0264 }
-                java.util.Map<java.lang.String, android.graphics.drawable.Drawable> r13 = r13.mIconCache     // Catch:{ Exception -> 0x0264 }
-                java.lang.Object r13 = r13.get(r12)     // Catch:{ Exception -> 0x0264 }
-                if (r13 != 0) goto L_0x0264
-            L_0x0251:
-                com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter r11 = com.nothing.systemui.p024qs.tiles.settings.panel.SettingItemAdapter.this     // Catch:{ Exception -> 0x0264 }
-                java.util.Map<java.lang.String, android.graphics.drawable.Drawable> r11 = r11.mIconCache     // Catch:{ Exception -> 0x0264 }
-                r11.put(r12, r1)     // Catch:{ Exception -> 0x0264 }
-                goto L_0x0264
-            L_0x0259:
-                if (r1 == 0) goto L_0x0264
+                goto L_0x01ef
+            L_0x01e4:
+                if (r1 == 0) goto L_0x01ef
                 java.lang.String r11 = "KEY_VALUE_INT"
                 int r11 = r13.getInt(r11)
                 r1.setAncLevel(r11)
-            L_0x0264:
+            L_0x01ef:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: com.nothing.systemui.p024qs.tiles.settings.panel.SettingItemAdapter.C42061.onSuccess(int, android.os.Bundle):void");
+            throw new UnsupportedOperationException("Method not decompiled: com.nothing.systemui.p024qs.tiles.settings.panel.SettingItemAdapter.C42181.onSuccess(int, android.os.Bundle):void");
+        }
+
+        public void onDeviceBitmapLoaded(String str, BitmapDrawable bitmapDrawable) {
+            NTLogUtil.m1686d(SettingItemAdapter.TAG, "---onDeviceBitmapLoaded command");
+            if (SettingItemAdapter.this.mAddressMapCachedSettingItemViewHolders.size() <= 0 || SettingItemAdapter.this.mAddressMapCachedSettingItemViewHolders.get(str) == null) {
+                SettingItemAdapter.this.notifyDataSetChanged();
+            } else {
+                SettingItemAdapter.this.mAddressMapCachedSettingItemViewHolders.get(str).mTitleIcon.setImageDrawable(bitmapDrawable);
+            }
         }
 
         public void onFail(int i, int i2) {
-            NTLogUtil.m1680d(SettingItemAdapter.TAG, "---onFail command:" + i + ", error:" + i2);
+            NTLogUtil.m1686d(SettingItemAdapter.TAG, "---onFail command:" + i + ", error:" + i2);
         }
 
         public void onDestroy() {
@@ -371,7 +330,7 @@ public class SettingItemAdapter extends RecyclerView.Adapter<SettingItemViewHold
                     Bundle bundle = new Bundle();
                     bundle.putString(DeviceConstant.KEY_MAC_ADDRESS, cachedBluetoothDevice.getAddress());
                     SettingItemAdapter.this.mBluetoothTileEx.sendCommand(0, bundle);
-                    NTLogUtil.m1680d(SettingItemAdapter.TAG, "STATE_CONNECTED--");
+                    NTLogUtil.m1686d(SettingItemAdapter.TAG, "STATE_CONNECTED--");
                     SettingItemAdapter.this.mAddressMapDisServiceConnect.put(cachedBluetoothDevice.getAddress(), Boolean.FALSE);
                 }
                 this.mState = i;
@@ -386,11 +345,11 @@ public class SettingItemAdapter extends RecyclerView.Adapter<SettingItemViewHold
     Context mContext;
     /* access modifiers changed from: private */
     public float mCurrentTemp = 23.0f;
+    public Map<String, String> mDeviceName = new HashMap();
     private View mDivider;
     private boolean mHasPerm;
     private View mHeadedDivider;
     private String mHighTempText = String.valueOf(this.mCurrentTemp);
-    public Map<String, Drawable> mIconCache = new HashMap();
     /* access modifiers changed from: private */
     public boolean mIsBtPanelAnimating = false;
     /* access modifiers changed from: private */
@@ -432,7 +391,7 @@ public class SettingItemAdapter extends RecyclerView.Adapter<SettingItemViewHold
 
     public SettingItemAdapter(Context context) {
         this.mContext = context;
-        NTLogUtil.m1680d(TAG, "clickFrom:" + this.mBluetoothTileEx.getClickFrom());
+        NTLogUtil.m1686d(TAG, "clickFrom:" + this.mBluetoothTileEx.getClickFrom());
         if (this.mBluetoothTileEx.getClickFrom() == 1 && !TextUtils.isEmpty(this.mBluetoothTileEx.getClickAddress())) {
             this.mAddressCorrespondingExpanded.put(this.mBluetoothTileEx.getClickAddress(), true);
         }
@@ -441,26 +400,26 @@ public class SettingItemAdapter extends RecyclerView.Adapter<SettingItemViewHold
     public void setTeslaView(View view, boolean z) {
         this.mTeslaView = view;
         if (view != null) {
-            this.mLowTempText = view.getContext().getResources().getString(C1893R.string.anc_noise_low);
-            this.mHighTempText = this.mTeslaView.getContext().getResources().getString(C1893R.string.anc_noise_high);
+            this.mLowTempText = view.getContext().getResources().getString(C1894R.string.anc_noise_low);
+            this.mHighTempText = this.mTeslaView.getContext().getResources().getString(C1894R.string.anc_noise_high);
             int i = 8;
             boolean z2 = false;
             this.mTeslaView.setVisibility(z ? 0 : 8);
-            this.mTeslaIconExpand = (ImageView) view.findViewById(C1893R.C1897id.expand_icon);
-            this.mTeslaLoadingView = view.findViewById(C1893R.C1897id.loading_progress_bar);
-            this.mTeslaUserIcon = (ImageView) view.findViewById(C1893R.C1897id.car_image);
-            View findViewById = view.findViewById(C1893R.C1897id.expandeable_control_panel_parent);
+            this.mTeslaIconExpand = (ImageView) view.findViewById(C1894R.C1898id.expand_icon);
+            this.mTeslaLoadingView = view.findViewById(C1894R.C1898id.loading_progress_bar);
+            this.mTeslaUserIcon = (ImageView) view.findViewById(C1894R.C1898id.car_image);
+            View findViewById = view.findViewById(C1894R.C1898id.expandeable_control_panel_parent);
             this.mTeslaExpandViewParent = findViewById;
             if (this.mBluetoothTileEx.getClickFrom() == 0) {
                 i = 0;
             }
             findViewById.setVisibility(i);
-            this.mTeslaCmdParentView = (LinearLayout) view.findViewById(C1893R.C1897id.control_panel);
-            this.mTeslaIconTempDown = (ImageView) view.findViewById(C1893R.C1897id.climate_down);
-            this.mTeslaIconTempUp = (ImageView) view.findViewById(C1893R.C1897id.climate_up);
-            this.mTeslaTempText = (TextView) view.findViewById(C1893R.C1897id.climate_temp);
-            this.mTeslaUserName = (TextView) view.findViewById(C1893R.C1897id.car_display_name);
-            this.mTeslaRange = (TextView) view.findViewById(C1893R.C1897id.car_range);
+            this.mTeslaCmdParentView = (LinearLayout) view.findViewById(C1894R.C1898id.control_panel);
+            this.mTeslaIconTempDown = (ImageView) view.findViewById(C1894R.C1898id.climate_down);
+            this.mTeslaIconTempUp = (ImageView) view.findViewById(C1894R.C1898id.climate_up);
+            this.mTeslaTempText = (TextView) view.findViewById(C1894R.C1898id.climate_temp);
+            this.mTeslaUserName = (TextView) view.findViewById(C1894R.C1898id.car_display_name);
+            this.mTeslaRange = (TextView) view.findViewById(C1894R.C1898id.car_range);
             if (this.mTeslaExpandViewParent.getVisibility() == 0) {
                 z2 = true;
             }
@@ -550,9 +509,9 @@ public class SettingItemAdapter extends RecyclerView.Adapter<SettingItemViewHold
                         imageView.setEnabled(z);
                     } else {
                         try {
-                            final View inflate = LayoutInflater.from(this.mTeslaCmdParentView.getContext()).inflate(C1893R.layout.tesla_cmd_item, (ViewGroup) null, false);
-                            updateTeslaIconStatus(next.getStatus(), next.getCmd(), (ImageView) inflate.findViewById(C1893R.C1897id.cmd_icon));
-                            ((TextView) inflate.findViewById(C1893R.C1897id.cmd_title)).setText(next.getTitle());
+                            final View inflate = LayoutInflater.from(this.mTeslaCmdParentView.getContext()).inflate(C1894R.layout.tesla_cmd_item, (ViewGroup) null, false);
+                            updateTeslaIconStatus(next.getStatus(), next.getCmd(), (ImageView) inflate.findViewById(C1894R.C1898id.cmd_icon));
+                            ((TextView) inflate.findViewById(C1894R.C1898id.cmd_title)).setText(next.getTitle());
                             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(-1, -1);
                             layoutParams.weight = 1.0f;
                             inflate.setId(next.getCmd());
@@ -561,7 +520,7 @@ public class SettingItemAdapter extends RecyclerView.Adapter<SettingItemViewHold
                                 public void onClick(View view) {
                                     boolean status = ((CmdObject) inflate.getTag()).getStatus();
                                     SettingItemAdapter.this.mTeslaPlugin.sendCmd(view.getId(), "");
-                                    SettingItemAdapter.this.updateTeslaIconStatus(status, view.getId(), (ImageView) view.findViewById(C1893R.C1897id.cmd_icon));
+                                    SettingItemAdapter.this.updateTeslaIconStatus(status, view.getId(), (ImageView) view.findViewById(C1894R.C1898id.cmd_icon));
                                 }
                             });
                             this.mTeslaCmdParentView.addView(inflate, layoutParams);
@@ -583,16 +542,16 @@ public class SettingItemAdapter extends RecyclerView.Adapter<SettingItemViewHold
         if (num2 == null) {
             z2 = false;
         }
-        NTLogUtil.m1680d(TAG, append.append(z2).toString());
+        NTLogUtil.m1686d(TAG, append.append(z2).toString());
         if (z) {
-            imageView.setBackgroundResource(C1893R.C1895drawable.tesla_cmd_item_background_selected);
+            imageView.setBackgroundResource(C1894R.C1896drawable.tesla_cmd_item_background_selected);
             if (num != null) {
                 imageView.setImageResource(num.intValue());
                 return;
             }
             return;
         }
-        imageView.setBackgroundResource(C1893R.C1895drawable.tesla_cmd_item_background);
+        imageView.setBackgroundResource(C1894R.C1896drawable.tesla_cmd_item_background);
         if (num2 != null) {
             imageView.setImageResource(num2.intValue());
         }
@@ -616,29 +575,29 @@ public class SettingItemAdapter extends RecyclerView.Adapter<SettingItemViewHold
     /* access modifiers changed from: private */
     public void updateExpandIcon(boolean z) {
         if (z) {
-            this.mTeslaIconExpand.setImageResource(C1893R.C1895drawable.ic_tesla_panel_up);
+            this.mTeslaIconExpand.setImageResource(C1894R.C1896drawable.ic_tesla_panel_up);
         } else {
-            this.mTeslaIconExpand.setImageResource(C1893R.C1895drawable.ic_tesla_panel_down);
+            this.mTeslaIconExpand.setImageResource(C1894R.C1896drawable.ic_tesla_panel_down);
         }
     }
 
     public void setPinnedHeader(View view) {
         this.mPinnedHeader = view;
         if (view != null) {
-            this.mHeadedDivider = view.findViewById(C1893R.C1897id.headed_divider);
-            this.mTitle = (TextView) this.mPinnedHeader.findViewById(C1893R.C1897id.title);
-            this.mSummary = (TextView) this.mPinnedHeader.findViewById(C1893R.C1897id.summary);
-            this.mDivider = this.mPinnedHeader.findViewById(C1893R.C1897id.divider);
-            this.mSwitch = (Switch) this.mPinnedHeader.findViewById(C1893R.C1897id.switch_widget);
-            this.mTitleIcon = (ImageView) this.mPinnedHeader.findViewById(C1893R.C1897id.icon_title);
-            this.mNtTitleIconLayout = this.mPinnedHeader.findViewById(C1893R.C1897id.nt_icon_title_layout);
-            this.mActionIcon = (ImageView) this.mPinnedHeader.findViewById(C1893R.C1897id.icon_action);
+            this.mHeadedDivider = view.findViewById(C1894R.C1898id.headed_divider);
+            this.mTitle = (TextView) this.mPinnedHeader.findViewById(C1894R.C1898id.title);
+            this.mSummary = (TextView) this.mPinnedHeader.findViewById(C1894R.C1898id.summary);
+            this.mDivider = this.mPinnedHeader.findViewById(C1894R.C1898id.divider);
+            this.mSwitch = (Switch) this.mPinnedHeader.findViewById(C1894R.C1898id.switch_widget);
+            this.mTitleIcon = (ImageView) this.mPinnedHeader.findViewById(C1894R.C1898id.icon_title);
+            this.mNtTitleIconLayout = this.mPinnedHeader.findViewById(C1894R.C1898id.nt_icon_title_layout);
+            this.mActionIcon = (ImageView) this.mPinnedHeader.findViewById(C1894R.C1898id.icon_action);
         }
     }
 
     public void setNothingAppHasPermission(boolean z) {
         this.mHasPerm = z;
-        NTLogUtil.m1680d(TAG, "HasPermission:" + this.mHasPerm);
+        NTLogUtil.m1686d(TAG, "HasPermission:" + this.mHasPerm);
     }
 
     public BluetoothTileEx.AncCallback getAncCallback() {
@@ -650,16 +609,16 @@ public class SettingItemAdapter extends RecyclerView.Adapter<SettingItemViewHold
     }
 
     public void onBindViewHolder(final SettingItemViewHolder settingItemViewHolder, int i) {
-        Drawable drawable;
         float f;
+        Drawable drawable;
         Drawable drawable2;
-        Map<String, Drawable> map;
         if (i < this.mSettingListsData.size()) {
             final SettingItemData settingItemData = this.mSettingListsData.get(i);
+            updateDeviceTitleIfNeeded(settingItemData);
             settingItemViewHolder.mTitle.setText(settingItemData.title);
             settingItemViewHolder.mSummary.setVisibility(TextUtils.isEmpty(settingItemData.subTitle) ? 8 : 0);
             settingItemViewHolder.mSummary.setText(settingItemData.subTitle);
-            if (this.mContext.getString(C1893R.string.quick_settings_connecting).equals(settingItemData.subTitle) || this.mContext.getString(C1893R.string.bluetooth_pairing).equals(settingItemData.subTitle)) {
+            if (this.mContext.getString(C1894R.string.quick_settings_connecting).equals(settingItemData.subTitle) || this.mContext.getString(C1894R.string.bluetooth_pairing).equals(settingItemData.subTitle)) {
                 settingItemViewHolder.mTitle.setAlpha(0.33f);
                 settingItemViewHolder.mSummary.setAlpha(0.33f);
             } else {
@@ -684,42 +643,49 @@ public class SettingItemAdapter extends RecyclerView.Adapter<SettingItemViewHold
             }
             settingItemViewHolder.mRowView.setOnClickListener(settingItemData.contentClickListener);
             settingItemViewHolder.mActionIcon.setOnClickListener(settingItemData.actionClickListener);
+            String modeID = this.mBluetoothTileEx.getModeID(settingItemData.macAddress);
             if (settingItemData.titleDrawable != null) {
-                String modeID = this.mBluetoothTileEx.getModeID(settingItemData.macAddress);
-                if (TextUtils.isEmpty(modeID) || (map = this.mIconCache) == null || map.get(modeID) == null || this.mBluetoothTileEx.isAdvancedDetailsHeader(settingItemData.cachedDevice.getDevice())) {
-                    if (!settingItemData.isNothingEarDevice) {
+                if (!TextUtils.isEmpty(modeID) && this.mBluetoothTileEx.getIconCache().size() > 0 && this.mBluetoothTileEx.getIconCache().get(modeID) != null && !this.mBluetoothTileEx.isAdvancedDetailsHeader(settingItemData.cachedDevice.getDevice())) {
+                    settingItemViewHolder.mTitleIcon.setImageDrawable(this.mBluetoothTileEx.getIconCache().get(modeID));
+                } else if (!settingItemData.isNothingEarDevice) {
+                    String airpodsVersion = this.mBluetoothTileEx.getAirpodsVersion(settingItemData.macAddress);
+                    boolean z = settingItemData.supportAirpods;
+                    if (TextUtils.isEmpty(airpodsVersion) || !z) {
                         settingItemViewHolder.mTitleIcon.setImageDrawable(settingItemData.titleDrawable);
-                        settingItemViewHolder.mTitleIcon.setBackground((Drawable) null);
-                    } else if (!TextUtils.isEmpty(modeID)) {
-                        if (this.mIconCache.size() <= 0 || this.mIconCache.get(modeID) == null) {
-                            Drawable moduleIDBitmap = this.mBluetoothTileEx.getModuleIDBitmap(modeID);
-                            if (moduleIDBitmap != null) {
-                                this.mIconCache.put(modeID, moduleIDBitmap);
-                            }
-                            drawable2 = moduleIDBitmap;
+                    } else {
+                        if (this.mBluetoothTileEx.getIconCache().size() <= 0 || this.mBluetoothTileEx.getIconCache().get(modeID) == null) {
+                            Drawable moduleIDBitmap = this.mBluetoothTileEx.getModuleIDBitmap(airpodsVersion);
+                            drawable2 = moduleIDBitmap != null ? new PanelCircleDrawable(moduleIDBitmap) : null;
                         } else {
-                            drawable2 = this.mIconCache.get(modeID);
+                            drawable2 = this.mBluetoothTileEx.getIconCache().get(modeID);
                         }
                         if (drawable2 != null) {
                             settingItemViewHolder.mTitleIcon.setImageDrawable(drawable2);
                         } else {
                             settingItemViewHolder.mTitleIcon.setImageDrawable(settingItemData.titleDrawable);
-                            settingItemViewHolder.mTitleIcon.setBackground((Drawable) null);
                         }
                     }
-                    drawable = null;
-                } else {
-                    drawable = this.mIconCache.get(modeID);
-                    settingItemViewHolder.mTitleIcon.setImageDrawable(drawable);
+                } else if (!TextUtils.isEmpty(modeID)) {
+                    if (this.mBluetoothTileEx.getIconCache().size() <= 0 || this.mBluetoothTileEx.getIconCache().get(modeID) == null) {
+                        Drawable moduleIDBitmap2 = this.mBluetoothTileEx.getModuleIDBitmap(modeID);
+                        drawable = moduleIDBitmap2 != null ? new PanelCircleDrawable(moduleIDBitmap2) : null;
+                    } else {
+                        drawable = this.mBluetoothTileEx.getIconCache().get(modeID);
+                    }
+                    if (drawable != null) {
+                        settingItemViewHolder.mTitleIcon.setImageDrawable(drawable);
+                    } else {
+                        settingItemViewHolder.mTitleIcon.setImageDrawable(settingItemData.titleDrawable);
+                    }
                 }
                 settingItemViewHolder.mTitleIcon.setVisibility(0);
                 settingItemViewHolder.mNtTitleIconLayout.setVisibility(0);
-                if (!settingItemData.isNothingEarDevice || drawable == null) {
-                    f = this.mContext.getResources().getDimension(C1893R.dimen.nt_panel_icon_title_height_medium);
-                    settingItemViewHolder.mNtTitleIconLayout.setBackground((Drawable) null);
+                if (settingItemData.isNothingEarDevice || !TextUtils.isEmpty(this.mBluetoothTileEx.getAirpodsVersion(settingItemData.macAddress))) {
+                    f = this.mContext.getResources().getDimension(C1894R.dimen.nt_panel_icon_title_height_small);
+                    settingItemViewHolder.mNtTitleIconLayout.setBackgroundResource(C1894R.C1896drawable.nt_circle);
                 } else {
-                    f = this.mContext.getResources().getDimension(C1893R.dimen.nt_panel_icon_title_height_small);
-                    settingItemViewHolder.mNtTitleIconLayout.setBackgroundResource(C1893R.C1895drawable.nt_circle);
+                    f = this.mContext.getResources().getDimension(C1894R.dimen.nt_panel_icon_title_height_medium);
+                    settingItemViewHolder.mNtTitleIconLayout.setBackground((Drawable) null);
                 }
                 ViewGroup.LayoutParams layoutParams = settingItemViewHolder.mTitleIcon.getLayoutParams();
                 int i2 = (int) f;
@@ -731,23 +697,27 @@ public class SettingItemAdapter extends RecyclerView.Adapter<SettingItemViewHold
                 settingItemViewHolder.mNtTitleIconLayout.setVisibility(8);
             }
             settingItemViewHolder.mActionIcon.setImageDrawable(settingItemData.actionDrawable);
-            boolean z = settingItemData.isConnected && settingItemData.isNothingEarDevice && this.mHasPerm;
-            boolean z2 = settingItemData.supportAnc;
-            updateItemIcon(z, settingItemViewHolder, settingItemData);
-            boolean z3 = this.mAddressCorrespondingExpanded.size() > 0 && settingItemData.macAddress != null && this.mAddressCorrespondingExpanded.get(settingItemData.macAddress) != null && this.mAddressCorrespondingExpanded.get(settingItemData.macAddress).booleanValue() && z && z2;
-            if (!z3) {
+            boolean z2 = true;
+            boolean z3 = settingItemData.isConnected && settingItemData.isNothingEarDevice && this.mHasPerm;
+            boolean z4 = settingItemData.supportAnc;
+            updateItemIcon(z3, settingItemViewHolder, settingItemData);
+            boolean z5 = this.mAddressCorrespondingExpanded.size() > 0 && settingItemData.macAddress != null && this.mAddressCorrespondingExpanded.get(settingItemData.macAddress) != null && this.mAddressCorrespondingExpanded.get(settingItemData.macAddress).booleanValue() && z3 && z4;
+            if (!settingItemData.supportAirpods || TextUtils.isEmpty(this.mBluetoothTileEx.getAirpodsVersion(settingItemData.macAddress)) || !settingItemData.isConnected || !this.mHasPerm) {
+                z2 = false;
+            }
+            if (!z5) {
                 settingItemViewHolder.mLayView.setOnClickListener(settingItemData.contentClickListener);
             }
-            if (z) {
+            if (z3 || z2) {
                 CachedBluetoothDevice cachedBluetoothDevice = settingItemData.cachedDevice;
-                NTLogUtil.m1680d(TAG, "---onBindViewHolder isConnected:" + settingItemData.isConnected + ", macAddress:" + settingItemData.macAddress);
-                NTLogUtil.m1680d(TAG, "---onBindViewHolder mAddressCorrespondingSoundLayouts size:" + this.mAddressCorrespondingSoundLayouts.size());
+                NTLogUtil.m1686d(TAG, "---onBindViewHolder isConnected:" + settingItemData.isConnected + ", macAddress:" + settingItemData.macAddress);
+                NTLogUtil.m1686d(TAG, "---onBindViewHolder mAddressCorrespondingSoundLayouts size:" + this.mAddressCorrespondingSoundLayouts.size());
                 int intValue = this.mBatteryLeft.getOrDefault(settingItemData.macAddress, -1).intValue();
                 int intValue2 = this.mBatteryRight.getOrDefault(settingItemData.macAddress, -1).intValue();
-                NTLogUtil.m1680d("SettingItemAdapter", "---onBindViewHolder left:" + intValue + ", right:" + intValue2);
+                NTLogUtil.m1686d(TAG, "---onBindViewHolder left:" + intValue + ", right:" + intValue2);
                 if (this.mAddressCorrespondingSoundLayouts.size() == 0 || (this.mAddressCorrespondingSoundLayouts.size() > 0 && this.mAddressCorrespondingSoundLayouts.get(settingItemData.macAddress) == null)) {
                     ViewGroup viewGroup = null;
-                    BluetoothQuickPanelSoundLayout bluetoothQuickPanelSoundLayout = (BluetoothQuickPanelSoundLayout) LayoutInflater.from(this.mContext).inflate(C1893R.layout.nt_quick_panel_anc_sound, (ViewGroup) null);
+                    BluetoothQuickPanelSoundLayout bluetoothQuickPanelSoundLayout = (BluetoothQuickPanelSoundLayout) LayoutInflater.from(this.mContext).inflate(C1894R.layout.nt_quick_panel_anc_sound, (ViewGroup) null);
                     bluetoothQuickPanelSoundLayout.setAddress(settingItemData.macAddress);
                     bluetoothQuickPanelSoundLayout.setDeviceServiceController(this.mBluetoothTileEx.getDeviceController());
                     bluetoothQuickPanelSoundLayout.setItemAdapter(this);
@@ -758,8 +728,8 @@ public class SettingItemAdapter extends RecyclerView.Adapter<SettingItemViewHold
                     if (intValue == -1 || intValue2 == -1) {
                         this.mBluetoothTileEx.getCommand(4, settingItemData.macAddress);
                     }
-                    if (this.mIconCache.size() <= 0 || this.mIconCache.get(this.mBluetoothTileEx.getModeID(cachedBluetoothDevice.getAddress())) == null) {
-                        this.mBluetoothTileEx.getCommand(3, cachedBluetoothDevice.getAddress(), false, this.mBluetoothTileEx.getModeID(cachedBluetoothDevice.getAddress()));
+                    if (!TextUtils.isEmpty(modeID) && (this.mBluetoothTileEx.getIconCache().size() <= 0 || this.mBluetoothTileEx.getIconCache().get(modeID) == null)) {
+                        this.mBluetoothTileEx.getCommand(3, cachedBluetoothDevice.getAddress(), false, modeID);
                     }
                     this.mAddressMapCachedBluetoothDevice.put(settingItemData.macAddress, cachedBluetoothDevice);
                     this.mAddressMapCachedSettingItemViewHolders.put(settingItemData.macAddress, settingItemViewHolder);
@@ -767,8 +737,12 @@ public class SettingItemAdapter extends RecyclerView.Adapter<SettingItemViewHold
                 if (this.mAddressCorrespondingContain.size() > 0 && this.mAddressCorrespondingContain.get(settingItemData.macAddress) != null) {
                     this.mAddressCorrespondingContain.get(settingItemData.macAddress).removeAllViews();
                 }
-                if (!z2) {
-                    NTLogUtil.m1680d(TAG, "don't support ANC");
+                CharSequence deviceSecondLabel = this.mBluetoothTileEx.getDeviceSecondLabel(settingItemData.cachedDevice);
+                if (!TextUtils.isEmpty(deviceSecondLabel)) {
+                    settingItemViewHolder.mSummary.setText(deviceSecondLabel.toString());
+                }
+                if (!z4) {
+                    NTLogUtil.m1686d(TAG, "don't support ANC");
                     return;
                 }
                 this.mAddressCorrespondingContain.put(settingItemData.macAddress, settingItemViewHolder.mBluetoothExpandViewParent);
@@ -780,21 +754,8 @@ public class SettingItemAdapter extends RecyclerView.Adapter<SettingItemViewHold
                         SettingItemAdapter.this.setBluetoothExpandView(settingItemViewHolder, settingItemData);
                     }
                 });
-                StringBuilder sb = new StringBuilder();
-                if (intValue != -1) {
-                    sb.append(this.mContext.getResources().getString(C1893R.string.nt_btpanel_battery_level_left, new Object[]{Utils.formatPercentage(this.mBatteryLeft.get(settingItemData.macAddress).intValue())}));
-                }
-                if (intValue2 != -1) {
-                    if (intValue != -1) {
-                        sb.append(this.mContext.getResources().getString(C1893R.string.nt_btpanel_battery_level_dot));
-                    }
-                    sb.append(this.mContext.getResources().getString(C1893R.string.nt_btpanel_battery_level_right, new Object[]{Utils.formatPercentage(this.mBatteryRight.get(settingItemData.macAddress).intValue())}));
-                }
-                if (!TextUtils.isEmpty(sb)) {
-                    settingItemViewHolder.mSummary.setText(sb.toString());
-                }
             }
-            initBluetoothExpandView(settingItemViewHolder, z3);
+            initBluetoothExpandView(settingItemViewHolder, z5);
         }
     }
 
@@ -839,14 +800,24 @@ public class SettingItemAdapter extends RecyclerView.Adapter<SettingItemViewHold
         });
     }
 
+    private void updateDeviceTitleIfNeeded(SettingItemData settingItemData) {
+        if (settingItemData.title.equals(settingItemData.macAddress)) {
+            settingItemData.title = this.mDeviceName.get(settingItemData.macAddress);
+        }
+        if (this.mDeviceName.get(settingItemData.macAddress) == null) {
+            this.mDeviceName.put(settingItemData.macAddress, settingItemData.title);
+            this.mBluetoothTileEx.setModelIdAndDevice(settingItemData.cachedDevice);
+        }
+    }
+
     private void initBluetoothExpandView(SettingItemViewHolder settingItemViewHolder, boolean z) {
         settingItemViewHolder.mBluetoothExpandViewParent.setVisibility(z ? 0 : 8);
         updateBluetoothExpandIcon(settingItemViewHolder, z);
     }
 
     private void updateBluetoothExpandIcon(SettingItemViewHolder settingItemViewHolder, boolean z) {
-        settingItemViewHolder.mBluetoothExpandIcon.setImageResource(z ? C1893R.C1895drawable.ic_tesla_panel_up : C1893R.C1895drawable.ic_tesla_panel_down);
-        settingItemViewHolder.mBluetoothExpandIcon.setBackgroundResource(C1893R.C1895drawable.tesla_cmd_item_background);
+        settingItemViewHolder.mBluetoothExpandIcon.setImageResource(z ? C1894R.C1896drawable.ic_tesla_panel_up : C1894R.C1896drawable.ic_tesla_panel_down);
+        settingItemViewHolder.mBluetoothExpandIcon.setBackgroundResource(C1894R.C1896drawable.tesla_cmd_item_background);
     }
 
     private void updateItemIcon(boolean z, SettingItemViewHolder settingItemViewHolder, SettingItemData settingItemData) {
@@ -886,7 +857,7 @@ public class SettingItemAdapter extends RecyclerView.Adapter<SettingItemViewHold
                 public void onChanged(List<SettingItemData> list) {
                     List unused = SettingItemAdapter.this.mSettingListsData = list;
                     if (SettingItemAdapter.this.mIsBtPanelAnimating) {
-                        NTLogUtil.m1680d(SettingItemAdapter.TAG, "onChanged isAnimShow");
+                        NTLogUtil.m1686d(SettingItemAdapter.TAG, "onChanged isAnimShow");
                     } else {
                         SettingItemAdapter.this.notifyDataSetChanged();
                     }
@@ -999,22 +970,22 @@ public class SettingItemAdapter extends RecyclerView.Adapter<SettingItemViewHold
 
     /* renamed from: com.nothing.systemui.qs.tiles.settings.panel.SettingItemAdapter$SettingItemViewHolder */
     public class SettingItemViewHolder extends RecyclerView.ViewHolder {
-        public ImageView mActionIcon = ((ImageView) this.itemView.findViewById(C1893R.C1897id.icon_action));
-        public ImageView mBluetoothExpandIcon = ((ImageView) this.itemView.findViewById(C1893R.C1897id.expand_bluetooth_icon));
-        public View mBluetoothExpandIconContainer = this.itemView.findViewById(C1893R.C1897id.expand_bluetooth_icon_container);
-        public LinearLayout mBluetoothExpandViewParent = ((LinearLayout) this.itemView.findViewById(C1893R.C1897id.expandeable_bluetooth_control_panel_parent));
-        public View mDivider = this.itemView.findViewById(C1893R.C1897id.divider);
-        public View mHeadedDivider = this.itemView.findViewById(C1893R.C1897id.headed_divider);
-        public LinearLayout mLayView = ((LinearLayout) this.itemView.findViewById(C1893R.C1897id.lay_view));
-        public View mNtTitleIconLayout = this.itemView.findViewById(C1893R.C1897id.nt_icon_title_layout);
-        public View mRowView = this.itemView.findViewById(C1893R.C1897id.row_view);
-        public TextView mSummary = ((TextView) this.itemView.findViewById(C1893R.C1897id.summary));
-        public Switch mSwitch = ((Switch) this.itemView.findViewById(C1893R.C1897id.switch_widget));
-        public TextView mTitle = ((TextView) this.itemView.findViewById(C1893R.C1897id.title));
-        public ImageView mTitleIcon = ((ImageView) this.itemView.findViewById(C1893R.C1897id.icon_title));
+        public ImageView mActionIcon = ((ImageView) this.itemView.findViewById(C1894R.C1898id.icon_action));
+        public ImageView mBluetoothExpandIcon = ((ImageView) this.itemView.findViewById(C1894R.C1898id.expand_bluetooth_icon));
+        public View mBluetoothExpandIconContainer = this.itemView.findViewById(C1894R.C1898id.expand_bluetooth_icon_container);
+        public LinearLayout mBluetoothExpandViewParent = ((LinearLayout) this.itemView.findViewById(C1894R.C1898id.expandeable_bluetooth_control_panel_parent));
+        public View mDivider = this.itemView.findViewById(C1894R.C1898id.divider);
+        public View mHeadedDivider = this.itemView.findViewById(C1894R.C1898id.headed_divider);
+        public LinearLayout mLayView = ((LinearLayout) this.itemView.findViewById(C1894R.C1898id.lay_view));
+        public View mNtTitleIconLayout = this.itemView.findViewById(C1894R.C1898id.nt_icon_title_layout);
+        public View mRowView = this.itemView.findViewById(C1894R.C1898id.row_view);
+        public TextView mSummary = ((TextView) this.itemView.findViewById(C1894R.C1898id.summary));
+        public Switch mSwitch = ((Switch) this.itemView.findViewById(C1894R.C1898id.switch_widget));
+        public TextView mTitle = ((TextView) this.itemView.findViewById(C1894R.C1898id.title));
+        public ImageView mTitleIcon = ((ImageView) this.itemView.findViewById(C1894R.C1898id.icon_title));
 
         public SettingItemViewHolder(ViewGroup viewGroup) {
-            super(LayoutInflater.from(viewGroup.getContext()).inflate(C1893R.layout.nt_panel_setting_item_row, viewGroup, false));
+            super(LayoutInflater.from(viewGroup.getContext()).inflate(C1894R.layout.nt_panel_setting_item_row, viewGroup, false));
             this.mSwitch.setVisibility(8);
         }
     }

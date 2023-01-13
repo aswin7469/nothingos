@@ -1288,12 +1288,12 @@ public class ObjectInputStream extends InputStream implements ObjectInput, Objec
     private static class PeekInputStream extends InputStream {
 
         /* renamed from: in */
-        private final InputStream f525in;
+        private final InputStream f523in;
         private int peekb = -1;
         private long totalBytesRead = 0;
 
         PeekInputStream(InputStream inputStream) {
-            this.f525in = inputStream;
+            this.f523in = inputStream;
         }
 
         /* access modifiers changed from: package-private */
@@ -1302,7 +1302,7 @@ public class ObjectInputStream extends InputStream implements ObjectInput, Objec
             if (i >= 0) {
                 return i;
             }
-            int read = this.f525in.read();
+            int read = this.f523in.read();
             this.peekb = read;
             this.totalBytesRead += read >= 0 ? 1 : 0;
             return read;
@@ -1314,7 +1314,7 @@ public class ObjectInputStream extends InputStream implements ObjectInput, Objec
                 this.peekb = -1;
                 return i;
             }
-            int read = this.f525in.read();
+            int read = this.f523in.read();
             this.totalBytesRead += read >= 0 ? 1 : 0;
             return read;
         }
@@ -1326,7 +1326,7 @@ public class ObjectInputStream extends InputStream implements ObjectInput, Objec
             int i3 = this.peekb;
             long j = 0;
             if (i3 < 0) {
-                int read = this.f525in.read(bArr, i, i2);
+                int read = this.f523in.read(bArr, i, i2);
                 long j2 = this.totalBytesRead;
                 if (read >= 0) {
                     j = (long) read;
@@ -1336,7 +1336,7 @@ public class ObjectInputStream extends InputStream implements ObjectInput, Objec
             }
             bArr[i] = (byte) i3;
             this.peekb = -1;
-            int read2 = this.f525in.read(bArr, i + 1, i2 - 1);
+            int read2 = this.f523in.read(bArr, i + 1, i2 - 1);
             long j3 = this.totalBytesRead;
             if (read2 >= 0) {
                 j = (long) read2;
@@ -1373,17 +1373,17 @@ public class ObjectInputStream extends InputStream implements ObjectInput, Objec
             } else {
                 i = 0;
             }
-            long skip = ((long) i) + this.f525in.skip(j);
+            long skip = ((long) i) + this.f523in.skip(j);
             this.totalBytesRead += skip;
             return skip;
         }
 
         public int available() throws IOException {
-            return this.f525in.available() + (this.peekb >= 0 ? 1 : 0);
+            return this.f523in.available() + (this.peekb >= 0 ? 1 : 0);
         }
 
         public void close() throws IOException {
-            this.f525in.close();
+            this.f523in.close();
         }
 
         public long getBytesRead() {
@@ -1405,12 +1405,12 @@ public class ObjectInputStream extends InputStream implements ObjectInput, Objec
         private final byte[] hbuf = new byte[5];
 
         /* renamed from: in */
-        private final PeekInputStream f524in;
+        private final PeekInputStream f522in;
         private int pos = 0;
         private int unread = 0;
 
         BlockDataInputStream(InputStream inputStream) {
-            this.f524in = new PeekInputStream(inputStream);
+            this.f522in = new PeekInputStream(inputStream);
             this.din = new DataInputStream(this);
         }
 
@@ -1457,7 +1457,7 @@ public class ObjectInputStream extends InputStream implements ObjectInput, Objec
                     i = Integer.MAX_VALUE;
                 } else {
                     try {
-                        i = this.f524in.available();
+                        i = this.f522in.available();
                     } catch (EOFException unused) {
                         throw new StreamCorruptedException("unexpected EOF while reading block data header");
                     }
@@ -1465,10 +1465,10 @@ public class ObjectInputStream extends InputStream implements ObjectInput, Objec
                 if (i == 0) {
                     return -2;
                 }
-                int peek = this.f524in.peek();
+                int peek = this.f522in.peek();
                 if (peek != 119) {
                     if (peek == 121) {
-                        this.f524in.read();
+                        this.f522in.read();
                         ObjectInputStream.this.handleReset();
                     } else if (peek != 122) {
                         if (peek >= 0) {
@@ -1480,7 +1480,7 @@ public class ObjectInputStream extends InputStream implements ObjectInput, Objec
                     } else if (i < 5) {
                         return -2;
                     } else {
-                        this.f524in.readFully(this.hbuf, 0, 5);
+                        this.f522in.readFully(this.hbuf, 0, 5);
                         int i2 = Bits.getInt(this.hbuf, 1);
                         if (i2 >= 0) {
                             return i2;
@@ -1490,7 +1490,7 @@ public class ObjectInputStream extends InputStream implements ObjectInput, Objec
                 } else if (i < 2) {
                     return -2;
                 } else {
-                    this.f524in.readFully(this.hbuf, 0, 2);
+                    this.f522in.readFully(this.hbuf, 0, 2);
                     return this.hbuf[1] & 255;
                 }
             }
@@ -1502,7 +1502,7 @@ public class ObjectInputStream extends InputStream implements ObjectInput, Objec
                     this.pos = 0;
                     int i = this.unread;
                     if (i > 0) {
-                        int read = this.f524in.read(this.buf, 0, Math.min(i, 1024));
+                        int read = this.f522in.read(this.buf, 0, Math.min(i, 1024));
                         if (read >= 0) {
                             this.end = read;
                             this.unread -= read;
@@ -1543,7 +1543,7 @@ public class ObjectInputStream extends InputStream implements ObjectInput, Objec
         /* access modifiers changed from: package-private */
         public int peek() throws IOException {
             if (!this.blkmode) {
-                return this.f524in.peek();
+                return this.f522in.peek();
             }
             if (this.pos == this.end) {
                 refill();
@@ -1565,7 +1565,7 @@ public class ObjectInputStream extends InputStream implements ObjectInput, Objec
 
         public int read() throws IOException {
             if (!this.blkmode) {
-                return this.f524in.read();
+                return this.f522in.read();
             }
             if (this.pos == this.end) {
                 refill();
@@ -1598,7 +1598,7 @@ public class ObjectInputStream extends InputStream implements ObjectInput, Objec
                     j2 -= (long) min;
                     this.pos += min;
                 } else {
-                    int read = this.f524in.read(this.buf, 0, (int) Math.min(j2, 1024));
+                    int read = this.f522in.read(this.buf, 0, (int) Math.min(j2, 1024));
                     if (read < 0) {
                         break;
                     }
@@ -1611,7 +1611,7 @@ public class ObjectInputStream extends InputStream implements ObjectInput, Objec
         public int available() throws IOException {
             int readBlockHeader;
             if (!this.blkmode) {
-                return this.f524in.available();
+                return this.f522in.available();
             }
             if (this.pos == this.end && this.unread == 0) {
                 do {
@@ -1628,7 +1628,7 @@ public class ObjectInputStream extends InputStream implements ObjectInput, Objec
                     }
                 }
             }
-            int min = this.unread > 0 ? Math.min(this.f524in.available(), this.unread) : 0;
+            int min = this.unread > 0 ? Math.min(this.f522in.available(), this.unread) : 0;
             int i = this.end;
             if (i >= 0) {
                 return (i - this.pos) + min;
@@ -1642,7 +1642,7 @@ public class ObjectInputStream extends InputStream implements ObjectInput, Objec
                 this.end = -1;
                 this.unread = 0;
             }
-            this.f524in.close();
+            this.f522in.close();
         }
 
         /* access modifiers changed from: package-private */
@@ -1663,9 +1663,9 @@ public class ObjectInputStream extends InputStream implements ObjectInput, Objec
                 this.pos += min;
                 return min;
             } else if (!z) {
-                return this.f524in.read(bArr, i, i2);
+                return this.f522in.read(bArr, i, i2);
             } else {
-                int read = this.f524in.read(this.buf, 0, Math.min(i2, 1024));
+                int read = this.f522in.read(this.buf, 0, Math.min(i2, 1024));
                 if (read > 0) {
                     System.arraycopy((Object) this.buf, 0, (Object) bArr, i, read);
                 }
@@ -1724,7 +1724,7 @@ public class ObjectInputStream extends InputStream implements ObjectInput, Objec
         public char readChar() throws IOException {
             if (!this.blkmode) {
                 this.pos = 0;
-                this.f524in.readFully(this.buf, 0, 2);
+                this.f522in.readFully(this.buf, 0, 2);
             } else if (this.end - this.pos < 2) {
                 return this.din.readChar();
             }
@@ -1736,7 +1736,7 @@ public class ObjectInputStream extends InputStream implements ObjectInput, Objec
         public short readShort() throws IOException {
             if (!this.blkmode) {
                 this.pos = 0;
-                this.f524in.readFully(this.buf, 0, 2);
+                this.f522in.readFully(this.buf, 0, 2);
             } else if (this.end - this.pos < 2) {
                 return this.din.readShort();
             }
@@ -1748,7 +1748,7 @@ public class ObjectInputStream extends InputStream implements ObjectInput, Objec
         public int readUnsignedShort() throws IOException {
             if (!this.blkmode) {
                 this.pos = 0;
-                this.f524in.readFully(this.buf, 0, 2);
+                this.f522in.readFully(this.buf, 0, 2);
             } else if (this.end - this.pos < 2) {
                 return this.din.readUnsignedShort();
             }
@@ -1760,7 +1760,7 @@ public class ObjectInputStream extends InputStream implements ObjectInput, Objec
         public int readInt() throws IOException {
             if (!this.blkmode) {
                 this.pos = 0;
-                this.f524in.readFully(this.buf, 0, 4);
+                this.f522in.readFully(this.buf, 0, 4);
             } else if (this.end - this.pos < 4) {
                 return this.din.readInt();
             }
@@ -1772,7 +1772,7 @@ public class ObjectInputStream extends InputStream implements ObjectInput, Objec
         public float readFloat() throws IOException {
             if (!this.blkmode) {
                 this.pos = 0;
-                this.f524in.readFully(this.buf, 0, 4);
+                this.f522in.readFully(this.buf, 0, 4);
             } else if (this.end - this.pos < 4) {
                 return this.din.readFloat();
             }
@@ -1784,7 +1784,7 @@ public class ObjectInputStream extends InputStream implements ObjectInput, Objec
         public long readLong() throws IOException {
             if (!this.blkmode) {
                 this.pos = 0;
-                this.f524in.readFully(this.buf, 0, 8);
+                this.f522in.readFully(this.buf, 0, 8);
             } else if (this.end - this.pos < 8) {
                 return this.din.readLong();
             }
@@ -1796,7 +1796,7 @@ public class ObjectInputStream extends InputStream implements ObjectInput, Objec
         public double readDouble() throws IOException {
             if (!this.blkmode) {
                 this.pos = 0;
-                this.f524in.readFully(this.buf, 0, 8);
+                this.f522in.readFully(this.buf, 0, 8);
             } else if (this.end - this.pos < 8) {
                 return this.din.readDouble();
             }
@@ -1827,7 +1827,7 @@ public class ObjectInputStream extends InputStream implements ObjectInput, Objec
                 int r0 = r8 - r7
                 r1 = 1024(0x400, float:1.435E-42)
                 int r0 = java.lang.Math.min((int) r0, (int) r1)
-                java.io.ObjectInputStream$PeekInputStream r1 = r5.f524in
+                java.io.ObjectInputStream$PeekInputStream r1 = r5.f522in
                 byte[] r2 = r5.buf
                 r3 = 0
                 r1.readFully(r2, r3, r0)
@@ -1882,7 +1882,7 @@ public class ObjectInputStream extends InputStream implements ObjectInput, Objec
                 int r0 = r9 - r8
                 r2 = 512(0x200, float:7.175E-43)
                 int r0 = java.lang.Math.min((int) r0, (int) r2)
-                java.io.ObjectInputStream$PeekInputStream r2 = r6.f524in
+                java.io.ObjectInputStream$PeekInputStream r2 = r6.f522in
                 byte[] r3 = r6.buf
                 int r4 = r0 << 1
                 r5 = 0
@@ -1939,7 +1939,7 @@ public class ObjectInputStream extends InputStream implements ObjectInput, Objec
                 int r0 = r9 - r8
                 r2 = 512(0x200, float:7.175E-43)
                 int r0 = java.lang.Math.min((int) r0, (int) r2)
-                java.io.ObjectInputStream$PeekInputStream r2 = r6.f524in
+                java.io.ObjectInputStream$PeekInputStream r2 = r6.f522in
                 byte[] r3 = r6.buf
                 int r4 = r0 << 1
                 r5 = 0
@@ -1996,7 +1996,7 @@ public class ObjectInputStream extends InputStream implements ObjectInput, Objec
                 int r0 = r9 - r8
                 r2 = 256(0x100, float:3.59E-43)
                 int r0 = java.lang.Math.min((int) r0, (int) r2)
-                java.io.ObjectInputStream$PeekInputStream r2 = r6.f524in
+                java.io.ObjectInputStream$PeekInputStream r2 = r6.f522in
                 byte[] r3 = r6.buf
                 int r4 = r0 << 2
                 r5 = 0
@@ -2045,7 +2045,7 @@ public class ObjectInputStream extends InputStream implements ObjectInput, Objec
             while (i < i4) {
                 if (!this.blkmode) {
                     i3 = Math.min(i4 - i, 256);
-                    this.f524in.readFully(this.buf, 0, i3 << 2);
+                    this.f522in.readFully(this.buf, 0, i3 << 2);
                     this.pos = 0;
                 } else {
                     int i5 = this.end;
@@ -2078,7 +2078,7 @@ public class ObjectInputStream extends InputStream implements ObjectInput, Objec
                 int r0 = r9 - r8
                 r2 = 128(0x80, float:1.794E-43)
                 int r0 = java.lang.Math.min((int) r0, (int) r2)
-                java.io.ObjectInputStream$PeekInputStream r2 = r6.f524in
+                java.io.ObjectInputStream$PeekInputStream r2 = r6.f522in
                 byte[] r3 = r6.buf
                 int r4 = r0 << 3
                 r5 = 0
@@ -2127,7 +2127,7 @@ public class ObjectInputStream extends InputStream implements ObjectInput, Objec
             while (i < i4) {
                 if (!this.blkmode) {
                     i3 = Math.min(i4 - i, 128);
-                    this.f524in.readFully(this.buf, 0, i3 << 3);
+                    this.f522in.readFully(this.buf, 0, i3 << 3);
                     this.pos = 0;
                 } else {
                     int i5 = this.end;
@@ -2173,7 +2173,7 @@ public class ObjectInputStream extends InputStream implements ObjectInput, Objec
                     this.pos = 0;
                     int min = (int) Math.min(1024, j);
                     this.end = min;
-                    this.f524in.readFully(this.buf, i3, min - i3);
+                    this.f522in.readFully(this.buf, i3, min - i3);
                 }
                 j -= j2;
             }
@@ -2297,7 +2297,7 @@ public class ObjectInputStream extends InputStream implements ObjectInput, Objec
 
         /* access modifiers changed from: package-private */
         public long getBytesRead() {
-            return this.f524in.getBytesRead();
+            return this.f522in.getBytesRead();
         }
     }
 

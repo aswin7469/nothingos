@@ -37,7 +37,7 @@ public class ScreenshotSelectorView extends View {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-screenshot-ScreenshotSelectorView */
-    public /* synthetic */ boolean mo37472x302dc8e6(View view, MotionEvent motionEvent) {
+    public /* synthetic */ boolean mo37473x302dc8e6(View view, MotionEvent motionEvent) {
         int action = motionEvent.getAction();
         if (action == 0) {
             startSelection((int) motionEvent.getX(), (int) motionEvent.getY());

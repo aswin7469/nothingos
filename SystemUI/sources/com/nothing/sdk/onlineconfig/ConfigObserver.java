@@ -27,7 +27,7 @@ public class ConfigObserver {
             Class findInnerClass = ClassReflection.findInnerClass(findClass, "ConfigUpdater");
             Constructor<?> constructor = this.mConfigObserverClass.getConstructor(Context.class, Handler.class, findInnerClass, String.class);
             constructor.setAccessible(true);
-            C41211 r3 = new InvocationHandler() {
+            C41311 r3 = new InvocationHandler() {
                 public Object invoke(Object obj, Method method, Object[] objArr) throws Throwable {
                     if (!"updateConfig".equals(method.getName())) {
                         return null;

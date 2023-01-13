@@ -17,7 +17,7 @@ import androidx.core.view.MarginLayoutParamsCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import androidx.core.widget.TextViewCompat;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.internal.CheckableImageButton;
 import com.google.android.material.internal.ViewUtils;
 import com.google.android.material.resources.MaterialResources;
@@ -38,7 +38,7 @@ class StartCompoundLayout extends LinearLayout {
         setVisibility(8);
         setOrientation(0);
         setLayoutParams(new FrameLayout.LayoutParams(-2, -1, 8388611));
-        CheckableImageButton checkableImageButton = (CheckableImageButton) LayoutInflater.from(getContext()).inflate(C3621R.layout.design_text_input_start_icon, this, false);
+        CheckableImageButton checkableImageButton = (CheckableImageButton) LayoutInflater.from(getContext()).inflate(C3631R.layout.design_text_input_start_icon, this, false);
         this.startIconView = checkableImageButton;
         AppCompatTextView appCompatTextView = new AppCompatTextView(getContext());
         this.prefixTextView = appCompatTextView;
@@ -54,31 +54,31 @@ class StartCompoundLayout extends LinearLayout {
         }
         setStartIconOnClickListener((View.OnClickListener) null);
         setStartIconOnLongClickListener((View.OnLongClickListener) null);
-        if (tintTypedArray.hasValue(C3621R.styleable.TextInputLayout_startIconTint)) {
-            this.startIconTintList = MaterialResources.getColorStateList(getContext(), tintTypedArray, C3621R.styleable.TextInputLayout_startIconTint);
+        if (tintTypedArray.hasValue(C3631R.styleable.TextInputLayout_startIconTint)) {
+            this.startIconTintList = MaterialResources.getColorStateList(getContext(), tintTypedArray, C3631R.styleable.TextInputLayout_startIconTint);
         }
-        if (tintTypedArray.hasValue(C3621R.styleable.TextInputLayout_startIconTintMode)) {
-            this.startIconTintMode = ViewUtils.parseTintMode(tintTypedArray.getInt(C3621R.styleable.TextInputLayout_startIconTintMode, -1), (PorterDuff.Mode) null);
+        if (tintTypedArray.hasValue(C3631R.styleable.TextInputLayout_startIconTintMode)) {
+            this.startIconTintMode = ViewUtils.parseTintMode(tintTypedArray.getInt(C3631R.styleable.TextInputLayout_startIconTintMode, -1), (PorterDuff.Mode) null);
         }
-        if (tintTypedArray.hasValue(C3621R.styleable.TextInputLayout_startIconDrawable)) {
-            setStartIconDrawable(tintTypedArray.getDrawable(C3621R.styleable.TextInputLayout_startIconDrawable));
-            if (tintTypedArray.hasValue(C3621R.styleable.TextInputLayout_startIconContentDescription)) {
-                setStartIconContentDescription(tintTypedArray.getText(C3621R.styleable.TextInputLayout_startIconContentDescription));
+        if (tintTypedArray.hasValue(C3631R.styleable.TextInputLayout_startIconDrawable)) {
+            setStartIconDrawable(tintTypedArray.getDrawable(C3631R.styleable.TextInputLayout_startIconDrawable));
+            if (tintTypedArray.hasValue(C3631R.styleable.TextInputLayout_startIconContentDescription)) {
+                setStartIconContentDescription(tintTypedArray.getText(C3631R.styleable.TextInputLayout_startIconContentDescription));
             }
-            setStartIconCheckable(tintTypedArray.getBoolean(C3621R.styleable.TextInputLayout_startIconCheckable, true));
+            setStartIconCheckable(tintTypedArray.getBoolean(C3631R.styleable.TextInputLayout_startIconCheckable, true));
         }
     }
 
     private void initPrefixTextView(TintTypedArray tintTypedArray) {
         this.prefixTextView.setVisibility(8);
-        this.prefixTextView.setId(C3621R.C3624id.textinput_prefix_text);
+        this.prefixTextView.setId(C3631R.C3634id.textinput_prefix_text);
         this.prefixTextView.setLayoutParams(new LinearLayout.LayoutParams(-2, -2));
         ViewCompat.setAccessibilityLiveRegion(this.prefixTextView, 1);
-        setPrefixTextAppearance(tintTypedArray.getResourceId(C3621R.styleable.TextInputLayout_prefixTextAppearance, 0));
-        if (tintTypedArray.hasValue(C3621R.styleable.TextInputLayout_prefixTextColor)) {
-            setPrefixTextColor(tintTypedArray.getColorStateList(C3621R.styleable.TextInputLayout_prefixTextColor));
+        setPrefixTextAppearance(tintTypedArray.getResourceId(C3631R.styleable.TextInputLayout_prefixTextAppearance, 0));
+        if (tintTypedArray.hasValue(C3631R.styleable.TextInputLayout_prefixTextColor)) {
+            setPrefixTextColor(tintTypedArray.getColorStateList(C3631R.styleable.TextInputLayout_prefixTextColor));
         }
-        setPrefixText(tintTypedArray.getText(C3621R.styleable.TextInputLayout_prefixText));
+        setPrefixText(tintTypedArray.getText(C3631R.styleable.TextInputLayout_prefixText));
     }
 
     /* access modifiers changed from: protected */
@@ -221,7 +221,7 @@ class StartCompoundLayout extends LinearLayout {
     public void updatePrefixTextViewPadding() {
         EditText editText = this.textInputLayout.editText;
         if (editText != null) {
-            ViewCompat.setPaddingRelative(this.prefixTextView, isStartIconVisible() ? 0 : ViewCompat.getPaddingStart(editText), editText.getCompoundPaddingTop(), getContext().getResources().getDimensionPixelSize(C3621R.dimen.material_input_text_to_prefix_suffix_padding), editText.getCompoundPaddingBottom());
+            ViewCompat.setPaddingRelative(this.prefixTextView, isStartIconVisible() ? 0 : ViewCompat.getPaddingStart(editText), editText.getCompoundPaddingTop(), getContext().getResources().getDimensionPixelSize(C3631R.dimen.material_input_text_to_prefix_suffix_padding), editText.getCompoundPaddingBottom());
         }
     }
 

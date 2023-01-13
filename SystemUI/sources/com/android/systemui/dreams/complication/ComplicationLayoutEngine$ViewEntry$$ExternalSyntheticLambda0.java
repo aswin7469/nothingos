@@ -24,6 +24,6 @@ public final /* synthetic */ class ComplicationLayoutEngine$ViewEntry$$ExternalS
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo32580xd35d1ce(this.f$1, this.f$2, this.f$3, this.f$4, this.f$5, (Integer) obj);
+        this.f$0.mo32591xd35d1ce(this.f$1, this.f$2, this.f$3, this.f$4, this.f$5, (Integer) obj);
     }
 }

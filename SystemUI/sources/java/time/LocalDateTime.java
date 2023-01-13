@@ -26,8 +26,8 @@ import java.util.Objects;
 import sun.security.x509.InvalidityDateExtension;
 
 public final class LocalDateTime implements Temporal, TemporalAdjuster, ChronoLocalDateTime<LocalDate>, Serializable {
-    public static final LocalDateTime MAX = m916of(LocalDate.MAX, LocalTime.MAX);
-    public static final LocalDateTime MIN = m916of(LocalDate.MIN, LocalTime.MIN);
+    public static final LocalDateTime MAX = m914of(LocalDate.MAX, LocalTime.MAX);
+    public static final LocalDateTime MIN = m914of(LocalDate.MIN, LocalTime.MIN);
     private static final long serialVersionUID = 6207766400415563566L;
     private final LocalDate date;
     private final LocalTime time;
@@ -47,37 +47,37 @@ public final class LocalDateTime implements Temporal, TemporalAdjuster, ChronoLo
     }
 
     /* renamed from: of */
-    public static LocalDateTime m913of(int i, Month month, int i2, int i3, int i4) {
-        return new LocalDateTime(LocalDate.m909of(i, month, i2), LocalTime.m917of(i3, i4));
+    public static LocalDateTime m911of(int i, Month month, int i2, int i3, int i4) {
+        return new LocalDateTime(LocalDate.m907of(i, month, i2), LocalTime.m915of(i3, i4));
     }
 
     /* renamed from: of */
-    public static LocalDateTime m914of(int i, Month month, int i2, int i3, int i4, int i5) {
-        return new LocalDateTime(LocalDate.m909of(i, month, i2), LocalTime.m918of(i3, i4, i5));
+    public static LocalDateTime m912of(int i, Month month, int i2, int i3, int i4, int i5) {
+        return new LocalDateTime(LocalDate.m907of(i, month, i2), LocalTime.m916of(i3, i4, i5));
     }
 
     /* renamed from: of */
-    public static LocalDateTime m915of(int i, Month month, int i2, int i3, int i4, int i5, int i6) {
-        return new LocalDateTime(LocalDate.m909of(i, month, i2), LocalTime.m919of(i3, i4, i5, i6));
+    public static LocalDateTime m913of(int i, Month month, int i2, int i3, int i4, int i5, int i6) {
+        return new LocalDateTime(LocalDate.m907of(i, month, i2), LocalTime.m917of(i3, i4, i5, i6));
     }
 
     /* renamed from: of */
-    public static LocalDateTime m910of(int i, int i2, int i3, int i4, int i5) {
-        return new LocalDateTime(LocalDate.m908of(i, i2, i3), LocalTime.m917of(i4, i5));
+    public static LocalDateTime m908of(int i, int i2, int i3, int i4, int i5) {
+        return new LocalDateTime(LocalDate.m906of(i, i2, i3), LocalTime.m915of(i4, i5));
     }
 
     /* renamed from: of */
-    public static LocalDateTime m911of(int i, int i2, int i3, int i4, int i5, int i6) {
-        return new LocalDateTime(LocalDate.m908of(i, i2, i3), LocalTime.m918of(i4, i5, i6));
+    public static LocalDateTime m909of(int i, int i2, int i3, int i4, int i5, int i6) {
+        return new LocalDateTime(LocalDate.m906of(i, i2, i3), LocalTime.m916of(i4, i5, i6));
     }
 
     /* renamed from: of */
-    public static LocalDateTime m912of(int i, int i2, int i3, int i4, int i5, int i6, int i7) {
-        return new LocalDateTime(LocalDate.m908of(i, i2, i3), LocalTime.m919of(i4, i5, i6, i7));
+    public static LocalDateTime m910of(int i, int i2, int i3, int i4, int i5, int i6, int i7) {
+        return new LocalDateTime(LocalDate.m906of(i, i2, i3), LocalTime.m917of(i4, i5, i6, i7));
     }
 
     /* renamed from: of */
-    public static LocalDateTime m916of(LocalDate localDate, LocalTime localTime) {
+    public static LocalDateTime m914of(LocalDate localDate, LocalTime localTime) {
         Objects.requireNonNull(localDate, InvalidityDateExtension.DATE);
         Objects.requireNonNull(localTime, "time");
         return new LocalDateTime(localDate, localTime);
@@ -293,7 +293,7 @@ public final class LocalDateTime implements Temporal, TemporalAdjuster, ChronoLo
         if (!(temporalUnit instanceof ChronoUnit)) {
             return (LocalDateTime) temporalUnit.addTo(this, j);
         }
-        switch (C28521.$SwitchMap$java$time$temporal$ChronoUnit[((ChronoUnit) temporalUnit).ordinal()]) {
+        switch (C28581.$SwitchMap$java$time$temporal$ChronoUnit[((ChronoUnit) temporalUnit).ordinal()]) {
             case 1:
                 return plusNanos(j);
             case 2:
@@ -314,7 +314,7 @@ public final class LocalDateTime implements Temporal, TemporalAdjuster, ChronoLo
     }
 
     /* renamed from: java.time.LocalDateTime$1 */
-    static /* synthetic */ class C28521 {
+    static /* synthetic */ class C28581 {
         static final /* synthetic */ int[] $SwitchMap$java$time$temporal$ChronoUnit;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(14:0|1|2|3|4|5|6|7|8|9|10|11|12|(3:13|14|16)) */
@@ -375,7 +375,7 @@ public final class LocalDateTime implements Temporal, TemporalAdjuster, ChronoLo
             L_0x0054:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: java.time.LocalDateTime.C28521.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: java.time.LocalDateTime.C28581.<clinit>():void");
         }
     }
 
@@ -535,7 +535,7 @@ public final class LocalDateTime implements Temporal, TemporalAdjuster, ChronoLo
                 j2 = daysUntil + 1;
                 j = nanoOfDay - 86400000000000L;
             }
-            switch (C28521.$SwitchMap$java$time$temporal$ChronoUnit[((ChronoUnit) temporalUnit).ordinal()]) {
+            switch (C28581.$SwitchMap$java$time$temporal$ChronoUnit[((ChronoUnit) temporalUnit).ordinal()]) {
                 case 1:
                     j2 = Math.multiplyExact(j2, 86400000000000L);
                     break;
@@ -581,11 +581,11 @@ public final class LocalDateTime implements Temporal, TemporalAdjuster, ChronoLo
     }
 
     public OffsetDateTime atOffset(ZoneOffset zoneOffset) {
-        return OffsetDateTime.m925of(this, zoneOffset);
+        return OffsetDateTime.m923of(this, zoneOffset);
     }
 
     public ZonedDateTime atZone(ZoneId zoneId) {
-        return ZonedDateTime.m938of(this, zoneId);
+        return ZonedDateTime.m936of(this, zoneId);
     }
 
     public int compareTo(ChronoLocalDateTime<?> chronoLocalDateTime) {
@@ -658,6 +658,6 @@ public final class LocalDateTime implements Temporal, TemporalAdjuster, ChronoLo
     }
 
     static LocalDateTime readExternal(DataInput dataInput) throws IOException {
-        return m916of(LocalDate.readExternal(dataInput), LocalTime.readExternal(dataInput));
+        return m914of(LocalDate.readExternal(dataInput), LocalTime.readExternal(dataInput));
     }
 }

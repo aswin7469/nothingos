@@ -102,12 +102,12 @@ public interface IntStream extends BaseStream<Integer, IntStream> {
     }
 
     /* renamed from: of */
-    static IntStream m1776of(int i) {
+    static IntStream m1782of(int i) {
         return StreamSupport.intStream(new Streams.IntStreamBuilderImpl(i), false);
     }
 
     /* renamed from: of */
-    static IntStream m1777of(int... iArr) {
+    static IntStream m1783of(int... iArr) {
         return Arrays.stream(iArr);
     }
 
@@ -116,7 +116,7 @@ public interface IntStream extends BaseStream<Integer, IntStream> {
         return StreamSupport.intStream(Spliterators.spliteratorUnknownSize((PrimitiveIterator.OfInt) new PrimitiveIterator.OfInt(i, intUnaryOperator) {
 
             /* renamed from: t */
-            int f778t;
+            int f776t;
             final /* synthetic */ IntUnaryOperator val$f;
             final /* synthetic */ int val$seed;
 
@@ -127,12 +127,12 @@ public interface IntStream extends BaseStream<Integer, IntStream> {
             {
                 this.val$seed = r1;
                 this.val$f = r2;
-                this.f778t = r1;
+                this.f776t = r1;
             }
 
             public int nextInt() {
-                int i = this.f778t;
-                this.f778t = this.val$f.applyAsInt(i);
+                int i = this.f776t;
+                this.f776t = this.val$f.applyAsInt(i);
                 return i;
             }
         }, 1296), false);

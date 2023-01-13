@@ -9,6 +9,6 @@ public final /* synthetic */ class StackScrollerDecorView$$ExternalSyntheticLamb
     }
 
     public final void run() {
-        this.f$0.mo41743x61f35466();
+        this.f$0.mo41751x61f35466();
     }
 }

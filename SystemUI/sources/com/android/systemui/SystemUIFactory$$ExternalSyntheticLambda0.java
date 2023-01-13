@@ -16,6 +16,6 @@ public final /* synthetic */ class SystemUIFactory$$ExternalSyntheticLambda0 imp
     }
 
     public final void run() {
-        this.f$0.m2530lambda$setupWmComponent$0$comandroidsystemuiSystemUIFactory(this.f$1, this.f$2);
+        this.f$0.m2536lambda$setupWmComponent$0$comandroidsystemuiSystemUIFactory(this.f$1, this.f$2);
     }
 }

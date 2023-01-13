@@ -11,6 +11,6 @@ public final /* synthetic */ class PeopleTileViewHelper$$ExternalSyntheticLambda
     }
 
     public final void onHeaderDecoded(ImageDecoder imageDecoder, ImageDecoder.ImageInfo imageInfo, ImageDecoder.Source source) {
-        this.f$0.mo35149x44fa7855(imageDecoder, imageInfo, source);
+        this.f$0.mo35153x44fa7855(imageDecoder, imageInfo, source);
     }
 }

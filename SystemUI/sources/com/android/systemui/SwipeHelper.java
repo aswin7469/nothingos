@@ -21,6 +21,7 @@ import com.android.systemui.flags.FeatureFlags;
 import com.android.systemui.flags.Flags;
 import com.android.systemui.plugins.FalsingManager;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
+import com.nothing.systemui.util.NTLogUtil;
 import java.util.function.Consumer;
 
 public class SwipeHelper implements Gefingerpoken {
@@ -41,10 +42,10 @@ public class SwipeHelper implements Gefingerpoken {
     static final String TAG = "com.android.systemui.SwipeHelper";
 
     /* renamed from: X */
-    public static final int f290X = 0;
+    public static final int f289X = 0;
 
     /* renamed from: Y */
-    public static final int f291Y = 1;
+    public static final int f290Y = 1;
     /* access modifiers changed from: private */
     public final Callback mCallback;
     private boolean mCanCurrViewBeDimissed;
@@ -156,8 +157,8 @@ public class SwipeHelper implements Gefingerpoken {
         this.mTouchSlopMultiplier = ViewConfiguration.getAmbiguousGestureMultiplier();
         this.mLongPressTimeout = (long) (((float) ViewConfiguration.getLongPressTimeout()) * 1.5f);
         this.mDensityScale = resources.getDisplayMetrics().density;
-        this.mFalsingThreshold = resources.getDimensionPixelSize(C1893R.dimen.swipe_helper_falsing_threshold);
-        this.mFadeDependingOnAmountSwiped = resources.getBoolean(C1893R.bool.config_fadeDependingOnAmountSwiped);
+        this.mFalsingThreshold = resources.getDimensionPixelSize(C1894R.dimen.swipe_helper_falsing_threshold);
+        this.mFadeDependingOnAmountSwiped = resources.getBoolean(C1894R.bool.config_fadeDependingOnAmountSwiped);
         this.mFalsingManager = falsingManager;
         this.mFeatureFlags = featureFlags;
         this.mFlingAnimationUtils = new FlingAnimationUtils(resources.getDisplayMetrics(), ((float) getMaxEscapeAnimDuration()) / 1000.0f);
@@ -518,7 +519,11 @@ public class SwipeHelper implements Gefingerpoken {
                 boolean isRemoved = view instanceof ExpandableNotificationRow ? ((ExpandableNotificationRow) view).isRemoved() : false;
                 if (!this.mCancelled || isRemoved) {
                     SwipeHelper.this.mCallback.onChildDismissed(view);
-                    SwipeHelper.this.resetSwipeState();
+                    if (view == SwipeHelper.this.mTouchedView) {
+                        SwipeHelper.this.resetSwipeState();
+                    } else {
+                        NTLogUtil.m1686d(SwipeHelper.TAG, "dismissChild onAnimationEnd mTouchedView != animView, skip resetSwipeState");
+                    }
                 }
                 Consumer consumer = consumer2;
                 if (consumer != null) {
@@ -558,7 +563,11 @@ public class SwipeHelper implements Gefingerpoken {
                 boolean unused = SwipeHelper.this.mSnappingChild = false;
                 if (!this.wasCancelled) {
                     SwipeHelper.this.updateSwipeProgressFromOffset(view, canChildBeDismissed);
-                    SwipeHelper.this.resetSwipeState();
+                    if (view == SwipeHelper.this.mTouchedView) {
+                        SwipeHelper.this.resetSwipeState();
+                    } else {
+                        NTLogUtil.m1686d(SwipeHelper.TAG, "snapChild onAnimationEnd mTouchedView != animView, skip resetSwipeState");
+                    }
                 }
                 SwipeHelper.this.onSnapChildWithAnimationFinished();
             }
@@ -573,7 +582,7 @@ public class SwipeHelper implements Gefingerpoken {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$snapChild$0$com-android-systemui-SwipeHelper  reason: not valid java name */
-    public /* synthetic */ void m2528lambda$snapChild$0$comandroidsystemuiSwipeHelper(View view, boolean z, ValueAnimator valueAnimator) {
+    public /* synthetic */ void m2534lambda$snapChild$0$comandroidsystemuiSwipeHelper(View view, boolean z, ValueAnimator valueAnimator) {
         onTranslationUpdate(view, ((Float) valueAnimator.getAnimatedValue()).floatValue(), z);
     }
 

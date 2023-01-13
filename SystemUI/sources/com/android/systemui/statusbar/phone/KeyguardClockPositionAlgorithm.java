@@ -3,7 +3,7 @@ package com.android.systemui.statusbar.phone;
 import android.content.res.Resources;
 import android.util.MathUtils;
 import com.android.keyguard.BouncerPanelExpansionCalculator;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.animation.Interpolators;
 import com.android.systemui.doze.util.BurnInHelperKt;
 import com.android.systemui.statusbar.notification.NotificationUtils;
@@ -43,12 +43,12 @@ public class KeyguardClockPositionAlgorithm {
     }
 
     public void loadDimens(Resources resources) {
-        this.mStatusViewBottomMargin = resources.getDimensionPixelSize(C1893R.dimen.keyguard_status_view_bottom_margin);
-        this.mSplitShadeTopNotificationsMargin = resources.getDimensionPixelSize(C1893R.dimen.large_screen_shade_header_height);
-        this.mSplitShadeTargetTopMargin = resources.getDimensionPixelSize(C1893R.dimen.keyguard_split_shade_top_margin);
-        this.mContainerTopPadding = resources.getDimensionPixelSize(C1893R.dimen.keyguard_clock_top_margin);
-        this.mBurnInPreventionOffsetX = resources.getDimensionPixelSize(C1893R.dimen.burn_in_prevention_offset_x);
-        this.mBurnInPreventionOffsetYClock = resources.getDimensionPixelSize(C1893R.dimen.burn_in_prevention_offset_y_clock);
+        this.mStatusViewBottomMargin = resources.getDimensionPixelSize(C1894R.dimen.keyguard_status_view_bottom_margin);
+        this.mSplitShadeTopNotificationsMargin = resources.getDimensionPixelSize(C1894R.dimen.large_screen_shade_header_height);
+        this.mSplitShadeTargetTopMargin = resources.getDimensionPixelSize(C1894R.dimen.keyguard_split_shade_top_margin);
+        this.mContainerTopPadding = resources.getDimensionPixelSize(C1894R.dimen.keyguard_clock_top_margin);
+        this.mBurnInPreventionOffsetX = resources.getDimensionPixelSize(C1894R.dimen.burn_in_prevention_offset_x);
+        this.mBurnInPreventionOffsetYClock = resources.getDimensionPixelSize(C1894R.dimen.burn_in_prevention_offset_y_clock);
     }
 
     public void setup(int i, float f, int i2, int i3, int i4, float f2, float f3, boolean z, int i5, float f4, int i6, boolean z2, float f5, float f6, boolean z3) {

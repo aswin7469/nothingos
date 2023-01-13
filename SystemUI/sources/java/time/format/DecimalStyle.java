@@ -26,11 +26,11 @@ public final class DecimalStyle {
     }
 
     public static DecimalStyle ofDefaultLocale() {
-        return m954of(Locale.getDefault(Locale.Category.FORMAT));
+        return m952of(Locale.getDefault(Locale.Category.FORMAT));
     }
 
     /* renamed from: of */
-    public static DecimalStyle m954of(Locale locale) {
+    public static DecimalStyle m952of(Locale locale) {
         Objects.requireNonNull(locale, "locale");
         ConcurrentMap<Locale, DecimalStyle> concurrentMap = CACHE;
         DecimalStyle decimalStyle = concurrentMap.get(locale);

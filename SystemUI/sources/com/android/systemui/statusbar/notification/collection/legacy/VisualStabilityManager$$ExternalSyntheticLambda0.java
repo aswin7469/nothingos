@@ -9,6 +9,6 @@ public final /* synthetic */ class VisualStabilityManager$$ExternalSyntheticLamb
     }
 
     public final void run() {
-        this.f$0.mo40399x506571a4();
+        this.f$0.mo40402x506571a4();
     }
 }

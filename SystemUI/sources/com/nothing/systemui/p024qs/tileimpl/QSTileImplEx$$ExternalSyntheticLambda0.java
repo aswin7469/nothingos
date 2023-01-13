@@ -14,6 +14,6 @@ public final /* synthetic */ class QSTileImplEx$$ExternalSyntheticLambda0 implem
     }
 
     public final void run() {
-        QSTileImplEx.m3515createInternetDialog$lambda1(this.f$0, this.f$1);
+        QSTileImplEx.m3521createInternetDialog$lambda1(this.f$0, this.f$1);
     }
 }

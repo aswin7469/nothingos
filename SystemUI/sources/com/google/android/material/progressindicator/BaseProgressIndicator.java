@@ -11,7 +11,7 @@ import android.view.ViewParent;
 import android.widget.ProgressBar;
 import androidx.core.view.ViewCompat;
 import androidx.vectordrawable.graphics.drawable.Animatable2Compat;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.internal.ThemeEnforcement;
 import com.google.android.material.progressindicator.BaseProgressIndicatorSpec;
@@ -22,7 +22,7 @@ import java.util.Arrays;
 
 public abstract class BaseProgressIndicator<S extends BaseProgressIndicatorSpec> extends ProgressBar {
     static final float DEFAULT_OPACITY = 0.2f;
-    static final int DEF_STYLE_RES = C3621R.style.Widget_MaterialComponents_ProgressIndicator;
+    static final int DEF_STYLE_RES = C3631R.style.Widget_MaterialComponents_ProgressIndicator;
     public static final int HIDE_INWARD = 2;
     public static final int HIDE_NONE = 0;
     public static final int HIDE_OUTWARD = 1;
@@ -89,9 +89,9 @@ public abstract class BaseProgressIndicator<S extends BaseProgressIndicatorSpec>
         super(MaterialThemeOverlay.wrap(context, attributeSet, i, DEF_STYLE_RES), attributeSet, i);
         Context context2 = getContext();
         this.spec = createSpec(context2, attributeSet);
-        TypedArray obtainStyledAttributes = ThemeEnforcement.obtainStyledAttributes(context2, attributeSet, C3621R.styleable.BaseProgressIndicator, i, i2, new int[0]);
-        this.showDelay = obtainStyledAttributes.getInt(C3621R.styleable.BaseProgressIndicator_showDelay, -1);
-        this.minHideDelay = Math.min(obtainStyledAttributes.getInt(C3621R.styleable.BaseProgressIndicator_minHideDelay, -1), 1000);
+        TypedArray obtainStyledAttributes = ThemeEnforcement.obtainStyledAttributes(context2, attributeSet, C3631R.styleable.BaseProgressIndicator, i, i2, new int[0]);
+        this.showDelay = obtainStyledAttributes.getInt(C3631R.styleable.BaseProgressIndicator_showDelay, -1);
+        this.minHideDelay = Math.min(obtainStyledAttributes.getInt(C3631R.styleable.BaseProgressIndicator_minHideDelay, -1), 1000);
         obtainStyledAttributes.recycle();
         this.animatorDurationScaleProvider = new AnimatorDurationScaleProvider();
         this.isParentDoneInitializing = true;
@@ -351,7 +351,7 @@ public abstract class BaseProgressIndicator<S extends BaseProgressIndicatorSpec>
 
     public void setIndicatorColor(int... iArr) {
         if (iArr.length == 0) {
-            iArr = new int[]{MaterialColors.getColor(getContext(), C3621R.attr.colorPrimary, -1)};
+            iArr = new int[]{MaterialColors.getColor(getContext(), C3631R.attr.colorPrimary, -1)};
         }
         if (!Arrays.equals(getIndicatorColor(), iArr)) {
             this.spec.indicatorColors = iArr;

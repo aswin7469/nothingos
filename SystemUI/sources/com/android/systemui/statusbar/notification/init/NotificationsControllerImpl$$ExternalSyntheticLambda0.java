@@ -9,6 +9,6 @@ public final /* synthetic */ class NotificationsControllerImpl$$ExternalSyntheti
     }
 
     public final void run() {
-        NotificationsControllerImpl.m3120initialize$lambda0(this.f$0);
+        NotificationsControllerImpl.m3124initialize$lambda0(this.f$0);
     }
 }

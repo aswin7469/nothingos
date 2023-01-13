@@ -14,10 +14,10 @@ import android.widget.LinearLayout;
 import android.widget.Toolbar;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.RecyclerView;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.p012qs.QSDetailClipper;
 import com.android.systemui.p012qs.QSUtils;
-import com.android.systemui.plugins.p011qs.C2301QS;
+import com.android.systemui.plugins.p011qs.C2304QS;
 import com.android.systemui.plugins.p011qs.QSContainerController;
 import com.android.systemui.statusbar.phone.LightBarController;
 
@@ -48,7 +48,7 @@ public class QSCustomizer extends LinearLayout {
     /* access modifiers changed from: private */
     public boolean mOpening;
     /* access modifiers changed from: private */
-    public C2301QS mQs;
+    public C2304QS mQs;
     /* access modifiers changed from: private */
     public QSContainerController mQsContainerController;
     /* access modifiers changed from: private */
@@ -56,10 +56,10 @@ public class QSCustomizer extends LinearLayout {
     private final View mTransparentView;
 
     /* renamed from: mX */
-    private int f331mX;
+    private int f330mX;
 
     /* renamed from: mY */
-    private int f332mY;
+    private int f331mY;
 
     /* access modifiers changed from: protected */
     public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateDefaultLayoutParams() {
@@ -81,17 +81,17 @@ public class QSCustomizer extends LinearLayout {
 
     public QSCustomizer(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        LayoutInflater.from(getContext()).inflate(C1893R.layout.qs_customize_panel_content, this);
-        this.mClipper = new QSDetailClipper(findViewById(C1893R.C1897id.customize_container));
+        LayoutInflater.from(getContext()).inflate(C1894R.layout.qs_customize_panel_content, this);
+        this.mClipper = new QSDetailClipper(findViewById(C1894R.C1898id.customize_container));
         Toolbar toolbar = (Toolbar) findViewById(16908731);
         TypedValue typedValue = new TypedValue();
         this.mContext.getTheme().resolveAttribute(16843531, typedValue, true);
         toolbar.setNavigationIcon(getResources().getDrawable(typedValue.resourceId, this.mContext.getTheme()));
         toolbar.getMenu().add(0, 1, 0, this.mContext.getString(17041387));
-        toolbar.setTitle(C1893R.string.qs_edit);
+        toolbar.setTitle(C1894R.string.qs_edit);
         RecyclerView recyclerView = (RecyclerView) findViewById(16908298);
         this.mRecyclerView = recyclerView;
-        this.mTransparentView = findViewById(C1893R.C1897id.customizer_transparent_view);
+        this.mTransparentView = findViewById(C1894R.C1898id.customizer_transparent_view);
         DefaultItemAnimator defaultItemAnimator = new DefaultItemAnimator();
         defaultItemAnimator.setMoveDuration(150);
         recyclerView.setItemAnimator(defaultItemAnimator);
@@ -107,7 +107,7 @@ public class QSCustomizer extends LinearLayout {
 
     /* access modifiers changed from: package-private */
     public void updateNavBackDrop(Configuration configuration, LightBarController lightBarController) {
-        View findViewById = findViewById(C1893R.C1897id.nav_bar_background);
+        View findViewById = findViewById(C1894R.C1898id.nav_bar_background);
         int i = 0;
         boolean z = configuration.smallestScreenWidthDp >= 600 || configuration.orientation != 2;
         this.mIsShowingNavBackdrop = z;
@@ -129,7 +129,7 @@ public class QSCustomizer extends LinearLayout {
         this.mQsContainerController = qSContainerController;
     }
 
-    public void setQs(C2301QS qs) {
+    public void setQs(C2304QS qs) {
         this.mQs = qs;
     }
 
@@ -137,13 +137,13 @@ public class QSCustomizer extends LinearLayout {
     public void show(int i, int i2, TileAdapter tileAdapter) {
         if (!this.isShown) {
             this.mRecyclerView.getLayoutManager().scrollToPosition(0);
-            int[] locationOnScreen = findViewById(C1893R.C1897id.customize_container).getLocationOnScreen();
-            this.f331mX = i - locationOnScreen[0];
-            this.f332mY = i2 - locationOnScreen[1];
+            int[] locationOnScreen = findViewById(C1894R.C1898id.customize_container).getLocationOnScreen();
+            this.f330mX = i - locationOnScreen[0];
+            this.f331mY = i2 - locationOnScreen[1];
             this.isShown = true;
             this.mOpening = true;
             setVisibility(0);
-            this.mClipper.animateCircularClip(this.f331mX, this.f332mY, true, new ExpandAnimatorListener(tileAdapter));
+            this.mClipper.animateCircularClip(this.f330mX, this.f331mY, true, new ExpandAnimatorListener(tileAdapter));
             this.mQsContainerController.setCustomizerAnimating(true);
             this.mQsContainerController.setCustomizerShowing(true);
         }
@@ -169,7 +169,7 @@ public class QSCustomizer extends LinearLayout {
             this.mClipper.cancelAnimator();
             this.mOpening = false;
             if (z) {
-                this.mClipper.animateCircularClip(this.f331mX, this.f332mY, false, this.mCollapseAnimationListener);
+                this.mClipper.animateCircularClip(this.f330mX, this.f331mY, false, this.mCollapseAnimationListener);
             } else {
                 setVisibility(8);
             }
@@ -193,9 +193,9 @@ public class QSCustomizer extends LinearLayout {
     }
 
     public void setEditLocation(int i, int i2) {
-        int[] locationOnScreen = findViewById(C1893R.C1897id.customize_container).getLocationOnScreen();
-        this.f331mX = i - locationOnScreen[0];
-        this.f332mY = i2 - locationOnScreen[1];
+        int[] locationOnScreen = findViewById(C1894R.C1898id.customize_container).getLocationOnScreen();
+        this.f330mX = i - locationOnScreen[0];
+        this.f331mY = i2 - locationOnScreen[1];
     }
 
     /* renamed from: com.android.systemui.qs.customize.QSCustomizer$ExpandAnimatorListener */

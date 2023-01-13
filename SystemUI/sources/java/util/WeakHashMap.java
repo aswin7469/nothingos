@@ -74,7 +74,7 @@ public class WeakHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> {
     }
 
     /* renamed from: eq */
-    private static boolean m1762eq(Object obj, Object obj2) {
+    private static boolean m1768eq(Object obj, Object obj2) {
         return obj == obj2 || obj.equals(obj2);
     }
 
@@ -141,7 +141,7 @@ public class WeakHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> {
         int hash = hash(maskNull);
         Entry<K, V>[] table2 = getTable();
         for (Entry<K, V> entry = table2[indexFor(hash, table2.length)]; entry != null; entry = entry.next) {
-            if (entry.hash == hash && m1762eq(maskNull, entry.get())) {
+            if (entry.hash == hash && m1768eq(maskNull, entry.get())) {
                 return entry.value;
             }
         }
@@ -158,7 +158,7 @@ public class WeakHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> {
         int hash = hash(maskNull);
         Entry<K, V>[] table2 = getTable();
         Entry<K, V> entry = table2[indexFor(hash, table2.length)];
-        while (entry != null && (entry.hash != hash || !m1762eq(maskNull, entry.get()))) {
+        while (entry != null && (entry.hash != hash || !m1768eq(maskNull, entry.get()))) {
             entry = entry.next;
         }
         return entry;
@@ -171,7 +171,7 @@ public class WeakHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> {
         int indexFor = indexFor(hash, table2.length);
         Entry<K, V> entry = table2[indexFor];
         while (entry != null) {
-            if (hash != entry.hash || !m1762eq(maskNull, entry.get())) {
+            if (hash != entry.hash || !m1768eq(maskNull, entry.get())) {
                 entry = entry.next;
             } else {
                 V v2 = entry.value;
@@ -262,7 +262,7 @@ public class WeakHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> {
         Entry<K, V> entry2 = entry;
         while (entry != null) {
             Entry<K, V> entry3 = entry.next;
-            if (hash != entry.hash || !m1762eq(maskNull, entry.get())) {
+            if (hash != entry.hash || !m1768eq(maskNull, entry.get())) {
                 entry2 = entry;
                 entry = entry3;
             } else {

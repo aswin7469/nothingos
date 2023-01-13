@@ -6,14 +6,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.google.android.setupcompat.partnerconfig.PartnerConfig;
 import com.google.android.setupcompat.partnerconfig.PartnerConfigHelper;
-import com.google.android.setupdesign.C3953R;
+import com.google.android.setupdesign.C3963R;
 import com.google.android.setupdesign.util.TextViewPartnerStyler;
 
 public final class ItemStyler {
     public static void applyPartnerCustomizationItemStyle(View view) {
         if (view != null && PartnerStyleHelper.shouldApplyPartnerHeavyThemeResource(view)) {
-            applyPartnerCustomizationItemTitleStyle((TextView) view.findViewById(C3953R.C3956id.sud_items_title));
-            TextView textView = (TextView) view.findViewById(C3953R.C3956id.sud_items_summary);
+            applyPartnerCustomizationItemTitleStyle((TextView) view.findViewById(C3963R.C3966id.sud_items_title));
+            TextView textView = (TextView) view.findViewById(C3963R.C3966id.sud_items_summary);
             if (textView.getVisibility() == 8 && (view instanceof LinearLayout)) {
                 ((LinearLayout) view).setGravity(16);
             }

@@ -16,7 +16,7 @@ import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 import java.util.stream.StreamSupport;
-import jdk.internal.misc.C4581VM;
+import jdk.internal.misc.C4593VM;
 import jdk.internal.misc.Unsafe;
 
 public class ThreadLocalRandom extends Random {
@@ -36,7 +36,7 @@ public class ThreadLocalRandom extends Random {
     private static final long THREADLOCALS;
 
     /* renamed from: U */
-    private static final Unsafe f761U;
+    private static final Unsafe f759U;
     static final ThreadLocalRandom instance = new ThreadLocalRandom();
     private static final ThreadLocal<Double> nextLocalGaussian = new ThreadLocal<>();
     private static final AtomicInteger probeGenerator = new AtomicInteger();
@@ -66,13 +66,13 @@ public class ThreadLocalRandom extends Random {
         }
         long mix64 = mix64(seeder.getAndAdd(SEEDER_INCREMENT));
         Thread currentThread = Thread.currentThread();
-        Unsafe unsafe = f761U;
+        Unsafe unsafe = f759U;
         unsafe.putLong(currentThread, SEED, mix64);
         unsafe.putInt(currentThread, PROBE, addAndGet);
     }
 
     public static ThreadLocalRandom current() {
-        if (f761U.getInt(Thread.currentThread(), PROBE) == 0) {
+        if (f759U.getInt(Thread.currentThread(), PROBE) == 0) {
             localInit();
         }
         return instance;
@@ -86,7 +86,7 @@ public class ThreadLocalRandom extends Random {
 
     /* access modifiers changed from: package-private */
     public final long nextSeed() {
-        Unsafe unsafe = f761U;
+        Unsafe unsafe = f759U;
         Thread currentThread = Thread.currentThread();
         long j = SEED;
         long j2 = GAMMA + unsafe.getLong(currentThread, j);
@@ -543,21 +543,21 @@ public class ThreadLocalRandom extends Random {
     }
 
     static final int getProbe() {
-        return f761U.getInt(Thread.currentThread(), PROBE);
+        return f759U.getInt(Thread.currentThread(), PROBE);
     }
 
     static final int advanceProbe(int i) {
         int i2 = i ^ (i << 13);
         int i3 = i2 ^ (i2 >>> 17);
         int i4 = i3 ^ (i3 << 5);
-        f761U.putInt(Thread.currentThread(), PROBE, i4);
+        f759U.putInt(Thread.currentThread(), PROBE, i4);
         return i4;
     }
 
     static final int nextSecondarySeed() {
         int i;
         Thread currentThread = Thread.currentThread();
-        Unsafe unsafe = f761U;
+        Unsafe unsafe = f759U;
         long j = SECONDARY;
         int i2 = unsafe.getInt(currentThread, j);
         if (i2 != 0) {
@@ -575,25 +575,25 @@ public class ThreadLocalRandom extends Random {
     }
 
     static final void eraseThreadLocals(Thread thread) {
-        Unsafe unsafe = f761U;
+        Unsafe unsafe = f759U;
         unsafe.putObject(thread, THREADLOCALS, (Object) null);
         unsafe.putObject(thread, INHERITABLETHREADLOCALS, (Object) null);
     }
 
     static final void setInheritedAccessControlContext(Thread thread, AccessControlContext accessControlContext) {
-        f761U.putObjectRelease(thread, INHERITEDACCESSCONTROLCONTEXT, accessControlContext);
+        f759U.putObjectRelease(thread, INHERITEDACCESSCONTROLCONTEXT, accessControlContext);
     }
 
     static {
         Unsafe unsafe = Unsafe.getUnsafe();
-        f761U = unsafe;
+        f759U = unsafe;
         SEED = unsafe.objectFieldOffset(Thread.class, "threadLocalRandomSeed");
         PROBE = unsafe.objectFieldOffset(Thread.class, "threadLocalRandomProbe");
         SECONDARY = unsafe.objectFieldOffset(Thread.class, "threadLocalRandomSecondarySeed");
         THREADLOCALS = unsafe.objectFieldOffset(Thread.class, "threadLocals");
         INHERITABLETHREADLOCALS = unsafe.objectFieldOffset(Thread.class, "inheritableThreadLocals");
         INHERITEDACCESSCONTROLCONTEXT = unsafe.objectFieldOffset(Thread.class, "inheritedAccessControlContext");
-        if (Boolean.parseBoolean(C4581VM.getSavedProperty("java.util.secureRandomSeed"))) {
+        if (Boolean.parseBoolean(C4593VM.getSavedProperty("java.util.secureRandomSeed"))) {
             byte[] seed = SecureRandom.getSeed(8);
             long j = ((long) seed[0]) & 255;
             for (int i = 1; i < 8; i++) {
@@ -605,7 +605,7 @@ public class ThreadLocalRandom extends Random {
 
     private void writeObject(ObjectOutputStream objectOutputStream) throws IOException {
         ObjectOutputStream.PutField putFields = objectOutputStream.putFields();
-        putFields.put("rnd", f761U.getLong(Thread.currentThread(), SEED));
+        putFields.put("rnd", f759U.getLong(Thread.currentThread(), SEED));
         putFields.put("initialized", true);
         objectOutputStream.writeFields();
     }

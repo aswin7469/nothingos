@@ -46,7 +46,7 @@ public class ZipFile implements ZipConstants, Closeable {
     public final int total;
 
     /* renamed from: zc */
-    private ZipCoder f808zc;
+    private ZipCoder f806zc;
 
     private static native void close(long j);
 
@@ -114,7 +114,7 @@ public class ZipFile implements ZipConstants, Closeable {
         String path = file.getPath();
         this.fileToRemoveOnClose = (i & 4) != 0 ? file : null;
         if (charset != null) {
-            this.f808zc = ZipCoder.get(charset);
+            this.f806zc = ZipCoder.get(charset);
             long open = open(path, i, file.lastModified(), usemmap);
             this.jzfile = open;
             this.name = path;
@@ -141,7 +141,7 @@ public class ZipFile implements ZipConstants, Closeable {
             if (commentBytes == null) {
                 return null;
             }
-            String zipCoder = this.f808zc.toString(commentBytes, commentBytes.length);
+            String zipCoder = this.f806zc.toString(commentBytes, commentBytes.length);
             return zipCoder;
         }
     }
@@ -150,7 +150,7 @@ public class ZipFile implements ZipConstants, Closeable {
         if (str != null) {
             synchronized (this) {
                 ensureOpen();
-                long entry = getEntry(this.jzfile, this.f808zc.getBytes(str), true);
+                long entry = getEntry(this.jzfile, this.f806zc.getBytes(str), true);
                 if (entry == 0) {
                     return null;
                 }
@@ -167,10 +167,10 @@ public class ZipFile implements ZipConstants, Closeable {
         if (zipEntry != null) {
             synchronized (this) {
                 ensureOpen();
-                if (this.f808zc.isUTF8() || (zipEntry.flag & 2048) == 0) {
-                    j = getEntry(this.jzfile, this.f808zc.getBytes(zipEntry.name), true);
+                if (this.f806zc.isUTF8() || (zipEntry.flag & 2048) == 0) {
+                    j = getEntry(this.jzfile, this.f806zc.getBytes(zipEntry.name), true);
                 } else {
-                    j = getEntry(this.jzfile, this.f808zc.getBytesUTF8(zipEntry.name), true);
+                    j = getEntry(this.jzfile, this.f806zc.getBytesUTF8(zipEntry.name), true);
                 }
                 if (j == 0) {
                     return null;
@@ -232,7 +232,7 @@ public class ZipFile implements ZipConstants, Closeable {
         /* access modifiers changed from: protected */
         public void fill() throws IOException {
             if (!this.eof) {
-                this.len = this.f521in.read(this.buf, 0, this.buf.length);
+                this.len = this.f519in.read(this.buf, 0, this.buf.length);
                 if (this.len == -1) {
                     this.buf[0] = 0;
                     this.len = 1;
@@ -291,7 +291,7 @@ public class ZipFile implements ZipConstants, Closeable {
     private class ZipEntryIterator implements Enumeration<ZipEntry>, Iterator<ZipEntry> {
 
         /* renamed from: i */
-        private int f809i = 0;
+        private int f807i = 0;
 
         public ZipEntryIterator() {
             ZipFile.this.ensureOpen();
@@ -305,7 +305,7 @@ public class ZipFile implements ZipConstants, Closeable {
             boolean z;
             synchronized (ZipFile.this) {
                 ZipFile.this.ensureOpen();
-                z = this.f809i < ZipFile.this.total;
+                z = this.f807i < ZipFile.this.total;
             }
             return z;
         }
@@ -319,10 +319,10 @@ public class ZipFile implements ZipConstants, Closeable {
             String str;
             synchronized (ZipFile.this) {
                 ZipFile.this.ensureOpen();
-                if (this.f809i < ZipFile.this.total) {
+                if (this.f807i < ZipFile.this.total) {
                     long r2 = ZipFile.this.jzfile;
-                    int i = this.f809i;
-                    this.f809i = i + 1;
+                    int i = this.f807i;
+                    this.f807i = i + 1;
                     long r22 = ZipFile.getNextEntry(r2, i);
                     if (r22 == 0) {
                         if (ZipFile.this.closeRequested) {
@@ -330,7 +330,7 @@ public class ZipFile implements ZipConstants, Closeable {
                         } else {
                             str = ZipFile.getZipMessage(ZipFile.this.jzfile);
                         }
-                        throw new ZipError("jzentry == 0,\n jzfile = " + ZipFile.this.jzfile + ",\n total = " + ZipFile.this.total + ",\n name = " + ZipFile.this.name + ",\n i = " + this.f809i + ",\n message = " + str);
+                        throw new ZipError("jzentry == 0,\n jzfile = " + ZipFile.this.jzfile + ",\n total = " + ZipFile.this.total + ",\n name = " + ZipFile.this.name + ",\n i = " + this.f807i + ",\n message = " + str);
                     }
                     r0 = ZipFile.this.getZipEntry((String) null, r22);
                     ZipFile.freeEntry(ZipFile.this.jzfile, r22);
@@ -358,10 +358,10 @@ public class ZipFile implements ZipConstants, Closeable {
             zipEntry.name = str;
         } else {
             byte[] entryBytes = getEntryBytes(j, 0);
-            if (this.f808zc.isUTF8() || (zipEntry.flag & 2048) == 0) {
-                zipEntry.name = this.f808zc.toString(entryBytes, entryBytes.length);
+            if (this.f806zc.isUTF8() || (zipEntry.flag & 2048) == 0) {
+                zipEntry.name = this.f806zc.toString(entryBytes, entryBytes.length);
             } else {
-                zipEntry.name = this.f808zc.toStringUTF8(entryBytes, entryBytes.length);
+                zipEntry.name = this.f806zc.toStringUTF8(entryBytes, entryBytes.length);
             }
         }
         zipEntry.xdostime = getEntryTime(j);
@@ -373,10 +373,10 @@ public class ZipFile implements ZipConstants, Closeable {
         byte[] entryBytes2 = getEntryBytes(j, 2);
         if (entryBytes2 == null) {
             zipEntry.comment = null;
-        } else if (this.f808zc.isUTF8() || (zipEntry.flag & 2048) == 0) {
-            zipEntry.comment = this.f808zc.toString(entryBytes2, entryBytes2.length);
+        } else if (this.f806zc.isUTF8() || (zipEntry.flag & 2048) == 0) {
+            zipEntry.comment = this.f806zc.toString(entryBytes2, entryBytes2.length);
         } else {
-            zipEntry.comment = this.f808zc.toStringUTF8(entryBytes2, entryBytes2.length);
+            zipEntry.comment = this.f806zc.toStringUTF8(entryBytes2, entryBytes2.length);
         }
         return zipEntry;
     }

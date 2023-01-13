@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.settings.brightness.BrightnessSliderController;
 import com.android.systemui.settings.brightness.ToggleSlider;
 import com.android.systemui.statusbar.NotificationShadeDepthController;
@@ -37,7 +37,7 @@ public class BrightnessMirrorController implements CallbackController<Brightness
     public BrightnessMirrorController(NotificationShadeWindowView notificationShadeWindowView, NotificationPanelViewController notificationPanelViewController, NotificationShadeDepthController notificationShadeDepthController, BrightnessSliderController.Factory factory, Consumer<Boolean> consumer) {
         this.mStatusBarWindow = notificationShadeWindowView;
         this.mToggleSliderFactory = factory;
-        this.mBrightnessMirror = (FrameLayout) notificationShadeWindowView.findViewById(C1893R.C1897id.brightness_mirror_container);
+        this.mBrightnessMirror = (FrameLayout) notificationShadeWindowView.findViewById(C1894R.C1898id.brightness_mirror_container);
         this.mToggleSliderController = setMirrorLayout();
         this.mNotificationPanel = notificationPanelViewController;
         this.mDepthController = notificationShadeDepthController;
@@ -47,7 +47,7 @@ public class BrightnessMirrorController implements CallbackController<Brightness
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-statusbar-policy-BrightnessMirrorController */
-    public /* synthetic */ void mo45626xafd79370() {
+    public /* synthetic */ void mo45638xafd79370() {
         this.mBrightnessMirror.setVisibility(4);
     }
 
@@ -92,7 +92,7 @@ public class BrightnessMirrorController implements CallbackController<Brightness
     }
 
     public void updateResources() {
-        int dimensionPixelSize = this.mBrightnessMirror.getResources().getDimensionPixelSize(C1893R.dimen.rounded_slider_background_padding);
+        int dimensionPixelSize = this.mBrightnessMirror.getResources().getDimensionPixelSize(C1894R.dimen.rounded_slider_background_padding);
         this.mBrightnessMirrorBackgroundPadding = dimensionPixelSize;
         this.mBrightnessMirror.setPadding(dimensionPixelSize, dimensionPixelSize, dimensionPixelSize, dimensionPixelSize);
     }
@@ -121,7 +121,7 @@ public class BrightnessMirrorController implements CallbackController<Brightness
         } else {
             context = ((QSFragmentEx) NTDependencyEx.get(QSFragmentEx.class)).getQSFragment().getView().getContext();
         }
-        this.mBrightnessMirror = (FrameLayout) LayoutInflater.from(context).inflate(C1893R.layout.brightness_mirror_container, this.mStatusBarWindow, false);
+        this.mBrightnessMirror = (FrameLayout) LayoutInflater.from(context).inflate(C1894R.layout.brightness_mirror_container, this.mStatusBarWindow, false);
         this.mToggleSliderController = setMirrorLayout();
         this.mStatusBarWindow.addView(this.mBrightnessMirror, indexOfChild);
         for (int i = 0; i < this.mBrightnessMirrorListeners.size(); i++) {

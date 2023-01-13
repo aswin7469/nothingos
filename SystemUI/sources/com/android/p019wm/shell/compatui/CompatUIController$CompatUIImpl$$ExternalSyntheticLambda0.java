@@ -14,6 +14,6 @@ public final /* synthetic */ class CompatUIController$CompatUIImpl$$ExternalSynt
     }
 
     public final void run() {
-        this.f$0.mo49366xf6370934(this.f$1);
+        this.f$0.mo49375xf6370934(this.f$1);
     }
 }

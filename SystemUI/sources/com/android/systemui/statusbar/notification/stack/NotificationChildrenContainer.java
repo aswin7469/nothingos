@@ -19,7 +19,7 @@ import android.view.ViewOverlay;
 import android.widget.RemoteViews;
 import android.widget.TextView;
 import com.android.internal.widget.NotificationExpandButton;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.statusbar.CrossFadeHelper;
 import com.android.systemui.statusbar.NotificationGroupingUtil;
 import com.android.systemui.statusbar.TransformableView;
@@ -32,6 +32,7 @@ import com.android.systemui.statusbar.notification.row.ExpandableView;
 import com.android.systemui.statusbar.notification.row.HybridGroupManager;
 import com.android.systemui.statusbar.notification.row.HybridNotificationView;
 import com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper;
+import com.nothing.systemui.NTDependencyEx;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -123,18 +124,18 @@ public class NotificationChildrenContainer extends ViewGroup implements Notifica
 
     private void initDimens() {
         Resources resources = getResources();
-        this.mChildPadding = resources.getDimensionPixelOffset(C1893R.dimen.notification_children_padding);
-        this.mDividerHeight = resources.getDimensionPixelOffset(C1893R.dimen.notification_children_container_divider_height);
-        this.mDividerAlpha = resources.getFloat(C1893R.dimen.notification_divider_alpha);
-        this.mNotificationHeaderMargin = resources.getDimensionPixelOffset(C1893R.dimen.notification_children_container_margin_top);
-        int dimensionPixelOffset = resources.getDimensionPixelOffset(C1893R.dimen.notification_children_container_top_padding);
+        this.mChildPadding = resources.getDimensionPixelOffset(C1894R.dimen.notification_children_padding);
+        this.mDividerHeight = resources.getDimensionPixelOffset(C1894R.dimen.notification_children_container_divider_height);
+        this.mDividerAlpha = resources.getFloat(C1894R.dimen.notification_divider_alpha);
+        this.mNotificationHeaderMargin = resources.getDimensionPixelOffset(C1894R.dimen.notification_children_container_margin_top);
+        int dimensionPixelOffset = resources.getDimensionPixelOffset(C1894R.dimen.notification_children_container_top_padding);
         this.mNotificationTopPadding = dimensionPixelOffset;
         this.mHeaderHeight = this.mNotificationHeaderMargin + dimensionPixelOffset;
-        this.mCollapsedBottomPadding = (float) resources.getDimensionPixelOffset(C1893R.dimen.notification_children_collapsed_bottom_padding);
-        this.mEnableShadowOnChildNotifications = resources.getBoolean(C1893R.bool.config_enableShadowOnChildNotifications);
-        this.mShowGroupCountInExpander = resources.getBoolean(C1893R.bool.config_showNotificationGroupCountInExpander);
-        this.mShowDividersWhenExpanded = resources.getBoolean(C1893R.bool.config_showDividersWhenGroupNotificationExpanded);
-        this.mHideDividersDuringExpand = resources.getBoolean(C1893R.bool.config_hideDividersDuringExpand);
+        this.mCollapsedBottomPadding = (float) resources.getDimensionPixelOffset(C1894R.dimen.notification_children_collapsed_bottom_padding);
+        this.mEnableShadowOnChildNotifications = resources.getBoolean(C1894R.bool.config_enableShadowOnChildNotifications);
+        this.mShowGroupCountInExpander = resources.getBoolean(C1894R.bool.config_showNotificationGroupCountInExpander);
+        this.mShowDividersWhenExpanded = resources.getBoolean(C1894R.bool.config_showDividersWhenGroupNotificationExpanded);
+        this.mHideDividersDuringExpand = resources.getBoolean(C1894R.bool.config_hideDividersDuringExpand);
         this.mTranslationForHeader = resources.getDimensionPixelOffset(17105382) - this.mNotificationHeaderMargin;
         this.mHybridGroupManager.initDimens();
     }
@@ -245,6 +246,7 @@ public class NotificationChildrenContainer extends ViewGroup implements Notifica
         this.mDividers.add(i, inflateDivider);
         expandableNotificationRow.setContentTransformationAmount(0.0f, false);
         expandableNotificationRow.setNotificationFaded(this.mContainingNotificationIsFaded);
+        ((NotificationRoundnessManager) NTDependencyEx.get(NotificationRoundnessManager.class)).updateView(expandableNotificationRow, false);
         ExpandableViewState viewState = expandableNotificationRow.getViewState();
         if (viewState != null) {
             viewState.cancelAnimations(expandableNotificationRow);
@@ -384,7 +386,7 @@ public class NotificationChildrenContainer extends ViewGroup implements Notifica
     }
 
     private View inflateDivider() {
-        return LayoutInflater.from(this.mContext).inflate(C1893R.layout.notification_children_divider, this, false);
+        return LayoutInflater.from(this.mContext).inflate(C1894R.layout.notification_children_divider, this, false);
     }
 
     public List<ExpandableNotificationRow> getAttachedChildren() {
@@ -952,7 +954,7 @@ public class NotificationChildrenContainer extends ViewGroup implements Notifica
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateHeaderVisibility$0$com-android-systemui-statusbar-notification-stack-NotificationChildrenContainer */
-    public /* synthetic */ void mo41970x29284b69() {
+    public /* synthetic */ void mo41978x29284b69() {
         updateHeaderVisibility(false);
     }
 

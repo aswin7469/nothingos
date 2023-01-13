@@ -11,6 +11,6 @@ public final /* synthetic */ class SystemActions$$ExternalSyntheticLambda0 imple
     }
 
     public final void onStateChanged(boolean z, boolean z2, boolean z3, boolean z4) {
-        this.f$0.m2531lambda$new$0$comandroidsystemuiaccessibilitySystemActions(z, z2, z3, z4);
+        this.f$0.m2537lambda$new$0$comandroidsystemuiaccessibilitySystemActions(z, z2, z3, z4);
     }
 }

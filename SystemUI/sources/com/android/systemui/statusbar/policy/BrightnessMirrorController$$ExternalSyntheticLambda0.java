@@ -9,6 +9,6 @@ public final /* synthetic */ class BrightnessMirrorController$$ExternalSynthetic
     }
 
     public final void run() {
-        this.f$0.mo45626xafd79370();
+        this.f$0.mo45638xafd79370();
     }
 }

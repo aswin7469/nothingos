@@ -43,7 +43,7 @@ public class BluetoothControllerImpl implements BluetoothController, BluetoothCa
     private final DumpManager mDumpManager;
     /* access modifiers changed from: private */
     public boolean mEnabled;
-    private final C3136H mHandler;
+    private final C3146H mHandler;
     private boolean mIsActive;
     private final LocalBluetoothManager mLocalBluetoothManager;
     private int mState;
@@ -57,7 +57,7 @@ public class BluetoothControllerImpl implements BluetoothController, BluetoothCa
         this.mDumpManager = dumpManager;
         this.mLocalBluetoothManager = localBluetoothManager;
         this.mBgHandler = new Handler(looper);
-        this.mHandler = new C3136H(looper2);
+        this.mHandler = new C3146H(looper2);
         if (localBluetoothManager != null) {
             localBluetoothManager.getEventManager().registerCallback(this);
             localBluetoothManager.getProfileManager().addServiceListener(this);
@@ -392,7 +392,7 @@ public class BluetoothControllerImpl implements BluetoothController, BluetoothCa
     }
 
     /* renamed from: com.android.systemui.statusbar.policy.BluetoothControllerImpl$H */
-    private final class C3136H extends Handler {
+    private final class C3146H extends Handler {
         private static final int MSG_ADD_CALLBACK = 3;
         private static final int MSG_PAIRED_DEVICES_CHANGED = 1;
         private static final int MSG_REMOVE_CALLBACK = 4;
@@ -400,7 +400,7 @@ public class BluetoothControllerImpl implements BluetoothController, BluetoothCa
         /* access modifiers changed from: private */
         public final ArrayList<BluetoothController.Callback> mCallbacks = new ArrayList<>();
 
-        public C3136H(Looper looper) {
+        public C3146H(Looper looper) {
             super(looper);
         }
 

@@ -45,14 +45,14 @@ public class GlifLayout extends PartnerCustomizationLayout {
         super(context, i, i2);
         this.backgroundPatterned = true;
         this.applyPartnerHeavyThemeResource = false;
-        init((AttributeSet) null, C3953R.attr.sudLayoutTheme);
+        init((AttributeSet) null, C3963R.attr.sudLayoutTheme);
     }
 
     public GlifLayout(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         this.backgroundPatterned = true;
         this.applyPartnerHeavyThemeResource = false;
-        init(attributeSet, C3953R.attr.sudLayoutTheme);
+        init(attributeSet, C3963R.attr.sudLayoutTheme);
     }
 
     public GlifLayout(Context context, AttributeSet attributeSet, int i) {
@@ -64,8 +64,8 @@ public class GlifLayout extends PartnerCustomizationLayout {
 
     private void init(AttributeSet attributeSet, int i) {
         if (!isInEditMode()) {
-            TypedArray obtainStyledAttributes = getContext().obtainStyledAttributes(attributeSet, C3953R.styleable.SudGlifLayout, i, 0);
-            this.applyPartnerHeavyThemeResource = shouldApplyPartnerResource() && obtainStyledAttributes.getBoolean(C3953R.styleable.SudGlifLayout_sudUsePartnerHeavyTheme, false);
+            TypedArray obtainStyledAttributes = getContext().obtainStyledAttributes(attributeSet, C3963R.styleable.SudGlifLayout, i, 0);
+            this.applyPartnerHeavyThemeResource = shouldApplyPartnerResource() && obtainStyledAttributes.getBoolean(C3963R.styleable.SudGlifLayout_sudUsePartnerHeavyTheme, false);
             registerMixin(HeaderMixin.class, new HeaderMixin(this, attributeSet, i));
             registerMixin(DescriptionMixin.class, new DescriptionMixin(this, attributeSet, i));
             registerMixin(IconMixin.class, new IconMixin(this, attributeSet, i));
@@ -77,14 +77,14 @@ public class GlifLayout extends PartnerCustomizationLayout {
             if (scrollView != null) {
                 requireScrollMixin.setScrollHandlingDelegate(new ScrollViewScrollHandlingDelegate(requireScrollMixin, scrollView));
             }
-            ColorStateList colorStateList = obtainStyledAttributes.getColorStateList(C3953R.styleable.SudGlifLayout_sudColorPrimary);
+            ColorStateList colorStateList = obtainStyledAttributes.getColorStateList(C3963R.styleable.SudGlifLayout_sudColorPrimary);
             if (colorStateList != null) {
                 setPrimaryColor(colorStateList);
             }
             if (shouldApplyPartnerHeavyThemeResource()) {
                 updateContentBackgroundColorWithPartnerConfig();
             }
-            View findManagedViewById = findManagedViewById(C3953R.C3956id.sud_layout_content);
+            View findManagedViewById = findManagedViewById(C3963R.C3966id.sud_layout_content);
             if (findManagedViewById != null) {
                 if (shouldApplyPartnerResource()) {
                     LayoutStyler.applyPartnerCustomizationExtraPaddingStyle(findManagedViewById);
@@ -94,9 +94,9 @@ public class GlifLayout extends PartnerCustomizationLayout {
                 }
             }
             updateLandscapeMiddleHorizontalSpacing();
-            setBackgroundBaseColor(obtainStyledAttributes.getColorStateList(C3953R.styleable.SudGlifLayout_sudBackgroundBaseColor));
-            setBackgroundPatterned(obtainStyledAttributes.getBoolean(C3953R.styleable.SudGlifLayout_sudBackgroundPatterned, true));
-            int resourceId = obtainStyledAttributes.getResourceId(C3953R.styleable.SudGlifLayout_sudStickyHeader, 0);
+            setBackgroundBaseColor(obtainStyledAttributes.getColorStateList(C3963R.styleable.SudGlifLayout_sudBackgroundBaseColor));
+            setBackgroundPatterned(obtainStyledAttributes.getBoolean(C3963R.styleable.SudGlifLayout_sudBackgroundPatterned, true));
+            int resourceId = obtainStyledAttributes.getResourceId(C3963R.styleable.SudGlifLayout_sudStickyHeader, 0);
             if (resourceId != 0) {
                 inflateStickyHeader(resourceId);
             }
@@ -115,7 +115,7 @@ public class GlifLayout extends PartnerCustomizationLayout {
     }
 
     private void tryApplyPartnerCustomizationStyleToShortDescription() {
-        TextView textView = (TextView) findManagedViewById(C3953R.C3956id.sud_layout_description);
+        TextView textView = (TextView) findManagedViewById(C3963R.C3966id.sud_layout_description);
         if (textView == null) {
             return;
         }
@@ -130,15 +130,15 @@ public class GlifLayout extends PartnerCustomizationLayout {
     public void updateLandscapeMiddleHorizontalSpacing() {
         int i;
         int i2;
-        int dimensionPixelSize = getResources().getDimensionPixelSize(C3953R.dimen.sud_glif_land_middle_horizontal_spacing);
+        int dimensionPixelSize = getResources().getDimensionPixelSize(C3963R.dimen.sud_glif_land_middle_horizontal_spacing);
         if (shouldApplyPartnerResource() && PartnerConfigHelper.get(getContext()).isPartnerConfigAvailable(PartnerConfig.CONFIG_LAND_MIDDLE_HORIZONTAL_SPACING)) {
             dimensionPixelSize = (int) PartnerConfigHelper.get(getContext()).getDimension(getContext(), PartnerConfig.CONFIG_LAND_MIDDLE_HORIZONTAL_SPACING);
         }
-        View findManagedViewById = findManagedViewById(C3953R.C3956id.sud_landscape_header_area);
+        View findManagedViewById = findManagedViewById(C3963R.C3966id.sud_landscape_header_area);
         int i3 = 0;
         if (findManagedViewById != null) {
             if (!shouldApplyPartnerResource() || !PartnerConfigHelper.get(getContext()).isPartnerConfigAvailable(PartnerConfig.CONFIG_LAYOUT_MARGIN_END)) {
-                TypedArray obtainStyledAttributes = getContext().obtainStyledAttributes(new int[]{C3953R.attr.sudMarginEnd});
+                TypedArray obtainStyledAttributes = getContext().obtainStyledAttributes(new int[]{C3963R.attr.sudMarginEnd});
                 int dimensionPixelSize2 = obtainStyledAttributes.getDimensionPixelSize(0, 0);
                 obtainStyledAttributes.recycle();
                 i2 = dimensionPixelSize2;
@@ -147,10 +147,10 @@ public class GlifLayout extends PartnerCustomizationLayout {
             }
             findManagedViewById.setPadding(findManagedViewById.getPaddingStart(), findManagedViewById.getPaddingTop(), (dimensionPixelSize / 2) - i2, findManagedViewById.getPaddingBottom());
         }
-        View findManagedViewById2 = findManagedViewById(C3953R.C3956id.sud_landscape_content_area);
+        View findManagedViewById2 = findManagedViewById(C3963R.C3966id.sud_landscape_content_area);
         if (findManagedViewById2 != null) {
             if (!shouldApplyPartnerResource() || !PartnerConfigHelper.get(getContext()).isPartnerConfigAvailable(PartnerConfig.CONFIG_LAYOUT_MARGIN_START)) {
-                TypedArray obtainStyledAttributes2 = getContext().obtainStyledAttributes(new int[]{C3953R.attr.sudMarginStart});
+                TypedArray obtainStyledAttributes2 = getContext().obtainStyledAttributes(new int[]{C3963R.attr.sudMarginStart});
                 int dimensionPixelSize3 = obtainStyledAttributes2.getDimensionPixelSize(0, 0);
                 obtainStyledAttributes2.recycle();
                 i = dimensionPixelSize3;
@@ -167,27 +167,27 @@ public class GlifLayout extends PartnerCustomizationLayout {
     /* access modifiers changed from: protected */
     public View onInflateTemplate(LayoutInflater layoutInflater, int i) {
         if (i == 0) {
-            i = C3953R.layout.sud_glif_template;
+            i = C3963R.layout.sud_glif_template;
         }
-        return inflateTemplate(layoutInflater, C3953R.style.SudThemeGlif_Light, i);
+        return inflateTemplate(layoutInflater, C3963R.style.SudThemeGlif_Light, i);
     }
 
     /* access modifiers changed from: protected */
     public ViewGroup findContainer(int i) {
         if (i == 0) {
-            i = C3953R.C3956id.sud_layout_content;
+            i = C3963R.C3966id.sud_layout_content;
         }
         return super.findContainer(i);
     }
 
     public View inflateStickyHeader(int i) {
-        ViewStub viewStub = (ViewStub) findManagedViewById(C3953R.C3956id.sud_layout_sticky_header);
+        ViewStub viewStub = (ViewStub) findManagedViewById(C3963R.C3966id.sud_layout_sticky_header);
         viewStub.setLayoutResource(i);
         return viewStub.inflate();
     }
 
     public ScrollView getScrollView() {
-        View findManagedViewById = findManagedViewById(C3953R.C3956id.sud_scroll_view);
+        View findManagedViewById = findManagedViewById(C3963R.C3966id.sud_scroll_view);
         if (findManagedViewById instanceof ScrollView) {
             return (ScrollView) findManagedViewById;
         }
@@ -243,7 +243,7 @@ public class GlifLayout extends PartnerCustomizationLayout {
     }
 
     public void setLandscapeHeaderAreaVisible(boolean z) {
-        View findManagedViewById = findManagedViewById(C3953R.C3956id.sud_landscape_header_area);
+        View findManagedViewById = findManagedViewById(C3963R.C3966id.sud_landscape_header_area);
         if (findManagedViewById != null) {
             if (z) {
                 findManagedViewById.setVisibility(0);
@@ -285,7 +285,7 @@ public class GlifLayout extends PartnerCustomizationLayout {
     private void updateBackground() {
         int i;
         Drawable drawable;
-        if (findManagedViewById(C3953R.C3956id.suc_layout_status) != null) {
+        if (findManagedViewById(C3963R.C3966id.suc_layout_status) != null) {
             ColorStateList colorStateList = this.backgroundBaseColor;
             if (colorStateList != null) {
                 i = colorStateList.getDefaultColor();

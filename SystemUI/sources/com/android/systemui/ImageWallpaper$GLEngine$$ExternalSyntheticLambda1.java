@@ -11,6 +11,6 @@ public final /* synthetic */ class ImageWallpaper$GLEngine$$ExternalSyntheticLam
     }
 
     public final void run() {
-        this.f$0.m2520lambda$onDestroy$2$comandroidsystemuiImageWallpaper$GLEngine();
+        this.f$0.m2526lambda$onDestroy$2$comandroidsystemuiImageWallpaper$GLEngine();
     }
 }

@@ -26,10 +26,10 @@ public final class UnboundedSdkLevel {
         Set set;
         SparseArray<Set<String>> sparseArray = new SparseArray<>(4);
         PREVIOUS_CODENAMES = sparseArray;
-        sparseArray.put(29, Set.m1751of("Q"));
-        sparseArray.put(30, Set.m1752of("Q", "R"));
-        sparseArray.put(31, Set.m1753of("Q", "R", ExifInterface.LATITUDE_SOUTH));
-        sparseArray.put(32, Set.m1754of("Q", "R", ExifInterface.LATITUDE_SOUTH, "Sv2"));
+        sparseArray.put(29, Set.m1757of("Q"));
+        sparseArray.put(30, Set.m1758of("Q", "R"));
+        sparseArray.put(31, Set.m1759of("Q", "R", ExifInterface.LATITUDE_SOUTH));
+        sparseArray.put(32, Set.m1760of("Q", "R", ExifInterface.LATITUDE_SOUTH, "Sv2"));
         int i = Build.VERSION.SDK_INT;
         String str = Build.VERSION.CODENAME;
         if (SdkLevel.isAtLeastT()) {

@@ -12,6 +12,6 @@ public final /* synthetic */ class QSFragment$$ExternalSyntheticLambda1 implemen
     }
 
     public final void onScrollChange(View view, int i, int i2, int i3, int i4) {
-        this.f$0.m2910lambda$onViewCreated$1$comandroidsystemuiqsQSFragment(view, i, i2, i3, i4);
+        this.f$0.m2915lambda$onViewCreated$1$comandroidsystemuiqsQSFragment(view, i, i2, i3, i4);
     }
 }

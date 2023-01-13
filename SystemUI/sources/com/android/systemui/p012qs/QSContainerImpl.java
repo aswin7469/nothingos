@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewOverlay;
 import android.widget.FrameLayout;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dumpable;
 import com.android.systemui.navigationbar.NavigationBarInflaterView;
 import com.android.systemui.p012qs.customize.QSCustomizer;
@@ -60,9 +60,9 @@ public class QSContainerImpl extends FrameLayout implements Dumpable {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mQSPanelContainer = (NonInterceptingScrollView) findViewById(C1893R.C1897id.expanded_qs_scroll_view);
-        this.mHeader = (QuickStatusBarHeader) findViewById(C1893R.C1897id.header);
-        this.mQSCustomizer = (QSCustomizer) findViewById(C1893R.C1897id.qs_customize);
+        this.mQSPanelContainer = (NonInterceptingScrollView) findViewById(C1894R.C1898id.expanded_qs_scroll_view);
+        this.mHeader = (QuickStatusBarHeader) findViewById(C1894R.C1898id.header);
+        this.mQSCustomizer = (QSCustomizer) findViewById(C1894R.C1898id.qs_customize);
         setImportantForAccessibility(2);
     }
 
@@ -121,9 +121,9 @@ public class QSContainerImpl extends FrameLayout implements Dumpable {
     public void updateResources(QSPanelController qSPanelController, QuickStatusBarHeaderController quickStatusBarHeaderController) {
         NonInterceptingScrollView nonInterceptingScrollView = this.mQSPanelContainer;
         nonInterceptingScrollView.setPaddingRelative(nonInterceptingScrollView.getPaddingStart(), QSUtils.getQsHeaderSystemIconsAreaHeight(this.mContext), this.mQSPanelContainer.getPaddingEnd(), this.mQSPanelContainer.getPaddingBottom());
-        int dimensionPixelSize = getResources().getDimensionPixelSize(C1893R.dimen.qs_horizontal_margin);
-        int dimensionPixelSize2 = getResources().getDimensionPixelSize(C1893R.dimen.qs_content_horizontal_padding);
-        int dimensionPixelSize3 = getResources().getDimensionPixelSize(C1893R.dimen.qs_tiles_page_horizontal_margin);
+        int dimensionPixelSize = getResources().getDimensionPixelSize(C1894R.dimen.qs_horizontal_margin);
+        int dimensionPixelSize2 = getResources().getDimensionPixelSize(C1894R.dimen.qs_content_horizontal_padding);
+        int dimensionPixelSize3 = getResources().getDimensionPixelSize(C1894R.dimen.qs_tiles_page_horizontal_margin);
         boolean z = (dimensionPixelSize2 == this.mContentHorizontalPadding && dimensionPixelSize == this.mHorizontalMargins && dimensionPixelSize3 == this.mTilesPageMargin) ? false : true;
         this.mContentHorizontalPadding = dimensionPixelSize2;
         this.mHorizontalMargins = dimensionPixelSize;

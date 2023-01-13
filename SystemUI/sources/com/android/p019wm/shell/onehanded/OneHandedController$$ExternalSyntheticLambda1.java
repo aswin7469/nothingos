@@ -12,6 +12,6 @@ public final /* synthetic */ class OneHandedController$$ExternalSyntheticLambda1
     }
 
     public final void onTimeout(int i) {
-        this.f$0.mo49859x137dffae(i);
+        this.f$0.mo49868x137dffae(i);
     }
 }

@@ -13,6 +13,6 @@ public final /* synthetic */ class PrivacyDialogController$$ExternalSyntheticLam
     }
 
     public final void run() {
-        PrivacyDialogController.m2872showDialog$lambda5(this.f$0, this.f$1);
+        PrivacyDialogController.m2877showDialog$lambda5(this.f$0, this.f$1);
     }
 }

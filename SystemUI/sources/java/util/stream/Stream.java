@@ -95,13 +95,13 @@ public interface Stream<T> extends BaseStream<T, Stream<T>> {
     }
 
     /* renamed from: of */
-    static <T> Stream<T> m1780of(T t) {
+    static <T> Stream<T> m1786of(T t) {
         return StreamSupport.stream(new Streams.StreamBuilderImpl(t), false);
     }
 
     @SafeVarargs
     /* renamed from: of */
-    static <T> Stream<T> m1781of(T... tArr) {
+    static <T> Stream<T> m1787of(T... tArr) {
         return Arrays.stream(tArr);
     }
 
@@ -110,15 +110,15 @@ public interface Stream<T> extends BaseStream<T, Stream<T>> {
         return StreamSupport.stream(Spliterators.spliteratorUnknownSize(new Iterator<T>() {
 
             /* renamed from: t */
-            T f795t = Streams.NONE;
+            T f793t = Streams.NONE;
 
             public boolean hasNext() {
                 return true;
             }
 
             public T next() {
-                T apply = this.f795t == Streams.NONE ? Object.this : unaryOperator.apply(this.f795t);
-                this.f795t = apply;
+                T apply = this.f793t == Streams.NONE ? Object.this : unaryOperator.apply(this.f793t);
+                this.f793t = apply;
                 return apply;
             }
         }, 1040), false);

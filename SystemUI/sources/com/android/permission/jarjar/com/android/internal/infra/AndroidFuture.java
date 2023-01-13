@@ -377,7 +377,7 @@ public class AndroidFuture<T> extends CompletableFuture<T> implements Parcelable
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$accept$0$com-android-permission-jarjar-com-android-internal-infra-AndroidFuture$ThenCombine */
-        public /* synthetic */ void mo27776x5f255859(Object obj, Throwable th) {
+        public /* synthetic */ void mo27777x5f255859(Object obj, Throwable th) {
             this.mSourceU = null;
             accept(obj, th);
         }

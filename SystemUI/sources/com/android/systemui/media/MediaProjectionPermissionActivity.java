@@ -17,7 +17,7 @@ import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.style.StyleSpan;
 import android.util.Log;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.statusbar.phone.SystemUIDialog;
 import com.android.systemui.util.Utils;
 
@@ -54,8 +54,8 @@ public class MediaProjectionPermissionActivity extends Activity implements Dialo
                 TextPaint textPaint = new TextPaint();
                 textPaint.setTextSize(42.0f);
                 if (Utils.isHeadlessRemoteDisplayProvider(packageManager, this.mPackageName)) {
-                    charSequence = getString(C1893R.string.media_projection_dialog_service_text);
-                    str = getString(C1893R.string.media_projection_dialog_service_title);
+                    charSequence = getString(C1894R.string.media_projection_dialog_service_text);
+                    str = getString(C1894R.string.media_projection_dialog_service_title);
                 } else {
                     String charSequence2 = applicationInfo.loadLabel(packageManager).toString();
                     int length = charSequence2.length();
@@ -77,16 +77,16 @@ public class MediaProjectionPermissionActivity extends Activity implements Dialo
                         charSequence2 = this.mPackageName;
                     }
                     String unicodeWrap = BidiFormatter.getInstance().unicodeWrap(TextUtils.ellipsize(charSequence2, textPaint, MAX_APP_NAME_SIZE_PX, TextUtils.TruncateAt.END).toString());
-                    String string = getString(C1893R.string.media_projection_dialog_text, new Object[]{unicodeWrap});
+                    String string = getString(C1894R.string.media_projection_dialog_text, new Object[]{unicodeWrap});
                     SpannableString spannableString = new SpannableString(string);
                     int indexOf = string.indexOf(unicodeWrap);
                     if (indexOf >= 0) {
                         spannableString.setSpan(new StyleSpan(1), indexOf, unicodeWrap.length() + indexOf, 0);
                     }
-                    str = getString(C1893R.string.media_projection_dialog_title, new Object[]{unicodeWrap});
+                    str = getString(C1894R.string.media_projection_dialog_title, new Object[]{unicodeWrap});
                     charSequence = spannableString;
                 }
-                AlertDialog create = new AlertDialog.Builder(this, C1893R.style.Theme_SystemUI_Dialog).setTitle(str).setIcon(C1893R.C1895drawable.ic_media_projection_permission).setMessage(charSequence).setPositiveButton(C1893R.string.media_projection_action_text, this).setNeutralButton(17039360, this).setOnCancelListener(this).create();
+                AlertDialog create = new AlertDialog.Builder(this, C1894R.style.Theme_SystemUI_Dialog).setTitle(str).setIcon(C1894R.C1896drawable.ic_media_projection_permission).setMessage(charSequence).setPositiveButton(C1894R.string.media_projection_action_text, this).setNeutralButton(17039360, this).setOnCancelListener(this).create();
                 this.mDialog = create;
                 SystemUIDialog.registerDismissListener(create);
                 SystemUIDialog.applyFlags(this.mDialog);

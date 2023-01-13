@@ -11,6 +11,6 @@ public final /* synthetic */ class RemoteInputViewControllerImpl$$ExternalSynthe
     }
 
     public final void onFocusChange(View view, boolean z) {
-        RemoteInputViewControllerImpl.m3239onFocusChangeListener$lambda4(this.f$0, view, z);
+        RemoteInputViewControllerImpl.m3244onFocusChangeListener$lambda4(this.f$0, view, z);
     }
 }

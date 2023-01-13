@@ -12,6 +12,6 @@ public final /* synthetic */ class HistoryTracker$$ExternalSyntheticLambda2 impl
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo31266xdeda9ad3((HistoryTracker.BeliefListener) obj);
+        this.f$0.mo31277xdeda9ad3((HistoryTracker.BeliefListener) obj);
     }
 }

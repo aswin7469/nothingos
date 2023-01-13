@@ -14,6 +14,6 @@ public final /* synthetic */ class BadgedImageView$$ExternalSyntheticLambda1 imp
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        this.f$0.mo48240x608b2681(this.f$1, valueAnimator);
+        this.f$0.mo48249x608b2681(this.f$1, valueAnimator);
     }
 }

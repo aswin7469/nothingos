@@ -3,7 +3,7 @@ package com.google.android.material.datepicker;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.internal.TextWatcherAdapter;
 import com.google.android.material.textfield.TextInputLayout;
 import java.text.DateFormat;
@@ -33,15 +33,15 @@ abstract class DateFormatTextWatcher extends TextWatcherAdapter {
         this.dateFormat = dateFormat2;
         this.textInputLayout = textInputLayout2;
         this.constraints = calendarConstraints;
-        this.outOfRange = textInputLayout2.getContext().getString(C3621R.string.mtrl_picker_out_of_range);
+        this.outOfRange = textInputLayout2.getContext().getString(C3631R.string.mtrl_picker_out_of_range);
         this.setErrorCallback = new Runnable() {
             public void run() {
                 TextInputLayout access$000 = DateFormatTextWatcher.this.textInputLayout;
                 DateFormat access$100 = DateFormatTextWatcher.this.dateFormat;
                 Context context = access$000.getContext();
-                String string = context.getString(C3621R.string.mtrl_picker_invalid_format);
-                String format = String.format(context.getString(C3621R.string.mtrl_picker_invalid_format_use), str);
-                access$000.setError(string + "\n" + format + "\n" + String.format(context.getString(C3621R.string.mtrl_picker_invalid_format_example), access$100.format(new Date(UtcDates.getTodayCalendar().getTimeInMillis()))));
+                String string = context.getString(C3631R.string.mtrl_picker_invalid_format);
+                String format = String.format(context.getString(C3631R.string.mtrl_picker_invalid_format_use), str);
+                access$000.setError(string + "\n" + format + "\n" + String.format(context.getString(C3631R.string.mtrl_picker_invalid_format_example), access$100.format(new Date(UtcDates.getTodayCalendar().getTimeInMillis()))));
                 DateFormatTextWatcher.this.onInvalidDate();
             }
         };

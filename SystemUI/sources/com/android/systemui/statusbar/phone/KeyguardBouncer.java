@@ -95,7 +95,7 @@ public class KeyguardBouncer {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-statusbar-phone-KeyguardBouncer */
-    public /* synthetic */ void mo44190x93953a0e() {
+    public /* synthetic */ void mo44205x93953a0e() {
         KeyguardHostViewController keyguardHostViewController = this.mKeyguardViewController;
         if (keyguardHostViewController != null) {
             keyguardHostViewController.resetSecurityContainer();
@@ -109,7 +109,7 @@ public class KeyguardBouncer {
     private KeyguardBouncer(Context context, ViewMediatorCallback viewMediatorCallback, ViewGroup viewGroup, DismissCallbackRegistry dismissCallbackRegistry, FalsingCollector falsingCollector, BouncerExpansionCallback bouncerExpansionCallback, KeyguardStateController keyguardStateController, KeyguardUpdateMonitor keyguardUpdateMonitor, KeyguardBypassController keyguardBypassController, @Main Handler handler, KeyguardSecurityModel keyguardSecurityModel, KeyguardBouncerComponent.Factory factory) {
         ArrayList arrayList = new ArrayList();
         this.mExpansionCallbacks = arrayList;
-        C29721 r1 = new KeyguardUpdateMonitorCallback() {
+        C29821 r1 = new KeyguardUpdateMonitorCallback() {
             public void onStrongAuthStateChanged(int i) {
                 KeyguardBouncer keyguardBouncer = KeyguardBouncer.this;
                 int unused = keyguardBouncer.mBouncerPromptReason = keyguardBouncer.mCallback.getBouncerPromptReason();

@@ -32,10 +32,10 @@ public class FtpURLConnection extends URLConnection {
     private Proxy instProxy;
 
     /* renamed from: is */
-    InputStream f870is;
+    InputStream f868is;
 
     /* renamed from: os */
-    OutputStream f871os;
+    OutputStream f869os;
     String password;
     String pathname;
     Permission permission;
@@ -85,8 +85,8 @@ public class FtpURLConnection extends URLConnection {
     FtpURLConnection(URL url, Proxy proxy) throws IOException {
         super(url);
         String str;
-        this.f870is = null;
-        this.f871os = null;
+        this.f868is = null;
+        this.f869os = null;
         this.ftp = null;
         this.type = 0;
         this.connectTimeout = -1;
@@ -352,7 +352,7 @@ public class FtpURLConnection extends URLConnection {
     }
 
     /* renamed from: cd */
-    private void m1818cd(String str) throws FtpProtocolException, IOException {
+    private void m1824cd(String str) throws FtpProtocolException, IOException {
         if (str != null && !str.isEmpty()) {
             if (str.indexOf(47) == -1) {
                 this.ftp.changeDirectory(ParseUtil.decode(str));
@@ -379,9 +379,9 @@ public class FtpURLConnection extends URLConnection {
             if (r3 != 0) goto L_0x000d
             r9.connect()
         L_0x000d:
-            java.io.OutputStream r3 = r9.f871os
+            java.io.OutputStream r3 = r9.f869os
             if (r3 != 0) goto L_0x0115
-            java.io.InputStream r3 = r9.f870is
+            java.io.InputStream r3 = r9.f868is
             if (r3 == 0) goto L_0x0016
             return r3
         L_0x0016:
@@ -408,33 +408,33 @@ public class FtpURLConnection extends URLConnection {
             r5.setBinaryType()     // Catch:{ FileNotFoundException -> 0x00de, FtpProtocolException -> 0x00d7 }
         L_0x003d:
             java.lang.String r5 = r9.pathname     // Catch:{ FileNotFoundException -> 0x00de, FtpProtocolException -> 0x00d7 }
-            r9.m1818cd(r5)     // Catch:{ FileNotFoundException -> 0x00de, FtpProtocolException -> 0x00d7 }
+            r9.m1824cd(r5)     // Catch:{ FileNotFoundException -> 0x00de, FtpProtocolException -> 0x00d7 }
             sun.net.www.protocol.ftp.FtpURLConnection$FtpInputStream r5 = new sun.net.www.protocol.ftp.FtpURLConnection$FtpInputStream     // Catch:{ FileNotFoundException -> 0x00de, FtpProtocolException -> 0x00d7 }
             sun.net.ftp.FtpClient r6 = r9.ftp     // Catch:{ FileNotFoundException -> 0x00de, FtpProtocolException -> 0x00d7 }
             java.lang.String r7 = r9.filename     // Catch:{ FileNotFoundException -> 0x00de, FtpProtocolException -> 0x00d7 }
             java.io.InputStream r7 = r6.getFileStream(r7)     // Catch:{ FileNotFoundException -> 0x00de, FtpProtocolException -> 0x00d7 }
             r5.<init>(r6, r7)     // Catch:{ FileNotFoundException -> 0x00de, FtpProtocolException -> 0x00d7 }
-            r9.f870is = r5     // Catch:{ FileNotFoundException -> 0x00de, FtpProtocolException -> 0x00d7 }
+            r9.f868is = r5     // Catch:{ FileNotFoundException -> 0x00de, FtpProtocolException -> 0x00d7 }
             goto L_0x007b
         L_0x0052:
             sun.net.ftp.FtpClient r5 = r9.ftp     // Catch:{ FileNotFoundException -> 0x00de, FtpProtocolException -> 0x00d7 }
             r5.setAsciiType()     // Catch:{ FileNotFoundException -> 0x00de, FtpProtocolException -> 0x00d7 }
             java.lang.String r5 = r9.pathname     // Catch:{ FileNotFoundException -> 0x00de, FtpProtocolException -> 0x00d7 }
-            r9.m1818cd(r5)     // Catch:{ FileNotFoundException -> 0x00de, FtpProtocolException -> 0x00d7 }
+            r9.m1824cd(r5)     // Catch:{ FileNotFoundException -> 0x00de, FtpProtocolException -> 0x00d7 }
             java.lang.String r5 = r9.filename     // Catch:{ FileNotFoundException -> 0x00de, FtpProtocolException -> 0x00d7 }
             if (r5 != 0) goto L_0x006e
             sun.net.www.protocol.ftp.FtpURLConnection$FtpInputStream r5 = new sun.net.www.protocol.ftp.FtpURLConnection$FtpInputStream     // Catch:{ FileNotFoundException -> 0x00de, FtpProtocolException -> 0x00d7 }
             sun.net.ftp.FtpClient r6 = r9.ftp     // Catch:{ FileNotFoundException -> 0x00de, FtpProtocolException -> 0x00d7 }
             java.io.InputStream r7 = r6.list(r4)     // Catch:{ FileNotFoundException -> 0x00de, FtpProtocolException -> 0x00d7 }
             r5.<init>(r6, r7)     // Catch:{ FileNotFoundException -> 0x00de, FtpProtocolException -> 0x00d7 }
-            r9.f870is = r5     // Catch:{ FileNotFoundException -> 0x00de, FtpProtocolException -> 0x00d7 }
+            r9.f868is = r5     // Catch:{ FileNotFoundException -> 0x00de, FtpProtocolException -> 0x00d7 }
             goto L_0x007b
         L_0x006e:
             sun.net.www.protocol.ftp.FtpURLConnection$FtpInputStream r6 = new sun.net.www.protocol.ftp.FtpURLConnection$FtpInputStream     // Catch:{ FileNotFoundException -> 0x00de, FtpProtocolException -> 0x00d7 }
             sun.net.ftp.FtpClient r7 = r9.ftp     // Catch:{ FileNotFoundException -> 0x00de, FtpProtocolException -> 0x00d7 }
             java.io.InputStream r5 = r7.nameList(r5)     // Catch:{ FileNotFoundException -> 0x00de, FtpProtocolException -> 0x00d7 }
             r6.<init>(r7, r5)     // Catch:{ FileNotFoundException -> 0x00de, FtpProtocolException -> 0x00d7 }
-            r9.f870is = r6     // Catch:{ FileNotFoundException -> 0x00de, FtpProtocolException -> 0x00d7 }
+            r9.f868is = r6     // Catch:{ FileNotFoundException -> 0x00de, FtpProtocolException -> 0x00d7 }
         L_0x007b:
             sun.net.ftp.FtpClient r5 = r9.ftp     // Catch:{ Exception -> 0x00b2 }
             long r5 = r5.getLastTransferSize()     // Catch:{ Exception -> 0x00b2 }
@@ -457,9 +457,9 @@ public class FtpURLConnection extends URLConnection {
             r7 = r4
         L_0x00a8:
             sun.net.www.MeteredStream r0 = new sun.net.www.MeteredStream     // Catch:{ Exception -> 0x00b2 }
-            java.io.InputStream r8 = r9.f870is     // Catch:{ Exception -> 0x00b2 }
+            java.io.InputStream r8 = r9.f868is     // Catch:{ Exception -> 0x00b2 }
             r0.<init>(r8, r7, r5)     // Catch:{ Exception -> 0x00b2 }
-            r9.f870is = r0     // Catch:{ Exception -> 0x00b2 }
+            r9.f868is = r0     // Catch:{ Exception -> 0x00b2 }
             goto L_0x00b6
         L_0x00b2:
             r0 = move-exception
@@ -470,10 +470,10 @@ public class FtpURLConnection extends URLConnection {
             java.lang.String r0 = r9.fullpath     // Catch:{ FileNotFoundException -> 0x00de, FtpProtocolException -> 0x00d7 }
             java.lang.String r0 = guessContentTypeFromName(r0)     // Catch:{ FileNotFoundException -> 0x00de, FtpProtocolException -> 0x00d7 }
             if (r0 != 0) goto L_0x00d1
-            java.io.InputStream r5 = r9.f870is     // Catch:{ FileNotFoundException -> 0x00de, FtpProtocolException -> 0x00d7 }
+            java.io.InputStream r5 = r9.f868is     // Catch:{ FileNotFoundException -> 0x00de, FtpProtocolException -> 0x00d7 }
             boolean r5 = r5.markSupported()     // Catch:{ FileNotFoundException -> 0x00de, FtpProtocolException -> 0x00d7 }
             if (r5 == 0) goto L_0x00d1
-            java.io.InputStream r0 = r9.f870is     // Catch:{ FileNotFoundException -> 0x00de, FtpProtocolException -> 0x00d7 }
+            java.io.InputStream r0 = r9.f868is     // Catch:{ FileNotFoundException -> 0x00de, FtpProtocolException -> 0x00d7 }
             java.lang.String r0 = guessContentTypeFromStream(r0)     // Catch:{ FileNotFoundException -> 0x00de, FtpProtocolException -> 0x00d7 }
         L_0x00d1:
             if (r0 == 0) goto L_0x00ff
@@ -486,21 +486,21 @@ public class FtpURLConnection extends URLConnection {
             throw r0
         L_0x00de:
             java.lang.String r0 = r9.fullpath     // Catch:{ IOException -> 0x010d, FtpProtocolException -> 0x0105 }
-            r9.m1818cd(r0)     // Catch:{ IOException -> 0x010d, FtpProtocolException -> 0x0105 }
+            r9.m1824cd(r0)     // Catch:{ IOException -> 0x010d, FtpProtocolException -> 0x0105 }
             sun.net.ftp.FtpClient r0 = r9.ftp     // Catch:{ IOException -> 0x010d, FtpProtocolException -> 0x0105 }
             r0.setAsciiType()     // Catch:{ IOException -> 0x010d, FtpProtocolException -> 0x0105 }
             sun.net.www.protocol.ftp.FtpURLConnection$FtpInputStream r0 = new sun.net.www.protocol.ftp.FtpURLConnection$FtpInputStream     // Catch:{ IOException -> 0x010d, FtpProtocolException -> 0x0105 }
             sun.net.ftp.FtpClient r5 = r9.ftp     // Catch:{ IOException -> 0x010d, FtpProtocolException -> 0x0105 }
             java.io.InputStream r4 = r5.list(r4)     // Catch:{ IOException -> 0x010d, FtpProtocolException -> 0x0105 }
             r0.<init>(r5, r4)     // Catch:{ IOException -> 0x010d, FtpProtocolException -> 0x0105 }
-            r9.f870is = r0     // Catch:{ IOException -> 0x010d, FtpProtocolException -> 0x0105 }
+            r9.f868is = r0     // Catch:{ IOException -> 0x010d, FtpProtocolException -> 0x0105 }
             java.lang.String r0 = "text/plain"
             r3.add(r2, r0)     // Catch:{ IOException -> 0x010d, FtpProtocolException -> 0x0105 }
             java.lang.String r0 = "directory"
             r3.add(r1, r0)     // Catch:{ IOException -> 0x010d, FtpProtocolException -> 0x0105 }
         L_0x00ff:
             r9.setProperties(r3)
-            java.io.InputStream r9 = r9.f870is
+            java.io.InputStream r9 = r9.f868is
             return r9
         L_0x0105:
             java.io.FileNotFoundException r0 = new java.io.FileNotFoundException
@@ -525,8 +525,8 @@ public class FtpURLConnection extends URLConnection {
         if (!this.connected) {
             connect();
         }
-        if (this.f870is == null) {
-            OutputStream outputStream = this.f871os;
+        if (this.f868is == null) {
+            OutputStream outputStream = this.f869os;
             if (outputStream != null) {
                 return outputStream;
             }
@@ -538,7 +538,7 @@ public class FtpURLConnection extends URLConnection {
             try {
                 String str2 = this.pathname;
                 if (str2 != null) {
-                    m1818cd(str2);
+                    m1824cd(str2);
                 }
                 if (this.type == 1) {
                     this.ftp.setAsciiType();
@@ -547,7 +547,7 @@ public class FtpURLConnection extends URLConnection {
                 }
                 FtpClient ftpClient = this.ftp;
                 FtpOutputStream ftpOutputStream = new FtpOutputStream(ftpClient, ftpClient.putFileStream(this.filename, false));
-                this.f871os = ftpOutputStream;
+                this.f869os = ftpOutputStream;
                 return ftpOutputStream;
             } catch (FtpProtocolException e) {
                 throw new IOException((Throwable) e);

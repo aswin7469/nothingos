@@ -118,7 +118,7 @@ class StageTaskListener implements ShellTaskOrganizer.TaskListener {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onTaskAppeared$0$com-android-wm-shell-stagesplit-StageTaskListener */
-    public /* synthetic */ void mo51064x3f2e804d(SurfaceControl.Transaction transaction) {
+    public /* synthetic */ void mo51075x3f2e804d(SurfaceControl.Transaction transaction) {
         transaction.hide(this.mRootLeash);
         this.mDimLayer = SurfaceUtils.makeDimLayer(transaction, this.mRootLeash, "Dim layer", this.mSurfaceSession);
     }
@@ -170,7 +170,7 @@ class StageTaskListener implements ShellTaskOrganizer.TaskListener {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onTaskVanished$1$com-android-wm-shell-stagesplit-StageTaskListener */
-    public /* synthetic */ void mo51065xfb5ec274(SurfaceControl.Transaction transaction) {
+    public /* synthetic */ void mo51076xfb5ec274(SurfaceControl.Transaction transaction) {
         transaction.remove(this.mDimLayer);
     }
 

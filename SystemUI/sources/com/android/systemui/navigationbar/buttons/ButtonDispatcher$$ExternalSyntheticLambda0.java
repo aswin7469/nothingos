@@ -11,6 +11,6 @@ public final /* synthetic */ class ButtonDispatcher$$ExternalSyntheticLambda0 im
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        this.f$0.mo34877xef8ba53e(valueAnimator);
+        this.f$0.mo34881xef8ba53e(valueAnimator);
     }
 }

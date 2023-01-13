@@ -244,7 +244,7 @@ public final class Decoder {
     }
 
     /* renamed from: com.google.zxing.aztec.decoder.Decoder$1 */
-    static /* synthetic */ class C40911 {
+    static /* synthetic */ class C41011 {
         static final /* synthetic */ int[] $SwitchMap$com$google$zxing$aztec$decoder$Decoder$Table;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(12:0|1|2|3|4|5|6|7|8|9|10|12) */
@@ -293,12 +293,12 @@ public final class Decoder {
             L_0x003e:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: com.google.zxing.aztec.decoder.Decoder.C40911.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: com.google.zxing.aztec.decoder.Decoder.C41011.<clinit>():void");
         }
     }
 
     private static String getCharacter(Table table, int i) {
-        int i2 = C40911.$SwitchMap$com$google$zxing$aztec$decoder$Decoder$Table[table.ordinal()];
+        int i2 = C41011.$SwitchMap$com$google$zxing$aztec$decoder$Decoder$Table[table.ordinal()];
         if (i2 == 1) {
             return UPPER_TABLE[i];
         }

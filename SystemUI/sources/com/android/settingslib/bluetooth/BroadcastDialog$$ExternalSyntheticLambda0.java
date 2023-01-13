@@ -11,6 +11,6 @@ public final /* synthetic */ class BroadcastDialog$$ExternalSyntheticLambda0 imp
     }
 
     public final void onClick(View view) {
-        this.f$0.mo28109x30e21355(view);
+        this.f$0.mo28114x30e21355(view);
     }
 }

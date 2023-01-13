@@ -12,6 +12,6 @@ public final /* synthetic */ class ObservableServiceConnection$$ExternalSyntheti
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo47105x7eb59809((ObservableServiceConnection.Callback) obj);
+        this.f$0.mo47117x7eb59809((ObservableServiceConnection.Callback) obj);
     }
 }

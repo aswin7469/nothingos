@@ -26,7 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import com.android.internal.protolog.common.ProtoLog;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.pip.PipUtils;
 import com.android.p019wm.shell.protolog.ShellProtoLogGroup;
 import java.util.ArrayList;
@@ -117,42 +117,42 @@ public class TvPipMenuView extends FrameLayout implements View.OnClickListener {
     public TvPipMenuView(Context context, AttributeSet attributeSet, int i, int i2) {
         super(context, attributeSet, i, i2);
         this.mAdditionalButtons = new ArrayList();
-        inflate(context, C3343R.layout.tv_pip_menu, this);
-        LinearLayout linearLayout = (LinearLayout) findViewById(C3343R.C3346id.tv_pip_menu_action_buttons);
+        inflate(context, C3353R.layout.tv_pip_menu, this);
+        LinearLayout linearLayout = (LinearLayout) findViewById(C3353R.C3356id.tv_pip_menu_action_buttons);
         this.mActionButtonsContainer = linearLayout;
-        linearLayout.findViewById(C3343R.C3346id.tv_pip_menu_fullscreen_button).setOnClickListener(this);
-        TvPipMenuActionButton tvPipMenuActionButton = (TvPipMenuActionButton) linearLayout.findViewById(C3343R.C3346id.tv_pip_menu_close_button);
+        linearLayout.findViewById(C3353R.C3356id.tv_pip_menu_fullscreen_button).setOnClickListener(this);
+        TvPipMenuActionButton tvPipMenuActionButton = (TvPipMenuActionButton) linearLayout.findViewById(C3353R.C3356id.tv_pip_menu_close_button);
         this.mCloseButton = tvPipMenuActionButton;
         tvPipMenuActionButton.setOnClickListener(this);
         tvPipMenuActionButton.setIsCustomCloseAction(true);
-        linearLayout.findViewById(C3343R.C3346id.tv_pip_menu_move_button).setOnClickListener(this);
-        TvPipMenuActionButton tvPipMenuActionButton2 = (TvPipMenuActionButton) findViewById(C3343R.C3346id.tv_pip_menu_expand_button);
+        linearLayout.findViewById(C3353R.C3356id.tv_pip_menu_move_button).setOnClickListener(this);
+        TvPipMenuActionButton tvPipMenuActionButton2 = (TvPipMenuActionButton) findViewById(C3353R.C3356id.tv_pip_menu_expand_button);
         this.mExpandButton = tvPipMenuActionButton2;
         tvPipMenuActionButton2.setOnClickListener(this);
-        this.mScrollView = (ScrollView) findViewById(C3343R.C3346id.tv_pip_menu_scroll);
-        this.mHorizontalScrollView = (HorizontalScrollView) findViewById(C3343R.C3346id.tv_pip_menu_horizontal_scroll);
-        this.mMenuFrameView = findViewById(C3343R.C3346id.tv_pip_menu_frame);
-        this.mPipFrameView = findViewById(C3343R.C3346id.tv_pip_border);
-        this.mPipView = findViewById(C3343R.C3346id.tv_pip);
-        this.mArrowUp = (ImageView) findViewById(C3343R.C3346id.tv_pip_menu_arrow_up);
-        this.mArrowRight = (ImageView) findViewById(C3343R.C3346id.tv_pip_menu_arrow_right);
-        this.mArrowDown = (ImageView) findViewById(C3343R.C3346id.tv_pip_menu_arrow_down);
-        this.mArrowLeft = (ImageView) findViewById(C3343R.C3346id.tv_pip_menu_arrow_left);
-        this.mEduTextView = (TextView) findViewById(C3343R.C3346id.tv_pip_menu_edu_text);
-        this.mEduTextContainerView = findViewById(C3343R.C3346id.tv_pip_menu_edu_text_container);
-        this.mResizeAnimationDuration = context.getResources().getInteger(C3343R.integer.config_pipResizeAnimationDuration);
-        this.mPipMenuFadeAnimationDuration = context.getResources().getInteger(C3343R.integer.pip_menu_fade_animation_duration);
-        this.mPipMenuOuterSpace = context.getResources().getDimensionPixelSize(C3343R.dimen.pip_menu_outer_space);
-        this.mPipMenuBorderWidth = context.getResources().getDimensionPixelSize(C3343R.dimen.pip_menu_border_width);
-        this.mEduTextHeight = context.getResources().getDimensionPixelSize(C3343R.dimen.pip_menu_edu_text_view_height);
-        this.mEduTextFadeExitAnimationDurationMs = context.getResources().getInteger(C3343R.integer.pip_edu_text_view_exit_animation_duration_ms);
-        this.mEduTextSlideExitAnimationDurationMs = context.getResources().getInteger(C3343R.integer.pip_edu_text_window_exit_animation_duration_ms);
+        this.mScrollView = (ScrollView) findViewById(C3353R.C3356id.tv_pip_menu_scroll);
+        this.mHorizontalScrollView = (HorizontalScrollView) findViewById(C3353R.C3356id.tv_pip_menu_horizontal_scroll);
+        this.mMenuFrameView = findViewById(C3353R.C3356id.tv_pip_menu_frame);
+        this.mPipFrameView = findViewById(C3353R.C3356id.tv_pip_border);
+        this.mPipView = findViewById(C3353R.C3356id.tv_pip);
+        this.mArrowUp = (ImageView) findViewById(C3353R.C3356id.tv_pip_menu_arrow_up);
+        this.mArrowRight = (ImageView) findViewById(C3353R.C3356id.tv_pip_menu_arrow_right);
+        this.mArrowDown = (ImageView) findViewById(C3353R.C3356id.tv_pip_menu_arrow_down);
+        this.mArrowLeft = (ImageView) findViewById(C3353R.C3356id.tv_pip_menu_arrow_left);
+        this.mEduTextView = (TextView) findViewById(C3353R.C3356id.tv_pip_menu_edu_text);
+        this.mEduTextContainerView = findViewById(C3353R.C3356id.tv_pip_menu_edu_text_container);
+        this.mResizeAnimationDuration = context.getResources().getInteger(C3353R.integer.config_pipResizeAnimationDuration);
+        this.mPipMenuFadeAnimationDuration = context.getResources().getInteger(C3353R.integer.pip_menu_fade_animation_duration);
+        this.mPipMenuOuterSpace = context.getResources().getDimensionPixelSize(C3353R.dimen.pip_menu_outer_space);
+        this.mPipMenuBorderWidth = context.getResources().getDimensionPixelSize(C3353R.dimen.pip_menu_border_width);
+        this.mEduTextHeight = context.getResources().getDimensionPixelSize(C3353R.dimen.pip_menu_edu_text_view_height);
+        this.mEduTextFadeExitAnimationDurationMs = context.getResources().getInteger(C3353R.integer.pip_edu_text_view_exit_animation_duration_ms);
+        this.mEduTextSlideExitAnimationDurationMs = context.getResources().getInteger(C3353R.integer.pip_edu_text_window_exit_animation_duration_ms);
         initEduText();
     }
 
     /* access modifiers changed from: package-private */
     public void initEduText() {
-        SpannedString spannedString = (SpannedString) getResources().getText(C3343R.string.pip_edu_text);
+        SpannedString spannedString = (SpannedString) getResources().getText(C3353R.string.pip_edu_text);
         SpannableString spannableString = new SpannableString(spannedString);
         Arrays.stream((T[]) (Annotation[]) spannedString.getSpans(0, spannedString.length(), Annotation.class)).findFirst().ifPresent(new TvPipMenuView$$ExternalSyntheticLambda6(this, spannableString, spannedString));
         this.mEduTextView.setText(spannableString);
@@ -160,8 +160,8 @@ public class TvPipMenuView extends FrameLayout implements View.OnClickListener {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$initEduText$0$com-android-wm-shell-pip-tv-TvPipMenuView  reason: not valid java name */
-    public /* synthetic */ void m3484lambda$initEduText$0$comandroidwmshellpiptvTvPipMenuView(SpannableString spannableString, SpannedString spannedString, Annotation annotation) {
-        Drawable drawable = getResources().getDrawable(C3343R.C3345drawable.home_icon, this.mContext.getTheme());
+    public /* synthetic */ void m3488lambda$initEduText$0$comandroidwmshellpiptvTvPipMenuView(SpannableString spannableString, SpannedString spannedString, Annotation annotation) {
+        Drawable drawable = getResources().getDrawable(C3353R.C3355drawable.home_icon, this.mContext.getTheme());
         if (drawable != null) {
             drawable.mutate();
             drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
@@ -186,13 +186,13 @@ public class TvPipMenuView extends FrameLayout implements View.OnClickListener {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$hideEduText$1$com-android-wm-shell-pip-tv-TvPipMenuView  reason: not valid java name */
-    public /* synthetic */ void m3482lambda$hideEduText$1$comandroidwmshellpiptvTvPipMenuView(ValueAnimator valueAnimator) {
+    public /* synthetic */ void m3486lambda$hideEduText$1$comandroidwmshellpiptvTvPipMenuView(ValueAnimator valueAnimator) {
         this.mEduTextHeight = ((Integer) valueAnimator.getAnimatedValue()).intValue();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$hideEduText$2$com-android-wm-shell-pip-tv-TvPipMenuView  reason: not valid java name */
-    public /* synthetic */ void m3483lambda$hideEduText$2$comandroidwmshellpiptvTvPipMenuView() {
+    public /* synthetic */ void m3487lambda$hideEduText$2$comandroidwmshellpiptvTvPipMenuView() {
         this.mEduTextContainerView.setVisibility(8);
     }
 
@@ -217,7 +217,7 @@ public class TvPipMenuView extends FrameLayout implements View.OnClickListener {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onPipTransitionStarted$3$com-android-wm-shell-pip-tv-TvPipMenuView */
-    public /* synthetic */ void mo50657x3a588eaa(Rect rect) {
+    public /* synthetic */ void mo50666x3a588eaa(Rect rect) {
         changeButtonScrollOrientation(rect);
         updateButtonGravity(rect);
     }
@@ -341,8 +341,8 @@ public class TvPipMenuView extends FrameLayout implements View.OnClickListener {
 
     /* access modifiers changed from: package-private */
     public void setIsExpanded(boolean z) {
-        this.mExpandButton.setImageResource(z ? C3343R.C3345drawable.pip_ic_collapse : C3343R.C3345drawable.pip_ic_expand);
-        this.mExpandButton.setTextAndDescription(z ? C3343R.string.pip_collapse : C3343R.string.pip_expand);
+        this.mExpandButton.setImageResource(z ? C3353R.C3355drawable.pip_ic_collapse : C3353R.C3355drawable.pip_ic_expand);
+        this.mExpandButton.setTextAndDescription(z ? C3353R.string.pip_collapse : C3353R.string.pip_expand);
     }
 
     /* access modifiers changed from: package-private */
@@ -410,8 +410,8 @@ public class TvPipMenuView extends FrameLayout implements View.OnClickListener {
         if (remoteAction != null) {
             setActionForButton(remoteAction, this.mCloseButton, handler);
         } else {
-            this.mCloseButton.setTextAndDescription(C3343R.string.pip_close);
-            this.mCloseButton.setImageResource(C3343R.C3345drawable.pip_ic_close_white);
+            this.mCloseButton.setTextAndDescription(C3353R.string.pip_close);
+            this.mCloseButton.setImageResource(C3353R.C3355drawable.pip_ic_close_white);
         }
         this.mCloseButton.setIsCustomCloseAction(remoteAction != null);
         this.mCloseButton.setEnabled(true);
@@ -477,13 +477,13 @@ public class TvPipMenuView extends FrameLayout implements View.OnClickListener {
     public void onClick(View view) {
         if (this.mListener != null) {
             int id = view.getId();
-            if (id == C3343R.C3346id.tv_pip_menu_fullscreen_button) {
+            if (id == C3353R.C3356id.tv_pip_menu_fullscreen_button) {
                 this.mListener.onFullscreenButtonClick();
-            } else if (id == C3343R.C3346id.tv_pip_menu_move_button) {
+            } else if (id == C3353R.C3356id.tv_pip_menu_move_button) {
                 this.mListener.onEnterMoveMode();
-            } else if (id == C3343R.C3346id.tv_pip_menu_close_button) {
+            } else if (id == C3353R.C3356id.tv_pip_menu_close_button) {
                 this.mListener.onCloseButtonClick();
-            } else if (id == C3343R.C3346id.tv_pip_menu_expand_button) {
+            } else if (id == C3353R.C3356id.tv_pip_menu_expand_button) {
                 this.mListener.onToggleExpandedMode();
             } else {
                 RemoteAction remoteAction = (RemoteAction) view.getTag();

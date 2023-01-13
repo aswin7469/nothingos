@@ -14,6 +14,6 @@ public final /* synthetic */ class StatusBehavior$$ExternalSyntheticLambda2 impl
     }
 
     public final void onClick(View view) {
-        StatusBehavior.m2718bind$lambda0(this.f$0, this.f$1, view);
+        StatusBehavior.m2723bind$lambda0(this.f$0, this.f$1, view);
     }
 }

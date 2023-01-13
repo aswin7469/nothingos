@@ -19,7 +19,7 @@ import android.view.ViewTreeObserver;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.util.Preconditions;
 import androidx.core.view.ViewCompat;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.animation.AnimationUtils;
 import com.google.android.material.animation.AnimatorSetCompat;
 import com.google.android.material.animation.ImageMatrixProperty;
@@ -552,8 +552,8 @@ class FloatingActionButtonImpl {
         });
         arrayList.add(ofFloat);
         AnimatorSetCompat.playTogether(animatorSet, arrayList);
-        animatorSet.setDuration((long) MotionUtils.resolveThemeDuration(this.view.getContext(), C3621R.attr.motionDurationLong1, this.view.getContext().getResources().getInteger(C3621R.integer.material_motion_duration_long_1)));
-        animatorSet.setInterpolator(MotionUtils.resolveThemeInterpolator(this.view.getContext(), C3621R.attr.motionEasingStandard, AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR));
+        animatorSet.setDuration((long) MotionUtils.resolveThemeDuration(this.view.getContext(), C3631R.attr.motionDurationLong1, this.view.getContext().getResources().getInteger(C3631R.integer.material_motion_duration_long_1)));
+        animatorSet.setInterpolator(MotionUtils.resolveThemeInterpolator(this.view.getContext(), C3631R.attr.motionEasingStandard, AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR));
         return animatorSet;
     }
 

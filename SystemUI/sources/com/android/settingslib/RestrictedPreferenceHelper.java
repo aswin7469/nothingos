@@ -94,7 +94,7 @@ public class RestrictedPreferenceHelper {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$getDisabledByAdminUpdatableString$0$com-android-settingslib-RestrictedPreferenceHelper */
-    public /* synthetic */ String mo27890xdbabbded() {
+    public /* synthetic */ String mo27891xdbabbded() {
         return this.mContext.getString(C1757R.string.disabled_by_admin_summary_text);
     }
 

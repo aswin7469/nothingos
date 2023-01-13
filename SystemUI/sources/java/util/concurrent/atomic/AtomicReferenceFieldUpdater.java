@@ -73,7 +73,7 @@ public abstract class AtomicReferenceFieldUpdater<T, V> {
     private static final class AtomicReferenceFieldUpdaterImpl<T, V> extends AtomicReferenceFieldUpdater<T, V> {
 
         /* renamed from: U */
-        private static final Unsafe f768U = Unsafe.getUnsafe();
+        private static final Unsafe f766U = Unsafe.getUnsafe();
         private final Class<?> cclass;
         private final long offset;
         private final Class<T> tclass;
@@ -110,7 +110,7 @@ public abstract class AtomicReferenceFieldUpdater<T, V> {
                 r2.cclass = r6
                 r2.tclass = r3
                 r2.vclass = r4
-                jdk.internal.misc.Unsafe r3 = f768U
+                jdk.internal.misc.Unsafe r3 = f766U
                 long r3 = r3.objectFieldOffset(r5)
                 r2.offset = r3
                 return
@@ -167,36 +167,36 @@ public abstract class AtomicReferenceFieldUpdater<T, V> {
         public final boolean compareAndSet(T t, V v, V v2) {
             accessCheck(t);
             valueCheck(v2);
-            return f768U.compareAndSetObject(t, this.offset, v, v2);
+            return f766U.compareAndSetObject(t, this.offset, v, v2);
         }
 
         public final boolean weakCompareAndSet(T t, V v, V v2) {
             accessCheck(t);
             valueCheck(v2);
-            return f768U.compareAndSetObject(t, this.offset, v, v2);
+            return f766U.compareAndSetObject(t, this.offset, v, v2);
         }
 
         public final void set(T t, V v) {
             accessCheck(t);
             valueCheck(v);
-            f768U.putObjectVolatile(t, this.offset, v);
+            f766U.putObjectVolatile(t, this.offset, v);
         }
 
         public final void lazySet(T t, V v) {
             accessCheck(t);
             valueCheck(v);
-            f768U.putObjectRelease(t, this.offset, v);
+            f766U.putObjectRelease(t, this.offset, v);
         }
 
         public final V get(T t) {
             accessCheck(t);
-            return f768U.getObjectVolatile(t, this.offset);
+            return f766U.getObjectVolatile(t, this.offset);
         }
 
         public final V getAndSet(T t, V v) {
             accessCheck(t);
             valueCheck(v);
-            return f768U.getAndSetObject(t, this.offset, v);
+            return f766U.getAndSetObject(t, this.offset, v);
         }
     }
 }

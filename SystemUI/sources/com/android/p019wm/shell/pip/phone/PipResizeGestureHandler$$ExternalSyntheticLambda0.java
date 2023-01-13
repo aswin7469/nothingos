@@ -10,6 +10,6 @@ public final /* synthetic */ class PipResizeGestureHandler$$ExternalSyntheticLam
     }
 
     public final void run() {
-        this.f$0.mo50457xbc679b54();
+        this.f$0.mo50466xbc679b54();
     }
 }

@@ -18,6 +18,6 @@ public final /* synthetic */ class BubbleFlyoutView$$ExternalSyntheticLambda2 im
     }
 
     public final void run() {
-        this.f$0.mo48576x220c48a3(this.f$1, this.f$2, this.f$3);
+        this.f$0.mo48585x220c48a3(this.f$1, this.f$2, this.f$3);
     }
 }

@@ -13,6 +13,6 @@ public final /* synthetic */ class ControlHolder$$ExternalSyntheticLambda0 imple
     }
 
     public final void onClick(View view) {
-        ControlHolder.m2636bindData$lambda1(this.f$0, this.f$1, view);
+        ControlHolder.m2641bindData$lambda1(this.f$0, this.f$1, view);
     }
 }

@@ -11,6 +11,6 @@ public final /* synthetic */ class ScreenshotView$$ExternalSyntheticLambda4 impl
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        this.f$0.mo37502x84965014(valueAnimator);
+        this.f$0.mo37503x84965014(valueAnimator);
     }
 }

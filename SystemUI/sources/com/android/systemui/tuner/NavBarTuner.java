@@ -15,7 +15,7 @@ import android.widget.EditText;
 import androidx.core.view.ViewCompat;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dependency;
 import com.android.systemui.navigationbar.NavigationBarInflaterView;
 import com.android.systemui.tuner.TunerService;
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 @Deprecated
 public class NavBarTuner extends TunerPreferenceFragment {
     private static final String ICON = "icon";
-    private static final int[][] ICONS = {new int[]{C1893R.C1895drawable.ic_qs_circle, C1893R.string.tuner_circle}, new int[]{C1893R.C1895drawable.ic_add, C1893R.string.tuner_plus}, new int[]{C1893R.C1895drawable.ic_remove, C1893R.string.tuner_minus}, new int[]{C1893R.C1895drawable.ic_left, C1893R.string.tuner_left}, new int[]{C1893R.C1895drawable.ic_right, C1893R.string.tuner_right}, new int[]{C1893R.C1895drawable.ic_menu, C1893R.string.tuner_menu}};
+    private static final int[][] ICONS = {new int[]{C1894R.C1896drawable.ic_qs_circle, C1894R.string.tuner_circle}, new int[]{C1894R.C1896drawable.ic_add, C1894R.string.tuner_plus}, new int[]{C1894R.C1896drawable.ic_remove, C1894R.string.tuner_minus}, new int[]{C1894R.C1896drawable.ic_left, C1894R.string.tuner_left}, new int[]{C1894R.C1896drawable.ic_right, C1894R.string.tuner_right}, new int[]{C1894R.C1896drawable.ic_menu, C1894R.string.tuner_menu}};
     private static final String KEYCODE = "keycode";
     private static final String LAYOUT = "layout";
     private static final String LEFT = "left";
@@ -44,7 +44,7 @@ public class NavBarTuner extends TunerPreferenceFragment {
     }
 
     public void onCreatePreferences(Bundle bundle, String str) {
-        addPreferencesFromResource(C1893R.C1901xml.nav_bar_tuner);
+        addPreferencesFromResource(C1894R.C1902xml.nav_bar_tuner);
         bindLayout((ListPreference) findPreference(LAYOUT));
         bindButton(NavigationBarInflaterView.NAV_BAR_LEFT, NavigationBarInflaterView.NAVSPACE, "left");
         bindButton(NavigationBarInflaterView.NAV_BAR_RIGHT, NavigationBarInflaterView.MENU_IME_ROTATE, "right");
@@ -67,7 +67,7 @@ public class NavBarTuner extends TunerPreferenceFragment {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$bindLayout$2$com-android-systemui-tuner-NavBarTuner  reason: not valid java name */
-    public /* synthetic */ void m3259lambda$bindLayout$2$comandroidsystemuitunerNavBarTuner(ListPreference listPreference, String str, String str2) {
+    public /* synthetic */ void m3264lambda$bindLayout$2$comandroidsystemuitunerNavBarTuner(ListPreference listPreference, String str, String str2) {
         this.mHandler.post(new NavBarTuner$$ExternalSyntheticLambda0(str2, listPreference));
     }
 
@@ -103,13 +103,13 @@ public class NavBarTuner extends TunerPreferenceFragment {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$bindButton$5$com-android-systemui-tuner-NavBarTuner  reason: not valid java name */
-    public /* synthetic */ void m3254lambda$bindButton$5$comandroidsystemuitunerNavBarTuner(String str, ListPreference listPreference, ListPreference listPreference2, Preference preference, String str2, String str3) {
+    public /* synthetic */ void m3259lambda$bindButton$5$comandroidsystemuitunerNavBarTuner(String str, ListPreference listPreference, ListPreference listPreference2, Preference preference, String str2, String str3) {
         this.mHandler.post(new NavBarTuner$$ExternalSyntheticLambda6(this, str3, str, listPreference, listPreference2, preference));
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$bindButton$4$com-android-systemui-tuner-NavBarTuner  reason: not valid java name */
-    public /* synthetic */ void m3253lambda$bindButton$4$comandroidsystemuitunerNavBarTuner(String str, String str2, ListPreference listPreference, ListPreference listPreference2, Preference preference) {
+    public /* synthetic */ void m3258lambda$bindButton$4$comandroidsystemuitunerNavBarTuner(String str, String str2, ListPreference listPreference, ListPreference listPreference2, Preference preference) {
         if (str == null) {
             str = str2;
         }
@@ -132,21 +132,21 @@ public class NavBarTuner extends TunerPreferenceFragment {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$bindButton$7$com-android-systemui-tuner-NavBarTuner  reason: not valid java name */
-    public /* synthetic */ boolean m3256lambda$bindButton$7$comandroidsystemuitunerNavBarTuner(String str, ListPreference listPreference, Preference preference, ListPreference listPreference2, Preference preference2, Object obj) {
+    public /* synthetic */ boolean m3261lambda$bindButton$7$comandroidsystemuitunerNavBarTuner(String str, ListPreference listPreference, Preference preference, ListPreference listPreference2, Preference preference2, Object obj) {
         this.mHandler.post(new NavBarTuner$$ExternalSyntheticLambda4(this, str, listPreference, preference, listPreference2));
         return true;
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$bindButton$6$com-android-systemui-tuner-NavBarTuner  reason: not valid java name */
-    public /* synthetic */ void m3255lambda$bindButton$6$comandroidsystemuitunerNavBarTuner(String str, ListPreference listPreference, Preference preference, ListPreference listPreference2) {
+    public /* synthetic */ void m3260lambda$bindButton$6$comandroidsystemuitunerNavBarTuner(String str, ListPreference listPreference, Preference preference, ListPreference listPreference2) {
         setValue(str, listPreference, preference, listPreference2);
         updateSummary(listPreference2);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$bindButton$9$com-android-systemui-tuner-NavBarTuner  reason: not valid java name */
-    public /* synthetic */ boolean m3258lambda$bindButton$9$comandroidsystemuitunerNavBarTuner(Preference preference, String str, ListPreference listPreference, ListPreference listPreference2, Preference preference2) {
+    public /* synthetic */ boolean m3263lambda$bindButton$9$comandroidsystemuitunerNavBarTuner(Preference preference, String str, ListPreference listPreference, ListPreference listPreference2, Preference preference2) {
         EditText editText = new EditText(getContext());
         new AlertDialog.Builder(getContext()).setTitle(preference2.getTitle()).setView(editText).setNegativeButton(17039360, (DialogInterface.OnClickListener) null).setPositiveButton(17039370, new NavBarTuner$$ExternalSyntheticLambda5(this, editText, preference, str, listPreference, listPreference2)).show();
         return true;
@@ -154,7 +154,7 @@ public class NavBarTuner extends TunerPreferenceFragment {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$bindButton$8$com-android-systemui-tuner-NavBarTuner  reason: not valid java name */
-    public /* synthetic */ void m3257lambda$bindButton$8$comandroidsystemuitunerNavBarTuner(EditText editText, Preference preference, String str, ListPreference listPreference, ListPreference listPreference2, DialogInterface dialogInterface, int i) {
+    public /* synthetic */ void m3262lambda$bindButton$8$comandroidsystemuitunerNavBarTuner(EditText editText, Preference preference, String str, ListPreference listPreference, ListPreference listPreference2, DialogInterface dialogInterface, int i) {
         int i2;
         try {
             i2 = Integer.parseInt(editText.getText().toString());

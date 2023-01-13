@@ -13,6 +13,6 @@ public final /* synthetic */ class AppOpsControllerImpl$$ExternalSyntheticLambda
     }
 
     public final void run() {
-        this.f$0.mo30324xcfa81741(this.f$1, this.f$2);
+        this.f$0.mo30334xcfa81741(this.f$1, this.f$2);
     }
 }

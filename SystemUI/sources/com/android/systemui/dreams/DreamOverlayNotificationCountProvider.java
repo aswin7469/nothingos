@@ -27,7 +27,7 @@ public class DreamOverlayNotificationCountProvider implements CallbackController
 
     @Inject
     public DreamOverlayNotificationCountProvider(NotificationListener notificationListener, @Background Executor executor) {
-        C20751 r0 = new NotificationListener.NotificationHandler() {
+        C20771 r0 = new NotificationListener.NotificationHandler() {
             public void onNotificationRankingUpdate(NotificationListenerService.RankingMap rankingMap) {
             }
 
@@ -56,14 +56,14 @@ public class DreamOverlayNotificationCountProvider implements CallbackController
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$1$com-android-systemui-dreams-DreamOverlayNotificationCountProvider */
-    public /* synthetic */ void mo32500x434ff17(NotificationListener notificationListener) {
+    public /* synthetic */ void mo32511x434ff17(NotificationListener notificationListener) {
         Arrays.stream((T[]) notificationListener.getActiveNotifications()).forEach(new DreamOverlayNotificationCountProvider$$ExternalSyntheticLambda2(this));
         reportNotificationCountChanged();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-dreams-DreamOverlayNotificationCountProvider */
-    public /* synthetic */ void mo32499x28738356(StatusBarNotification statusBarNotification) {
+    public /* synthetic */ void mo32510x28738356(StatusBarNotification statusBarNotification) {
         this.mNotificationKeys.add(statusBarNotification.getKey());
     }
 

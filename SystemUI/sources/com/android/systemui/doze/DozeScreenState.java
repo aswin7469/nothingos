@@ -25,7 +25,7 @@ import javax.inject.Provider;
 public class DozeScreenState implements DozeMachine.Part {
     private static final boolean DEBUG = DozeService.DEBUG;
     private static final int ENTER_DOZE_DELAY = 4000;
-    private static final int ENTER_DOZE_DELAY_BY_LANDSCAPE_SCREEN_OFF = SystemProperties.getInt("debug.system.landscape_doze_delay", 500);
+    private static final int ENTER_DOZE_DELAY_BY_LANDSCAPE_SCREEN_OFF = SystemProperties.getInt("debug.system.landscape_doze_delay", 400);
     public static final int ENTER_DOZE_HIDE_WALLPAPER_DELAY = 2500;
     private static final int ENTER_SCREEN_OFF_WITH_ANIMATION_DELAY = 500;
     private static final String TAG = "DozeScreenState";
@@ -48,7 +48,7 @@ public class DozeScreenState implements DozeMachine.Part {
 
     @Inject
     public DozeScreenState(@WrappedService DozeMachine.Service service, @Main Handler handler, DozeHost dozeHost, DozeParameters dozeParameters, WakeLock wakeLock, AuthController authController, Provider<UdfpsController> provider, DozeLog dozeLog, DozeScreenBrightness dozeScreenBrightness) {
-        C20621 r0 = new AuthController.Callback() {
+        C20641 r0 = new AuthController.Callback() {
             public void onAllAuthenticatorsRegistered() {
                 DozeScreenState.this.updateUdfpsController();
             }
@@ -94,7 +94,7 @@ public class DozeScreenState implements DozeMachine.Part {
         if (state2 == DozeMachine.State.FINISH) {
             this.mPendingScreenState = 0;
             this.mHandler.removeCallbacks(this.mApplyPendingScreenState);
-            m2735lambda$transitionTo$0$comandroidsystemuidozeDozeScreenState(screenState);
+            m2740lambda$transitionTo$0$comandroidsystemuidozeDozeScreenState(screenState);
             this.mWakeLock.setAcquired(false);
         } else if (screenState != 0) {
             boolean hasCallbacks = this.mHandler.hasCallbacks(this.mApplyPendingScreenState);
@@ -110,15 +110,18 @@ public class DozeScreenState implements DozeMachine.Part {
                 boolean z5 = state2 == DozeMachine.State.DOZE_AOD && this.mParameters.shouldDelayDisplayDozeTransition() && !z2;
                 boolean z6 = state2 == DozeMachine.State.DOZE_AOD && (udfpsController = this.mUdfpsController) != null && udfpsController.isFingerDown();
                 boolean z7 = state2 == DozeMachine.State.DOZE && ((CentralSurfacesImplEx) NTDependencyEx.get(CentralSurfacesImplEx.class)).shouldPlayOnOffAnimation();
-                this.mIsLandscapeScreenOff = this.mNotificationPanelViewController.isLandscapeScreenOff();
-                this.mNotificationPanelViewController.setIsLandscapeOff(false);
+                NotificationPanelViewController notificationPanelViewController = this.mNotificationPanelViewController;
+                if (notificationPanelViewController != null) {
+                    this.mIsLandscapeScreenOff = notificationPanelViewController.isLandscapeScreenOff();
+                    this.mNotificationPanelViewController.setIsLandscapeOff(false);
+                }
                 if (!hasCallbacks) {
                     if (DEBUG) {
                         Log.d(TAG, "Display state changed to " + screenState + " delayed by " + (z5 ? ENTER_DOZE_DELAY : 1));
                     }
                     if (z5) {
                         if (z4) {
-                            m2735lambda$transitionTo$0$comandroidsystemuidozeDozeScreenState(2);
+                            m2740lambda$transitionTo$0$comandroidsystemuidozeDozeScreenState(2);
                             this.mPendingScreenState = screenState;
                         }
                         this.mHandler.postDelayed(this.mApplyPendingScreenState, 4000);
@@ -127,7 +130,7 @@ public class DozeScreenState implements DozeMachine.Part {
                         this.mHandler.postDelayed(this.mApplyPendingScreenState, NotificationTapHelper.DOUBLE_TAP_TIMEOUT_MS);
                     } else if (z7 && !this.mIsLandscapeScreenOff) {
                         if (z4) {
-                            m2735lambda$transitionTo$0$comandroidsystemuidozeDozeScreenState(2);
+                            m2740lambda$transitionTo$0$comandroidsystemuidozeDozeScreenState(2);
                             this.mPendingScreenState = screenState;
                         }
                         this.mHandler.postDelayed(this.mApplyPendingScreenState, 500);
@@ -147,7 +150,7 @@ public class DozeScreenState implements DozeMachine.Part {
             } else if (z3) {
                 this.mDozeHost.prepareForGentleSleep(new DozeScreenState$$ExternalSyntheticLambda1(this, screenState));
             } else {
-                m2735lambda$transitionTo$0$comandroidsystemuidozeDozeScreenState(screenState);
+                m2740lambda$transitionTo$0$comandroidsystemuidozeDozeScreenState(screenState);
             }
         }
     }
@@ -156,7 +159,7 @@ public class DozeScreenState implements DozeMachine.Part {
     public void applyPendingScreenState() {
         UdfpsController udfpsController = this.mUdfpsController;
         if (udfpsController == null || !udfpsController.isFingerDown()) {
-            m2735lambda$transitionTo$0$comandroidsystemuidozeDozeScreenState(this.mPendingScreenState);
+            m2740lambda$transitionTo$0$comandroidsystemuidozeDozeScreenState(this.mPendingScreenState);
             this.mPendingScreenState = 0;
             return;
         }
@@ -166,7 +169,7 @@ public class DozeScreenState implements DozeMachine.Part {
 
     /* access modifiers changed from: private */
     /* renamed from: applyScreenState */
-    public void m2735lambda$transitionTo$0$comandroidsystemuidozeDozeScreenState(int i) {
+    public void m2740lambda$transitionTo$0$comandroidsystemuidozeDozeScreenState(int i) {
         if (i != 0) {
             if (DEBUG) {
                 Log.d(TAG, "setDozeScreenState(" + i + NavigationBarInflaterView.KEY_CODE_END);

@@ -30,7 +30,7 @@ public class WifiStateWorker extends BroadcastReceiver {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-qs-tiles-dialog-WifiStateWorker */
-    public /* synthetic */ void mo37097xefab5b9d() {
+    public /* synthetic */ void mo37096xefab5b9d() {
         WifiManager wifiManager = this.mWifiManager;
         if (wifiManager != null) {
             this.mWifiState = wifiManager.getWifiState();
@@ -44,7 +44,7 @@ public class WifiStateWorker extends BroadcastReceiver {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setWifiEnabled$1$com-android-systemui-qs-tiles-dialog-WifiStateWorker */
-    public /* synthetic */ void mo37098xcf6eb5d8(boolean z) {
+    public /* synthetic */ void mo37097xcf6eb5d8(boolean z) {
         WifiManager wifiManager = this.mWifiManager;
         if (wifiManager != null) {
             this.mWifiState = z ? 2 : 0;

@@ -9,6 +9,7 @@ import android.graphics.RenderNode;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import com.android.internal.util.CallbackRegistry;
+import com.nothing.systemui.util.NTLogUtil;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -18,6 +19,7 @@ class ImageTileSet {
     private static final String TAG = "ImageTileSet";
     private CallbackRegistry<OnContentChangedListener, ImageTileSet, Rect> mContentListeners;
     private final Handler mHandler;
+    private Object mLock = new Object();
     private final Region mRegion = new Region();
     private final List<ImageTile> mTiles = new ArrayList();
 
@@ -44,12 +46,15 @@ class ImageTileSet {
 
     /* access modifiers changed from: package-private */
     /* renamed from: addTile */
-    public void m2998lambda$addTile$0$comandroidsystemuiscreenshotImageTileSet(ImageTile imageTile) {
+    public void m3002lambda$addTile$0$comandroidsystemuiscreenshotImageTileSet(ImageTile imageTile) {
         if (!this.mHandler.getLooper().isCurrentThread()) {
             this.mHandler.post(new ImageTileSet$$ExternalSyntheticLambda0(this, imageTile));
             return;
         }
-        this.mTiles.add(imageTile);
+        synchronized (this.mLock) {
+            NTLogUtil.m1686d(TAG, " addTile");
+            this.mTiles.add(imageTile);
+        }
         this.mRegion.op(imageTile.getLocation(), this.mRegion, Region.Op.UNION);
         notifyContentChanged();
     }
@@ -142,10 +147,14 @@ class ImageTileSet {
     public void clear() {
         if (!this.mTiles.isEmpty()) {
             this.mRegion.setEmpty();
-            Iterator<ImageTile> it = this.mTiles.iterator();
-            while (it.hasNext()) {
-                it.next().close();
-                it.remove();
+            synchronized (this.mLock) {
+                NTLogUtil.m1686d(TAG, "remove mTiles start");
+                Iterator<ImageTile> it = this.mTiles.iterator();
+                while (it.hasNext()) {
+                    it.next().close();
+                    it.remove();
+                }
+                NTLogUtil.m1686d(TAG, "remove mTiles end");
             }
             notifyContentChanged();
         }

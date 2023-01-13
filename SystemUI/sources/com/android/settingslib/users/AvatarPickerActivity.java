@@ -20,7 +20,7 @@ import com.android.settingslib.C1757R;
 import com.android.settingslib.users.AvatarPhotoController;
 import com.google.android.setupcompat.template.FooterBarMixin;
 import com.google.android.setupcompat.template.FooterButton;
-import com.google.android.setupdesign.C3953R;
+import com.google.android.setupdesign.C3963R;
 import com.google.android.setupdesign.GlifLayout;
 import com.google.android.setupdesign.util.ThemeHelper;
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ public class AvatarPickerActivity extends Activity {
     /* access modifiers changed from: protected */
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        setTheme(C3953R.style.SudThemeGlifV3_DayNight);
+        setTheme(C3963R.style.SudThemeGlifV3_DayNight);
         ThemeHelper.trySetDynamicColor(this);
         setContentView(C1757R.layout.avatar_picker);
         setUpButtons();
@@ -67,13 +67,13 @@ public class AvatarPickerActivity extends Activity {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setUpButtons$0$com-android-settingslib-users-AvatarPickerActivity */
-    public /* synthetic */ void mo29200x54065827(View view) {
+    public /* synthetic */ void mo29205x54065827(View view) {
         cancel();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setUpButtons$1$com-android-settingslib-users-AvatarPickerActivity */
-    public /* synthetic */ void mo29201x81def286(View view) {
+    public /* synthetic */ void mo29206x81def286(View view) {
         this.mAdapter.returnSelectionResult();
     }
 
@@ -191,19 +191,19 @@ public class AvatarPickerActivity extends Activity {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onBindViewHolder$0$com-android-settingslib-users-AvatarPickerActivity$AvatarAdapter */
-        public /* synthetic */ void mo29208xbac58150(View view) {
+        public /* synthetic */ void mo29213xbac58150(View view) {
             AvatarPickerActivity.this.mAvatarPhotoController.takePhoto();
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onBindViewHolder$1$com-android-settingslib-users-AvatarPickerActivity$AvatarAdapter */
-        public /* synthetic */ void mo29209x24f5096f(View view) {
+        public /* synthetic */ void mo29214x24f5096f(View view) {
             AvatarPickerActivity.this.mAvatarPhotoController.choosePhoto();
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onBindViewHolder$2$com-android-settingslib-users-AvatarPickerActivity$AvatarAdapter */
-        public /* synthetic */ void mo29210x8f24918e(int i, View view) {
+        public /* synthetic */ void mo29215x8f24918e(int i, View view) {
             if (this.mSelectedPosition == i) {
                 deselect(i);
             } else {

@@ -21,7 +21,7 @@ import android.view.SurfaceControl;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.animation.Interpolators;
 import com.android.systemui.statusbar.phone.ShadeController;
 import com.android.systemui.statusbar.policy.HeadsUpManager;
@@ -43,7 +43,7 @@ public class ExpandableNotificationRowDragController {
     }
 
     private void init() {
-        this.mIconSize = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.drag_and_drop_icon_size);
+        this.mIconSize = this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.drag_and_drop_icon_size);
     }
 
     public void startDragAndDrop(View view) {
@@ -59,7 +59,7 @@ public class ExpandableNotificationRowDragController {
             if (!expandableNotificationRow.isPinned()) {
                 dismissShade();
             }
-            Toast.makeText(this.mContext, C1893R.string.drag_split_not_supported, 0).show();
+            Toast.makeText(this.mContext, C1894R.string.drag_split_not_supported, 0).show();
             return;
         }
         Bitmap bitmapFromDrawable = getBitmapFromDrawable(getPkgIcon(expandableNotificationRow.getEntry().getSbn().getPackageName()));
@@ -112,12 +112,12 @@ public class ExpandableNotificationRowDragController {
     }
 
     private View.OnDragListener getDraggedViewDragListener() {
-        return new C2749x70846d1b(this);
+        return new C2755x70846d1b(this);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$getDraggedViewDragListener$0$com-android-systemui-statusbar-notification-row-ExpandableNotificationRowDragController */
-    public /* synthetic */ boolean mo41258x5aa35130(View view, DragEvent dragEvent) {
+    public /* synthetic */ boolean mo41264x5aa35130(View view, DragEvent dragEvent) {
         int action = dragEvent.getAction();
         if (action != 1) {
             if (action != 4) {
@@ -139,7 +139,7 @@ public class ExpandableNotificationRowDragController {
         ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
         ofFloat.setDuration(200);
         ofFloat.setInterpolator(Interpolators.FAST_OUT_SLOW_IN);
-        ofFloat.addUpdateListener(new C2748x70846d1a(transaction, dragSurface));
+        ofFloat.addUpdateListener(new C2754x70846d1a(transaction, dragSurface));
         ofFloat.addListener(new AnimatorListenerAdapter() {
             private boolean mCanceled = false;
 

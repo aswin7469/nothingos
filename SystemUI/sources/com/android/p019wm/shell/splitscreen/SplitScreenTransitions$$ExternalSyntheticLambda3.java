@@ -14,6 +14,6 @@ public final /* synthetic */ class SplitScreenTransitions$$ExternalSyntheticLamb
     }
 
     public final void run() {
-        this.f$0.mo50796x97d29971(this.f$1);
+        this.f$0.mo50805x97d29971(this.f$1);
     }
 }

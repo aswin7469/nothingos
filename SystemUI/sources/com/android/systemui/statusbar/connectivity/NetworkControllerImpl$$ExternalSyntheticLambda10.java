@@ -9,6 +9,6 @@ public final /* synthetic */ class NetworkControllerImpl$$ExternalSyntheticLambd
     }
 
     public final void run() {
-        this.f$0.mo39414x8520f6f1();
+        this.f$0.mo39416x8520f6f1();
     }
 }

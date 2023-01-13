@@ -17,13 +17,13 @@ public class LineNumberInputStream extends FilterInputStream {
         if (i != -1) {
             this.pushBack = -1;
         } else {
-            i = this.f521in.read();
+            i = this.f519in.read();
         }
         if (i != 10) {
             if (i != 13) {
                 return i;
             }
-            int read = this.f521in.read();
+            int read = this.f519in.read();
             this.pushBack = read;
             if (read == 10) {
                 this.pushBack = -1;
@@ -97,12 +97,12 @@ public class LineNumberInputStream extends FilterInputStream {
     public void mark(int i) {
         this.markLineNumber = this.lineNumber;
         this.markPushBack = this.pushBack;
-        this.f521in.mark(i);
+        this.f519in.mark(i);
     }
 
     public void reset() throws IOException {
         this.lineNumber = this.markLineNumber;
         this.pushBack = this.markPushBack;
-        this.f521in.reset();
+        this.f519in.reset();
     }
 }

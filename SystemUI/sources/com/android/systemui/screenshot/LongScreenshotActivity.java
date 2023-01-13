@@ -23,7 +23,7 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import com.android.internal.logging.UiEventLogger;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.qualifiers.Background;
 import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.screenshot.CropView;
@@ -86,18 +86,18 @@ public class LongScreenshotActivity extends Activity {
 
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        setContentView(C1893R.layout.long_screenshot);
-        this.mPreview = (ImageView) requireViewById(C1893R.C1897id.preview);
-        this.mSave = requireViewById(C1893R.C1897id.save);
-        this.mEdit = requireViewById(C1893R.C1897id.edit);
-        this.mShare = requireViewById(C1893R.C1897id.share);
-        this.mCancel = requireViewById(C1893R.C1897id.cancel);
-        this.mCropView = (CropView) requireViewById(C1893R.C1897id.crop_view);
-        MagnifierView magnifierView = (MagnifierView) requireViewById(C1893R.C1897id.magnifier);
+        setContentView(C1894R.layout.long_screenshot);
+        this.mPreview = (ImageView) requireViewById(C1894R.C1898id.preview);
+        this.mSave = requireViewById(C1894R.C1898id.save);
+        this.mEdit = requireViewById(C1894R.C1898id.edit);
+        this.mShare = requireViewById(C1894R.C1898id.share);
+        this.mCancel = requireViewById(C1894R.C1898id.cancel);
+        this.mCropView = (CropView) requireViewById(C1894R.C1898id.crop_view);
+        MagnifierView magnifierView = (MagnifierView) requireViewById(C1894R.C1898id.magnifier);
         this.mMagnifierView = magnifierView;
         this.mCropView.setCropInteractionListener(magnifierView);
-        this.mTransitionView = (ImageView) requireViewById(C1893R.C1897id.transition);
-        this.mEnterTransitionView = (ImageView) requireViewById(C1893R.C1897id.enter_transition);
+        this.mTransitionView = (ImageView) requireViewById(C1894R.C1898id.transition);
+        this.mEnterTransitionView = (ImageView) requireViewById(C1894R.C1898id.enter_transition);
         this.mSave.setOnClickListener(new LongScreenshotActivity$$ExternalSyntheticLambda3(this));
         this.mCancel.setOnClickListener(new LongScreenshotActivity$$ExternalSyntheticLambda3(this));
         this.mEdit.setOnClickListener(new LongScreenshotActivity$$ExternalSyntheticLambda3(this));
@@ -118,7 +118,7 @@ public class LongScreenshotActivity extends Activity {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onCreate$0$com-android-systemui-screenshot-LongScreenshotActivity */
-    public /* synthetic */ void mo37372x85381858(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
+    public /* synthetic */ void mo37373x85381858(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
         updateImageDimensions();
     }
 
@@ -145,7 +145,7 @@ public class LongScreenshotActivity extends Activity {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onStart$1$com-android-systemui-screenshot-LongScreenshotActivity */
-    public /* synthetic */ void mo37374x67b51509(ListenableFuture listenableFuture) {
+    public /* synthetic */ void mo37375x67b51509(ListenableFuture listenableFuture) {
         Log.d(TAG, "cached bitmap load complete");
         try {
             onCachedImageLoaded((ImageLoader.Result) listenableFuture.get());
@@ -179,7 +179,7 @@ public class LongScreenshotActivity extends Activity {
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onPreDraw$1$com-android-systemui-screenshot-LongScreenshotActivity$1 */
-            public /* synthetic */ void mo37381x100e0b11(float f, float f2) {
+            public /* synthetic */ void mo37382x100e0b11(float f, float f2) {
                 Rect rect = new Rect();
                 LongScreenshotActivity.this.mEnterTransitionView.getBoundsOnScreen(rect);
                 LongScreenshotActivity.this.mLongScreenshotHolder.takeTransitionDestinationCallback().setTransitionDestination(rect, new LongScreenshotActivity$1$$ExternalSyntheticLambda1(this, f, f2));
@@ -187,7 +187,7 @@ public class LongScreenshotActivity extends Activity {
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onPreDraw$0$com-android-systemui-screenshot-LongScreenshotActivity$1 */
-            public /* synthetic */ void mo37380x8320f3f2(float f, float f2) {
+            public /* synthetic */ void mo37381x8320f3f2(float f, float f2) {
                 LongScreenshotActivity.this.mPreview.animate().alpha(1.0f);
                 LongScreenshotActivity.this.mCropView.setBoundaryPosition(CropView.CropBoundary.TOP, f);
                 LongScreenshotActivity.this.mCropView.setBoundaryPosition(CropView.CropBoundary.BOTTOM, f2);
@@ -203,7 +203,7 @@ public class LongScreenshotActivity extends Activity {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onLongScreenshotReceived$2$com-android-systemui-screenshot-LongScreenshotActivity */
-    public /* synthetic */ void mo37373xc1ca0fef() {
+    public /* synthetic */ void mo37374xc1ca0fef() {
         try {
             this.mSavedImagePath = this.mCacheSaveFuture.get();
         } catch (InterruptedException | CancellationException | ExecutionException e) {
@@ -284,7 +284,7 @@ public class LongScreenshotActivity extends Activity {
     }
 
     private void doEdit(Uri uri) {
-        String string = getString(C1893R.string.nt_config_screenshotEditor);
+        String string = getString(C1894R.string.nt_config_screenshotEditor);
         Intent intent = new Intent("android.intent.action.EDIT");
         if (!TextUtils.isEmpty(string)) {
             intent.setComponent(ComponentName.unflattenFromString(string));
@@ -311,16 +311,16 @@ public class LongScreenshotActivity extends Activity {
         int id = view.getId();
         view.setPressed(true);
         setButtonsEnabled(false);
-        if (id == C1893R.C1897id.save) {
+        if (id == C1894R.C1898id.save) {
             this.mUiEventLogger.log(ScreenshotEvent.SCREENSHOT_LONG_SCREENSHOT_SAVED);
             startExport(PendingAction.SAVE);
-        } else if (id == C1893R.C1897id.edit) {
+        } else if (id == C1894R.C1898id.edit) {
             this.mUiEventLogger.log(ScreenshotEvent.SCREENSHOT_LONG_SCREENSHOT_EDIT);
             startExport(PendingAction.EDIT);
-        } else if (id == C1893R.C1897id.share) {
+        } else if (id == C1894R.C1898id.share) {
             this.mUiEventLogger.log(ScreenshotEvent.SCREENSHOT_LONG_SCREENSHOT_SHARE);
             startExport(PendingAction.SHARE);
-        } else if (id == C1893R.C1897id.cancel) {
+        } else if (id == C1894R.C1898id.cancel) {
             this.mUiEventLogger.log(ScreenshotEvent.SCREENSHOT_LONG_SCREENSHOT_EXIT);
             finishAndRemoveTask();
         }
@@ -345,11 +345,11 @@ public class LongScreenshotActivity extends Activity {
 
     /* access modifiers changed from: private */
     /* renamed from: onExportCompleted */
-    public void mo37375x107eeeb4(PendingAction pendingAction, ListenableFuture<ImageExporter.Result> listenableFuture) {
+    public void mo37376x107eeeb4(PendingAction pendingAction, ListenableFuture<ImageExporter.Result> listenableFuture) {
         setButtonsEnabled(true);
         try {
             ImageExporter.Result result = listenableFuture.get();
-            int i = C24402.f338x6ba3e28f[pendingAction.ordinal()];
+            int i = C24462.f337x6ba3e28f[pendingAction.ordinal()];
             if (i == 1) {
                 doEdit(result.uri);
             } else if (i == 2) {
@@ -363,10 +363,10 @@ public class LongScreenshotActivity extends Activity {
     }
 
     /* renamed from: com.android.systemui.screenshot.LongScreenshotActivity$2 */
-    static /* synthetic */ class C24402 {
+    static /* synthetic */ class C24462 {
 
         /* renamed from: $SwitchMap$com$android$systemui$screenshot$LongScreenshotActivity$PendingAction */
-        static final /* synthetic */ int[] f338x6ba3e28f;
+        static final /* synthetic */ int[] f337x6ba3e28f;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(6:0|1|2|3|4|(3:5|6|8)) */
         /* JADX WARNING: Failed to process nested try/catch */
@@ -377,19 +377,19 @@ public class LongScreenshotActivity extends Activity {
                 com.android.systemui.screenshot.LongScreenshotActivity$PendingAction[] r0 = com.android.systemui.screenshot.LongScreenshotActivity.PendingAction.values()
                 int r0 = r0.length
                 int[] r0 = new int[r0]
-                f338x6ba3e28f = r0
+                f337x6ba3e28f = r0
                 com.android.systemui.screenshot.LongScreenshotActivity$PendingAction r1 = com.android.systemui.screenshot.LongScreenshotActivity.PendingAction.EDIT     // Catch:{ NoSuchFieldError -> 0x0012 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
                 r2 = 1
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0012 }
             L_0x0012:
-                int[] r0 = f338x6ba3e28f     // Catch:{ NoSuchFieldError -> 0x001d }
+                int[] r0 = f337x6ba3e28f     // Catch:{ NoSuchFieldError -> 0x001d }
                 com.android.systemui.screenshot.LongScreenshotActivity$PendingAction r1 = com.android.systemui.screenshot.LongScreenshotActivity.PendingAction.SHARE     // Catch:{ NoSuchFieldError -> 0x001d }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
                 r2 = 2
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x001d }
             L_0x001d:
-                int[] r0 = f338x6ba3e28f     // Catch:{ NoSuchFieldError -> 0x0028 }
+                int[] r0 = f337x6ba3e28f     // Catch:{ NoSuchFieldError -> 0x0028 }
                 com.android.systemui.screenshot.LongScreenshotActivity$PendingAction r1 = com.android.systemui.screenshot.LongScreenshotActivity.PendingAction.SAVE     // Catch:{ NoSuchFieldError -> 0x0028 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0028 }
                 r2 = 3
@@ -397,7 +397,7 @@ public class LongScreenshotActivity extends Activity {
             L_0x0028:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.screenshot.LongScreenshotActivity.C24402.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.screenshot.LongScreenshotActivity.C24462.<clinit>():void");
         }
     }
 

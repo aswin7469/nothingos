@@ -282,24 +282,24 @@ class JarVerifier {
     static class VerifierStream extends InputStream {
 
         /* renamed from: is */
-        private InputStream f773is;
+        private InputStream f771is;
 
         /* renamed from: jv */
-        private JarVerifier f774jv;
+        private JarVerifier f772jv;
         private ManifestEntryVerifier mev;
         private long numLeft;
 
         VerifierStream(Manifest manifest, JarEntry jarEntry, InputStream inputStream, JarVerifier jarVerifier) throws IOException {
             if (inputStream != null) {
-                this.f773is = inputStream;
-                this.f774jv = jarVerifier;
+                this.f771is = inputStream;
+                this.f772jv = jarVerifier;
                 ManifestEntryVerifier manifestEntryVerifier = new ManifestEntryVerifier(manifest);
                 this.mev = manifestEntryVerifier;
-                this.f774jv.beginEntry(jarEntry, manifestEntryVerifier);
+                this.f772jv.beginEntry(jarEntry, manifestEntryVerifier);
                 long size = jarEntry.getSize();
                 this.numLeft = size;
                 if (size == 0) {
-                    this.f774jv.update(-1, this.mev);
+                    this.f772jv.update(-1, this.mev);
                     return;
                 }
                 return;
@@ -308,25 +308,25 @@ class JarVerifier {
         }
 
         public int read() throws IOException {
-            InputStream inputStream = this.f773is;
+            InputStream inputStream = this.f771is;
             if (inputStream == null) {
                 throw new IOException("stream closed");
             } else if (this.numLeft <= 0) {
                 return -1;
             } else {
                 int read = inputStream.read();
-                this.f774jv.update(read, this.mev);
+                this.f772jv.update(read, this.mev);
                 long j = this.numLeft - 1;
                 this.numLeft = j;
                 if (j == 0) {
-                    this.f774jv.update(-1, this.mev);
+                    this.f772jv.update(-1, this.mev);
                 }
                 return read;
             }
         }
 
         public int read(byte[] bArr, int i, int i2) throws IOException {
-            InputStream inputStream = this.f773is;
+            InputStream inputStream = this.f771is;
             if (inputStream != null) {
                 long j = this.numLeft;
                 if (j > 0 && j < ((long) i2)) {
@@ -336,11 +336,11 @@ class JarVerifier {
                     return -1;
                 }
                 int read = inputStream.read(bArr, i, i2);
-                this.f774jv.update(read, bArr, i, i2, this.mev);
+                this.f772jv.update(read, bArr, i, i2, this.mev);
                 long j2 = this.numLeft - ((long) read);
                 this.numLeft = j2;
                 if (j2 == 0) {
-                    this.f774jv.update(-1, bArr, i, i2, this.mev);
+                    this.f772jv.update(-1, bArr, i, i2, this.mev);
                 }
                 return read;
             }
@@ -348,17 +348,17 @@ class JarVerifier {
         }
 
         public void close() throws IOException {
-            InputStream inputStream = this.f773is;
+            InputStream inputStream = this.f771is;
             if (inputStream != null) {
                 inputStream.close();
             }
-            this.f773is = null;
+            this.f771is = null;
             this.mev = null;
-            this.f774jv = null;
+            this.f772jv = null;
         }
 
         public int available() throws IOException {
-            InputStream inputStream = this.f773is;
+            InputStream inputStream = this.f771is;
             if (inputStream != null) {
                 return inputStream.available();
             }

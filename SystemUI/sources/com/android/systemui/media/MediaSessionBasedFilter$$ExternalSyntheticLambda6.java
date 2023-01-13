@@ -11,6 +11,6 @@ public final /* synthetic */ class MediaSessionBasedFilter$$ExternalSyntheticLam
     }
 
     public final void run() {
-        MediaSessionBasedFilter.m2823onMediaDataRemoved$lambda8(this.f$0, this.f$1);
+        MediaSessionBasedFilter.m2828onMediaDataRemoved$lambda8(this.f$0, this.f$1);
     }
 }

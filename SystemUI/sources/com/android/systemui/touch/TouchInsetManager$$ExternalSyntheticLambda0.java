@@ -15,6 +15,6 @@ public final /* synthetic */ class TouchInsetManager$$ExternalSyntheticLambda0 i
     }
 
     public final Object attachCompleter(CallbackToFutureAdapter.Completer completer) {
-        return this.f$0.mo46334x20e3bcda(this.f$1, this.f$2, completer);
+        return this.f$0.mo46346x20e3bcda(this.f$1, this.f$2, completer);
     }
 }

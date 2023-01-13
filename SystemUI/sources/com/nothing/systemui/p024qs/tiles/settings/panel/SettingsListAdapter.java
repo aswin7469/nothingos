@@ -3,7 +3,7 @@ package com.nothing.systemui.p024qs.tiles.settings.panel;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import androidx.recyclerview.widget.RecyclerView;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.nothing.systemui.p024qs.tiles.settings.tesla.TeslaConnectPanelPlugin;
 import com.nothing.tesla.service.CmdObjectList;
 import java.util.List;
@@ -48,11 +48,11 @@ public class SettingsListAdapter extends RecyclerView.Adapter<SettingRowViewHold
         public SettingView mSettingView;
 
         public SettingRowViewHolder(ViewGroup viewGroup) {
-            super(LayoutInflater.from(viewGroup.getContext()).inflate(C1893R.layout.nt_panel_setting_row, viewGroup, false));
-            SettingView settingView = (SettingView) this.itemView.findViewById(C1893R.C1897id.setting_view);
+            super(LayoutInflater.from(viewGroup.getContext()).inflate(C1894R.layout.nt_panel_setting_row, viewGroup, false));
+            SettingView settingView = (SettingView) this.itemView.findViewById(C1894R.C1898id.setting_view);
             this.mSettingView = settingView;
-            settingView.setTeslaView(this.itemView.findViewById(C1893R.C1897id.pinned_tesla_header), SettingsListAdapter.this.mIsTeslaViewShowing);
-            this.mSettingView.setPinnedHeader(this.itemView.findViewById(C1893R.C1897id.pinned_header));
+            settingView.setTeslaView(this.itemView.findViewById(C1894R.C1898id.pinned_tesla_header), SettingsListAdapter.this.mIsTeslaViewShowing);
+            this.mSettingView.setPinnedHeader(this.itemView.findViewById(C1894R.C1898id.pinned_header));
             this.mSettingView.setupTeslaPlugin(SettingsListAdapter.this.mTeslaPlugin);
         }
 

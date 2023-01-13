@@ -3,7 +3,7 @@ package com.android.p019wm.shell.unfold;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.SurfaceControl;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.RootTaskDisplayAreaOrganizer;
 
 /* renamed from: com.android.wm.shell.unfold.UnfoldBackgroundController */
@@ -39,7 +39,7 @@ public class UnfoldBackgroundController {
     }
 
     private float[] getBackgroundColor(Context context) {
-        int color = context.getResources().getColor(C3343R.C3344color.unfold_transition_background);
+        int color = context.getResources().getColor(C3353R.C3354color.unfold_transition_background);
         return new float[]{((float) Color.red(color)) / 255.0f, ((float) Color.green(color)) / 255.0f, ((float) Color.blue(color)) / 255.0f};
     }
 }

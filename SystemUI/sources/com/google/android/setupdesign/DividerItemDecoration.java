@@ -38,10 +38,10 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     }
 
     public DividerItemDecoration(Context context) {
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(C3953R.styleable.SudDividerItemDecoration);
-        Drawable drawable = obtainStyledAttributes.getDrawable(C3953R.styleable.SudDividerItemDecoration_android_listDivider);
-        int dimensionPixelSize = obtainStyledAttributes.getDimensionPixelSize(C3953R.styleable.SudDividerItemDecoration_android_dividerHeight, 0);
-        int i = obtainStyledAttributes.getInt(C3953R.styleable.SudDividerItemDecoration_sudDividerCondition, 0);
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(C3963R.styleable.SudDividerItemDecoration);
+        Drawable drawable = obtainStyledAttributes.getDrawable(C3963R.styleable.SudDividerItemDecoration_android_listDivider);
+        int dimensionPixelSize = obtainStyledAttributes.getDimensionPixelSize(C3963R.styleable.SudDividerItemDecoration_android_dividerHeight, 0);
+        int i = obtainStyledAttributes.getInt(C3963R.styleable.SudDividerItemDecoration_sudDividerCondition, 0);
         obtainStyledAttributes.recycle();
         setDivider(drawable);
         setDividerHeight(dimensionPixelSize);

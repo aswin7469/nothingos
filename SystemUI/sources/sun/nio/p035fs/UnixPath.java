@@ -24,14 +24,14 @@ class UnixPath extends AbstractPath {
     private static ThreadLocal<SoftReference<CharsetEncoder>> encoder = new ThreadLocal<>();
 
     /* renamed from: fs */
-    private final UnixFileSystem f911fs;
+    private final UnixFileSystem f909fs;
     private int hash;
     private volatile int[] offsets;
     private final byte[] path;
     private volatile String stringValue;
 
     UnixPath(UnixFileSystem unixFileSystem, byte[] bArr) {
-        this.f911fs = unixFileSystem;
+        this.f909fs = unixFileSystem;
         this.path = bArr;
     }
 
@@ -222,7 +222,7 @@ class UnixPath extends AbstractPath {
     }
 
     public UnixFileSystem getFileSystem() {
-        return this.f911fs;
+        return this.f909fs;
     }
 
     public UnixPath getRoot() {
@@ -674,7 +674,7 @@ class UnixPath extends AbstractPath {
 
     public String toString() {
         if (this.stringValue == null) {
-            this.stringValue = this.f911fs.normalizeJavaPath(Util.toString(this.path));
+            this.stringValue = this.f909fs.normalizeJavaPath(Util.toString(this.path));
         }
         return this.stringValue;
     }
@@ -750,7 +750,7 @@ class UnixPath extends AbstractPath {
                 e.rethrowAsIOException(this);
             }
         }
-        UnixPath rootDirectory = this.f911fs.rootDirectory();
+        UnixPath rootDirectory = this.f909fs.rootDirectory();
         for (int i = 0; i < absolutePath.getNameCount(); i++) {
             UnixPath name = absolutePath.getName(i);
             if (name.asByteArray().length != 1 || name.asByteArray()[0] != 46) {
@@ -764,7 +764,7 @@ class UnixPath extends AbstractPath {
                     if (!unixFileAttributes.isSymbolicLink()) {
                         rootDirectory = rootDirectory.getParent();
                         if (rootDirectory == null) {
-                            rootDirectory = this.f911fs.rootDirectory();
+                            rootDirectory = this.f909fs.rootDirectory();
                         }
                     }
                 }

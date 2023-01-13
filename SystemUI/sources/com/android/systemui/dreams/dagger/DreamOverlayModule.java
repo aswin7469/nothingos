@@ -7,7 +7,7 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LifecycleRegistry;
 import com.android.internal.util.Preconditions;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.dreams.DreamOverlayContainerView;
 import com.android.systemui.dreams.DreamOverlayStatusBarView;
@@ -29,14 +29,14 @@ public abstract class DreamOverlayModule {
     @DreamOverlayComponent.DreamOverlayScope
     @Provides
     public static DreamOverlayContainerView providesDreamOverlayContainerView(LayoutInflater layoutInflater) {
-        return (DreamOverlayContainerView) Preconditions.checkNotNull((DreamOverlayContainerView) layoutInflater.inflate(C1893R.layout.dream_overlay_container, (ViewGroup) null), "R.layout.dream_layout_container could not be properly inflated");
+        return (DreamOverlayContainerView) Preconditions.checkNotNull((DreamOverlayContainerView) layoutInflater.inflate(C1894R.layout.dream_overlay_container, (ViewGroup) null), "R.layout.dream_layout_container could not be properly inflated");
     }
 
     @DreamOverlayComponent.DreamOverlayScope
     @Provides
     @Named("dream_overlay_content_view")
     public static ViewGroup providesDreamOverlayContentView(DreamOverlayContainerView dreamOverlayContainerView) {
-        return (ViewGroup) Preconditions.checkNotNull((ViewGroup) dreamOverlayContainerView.findViewById(C1893R.C1897id.dream_overlay_content), "R.id.dream_overlay_content must not be null");
+        return (ViewGroup) Preconditions.checkNotNull((ViewGroup) dreamOverlayContainerView.findViewById(C1894R.C1898id.dream_overlay_content), "R.id.dream_overlay_content must not be null");
     }
 
     @Provides
@@ -53,26 +53,26 @@ public abstract class DreamOverlayModule {
     @DreamOverlayComponent.DreamOverlayScope
     @Provides
     public static DreamOverlayStatusBarView providesDreamOverlayStatusBarView(DreamOverlayContainerView dreamOverlayContainerView) {
-        return (DreamOverlayStatusBarView) Preconditions.checkNotNull((DreamOverlayStatusBarView) dreamOverlayContainerView.findViewById(C1893R.C1897id.dream_overlay_status_bar), "R.id.status_bar must not be null");
+        return (DreamOverlayStatusBarView) Preconditions.checkNotNull((DreamOverlayStatusBarView) dreamOverlayContainerView.findViewById(C1894R.C1898id.dream_overlay_status_bar), "R.id.status_bar must not be null");
     }
 
     @DreamOverlayComponent.DreamOverlayScope
     @Provides
     @Named("max_burn_in_offset")
     static int providesMaxBurnInOffset(@Main Resources resources) {
-        return resources.getDimensionPixelSize(C1893R.dimen.default_burn_in_prevention_offset);
+        return resources.getDimensionPixelSize(C1894R.dimen.default_burn_in_prevention_offset);
     }
 
     @Provides
     @Named("burn_in_protection_update_interval")
     static long providesBurnInProtectionUpdateInterval(@Main Resources resources) {
-        return (long) resources.getInteger(C1893R.integer.config_dreamOverlayBurnInProtectionUpdateIntervalMillis);
+        return (long) resources.getInteger(C1894R.integer.config_dreamOverlayBurnInProtectionUpdateIntervalMillis);
     }
 
     @Provides
     @Named("millis_until_full_jitter")
     static long providesMillisUntilFullJitter(@Main Resources resources) {
-        return (long) resources.getInteger(C1893R.integer.config_dreamOverlayMillisUntilFullJitter);
+        return (long) resources.getInteger(C1894R.integer.config_dreamOverlayMillisUntilFullJitter);
     }
 
     static /* synthetic */ Lifecycle lambda$providesLifecycleOwner$0(Lazy lazy) {

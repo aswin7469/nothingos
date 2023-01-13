@@ -8,7 +8,7 @@ import android.util.ArraySet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.animation.Interpolators;
 import com.android.systemui.statusbar.notification.TransformState;
 import java.util.Stack;
@@ -122,7 +122,7 @@ public class ViewTransformationHelper implements TransformableView, TransformSta
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$transformTo$0$com-android-systemui-statusbar-ViewTransformationHelper */
-    public /* synthetic */ void mo39187xfd6a2d5a(TransformableView transformableView, ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo39188xfd6a2d5a(TransformableView transformableView, ValueAnimator valueAnimator) {
         transformTo(transformableView, valueAnimator.getAnimatedFraction());
     }
 
@@ -177,7 +177,7 @@ public class ViewTransformationHelper implements TransformableView, TransformSta
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$transformFrom$1$com-android-systemui-statusbar-ViewTransformationHelper */
-    public /* synthetic */ void mo39186x9ccdb70a(TransformableView transformableView, ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo39187x9ccdb70a(TransformableView transformableView, ValueAnimator valueAnimator) {
         transformFrom(transformableView, valueAnimator.getAnimatedFraction());
     }
 
@@ -237,7 +237,7 @@ public class ViewTransformationHelper implements TransformableView, TransformSta
                 if (view2 == view.getParent()) {
                     break;
                 }
-                view2.setTag(C1893R.C1897id.contains_transformed_view, true);
+                view2.setTag(C1894R.C1898id.contains_transformed_view, true);
                 valueAt = view2.getParent();
             }
         }
@@ -245,8 +245,8 @@ public class ViewTransformationHelper implements TransformableView, TransformSta
         stack.push(view);
         while (!stack.isEmpty()) {
             View view3 = (View) stack.pop();
-            if (((Boolean) view3.getTag(C1893R.C1897id.contains_transformed_view)) != null || (id = view3.getId()) == -1) {
-                view3.setTag(C1893R.C1897id.contains_transformed_view, (Object) null);
+            if (((Boolean) view3.getTag(C1894R.C1898id.contains_transformed_view)) != null || (id = view3.getId()) == -1) {
+                view3.setTag(C1894R.C1898id.contains_transformed_view, (Object) null);
                 if ((view3 instanceof ViewGroup) && !this.mTransformedViews.containsValue(view3)) {
                     ViewGroup viewGroup = (ViewGroup) view3;
                     for (int i2 = 0; i2 < viewGroup.getChildCount(); i2++) {

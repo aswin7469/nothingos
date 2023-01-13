@@ -258,7 +258,7 @@ public final class ShellCommandHandlerImpl {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$dump$0$com-android-wm-shell-ShellCommandHandlerImpl$HandlerImpl */
-        public /* synthetic */ void mo47938xb0608392(PrintWriter printWriter) {
+        public /* synthetic */ void mo47947xb0608392(PrintWriter printWriter) {
             ShellCommandHandlerImpl.this.dump(printWriter);
         }
 
@@ -274,7 +274,7 @@ public final class ShellCommandHandlerImpl {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$handleCommand$1$com-android-wm-shell-ShellCommandHandlerImpl$HandlerImpl */
-        public /* synthetic */ void mo47939xd9453c5c(boolean[] zArr, String[] strArr, PrintWriter printWriter) {
+        public /* synthetic */ void mo47948xd9453c5c(boolean[] zArr, String[] strArr, PrintWriter printWriter) {
             zArr[0] = ShellCommandHandlerImpl.this.handleCommand(strArr, printWriter);
         }
     }

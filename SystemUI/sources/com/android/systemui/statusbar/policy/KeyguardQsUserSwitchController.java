@@ -17,7 +17,7 @@ import com.android.keyguard.KeyguardConstants;
 import com.android.keyguard.KeyguardVisibilityHelper;
 import com.android.keyguard.dagger.KeyguardUserSwitcherScope;
 import com.android.settingslib.drawable.CircleFramedDrawable;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.p012qs.user.UserSwitchDialogController;
 import com.android.systemui.plugins.FalsingManager;
@@ -124,8 +124,8 @@ public class KeyguardQsUserSwitchController extends ViewController<FrameLayout> 
         if (DEBUG) {
             Log.d(TAG, "onInit");
         }
-        this.mUserAvatarView = (UserAvatarView) ((FrameLayout) this.mView).findViewById(C1893R.C1897id.kg_multi_user_avatar);
-        this.mUserAvatarViewWithBackground = ((FrameLayout) this.mView).findViewById(C1893R.C1897id.kg_multi_user_avatar_with_background);
+        this.mUserAvatarView = (UserAvatarView) ((FrameLayout) this.mView).findViewById(C1894R.C1898id.kg_multi_user_avatar);
+        this.mUserAvatarViewWithBackground = ((FrameLayout) this.mView).findViewById(C1894R.C1898id.kg_multi_user_avatar_with_background);
         this.mAdapter = new UserSwitcherController.BaseUserAdapter(this.mUserSwitcherController) {
             public View getView(int i, View view, ViewGroup viewGroup) {
                 return null;
@@ -135,14 +135,14 @@ public class KeyguardQsUserSwitchController extends ViewController<FrameLayout> 
         this.mUserAvatarView.setAccessibilityDelegate(new View.AccessibilityDelegate() {
             public void onInitializeAccessibilityNodeInfo(View view, AccessibilityNodeInfo accessibilityNodeInfo) {
                 super.onInitializeAccessibilityNodeInfo(view, accessibilityNodeInfo);
-                accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(16, KeyguardQsUserSwitchController.this.mContext.getString(C1893R.string.accessibility_quick_settings_choose_user_action)));
+                accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(16, KeyguardQsUserSwitchController.this.mContext.getString(C1894R.string.accessibility_quick_settings_choose_user_action)));
             }
         });
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onInit$0$com-android-systemui-statusbar-policy-KeyguardQsUserSwitchController */
-    public /* synthetic */ void mo45832xa1a946be(View view) {
+    public /* synthetic */ void mo45844xa1a946be(View view) {
         if (!this.mFalsingManager.isFalseTap(1) && !isListAnimating()) {
             this.mUiEventLogger.log(LockscreenGestureLogger.LockscreenUiEvent.LOCKSCREEN_SWITCH_USER_TAP);
             this.mUserSwitchDialogController.showDialog(this.mUserAvatarViewWithBackground);
@@ -218,9 +218,9 @@ public class KeyguardQsUserSwitchController extends ViewController<FrameLayout> 
     private String getContentDescription() {
         UserSwitcherController.UserRecord userRecord = this.mCurrentUser;
         if (userRecord == null || userRecord.info == null || TextUtils.isEmpty(this.mCurrentUser.info.name)) {
-            return this.mContext.getString(C1893R.string.accessibility_multi_user_switch_switcher);
+            return this.mContext.getString(C1894R.string.accessibility_multi_user_switch_switcher);
         }
-        return this.mContext.getString(C1893R.string.accessibility_quick_settings_user, new Object[]{this.mCurrentUser.info.name});
+        return this.mContext.getString(C1894R.string.accessibility_quick_settings_user, new Object[]{this.mCurrentUser.info.name});
     }
 
     /* access modifiers changed from: private */
@@ -241,16 +241,16 @@ public class KeyguardQsUserSwitchController extends ViewController<FrameLayout> 
         if (userRecord == null || userRecord.picture == null) {
             UserSwitcherController.UserRecord userRecord2 = this.mCurrentUser;
             if (userRecord2 == null || !userRecord2.isGuest) {
-                drawable2 = this.mContext.getDrawable(C1893R.C1895drawable.ic_avatar_user);
+                drawable2 = this.mContext.getDrawable(C1894R.C1896drawable.ic_avatar_user);
             } else {
-                drawable2 = this.mContext.getDrawable(C1893R.C1895drawable.ic_avatar_guest_user);
+                drawable2 = this.mContext.getDrawable(C1894R.C1896drawable.ic_avatar_guest_user);
             }
             drawable = drawable2;
-            drawable.setTint(this.mResources.getColor(C1893R.C1894color.kg_user_switcher_avatar_icon_color, this.mContext.getTheme()));
+            drawable.setTint(this.mResources.getColor(C1894R.C1895color.kg_user_switcher_avatar_icon_color, this.mContext.getTheme()));
         } else {
-            drawable = new CircleFramedDrawable(this.mCurrentUser.picture, (int) this.mResources.getDimension(C1893R.dimen.kg_framed_avatar_size));
+            drawable = new CircleFramedDrawable(this.mCurrentUser.picture, (int) this.mResources.getDimension(C1894R.dimen.kg_framed_avatar_size));
         }
-        return new LayerDrawable(new Drawable[]{this.mContext.getDrawable(C1893R.C1895drawable.user_avatar_bg), drawable});
+        return new LayerDrawable(new Drawable[]{this.mContext.getDrawable(C1894R.C1896drawable.user_avatar_bg), drawable});
     }
 
     public int getUserIconHeight() {
@@ -263,7 +263,7 @@ public class KeyguardQsUserSwitchController extends ViewController<FrameLayout> 
 
     public void updatePosition(int i, int i2, boolean z) {
         AnimationProperties animationProperties = ANIMATION_PROPERTIES;
-        PropertyAnimator.setProperty((FrameLayout) this.mView, AnimatableProperty.f376Y, (float) i2, animationProperties, z);
+        PropertyAnimator.setProperty((FrameLayout) this.mView, AnimatableProperty.f375Y, (float) i2, animationProperties, z);
         PropertyAnimator.setProperty((FrameLayout) this.mView, AnimatableProperty.TRANSLATION_X, (float) (-Math.abs(i)), animationProperties, z);
     }
 

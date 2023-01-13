@@ -34,9 +34,6 @@ import android.telephony.TelephonyManager;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import com.android.internal.util.UserIcons;
-import com.android.launcher3.icons.BaseIconFactory;
-import com.android.launcher3.icons.FastBitmapDrawable;
-import com.android.launcher3.icons.IconFactory;
 import com.android.settingslib.drawable.UserIconDrawable;
 import com.android.settingslib.fuelgauge.BatteryStatus;
 import com.android.settingslib.utils.BuildCompatUtils;
@@ -53,6 +50,10 @@ public class Utils {
     private static String sServicesSystemSharedLibPackageName;
     private static String sSharedSystemSharedLibPackageName;
     private static Signature[] sSystemSignature;
+
+    public static Drawable getBadgedIcon(Context context, Drawable drawable, UserHandle userHandle) {
+        return drawable;
+    }
 
     public static void updateLocationEnabled(Context context, boolean z, int i, int i2) {
         Settings.Secure.putIntForUser(context.getContentResolver(), "location_changer", i2, i);
@@ -396,20 +397,6 @@ public class Utils {
             return 0;
         }
         return state;
-    }
-
-    public static Drawable getBadgedIcon(Context context, Drawable drawable, UserHandle userHandle) {
-        IconFactory obtain = IconFactory.obtain(context);
-        try {
-            FastBitmapDrawable newIcon = obtain.createBadgedIconBitmap(drawable, new BaseIconFactory.IconOptions().setUser(userHandle)).newIcon(context);
-            if (obtain != null) {
-                obtain.close();
-            }
-            return newIcon;
-        } catch (Throwable th) {
-            th.addSuppressed(th);
-        }
-        throw th;
     }
 
     public static Drawable getBadgedIcon(Context context, ApplicationInfo applicationInfo) {

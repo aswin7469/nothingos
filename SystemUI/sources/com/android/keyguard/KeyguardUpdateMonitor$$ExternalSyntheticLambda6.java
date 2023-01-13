@@ -11,6 +11,6 @@ public final /* synthetic */ class KeyguardUpdateMonitor$$ExternalSyntheticLambd
     }
 
     public final void onFaceDetected(int i, int i2, boolean z) {
-        this.f$0.m2295lambda$new$6$comandroidkeyguardKeyguardUpdateMonitor(i, i2, z);
+        this.f$0.m2301lambda$new$6$comandroidkeyguardKeyguardUpdateMonitor(i, i2, z);
     }
 }

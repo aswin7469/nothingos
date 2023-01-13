@@ -11,6 +11,6 @@ public final /* synthetic */ class ScreenshotController$$ExternalSyntheticLambda
     }
 
     public final Object attachCompleter(CallbackToFutureAdapter.Completer completer) {
-        return this.f$0.mo37422xb98335af(completer);
+        return this.f$0.mo37423xb98335af(completer);
     }
 }

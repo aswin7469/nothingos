@@ -11,6 +11,6 @@ public final /* synthetic */ class MediaCarouselController$$ExternalSyntheticLam
     }
 
     public final void onClick(View view) {
-        MediaCarouselController.m2771inflateSettingsButton$lambda3(this.f$0, view);
+        MediaCarouselController.m2776inflateSettingsButton$lambda3(this.f$0, view);
     }
 }

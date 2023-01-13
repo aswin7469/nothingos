@@ -49,7 +49,7 @@ public class WifiP2pDnsSdServiceInfo extends WifiP2pServiceInfo {
         stringBuffer.append(createRequest(str2 + ".local.", 12, 1));
         stringBuffer.append(WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER);
         byte[] bytes = str.getBytes();
-        stringBuffer.append(String.format(Locale.f700US, "%02x", Integer.valueOf(bytes.length)));
+        stringBuffer.append(String.format(Locale.f698US, "%02x", Integer.valueOf(bytes.length)));
         stringBuffer.append(WifiP2pServiceInfo.bin2HexStr(bytes));
         stringBuffer.append("c027");
         return stringBuffer.toString();
@@ -74,8 +74,8 @@ public class WifiP2pDnsSdServiceInfo extends WifiP2pServiceInfo {
             str = str.toLowerCase(Locale.ROOT);
         }
         stringBuffer.append(compressDnsName(str));
-        stringBuffer.append(String.format(Locale.f700US, "%04x", Integer.valueOf(i)));
-        stringBuffer.append(String.format(Locale.f700US, "%02x", Integer.valueOf(i2)));
+        stringBuffer.append(String.format(Locale.f698US, "%04x", Integer.valueOf(i)));
+        stringBuffer.append(String.format(Locale.f698US, "%02x", Integer.valueOf(i2)));
         return stringBuffer.toString();
     }
 
@@ -90,14 +90,14 @@ public class WifiP2pDnsSdServiceInfo extends WifiP2pServiceInfo {
             int indexOf = str.indexOf(46);
             if (indexOf == -1) {
                 if (str.length() > 0) {
-                    stringBuffer.append(String.format(Locale.f700US, "%02x", Integer.valueOf(str.length())));
+                    stringBuffer.append(String.format(Locale.f698US, "%02x", Integer.valueOf(str.length())));
                     stringBuffer.append(WifiP2pServiceInfo.bin2HexStr(str.getBytes()));
                 }
                 stringBuffer.append("00");
             } else {
                 String substring = str.substring(0, indexOf);
                 str = str.substring(indexOf + 1);
-                stringBuffer.append(String.format(Locale.f700US, "%02x", Integer.valueOf(substring.length())));
+                stringBuffer.append(String.format(Locale.f698US, "%02x", Integer.valueOf(substring.length())));
                 stringBuffer.append(WifiP2pServiceInfo.bin2HexStr(substring.getBytes()));
             }
         }

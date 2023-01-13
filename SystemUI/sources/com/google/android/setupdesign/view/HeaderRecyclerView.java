@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.FrameLayout;
 import androidx.recyclerview.widget.RecyclerView;
-import com.google.android.setupdesign.C3953R;
+import com.google.android.setupdesign.C3963R;
 import com.google.android.setupdesign.DividerItemDecoration;
 
 public class HeaderRecyclerView extends RecyclerView {
@@ -40,7 +40,7 @@ public class HeaderRecyclerView extends RecyclerView {
         private final RecyclerView.AdapterDataObserver observer;
 
         public HeaderAdapter(RecyclerView.Adapter<CVH> adapter2) {
-            C39721 r0 = new RecyclerView.AdapterDataObserver() {
+            C39821 r0 = new RecyclerView.AdapterDataObserver() {
                 public void onChanged() {
                     HeaderAdapter.this.notifyDataSetChanged();
                 }
@@ -159,8 +159,8 @@ public class HeaderRecyclerView extends RecyclerView {
 
     private void init(AttributeSet attributeSet, int i) {
         if (!isInEditMode()) {
-            TypedArray obtainStyledAttributes = getContext().obtainStyledAttributes(attributeSet, C3953R.styleable.SudHeaderRecyclerView, i, 0);
-            this.headerRes = obtainStyledAttributes.getResourceId(C3953R.styleable.SudHeaderRecyclerView_sudHeader, 0);
+            TypedArray obtainStyledAttributes = getContext().obtainStyledAttributes(attributeSet, C3963R.styleable.SudHeaderRecyclerView, i, 0);
+            this.headerRes = obtainStyledAttributes.getResourceId(C3963R.styleable.SudHeaderRecyclerView_sudHeader, 0);
             obtainStyledAttributes.recycle();
         }
     }

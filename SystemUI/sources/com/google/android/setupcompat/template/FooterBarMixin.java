@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import com.google.android.setupcompat.C3931R;
+import com.google.android.setupcompat.C3941R;
 import com.google.android.setupcompat.PartnerCustomizationLayout;
 import com.google.android.setupcompat.internal.FooterButtonPartnerConfig;
 import com.google.android.setupcompat.internal.Preconditions;
@@ -110,21 +110,21 @@ public class FooterBarMixin implements Mixin {
         this.metrics = footerBarMixinMetrics;
         Context context2 = templateLayout.getContext();
         this.context = context2;
-        this.footerStub = (ViewStub) templateLayout.findManagedViewById(C3931R.C3933id.suc_layout_footer);
+        this.footerStub = (ViewStub) templateLayout.findManagedViewById(C3941R.C3943id.suc_layout_footer);
         boolean z = templateLayout instanceof PartnerCustomizationLayout;
         this.applyPartnerResources = z && ((PartnerCustomizationLayout) templateLayout).shouldApplyPartnerResource();
         this.applyDynamicColor = z && ((PartnerCustomizationLayout) templateLayout).shouldApplyDynamicColor();
         this.useFullDynamicColor = z && ((PartnerCustomizationLayout) templateLayout).useFullDynamicColor();
-        TypedArray obtainStyledAttributes = context2.obtainStyledAttributes(attributeSet, C3931R.styleable.SucFooterBarMixin, i, 0);
-        this.defaultPadding = obtainStyledAttributes.getDimensionPixelSize(C3931R.styleable.SucFooterBarMixin_sucFooterBarPaddingVertical, 0);
-        this.footerBarPaddingTop = obtainStyledAttributes.getDimensionPixelSize(C3931R.styleable.SucFooterBarMixin_sucFooterBarPaddingTop, this.defaultPadding);
-        this.footerBarPaddingBottom = obtainStyledAttributes.getDimensionPixelSize(C3931R.styleable.SucFooterBarMixin_sucFooterBarPaddingBottom, this.defaultPadding);
-        this.footerBarPaddingStart = obtainStyledAttributes.getDimensionPixelSize(C3931R.styleable.SucFooterBarMixin_sucFooterBarPaddingStart, 0);
-        this.footerBarPaddingEnd = obtainStyledAttributes.getDimensionPixelSize(C3931R.styleable.SucFooterBarMixin_sucFooterBarPaddingEnd, 0);
-        this.footerBarPrimaryBackgroundColor = obtainStyledAttributes.getColor(C3931R.styleable.SucFooterBarMixin_sucFooterBarPrimaryFooterBackground, 0);
-        this.footerBarSecondaryBackgroundColor = obtainStyledAttributes.getColor(C3931R.styleable.SucFooterBarMixin_sucFooterBarSecondaryFooterBackground, 0);
-        int resourceId = obtainStyledAttributes.getResourceId(C3931R.styleable.SucFooterBarMixin_sucFooterBarPrimaryFooterButton, 0);
-        int resourceId2 = obtainStyledAttributes.getResourceId(C3931R.styleable.SucFooterBarMixin_sucFooterBarSecondaryFooterButton, 0);
+        TypedArray obtainStyledAttributes = context2.obtainStyledAttributes(attributeSet, C3941R.styleable.SucFooterBarMixin, i, 0);
+        this.defaultPadding = obtainStyledAttributes.getDimensionPixelSize(C3941R.styleable.SucFooterBarMixin_sucFooterBarPaddingVertical, 0);
+        this.footerBarPaddingTop = obtainStyledAttributes.getDimensionPixelSize(C3941R.styleable.SucFooterBarMixin_sucFooterBarPaddingTop, this.defaultPadding);
+        this.footerBarPaddingBottom = obtainStyledAttributes.getDimensionPixelSize(C3941R.styleable.SucFooterBarMixin_sucFooterBarPaddingBottom, this.defaultPadding);
+        this.footerBarPaddingStart = obtainStyledAttributes.getDimensionPixelSize(C3941R.styleable.SucFooterBarMixin_sucFooterBarPaddingStart, 0);
+        this.footerBarPaddingEnd = obtainStyledAttributes.getDimensionPixelSize(C3941R.styleable.SucFooterBarMixin_sucFooterBarPaddingEnd, 0);
+        this.footerBarPrimaryBackgroundColor = obtainStyledAttributes.getColor(C3941R.styleable.SucFooterBarMixin_sucFooterBarPrimaryFooterBackground, 0);
+        this.footerBarSecondaryBackgroundColor = obtainStyledAttributes.getColor(C3941R.styleable.SucFooterBarMixin_sucFooterBarSecondaryFooterBackground, 0);
+        int resourceId = obtainStyledAttributes.getResourceId(C3941R.styleable.SucFooterBarMixin_sucFooterBarPrimaryFooterButton, 0);
+        int resourceId2 = obtainStyledAttributes.getResourceId(C3941R.styleable.SucFooterBarMixin_sucFooterBarSecondaryFooterButton, 0);
         obtainStyledAttributes.recycle();
         FooterButtonInflater footerButtonInflater = new FooterButtonInflater(context2);
         if (resourceId2 != 0) {
@@ -167,7 +167,7 @@ public class FooterBarMixin implements Mixin {
     private LinearLayout ensureFooterInflated() {
         if (this.buttonContainer == null) {
             if (this.footerStub != null) {
-                LinearLayout linearLayout = (LinearLayout) inflateFooter(C3931R.layout.suc_footer_button_bar);
+                LinearLayout linearLayout = (LinearLayout) inflateFooter(C3941R.layout.suc_footer_button_bar);
                 this.buttonContainer = linearLayout;
                 onFooterBarInflated(linearLayout);
                 onFooterBarApplyPartnerResource(this.buttonContainer);
@@ -217,13 +217,13 @@ public class FooterBarMixin implements Mixin {
 
     /* access modifiers changed from: protected */
     public FooterActionButton createThemedButton(Context context2, int i) {
-        return (FooterActionButton) LayoutInflater.from(new ContextThemeWrapper(context2, i)).inflate(C3931R.layout.suc_button, (ViewGroup) null, false);
+        return (FooterActionButton) LayoutInflater.from(new ContextThemeWrapper(context2, i)).inflate(C3941R.layout.suc_button, (ViewGroup) null, false);
     }
 
     public void setPrimaryButton(FooterButton footerButton) {
         Preconditions.ensureOnMainThread("setPrimaryButton");
         ensureFooterInflated();
-        FooterButtonPartnerConfig build = new FooterButtonPartnerConfig.Builder(footerButton).setPartnerTheme(getPartnerTheme(footerButton, C3931R.style.SucPartnerCustomizationButton_Primary, PartnerConfig.CONFIG_FOOTER_PRIMARY_BUTTON_BG_COLOR)).setButtonBackgroundConfig(PartnerConfig.CONFIG_FOOTER_PRIMARY_BUTTON_BG_COLOR).setButtonDisableAlphaConfig(PartnerConfig.CONFIG_FOOTER_BUTTON_DISABLED_ALPHA).setButtonDisableBackgroundConfig(PartnerConfig.CONFIG_FOOTER_BUTTON_DISABLED_BG_COLOR).setButtonDisableTextColorConfig(PartnerConfig.CONFIG_FOOTER_PRIMARY_BUTTON_DISABLED_TEXT_COLOR).setButtonIconConfig(getDrawablePartnerConfig(footerButton.getButtonType())).setButtonRadiusConfig(PartnerConfig.CONFIG_FOOTER_BUTTON_RADIUS).setButtonRippleColorAlphaConfig(PartnerConfig.CONFIG_FOOTER_BUTTON_RIPPLE_COLOR_ALPHA).setTextColorConfig(PartnerConfig.CONFIG_FOOTER_PRIMARY_BUTTON_TEXT_COLOR).setMarginStartConfig(PartnerConfig.CONFIG_FOOTER_PRIMARY_BUTTON_MARGIN_START).setTextSizeConfig(PartnerConfig.CONFIG_FOOTER_BUTTON_TEXT_SIZE).setButtonMinHeight(PartnerConfig.CONFIG_FOOTER_BUTTON_MIN_HEIGHT).setTextTypeFaceConfig(PartnerConfig.CONFIG_FOOTER_BUTTON_FONT_FAMILY).setTextStyleConfig(PartnerConfig.CONFIG_FOOTER_BUTTON_TEXT_STYLE).build();
+        FooterButtonPartnerConfig build = new FooterButtonPartnerConfig.Builder(footerButton).setPartnerTheme(getPartnerTheme(footerButton, C3941R.style.SucPartnerCustomizationButton_Primary, PartnerConfig.CONFIG_FOOTER_PRIMARY_BUTTON_BG_COLOR)).setButtonBackgroundConfig(PartnerConfig.CONFIG_FOOTER_PRIMARY_BUTTON_BG_COLOR).setButtonDisableAlphaConfig(PartnerConfig.CONFIG_FOOTER_BUTTON_DISABLED_ALPHA).setButtonDisableBackgroundConfig(PartnerConfig.CONFIG_FOOTER_BUTTON_DISABLED_BG_COLOR).setButtonDisableTextColorConfig(PartnerConfig.CONFIG_FOOTER_PRIMARY_BUTTON_DISABLED_TEXT_COLOR).setButtonIconConfig(getDrawablePartnerConfig(footerButton.getButtonType())).setButtonRadiusConfig(PartnerConfig.CONFIG_FOOTER_BUTTON_RADIUS).setButtonRippleColorAlphaConfig(PartnerConfig.CONFIG_FOOTER_BUTTON_RIPPLE_COLOR_ALPHA).setTextColorConfig(PartnerConfig.CONFIG_FOOTER_PRIMARY_BUTTON_TEXT_COLOR).setMarginStartConfig(PartnerConfig.CONFIG_FOOTER_PRIMARY_BUTTON_MARGIN_START).setTextSizeConfig(PartnerConfig.CONFIG_FOOTER_BUTTON_TEXT_SIZE).setButtonMinHeight(PartnerConfig.CONFIG_FOOTER_BUTTON_MIN_HEIGHT).setTextTypeFaceConfig(PartnerConfig.CONFIG_FOOTER_BUTTON_FONT_FAMILY).setTextStyleConfig(PartnerConfig.CONFIG_FOOTER_BUTTON_TEXT_STYLE).build();
         FooterActionButton inflateButton = inflateButton(footerButton, build);
         this.primaryButtonId = inflateButton.getId();
         inflateButton.setPrimaryButtonStyle(true);
@@ -266,9 +266,9 @@ public class FooterBarMixin implements Mixin {
         ensureFooterInflated();
         FooterButtonPartnerConfig.Builder builder = new FooterButtonPartnerConfig.Builder(footerButton);
         if (z) {
-            i = C3931R.style.SucPartnerCustomizationButton_Primary;
+            i = C3941R.style.SucPartnerCustomizationButton_Primary;
         } else {
-            i = C3931R.style.SucPartnerCustomizationButton_Secondary;
+            i = C3941R.style.SucPartnerCustomizationButton_Secondary;
         }
         if (z) {
             partnerConfig = PartnerConfig.CONFIG_FOOTER_PRIMARY_BUTTON_BG_COLOR;
@@ -372,9 +372,9 @@ public class FooterBarMixin implements Mixin {
             return i;
         }
         if (PartnerConfigHelper.get(this.context).getColor(this.context, partnerConfig) == 0) {
-            return C3931R.style.SucPartnerCustomizationButton_Secondary;
+            return C3941R.style.SucPartnerCustomizationButton_Secondary;
         }
-        return C3931R.style.SucPartnerCustomizationButton_Primary;
+        return C3941R.style.SucPartnerCustomizationButton_Primary;
     }
 
     public LinearLayout getButtonContainer() {
@@ -496,7 +496,7 @@ public class FooterBarMixin implements Mixin {
 
     /* access modifiers changed from: protected */
     public View inflateFooter(int i) {
-        this.footerStub.setLayoutInflater(LayoutInflater.from(new ContextThemeWrapper(this.context, C3931R.style.SucPartnerCustomizationButtonBar_Stackable)));
+        this.footerStub.setLayoutInflater(LayoutInflater.from(new ContextThemeWrapper(this.context, C3941R.style.SucPartnerCustomizationButtonBar_Stackable)));
         this.footerStub.setLayoutResource(i);
         return this.footerStub.inflate();
     }

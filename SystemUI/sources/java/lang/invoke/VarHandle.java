@@ -118,15 +118,15 @@ public abstract class VarHandle {
 
     static {
         if (AccessMode.values().length <= 32) {
-            int accessTypesToBitMask = accessTypesToBitMask(EnumSet.m1716of(AccessType.GET));
+            int accessTypesToBitMask = accessTypesToBitMask(EnumSet.m1722of(AccessType.GET));
             READ_ACCESS_MODES_BIT_MASK = accessTypesToBitMask;
-            int accessTypesToBitMask2 = accessTypesToBitMask(EnumSet.m1716of(AccessType.SET));
+            int accessTypesToBitMask2 = accessTypesToBitMask(EnumSet.m1722of(AccessType.SET));
             WRITE_ACCESS_MODES_BIT_MASK = accessTypesToBitMask2;
-            int accessTypesToBitMask3 = accessTypesToBitMask(EnumSet.m1718of(AccessType.COMPARE_AND_EXCHANGE, AccessType.COMPARE_AND_SET, AccessType.GET_AND_UPDATE));
+            int accessTypesToBitMask3 = accessTypesToBitMask(EnumSet.m1724of(AccessType.COMPARE_AND_EXCHANGE, AccessType.COMPARE_AND_SET, AccessType.GET_AND_UPDATE));
             ATOMIC_UPDATE_ACCESS_MODES_BIT_MASK = accessTypesToBitMask3;
-            int accessTypesToBitMask4 = accessTypesToBitMask(EnumSet.m1716of(AccessType.GET_AND_UPDATE_NUMERIC));
+            int accessTypesToBitMask4 = accessTypesToBitMask(EnumSet.m1722of(AccessType.GET_AND_UPDATE_NUMERIC));
             NUMERIC_ATOMIC_UPDATE_ACCESS_MODES_BIT_MASK = accessTypesToBitMask4;
-            int accessTypesToBitMask5 = accessTypesToBitMask(EnumSet.m1716of(AccessType.GET_AND_UPDATE_BITWISE));
+            int accessTypesToBitMask5 = accessTypesToBitMask(EnumSet.m1722of(AccessType.GET_AND_UPDATE_BITWISE));
             BITWISE_ATOMIC_UPDATE_ACCESS_MODES_BIT_MASK = accessTypesToBitMask5;
             ALL_MODES_BIT_MASK = accessTypesToBitMask | accessTypesToBitMask2 | accessTypesToBitMask3 | accessTypesToBitMask4 | accessTypesToBitMask5;
             return;
@@ -135,7 +135,7 @@ public abstract class VarHandle {
     }
 
     /* renamed from: java.lang.invoke.VarHandle$1 */
-    static /* synthetic */ class C43101 {
+    static /* synthetic */ class C43221 {
         static final /* synthetic */ int[] $SwitchMap$java$lang$invoke$VarHandle$AccessType;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(14:0|1|2|3|4|5|6|7|8|9|10|11|12|(3:13|14|16)) */
@@ -196,7 +196,7 @@ public abstract class VarHandle {
             L_0x0054:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: java.lang.invoke.VarHandle.C43101.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: java.lang.invoke.VarHandle.C43221.<clinit>():void");
         }
     }
 
@@ -211,7 +211,7 @@ public abstract class VarHandle {
 
         /* access modifiers changed from: package-private */
         public MethodType accessModeType(Class<?> cls, Class<?> cls2, Class<?>... clsArr) {
-            switch (C43101.$SwitchMap$java$lang$invoke$VarHandle$AccessType[ordinal()]) {
+            switch (C43221.$SwitchMap$java$lang$invoke$VarHandle$AccessType[ordinal()]) {
                 case 1:
                     Class[] allocateParameters = allocateParameters(0, cls, clsArr);
                     fillParameters(allocateParameters, cls, clsArr);
@@ -301,7 +301,7 @@ public abstract class VarHandle {
         static final Map<String, AccessMode> methodNameToAccessMode = null;
 
         /* renamed from: at */
-        final AccessType f551at;
+        final AccessType f549at;
         final String methodName;
 
         static {
@@ -314,7 +314,7 @@ public abstract class VarHandle {
 
         private AccessMode(String str, AccessType accessType) {
             this.methodName = str;
-            this.f551at = accessType;
+            this.f549at = accessType;
         }
 
         public String methodName() {
@@ -348,9 +348,9 @@ public abstract class VarHandle {
 
     public final MethodType accessModeType(AccessMode accessMode) {
         if (this.coordinateType1 == null) {
-            return accessMode.f551at.accessModeType(this.coordinateType0, this.varType, new Class[0]);
+            return accessMode.f549at.accessModeType(this.coordinateType0, this.varType, new Class[0]);
         }
-        return accessMode.f551at.accessModeType(this.coordinateType0, this.varType, this.coordinateType1);
+        return accessMode.f549at.accessModeType(this.coordinateType0, this.varType, this.coordinateType1);
     }
 
     public final boolean isAccessModeSupported(AccessMode accessMode) {
@@ -417,7 +417,7 @@ public abstract class VarHandle {
     static int accessTypesToBitMask(EnumSet<AccessType> enumSet) {
         int i = 0;
         for (AccessMode accessMode : AccessMode.values()) {
-            if (enumSet.contains(accessMode.f551at)) {
+            if (enumSet.contains(accessMode.f549at)) {
                 i |= 1 << accessMode.ordinal();
             }
         }

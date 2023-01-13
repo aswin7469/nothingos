@@ -12,6 +12,6 @@ public final /* synthetic */ class CaptionsToggleImageButton$$ExternalSyntheticL
     }
 
     public final boolean perform(View view, AccessibilityViewCommand.CommandArguments commandArguments) {
-        return this.f$0.mo47233x6e1d1350(view, commandArguments);
+        return this.f$0.mo47245x6e1d1350(view, commandArguments);
     }
 }

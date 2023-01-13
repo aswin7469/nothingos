@@ -149,7 +149,7 @@ public class KeyguardStatusViewController extends ViewController<KeyguardStatusV
 
     public void updatePosition(int i, int i2, float f, boolean z) {
         AnimationProperties animationProperties = CLOCK_ANIMATION_PROPERTIES;
-        PropertyAnimator.setProperty((KeyguardStatusView) this.mView, AnimatableProperty.f376Y, (float) i2, animationProperties, z);
+        PropertyAnimator.setProperty((KeyguardStatusView) this.mView, AnimatableProperty.f375Y, (float) i2, animationProperties, z);
         this.mKeyguardClockSwitchController.updatePosition(i, f, animationProperties, z);
     }
 

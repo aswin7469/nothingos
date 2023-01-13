@@ -10,7 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Switch;
 import com.android.internal.logging.MetricsLogger;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.qualifiers.Background;
 import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.navigationbar.NavigationBarInflaterView;
@@ -70,7 +70,7 @@ public class WifiTile extends QSTileImpl<QSTile.SignalState> {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$createTileView$1$com-android-systemui-qs-tiles-WifiTile  reason: not valid java name */
-    public /* synthetic */ void m2983lambda$createTileView$1$comandroidsystemuiqstilesWifiTile(View view) {
+    public /* synthetic */ void m2987lambda$createTileView$1$comandroidsystemuiqstilesWifiTile(View view) {
         Object obj;
         ((QSTile.SignalState) this.mState).copyTo(this.mStateBeforeClick);
         boolean z = ((QSTile.SignalState) this.mState).value;
@@ -89,7 +89,7 @@ public class WifiTile extends QSTileImpl<QSTile.SignalState> {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$createTileView$0$com-android-systemui-qs-tiles-WifiTile  reason: not valid java name */
-    public /* synthetic */ void m2982lambda$createTileView$0$comandroidsystemuiqstilesWifiTile() {
+    public /* synthetic */ void m2986lambda$createTileView$0$comandroidsystemuiqstilesWifiTile() {
         if (this.mExpectDisabled) {
             this.mExpectDisabled = false;
             refreshState();
@@ -98,7 +98,7 @@ public class WifiTile extends QSTileImpl<QSTile.SignalState> {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$createTileView$2$com-android-systemui-qs-tiles-WifiTile  reason: not valid java name */
-    public /* synthetic */ boolean m2984lambda$createTileView$2$comandroidsystemuiqstilesWifiTile(View view) {
+    public /* synthetic */ boolean m2988lambda$createTileView$2$comandroidsystemuiqstilesWifiTile(View view) {
         handleLongClick(view);
         return true;
     }
@@ -132,7 +132,7 @@ public class WifiTile extends QSTileImpl<QSTile.SignalState> {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$handleClick$3$com-android-systemui-qs-tiles-WifiTile  reason: not valid java name */
-    public /* synthetic */ void m2985lambda$handleClick$3$comandroidsystemuiqstilesWifiTile() {
+    public /* synthetic */ void m2989lambda$handleClick$3$comandroidsystemuiqstilesWifiTile() {
         if (this.mExpectDisabled) {
             this.mExpectDisabled = false;
             refreshState();
@@ -149,7 +149,7 @@ public class WifiTile extends QSTileImpl<QSTile.SignalState> {
     }
 
     public CharSequence getTileLabel() {
-        return this.mContext.getString(C1893R.string.quick_settings_wifi_label);
+        return this.mContext.getString(C1894R.string.quick_settings_wifi_label);
     }
 
     /* access modifiers changed from: protected */
@@ -185,23 +185,23 @@ public class WifiTile extends QSTileImpl<QSTile.SignalState> {
         Resources resources = this.mContext.getResources();
         if (z4) {
             signalState.icon = QSTileImpl.ResourceIcon.get(17302865);
-            signalState.label = resources.getString(C1893R.string.quick_settings_wifi_label);
+            signalState.label = resources.getString(C1894R.string.quick_settings_wifi_label);
         } else if (!signalState.value) {
             signalState.slash.isSlashed = true;
             signalState.state = 1;
             signalState.icon = QSTileImpl.ResourceIcon.get(17302913);
-            signalState.label = resources.getString(C1893R.string.quick_settings_wifi_label);
+            signalState.label = resources.getString(C1894R.string.quick_settings_wifi_label);
         } else if (z2) {
             signalState.icon = QSTileImpl.ResourceIcon.get(callbackInfo.wifiSignalIconId);
             signalState.label = callbackInfo.ssid != null ? removeDoubleQuotes(callbackInfo.ssid) : getTileLabel();
         } else if (z3) {
             signalState.icon = QSTileImpl.ResourceIcon.get(17302913);
-            signalState.label = resources.getString(C1893R.string.quick_settings_wifi_label);
+            signalState.label = resources.getString(C1894R.string.quick_settings_wifi_label);
         } else {
             signalState.icon = QSTileImpl.ResourceIcon.get(17302913);
-            signalState.label = resources.getString(C1893R.string.quick_settings_wifi_label);
+            signalState.label = resources.getString(C1894R.string.quick_settings_wifi_label);
         }
-        stringBuffer.append(this.mContext.getString(C1893R.string.quick_settings_wifi_label)).append(NavigationBarInflaterView.BUTTON_SEPARATOR);
+        stringBuffer.append(this.mContext.getString(C1894R.string.quick_settings_wifi_label)).append(NavigationBarInflaterView.BUTTON_SEPARATOR);
         if (signalState.value && z2) {
             stringBuffer2.append(callbackInfo.wifiSignalContentDescription);
             stringBuffer.append(removeDoubleQuotes(callbackInfo.ssid));
@@ -211,12 +211,12 @@ public class WifiTile extends QSTileImpl<QSTile.SignalState> {
         }
         signalState.stateDescription = stringBuffer2.toString();
         signalState.contentDescription = stringBuffer.toString();
-        signalState.dualLabelContentDescription = resources.getString(C1893R.string.accessibility_quick_settings_open_settings, new Object[]{getTileLabel()});
+        signalState.dualLabelContentDescription = resources.getString(C1894R.string.accessibility_quick_settings_open_settings, new Object[]{getTileLabel()});
         signalState.expandedAccessibilityClassName = Switch.class.getName();
     }
 
     private CharSequence getSecondaryLabel(boolean z, String str) {
-        return z ? this.mContext.getString(C1893R.string.quick_settings_wifi_secondary_label_transient) : str;
+        return z ? this.mContext.getString(C1894R.string.quick_settings_wifi_secondary_label_transient) : str;
     }
 
     public boolean isAvailable() {

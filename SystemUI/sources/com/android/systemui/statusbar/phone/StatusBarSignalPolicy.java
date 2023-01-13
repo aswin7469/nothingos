@@ -6,7 +6,7 @@ import android.telephony.SubscriptionInfo;
 import android.util.ArraySet;
 import android.util.Log;
 import com.android.settingslib.mobile.TelephonyIcons;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.flags.FeatureFlags;
 import com.android.systemui.flags.Flags;
@@ -57,7 +57,7 @@ public class StatusBarSignalPolicy implements SignalCallback, SecurityController
     private WifiIconState mWifiIconState = new WifiIconState();
 
     private int currentVpnIconId(boolean z) {
-        return z ? C1893R.C1895drawable.stat_sys_branded_vpn : C1893R.C1895drawable.stat_sys_vpn_ic;
+        return z ? C1894R.C1896drawable.stat_sys_branded_vpn : C1894R.C1896drawable.stat_sys_vpn_ic;
     }
 
     public void setMobileDataEnabled(boolean z) {
@@ -82,7 +82,7 @@ public class StatusBarSignalPolicy implements SignalCallback, SecurityController
         this.mSlotVpn = context.getString(17041586);
         this.mSlotNoCalling = context.getString(17041574);
         this.mSlotCallStrength = context.getString(17041557);
-        this.mActivityEnabled = context.getResources().getBoolean(C1893R.bool.config_showActivity);
+        this.mActivityEnabled = context.getResources().getBoolean(C1894R.bool.config_showActivity);
     }
 
     public void init() {
@@ -103,7 +103,7 @@ public class StatusBarSignalPolicy implements SignalCallback, SecurityController
     /* access modifiers changed from: private */
     public void updateVpn() {
         boolean isVpnEnabled = this.mSecurityController.isVpnEnabled();
-        this.mIconController.setIcon(this.mSlotVpn, currentVpnIconId(this.mSecurityController.isVpnBranded()), this.mContext.getResources().getString(C1893R.string.accessibility_vpn_on));
+        this.mIconController.setIcon(this.mSlotVpn, currentVpnIconId(this.mSecurityController.isVpnBranded()), this.mContext.getResources().getString(C1894R.string.accessibility_vpn_on));
         this.mIconController.setIconVisibility(this.mSlotVpn, isVpnEnabled);
     }
 
@@ -142,7 +142,7 @@ public class StatusBarSignalPolicy implements SignalCallback, SecurityController
         WifiIconState copy = this.mWifiIconState.copy();
         if (this.mWifiIconState.noDefaultNetwork && this.mWifiIconState.noNetworksAvailable && !this.mIsAirplaneMode) {
             copy.visible = true;
-            copy.resId = C1893R.C1895drawable.ic_qs_no_internet_unavailable;
+            copy.resId = C1894R.C1896drawable.ic_qs_no_internet_unavailable;
         } else if (!this.mWifiIconState.noDefaultNetwork || this.mWifiIconState.noNetworksAvailable || ((z = this.mIsAirplaneMode) && (!z || !this.mIsWifiEnabled))) {
             copy.visible = z3;
             copy.resId = wifiIndicators.statusIcon.icon;
@@ -156,7 +156,7 @@ public class StatusBarSignalPolicy implements SignalCallback, SecurityController
             copy.signalSpacerVisible = z2;
         } else {
             copy.visible = true;
-            copy.resId = C1893R.C1895drawable.ic_qs_no_internet_available;
+            copy.resId = C1894R.C1896drawable.ic_qs_no_internet_available;
         }
         copy.slot = this.mSlotWifi;
         copy.airplaneSpacerVisible = this.mIsAirplaneMode;
@@ -187,7 +187,7 @@ public class StatusBarSignalPolicy implements SignalCallback, SecurityController
         }
         CallIndicatorIconState noCallingState = getNoCallingState(i);
         if (noCallingState != null) {
-            if (iconState.icon == C1893R.C1895drawable.ic_qs_no_calling_sms) {
+            if (iconState.icon == C1894R.C1896drawable.ic_qs_no_calling_sms) {
                 noCallingState.isNoCalling = iconState.visible;
                 noCallingState.noCallingDescription = iconState.contentDescription;
             } else {
@@ -336,13 +336,13 @@ public class StatusBarSignalPolicy implements SignalCallback, SecurityController
             copy.airplaneSpacerVisible = this.mIsAirplaneMode;
             if (z && z3 && !this.mIsAirplaneMode) {
                 copy.visible = true;
-                copy.resId = C1893R.C1895drawable.ic_qs_no_internet_unavailable;
+                copy.resId = C1894R.C1896drawable.ic_qs_no_internet_unavailable;
             } else if (!z || z3 || (z4 && (!(z4 = this.mIsAirplaneMode) || !this.mIsWifiEnabled))) {
                 copy.visible = false;
                 copy.resId = 0;
             } else {
                 copy.visible = true;
-                copy.resId = C1893R.C1895drawable.ic_qs_no_internet_available;
+                copy.resId = C1894R.C1896drawable.ic_qs_no_internet_available;
             }
             updateWifiIconWithState(copy);
             this.mWifiIconState = copy;
@@ -395,7 +395,7 @@ public class StatusBarSignalPolicy implements SignalCallback, SecurityController
 
         private CallIndicatorIconState(int i) {
             this.subId = i;
-            this.noCallingResId = C1893R.C1895drawable.ic_qs_no_calling_sms;
+            this.noCallingResId = C1894R.C1896drawable.ic_qs_no_calling_sms;
             this.callStrengthResId = TelephonyIcons.MOBILE_CALL_STRENGTH_ICONS[0];
         }
 

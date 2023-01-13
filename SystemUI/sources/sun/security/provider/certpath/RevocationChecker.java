@@ -137,7 +137,7 @@ class RevocationChecker extends PKIXRevocationChecker {
         this.responderCert = ocspResponderCert;
         Set<PKIXRevocationChecker.Option> options = getOptions();
         for (PKIXRevocationChecker.Option next : options) {
-            int i = C48112.$SwitchMap$java$security$cert$PKIXRevocationChecker$Option[next.ordinal()];
+            int i = C48232.$SwitchMap$java$security$cert$PKIXRevocationChecker$Option[next.ordinal()];
             if (i != 1 && i != 2 && i != 3 && i != 4) {
                 throw new CertPathValidatorException("Unrecognized revocation parameter option: " + next);
             }
@@ -317,7 +317,7 @@ class RevocationChecker extends PKIXRevocationChecker {
         }
         try {
             if (!this.onlyEE || x509Certificate.getBasicConstraints() == -1) {
-                int i = C48112.$SwitchMap$sun$security$provider$certpath$RevocationChecker$Mode[this.mode.ordinal()];
+                int i = C48232.$SwitchMap$sun$security$provider$certpath$RevocationChecker$Mode[this.mode.ordinal()];
                 if (i == 1 || i == 2) {
                     checkOCSP(x509Certificate, collection);
                     updateState(x509Certificate);
@@ -364,7 +364,7 @@ class RevocationChecker extends PKIXRevocationChecker {
                     debug4.println("RevocationChecker.check() " + certPathValidatorException.getMessage());
                     debug4.println("RevocationChecker.check() preparing to failover");
                 }
-                int i2 = C48112.$SwitchMap$sun$security$provider$certpath$RevocationChecker$Mode[this.mode.ordinal()];
+                int i2 = C48232.$SwitchMap$sun$security$provider$certpath$RevocationChecker$Mode[this.mode.ordinal()];
                 if (i2 == 1) {
                     checkCRLs(x509Certificate, collection, (Set<X509Certificate>) null, publicKey, z);
                 } else if (i2 == 3) {
@@ -380,7 +380,7 @@ class RevocationChecker extends PKIXRevocationChecker {
     }
 
     /* renamed from: sun.security.provider.certpath.RevocationChecker$2 */
-    static /* synthetic */ class C48112 {
+    static /* synthetic */ class C48232 {
         static final /* synthetic */ int[] $SwitchMap$java$security$cert$PKIXRevocationChecker$Option;
         static final /* synthetic */ int[] $SwitchMap$sun$security$provider$certpath$RevocationChecker$Mode;
 
@@ -444,7 +444,7 @@ class RevocationChecker extends PKIXRevocationChecker {
             L_0x0062:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: sun.security.provider.certpath.RevocationChecker.C48112.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: sun.security.provider.certpath.RevocationChecker.C48232.<clinit>():void");
         }
     }
 

@@ -11,6 +11,6 @@ public final /* synthetic */ class MediaDataManager$$ExternalSyntheticLambda15 i
     }
 
     public final void run() {
-        MediaDataManager.m2794getStandardAction$lambda28(this.f$0);
+        MediaDataManager.m2799getStandardAction$lambda28(this.f$0);
     }
 }

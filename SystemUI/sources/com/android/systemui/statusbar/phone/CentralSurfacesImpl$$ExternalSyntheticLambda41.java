@@ -18,6 +18,6 @@ public final /* synthetic */ class CentralSurfacesImpl$$ExternalSyntheticLambda4
     }
 
     public final Object invoke(Object obj) {
-        return this.f$0.mo43906x2856e505(this.f$1, this.f$2, (RemoteAnimationAdapter) obj);
+        return this.f$0.mo43915x2856e505(this.f$1, this.f$2, (RemoteAnimationAdapter) obj);
     }
 }

@@ -23,7 +23,7 @@ import java.util.Properties;
 import java.util.PropertyPermission;
 import libcore.icu.ICU;
 import libcore.p030io.Libcore;
-import sun.misc.C4740VM;
+import sun.misc.C4752VM;
 import sun.misc.Version;
 import sun.reflect.CallerSensitive;
 import sun.reflect.Reflection;
@@ -42,7 +42,7 @@ public final class System {
     public static final PrintStream err;
 
     /* renamed from: in */
-    public static final InputStream f550in;
+    public static final InputStream f548in;
     private static boolean justRanFinalization;
     private static String lineSeparator = props.getProperty("line.separator");
     public static final PrintStream out;
@@ -94,14 +94,14 @@ public final class System {
     static {
         addLegacyLocaleSystemProperties();
         Version.initSystemProperties();
-        FileInputStream fileInputStream = new FileInputStream(FileDescriptor.f518in);
+        FileInputStream fileInputStream = new FileInputStream(FileDescriptor.f516in);
         FileOutputStream fileOutputStream = new FileOutputStream(FileDescriptor.out);
         FileOutputStream fileOutputStream2 = new FileOutputStream(FileDescriptor.err);
-        f550in = new BufferedInputStream(fileInputStream, 128);
+        f548in = new BufferedInputStream(fileInputStream, 128);
         out = newPrintStream(fileOutputStream, props.getProperty("sun.stdout.encoding"));
         err = newPrintStream(fileOutputStream2, props.getProperty("sun.stderr.encoding"));
-        C4740VM.initializeOSEnvironment();
-        C4740VM.booted();
+        C4752VM.initializeOSEnvironment();
+        C4752VM.booted();
     }
 
     public static void setIn(InputStream inputStream) {
@@ -346,12 +346,12 @@ public final class System {
         properties.put("java.home", str2);
         properties.put("java.vm.version", runtime.vmVersion());
         try {
-            str = Libcore.f857os.getpwuid(Libcore.f857os.getuid()).pw_name;
+            str = Libcore.f855os.getpwuid(Libcore.f855os.getuid()).pw_name;
         } catch (ErrnoException unused) {
             str = EnvironmentCompat.MEDIA_UNKNOWN;
         }
         properties.put("user.name", str);
-        StructUtsname uname = Libcore.f857os.uname();
+        StructUtsname uname = Libcore.f855os.uname();
         properties.put("os.arch", uname.machine);
         properties.put("os.name", uname.sysname);
         properties.put("os.version", uname.release);
@@ -482,7 +482,7 @@ public final class System {
 
     public static String getenv(String str) {
         if (str != null) {
-            return Libcore.f857os.getenv(str);
+            return Libcore.f855os.getenv(str);
         }
         throw new NullPointerException("name == null");
     }
@@ -500,7 +500,7 @@ public final class System {
     }
 
     /* renamed from: gc */
-    public static void m1693gc() {
+    public static void m1699gc() {
         boolean z;
         synchronized (LOCK) {
             z = justRanFinalization;
@@ -511,7 +511,7 @@ public final class System {
             }
         }
         if (z) {
-            Runtime.getRuntime().mo59631gc();
+            Runtime.getRuntime().mo59687gc();
         }
     }
 
@@ -523,7 +523,7 @@ public final class System {
             runGC = false;
         }
         if (z) {
-            Runtime.getRuntime().mo59631gc();
+            Runtime.getRuntime().mo59687gc();
         }
         Runtime.getRuntime().runFinalization();
         synchronized (obj) {

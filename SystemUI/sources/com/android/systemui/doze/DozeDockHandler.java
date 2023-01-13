@@ -27,7 +27,7 @@ public class DozeDockHandler implements DozeMachine.Part {
     DozeDockHandler(AmbientDisplayConfiguration ambientDisplayConfiguration, DockManager dockManager) {
         this.mConfig = ambientDisplayConfiguration;
         this.mDockManager = dockManager;
-        this.mDockEventListener = new DockEventListener(this, (C20551) null);
+        this.mDockEventListener = new DockEventListener(this, (C20571) null);
     }
 
     public void setDozeMachine(DozeMachine dozeMachine) {
@@ -35,7 +35,7 @@ public class DozeDockHandler implements DozeMachine.Part {
     }
 
     /* renamed from: com.android.systemui.doze.DozeDockHandler$1 */
-    static /* synthetic */ class C20551 {
+    static /* synthetic */ class C20571 {
         static final /* synthetic */ int[] $SwitchMap$com$android$systemui$doze$DozeMachine$State;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(6:0|1|2|3|4|6) */
@@ -63,12 +63,12 @@ public class DozeDockHandler implements DozeMachine.Part {
             L_0x001d:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.doze.DozeDockHandler.C20551.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.doze.DozeDockHandler.C20571.<clinit>():void");
         }
     }
 
     public void transitionTo(DozeMachine.State state, DozeMachine.State state2) {
-        int i = C20551.$SwitchMap$com$android$systemui$doze$DozeMachine$State[state2.ordinal()];
+        int i = C20571.$SwitchMap$com$android$systemui$doze$DozeMachine$State[state2.ordinal()];
         if (i == 1) {
             this.mDockEventListener.register();
         } else if (i == 2) {
@@ -87,7 +87,7 @@ public class DozeDockHandler implements DozeMachine.Part {
         private DockEventListener() {
         }
 
-        /* synthetic */ DockEventListener(DozeDockHandler dozeDockHandler, C20551 r2) {
+        /* synthetic */ DockEventListener(DozeDockHandler dozeDockHandler, C20571 r2) {
             this();
         }
 

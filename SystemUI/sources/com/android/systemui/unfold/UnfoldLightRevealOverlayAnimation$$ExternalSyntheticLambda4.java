@@ -11,6 +11,6 @@ public final /* synthetic */ class UnfoldLightRevealOverlayAnimation$$ExternalSy
     }
 
     public final void onTransactionCommitted() {
-        UnfoldLightRevealOverlayAnimation.m3273addView$lambda6$lambda5$lambda4(this.f$0);
+        UnfoldLightRevealOverlayAnimation.m3278addView$lambda6$lambda5$lambda4(this.f$0);
     }
 }

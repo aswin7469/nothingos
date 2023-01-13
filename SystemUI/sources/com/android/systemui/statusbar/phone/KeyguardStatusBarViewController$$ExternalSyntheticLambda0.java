@@ -12,6 +12,6 @@ public final /* synthetic */ class KeyguardStatusBarViewController$$ExternalSynt
     }
 
     public final WindowInsets onApplyWindowInsets(View view, WindowInsets windowInsets) {
-        return this.f$0.mo44300xd10be31f(view, windowInsets);
+        return this.f$0.mo44315xd10be31f(view, windowInsets);
     }
 }

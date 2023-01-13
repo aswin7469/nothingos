@@ -20,7 +20,7 @@ public abstract class Calendar implements Serializable, Cloneable, Comparable<Ca
     public static final int ALL_STYLES = 0;
 
     /* renamed from: AM */
-    public static final int f639AM = 0;
+    public static final int f637AM = 0;
     public static final int AM_PM = 9;
     static final int AM_PM_MASK = 512;
     public static final int APRIL = 3;
@@ -71,7 +71,7 @@ public abstract class Calendar implements Serializable, Cloneable, Comparable<Ca
     public static final int OCTOBER = 9;
 
     /* renamed from: PM */
-    public static final int f640PM = 1;
+    public static final int f638PM = 1;
     public static final int SATURDAY = 7;
     public static final int SECOND = 13;
     static final int SECOND_MASK = 8192;

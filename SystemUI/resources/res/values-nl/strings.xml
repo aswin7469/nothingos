@@ -708,9 +708,15 @@
     <string name="force_rtl_layout_all_locales_summary">Stel de schermindelingsrichting geforceerd in op v.r.n.l. voor alle talen</string>
     <string name="forced_resizable_secondary_display">App werkt mogelijk niet op een secundair scherm.</string>
     <string name="game_status">Aan het spelen</string>
+    <string name="gamemode_description">Game-modus bepaalt of u in een game zit en wordt automatisch voor u ingeschakeld</string>
+    <string name="gamemode_gamedashboard_title">Game-dashboard</string>
+    <string name="gamemode_notification_content">Tik om naar Instellingen te gaan</string>
+    <string name="gamemode_notification_title">Game-modus is momenteel ingeschakeld</string>
     <string name="global_action_lock_message">Ontgrendel je telefoon voor meer opties</string>
     <string name="global_action_screenshot">Screenshot</string>
     <string name="global_action_smart_lock_disabled">Smart Lock staat uit</string>
+    <string name="gm_guide_status_on">AAN</string>
+    <string name="gm_notification_title">Game-modus</string>
     <string name="go_to_web">Ga naar browser</string>
     <string name="got_it">OK</string>
     <string name="guest_exit_guest">Gast verwijderen</string>

@@ -7,27 +7,27 @@ public class NTLogUtil {
     private static String sSeparator = "-->";
 
     /* renamed from: v */
-    public static void m1683v(String str, String str2) {
+    public static void m1689v(String str, String str2) {
         Log.v(TAG, str + sSeparator + str2);
     }
 
     /* renamed from: d */
-    public static void m1680d(String str, String str2) {
+    public static void m1686d(String str, String str2) {
         Log.d(TAG, str + sSeparator + str2);
     }
 
     /* renamed from: i */
-    public static void m1682i(String str, String str2) {
+    public static void m1688i(String str, String str2) {
         Log.i(TAG, str + sSeparator + str2);
     }
 
     /* renamed from: w */
-    public static void m1684w(String str, String str2) {
+    public static void m1690w(String str, String str2) {
         Log.w(TAG, str + sSeparator + str2);
     }
 
     /* renamed from: e */
-    public static void m1681e(String str, String str2) {
+    public static void m1687e(String str, String str2) {
         Log.e(TAG, str + sSeparator + str2);
     }
 

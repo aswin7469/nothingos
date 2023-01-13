@@ -48,9 +48,9 @@ public class TwoTargetPreference extends Preference {
     }
 
     private void init(Context context) {
-        setLayoutResource(C1860R.layout.preference_two_target);
-        this.mSmallIconSize = context.getResources().getDimensionPixelSize(C1860R.dimen.two_target_pref_small_icon_size);
-        this.mMediumIconSize = context.getResources().getDimensionPixelSize(C1860R.dimen.two_target_pref_medium_icon_size);
+        setLayoutResource(C1861R.layout.preference_two_target);
+        this.mSmallIconSize = context.getResources().getDimensionPixelSize(C1861R.dimen.two_target_pref_small_icon_size);
+        this.mMediumIconSize = context.getResources().getDimensionPixelSize(C1861R.dimen.two_target_pref_medium_icon_size);
         int secondTargetResId = getSecondTargetResId();
         if (secondTargetResId != 0) {
             setWidgetLayoutResource(secondTargetResId);
@@ -72,7 +72,7 @@ public class TwoTargetPreference extends Preference {
             int i3 = this.mSmallIconSize;
             imageView.setLayoutParams(new LinearLayout.LayoutParams(i3, i3));
         }
-        View findViewById = preferenceViewHolder.findViewById(C1860R.C1863id.two_target_divider);
+        View findViewById = preferenceViewHolder.findViewById(C1861R.C1864id.two_target_divider);
         View findViewById2 = preferenceViewHolder.findViewById(16908312);
         boolean shouldHideSecondTarget = shouldHideSecondTarget();
         int i4 = 8;

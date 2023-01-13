@@ -15,6 +15,6 @@ public final /* synthetic */ class ImageWallpaper$GLEngine$$ExternalSyntheticLam
     }
 
     public final void run() {
-        this.f$0.mo29691xc1020853(this.f$1, this.f$2);
+        this.f$0.mo29701xc1020853(this.f$1, this.f$2);
     }
 }

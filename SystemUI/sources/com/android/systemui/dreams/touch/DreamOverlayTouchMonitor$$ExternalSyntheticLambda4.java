@@ -16,6 +16,6 @@ public final /* synthetic */ class DreamOverlayTouchMonitor$$ExternalSyntheticLa
     }
 
     public final void run() {
-        this.f$0.mo32635x8120ea15(this.f$1, this.f$2);
+        this.f$0.mo32646x8120ea15(this.f$1, this.f$2);
     }
 }

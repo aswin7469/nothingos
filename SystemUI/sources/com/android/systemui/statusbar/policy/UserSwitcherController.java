@@ -39,7 +39,7 @@ import com.android.settingslib.RestrictedLockUtils;
 import com.android.settingslib.RestrictedLockUtilsInternal;
 import com.android.settingslib.users.UserCreatingDialog;
 import com.android.settingslib.utils.ThreadUtils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dumpable;
 import com.android.systemui.GuestResumeSessionReceiver;
 import com.android.systemui.SystemUISecondaryUserService;
@@ -232,7 +232,7 @@ public class UserSwitcherController implements Dumpable {
         Handler handler2 = handler;
         BroadcastDispatcher broadcastDispatcher2 = broadcastDispatcher;
         UiEventLogger uiEventLogger2 = uiEventLogger;
-        C31985 r10 = new KeyguardStateController.Callback() {
+        C32085 r10 = new KeyguardStateController.Callback() {
             public void onKeyguardShowingChanged() {
                 if (!UserSwitcherController.this.mKeyguardStateController.isShowing()) {
                     UserSwitcherController.this.mHandler.post(new UserSwitcherController$5$$ExternalSyntheticLambda0(UserSwitcherController.this));
@@ -252,7 +252,7 @@ public class UserSwitcherController implements Dumpable {
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onDeviceProvisionedChanged$0$com-android-systemui-statusbar-policy-UserSwitcherController$6 */
-            public /* synthetic */ void mo46173xbadc88af() {
+            public /* synthetic */ void mo46185xbadc88af() {
                 UserSwitcherController.this.mDeviceProvisionedController.removeCallback(UserSwitcherController.this.mGuaranteeGuestPresentAfterProvisioned);
             }
         };
@@ -297,7 +297,7 @@ public class UserSwitcherController implements Dumpable {
         this.mSecondaryUserServiceIntent = new Intent(context2, SystemUISecondaryUserService.class);
         IntentFilter intentFilter2 = new IntentFilter();
         context.registerReceiverAsUser(this.mReceiver, UserHandle.SYSTEM, intentFilter2, "com.android.systemui.permission.SELF", (Handler) null, 2);
-        C31941 r2 = new ContentObserver(handler2) {
+        C32041 r2 = new ContentObserver(handler2) {
             public void onChange(boolean z) {
                 UserSwitcherController userSwitcherController = UserSwitcherController.this;
                 boolean unused = userSwitcherController.mSimpleUserSwitcher = userSwitcherController.shouldUseSimpleUserSwitcher();
@@ -347,7 +347,7 @@ public class UserSwitcherController implements Dumpable {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$refreshUsers$1$com-android-systemui-statusbar-policy-UserSwitcherController */
-    public /* synthetic */ void mo46157x20a6fb24(SparseArray sparseArray) {
+    public /* synthetic */ void mo46169x20a6fb24(SparseArray sparseArray) {
         List<UserInfo> aliveUsers = this.mUserManager.getAliveUsers();
         if (aliveUsers != null) {
             ArrayList arrayList = new ArrayList(aliveUsers.size());
@@ -364,7 +364,7 @@ public class UserSwitcherController implements Dumpable {
                     } else if (userInfo.supportsSwitchToByUser()) {
                         Bitmap bitmap = (Bitmap) sparseArray.get(userInfo.id);
                         if (bitmap == null && (bitmap = this.mUserManager.getUserIcon(userInfo.id)) != null) {
-                            int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.max_avatar_size);
+                            int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.max_avatar_size);
                             bitmap = Bitmap.createScaledBitmap(bitmap, dimensionPixelSize, dimensionPixelSize, true);
                         }
                         arrayList.add(new UserRecord(userInfo, bitmap, false, z3, false, false, z4, false));
@@ -403,7 +403,7 @@ public class UserSwitcherController implements Dumpable {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$refreshUsers$0$com-android-systemui-statusbar-policy-UserSwitcherController */
-    public /* synthetic */ void mo46156x8c688b85(ArrayList arrayList) {
+    public /* synthetic */ void mo46168x8c688b85(ArrayList arrayList) {
         if (arrayList != null) {
             this.mUsers = arrayList;
             notifyAdapters();
@@ -515,7 +515,7 @@ public class UserSwitcherController implements Dumpable {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onUserListItemClicked$2$com-android-systemui-statusbar-policy-UserSwitcherController */
-    public /* synthetic */ void mo46155xc3fe867e(UserRecord userRecord, UserSwitchDialogController.DialogShower dialogShower, Integer num) {
+    public /* synthetic */ void mo46167xc3fe867e(UserRecord userRecord, UserSwitchDialogController.DialogShower dialogShower, Integer num) {
         if (num.intValue() != -10000) {
             this.mUiEventLogger.log(QSUserSwitcherEvent.QS_USER_GUEST_ADD);
             onUserListItemClicked(num.intValue(), userRecord, dialogShower);
@@ -673,7 +673,7 @@ public class UserSwitcherController implements Dumpable {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$removeGuestUser$4$com-android-systemui-statusbar-policy-UserSwitcherController */
-    public /* synthetic */ void mo46158x71aedde9(UserInfo userInfo, Integer num) {
+    public /* synthetic */ void mo46170x71aedde9(UserInfo userInfo, Integer num) {
         if (num.intValue() == -10000) {
             Log.e(TAG, "Could not create new guest, switching back to system user");
             switchToUserId(0);
@@ -697,7 +697,7 @@ public class UserSwitcherController implements Dumpable {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$scheduleGuestCreation$5$com-android-systemui-statusbar-policy-UserSwitcherController */
-    public /* synthetic */ void mo46159xf6e16dc7() {
+    public /* synthetic */ void mo46171xf6e16dc7() {
         int createGuest = createGuest();
         this.mGuestCreationScheduled.set(false);
         this.mGuestIsResetting.set(false);
@@ -735,11 +735,11 @@ public class UserSwitcherController implements Dumpable {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$createGuestAsync$6$com-android-systemui-statusbar-policy-UserSwitcherController */
-    public /* synthetic */ void mo46154x5d5813ac(Dialog dialog, Consumer consumer) {
+    public /* synthetic */ void mo46166x5d5813ac(Dialog dialog, Consumer consumer) {
         int createGuest = createGuest();
         dialog.dismiss();
         if (createGuest == -10000) {
-            Toast.makeText(this.mContext, C1893R.string.add_guest_failed, 0).show();
+            Toast.makeText(this.mContext, C1894R.string.add_guest_failed, 0).show();
         }
         consumer.accept(Integer.valueOf(createGuest));
     }
@@ -823,24 +823,24 @@ public class UserSwitcherController implements Dumpable {
         public String getName(Context context, UserRecord userRecord) {
             if (userRecord.isGuest) {
                 if (userRecord.isCurrent) {
-                    return context.getString(this.mController.mGuestUserAutoCreated ? C1893R.string.guest_reset_guest : C1893R.string.guest_exit_guest);
+                    return context.getString(this.mController.mGuestUserAutoCreated ? C1894R.string.guest_reset_guest : C1894R.string.guest_exit_guest);
                 }
                 int i = 17040431;
                 if (userRecord.info != null) {
                     return context.getString(17040431);
                 }
                 if (!this.mController.mGuestUserAutoCreated) {
-                    return context.getString(C1893R.string.guest_new_guest);
+                    return context.getString(C1894R.string.guest_new_guest);
                 }
                 if (this.mController.mGuestIsResetting.get()) {
-                    i = C1893R.string.guest_resetting;
+                    i = C1894R.string.guest_resetting;
                 }
                 return context.getString(i);
             } else if (userRecord.isAddUser) {
-                return context.getString(C1893R.string.user_add_user);
+                return context.getString(C1894R.string.user_add_user);
             } else {
                 if (userRecord.isAddSupervisedUser) {
-                    return context.getString(C1893R.string.add_user_supervised);
+                    return context.getString(C1894R.string.add_user_supervised);
                 }
                 return userRecord.info.name;
             }
@@ -855,11 +855,11 @@ public class UserSwitcherController implements Dumpable {
         protected static Drawable getIconDrawable(Context context, UserRecord userRecord) {
             int i;
             if (userRecord.isAddUser) {
-                i = C1893R.C1895drawable.ic_account_circle_filled;
+                i = C1894R.C1896drawable.ic_account_circle_filled;
             } else if (userRecord.isGuest) {
-                i = C1893R.C1895drawable.ic_account_circle;
+                i = C1894R.C1896drawable.ic_account_circle;
             } else {
-                i = userRecord.isAddSupervisedUser ? C1893R.C1895drawable.ic_add_supervised_user : C1893R.C1895drawable.ic_avatar_user;
+                i = userRecord.isAddSupervisedUser ? C1894R.C1896drawable.ic_add_supervised_user : C1894R.C1896drawable.ic_avatar_user;
             }
             return context.getDrawable(i);
         }
@@ -988,10 +988,10 @@ public class UserSwitcherController implements Dumpable {
 
         public ExitGuestDialog(Context context, int i, int i2) {
             super(context);
-            setTitle(UserSwitcherController.this.mGuestUserAutoCreated ? C1893R.string.guest_reset_guest_dialog_title : C1893R.string.guest_remove_guest_dialog_title);
-            setMessage(context.getString(C1893R.string.guest_exit_guest_dialog_message));
+            setTitle(UserSwitcherController.this.mGuestUserAutoCreated ? C1894R.string.guest_reset_guest_dialog_title : C1894R.string.guest_remove_guest_dialog_title);
+            setMessage(context.getString(C1894R.string.guest_exit_guest_dialog_message));
             setButton(-3, context.getString(17039360), this);
-            setButton(-1, context.getString(UserSwitcherController.this.mGuestUserAutoCreated ? C1893R.string.guest_reset_guest_confirm_button : C1893R.string.guest_remove_guest_confirm_button), this);
+            setButton(-1, context.getString(UserSwitcherController.this.mGuestUserAutoCreated ? C1894R.string.guest_reset_guest_confirm_button : C1894R.string.guest_remove_guest_confirm_button), this);
             SystemUIDialog.setWindowOnTop(this, UserSwitcherController.this.mKeyguardStateController.isShowing());
             setCanceledOnTouchOutside(false);
             this.mGuestId = i;
@@ -1014,8 +1014,8 @@ public class UserSwitcherController implements Dumpable {
     final class AddUserDialog extends SystemUIDialog implements DialogInterface.OnClickListener {
         public AddUserDialog(Context context) {
             super(context);
-            setTitle(C1893R.string.user_add_user_title);
-            setMessage(C1893R.string.user_add_user_message_short);
+            setTitle(C1894R.string.user_add_user_title);
+            setMessage(C1894R.string.user_add_user_message_short);
             setButton(-3, context.getString(17039360), this);
             setButton(-1, context.getString(17039370), this);
             SystemUIDialog.setWindowOnTop(this, UserSwitcherController.this.mKeyguardStateController.isShowing());

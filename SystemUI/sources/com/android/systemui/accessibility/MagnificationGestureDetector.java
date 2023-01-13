@@ -36,7 +36,7 @@ class MagnificationGestureDetector {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-accessibility-MagnificationGestureDetector */
-    public /* synthetic */ void mo29900xa262ed76() {
+    public /* synthetic */ void mo29910xa262ed76() {
         this.mDetectSingleTap = false;
     }
 

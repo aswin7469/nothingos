@@ -11,6 +11,6 @@ public final /* synthetic */ class KeyguardUpdateMonitor$15$$ExternalSyntheticLa
     }
 
     public final void run() {
-        this.f$0.mo26321x878f1f44();
+        this.f$0.mo26322x878f1f44();
     }
 }

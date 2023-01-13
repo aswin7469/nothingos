@@ -14,6 +14,6 @@ public final /* synthetic */ class Bubble$$ExternalSyntheticLambda1 implements R
     }
 
     public final void run() {
-        this.f$0.m3408lambda$new$0$comandroidwmshellbubblesBubble(this.f$1);
+        this.f$0.m3412lambda$new$0$comandroidwmshellbubblesBubble(this.f$1);
     }
 }

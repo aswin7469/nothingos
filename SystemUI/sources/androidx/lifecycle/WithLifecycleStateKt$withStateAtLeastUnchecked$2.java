@@ -4,7 +4,7 @@ import kotlin.Metadata;
 import kotlin.jvm.functions.Function0;
 import kotlin.jvm.internal.Lambda;
 
-@Metadata(mo64986d1 = {"\u0000\u0004\n\u0002\b\u0002\u0010\u0000\u001a\u0002H\u0001\"\u0004\b\u0000\u0010\u0001H\n"}, mo64987d2 = {"<anonymous>", "R"}, mo64988k = 3, mo64989mv = {1, 5, 1}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000\u0004\n\u0002\b\u0002\u0010\u0000\u001a\u0002H\u0001\"\u0004\b\u0000\u0010\u0001H\n"}, mo65043d2 = {"<anonymous>", "R"}, mo65044k = 3, mo65045mv = {1, 5, 1}, mo65047xi = 48)
 /* compiled from: WithLifecycleState.kt */
 public final class WithLifecycleStateKt$withStateAtLeastUnchecked$2 extends Lambda implements Function0<R> {
     final /* synthetic */ Function0<R> $block;

@@ -16,59 +16,59 @@ public class CopyOnWriteArraySet<E> extends AbstractSet<E> implements Serializab
     private static final long serialVersionUID = 5457747651344034263L;
 
     /* renamed from: al */
-    private final CopyOnWriteArrayList<E> f750al;
+    private final CopyOnWriteArrayList<E> f748al;
 
     public CopyOnWriteArraySet() {
-        this.f750al = new CopyOnWriteArrayList<>();
+        this.f748al = new CopyOnWriteArrayList<>();
     }
 
     public CopyOnWriteArraySet(Collection<? extends E> collection) {
         if (collection.getClass() == CopyOnWriteArraySet.class) {
-            this.f750al = new CopyOnWriteArrayList<>(((CopyOnWriteArraySet) collection).f750al);
+            this.f748al = new CopyOnWriteArrayList<>(((CopyOnWriteArraySet) collection).f748al);
             return;
         }
         CopyOnWriteArrayList<E> copyOnWriteArrayList = new CopyOnWriteArrayList<>();
-        this.f750al = copyOnWriteArrayList;
+        this.f748al = copyOnWriteArrayList;
         copyOnWriteArrayList.addAllAbsent(collection);
     }
 
     public int size() {
-        return this.f750al.size();
+        return this.f748al.size();
     }
 
     public boolean isEmpty() {
-        return this.f750al.isEmpty();
+        return this.f748al.isEmpty();
     }
 
     public boolean contains(Object obj) {
-        return this.f750al.contains(obj);
+        return this.f748al.contains(obj);
     }
 
     public Object[] toArray() {
-        return this.f750al.toArray();
+        return this.f748al.toArray();
     }
 
     public <T> T[] toArray(T[] tArr) {
-        return this.f750al.toArray(tArr);
+        return this.f748al.toArray(tArr);
     }
 
     public void clear() {
-        this.f750al.clear();
+        this.f748al.clear();
     }
 
     public boolean remove(Object obj) {
-        return this.f750al.remove(obj);
+        return this.f748al.remove(obj);
     }
 
     public boolean add(E e) {
-        return this.f750al.addIfAbsent(e);
+        return this.f748al.addIfAbsent(e);
     }
 
     public boolean containsAll(Collection<?> collection) {
         if (collection instanceof Set) {
-            return compareSets(this.f750al.getArray(), (Set) collection) >= 0;
+            return compareSets(this.f748al.getArray(), (Set) collection) >= 0;
         }
-        return this.f750al.containsAll(collection);
+        return this.f748al.containsAll(collection);
     }
 
     private static int compareSets(Object[] objArr, Set<?> set) {
@@ -101,34 +101,34 @@ public class CopyOnWriteArraySet<E> extends AbstractSet<E> implements Serializab
     }
 
     public boolean addAll(Collection<? extends E> collection) {
-        return this.f750al.addAllAbsent(collection) > 0;
+        return this.f748al.addAllAbsent(collection) > 0;
     }
 
     public boolean removeAll(Collection<?> collection) {
-        return this.f750al.removeAll(collection);
+        return this.f748al.removeAll(collection);
     }
 
     public boolean retainAll(Collection<?> collection) {
-        return this.f750al.retainAll(collection);
+        return this.f748al.retainAll(collection);
     }
 
     public Iterator<E> iterator() {
-        return this.f750al.iterator();
+        return this.f748al.iterator();
     }
 
     public boolean equals(Object obj) {
-        return obj == this || ((obj instanceof Set) && compareSets(this.f750al.getArray(), (Set) obj) == 0);
+        return obj == this || ((obj instanceof Set) && compareSets(this.f748al.getArray(), (Set) obj) == 0);
     }
 
     public boolean removeIf(Predicate<? super E> predicate) {
-        return this.f750al.removeIf(predicate);
+        return this.f748al.removeIf(predicate);
     }
 
     public void forEach(Consumer<? super E> consumer) {
-        this.f750al.forEach(consumer);
+        this.f748al.forEach(consumer);
     }
 
     public Spliterator<E> spliterator() {
-        return Spliterators.spliterator(this.f750al.getArray(), (int) InputDeviceCompat.SOURCE_GAMEPAD);
+        return Spliterators.spliterator(this.f748al.getArray(), (int) InputDeviceCompat.SOURCE_GAMEPAD);
     }
 }

@@ -9,6 +9,6 @@ public final /* synthetic */ class NotificationStackScrollLayout$$ExternalSynthe
     }
 
     public final void run() {
-        this.f$0.mo42212x3b674507();
+        this.f$0.mo42220x3b674507();
     }
 }

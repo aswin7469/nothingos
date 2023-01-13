@@ -11,6 +11,6 @@ public final /* synthetic */ class NotificationPanelViewController$$ExternalSynt
     }
 
     public final void onRtlPropertielsChanged(int i) {
-        this.f$0.mo44618x8d3b8be9(i);
+        this.f$0.mo44633x8d3b8be9(i);
     }
 }

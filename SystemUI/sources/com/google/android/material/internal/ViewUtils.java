@@ -13,7 +13,7 @@ import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 
 public class ViewUtils {
 
@@ -93,10 +93,10 @@ public class ViewUtils {
     }
 
     public static void doOnApplyWindowInsets(View view, AttributeSet attributeSet, int i, int i2, final OnApplyWindowInsetsListener onApplyWindowInsetsListener) {
-        TypedArray obtainStyledAttributes = view.getContext().obtainStyledAttributes(attributeSet, C3621R.styleable.Insets, i, i2);
-        final boolean z = obtainStyledAttributes.getBoolean(C3621R.styleable.Insets_paddingBottomSystemWindowInsets, false);
-        final boolean z2 = obtainStyledAttributes.getBoolean(C3621R.styleable.Insets_paddingLeftSystemWindowInsets, false);
-        final boolean z3 = obtainStyledAttributes.getBoolean(C3621R.styleable.Insets_paddingRightSystemWindowInsets, false);
+        TypedArray obtainStyledAttributes = view.getContext().obtainStyledAttributes(attributeSet, C3631R.styleable.Insets, i, i2);
+        final boolean z = obtainStyledAttributes.getBoolean(C3631R.styleable.Insets_paddingBottomSystemWindowInsets, false);
+        final boolean z2 = obtainStyledAttributes.getBoolean(C3631R.styleable.Insets_paddingLeftSystemWindowInsets, false);
+        final boolean z3 = obtainStyledAttributes.getBoolean(C3631R.styleable.Insets_paddingRightSystemWindowInsets, false);
         obtainStyledAttributes.recycle();
         doOnApplyWindowInsets(view, new OnApplyWindowInsetsListener() {
             public WindowInsetsCompat onApplyWindowInsets(View view, WindowInsetsCompat windowInsetsCompat, RelativePadding relativePadding) {

@@ -8,7 +8,7 @@ import java.p026io.InputStream;
 public class InflaterInputStream extends FilterInputStream {
 
     /* renamed from: b */
-    private byte[] f806b;
+    private byte[] f804b;
     protected byte[] buf;
     @Deprecated
     protected boolean closed;
@@ -32,7 +32,7 @@ public class InflaterInputStream extends FilterInputStream {
         this.closed = false;
         this.reachEOF = false;
         this.singleByteBuf = new byte[1];
-        this.f806b = new byte[512];
+        this.f804b = new byte[512];
         if (inputStream == null || inflater == null) {
             throw null;
         } else if (i > 0) {
@@ -115,7 +115,7 @@ public class InflaterInputStream extends FilterInputStream {
                     break;
                 }
                 int i2 = min - i;
-                byte[] bArr = this.f806b;
+                byte[] bArr = this.f804b;
                 if (i2 > bArr.length) {
                     i2 = bArr.length;
                 }
@@ -134,7 +134,7 @@ public class InflaterInputStream extends FilterInputStream {
     public void close() throws IOException {
         if (!this.closed) {
             this.inf.end();
-            this.f521in.close();
+            this.f519in.close();
             this.closed = true;
         }
     }
@@ -142,7 +142,7 @@ public class InflaterInputStream extends FilterInputStream {
     /* access modifiers changed from: protected */
     public void fill() throws IOException {
         ensureOpen();
-        InputStream inputStream = this.f521in;
+        InputStream inputStream = this.f519in;
         byte[] bArr = this.buf;
         int read = inputStream.read(bArr, 0, bArr.length);
         this.len = read;

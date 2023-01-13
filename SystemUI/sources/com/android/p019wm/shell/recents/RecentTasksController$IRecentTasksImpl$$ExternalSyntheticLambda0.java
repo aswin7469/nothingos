@@ -13,6 +13,6 @@ public final /* synthetic */ class RecentTasksController$IRecentTasksImpl$$Exter
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo50717x2087de69((RecentTasksController) obj);
+        this.f$0.mo50726x2087de69((RecentTasksController) obj);
     }
 }

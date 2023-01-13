@@ -9,6 +9,6 @@ public final /* synthetic */ class KeyguardStatusBarViewController$$ExternalSynt
     }
 
     public final void run() {
-        this.f$0.mo44301x6e64a4f();
+        this.f$0.mo44316x6e64a4f();
     }
 }

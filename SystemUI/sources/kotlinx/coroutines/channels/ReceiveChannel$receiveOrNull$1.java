@@ -6,8 +6,8 @@ import kotlin.coroutines.jvm.internal.ContinuationImpl;
 import kotlin.coroutines.jvm.internal.DebugMetadata;
 import kotlinx.coroutines.channels.ReceiveChannel;
 
-@Metadata(mo64988k = 3, mo64989mv = {1, 5, 1}, mo64991xi = 48)
-@DebugMetadata(mo65240c = "kotlinx.coroutines.channels.ReceiveChannel$DefaultImpls", mo65241f = "Channel.kt", mo65242i = {}, mo65243l = {349}, mo65244m = "receiveOrNull", mo65245n = {}, mo65246s = {})
+@Metadata(mo65044k = 3, mo65045mv = {1, 5, 1}, mo65047xi = 48)
+@DebugMetadata(mo65296c = "kotlinx.coroutines.channels.ReceiveChannel$DefaultImpls", mo65297f = "Channel.kt", mo65298i = {}, mo65299l = {349}, mo65300m = "receiveOrNull", mo65301n = {}, mo65302s = {})
 /* compiled from: Channel.kt */
 final class ReceiveChannel$receiveOrNull$1<E> extends ContinuationImpl {
     int label;

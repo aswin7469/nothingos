@@ -100,7 +100,7 @@ public final class DexFile {
         if (outputName != null) {
             try {
                 String parent = new File(outputName).getParent();
-                if (Libcore.f857os.getuid() != Libcore.f857os.stat(parent).st_uid) {
+                if (Libcore.f855os.getuid() != Libcore.f855os.stat(parent).st_uid) {
                     throw new IllegalArgumentException("Optimized data directory " + parent + " is not owned by the current user. Shared storage cannot protect your application from code injection attacks.");
                 }
             } catch (ErrnoException e) {

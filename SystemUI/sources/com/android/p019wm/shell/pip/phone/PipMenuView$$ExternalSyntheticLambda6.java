@@ -12,6 +12,6 @@ public final /* synthetic */ class PipMenuView$$ExternalSyntheticLambda6 impleme
     }
 
     public final void onClick(View view) {
-        this.f$0.m3466lambda$new$3$comandroidwmshellpipphonePipMenuView(view);
+        this.f$0.m3470lambda$new$3$comandroidwmshellpipphonePipMenuView(view);
     }
 }

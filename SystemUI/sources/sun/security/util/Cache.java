@@ -51,20 +51,20 @@ public abstract class Cache<K, V> {
     public static class EqualByteArray {
 
         /* renamed from: b */
-        private final byte[] f918b;
+        private final byte[] f916b;
         private volatile int hash;
 
         public EqualByteArray(byte[] bArr) {
-            this.f918b = bArr;
+            this.f916b = bArr;
         }
 
         public int hashCode() {
             int i = this.hash;
             if (i == 0) {
-                i = this.f918b.length + 1;
+                i = this.f916b.length + 1;
                 int i2 = 0;
                 while (true) {
-                    byte[] bArr = this.f918b;
+                    byte[] bArr = this.f916b;
                     if (i2 >= bArr.length) {
                         break;
                     }
@@ -83,7 +83,7 @@ public abstract class Cache<K, V> {
             if (!(obj instanceof EqualByteArray)) {
                 return false;
             }
-            return Arrays.equals(this.f918b, ((EqualByteArray) obj).f918b);
+            return Arrays.equals(this.f916b, ((EqualByteArray) obj).f916b);
         }
     }
 }

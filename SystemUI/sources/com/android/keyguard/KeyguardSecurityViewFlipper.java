@@ -13,7 +13,7 @@ import android.view.ViewHierarchyEncoder;
 import android.view.ViewOverlay;
 import android.widget.FrameLayout;
 import android.widget.ViewFlipper;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 
 public class KeyguardSecurityViewFlipper extends ViewFlipper {
     private static final boolean DEBUG = KeyguardConstants.DEBUG;
@@ -156,7 +156,7 @@ public class KeyguardSecurityViewFlipper extends ViewFlipper {
 
         public LayoutParams(Context context, AttributeSet attributeSet) {
             super(context, attributeSet);
-            TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C1893R.styleable.KeyguardSecurityViewFlipper_Layout, 0, 0);
+            TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C1894R.styleable.KeyguardSecurityViewFlipper_Layout, 0, 0);
             this.maxWidth = obtainStyledAttributes.getDimensionPixelSize(1, 0);
             this.maxHeight = obtainStyledAttributes.getDimensionPixelSize(0, 0);
             obtainStyledAttributes.recycle();

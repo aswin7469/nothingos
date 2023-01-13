@@ -28,13 +28,13 @@ class WindowMagnificationConnectionImpl extends IWindowMagnificationConnection.S
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$enableWindowMagnification$0$com-android-systemui-accessibility-WindowMagnificationConnectionImpl */
-    public /* synthetic */ void mo29977xc4f82a97(int i, float f, float f2, float f3, float f4, float f5, IRemoteMagnificationAnimationCallback iRemoteMagnificationAnimationCallback) {
+    public /* synthetic */ void mo29987xc4f82a97(int i, float f, float f2, float f3, float f4, float f5, IRemoteMagnificationAnimationCallback iRemoteMagnificationAnimationCallback) {
         this.mWindowMagnification.enableWindowMagnification(i, f, f2, f3, f4, f5, iRemoteMagnificationAnimationCallback);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setScale$1$com-android-systemui-accessibility-WindowMagnificationConnectionImpl */
-    public /* synthetic */ void mo29981x60820c4(int i, float f) {
+    public /* synthetic */ void mo29991x60820c4(int i, float f) {
         this.mWindowMagnification.setScale(i, f);
     }
 
@@ -48,7 +48,7 @@ class WindowMagnificationConnectionImpl extends IWindowMagnificationConnection.S
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$disableWindowMagnification$2$com-android-systemui-accessibility-WindowMagnificationConnectionImpl */
-    public /* synthetic */ void mo29976x31bfb220(int i, IRemoteMagnificationAnimationCallback iRemoteMagnificationAnimationCallback) {
+    public /* synthetic */ void mo29986x31bfb220(int i, IRemoteMagnificationAnimationCallback iRemoteMagnificationAnimationCallback) {
         this.mWindowMagnification.disableWindowMagnification(i, iRemoteMagnificationAnimationCallback);
     }
 
@@ -58,13 +58,13 @@ class WindowMagnificationConnectionImpl extends IWindowMagnificationConnection.S
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$moveWindowMagnifier$3$com-android-systemui-accessibility-WindowMagnificationConnectionImpl */
-    public /* synthetic */ void mo29978xd4f28a67(int i, float f, float f2) {
+    public /* synthetic */ void mo29988xd4f28a67(int i, float f, float f2) {
         this.mWindowMagnification.moveWindowMagnifier(i, f, f2);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$moveWindowMagnifierToPosition$4$com-android-systemui-accessibility-WindowMagnificationConnectionImpl */
-    public /* synthetic */ void mo29979x41e825a2(int i, float f, float f2, IRemoteMagnificationAnimationCallback iRemoteMagnificationAnimationCallback) {
+    public /* synthetic */ void mo29989x41e825a2(int i, float f, float f2, IRemoteMagnificationAnimationCallback iRemoteMagnificationAnimationCallback) {
         this.mWindowMagnification.moveWindowMagnifierToPositionInternal(i, f, f2, iRemoteMagnificationAnimationCallback);
     }
 
@@ -78,7 +78,7 @@ class WindowMagnificationConnectionImpl extends IWindowMagnificationConnection.S
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$showMagnificationButton$5$com-android-systemui-accessibility-WindowMagnificationConnectionImpl */
-    public /* synthetic */ void mo29982x9bca648a(int i, int i2) {
+    public /* synthetic */ void mo29992x9bca648a(int i, int i2) {
         this.mModeSwitchesController.showButton(i, i2);
     }
 
@@ -88,7 +88,7 @@ class WindowMagnificationConnectionImpl extends IWindowMagnificationConnection.S
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$removeMagnificationButton$6$com-android-systemui-accessibility-WindowMagnificationConnectionImpl */
-    public /* synthetic */ void mo29980xe5094b0(int i) {
+    public /* synthetic */ void mo29990xe5094b0(int i) {
         this.mModeSwitchesController.removeButton(i);
     }
 

@@ -12,6 +12,6 @@ public final /* synthetic */ class VolumeDialogComponent$$ExternalSyntheticLambd
     }
 
     public final void accept(Object obj) {
-        this.f$0.m3310lambda$new$1$comandroidsystemuivolumeVolumeDialogComponent((VolumeDialog) obj);
+        this.f$0.m3315lambda$new$1$comandroidsystemuivolumeVolumeDialogComponent((VolumeDialog) obj);
     }
 }

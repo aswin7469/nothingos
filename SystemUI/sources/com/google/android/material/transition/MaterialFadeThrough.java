@@ -4,12 +4,12 @@ import android.animation.Animator;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.transition.TransitionValues;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 
 public final class MaterialFadeThrough extends MaterialVisibility<FadeThroughProvider> {
     private static final float DEFAULT_START_SCALE = 0.92f;
-    private static final int DEFAULT_THEMED_DURATION_ATTR = C3621R.attr.motionDurationLong1;
-    private static final int DEFAULT_THEMED_EASING_ATTR = C3621R.attr.motionEasingStandard;
+    private static final int DEFAULT_THEMED_DURATION_ATTR = C3631R.attr.motionDurationLong1;
+    private static final int DEFAULT_THEMED_EASING_ATTR = C3631R.attr.motionEasingStandard;
 
     public /* bridge */ /* synthetic */ void addAdditionalAnimatorProvider(VisibilityAnimatorProvider visibilityAnimatorProvider) {
         super.addAdditionalAnimatorProvider(visibilityAnimatorProvider);

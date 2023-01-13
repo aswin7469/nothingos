@@ -99,7 +99,7 @@ public class KeyguardIndicationRotateTextViewController extends ViewController<K
             boolean z3 = keyguardIndication != null && !TextUtils.isEmpty(keyguardIndication.getMessage());
             if (!z3) {
                 this.mIndicationMessages.remove(Integer.valueOf(i));
-                this.mIndicationQueue.removeIf(new C2147x419da85b(i));
+                this.mIndicationQueue.removeIf(new C2149x419da85b(i));
             } else {
                 if (!this.mIndicationQueue.contains(Integer.valueOf(i))) {
                     this.mIndicationQueue.add(Integer.valueOf(i));
@@ -120,7 +120,7 @@ public class KeyguardIndicationRotateTextViewController extends ViewController<K
                             showIndication(i);
                             return;
                         }
-                        this.mIndicationQueue.removeIf(new C2148x419da85c(i));
+                        this.mIndicationQueue.removeIf(new C2150x419da85c(i));
                         this.mIndicationQueue.add(0, Integer.valueOf(i));
                         scheduleShowNextIndication(minVisibilityMillis - uptimeMillis);
                     } else if (!isNextIndicationScheduled()) {
@@ -187,7 +187,7 @@ public class KeyguardIndicationRotateTextViewController extends ViewController<K
         int i2 = this.mCurrIndicationType;
         this.mCurrIndicationType = i;
         this.mCurrMessage = this.mIndicationMessages.get(Integer.valueOf(i)) != null ? this.mIndicationMessages.get(Integer.valueOf(i)).getMessage() : null;
-        this.mIndicationQueue.removeIf(new C2146x419da85a(i));
+        this.mIndicationQueue.removeIf(new C2148x419da85a(i));
         if (this.mCurrIndicationType != -1) {
             this.mIndicationQueue.add(Integer.valueOf(i));
         }
@@ -234,14 +234,14 @@ public class KeyguardIndicationRotateTextViewController extends ViewController<K
         private final Runnable mShowIndicationRunnable;
 
         ShowNextIndication(long j) {
-            C2149x49118fb4 keyguardIndicationRotateTextViewController$ShowNextIndication$$ExternalSyntheticLambda0 = new C2149x49118fb4(this);
+            C2151x49118fb4 keyguardIndicationRotateTextViewController$ShowNextIndication$$ExternalSyntheticLambda0 = new C2151x49118fb4(this);
             this.mShowIndicationRunnable = keyguardIndicationRotateTextViewController$ShowNextIndication$$ExternalSyntheticLambda0;
             this.mCancelDelayedRunnable = KeyguardIndicationRotateTextViewController.this.mExecutor.executeDelayed(keyguardIndicationRotateTextViewController$ShowNextIndication$$ExternalSyntheticLambda0, j);
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$new$0$com-android-systemui-keyguard-KeyguardIndicationRotateTextViewController$ShowNextIndication */
-        public /* synthetic */ void mo33120x7d3b789() {
+        public /* synthetic */ void mo33130x7d3b789() {
             int i;
             if (KeyguardIndicationRotateTextViewController.this.mIndicationQueue.size() == 0) {
                 i = -1;

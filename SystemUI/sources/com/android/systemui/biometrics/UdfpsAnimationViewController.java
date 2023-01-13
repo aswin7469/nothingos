@@ -15,11 +15,14 @@ import com.android.systemui.statusbar.phone.panelstate.PanelExpansionChangeEvent
 import com.android.systemui.statusbar.phone.panelstate.PanelExpansionListener;
 import com.android.systemui.statusbar.phone.panelstate.PanelExpansionStateManager;
 import com.android.systemui.util.ViewController;
+import com.nothing.systemui.NTDependencyEx;
+import com.nothing.systemui.assist.AssistManagerEx;
+import com.nothing.systemui.util.NTLogUtil;
 import java.p026io.PrintWriter;
 import kotlin.Metadata;
 import kotlin.jvm.internal.Intrinsics;
 
-@Metadata(mo64986d1 = {"\u0000\u0001\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0010\u000e\n\u0000\n\u0002\u0010\u000b\n\u0002\b\u0005\n\u0002\u0010\b\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\b\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0010\u0002\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0011\n\u0002\b\u0006\n\u0002\u0018\u0002\n\u0002\b\u0007\n\u0002\u0010\u0007\n\u0002\b\u0002\b&\u0018\u0000*\b\b\u0000\u0010\u0001*\u00020\u00022\b\u0012\u0004\u0012\u0002H\u00010\u00032\u00020\u0004B-\u0012\u0006\u0010\u0005\u001a\u00028\u0000\u0012\u0006\u0010\u0006\u001a\u00020\u0007\u0012\u0006\u0010\b\u001a\u00020\t\u0012\u0006\u0010\n\u001a\u00020\u000b\u0012\u0006\u0010\f\u001a\u00020\r¢\u0006\u0002\u0010\u000eJ\u0010\u00102\u001a\u0002032\u0006\u00104\u001a\u00020\u0016H\u0016J\u0006\u00105\u001a\u000203J#\u00106\u001a\u0002032\u0006\u00107\u001a\u0002082\f\u00109\u001a\b\u0012\u0004\u0012\u00020\u00160:H\u0016¢\u0006\u0002\u0010;J\b\u0010<\u001a\u00020\u0018H\u0016J\u0006\u0010=\u001a\u000203J\u0006\u0010>\u001a\u000203J\u000e\u0010?\u001a\u0002032\u0006\u0010@\u001a\u00020AJ\b\u0010B\u001a\u000203H\u0016J\b\u0010C\u001a\u000203H\u0014J\b\u0010D\u001a\u000203H\u0014J\u0006\u0010E\u001a\u000203J\b\u0010F\u001a\u00020\u0018H\u0016J\b\u0010G\u001a\u000203H\u0016J\u0010\u0010G\u001a\u0002032\u0006\u0010H\u001a\u00020IH\u0016J\u0006\u0010J\u001a\u000203R\u0010\u0010\u000f\u001a\u0004\u0018\u00010\u0010X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0011\u001a\u00020\u0012X\u0004¢\u0006\u0002\n\u0000R\u0014\u0010\n\u001a\u00020\u000bX\u0004¢\u0006\b\n\u0000\u001a\u0004\b\u0013\u0010\u0014R\u000e\u0010\f\u001a\u00020\rX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0015\u001a\u00020\u0016X\u0004¢\u0006\u0002\n\u0000R\u001a\u0010\u0017\u001a\u00020\u0018X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0019\u0010\u001a\"\u0004\b\u001b\u0010\u001cR\u0014\u0010\u001d\u001a\u00020\u001eXD¢\u0006\b\n\u0000\u001a\u0004\b\u001f\u0010 R\u0014\u0010!\u001a\u00020\u001eXD¢\u0006\b\n\u0000\u001a\u0004\b\"\u0010 R\u000e\u0010#\u001a\u00020$X\u0004¢\u0006\u0002\n\u0000R\u0014\u0010\b\u001a\u00020\tX\u0004¢\u0006\b\n\u0000\u001a\u0004\b%\u0010&R\u0014\u0010\u0006\u001a\u00020\u0007X\u0004¢\u0006\b\n\u0000\u001a\u0004\b'\u0010(R\u0012\u0010)\u001a\u00020\u0016X¤\u0004¢\u0006\u0006\u001a\u0004\b*\u0010+R\u0014\u0010,\u001a\u00020-X\u0004¢\u0006\b\n\u0000\u001a\u0004\b.\u0010/R\u0014\u0010\u0005\u001a\u00028\u00008BX\u0004¢\u0006\u0006\u001a\u0004\b0\u00101¨\u0006K"}, mo64987d2 = {"Lcom/android/systemui/biometrics/UdfpsAnimationViewController;", "T", "Lcom/android/systemui/biometrics/UdfpsAnimationView;", "Lcom/android/systemui/util/ViewController;", "Lcom/android/systemui/Dumpable;", "view", "statusBarStateController", "Lcom/android/systemui/plugins/statusbar/StatusBarStateController;", "panelExpansionStateManager", "Lcom/android/systemui/statusbar/phone/panelstate/PanelExpansionStateManager;", "dialogManager", "Lcom/android/systemui/statusbar/phone/SystemUIDialogManager;", "dumpManager", "Lcom/android/systemui/dump/DumpManager;", "(Lcom/android/systemui/biometrics/UdfpsAnimationView;Lcom/android/systemui/plugins/statusbar/StatusBarStateController;Lcom/android/systemui/statusbar/phone/panelstate/PanelExpansionStateManager;Lcom/android/systemui/statusbar/phone/SystemUIDialogManager;Lcom/android/systemui/dump/DumpManager;)V", "dialogAlphaAnimator", "Landroid/animation/ValueAnimator;", "dialogListener", "Lcom/android/systemui/statusbar/phone/SystemUIDialogManager$Listener;", "getDialogManager", "()Lcom/android/systemui/statusbar/phone/SystemUIDialogManager;", "dumpTag", "", "notificationShadeVisible", "", "getNotificationShadeVisible", "()Z", "setNotificationShadeVisible", "(Z)V", "paddingX", "", "getPaddingX", "()I", "paddingY", "getPaddingY", "panelExpansionListener", "Lcom/android/systemui/statusbar/phone/panelstate/PanelExpansionListener;", "getPanelExpansionStateManager", "()Lcom/android/systemui/statusbar/phone/panelstate/PanelExpansionStateManager;", "getStatusBarStateController", "()Lcom/android/systemui/plugins/statusbar/StatusBarStateController;", "tag", "getTag", "()Ljava/lang/String;", "touchTranslation", "Landroid/graphics/PointF;", "getTouchTranslation", "()Landroid/graphics/PointF;", "getView", "()Lcom/android/systemui/biometrics/UdfpsAnimationView;", "doAnnounceForAccessibility", "", "str", "dozeTimeTick", "dump", "pw", "Ljava/io/PrintWriter;", "args", "", "(Ljava/io/PrintWriter;[Ljava/lang/String;)V", "listenForTouchesOutsideView", "onIlluminationStarting", "onIlluminationStopped", "onSensorRectUpdated", "sensorRect", "Landroid/graphics/RectF;", "onTouchOutsideView", "onViewAttached", "onViewDetached", "runDialogAlphaAnimator", "shouldPauseAuth", "updateAlpha", "alpha", "", "updatePauseAuth", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000\u0001\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0010\u000e\n\u0000\n\u0002\u0010\u000b\n\u0002\b\u0005\n\u0002\u0010\b\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\b\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0010\u0002\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0011\n\u0002\b\u0006\n\u0002\u0018\u0002\n\u0002\b\u0007\n\u0002\u0010\u0007\n\u0002\b\u0003\b&\u0018\u0000*\b\b\u0000\u0010\u0001*\u00020\u00022\b\u0012\u0004\u0012\u0002H\u00010\u00032\u00020\u0004B-\u0012\u0006\u0010\u0005\u001a\u00028\u0000\u0012\u0006\u0010\u0006\u001a\u00020\u0007\u0012\u0006\u0010\b\u001a\u00020\t\u0012\u0006\u0010\n\u001a\u00020\u000b\u0012\u0006\u0010\f\u001a\u00020\r¢\u0006\u0002\u0010\u000eJ\u0010\u00102\u001a\u0002032\u0006\u00104\u001a\u00020\u0016H\u0016J\u0006\u00105\u001a\u000203J#\u00106\u001a\u0002032\u0006\u00107\u001a\u0002082\f\u00109\u001a\b\u0012\u0004\u0012\u00020\u00160:H\u0016¢\u0006\u0002\u0010;J\b\u0010<\u001a\u00020\u0018H\u0016J\u0006\u0010=\u001a\u000203J\u0006\u0010>\u001a\u000203J\u000e\u0010?\u001a\u0002032\u0006\u0010@\u001a\u00020AJ\b\u0010B\u001a\u000203H\u0016J\b\u0010C\u001a\u000203H\u0014J\b\u0010D\u001a\u000203H\u0014J\u0006\u0010E\u001a\u000203J\b\u0010F\u001a\u00020\u0018H\u0016J\u0010\u0010G\u001a\u0002032\u0006\u0010H\u001a\u00020IH\u0016J\u0010\u0010G\u001a\u0002032\u0006\u0010J\u001a\u00020\u0016H\u0016J\u0006\u0010K\u001a\u000203R\u0010\u0010\u000f\u001a\u0004\u0018\u00010\u0010X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0011\u001a\u00020\u0012X\u0004¢\u0006\u0002\n\u0000R\u0014\u0010\n\u001a\u00020\u000bX\u0004¢\u0006\b\n\u0000\u001a\u0004\b\u0013\u0010\u0014R\u000e\u0010\f\u001a\u00020\rX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0015\u001a\u00020\u0016X\u0004¢\u0006\u0002\n\u0000R\u001a\u0010\u0017\u001a\u00020\u0018X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0019\u0010\u001a\"\u0004\b\u001b\u0010\u001cR\u0014\u0010\u001d\u001a\u00020\u001eXD¢\u0006\b\n\u0000\u001a\u0004\b\u001f\u0010 R\u0014\u0010!\u001a\u00020\u001eXD¢\u0006\b\n\u0000\u001a\u0004\b\"\u0010 R\u000e\u0010#\u001a\u00020$X\u0004¢\u0006\u0002\n\u0000R\u0014\u0010\b\u001a\u00020\tX\u0004¢\u0006\b\n\u0000\u001a\u0004\b%\u0010&R\u0014\u0010\u0006\u001a\u00020\u0007X\u0004¢\u0006\b\n\u0000\u001a\u0004\b'\u0010(R\u0012\u0010)\u001a\u00020\u0016X¤\u0004¢\u0006\u0006\u001a\u0004\b*\u0010+R\u0014\u0010,\u001a\u00020-X\u0004¢\u0006\b\n\u0000\u001a\u0004\b.\u0010/R\u0014\u0010\u0005\u001a\u00028\u00008BX\u0004¢\u0006\u0006\u001a\u0004\b0\u00101¨\u0006L"}, mo65043d2 = {"Lcom/android/systemui/biometrics/UdfpsAnimationViewController;", "T", "Lcom/android/systemui/biometrics/UdfpsAnimationView;", "Lcom/android/systemui/util/ViewController;", "Lcom/android/systemui/Dumpable;", "view", "statusBarStateController", "Lcom/android/systemui/plugins/statusbar/StatusBarStateController;", "panelExpansionStateManager", "Lcom/android/systemui/statusbar/phone/panelstate/PanelExpansionStateManager;", "dialogManager", "Lcom/android/systemui/statusbar/phone/SystemUIDialogManager;", "dumpManager", "Lcom/android/systemui/dump/DumpManager;", "(Lcom/android/systemui/biometrics/UdfpsAnimationView;Lcom/android/systemui/plugins/statusbar/StatusBarStateController;Lcom/android/systemui/statusbar/phone/panelstate/PanelExpansionStateManager;Lcom/android/systemui/statusbar/phone/SystemUIDialogManager;Lcom/android/systemui/dump/DumpManager;)V", "dialogAlphaAnimator", "Landroid/animation/ValueAnimator;", "dialogListener", "Lcom/android/systemui/statusbar/phone/SystemUIDialogManager$Listener;", "getDialogManager", "()Lcom/android/systemui/statusbar/phone/SystemUIDialogManager;", "dumpTag", "", "notificationShadeVisible", "", "getNotificationShadeVisible", "()Z", "setNotificationShadeVisible", "(Z)V", "paddingX", "", "getPaddingX", "()I", "paddingY", "getPaddingY", "panelExpansionListener", "Lcom/android/systemui/statusbar/phone/panelstate/PanelExpansionListener;", "getPanelExpansionStateManager", "()Lcom/android/systemui/statusbar/phone/panelstate/PanelExpansionStateManager;", "getStatusBarStateController", "()Lcom/android/systemui/plugins/statusbar/StatusBarStateController;", "tag", "getTag", "()Ljava/lang/String;", "touchTranslation", "Landroid/graphics/PointF;", "getTouchTranslation", "()Landroid/graphics/PointF;", "getView", "()Lcom/android/systemui/biometrics/UdfpsAnimationView;", "doAnnounceForAccessibility", "", "str", "dozeTimeTick", "dump", "pw", "Ljava/io/PrintWriter;", "args", "", "(Ljava/io/PrintWriter;[Ljava/lang/String;)V", "listenForTouchesOutsideView", "onIlluminationStarting", "onIlluminationStopped", "onSensorRectUpdated", "sensorRect", "Landroid/graphics/RectF;", "onTouchOutsideView", "onViewAttached", "onViewDetached", "runDialogAlphaAnimator", "shouldPauseAuth", "updateAlpha", "alpha", "", "reason", "updatePauseAuth", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* compiled from: UdfpsAnimationViewController.kt */
 public abstract class UdfpsAnimationViewController<T extends UdfpsAnimationView> extends ViewController<T> implements Dumpable {
     private ValueAnimator dialogAlphaAnimator;
@@ -89,18 +92,23 @@ public abstract class UdfpsAnimationViewController<T extends UdfpsAnimationView>
 
     /* access modifiers changed from: private */
     /* renamed from: dialogListener$lambda-0  reason: not valid java name */
-    public static final void m2579dialogListener$lambda0(UdfpsAnimationViewController udfpsAnimationViewController, boolean z) {
+    public static final void m2585dialogListener$lambda0(UdfpsAnimationViewController udfpsAnimationViewController, boolean z) {
         Intrinsics.checkNotNullParameter(udfpsAnimationViewController, "this$0");
         udfpsAnimationViewController.runDialogAlphaAnimator();
     }
 
     /* access modifiers changed from: private */
     /* renamed from: panelExpansionListener$lambda-1  reason: not valid java name */
-    public static final void m2580panelExpansionListener$lambda1(UdfpsAnimationViewController udfpsAnimationViewController, UdfpsAnimationView udfpsAnimationView, PanelExpansionChangeEvent panelExpansionChangeEvent) {
+    public static final void m2586panelExpansionListener$lambda1(UdfpsAnimationViewController udfpsAnimationViewController, UdfpsAnimationView udfpsAnimationView, PanelExpansionChangeEvent panelExpansionChangeEvent) {
         Intrinsics.checkNotNullParameter(udfpsAnimationViewController, "this$0");
         Intrinsics.checkNotNullParameter(udfpsAnimationView, "$view");
         Intrinsics.checkNotNullParameter(panelExpansionChangeEvent, NotificationCompat.CATEGORY_EVENT);
-        udfpsAnimationViewController.notificationShadeVisible = panelExpansionChangeEvent.getExpanded() && panelExpansionChangeEvent.getFraction() > 0.0f;
+        boolean z = udfpsAnimationViewController.notificationShadeVisible;
+        boolean z2 = panelExpansionChangeEvent.getExpanded() && panelExpansionChangeEvent.getFraction() > 0.0f;
+        udfpsAnimationViewController.notificationShadeVisible = z2;
+        if (z != z2) {
+            NTLogUtil.m1686d("UdfpsAnimationViewController", "notificationShadeVisible Changed: " + udfpsAnimationViewController.notificationShadeVisible + " event " + panelExpansionChangeEvent);
+        }
         udfpsAnimationView.onExpansionChanged(panelExpansionChangeEvent.getFraction());
         udfpsAnimationViewController.updatePauseAuth();
     }
@@ -125,8 +133,9 @@ public abstract class UdfpsAnimationViewController<T extends UdfpsAnimationView>
         return this.paddingY;
     }
 
-    public void updateAlpha() {
-        getView().updateAlpha();
+    public void updateAlpha(String str) {
+        Intrinsics.checkNotNullParameter(str, "reason");
+        getView().updateAlpha(str);
     }
 
     public final void runDialogAlphaAnimator() {
@@ -148,13 +157,13 @@ public abstract class UdfpsAnimationViewController<T extends UdfpsAnimationView>
 
     /* access modifiers changed from: private */
     /* renamed from: runDialogAlphaAnimator$lambda-3$lambda-2  reason: not valid java name */
-    public static final void m2581runDialogAlphaAnimator$lambda3$lambda2(UdfpsAnimationViewController udfpsAnimationViewController, ValueAnimator valueAnimator) {
+    public static final void m2587runDialogAlphaAnimator$lambda3$lambda2(UdfpsAnimationViewController udfpsAnimationViewController, ValueAnimator valueAnimator) {
         Intrinsics.checkNotNullParameter(udfpsAnimationViewController, "this$0");
         UdfpsAnimationView view = udfpsAnimationViewController.getView();
         Object animatedValue = valueAnimator.getAnimatedValue();
         if (animatedValue != null) {
             view.setDialogSuggestedAlpha(((Float) animatedValue).floatValue());
-            udfpsAnimationViewController.updateAlpha();
+            udfpsAnimationViewController.updateAlpha("setDialogSuggestedAlpha " + valueAnimator.getAnimatedValue());
             udfpsAnimationViewController.updatePauseAuth();
             return;
         }
@@ -185,7 +194,7 @@ public abstract class UdfpsAnimationViewController<T extends UdfpsAnimationView>
     }
 
     public boolean shouldPauseAuth() {
-        return this.notificationShadeVisible || this.dialogManager.shouldHideAffordance();
+        return this.notificationShadeVisible || this.dialogManager.shouldHideAffordance() || ((AssistManagerEx) NTDependencyEx.get(AssistManagerEx.class)).isVoiceSessionWindowVisible();
     }
 
     public final void updatePauseAuth() {

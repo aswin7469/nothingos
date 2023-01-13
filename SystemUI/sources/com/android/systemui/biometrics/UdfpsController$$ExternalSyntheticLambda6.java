@@ -13,6 +13,6 @@ public final /* synthetic */ class UdfpsController$$ExternalSyntheticLambda6 imp
     }
 
     public final void run() {
-        this.f$0.m2583lambda$onTouch$0$comandroidsystemuibiometricsUdfpsController(this.f$1);
+        this.f$0.m2589lambda$onTouch$0$comandroidsystemuibiometricsUdfpsController(this.f$1);
     }
 }

@@ -11,10 +11,10 @@ public class TreeSet<E> extends AbstractSet<E> implements NavigableSet<E>, Clone
     private static final long serialVersionUID = -2479143000061671589L;
 
     /* renamed from: m */
-    private transient NavigableMap<E, Object> f715m;
+    private transient NavigableMap<E, Object> f713m;
 
     TreeSet(NavigableMap<E, Object> navigableMap) {
-        this.f715m = navigableMap;
+        this.f713m = navigableMap;
     }
 
     public TreeSet() {
@@ -36,39 +36,39 @@ public class TreeSet<E> extends AbstractSet<E> implements NavigableSet<E>, Clone
     }
 
     public Iterator<E> iterator() {
-        return this.f715m.navigableKeySet().iterator();
+        return this.f713m.navigableKeySet().iterator();
     }
 
     public Iterator<E> descendingIterator() {
-        return this.f715m.descendingKeySet().iterator();
+        return this.f713m.descendingKeySet().iterator();
     }
 
     public NavigableSet<E> descendingSet() {
-        return new TreeSet(this.f715m.descendingMap());
+        return new TreeSet(this.f713m.descendingMap());
     }
 
     public int size() {
-        return this.f715m.size();
+        return this.f713m.size();
     }
 
     public boolean isEmpty() {
-        return this.f715m.isEmpty();
+        return this.f713m.isEmpty();
     }
 
     public boolean contains(Object obj) {
-        return this.f715m.containsKey(obj);
+        return this.f713m.containsKey(obj);
     }
 
     public boolean add(E e) {
-        return this.f715m.put(e, PRESENT) == null;
+        return this.f713m.put(e, PRESENT) == null;
     }
 
     public boolean remove(Object obj) {
-        return this.f715m.remove(obj) == PRESENT;
+        return this.f713m.remove(obj) == PRESENT;
     }
 
     public void clear() {
-        this.f715m.clear();
+        this.f713m.clear();
     }
 
     /* JADX WARNING: Code restructure failed: missing block: B:8:0x0018, code lost:
@@ -79,14 +79,14 @@ public class TreeSet<E> extends AbstractSet<E> implements NavigableSet<E>, Clone
     public boolean addAll(java.util.Collection<? extends E> r5) {
         /*
             r4 = this;
-            java.util.NavigableMap<E, java.lang.Object> r0 = r4.f715m
+            java.util.NavigableMap<E, java.lang.Object> r0 = r4.f713m
             int r0 = r0.size()
             if (r0 != 0) goto L_0x0036
             int r0 = r5.size()
             if (r0 <= 0) goto L_0x0036
             boolean r0 = r5 instanceof java.util.SortedSet
             if (r0 == 0) goto L_0x0036
-            java.util.NavigableMap<E, java.lang.Object> r0 = r4.f715m
+            java.util.NavigableMap<E, java.lang.Object> r0 = r4.f713m
             boolean r1 = r0 instanceof java.util.TreeMap
             if (r1 == 0) goto L_0x0036
             r1 = r5
@@ -111,15 +111,15 @@ public class TreeSet<E> extends AbstractSet<E> implements NavigableSet<E>, Clone
     }
 
     public NavigableSet<E> subSet(E e, boolean z, E e2, boolean z2) {
-        return new TreeSet(this.f715m.subMap(e, z, e2, z2));
+        return new TreeSet(this.f713m.subMap(e, z, e2, z2));
     }
 
     public NavigableSet<E> headSet(E e, boolean z) {
-        return new TreeSet(this.f715m.headMap(e, z));
+        return new TreeSet(this.f713m.headMap(e, z));
     }
 
     public NavigableSet<E> tailSet(E e, boolean z) {
-        return new TreeSet(this.f715m.tailMap(e, z));
+        return new TreeSet(this.f713m.tailMap(e, z));
     }
 
     public SortedSet<E> subSet(E e, E e2) {
@@ -135,35 +135,35 @@ public class TreeSet<E> extends AbstractSet<E> implements NavigableSet<E>, Clone
     }
 
     public Comparator<? super E> comparator() {
-        return this.f715m.comparator();
+        return this.f713m.comparator();
     }
 
     public E first() {
-        return this.f715m.firstKey();
+        return this.f713m.firstKey();
     }
 
     public E last() {
-        return this.f715m.lastKey();
+        return this.f713m.lastKey();
     }
 
     public E lower(E e) {
-        return this.f715m.lowerKey(e);
+        return this.f713m.lowerKey(e);
     }
 
     public E floor(E e) {
-        return this.f715m.floorKey(e);
+        return this.f713m.floorKey(e);
     }
 
     public E ceiling(E e) {
-        return this.f715m.ceilingKey(e);
+        return this.f713m.ceilingKey(e);
     }
 
     public E higher(E e) {
-        return this.f715m.higherKey(e);
+        return this.f713m.higherKey(e);
     }
 
     public E pollFirst() {
-        Map.Entry<E, Object> pollFirstEntry = this.f715m.pollFirstEntry();
+        Map.Entry<E, Object> pollFirstEntry = this.f713m.pollFirstEntry();
         if (pollFirstEntry == null) {
             return null;
         }
@@ -171,7 +171,7 @@ public class TreeSet<E> extends AbstractSet<E> implements NavigableSet<E>, Clone
     }
 
     public E pollLast() {
-        Map.Entry<E, Object> pollLastEntry = this.f715m.pollLastEntry();
+        Map.Entry<E, Object> pollLastEntry = this.f713m.pollLastEntry();
         if (pollLastEntry == null) {
             return null;
         }
@@ -181,7 +181,7 @@ public class TreeSet<E> extends AbstractSet<E> implements NavigableSet<E>, Clone
     public Object clone() {
         try {
             TreeSet treeSet = (TreeSet) super.clone();
-            treeSet.f715m = new TreeMap(this.f715m);
+            treeSet.f713m = new TreeMap(this.f713m);
             return treeSet;
         } catch (CloneNotSupportedException e) {
             throw new InternalError((Throwable) e);
@@ -190,9 +190,9 @@ public class TreeSet<E> extends AbstractSet<E> implements NavigableSet<E>, Clone
 
     private void writeObject(ObjectOutputStream objectOutputStream) throws IOException {
         objectOutputStream.defaultWriteObject();
-        objectOutputStream.writeObject(this.f715m.comparator());
-        objectOutputStream.writeInt(this.f715m.size());
-        for (E writeObject : this.f715m.keySet()) {
+        objectOutputStream.writeObject(this.f713m.comparator());
+        objectOutputStream.writeInt(this.f713m.size());
+        for (E writeObject : this.f713m.keySet()) {
             objectOutputStream.writeObject(writeObject);
         }
     }
@@ -200,11 +200,11 @@ public class TreeSet<E> extends AbstractSet<E> implements NavigableSet<E>, Clone
     private void readObject(ObjectInputStream objectInputStream) throws IOException, ClassNotFoundException {
         objectInputStream.defaultReadObject();
         TreeMap treeMap = new TreeMap((Comparator) objectInputStream.readObject());
-        this.f715m = treeMap;
+        this.f713m = treeMap;
         treeMap.readTreeSet(objectInputStream.readInt(), objectInputStream, PRESENT);
     }
 
     public Spliterator<E> spliterator() {
-        return TreeMap.keySpliteratorFor(this.f715m);
+        return TreeMap.keySpliteratorFor(this.f713m);
     }
 }

@@ -11,6 +11,6 @@ public final /* synthetic */ class ChannelRow$$ExternalSyntheticLambda0 implemen
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        ChannelRow.m3144playHighlight$lambda3(this.f$0, valueAnimator);
+        ChannelRow.m3148playHighlight$lambda3(this.f$0, valueAnimator);
     }
 }

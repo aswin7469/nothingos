@@ -32,7 +32,7 @@ public final class C1693R {
     /* renamed from: com.android.launcher3.icons.R$dimen */
     public static final class dimen {
         public static final int default_icon_bitmap_size = 2131165599;
-        public static final int profile_badge_size = 2131166839;
+        public static final int profile_badge_size = 2131166845;
 
         private dimen() {
         }

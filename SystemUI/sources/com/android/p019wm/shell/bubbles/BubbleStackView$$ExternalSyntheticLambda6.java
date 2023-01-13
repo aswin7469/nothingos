@@ -12,6 +12,6 @@ public final /* synthetic */ class BubbleStackView$$ExternalSyntheticLambda6 imp
     }
 
     public final void run() {
-        this.f$0.mo48681xb6dfc042(this.f$1);
+        this.f$0.mo48690xb6dfc042(this.f$1);
     }
 }

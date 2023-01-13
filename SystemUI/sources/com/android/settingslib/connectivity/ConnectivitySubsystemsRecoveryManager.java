@@ -99,7 +99,7 @@ public class ConnectivitySubsystemsRecoveryManager {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setRecoveryAvailableListener$0$com-android-settingslib-connectivity-ConnectivitySubsystemsRecoveryManager */
-    public /* synthetic */ void mo28441x8f9ba31(RecoveryAvailableListener recoveryAvailableListener) {
+    public /* synthetic */ void mo28446x8f9ba31(RecoveryAvailableListener recoveryAvailableListener) {
         this.mRecoveryAvailableListener = recoveryAvailableListener;
         startTrackingRecoveryAvailability();
     }
@@ -110,7 +110,7 @@ public class ConnectivitySubsystemsRecoveryManager {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$clearRecoveryAvailableListener$1$com-android-settingslib-connectivity-ConnectivitySubsystemsRecoveryManager */
-    public /* synthetic */ void mo28440xcb7cf47b() {
+    public /* synthetic */ void mo28445xcb7cf47b() {
         this.mRecoveryAvailableListener = null;
         stopTrackingRecoveryAvailability();
     }
@@ -192,7 +192,7 @@ public class ConnectivitySubsystemsRecoveryManager {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$triggerSubsystemRestart$3$com-android-settingslib-connectivity-ConnectivitySubsystemsRecoveryManager */
-    public /* synthetic */ void mo28443xb18e63b6(RecoveryStatusCallback recoveryStatusCallback) {
+    public /* synthetic */ void mo28448xb18e63b6(RecoveryStatusCallback recoveryStatusCallback) {
         boolean z;
         if (this.mWifiRestartInProgress) {
             Log.e(TAG, "Wifi restart still in progress");
@@ -224,7 +224,7 @@ public class ConnectivitySubsystemsRecoveryManager {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$triggerSubsystemRestart$2$com-android-settingslib-connectivity-ConnectivitySubsystemsRecoveryManager */
-    public /* synthetic */ void mo28442x6f773657() {
+    public /* synthetic */ void mo28447x6f773657() {
         stopTrackingWifiRestart();
         stopTrackingTelephonyRestart();
         this.mWifiRestartInProgress = false;

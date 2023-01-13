@@ -12,8 +12,8 @@ import kotlinx.coroutines.CoroutineScope;
 import kotlinx.coroutines.flow.Flow;
 import kotlinx.coroutines.flow.FlowCollector;
 
-@Metadata(mo64986d1 = {"\u0000\u000e\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\u0010\u0000\u001a\u00020\u0001\"\u0004\b\u0000\u0010\u0002\"\u0004\b\u0001\u0010\u0003*\u00020\u0004H@"}, mo64987d2 = {"<anonymous>", "", "R", "T", "Lkotlinx/coroutines/CoroutineScope;"}, mo64988k = 3, mo64989mv = {1, 5, 1}, mo64991xi = 48)
-@DebugMetadata(mo65240c = "kotlinx.coroutines.flow.internal.CombineKt$combineInternal$2", mo65241f = "Combine.kt", mo65242i = {0, 0, 0, 0}, mo65243l = {57, 79, 82}, mo65244m = "invokeSuspend", mo65245n = {"latestValues", "resultChannel", "lastReceivedEpoch", "remainingAbsentValues"}, mo65246s = {"L$0", "L$1", "L$2", "I$0"})
+@Metadata(mo65042d1 = {"\u0000\u000e\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\u0010\u0000\u001a\u00020\u0001\"\u0004\b\u0000\u0010\u0002\"\u0004\b\u0001\u0010\u0003*\u00020\u0004H@"}, mo65043d2 = {"<anonymous>", "", "R", "T", "Lkotlinx/coroutines/CoroutineScope;"}, mo65044k = 3, mo65045mv = {1, 5, 1}, mo65047xi = 48)
+@DebugMetadata(mo65296c = "kotlinx.coroutines.flow.internal.CombineKt$combineInternal$2", mo65297f = "Combine.kt", mo65298i = {0, 0, 0, 0}, mo65299l = {57, 79, 82}, mo65300m = "invokeSuspend", mo65301n = {"latestValues", "resultChannel", "lastReceivedEpoch", "remainingAbsentValues"}, mo65302s = {"L$0", "L$1", "L$2", "I$0"})
 /* compiled from: Combine.kt */
 final class CombineKt$combineInternal$2 extends SuspendLambda implements Function2<CoroutineScope, Continuation<? super Unit>, Object> {
     final /* synthetic */ Function0<T[]> $arrayFactory;
@@ -115,7 +115,7 @@ final class CombineKt$combineInternal$2 extends SuspendLambda implements Functio
             kotlin.ResultKt.throwOnFailure(r26)
             r10 = r26
             kotlinx.coroutines.channels.ChannelResult r10 = (kotlinx.coroutines.channels.ChannelResult) r10
-            java.lang.Object r10 = r10.m5447unboximpl()
+            java.lang.Object r10 = r10.m5465unboximpl()
             r3 = r8
             r13 = r9
             r24 = r7
@@ -191,11 +191,11 @@ final class CombineKt$combineInternal$2 extends SuspendLambda implements Functio
             r0.I$0 = r6
             r0.I$1 = r7
             r0.label = r5
-            java.lang.Object r10 = r3.m5454receiveCatchingJP2dKIU(r8)
+            java.lang.Object r10 = r3.m5472receiveCatchingJP2dKIU(r8)
             if (r10 != r1) goto L_0x00e1
             return r1
         L_0x00e1:
-            java.lang.Object r8 = kotlinx.coroutines.channels.ChannelResult.m5440getOrNullimpl(r10)
+            java.lang.Object r8 = kotlinx.coroutines.channels.ChannelResult.m5458getOrNullimpl(r10)
             kotlin.collections.IndexedValue r8 = (kotlin.collections.IndexedValue) r8
             if (r8 != 0) goto L_0x00ec
             kotlin.Unit r0 = kotlin.Unit.INSTANCE
@@ -215,8 +215,8 @@ final class CombineKt$combineInternal$2 extends SuspendLambda implements Functio
         L_0x0103:
             byte r8 = (byte) r7
             r2[r9] = r8
-            java.lang.Object r8 = r3.m5455tryReceivePtdJZtk()
-            java.lang.Object r8 = kotlinx.coroutines.channels.ChannelResult.m5440getOrNullimpl(r8)
+            java.lang.Object r8 = r3.m5473tryReceivePtdJZtk()
+            java.lang.Object r8 = kotlinx.coroutines.channels.ChannelResult.m5458getOrNullimpl(r8)
             kotlin.collections.IndexedValue r8 = (kotlin.collections.IndexedValue) r8
             if (r8 != 0) goto L_0x00ec
         L_0x0112:

@@ -12,7 +12,7 @@ import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
 import androidx.appcompat.graphics.drawable.DrawableWrapper;
 import androidx.core.content.ContextCompat;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 
 @Deprecated
 public class ShadowDrawableWrapper extends DrawableWrapper {
@@ -44,9 +44,9 @@ public class ShadowDrawableWrapper extends DrawableWrapper {
 
     public ShadowDrawableWrapper(Context context, Drawable drawable, float f, float f2, float f3) {
         super(drawable);
-        this.shadowStartColor = ContextCompat.getColor(context, C3621R.C3622color.design_fab_shadow_start_color);
-        this.shadowMiddleColor = ContextCompat.getColor(context, C3621R.C3622color.design_fab_shadow_mid_color);
-        this.shadowEndColor = ContextCompat.getColor(context, C3621R.C3622color.design_fab_shadow_end_color);
+        this.shadowStartColor = ContextCompat.getColor(context, C3631R.C3632color.design_fab_shadow_start_color);
+        this.shadowMiddleColor = ContextCompat.getColor(context, C3631R.C3632color.design_fab_shadow_mid_color);
+        this.shadowEndColor = ContextCompat.getColor(context, C3631R.C3632color.design_fab_shadow_end_color);
         Paint paint = new Paint(5);
         this.cornerShadowPaint = paint;
         paint.setStyle(Paint.Style.FILL);

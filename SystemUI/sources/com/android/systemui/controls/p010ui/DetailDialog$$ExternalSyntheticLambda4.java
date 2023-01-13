@@ -12,6 +12,6 @@ public final /* synthetic */ class DetailDialog$$ExternalSyntheticLambda4 implem
     }
 
     public final boolean onDismiss() {
-        return DetailDialog.m2716lambda8$lambda7$lambda6(this.f$0);
+        return DetailDialog.m2721lambda8$lambda7$lambda6(this.f$0);
     }
 }

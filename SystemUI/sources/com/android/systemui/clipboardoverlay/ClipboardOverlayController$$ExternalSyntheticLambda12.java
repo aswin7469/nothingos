@@ -11,6 +11,6 @@ public final /* synthetic */ class ClipboardOverlayController$$ExternalSynthetic
     }
 
     public final boolean onPreDraw() {
-        return this.f$0.mo31300x668837e();
+        return this.f$0.mo31311x668837e();
     }
 }

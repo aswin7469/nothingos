@@ -11,6 +11,6 @@ public final /* synthetic */ class UdfpsAnimationViewController$$ExternalSynthet
     }
 
     public final void shouldHideAffordances(boolean z) {
-        UdfpsAnimationViewController.m2579dialogListener$lambda0(this.f$0, z);
+        UdfpsAnimationViewController.m2585dialogListener$lambda0(this.f$0, z);
     }
 }

@@ -69,6 +69,7 @@ public abstract class AbstractEnableAdbPreferenceController extends DeveloperOpt
         }
     }
 
+    /* JADX WARNING: type inference failed for: r0v3, types: [com.android.settingslib.RestrictedSwitchPreference, androidx.preference.Preference] */
     public void resetPreference() {
         if (this.mPreference.isChecked()) {
             this.mPreference.setChecked(false);

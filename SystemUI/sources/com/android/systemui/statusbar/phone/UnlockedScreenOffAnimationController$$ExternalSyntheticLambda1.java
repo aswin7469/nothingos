@@ -9,6 +9,6 @@ public final /* synthetic */ class UnlockedScreenOffAnimationController$$Externa
     }
 
     public final void run() {
-        UnlockedScreenOffAnimationController.m3196startAnimation$lambda3(this.f$0);
+        UnlockedScreenOffAnimationController.m3201startAnimation$lambda3(this.f$0);
     }
 }

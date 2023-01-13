@@ -14,6 +14,6 @@ public final /* synthetic */ class NotifCollection$$ExternalSyntheticLambda7 imp
     }
 
     public final void onInternalNotificationUpdate(StatusBarNotification statusBarNotification, String str) {
-        this.f$0.mo39958x181d259(this.f$1, statusBarNotification, str);
+        this.f$0.mo39960x181d259(this.f$1, statusBarNotification, str);
     }
 }

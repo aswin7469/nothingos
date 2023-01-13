@@ -118,7 +118,7 @@ public class ActivityManagerWrapper {
     }
 
     public boolean startRecentsActivity(Intent intent, long j, final RecentsAnimationListener recentsAnimationListener) {
-        C25062 r0;
+        C25122 r0;
         if (recentsAnimationListener != null) {
             try {
                 r0 = new IRecentsAnimationRunner.Stub() {
@@ -168,7 +168,7 @@ public class ActivityManagerWrapper {
     }
 
     public boolean startActivityFromRecents(Task.TaskKey taskKey, ActivityOptions activityOptions) {
-        return startActivityFromRecents(taskKey.f344id, activityOptions);
+        return startActivityFromRecents(taskKey.f343id, activityOptions);
     }
 
     public boolean startActivityFromRecents(int i, ActivityOptions activityOptions) {

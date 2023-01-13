@@ -63,7 +63,7 @@ class ImmutableCollections {
 
     static <E> List<E> listCopy(Collection<? extends E> collection) {
         if (!(collection instanceof AbstractImmutableList) || collection.getClass() == SubList.class) {
-            return List.m1733of((E[]) collection.toArray());
+            return List.m1739of((E[]) collection.toArray());
         }
         return (List) collection;
     }
@@ -331,33 +331,33 @@ class ImmutableCollections {
         @Stable
 
         /* renamed from: e0 */
-        private final E f692e0;
+        private final E f690e0;
         @Stable
 
         /* renamed from: e1 */
-        private final E f693e1;
+        private final E f691e1;
 
         List12(E e) {
-            this.f692e0 = Objects.requireNonNull(e);
-            this.f693e1 = null;
+            this.f690e0 = Objects.requireNonNull(e);
+            this.f691e1 = null;
         }
 
         List12(E e, E e2) {
-            this.f692e0 = Objects.requireNonNull(e);
-            this.f693e1 = Objects.requireNonNull(e2);
+            this.f690e0 = Objects.requireNonNull(e);
+            this.f691e1 = Objects.requireNonNull(e2);
         }
 
         public int size() {
-            return this.f693e1 != null ? 2 : 1;
+            return this.f691e1 != null ? 2 : 1;
         }
 
         public E get(int i) {
             E e;
             Objects.checkIndex(i, 2);
             if (i == 0) {
-                return this.f692e0;
+                return this.f690e0;
             }
-            if (i == 1 && (e = this.f693e1) != null) {
+            if (i == 1 && (e = this.f691e1) != null) {
                 return e;
             }
             throw outOfBounds(i);
@@ -368,11 +368,11 @@ class ImmutableCollections {
         }
 
         private Object writeReplace() {
-            E e = this.f693e1;
+            E e = this.f691e1;
             if (e == null) {
-                return new CollSer(1, this.f692e0);
+                return new CollSer(1, this.f690e0);
             }
-            return new CollSer(1, this.f692e0, e);
+            return new CollSer(1, this.f690e0, e);
         }
     }
 
@@ -494,22 +494,22 @@ class ImmutableCollections {
         @Stable
 
         /* renamed from: e0 */
-        private final E f696e0;
+        private final E f694e0;
 
         public int size() {
             return 1;
         }
 
         Set1(E e) {
-            this.f696e0 = Objects.requireNonNull(e);
+            this.f694e0 = Objects.requireNonNull(e);
         }
 
         public boolean contains(Object obj) {
-            return obj.equals(this.f696e0);
+            return obj.equals(this.f694e0);
         }
 
         public Iterator<E> iterator() {
-            return Collections.singletonIterator(this.f696e0);
+            return Collections.singletonIterator(this.f694e0);
         }
 
         private void readObject(ObjectInputStream objectInputStream) throws IOException, ClassNotFoundException {
@@ -517,11 +517,11 @@ class ImmutableCollections {
         }
 
         private Object writeReplace() {
-            return new CollSer(2, this.f696e0);
+            return new CollSer(2, this.f694e0);
         }
 
         public int hashCode() {
-            return this.f696e0.hashCode();
+            return this.f694e0.hashCode();
         }
     }
 
@@ -529,11 +529,11 @@ class ImmutableCollections {
         @Stable
 
         /* renamed from: e0 */
-        final E f697e0;
+        final E f695e0;
         @Stable
 
         /* renamed from: e1 */
-        final E f698e1;
+        final E f696e1;
 
         public int size() {
             return 2;
@@ -543,20 +543,20 @@ class ImmutableCollections {
             if (e.equals(Objects.requireNonNull(e2))) {
                 throw new IllegalArgumentException("duplicate element: " + e);
             } else if (ImmutableCollections.SALT >= 0) {
-                this.f697e0 = e;
-                this.f698e1 = e2;
+                this.f695e0 = e;
+                this.f696e1 = e2;
             } else {
-                this.f697e0 = e2;
-                this.f698e1 = e;
+                this.f695e0 = e2;
+                this.f696e1 = e;
             }
         }
 
         public boolean contains(Object obj) {
-            return obj.equals(this.f697e0) || obj.equals(this.f698e1);
+            return obj.equals(this.f695e0) || obj.equals(this.f696e1);
         }
 
         public int hashCode() {
-            return this.f697e0.hashCode() + this.f698e1.hashCode();
+            return this.f695e0.hashCode() + this.f696e1.hashCode();
         }
 
         public Iterator<E> iterator() {
@@ -571,10 +571,10 @@ class ImmutableCollections {
                     int i = this.idx;
                     if (i == 0) {
                         this.idx = 1;
-                        return Set2.this.f697e0;
+                        return Set2.this.f695e0;
                     } else if (i == 1) {
                         this.idx = 2;
-                        return Set2.this.f698e1;
+                        return Set2.this.f696e1;
                     } else {
                         throw new NoSuchElementException();
                     }
@@ -587,7 +587,7 @@ class ImmutableCollections {
         }
 
         private Object writeReplace() {
-            return new CollSer(2, this.f697e0, this.f698e1);
+            return new CollSer(2, this.f695e0, this.f696e1);
         }
     }
 
@@ -773,7 +773,7 @@ class ImmutableCollections {
         }
 
         public Set<Map.Entry<K, V>> entrySet() {
-            return Set.m1750of();
+            return Set.m1756of();
         }
 
         public boolean containsKey(Object obj) {
@@ -799,34 +799,34 @@ class ImmutableCollections {
         @Stable
 
         /* renamed from: k0 */
-        private final K f694k0;
+        private final K f692k0;
         @Stable
 
         /* renamed from: v0 */
-        private final V f695v0;
+        private final V f693v0;
 
         Map1(K k, V v) {
-            this.f694k0 = Objects.requireNonNull(k);
-            this.f695v0 = Objects.requireNonNull(v);
+            this.f692k0 = Objects.requireNonNull(k);
+            this.f693v0 = Objects.requireNonNull(v);
         }
 
         public Set<Map.Entry<K, V>> entrySet() {
-            return Set.m1751of(new KeyValueHolder(this.f694k0, this.f695v0));
+            return Set.m1757of(new KeyValueHolder(this.f692k0, this.f693v0));
         }
 
         public V get(Object obj) {
-            if (obj.equals(this.f694k0)) {
-                return this.f695v0;
+            if (obj.equals(this.f692k0)) {
+                return this.f693v0;
             }
             return null;
         }
 
         public boolean containsKey(Object obj) {
-            return obj.equals(this.f694k0);
+            return obj.equals(this.f692k0);
         }
 
         public boolean containsValue(Object obj) {
-            return obj.equals(this.f695v0);
+            return obj.equals(this.f693v0);
         }
 
         private void readObject(ObjectInputStream objectInputStream) throws IOException, ClassNotFoundException {
@@ -834,11 +834,11 @@ class ImmutableCollections {
         }
 
         private Object writeReplace() {
-            return new CollSer(3, this.f694k0, this.f695v0);
+            return new CollSer(3, this.f692k0, this.f693v0);
         }
 
         public int hashCode() {
-            return this.f695v0.hashCode() ^ this.f694k0.hashCode();
+            return this.f693v0.hashCode() ^ this.f692k0.hashCode();
         }
     }
 

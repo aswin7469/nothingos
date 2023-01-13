@@ -16,7 +16,7 @@ import com.android.internal.statusbar.IStatusBarService;
 import com.android.internal.widget.MessagingGroup;
 import com.android.internal.widget.MessagingMessage;
 import com.android.keyguard.KeyguardUpdateMonitor;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dependency;
 import com.android.systemui.ForegroundServiceNotificationListener;
 import com.android.systemui.InitController;
@@ -151,7 +151,7 @@ class StatusBarNotificationPresenter implements NotificationPresenter, Configura
     StatusBarNotificationPresenter(Context context, NotificationPanelViewController notificationPanelViewController, HeadsUpManagerPhone headsUpManagerPhone, NotificationShadeWindowView notificationShadeWindowView, ActivityStarter activityStarter, NotificationStackScrollLayoutController notificationStackScrollLayoutController, DozeScrimController dozeScrimController, ScrimController scrimController, NotificationShadeWindowController notificationShadeWindowController, DynamicPrivacyController dynamicPrivacyController, KeyguardStateController keyguardStateController, KeyguardIndicationController keyguardIndicationController, CentralSurfaces centralSurfaces, ShadeController shadeController, LockscreenShadeTransitionController lockscreenShadeTransitionController, CommandQueue commandQueue, NotificationViewHierarchyManager notificationViewHierarchyManager, NotificationLockscreenUserManager notificationLockscreenUserManager, SysuiStatusBarStateController sysuiStatusBarStateController, NotifShadeEventSource notifShadeEventSource, NotificationEntryManager notificationEntryManager, NotificationMediaManager notificationMediaManager, NotificationGutsManager notificationGutsManager, KeyguardUpdateMonitor keyguardUpdateMonitor, LockscreenGestureLogger lockscreenGestureLogger, InitController initController, NotificationInterruptStateProvider notificationInterruptStateProvider, NotificationRemoteInputManager notificationRemoteInputManager, ConfigurationController configurationController, NotifPipelineFlags notifPipelineFlags, NotificationRemoteInputManager.Callback callback, NotificationListContainer notificationListContainer) {
         Context context2 = context;
         NotificationRemoteInputManager notificationRemoteInputManager2 = notificationRemoteInputManager;
-        C31031 r3 = new IVrStateCallbacks.Stub() {
+        C31131 r3 = new IVrStateCallbacks.Stub() {
             public void onVrStateChanged(boolean z) {
                 StatusBarNotificationPresenter.this.mVrMode = z;
             }
@@ -181,7 +181,7 @@ class StatusBarNotificationPresenter implements NotificationPresenter, Configura
         this.mNotificationShadeWindowController = notificationShadeWindowController;
         this.mNotifPipelineFlags = notifPipelineFlags;
         NotificationShadeWindowView notificationShadeWindowView2 = notificationShadeWindowView;
-        aboveShelfObserver.setListener((AboveShelfObserver.HasViewAboveShelfChangedListener) notificationShadeWindowView.findViewById(C1893R.C1897id.notification_container_parent));
+        aboveShelfObserver.setListener((AboveShelfObserver.HasViewAboveShelfChangedListener) notificationShadeWindowView.findViewById(C1894R.C1898id.notification_container_parent));
         this.mAccessibilityManager = (AccessibilityManager) context.getSystemService(AccessibilityManager.class);
         this.mDozeScrimController = dozeScrimController;
         this.mScrimController = scrimController;
@@ -204,7 +204,7 @@ class StatusBarNotificationPresenter implements NotificationPresenter, Configura
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-statusbar-phone-StatusBarNotificationPresenter */
-    public /* synthetic */ void mo45328xd80122d2(NotificationStackScrollLayoutController notificationStackScrollLayoutController, NotificationRemoteInputManager notificationRemoteInputManager, NotificationInterruptStateProvider notificationInterruptStateProvider) {
+    public /* synthetic */ void mo45340xd80122d2(NotificationStackScrollLayoutController notificationStackScrollLayoutController, NotificationRemoteInputManager notificationRemoteInputManager, NotificationInterruptStateProvider notificationInterruptStateProvider) {
         this.mKeyguardIndicationController.init();
         this.mViewHierarchyManager.setUpWithPresenter(this, notificationStackScrollLayoutController.getNotifStackController(), this.mNotifListContainer);
         this.mNotifShadeEventSource.setShadeEmptiedCallback(new StatusBarNotificationPresenter$$ExternalSyntheticLambda0(this));
@@ -293,7 +293,7 @@ class StatusBarNotificationPresenter implements NotificationPresenter, Configura
     }
 
     /* renamed from: updateNotificationViews */
-    public void mo45329x4e722c2d(String str) {
+    public void mo45341x4e722c2d(String str) {
         if (!this.mNotifPipelineFlags.checkLegacyPipelineEnabled() || this.mScrimController == null) {
             return;
         }
@@ -317,7 +317,7 @@ class StatusBarNotificationPresenter implements NotificationPresenter, Configura
                 updateNotificationsOnUiModeChanged();
                 this.mDispatchUiModeChangeOnUserSwitched = false;
             }
-            mo45329x4e722c2d("user switched");
+            mo45341x4e722c2d("user switched");
         }
         this.mMediaManager.clearCurrentMediaNotification();
         this.mCentralSurfaces.setLockscreenUser(i);

@@ -11,6 +11,6 @@ public final /* synthetic */ class SystemUIApplication$$ExternalSyntheticLambda2
     }
 
     public final void run() {
-        this.f$0.mo29857x90e599cf(this.f$1);
+        this.f$0.mo29867x90e599cf(this.f$1);
     }
 }

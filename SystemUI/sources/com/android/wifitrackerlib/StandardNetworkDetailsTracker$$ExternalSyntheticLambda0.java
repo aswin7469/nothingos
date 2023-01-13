@@ -12,6 +12,6 @@ public final /* synthetic */ class StandardNetworkDetailsTracker$$ExternalSynthe
     }
 
     public final boolean test(Object obj) {
-        return this.f$0.mo47846x8334db20((ScanResult) obj);
+        return this.f$0.mo47855x8334db20((ScanResult) obj);
     }
 }

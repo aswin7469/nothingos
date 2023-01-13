@@ -13,7 +13,7 @@ class MembershipKeyImpl extends MembershipKey {
     private HashSet<InetAddress> blockedSet;
 
     /* renamed from: ch */
-    private final MulticastChannel f887ch;
+    private final MulticastChannel f885ch;
     private final InetAddress group;
     private final NetworkInterface interf;
     private volatile boolean invalid;
@@ -22,7 +22,7 @@ class MembershipKeyImpl extends MembershipKey {
 
     private MembershipKeyImpl(MulticastChannel multicastChannel, InetAddress inetAddress, NetworkInterface networkInterface, InetAddress inetAddress2) {
         this.stateLock = new Object();
-        this.f887ch = multicastChannel;
+        this.f885ch = multicastChannel;
         this.group = inetAddress;
         this.interf = networkInterface;
         this.source = inetAddress2;
@@ -96,11 +96,11 @@ class MembershipKeyImpl extends MembershipKey {
     }
 
     public void drop() {
-        ((DatagramChannelImpl) this.f887ch).drop(this);
+        ((DatagramChannelImpl) this.f885ch).drop(this);
     }
 
     public MulticastChannel channel() {
-        return this.f887ch;
+        return this.f885ch;
     }
 
     public InetAddress group() {
@@ -122,7 +122,7 @@ class MembershipKeyImpl extends MembershipKey {
                 if (hashSet != null && hashSet.contains(inetAddress)) {
                     return this;
                 }
-                ((DatagramChannelImpl) this.f887ch).block(this, inetAddress);
+                ((DatagramChannelImpl) this.f885ch).block(this, inetAddress);
                 if (this.blockedSet == null) {
                     this.blockedSet = new HashSet<>();
                 }
@@ -139,7 +139,7 @@ class MembershipKeyImpl extends MembershipKey {
             if (hashSet == null || !hashSet.contains(inetAddress)) {
                 throw new IllegalStateException("not blocked");
             }
-            ((DatagramChannelImpl) this.f887ch).unblock(this, inetAddress);
+            ((DatagramChannelImpl) this.f885ch).unblock(this, inetAddress);
             this.blockedSet.remove(inetAddress);
         }
         return this;

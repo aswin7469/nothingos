@@ -98,7 +98,7 @@ public class IconProvider {
     /* JADX WARNING: Removed duplicated region for block: B:8:0x001c  */
     /* renamed from: loadActivityInfoIcon */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    public android.graphics.drawable.Drawable m2317lambda$getIcon$1$comandroidlauncher3iconsIconProvider(android.content.pm.ActivityInfo r4, int r5) {
+    public android.graphics.drawable.Drawable m2323lambda$getIcon$1$comandroidlauncher3iconsIconProvider(android.content.pm.ActivityInfo r4, int r5) {
         /*
             r3 = this;
             int r0 = r4.getIconResource()
@@ -120,7 +120,7 @@ public class IconProvider {
         L_0x0026:
             return r5
         */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.launcher3.icons.IconProvider.m2317lambda$getIcon$1$comandroidlauncher3iconsIconProvider(android.content.pm.ActivityInfo, int):android.graphics.drawable.Drawable");
+        throw new UnsupportedOperationException("Method not decompiled: com.android.launcher3.icons.IconProvider.m2323lambda$getIcon$1$comandroidlauncher3iconsIconProvider(android.content.pm.ActivityInfo, int):android.graphics.drawable.Drawable");
     }
 
     private Drawable loadCalendarDrawable(int i, ThemeData themeData) {

@@ -11,6 +11,6 @@ public final /* synthetic */ class DozeSensors$$ExternalSyntheticLambda0 impleme
     }
 
     public final void onPostureChanged(int i) {
-        this.f$0.m2737lambda$new$1$comandroidsystemuidozeDozeSensors(i);
+        this.f$0.m2742lambda$new$1$comandroidsystemuidozeDozeSensors(i);
     }
 }

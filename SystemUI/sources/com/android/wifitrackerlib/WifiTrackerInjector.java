@@ -54,7 +54,7 @@ class WifiTrackerInjector {
         mContext = context;
         this.mUserManager = (UserManager) context.getSystemService(UserManager.class);
         this.mDevicePolicyManager = (DevicePolicyManager) context.getSystemService(DevicePolicyManager.class);
-        String[] split = context.getString(C3341R.string.wifitrackerlib_no_attribution_annotation_packages).split(NavigationBarInflaterView.BUTTON_SEPARATOR);
+        String[] split = context.getString(C3351R.string.wifitrackerlib_no_attribution_annotation_packages).split(NavigationBarInflaterView.BUTTON_SEPARATOR);
         for (String add : split) {
             this.mNoAttributionAnnotationPackages.add(add);
         }

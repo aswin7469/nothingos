@@ -13,6 +13,6 @@ public final /* synthetic */ class BouncerSwipeTouchHandler$$ExternalSyntheticLa
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        this.f$0.mo32622xfaaef06f(this.f$1, valueAnimator);
+        this.f$0.mo32633xfaaef06f(this.f$1, valueAnimator);
     }
 }

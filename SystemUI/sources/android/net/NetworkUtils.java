@@ -163,7 +163,7 @@ public class NetworkUtils {
 
     public static InetAddress hexToInet6Address(String str) throws IllegalArgumentException {
         try {
-            return numericToInetAddress(String.format(Locale.f700US, "%s:%s:%s:%s:%s:%s:%s:%s", str.substring(0, 4), str.substring(4, 8), str.substring(8, 12), str.substring(12, 16), str.substring(16, 20), str.substring(20, 24), str.substring(24, 28), str.substring(28, 32)));
+            return numericToInetAddress(String.format(Locale.f698US, "%s:%s:%s:%s:%s:%s:%s:%s", str.substring(0, 4), str.substring(4, 8), str.substring(8, 12), str.substring(12, 16), str.substring(16, 20), str.substring(20, 24), str.substring(24, 28), str.substring(28, 32)));
         } catch (Exception e) {
             Log.e(TAG, "error in hexToInet6Address(" + str + "): " + e);
             throw new IllegalArgumentException((Throwable) e);

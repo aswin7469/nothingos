@@ -11,6 +11,6 @@ public final /* synthetic */ class DevicePostureControllerImpl$$ExternalSyntheti
     }
 
     public final void onStateChanged(int i) {
-        this.f$0.mo45687xf7cace0b(i);
+        this.f$0.mo45699xf7cace0b(i);
     }
 }

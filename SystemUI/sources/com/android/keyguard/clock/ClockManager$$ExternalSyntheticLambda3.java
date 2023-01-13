@@ -12,6 +12,6 @@ public final /* synthetic */ class ClockManager$$ExternalSyntheticLambda3 implem
     }
 
     public final void accept(Object obj, Object obj2) {
-        this.f$0.m2315lambda$reload$3$comandroidkeyguardclockClockManager((ClockManager.ClockChangedListener) obj, (ClockManager.AvailableClocks) obj2);
+        this.f$0.m2321lambda$reload$3$comandroidkeyguardclockClockManager((ClockManager.ClockChangedListener) obj, (ClockManager.AvailableClocks) obj2);
     }
 }

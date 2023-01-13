@@ -39,12 +39,12 @@ public class FileChannelImpl extends FileChannel {
     private final boolean append;
 
     /* renamed from: fd */
-    public final FileDescriptor f883fd;
+    public final FileDescriptor f881fd;
     private volatile FileLockTable fileLockTable;
     private final CloseGuard guard;
 
     /* renamed from: nd */
-    private final FileDispatcher f884nd;
+    private final FileDispatcher f882nd;
     private final Object parent;
     private final String path;
     private final Object positionLock = new Object();
@@ -66,13 +66,13 @@ public class FileChannelImpl extends FileChannel {
     private FileChannelImpl(FileDescriptor fd, String path2, boolean readable2, boolean writable2, boolean append2, Object parent2) {
         CloseGuard closeGuard = CloseGuard.get();
         this.guard = closeGuard;
-        this.f883fd = fd;
+        this.f881fd = fd;
         this.readable = readable2;
         this.writable = writable2;
         this.append = append2;
         this.parent = parent2;
         this.path = path2;
-        this.f884nd = new FileDispatcherImpl(append2);
+        this.f882nd = new FileDispatcherImpl(append2);
         if (fd != null && fd.valid()) {
             closeGuard.open("close");
         }
@@ -99,7 +99,7 @@ public class FileChannelImpl extends FileChannel {
             for (FileLock next : this.fileLockTable.removeAll()) {
                 synchronized (next) {
                     if (next.isValid()) {
-                        this.f884nd.release(this.f883fd, next.position(), next.size());
+                        this.f882nd.release(this.f881fd, next.position(), next.size());
                         ((FileLockImpl) next).invalidate();
                     }
                 }
@@ -110,7 +110,7 @@ public class FileChannelImpl extends FileChannel {
         if (obj != null) {
             ((Closeable) obj).close();
         } else {
-            this.f884nd.close(this.f883fd);
+            this.f882nd.close(this.f881fd);
         }
     }
 
@@ -146,11 +146,11 @@ public class FileChannelImpl extends FileChannel {
                         return 0;
                     }
                     do {
-                        i = IOUtil.read(this.f883fd, dst, -1, this.f884nd);
+                        i = IOUtil.read(this.f881fd, dst, -1, this.f882nd);
                         if (i != -3 || !isOpen()) {
                             int normalize = IOStatus.normalize(i);
                         }
-                        i = IOUtil.read(this.f883fd, dst, -1, this.f884nd);
+                        i = IOUtil.read(this.f881fd, dst, -1, this.f882nd);
                         break;
                     } while (!isOpen());
                     int normalize2 = IOStatus.normalize(i);
@@ -196,11 +196,11 @@ public class FileChannelImpl extends FileChannel {
                         return 0;
                     }
                     do {
-                        j = IOUtil.read(this.f883fd, dsts, offset, length, this.f884nd);
+                        j = IOUtil.read(this.f881fd, dsts, offset, length, this.f882nd);
                         if (j != -3 || !isOpen()) {
                             long normalize = IOStatus.normalize(j);
                         }
-                        j = IOUtil.read(this.f883fd, dsts, offset, length, this.f884nd);
+                        j = IOUtil.read(this.f881fd, dsts, offset, length, this.f882nd);
                         break;
                     } while (!isOpen());
                     long normalize2 = IOStatus.normalize(j);
@@ -243,11 +243,11 @@ public class FileChannelImpl extends FileChannel {
                         return 0;
                     }
                     do {
-                        i = IOUtil.write(this.f883fd, src, -1, this.f884nd);
+                        i = IOUtil.write(this.f881fd, src, -1, this.f882nd);
                         if (i != -3 || !isOpen()) {
                             int normalize = IOStatus.normalize(i);
                         }
-                        i = IOUtil.write(this.f883fd, src, -1, this.f884nd);
+                        i = IOUtil.write(this.f881fd, src, -1, this.f882nd);
                         break;
                     } while (!isOpen());
                     int normalize2 = IOStatus.normalize(i);
@@ -293,11 +293,11 @@ public class FileChannelImpl extends FileChannel {
                         return 0;
                     }
                     do {
-                        j = IOUtil.write(this.f883fd, srcs, offset, length, this.f884nd);
+                        j = IOUtil.write(this.f881fd, srcs, offset, length, this.f882nd);
                         if (j != -3 || !isOpen()) {
                             long normalize = IOStatus.normalize(j);
                         }
-                        j = IOUtil.write(this.f883fd, srcs, offset, length, this.f884nd);
+                        j = IOUtil.write(this.f881fd, srcs, offset, length, this.f882nd);
                         break;
                     } while (!isOpen());
                     long normalize2 = IOStatus.normalize(j);
@@ -342,7 +342,7 @@ public class FileChannelImpl extends FileChannel {
                     BlockGuard.getThreadPolicy().onWriteToDisk();
                 }
                 while (true) {
-                    size = this.append ? this.f884nd.size(this.f883fd) : position0(this.f883fd, -1);
+                    size = this.append ? this.f882nd.size(this.f881fd) : position0(this.f881fd, -1);
                     if (size == -3) {
                         if (!isOpen()) {
                             break;
@@ -389,11 +389,11 @@ public class FileChannelImpl extends FileChannel {
                     }
                     BlockGuard.getThreadPolicy().onReadFromDisk();
                     do {
-                        position0 = position0(this.f883fd, newPosition);
+                        position0 = position0(this.f881fd, newPosition);
                         if (position0 != -3 || !isOpen()) {
                             break;
                         }
-                        position0 = position0(this.f883fd, newPosition);
+                        position0 = position0(this.f881fd, newPosition);
                         break;
                         break;
                     } while (!isOpen());
@@ -436,11 +436,11 @@ public class FileChannelImpl extends FileChannel {
                     return -1;
                 }
                 do {
-                    j = this.f884nd.size(this.f883fd);
+                    j = this.f882nd.size(this.f881fd);
                     if (j != -3 || !isOpen()) {
                         long normalize = IOStatus.normalize(j);
                     }
-                    j = this.f884nd.size(this.f883fd);
+                    j = this.f882nd.size(this.f881fd);
                     break;
                 } while (!isOpen());
                 long normalize2 = IOStatus.normalize(j);
@@ -481,10 +481,10 @@ public class FileChannelImpl extends FileChannel {
                 }
                 do {
                     try {
-                        size = this.f884nd.size(this.f883fd);
+                        size = this.f882nd.size(this.f881fd);
                         if (size != -3 || !isOpen()) {
                         }
-                        size = this.f884nd.size(this.f883fd);
+                        size = this.f882nd.size(this.f881fd);
                         break;
                     } catch (Throwable th) {
                         this.threads.remove(i2);
@@ -498,10 +498,10 @@ public class FileChannelImpl extends FileChannel {
                     return null;
                 }
                 do {
-                    position0 = position0(this.f883fd, -1);
+                    position0 = position0(this.f881fd, -1);
                     if (position0 != -3 || !isOpen()) {
                     }
-                    position0 = position0(this.f883fd, -1);
+                    position0 = position0(this.f881fd, -1);
                     break;
                 } while (!isOpen());
                 if (!isOpen()) {
@@ -511,10 +511,10 @@ public class FileChannelImpl extends FileChannel {
                 }
                 if (j < size) {
                     do {
-                        i = this.f884nd.truncate(this.f883fd, j);
+                        i = this.f882nd.truncate(this.f881fd, j);
                         if (i != -3 || !isOpen()) {
                         }
-                        i = this.f884nd.truncate(this.f883fd, j);
+                        i = this.f882nd.truncate(this.f881fd, j);
                         break;
                     } while (!isOpen());
                     if (!isOpen()) {
@@ -527,7 +527,7 @@ public class FileChannelImpl extends FileChannel {
                     position0 = newSize;
                 }
                 do {
-                    if (position0(this.f883fd, position0) != -3 || !isOpen()) {
+                    if (position0(this.f881fd, position0) != -3 || !isOpen()) {
                         break;
                     }
                     break;
@@ -553,11 +553,11 @@ public class FileChannelImpl extends FileChannel {
             i2 = this.threads.add();
             if (isOpen()) {
                 do {
-                    i = this.f884nd.force(this.f883fd, metaData);
+                    i = this.f882nd.force(this.f881fd, metaData);
                     if (i != -3 || !isOpen()) {
                         this.threads.remove(i2);
                     }
-                    i = this.f884nd.force(this.f883fd, metaData);
+                    i = this.f882nd.force(this.f881fd, metaData);
                     break;
                 } while (!isOpen());
                 this.threads.remove(i2);
@@ -617,7 +617,7 @@ public class FileChannelImpl extends FileChannel {
             r0.onWriteToDisk()     // Catch:{ all -> 0x0098 }
             r15 = r1
         L_0x0033:
-            java.io.FileDescriptor r2 = r8.f883fd     // Catch:{ all -> 0x0094 }
+            java.io.FileDescriptor r2 = r8.f881fd     // Catch:{ all -> 0x0094 }
             r7 = r20
             long r5 = (long) r7     // Catch:{ all -> 0x0094 }
             r1 = r17
@@ -706,21 +706,21 @@ public class FileChannelImpl extends FileChannel {
             if (!fileSupported) {
                 return -6;
             }
-            fileDescriptor = ((FileChannelImpl) writableByteChannel).f883fd;
+            fileDescriptor = ((FileChannelImpl) writableByteChannel).f881fd;
         } else if (writableByteChannel instanceof SelChImpl) {
             if ((writableByteChannel instanceof SinkChannelImpl) && !pipeSupported) {
                 return -6;
             }
-            if (!this.f884nd.canTransferToDirectly((SelectableChannel) writableByteChannel)) {
+            if (!this.f882nd.canTransferToDirectly((SelectableChannel) writableByteChannel)) {
                 return -6;
             }
             fileDescriptor = ((SelChImpl) writableByteChannel).getFD();
         }
         FileDescriptor fileDescriptor2 = fileDescriptor;
-        if (fileDescriptor2 == null || IOUtil.fdVal(this.f883fd) == IOUtil.fdVal(fileDescriptor2)) {
+        if (fileDescriptor2 == null || IOUtil.fdVal(this.f881fd) == IOUtil.fdVal(fileDescriptor2)) {
             return -4;
         }
-        if (!this.f884nd.transferToDirectlyNeedsPositionLock()) {
+        if (!this.f882nd.transferToDirectlyNeedsPositionLock()) {
             return transferToDirectlyInternal(position, icount, target, fileDescriptor2);
         }
         synchronized (this.positionLock) {
@@ -1056,7 +1056,7 @@ public class FileChannelImpl extends FileChannel {
             throw new IllegalArgumentException("Negative position");
         } else if (this.readable) {
             ensureOpen();
-            if (!this.f884nd.needsPositionLock()) {
+            if (!this.f882nd.needsPositionLock()) {
                 return readInternal(dst, position);
             }
             synchronized (this.positionLock) {
@@ -1085,11 +1085,11 @@ public class FileChannelImpl extends FileChannel {
                 return -1;
             }
             do {
-                i = IOUtil.read(this.f883fd, dst, position, this.f884nd);
+                i = IOUtil.read(this.f881fd, dst, position, this.f882nd);
                 if (i != -3 || !isOpen()) {
                     int normalize = IOStatus.normalize(i);
                 }
-                i = IOUtil.read(this.f883fd, dst, position, this.f884nd);
+                i = IOUtil.read(this.f881fd, dst, position, this.f882nd);
                 break;
             } while (!isOpen());
             int normalize2 = IOStatus.normalize(i);
@@ -1117,7 +1117,7 @@ public class FileChannelImpl extends FileChannel {
             throw new IllegalArgumentException("Negative position");
         } else if (this.writable) {
             ensureOpen();
-            if (!this.f884nd.needsPositionLock()) {
+            if (!this.f882nd.needsPositionLock()) {
                 return writeInternal(src, position);
             }
             synchronized (this.positionLock) {
@@ -1146,11 +1146,11 @@ public class FileChannelImpl extends FileChannel {
                 return -1;
             }
             do {
-                i = IOUtil.write(this.f883fd, src, position, this.f884nd);
+                i = IOUtil.write(this.f881fd, src, position, this.f882nd);
                 if (i != -3 || !isOpen()) {
                     int normalize = IOStatus.normalize(i);
                 }
-                i = IOUtil.write(this.f883fd, src, position, this.f884nd);
+                i = IOUtil.write(this.f881fd, src, position, this.f882nd);
                 break;
             } while (!isOpen());
             int normalize2 = IOStatus.normalize(i);
@@ -1176,14 +1176,14 @@ public class FileChannelImpl extends FileChannel {
         static volatile int count;
 
         /* renamed from: nd */
-        private static final NativeDispatcher f885nd = new FileDispatcherImpl();
+        private static final NativeDispatcher f883nd = new FileDispatcherImpl();
         static volatile long totalCapacity;
         static volatile long totalSize;
         private volatile long address;
         private final int cap;
 
         /* renamed from: fd */
-        private final FileDescriptor f886fd;
+        private final FileDescriptor f884fd;
         private final long size;
 
         static {
@@ -1194,7 +1194,7 @@ public class FileChannelImpl extends FileChannel {
             this.address = j;
             this.size = j2;
             this.cap = i;
-            this.f886fd = fileDescriptor;
+            this.f884fd = fileDescriptor;
             synchronized (Unmapper.class) {
                 count++;
                 totalSize += j2;
@@ -1206,9 +1206,9 @@ public class FileChannelImpl extends FileChannel {
             if (this.address != 0) {
                 int unused = FileChannelImpl.unmap0(this.address, this.size);
                 this.address = 0;
-                if (this.f886fd.valid()) {
+                if (this.f884fd.valid()) {
                     try {
-                        f885nd.close(this.f886fd);
+                        f883nd.close(this.f884fd);
                     } catch (IOException unused2) {
                     }
                 }
@@ -1295,8 +1295,8 @@ public class FileChannelImpl extends FileChannel {
             r7.end(r0)
             return r3
         L_0x006c:
-            sun.nio.ch.FileDispatcher r2 = r7.f884nd     // Catch:{ all -> 0x018a }
-            java.io.FileDescriptor r4 = r7.f883fd     // Catch:{ all -> 0x018a }
+            sun.nio.ch.FileDispatcher r2 = r7.f882nd     // Catch:{ all -> 0x018a }
+            java.io.FileDescriptor r4 = r7.f881fd     // Catch:{ all -> 0x018a }
             long r4 = r2.size(r4)     // Catch:{ all -> 0x018a }
             r15 = r4
             r4 = -3
@@ -1315,8 +1315,8 @@ public class FileChannelImpl extends FileChannel {
             boolean r2 = r7.writable     // Catch:{ all -> 0x018a }
             if (r2 == 0) goto L_0x00ae
         L_0x0093:
-            sun.nio.ch.FileDispatcher r2 = r7.f884nd     // Catch:{ all -> 0x018a }
-            java.io.FileDescriptor r4 = r7.f883fd     // Catch:{ all -> 0x018a }
+            sun.nio.ch.FileDispatcher r2 = r7.f882nd     // Catch:{ all -> 0x018a }
+            java.io.FileDescriptor r4 = r7.f881fd     // Catch:{ all -> 0x018a }
             long r5 = r33 + r9
             int r2 = r2.truncate(r4, r5)     // Catch:{ all -> 0x018a }
             r4 = -3
@@ -1390,7 +1390,7 @@ public class FileChannelImpl extends FileChannel {
             r8 = r5
         L_0x0113:
             r21 = r0
-            java.lang.System.m1693gc()     // Catch:{ all -> 0x018a }
+            java.lang.System.m1699gc()     // Catch:{ all -> 0x018a }
             r0 = 100
             java.lang.Thread.sleep(r0)     // Catch:{ InterruptedException -> 0x011e }
         L_0x011d:
@@ -1410,8 +1410,8 @@ public class FileChannelImpl extends FileChannel {
             long r0 = r1.map0(r2, r3, r5)     // Catch:{ OutOfMemoryError -> 0x017d }
             goto L_0x010a
         L_0x0135:
-            sun.nio.ch.FileDispatcher r0 = r7.f884nd     // Catch:{ IOException -> 0x0176 }
-            java.io.FileDescriptor r1 = r7.f883fd     // Catch:{ IOException -> 0x0176 }
+            sun.nio.ch.FileDispatcher r0 = r7.f882nd     // Catch:{ IOException -> 0x0176 }
+            java.io.FileDescriptor r1 = r7.f881fd     // Catch:{ IOException -> 0x0176 }
             java.io.FileDescriptor r27 = r0.duplicateForMapping(r1)     // Catch:{ IOException -> 0x0176 }
             int r6 = (int) r9
             sun.nio.ch.FileChannelImpl$Unmapper r5 = new sun.nio.ch.FileChannelImpl$Unmapper     // Catch:{ all -> 0x018a }
@@ -1531,7 +1531,7 @@ public class FileChannelImpl extends FileChannel {
                         int add = this.threads.add();
                         try {
                             ensureOpen();
-                            this.fileLockTable = FileLockTable.newSharedFileLockTable(this, this.f883fd);
+                            this.fileLockTable = FileLockTable.newSharedFileLockTable(this, this.f881fd);
                             this.threads.remove(add);
                         } catch (Throwable th) {
                             this.threads.remove(add);
@@ -1605,8 +1605,8 @@ public class FileChannelImpl extends FileChannel {
             r1.<init>()
             throw r1
         L_0x0061:
-            sun.nio.ch.FileDispatcher r9 = r8.f884nd     // Catch:{ all -> 0x00c6 }
-            java.io.FileDescriptor r10 = r8.f883fd     // Catch:{ all -> 0x00c6 }
+            sun.nio.ch.FileDispatcher r9 = r8.f882nd     // Catch:{ all -> 0x00c6 }
+            java.io.FileDescriptor r10 = r8.f881fd     // Catch:{ all -> 0x00c6 }
             r11 = 1
             r12 = r18
             r14 = r20
@@ -1720,7 +1720,7 @@ public class FileChannelImpl extends FileChannel {
             int add = this.threads.add();
             try {
                 ensureOpen();
-                int lock = this.f884nd.lock(this.f883fd, false, position, size, shared);
+                int lock = this.f882nd.lock(this.f881fd, false, position, size, shared);
                 if (lock == -1) {
                     try {
                         fileLockTable2.remove(fileLockImpl);
@@ -1769,7 +1769,7 @@ public class FileChannelImpl extends FileChannel {
         int add = this.threads.add();
         try {
             ensureOpen();
-            this.f884nd.release(this.f883fd, fli.position(), fli.size());
+            this.f882nd.release(this.f881fd, fli.position(), fli.size());
             this.threads.remove(add);
             this.fileLockTable.remove(fli);
         } catch (Throwable th) {

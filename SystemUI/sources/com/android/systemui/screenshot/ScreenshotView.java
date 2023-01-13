@@ -57,7 +57,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.ViewCompat;
 import com.android.internal.jank.InteractionJankMonitor;
 import com.android.internal.logging.UiEventLogger;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.screenshot.DraggableConstraintLayout;
 import com.android.systemui.screenshot.ScreenshotController;
 import com.android.systemui.screenshot.ScrollCaptureController;
@@ -183,7 +183,7 @@ public class ScreenshotView extends FrameLayout implements ViewTreeObserver.OnCo
         Resources resources = this.mContext.getResources();
         this.mResources = resources;
         this.mInteractionJankMonitor = getInteractionJankMonitorInstance();
-        this.mFixedSize = (float) resources.getDimensionPixelSize(C1893R.dimen.overlay_x_scale);
+        this.mFixedSize = (float) resources.getDimensionPixelSize(C1894R.dimen.overlay_x_scale);
         this.mFastOutSlowIn = AnimationUtils.loadInterpolator(this.mContext, AndroidResources.FAST_OUT_SLOW_IN);
         DisplayMetrics displayMetrics = new DisplayMetrics();
         this.mDisplayMetrics = displayMetrics;
@@ -231,7 +231,7 @@ public class ScreenshotView extends FrameLayout implements ViewTreeObserver.OnCo
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$showScrollChip$0$com-android-systemui-screenshot-ScreenshotView */
-    public /* synthetic */ void mo37510x53b7cd97(String str, Runnable runnable, View view) {
+    public /* synthetic */ void mo37511x53b7cd97(String str, Runnable runnable, View view) {
         this.mUiEventLogger.log(ScreenshotEvent.SCREENSHOT_LONG_SCREENSHOT_REQUESTED, 0, str);
         runnable.run();
     }
@@ -282,7 +282,7 @@ public class ScreenshotView extends FrameLayout implements ViewTreeObserver.OnCo
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startInputListening$1$com-android-systemui-screenshot-ScreenshotView */
-    public /* synthetic */ void mo37511x393f333(InputEvent inputEvent) {
+    public /* synthetic */ void mo37512x393f333(InputEvent inputEvent) {
         if (inputEvent instanceof MotionEvent) {
             MotionEvent motionEvent = (MotionEvent) inputEvent;
             if (motionEvent.getActionMasked() == 0 && !getTouchRegion(false).contains((int) motionEvent.getRawX(), (int) motionEvent.getRawY())) {
@@ -307,21 +307,21 @@ public class ScreenshotView extends FrameLayout implements ViewTreeObserver.OnCo
 
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
-        this.mScrollingScrim = (ImageView) Objects.requireNonNull((ImageView) findViewById(C1893R.C1897id.screenshot_scrolling_scrim));
-        this.mScreenshotStatic = (DraggableConstraintLayout) Objects.requireNonNull((DraggableConstraintLayout) findViewById(C1893R.C1897id.screenshot_static));
-        this.mScreenshotPreview = (ImageView) Objects.requireNonNull((ImageView) findViewById(C1893R.C1897id.screenshot_preview));
-        this.mScreenshotPreviewBorder = (View) Objects.requireNonNull(findViewById(C1893R.C1897id.screenshot_preview_border));
+        this.mScrollingScrim = (ImageView) Objects.requireNonNull((ImageView) findViewById(C1894R.C1898id.screenshot_scrolling_scrim));
+        this.mScreenshotStatic = (DraggableConstraintLayout) Objects.requireNonNull((DraggableConstraintLayout) findViewById(C1894R.C1898id.screenshot_static));
+        this.mScreenshotPreview = (ImageView) Objects.requireNonNull((ImageView) findViewById(C1894R.C1898id.screenshot_preview));
+        this.mScreenshotPreviewBorder = (View) Objects.requireNonNull(findViewById(C1894R.C1898id.screenshot_preview_border));
         this.mScreenshotPreview.setClipToOutline(true);
-        this.mActionsContainerBackground = (ImageView) Objects.requireNonNull((ImageView) findViewById(C1893R.C1897id.actions_container_background));
-        this.mActionsContainer = (HorizontalScrollView) Objects.requireNonNull((HorizontalScrollView) findViewById(C1893R.C1897id.actions_container));
-        this.mActionsView = (LinearLayout) Objects.requireNonNull((LinearLayout) findViewById(C1893R.C1897id.screenshot_actions));
-        this.mDismissButton = (FrameLayout) Objects.requireNonNull((FrameLayout) findViewById(C1893R.C1897id.screenshot_dismiss_button));
-        this.mScrollablePreview = (ImageView) Objects.requireNonNull((ImageView) findViewById(C1893R.C1897id.screenshot_scrollable_preview));
-        this.mScreenshotFlash = (ImageView) Objects.requireNonNull((ImageView) findViewById(C1893R.C1897id.screenshot_flash));
-        this.mScreenshotSelectorView = (ScreenshotSelectorView) Objects.requireNonNull((ScreenshotSelectorView) findViewById(C1893R.C1897id.screenshot_selector));
-        this.mShareChip = (OverlayActionChip) Objects.requireNonNull((OverlayActionChip) this.mActionsContainer.findViewById(C1893R.C1897id.screenshot_share_chip));
-        this.mEditChip = (OverlayActionChip) Objects.requireNonNull((OverlayActionChip) this.mActionsContainer.findViewById(C1893R.C1897id.screenshot_edit_chip));
-        this.mScrollChip = (OverlayActionChip) Objects.requireNonNull((OverlayActionChip) this.mActionsContainer.findViewById(C1893R.C1897id.screenshot_scroll_chip));
+        this.mActionsContainerBackground = (ImageView) Objects.requireNonNull((ImageView) findViewById(C1894R.C1898id.actions_container_background));
+        this.mActionsContainer = (HorizontalScrollView) Objects.requireNonNull((HorizontalScrollView) findViewById(C1894R.C1898id.actions_container));
+        this.mActionsView = (LinearLayout) Objects.requireNonNull((LinearLayout) findViewById(C1894R.C1898id.screenshot_actions));
+        this.mDismissButton = (FrameLayout) Objects.requireNonNull((FrameLayout) findViewById(C1894R.C1898id.screenshot_dismiss_button));
+        this.mScrollablePreview = (ImageView) Objects.requireNonNull((ImageView) findViewById(C1894R.C1898id.screenshot_scrollable_preview));
+        this.mScreenshotFlash = (ImageView) Objects.requireNonNull((ImageView) findViewById(C1894R.C1898id.screenshot_flash));
+        this.mScreenshotSelectorView = (ScreenshotSelectorView) Objects.requireNonNull((ScreenshotSelectorView) findViewById(C1894R.C1898id.screenshot_selector));
+        this.mShareChip = (OverlayActionChip) Objects.requireNonNull((OverlayActionChip) this.mActionsContainer.findViewById(C1894R.C1898id.screenshot_share_chip));
+        this.mEditChip = (OverlayActionChip) Objects.requireNonNull((OverlayActionChip) this.mActionsContainer.findViewById(C1894R.C1898id.screenshot_edit_chip));
+        this.mScrollChip = (OverlayActionChip) Objects.requireNonNull((OverlayActionChip) this.mActionsContainer.findViewById(C1894R.C1898id.screenshot_scroll_chip));
         int dpToPx = (int) FloatingWindowUtil.dpToPx(this.mDisplayMetrics, 12.0f);
         this.mScreenshotPreview.setTouchDelegate(new TouchDelegate(new Rect(dpToPx, dpToPx, dpToPx, dpToPx), this.mScreenshotPreview));
         this.mActionsContainerBackground.setTouchDelegate(new TouchDelegate(new Rect(dpToPx, dpToPx, dpToPx, dpToPx), this.mActionsContainerBackground));
@@ -512,7 +512,7 @@ public class ScreenshotView extends FrameLayout implements ViewTreeObserver.OnCo
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onAnimationEnd$0$com-android-systemui-screenshot-ScreenshotView$5 */
-            public /* synthetic */ void mo37534x7f6501c8(View view) {
+            public /* synthetic */ void mo37535x7f6501c8(View view) {
                 ScreenshotView.this.mUiEventLogger.log(ScreenshotEvent.SCREENSHOT_EXPLICIT_DISMISSAL, 0, ScreenshotView.this.mPackageName);
                 ScreenshotView.this.animateDismissal();
             }
@@ -522,19 +522,19 @@ public class ScreenshotView extends FrameLayout implements ViewTreeObserver.OnCo
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$createScreenshotDropInAnimation$2$com-android-systemui-screenshot-ScreenshotView */
-    public /* synthetic */ void mo37499xd7366a77(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo37500xd7366a77(ValueAnimator valueAnimator) {
         this.mScreenshotFlash.setAlpha(((Float) valueAnimator.getAnimatedValue()).floatValue());
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$createScreenshotDropInAnimation$3$com-android-systemui-screenshot-ScreenshotView */
-    public /* synthetic */ void mo37500x11010c56(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo37501x11010c56(ValueAnimator valueAnimator) {
         this.mScreenshotFlash.setAlpha(((Float) valueAnimator.getAnimatedValue()).floatValue());
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$createScreenshotDropInAnimation$4$com-android-systemui-screenshot-ScreenshotView */
-    public /* synthetic */ void mo37501x4acbae35(float f, float f2, float f3, PointF pointF, PointF pointF2, float f4, ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo37502x4acbae35(float f, float f2, float f3, PointF pointF, PointF pointF2, float f4, ValueAnimator valueAnimator) {
         float animatedFraction = valueAnimator.getAnimatedFraction();
         if (animatedFraction < f) {
             float lerp = MathUtils.lerp(f2, 1.0f, this.mFastOutSlowIn.getInterpolation(animatedFraction / f));
@@ -571,7 +571,7 @@ public class ScreenshotView extends FrameLayout implements ViewTreeObserver.OnCo
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$createScreenshotDropInAnimation$5$com-android-systemui-screenshot-ScreenshotView */
-    public /* synthetic */ void mo37502x84965014(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo37503x84965014(ValueAnimator valueAnimator) {
         this.mScreenshotPreviewBorder.setAlpha(valueAnimator.getAnimatedFraction());
     }
 
@@ -582,17 +582,17 @@ public class ScreenshotView extends FrameLayout implements ViewTreeObserver.OnCo
         } catch (RemoteException unused) {
         }
         ArrayList arrayList = new ArrayList();
-        this.mShareChip.setContentDescription(this.mContext.getString(C1893R.string.screenshot_share_description));
-        this.mShareChip.setIcon(Icon.createWithResource(this.mContext, C1893R.C1895drawable.ic_screenshot_share), true);
+        this.mShareChip.setContentDescription(this.mContext.getString(C1894R.string.screenshot_share_description));
+        this.mShareChip.setIcon(Icon.createWithResource(this.mContext, C1894R.C1896drawable.ic_screenshot_share), true);
         this.mShareChip.setOnClickListener(new ScreenshotView$$ExternalSyntheticLambda0(this));
         arrayList.add(this.mShareChip);
-        this.mEditChip.setContentDescription(this.mContext.getString(C1893R.string.screenshot_edit_description));
-        this.mEditChip.setIcon(Icon.createWithResource(this.mContext, C1893R.C1895drawable.ic_screenshot_edit), true);
+        this.mEditChip.setContentDescription(this.mContext.getString(C1894R.string.screenshot_edit_description));
+        this.mEditChip.setIcon(Icon.createWithResource(this.mContext, C1894R.C1896drawable.ic_screenshot_edit), true);
         this.mEditChip.setOnClickListener(new ScreenshotView$$ExternalSyntheticLambda11(this));
         arrayList.add(this.mEditChip);
         this.mScreenshotPreview.setOnClickListener(new ScreenshotView$$ExternalSyntheticLambda13(this));
-        this.mScrollChip.setText(this.mContext.getString(C1893R.string.screenshot_scroll_label));
-        this.mScrollChip.setIcon(Icon.createWithResource(this.mContext, C1893R.C1895drawable.ic_screenshot_scroll), true);
+        this.mScrollChip.setText(this.mContext.getString(C1894R.string.screenshot_scroll_label));
+        this.mScrollChip.setIcon(Icon.createWithResource(this.mContext, C1894R.C1896drawable.ic_screenshot_scroll), true);
         arrayList.add(this.mScrollChip);
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) this.mActionsView.getChildAt(0).getLayoutParams();
         layoutParams.setMarginEnd(0);
@@ -622,7 +622,7 @@ public class ScreenshotView extends FrameLayout implements ViewTreeObserver.OnCo
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$createScreenshotActionsShadeAnimation$6$com-android-systemui-screenshot-ScreenshotView */
-    public /* synthetic */ void mo37495xc285de6f(View view) {
+    public /* synthetic */ void mo37496xc285de6f(View view) {
         this.mShareChip.setIsPending(true);
         this.mEditChip.setIsPending(false);
         OverlayActionChip overlayActionChip = this.mQuickShareChip;
@@ -634,7 +634,7 @@ public class ScreenshotView extends FrameLayout implements ViewTreeObserver.OnCo
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$createScreenshotActionsShadeAnimation$7$com-android-systemui-screenshot-ScreenshotView */
-    public /* synthetic */ void mo37496xfc50804e(View view) {
+    public /* synthetic */ void mo37497xfc50804e(View view) {
         this.mEditChip.setIsPending(true);
         this.mShareChip.setIsPending(false);
         OverlayActionChip overlayActionChip = this.mQuickShareChip;
@@ -646,7 +646,7 @@ public class ScreenshotView extends FrameLayout implements ViewTreeObserver.OnCo
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$createScreenshotActionsShadeAnimation$8$com-android-systemui-screenshot-ScreenshotView */
-    public /* synthetic */ void mo37497x361b222d(View view) {
+    public /* synthetic */ void mo37498x361b222d(View view) {
         this.mShareChip.setIsPending(false);
         this.mEditChip.setIsPending(false);
         OverlayActionChip overlayActionChip = this.mQuickShareChip;
@@ -658,7 +658,7 @@ public class ScreenshotView extends FrameLayout implements ViewTreeObserver.OnCo
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$createScreenshotActionsShadeAnimation$9$com-android-systemui-screenshot-ScreenshotView */
-    public /* synthetic */ void mo37498x6fe5c40c(float f, ArrayList arrayList, ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo37499x6fe5c40c(float f, ArrayList arrayList, ValueAnimator valueAnimator) {
         float animatedFraction = valueAnimator.getAnimatedFraction();
         float f2 = animatedFraction < f ? animatedFraction / f : 1.0f;
         this.mActionsContainer.setAlpha(f2);
@@ -694,7 +694,7 @@ public class ScreenshotView extends FrameLayout implements ViewTreeObserver.OnCo
             overlayActionChip.setPendingIntent(savedImageData.quickShareAction.actionIntent, new ScreenshotView$$ExternalSyntheticLambda8(this));
         }
         if (this.mPendingInteraction != null) {
-            int i = C245210.f339x2e594f1f[this.mPendingInteraction.ordinal()];
+            int i = C245810.f338x2e594f1f[this.mPendingInteraction.ordinal()];
             if (i == 1) {
                 this.mScreenshotPreview.callOnClick();
             } else if (i == 2) {
@@ -707,7 +707,7 @@ public class ScreenshotView extends FrameLayout implements ViewTreeObserver.OnCo
         } else {
             LayoutInflater from = LayoutInflater.from(this.mContext);
             for (Notification.Action next : savedImageData.smartActions) {
-                OverlayActionChip overlayActionChip2 = (OverlayActionChip) from.inflate(C1893R.layout.overlay_action_chip, this.mActionsView, false);
+                OverlayActionChip overlayActionChip2 = (OverlayActionChip) from.inflate(C1894R.layout.overlay_action_chip, this.mActionsView, false);
                 overlayActionChip2.setText(next.title);
                 overlayActionChip2.setIcon(next.getIcon(), false);
                 overlayActionChip2.setPendingIntent(next.actionIntent, new ScreenshotView$$ExternalSyntheticLambda9(this));
@@ -721,37 +721,37 @@ public class ScreenshotView extends FrameLayout implements ViewTreeObserver.OnCo
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setChipIntents$10$com-android-systemui-screenshot-ScreenshotView */
-    public /* synthetic */ void mo37505x60368c59(ScreenshotController.SavedImageData savedImageData, View view) {
+    public /* synthetic */ void mo37506x60368c59(ScreenshotController.SavedImageData savedImageData, View view) {
         this.mUiEventLogger.log(ScreenshotEvent.SCREENSHOT_SHARE_TAPPED, 0, this.mPackageName);
         startSharedTransition(savedImageData.shareTransition.get());
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setChipIntents$11$com-android-systemui-screenshot-ScreenshotView */
-    public /* synthetic */ void mo37506x9a012e38(ScreenshotController.SavedImageData savedImageData, View view) {
+    public /* synthetic */ void mo37507x9a012e38(ScreenshotController.SavedImageData savedImageData, View view) {
         this.mUiEventLogger.log(ScreenshotEvent.SCREENSHOT_EDIT_TAPPED, 0, this.mPackageName);
         startSharedTransition(savedImageData.editTransition.get());
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setChipIntents$12$com-android-systemui-screenshot-ScreenshotView */
-    public /* synthetic */ void mo37507xd3cbd017(ScreenshotController.SavedImageData savedImageData, View view) {
+    public /* synthetic */ void mo37508xd3cbd017(ScreenshotController.SavedImageData savedImageData, View view) {
         this.mUiEventLogger.log(ScreenshotEvent.SCREENSHOT_PREVIEW_TAPPED, 0, this.mPackageName);
         startSharedTransition(savedImageData.editTransition.get());
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setChipIntents$13$com-android-systemui-screenshot-ScreenshotView */
-    public /* synthetic */ void mo37508xd9671f6() {
+    public /* synthetic */ void mo37509xd9671f6() {
         this.mUiEventLogger.log(ScreenshotEvent.SCREENSHOT_SMART_ACTION_TAPPED, 0, this.mPackageName);
         animateDismissal();
     }
 
     /* renamed from: com.android.systemui.screenshot.ScreenshotView$10 */
-    static /* synthetic */ class C245210 {
+    static /* synthetic */ class C245810 {
 
         /* renamed from: $SwitchMap$com$android$systemui$screenshot$ScreenshotView$PendingInteraction */
-        static final /* synthetic */ int[] f339x2e594f1f;
+        static final /* synthetic */ int[] f338x2e594f1f;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(8:0|1|2|3|4|5|6|(3:7|8|10)) */
         /* JADX WARNING: Failed to process nested try/catch */
@@ -763,25 +763,25 @@ public class ScreenshotView extends FrameLayout implements ViewTreeObserver.OnCo
                 com.android.systemui.screenshot.ScreenshotView$PendingInteraction[] r0 = com.android.systemui.screenshot.ScreenshotView.PendingInteraction.values()
                 int r0 = r0.length
                 int[] r0 = new int[r0]
-                f339x2e594f1f = r0
+                f338x2e594f1f = r0
                 com.android.systemui.screenshot.ScreenshotView$PendingInteraction r1 = com.android.systemui.screenshot.ScreenshotView.PendingInteraction.PREVIEW     // Catch:{ NoSuchFieldError -> 0x0012 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
                 r2 = 1
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0012 }
             L_0x0012:
-                int[] r0 = f339x2e594f1f     // Catch:{ NoSuchFieldError -> 0x001d }
+                int[] r0 = f338x2e594f1f     // Catch:{ NoSuchFieldError -> 0x001d }
                 com.android.systemui.screenshot.ScreenshotView$PendingInteraction r1 = com.android.systemui.screenshot.ScreenshotView.PendingInteraction.SHARE     // Catch:{ NoSuchFieldError -> 0x001d }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
                 r2 = 2
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x001d }
             L_0x001d:
-                int[] r0 = f339x2e594f1f     // Catch:{ NoSuchFieldError -> 0x0028 }
+                int[] r0 = f338x2e594f1f     // Catch:{ NoSuchFieldError -> 0x0028 }
                 com.android.systemui.screenshot.ScreenshotView$PendingInteraction r1 = com.android.systemui.screenshot.ScreenshotView.PendingInteraction.EDIT     // Catch:{ NoSuchFieldError -> 0x0028 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0028 }
                 r2 = 3
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0028 }
             L_0x0028:
-                int[] r0 = f339x2e594f1f     // Catch:{ NoSuchFieldError -> 0x0033 }
+                int[] r0 = f338x2e594f1f     // Catch:{ NoSuchFieldError -> 0x0033 }
                 com.android.systemui.screenshot.ScreenshotView$PendingInteraction r1 = com.android.systemui.screenshot.ScreenshotView.PendingInteraction.QUICK_SHARE     // Catch:{ NoSuchFieldError -> 0x0033 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0033 }
                 r2 = 4
@@ -789,13 +789,13 @@ public class ScreenshotView extends FrameLayout implements ViewTreeObserver.OnCo
             L_0x0033:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.screenshot.ScreenshotView.C245210.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.screenshot.ScreenshotView.C245810.<clinit>():void");
         }
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setChipIntents$14$com-android-systemui-screenshot-ScreenshotView */
-    public /* synthetic */ void mo37509x476113d5() {
+    public /* synthetic */ void mo37510x476113d5() {
         this.mUiEventLogger.log(ScreenshotEvent.SCREENSHOT_SMART_ACTION_TAPPED, 0, this.mPackageName);
         animateDismissal();
     }
@@ -803,7 +803,7 @@ public class ScreenshotView extends FrameLayout implements ViewTreeObserver.OnCo
     /* access modifiers changed from: package-private */
     public void addQuickShareChip(Notification.Action action) {
         if (this.mPendingInteraction == null) {
-            OverlayActionChip overlayActionChip = (OverlayActionChip) LayoutInflater.from(this.mContext).inflate(C1893R.layout.overlay_action_chip, this.mActionsView, false);
+            OverlayActionChip overlayActionChip = (OverlayActionChip) LayoutInflater.from(this.mContext).inflate(C1894R.layout.overlay_action_chip, this.mActionsView, false);
             this.mQuickShareChip = overlayActionChip;
             overlayActionChip.setText(action.title);
             this.mQuickShareChip.setIcon(action.getIcon(), false);
@@ -816,7 +816,7 @@ public class ScreenshotView extends FrameLayout implements ViewTreeObserver.OnCo
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$addQuickShareChip$15$com-android-systemui-screenshot-ScreenshotView */
-    public /* synthetic */ void mo37494x71b50b50(View view) {
+    public /* synthetic */ void mo37495x71b50b50(View view) {
         this.mShareChip.setIsPending(false);
         this.mEditChip.setIsPending(false);
         this.mQuickShareChip.setIsPending(true);
@@ -882,13 +882,13 @@ public class ScreenshotView extends FrameLayout implements ViewTreeObserver.OnCo
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startLongScreenshotTransition$16$com-android-systemui-screenshot-ScreenshotView */
-    public /* synthetic */ void mo37512x73692849(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo37513x73692849(ValueAnimator valueAnimator) {
         this.mScrollingScrim.setAlpha(1.0f - valueAnimator.getAnimatedFraction());
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startLongScreenshotTransition$17$com-android-systemui-screenshot-ScreenshotView */
-    public /* synthetic */ void mo37513xad33ca28(float f, float f2, Rect rect, float f3, ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo37514xad33ca28(float f, float f2, Rect rect, float f3, ValueAnimator valueAnimator) {
         float animatedFraction = valueAnimator.getAnimatedFraction();
         float lerp = MathUtils.lerp(1.0f, f, animatedFraction);
         this.mScrollablePreview.setScaleX(lerp);
@@ -899,7 +899,7 @@ public class ScreenshotView extends FrameLayout implements ViewTreeObserver.OnCo
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startLongScreenshotTransition$18$com-android-systemui-screenshot-ScreenshotView */
-    public /* synthetic */ void mo37514xe6fe6c07(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo37515xe6fe6c07(ValueAnimator valueAnimator) {
         this.mScrollablePreview.setAlpha(1.0f - valueAnimator.getAnimatedFraction());
     }
 
@@ -937,7 +937,7 @@ public class ScreenshotView extends FrameLayout implements ViewTreeObserver.OnCo
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$prepareScrollingTransition$19$com-android-systemui-screenshot-ScreenshotView */
-    public /* synthetic */ void mo37504xb1de5e2a(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo37505xb1de5e2a(ValueAnimator valueAnimator) {
         this.mScrollingScrim.setImageTintList(ColorStateList.valueOf(Color.argb(((Float) valueAnimator.getAnimatedValue()).floatValue(), 0.0f, 0.0f, 0.0f)));
     }
 
@@ -985,7 +985,7 @@ public class ScreenshotView extends FrameLayout implements ViewTreeObserver.OnCo
         this.mScrollingScrim.setVisibility(8);
         this.mScrollablePreview.setVisibility(8);
         this.mScreenshotStatic.setTranslationX(0.0f);
-        this.mScreenshotPreview.setContentDescription(this.mContext.getResources().getString(C1893R.string.screenshot_preview_description));
+        this.mScreenshotPreview.setContentDescription(this.mContext.getResources().getString(C1894R.string.screenshot_preview_description));
         this.mScreenshotPreview.setOnClickListener((View.OnClickListener) null);
         this.mShareChip.setOnClickListener((View.OnClickListener) null);
         this.mScrollingScrim.setVisibility(8);
@@ -1028,7 +1028,7 @@ public class ScreenshotView extends FrameLayout implements ViewTreeObserver.OnCo
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$createScreenshotFadeDismissAnimation$20$com-android-systemui-screenshot-ScreenshotView */
-    public /* synthetic */ void mo37503x69dd1089(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo37504x69dd1089(ValueAnimator valueAnimator) {
         float animatedFraction = 1.0f - valueAnimator.getAnimatedFraction();
         this.mDismissButton.setAlpha(animatedFraction);
         this.mActionsContainerBackground.setAlpha(animatedFraction);

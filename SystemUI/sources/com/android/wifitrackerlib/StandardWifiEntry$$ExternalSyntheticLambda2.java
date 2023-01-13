@@ -13,6 +13,6 @@ public final /* synthetic */ class StandardWifiEntry$$ExternalSyntheticLambda2 i
     }
 
     public final void run() {
-        this.f$0.m3373lambda$disconnect$2$comandroidwifitrackerlibStandardWifiEntry(this.f$1);
+        this.f$0.m3377lambda$disconnect$2$comandroidwifitrackerlibStandardWifiEntry(this.f$1);
     }
 }

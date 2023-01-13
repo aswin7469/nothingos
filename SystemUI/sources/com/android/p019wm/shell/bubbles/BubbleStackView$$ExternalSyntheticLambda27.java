@@ -12,6 +12,6 @@ public final /* synthetic */ class BubbleStackView$$ExternalSyntheticLambda27 im
     }
 
     public final void onClick(View view) {
-        this.f$0.mo48704x1873f3b4(view);
+        this.f$0.mo48713x1873f3b4(view);
     }
 }

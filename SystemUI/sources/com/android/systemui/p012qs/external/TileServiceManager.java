@@ -65,7 +65,7 @@ public class TileServiceManager {
                 TileServiceManager.this.mServices.recalculateBindAllowance();
             }
         };
-        C23743 r2 = new BroadcastReceiver() {
+        C23773 r2 = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
                 if ("android.intent.action.PACKAGE_REMOVED".equals(intent.getAction())) {
                     String encodedSchemeSpecificPart = intent.getData().getEncodedSchemeSpecificPart();

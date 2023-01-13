@@ -18,7 +18,7 @@ import com.android.internal.util.LatencyTracker;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.keyguard.KeyguardMessageAreaController;
 import com.android.keyguard.KeyguardSecurityModel;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.classifier.FalsingCollector;
 import com.android.systemui.navigationbar.NavigationBarInflaterView;
 import java.sql.Types;
@@ -74,7 +74,7 @@ public class KeyguardSimPukViewController extends KeyguardPinBasedInputViewContr
         super(keyguardSimPukView, keyguardUpdateMonitor, securityMode, lockPatternUtils, keyguardSecurityCallback, factory, latencyTracker, liftToActivateListener, emergencyButtonController, falsingCollector);
         this.mKeyguardUpdateMonitor = keyguardUpdateMonitor;
         this.mTelephonyManager = telephonyManager;
-        this.mSimImageView = (ImageView) ((KeyguardSimPukView) this.mView).findViewById(C1893R.C1897id.keyguard_sim);
+        this.mSimImageView = (ImageView) ((KeyguardSimPukView) this.mView).findViewById(C1894R.C1898id.keyguard_sim);
     }
 
     /* access modifiers changed from: protected */
@@ -122,26 +122,26 @@ public class KeyguardSimPukViewController extends KeyguardPinBasedInputViewContr
             if (i2 == 0) {
                 if (KeyguardSimPukViewController.this.checkPuk()) {
                     this.mState = 1;
-                    i = C1893R.string.kg_puk_enter_pin_hint;
+                    i = C1894R.string.kg_puk_enter_pin_hint;
                 } else {
-                    i = C1893R.string.kg_invalid_sim_puk_hint;
+                    i = C1894R.string.kg_invalid_sim_puk_hint;
                 }
             } else if (i2 == 1) {
                 if (KeyguardSimPukViewController.this.checkPin()) {
                     this.mState = 2;
-                    i = C1893R.string.kg_enter_confirm_pin_hint;
+                    i = C1894R.string.kg_enter_confirm_pin_hint;
                 } else {
-                    i = C1893R.string.kg_invalid_sim_pin_hint;
+                    i = C1894R.string.kg_invalid_sim_pin_hint;
                 }
             } else if (i2 != 2) {
                 i = 0;
             } else if (KeyguardSimPukViewController.this.confirmPin()) {
                 this.mState = 3;
                 KeyguardSimPukViewController.this.updateSim();
-                i = C1893R.string.keyguard_sim_unlock_progress_dialog_message;
+                i = C1894R.string.keyguard_sim_unlock_progress_dialog_message;
             } else {
                 this.mState = 1;
-                i = C1893R.string.kg_invalid_confirm_pin_hint;
+                i = C1894R.string.kg_invalid_confirm_pin_hint;
             }
             ((KeyguardSimPukView) KeyguardSimPukViewController.this.mView).resetPasswordText(true, true);
             if (i != 0) {
@@ -160,7 +160,7 @@ public class KeyguardSimPukViewController extends KeyguardPinBasedInputViewContr
                 KeyguardSimPukViewController.this.showDefaultMessage();
             }
             boolean isEsimLocked = KeyguardEsimArea.isEsimLocked(((KeyguardSimPukView) KeyguardSimPukViewController.this.mView).getContext(), KeyguardSimPukViewController.this.mSubId);
-            KeyguardEsimArea keyguardEsimArea = (KeyguardEsimArea) ((KeyguardSimPukView) KeyguardSimPukViewController.this.mView).findViewById(C1893R.C1897id.keyguard_esim_area);
+            KeyguardEsimArea keyguardEsimArea = (KeyguardEsimArea) ((KeyguardSimPukView) KeyguardSimPukViewController.this.mView).findViewById(C1894R.C1898id.keyguard_esim_area);
             keyguardEsimArea.setSubscriptionId(KeyguardSimPukViewController.this.mSubId);
             if (!isEsimLocked) {
                 i = 8;
@@ -186,7 +186,7 @@ public class KeyguardSimPukViewController extends KeyguardPinBasedInputViewContr
         int color = obtainStyledAttributes.getColor(0, -1);
         obtainStyledAttributes.recycle();
         if (activeModemCount < 2) {
-            str = resources.getString(C1893R.string.kg_puk_enter_puk_hint);
+            str = resources.getString(C1894R.string.kg_puk_enter_puk_hint);
         } else {
             SubscriptionInfo subscriptionInfoForSubId = this.mKeyguardUpdateMonitor.getSubscriptionInfoForSubId(this.mSubId);
             if (subscriptionInfoForSubId != null) {
@@ -194,14 +194,14 @@ public class KeyguardSimPukViewController extends KeyguardPinBasedInputViewContr
             } else {
                 charSequence = "";
             }
-            String string = resources.getString(C1893R.string.kg_puk_enter_puk_hint_multi, new Object[]{charSequence});
+            String string = resources.getString(C1894R.string.kg_puk_enter_puk_hint_multi, new Object[]{charSequence});
             if (subscriptionInfoForSubId != null) {
                 color = subscriptionInfoForSubId.getIconTint();
             }
             str = string;
         }
         if (isEsimLocked) {
-            str = resources.getString(C1893R.string.kg_sim_lock_esim_instructions, new Object[]{str});
+            str = resources.getString(C1894R.string.kg_sim_lock_esim_instructions, new Object[]{str});
         }
         this.mMessageAreaController.setMessage((CharSequence) str);
         this.mSimImageView.setImageTintList(ColorStateList.valueOf(color));
@@ -276,7 +276,7 @@ public class KeyguardSimPukViewController extends KeyguardPinBasedInputViewContr
                                 KeyguardSimPukViewController.this.mMessageAreaController.setMessage((CharSequence) ((KeyguardSimPukView) KeyguardSimPukViewController.this.mView).getPukPasswordErrorMessage(pinResult.getAttemptsRemaining(), false, KeyguardEsimArea.isEsimLocked(((KeyguardSimPukView) KeyguardSimPukViewController.this.mView).getContext(), KeyguardSimPukViewController.this.mSubId), KeyguardSimPukViewController.this.mSubId));
                             }
                         } else {
-                            KeyguardSimPukViewController.this.mMessageAreaController.setMessage((CharSequence) ((KeyguardSimPukView) KeyguardSimPukViewController.this.mView).getResources().getString(C1893R.string.kg_password_puk_failed));
+                            KeyguardSimPukViewController.this.mMessageAreaController.setMessage((CharSequence) ((KeyguardSimPukView) KeyguardSimPukViewController.this.mView).getResources().getString(C1894R.string.kg_password_puk_failed));
                         }
                         if (KeyguardSimPukViewController.DEBUG) {
                             Log.d("KeyguardSimPukView", "verifyPasswordAndUnlock  UpdateSim.onSimCheckResponse:  attemptsRemaining=" + pinResult.getAttemptsRemaining());
@@ -295,7 +295,7 @@ public class KeyguardSimPukViewController extends KeyguardPinBasedInputViewContr
         if (this.mSimUnlockProgressDialog == null) {
             ProgressDialog progressDialog = new ProgressDialog(((KeyguardSimPukView) this.mView).getContext());
             this.mSimUnlockProgressDialog = progressDialog;
-            progressDialog.setMessage(((KeyguardSimPukView) this.mView).getResources().getString(C1893R.string.kg_sim_unlock_progress_dialog_message));
+            progressDialog.setMessage(((KeyguardSimPukView) this.mView).getResources().getString(C1894R.string.kg_sim_unlock_progress_dialog_message));
             this.mSimUnlockProgressDialog.setIndeterminate(true);
             this.mSimUnlockProgressDialog.setCancelable(false);
             if (!(((KeyguardSimPukView) this.mView).getContext() instanceof Activity)) {
@@ -325,7 +325,7 @@ public class KeyguardSimPukViewController extends KeyguardPinBasedInputViewContr
             AlertDialog.Builder builder = new AlertDialog.Builder(((KeyguardSimPukView) this.mView).getContext());
             builder.setMessage(pukPasswordErrorMessage);
             builder.setCancelable(false);
-            builder.setNeutralButton(C1893R.string.f262ok, (DialogInterface.OnClickListener) null);
+            builder.setNeutralButton(C1894R.string.f262ok, (DialogInterface.OnClickListener) null);
             AlertDialog create = builder.create();
             this.mRemainingAttemptsDialog = create;
             create.getWindow().setType(Types.SQLXML);

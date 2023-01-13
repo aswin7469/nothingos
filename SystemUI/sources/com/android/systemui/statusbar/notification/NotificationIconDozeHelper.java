@@ -9,7 +9,7 @@ import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 import androidx.core.view.ViewCompat;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 
 public class NotificationIconDozeHelper extends NotificationDozeHelper {
     private int mColor = ViewCompat.MEASURED_STATE_MASK;
@@ -18,7 +18,7 @@ public class NotificationIconDozeHelper extends NotificationDozeHelper {
     private final int mImageDarkColor = -1;
 
     public NotificationIconDozeHelper(Context context) {
-        this.mImageDarkAlpha = context.getResources().getInteger(C1893R.integer.doze_small_icon_alpha);
+        this.mImageDarkAlpha = context.getResources().getInteger(C1894R.integer.doze_small_icon_alpha);
     }
 
     public void setColor(int i) {
@@ -47,7 +47,7 @@ public class NotificationIconDozeHelper extends NotificationDozeHelper {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$fadeImageColorFilter$0$com-android-systemui-statusbar-notification-NotificationIconDozeHelper */
-    public /* synthetic */ void mo39816x2680c1dd(ImageView imageView, ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo39818x2680c1dd(ImageView imageView, ValueAnimator valueAnimator) {
         updateImageColorFilter(imageView, ((Float) valueAnimator.getAnimatedValue()).floatValue());
     }
 
@@ -57,7 +57,7 @@ public class NotificationIconDozeHelper extends NotificationDozeHelper {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$fadeImageAlpha$1$com-android-systemui-statusbar-notification-NotificationIconDozeHelper */
-    public /* synthetic */ void mo39815xb841aef9(ImageView imageView, ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo39817xb841aef9(ImageView imageView, ValueAnimator valueAnimator) {
         float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
         imageView.setImageAlpha((int) (((1.0f - floatValue) * 255.0f) + (((float) this.mImageDarkAlpha) * floatValue)));
     }

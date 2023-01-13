@@ -9,7 +9,7 @@ public class ShortcutKeyServiceProxy extends IShortcutService.Stub {
     private static final int MSG_SHORTCUT_RECEIVED = 1;
     /* access modifiers changed from: private */
     public Callbacks mCallbacks;
-    private final Handler mHandler = new C2527H();
+    private final Handler mHandler = new C2533H();
     private final Object mLock = new Object();
 
     public interface Callbacks {
@@ -27,8 +27,8 @@ public class ShortcutKeyServiceProxy extends IShortcutService.Stub {
     }
 
     /* renamed from: com.android.systemui.shortcut.ShortcutKeyServiceProxy$H */
-    private final class C2527H extends Handler {
-        private C2527H() {
+    private final class C2533H extends Handler {
+        private C2533H() {
         }
 
         public void handleMessage(Message message) {

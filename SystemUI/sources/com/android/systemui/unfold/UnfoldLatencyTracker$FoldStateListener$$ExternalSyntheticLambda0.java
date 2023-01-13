@@ -12,6 +12,6 @@ public final /* synthetic */ class UnfoldLatencyTracker$FoldStateListener$$Exter
     }
 
     public final void accept(Object obj) {
-        UnfoldLatencyTracker.FoldStateListener.m3268_init_$lambda0(this.f$0, (Boolean) obj);
+        UnfoldLatencyTracker.FoldStateListener.m3273_init_$lambda0(this.f$0, (Boolean) obj);
     }
 }

@@ -9,6 +9,6 @@ public final /* synthetic */ class HeadsUpAppearanceController$$ExternalSyntheti
     }
 
     public final void run() {
-        this.f$0.mo44043x76ccce16();
+        this.f$0.mo44053x76ccce16();
     }
 }

@@ -13,6 +13,6 @@ public final /* synthetic */ class ViewTransformationHelper$$ExternalSyntheticLa
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        this.f$0.mo39187xfd6a2d5a(this.f$1, valueAnimator);
+        this.f$0.mo39188xfd6a2d5a(this.f$1, valueAnimator);
     }
 }

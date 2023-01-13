@@ -10,6 +10,6 @@ public final /* synthetic */ class CustomTile$$ExternalSyntheticLambda1 implemen
     }
 
     public final void run() {
-        this.f$0.mo36568xbca43afd();
+        this.f$0.mo36572xbca43afd();
     }
 }

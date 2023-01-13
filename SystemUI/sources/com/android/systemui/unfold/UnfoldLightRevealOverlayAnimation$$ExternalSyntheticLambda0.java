@@ -13,6 +13,6 @@ public final /* synthetic */ class UnfoldLightRevealOverlayAnimation$$ExternalSy
     }
 
     public final void run() {
-        UnfoldLightRevealOverlayAnimation.m3275init$lambda1$lambda0(this.f$0, this.f$1);
+        UnfoldLightRevealOverlayAnimation.m3280init$lambda1$lambda0(this.f$0, this.f$1);
     }
 }

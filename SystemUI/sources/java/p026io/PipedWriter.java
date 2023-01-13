@@ -21,7 +21,7 @@ public class PipedWriter extends Writer {
                     throw new IOException("Pipe closed");
                 } else {
                     this.sink = pipedReader;
-                    pipedReader.f529in = -1;
+                    pipedReader.f527in = -1;
                     pipedReader.out = 0;
                     pipedReader.connected = true;
                 }

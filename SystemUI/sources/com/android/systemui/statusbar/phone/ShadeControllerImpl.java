@@ -9,6 +9,8 @@ import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.NotificationPresenter;
 import com.android.systemui.statusbar.NotificationShadeWindowController;
+import com.nothing.systemui.NTDependencyEx;
+import com.nothing.systemui.statusbar.phone.CentralSurfacesImplEx;
 import dagger.Lazy;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -66,7 +68,10 @@ public class ShadeControllerImpl implements ShadeController {
             if (getNotificationShadeWindowView() != null && getNotificationPanelViewController().canPanelBeCollapsed() && (i & 4) == 0) {
                 this.mNotificationShadeWindowController.setNotificationShadeFocusable(false);
                 getCentralSurfaces().getNotificationShadeWindowViewController().cancelExpandHelper();
-                getNotificationPanelViewController().collapsePanel(true, z2, f);
+                if (getNotificationPanelViewController().isFullyCollapsed() || !((CentralSurfacesImplEx) NTDependencyEx.get(CentralSurfacesImplEx.class)).isPanelCollapsedByDream()) {
+                    getNotificationPanelViewController().collapsePanel(true, z2, f);
+                    return;
+                }
                 return;
             }
             return;
@@ -152,17 +157,5 @@ public class ShadeControllerImpl implements ShadeController {
     /* access modifiers changed from: private */
     public NotificationPanelViewController getNotificationPanelViewController() {
         return getCentralSurfaces().getPanelController();
-    }
-
-    public boolean isPanelFullyCollapsed() {
-        return getNotificationPanelViewController().isPanelFullyCollapsed();
-    }
-
-    public boolean isQsExpanded() {
-        return getNotificationPanelViewController().isQsExpanded();
-    }
-
-    public void addPostFullyCollapseAction(Runnable runnable) {
-        getNotificationPanelViewController().addPostFullyCollapseAction(runnable);
     }
 }

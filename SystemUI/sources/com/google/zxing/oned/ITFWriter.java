@@ -8,12 +8,12 @@ public final class ITFWriter extends OneDimensionalCodeWriter {
     private static final int[] END_PATTERN = {3, 1, 1};
 
     /* renamed from: N */
-    private static final int f485N = 1;
+    private static final int f484N = 1;
     private static final int[][] PATTERNS = {new int[]{1, 1, 3, 3, 1}, new int[]{3, 1, 1, 1, 3}, new int[]{1, 3, 1, 1, 3}, new int[]{3, 3, 1, 1, 1}, new int[]{1, 1, 3, 1, 3}, new int[]{3, 1, 3, 1, 1}, new int[]{1, 3, 3, 1, 1}, new int[]{1, 1, 1, 3, 3}, new int[]{3, 1, 1, 3, 1}, new int[]{1, 3, 1, 3, 1}};
     private static final int[] START_PATTERN = {1, 1, 1, 1};
 
     /* renamed from: W */
-    private static final int f486W = 3;
+    private static final int f485W = 3;
 
     /* access modifiers changed from: protected */
     public Collection<BarcodeFormat> getSupportedWriteFormats() {

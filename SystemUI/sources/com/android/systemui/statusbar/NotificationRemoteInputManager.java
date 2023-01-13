@@ -27,7 +27,7 @@ import android.widget.RemoteViews;
 import android.widget.TextView;
 import com.android.internal.statusbar.IStatusBarService;
 import com.android.internal.statusbar.NotificationVisibility;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dumpable;
 import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.dump.DumpManager;
@@ -95,7 +95,7 @@ public class NotificationRemoteInputManager implements Dumpable {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onInteraction$1$com-android-systemui-statusbar-NotificationRemoteInputManager$1 */
-        public /* synthetic */ boolean mo38825x7b0670ac(RemoteViews.RemoteResponse remoteResponse, View view, NotificationEntry notificationEntry, PendingIntent pendingIntent) {
+        public /* synthetic */ boolean mo38826x7b0670ac(RemoteViews.RemoteResponse remoteResponse, View view, NotificationEntry notificationEntry, PendingIntent pendingIntent) {
             Pair launchOptions = remoteResponse.getLaunchOptions(view);
             NotificationRemoteInputManager.this.mLogger.logStartingIntentWithDefaultHandler(notificationEntry, pendingIntent);
             boolean startPendingIntent = RemoteViews.startPendingIntent(view, pendingIntent, launchOptions);
@@ -312,7 +312,7 @@ public class NotificationRemoteInputManager implements Dumpable {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setUpWithCallback$0$com-android-systemui-statusbar-NotificationRemoteInputManager */
-    public /* synthetic */ void mo38817x7995d1d3(NotificationEntry notificationEntry, CharSequence charSequence) {
+    public /* synthetic */ void mo38818x7995d1d3(NotificationEntry notificationEntry, CharSequence charSequence) {
         this.mEntryManager.updateNotification(this.mRebuilder.rebuildForSendingSmartReply(notificationEntry, charSequence), (NotificationListenerService.RankingMap) null);
     }
 
@@ -335,11 +335,11 @@ public class NotificationRemoteInputManager implements Dumpable {
     }
 
     public boolean activateRemoteInput(View view, RemoteInput[] remoteInputArr, RemoteInput remoteInput, PendingIntent pendingIntent, NotificationEntry.EditedSuggestionInfo editedSuggestionInfo) {
-        return mo38815x794a631d(view, remoteInputArr, remoteInput, pendingIntent, editedSuggestionInfo, (String) null, (AuthBypassPredicate) null);
+        return mo38816x794a631d(view, remoteInputArr, remoteInput, pendingIntent, editedSuggestionInfo, (String) null, (AuthBypassPredicate) null);
     }
 
     /* renamed from: activateRemoteInput */
-    public boolean mo38815x794a631d(View view, RemoteInput[] remoteInputArr, RemoteInput remoteInput, PendingIntent pendingIntent, NotificationEntry.EditedSuggestionInfo editedSuggestionInfo, String str, AuthBypassPredicate authBypassPredicate) {
+    public boolean mo38816x794a631d(View view, RemoteInput[] remoteInputArr, RemoteInput remoteInput, PendingIntent pendingIntent, NotificationEntry.EditedSuggestionInfo editedSuggestionInfo, String str, AuthBypassPredicate authBypassPredicate) {
         RemoteInputView remoteInputView;
         RemoteInputView remoteInputView2;
         ExpandableNotificationRow expandableNotificationRow;
@@ -358,7 +358,7 @@ public class NotificationRemoteInputManager implements Dumpable {
                 View view3 = (View) parent;
                 if (view3.isRootNamespace()) {
                     remoteInputView2 = findRemoteInputView(view3);
-                    expandableNotificationRow = (ExpandableNotificationRow) view3.getTag(C1893R.C1897id.row_tag_for_content_view);
+                    expandableNotificationRow = (ExpandableNotificationRow) view3.getTag(C1894R.C1898id.row_tag_for_content_view);
                     break;
                 }
             }
@@ -414,7 +414,7 @@ public class NotificationRemoteInputManager implements Dumpable {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$activateRemoteInput$2$com-android-systemui-statusbar-NotificationRemoteInputManager */
-    public /* synthetic */ boolean mo38816x6cd9e75e(AuthBypassPredicate authBypassPredicate, View view, PendingIntent pendingIntent, ExpandableNotificationRow expandableNotificationRow) {
+    public /* synthetic */ boolean mo38817x6cd9e75e(AuthBypassPredicate authBypassPredicate, View view, PendingIntent pendingIntent, ExpandableNotificationRow expandableNotificationRow) {
         return !authBypassPredicate.canSendRemoteInputWithoutBouncer() && showBouncerForRemoteInput(view, pendingIntent, expandableNotificationRow);
     }
 
@@ -581,13 +581,13 @@ public class NotificationRemoteInputManager implements Dumpable {
             if (NotificationRemoteInputManager.FORCE_REMOTE_INPUT_HISTORY && isNotificationKeptForRemoteInputHistory(notificationEntry.getKey())) {
                 this.mNotificationLifetimeFinishedCallback.onSafeToRemove(notificationEntry.getKey());
             } else if (this.mEntriesKeptForRemoteInputActive.contains(notificationEntry)) {
-                NotificationRemoteInputManager.this.mMainHandler.postDelayed(new C2577x9a54ce8a(this, notificationEntry), 200);
+                NotificationRemoteInputManager.this.mMainHandler.postDelayed(new C2583x9a54ce8a(this, notificationEntry), 200);
             }
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onRemoteInputSent$0$com-android-systemui-statusbar-NotificationRemoteInputManager$LegacyRemoteInputLifetimeExtender */
-        public /* synthetic */ void mo38839x9dd93c8f(NotificationEntry notificationEntry) {
+        public /* synthetic */ void mo38840x9dd93c8f(NotificationEntry notificationEntry) {
             if (this.mEntriesKeptForRemoteInputActive.remove(notificationEntry)) {
                 this.mNotificationLifetimeFinishedCallback.onSafeToRemove(notificationEntry.getKey());
             }
@@ -615,13 +615,13 @@ public class NotificationRemoteInputManager implements Dumpable {
         public void releaseNotificationIfKeptForRemoteInputHistory(NotificationEntry notificationEntry) {
             String key = notificationEntry.getKey();
             if (isNotificationKeptForRemoteInputHistory(key)) {
-                NotificationRemoteInputManager.this.mMainHandler.postDelayed(new C2578x9a54ce8b(this, key), 200);
+                NotificationRemoteInputManager.this.mMainHandler.postDelayed(new C2584x9a54ce8b(this, key), 200);
             }
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$releaseNotificationIfKeptForRemoteInputHistory$1$com-android-systemui-statusbar-NotificationRemoteInputManager$LegacyRemoteInputLifetimeExtender */
-        public /* synthetic */ void mo38840xaac6da19(String str) {
+        public /* synthetic */ void mo38841xaac6da19(String str) {
             if (isNotificationKeptForRemoteInputHistory(str)) {
                 this.mNotificationLifetimeFinishedCallback.onSafeToRemove(str);
             }

@@ -5,7 +5,7 @@ import android.text.method.PasswordTransformationMethod;
 import android.text.method.TransformationMethod;
 import android.view.View;
 import android.widget.EditText;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.internal.TextWatcherAdapter;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -44,8 +44,8 @@ class PasswordToggleEndIconDelegate extends EndIconDelegate {
 
     /* access modifiers changed from: package-private */
     public void initialize() {
-        this.textInputLayout.setEndIconDrawable(this.customEndIcon == 0 ? C3621R.C3623drawable.design_password_eye : this.customEndIcon);
-        this.textInputLayout.setEndIconContentDescription(this.textInputLayout.getResources().getText(C3621R.string.password_toggle_content_description));
+        this.textInputLayout.setEndIconDrawable(this.customEndIcon == 0 ? C3631R.C3633drawable.design_password_eye : this.customEndIcon);
+        this.textInputLayout.setEndIconContentDescription(this.textInputLayout.getResources().getText(C3631R.string.password_toggle_content_description));
         this.textInputLayout.setEndIconVisible(true);
         this.textInputLayout.setEndIconCheckable(true);
         this.textInputLayout.setEndIconOnClickListener(new View.OnClickListener() {

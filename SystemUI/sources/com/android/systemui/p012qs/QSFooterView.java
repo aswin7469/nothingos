@@ -15,7 +15,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import androidx.constraintlayout.motion.widget.Key;
 import com.android.settingslib.development.DevelopmentSettingsEnabler;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.p012qs.TouchAnimator;
 
 /* renamed from: com.android.systemui.qs.QSFooterView */
@@ -56,8 +56,8 @@ public class QSFooterView extends FrameLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mPageIndicator = (PageIndicator) findViewById(C1893R.C1897id.footer_page_indicator);
-        this.mBuildText = (TextView) findViewById(C1893R.C1897id.build);
+        this.mPageIndicator = (PageIndicator) findViewById(C1894R.C1898id.footer_page_indicator);
+        this.mBuildText = (TextView) findViewById(C1894R.C1898id.build);
         this.mEditButton = findViewById(16908291);
         updateResources();
         setImportantForAccessibility(1);
@@ -88,7 +88,7 @@ public class QSFooterView extends FrameLayout {
     private void updateResources() {
         updateFooterAnimator();
         ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) getLayoutParams();
-        marginLayoutParams.bottomMargin = getResources().getDimensionPixelSize(C1893R.dimen.qs_footers_margin_bottom);
+        marginLayoutParams.bottomMargin = getResources().getDimensionPixelSize(C1894R.dimen.qs_footers_margin_bottom);
         setLayoutParams(marginLayoutParams);
     }
 
@@ -154,7 +154,7 @@ public class QSFooterView extends FrameLayout {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateEverything$0$com-android-systemui-qs-QSFooterView  reason: not valid java name */
-    public /* synthetic */ void m2908lambda$updateEverything$0$comandroidsystemuiqsQSFooterView() {
+    public /* synthetic */ void m2913lambda$updateEverything$0$comandroidsystemuiqsQSFooterView() {
         updateVisibilities();
         updateClickabilities();
         setClickable(false);

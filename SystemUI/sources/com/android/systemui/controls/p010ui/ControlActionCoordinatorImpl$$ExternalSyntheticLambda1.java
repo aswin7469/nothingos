@@ -12,6 +12,6 @@ public final /* synthetic */ class ControlActionCoordinatorImpl$$ExternalSynthet
     }
 
     public final void onDismiss(DialogInterface dialogInterface) {
-        ControlActionCoordinatorImpl.m2679showDetail$lambda7$lambda6$lambda5$lambda4$lambda3(this.f$0, dialogInterface);
+        ControlActionCoordinatorImpl.m2684showDetail$lambda7$lambda6$lambda5$lambda4$lambda3(this.f$0, dialogInterface);
     }
 }

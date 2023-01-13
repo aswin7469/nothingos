@@ -7,7 +7,7 @@ public enum IsoEra implements Era {
     CE;
 
     /* renamed from: of */
-    public static IsoEra m945of(int i) {
+    public static IsoEra m943of(int i) {
         if (i == 0) {
             return BCE;
         }

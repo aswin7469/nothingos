@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.android.launcher3.icons.cache.BaseIconCache;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.controls.controller.ControlInfo;
 import com.android.systemui.controls.controller.ControlsController;
@@ -28,7 +28,7 @@ import kotlin.Metadata;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 
-@Metadata(mo64986d1 = {"\u0000n\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\r\n\u0000\n\u0002\u0010\u000b\n\u0000\n\u0002\u0010\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\b\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0005*\u0002\f\u0013\b\u0016\u0018\u0000 (2\u00020\u00012\u00020\u00022\u00020\u0003:\u0001(B\u001f\b\u0007\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\u0006\u0010\u0006\u001a\u00020\u0007\u0012\u0006\u0010\b\u001a\u00020\t¢\u0006\u0002\u0010\nJ\u000e\u0010\u0017\u001a\u00020\u00162\u0006\u0010\u0018\u001a\u00020\u0019J\b\u0010\u001a\u001a\u00020\u001bH\u0002J\u0012\u0010\u001c\u001a\u00020\u001d2\b\u0010\u0015\u001a\u0004\u0018\u00010\u001eH\u0016J\u001a\u0010\u001f\u001a\u00020\u001d2\b\u0010\u0015\u001a\u0004\u0018\u00010\u001e2\u0006\u0010 \u001a\u00020!H\u0016J\u0012\u0010\"\u001a\u00020\u001d2\b\u0010#\u001a\u0004\u0018\u00010$H\u0014J\b\u0010%\u001a\u00020\u001dH\u0014J\b\u0010&\u001a\u00020\u001dH\u0014J\n\u0010'\u001a\u0004\u0018\u00010\u0019H\u0002R\u000e\u0010\u0006\u001a\u00020\u0007X\u0004¢\u0006\u0002\n\u0000R\u0010\u0010\u000b\u001a\u00020\fX\u0004¢\u0006\u0004\n\u0002\u0010\rR\u000e\u0010\u000e\u001a\u00020\u000fX.¢\u0006\u0002\n\u0000R\u000e\u0010\u0010\u001a\u00020\u0011X.¢\u0006\u0002\n\u0000R\u000e\u0010\u0004\u001a\u00020\u0005X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\b\u001a\u00020\tX\u0004¢\u0006\u0002\n\u0000R\u0010\u0010\u0012\u001a\u00020\u0013X\u0004¢\u0006\u0004\n\u0002\u0010\u0014R\u0010\u0010\u0015\u001a\u0004\u0018\u00010\u0016X\u000e¢\u0006\u0002\n\u0000¨\u0006)"}, mo64987d2 = {"Lcom/android/systemui/controls/management/ControlsRequestDialog;", "Lcom/android/systemui/util/LifecycleActivity;", "Landroid/content/DialogInterface$OnClickListener;", "Landroid/content/DialogInterface$OnCancelListener;", "controller", "Lcom/android/systemui/controls/controller/ControlsController;", "broadcastDispatcher", "Lcom/android/systemui/broadcast/BroadcastDispatcher;", "controlsListingController", "Lcom/android/systemui/controls/management/ControlsListingController;", "(Lcom/android/systemui/controls/controller/ControlsController;Lcom/android/systemui/broadcast/BroadcastDispatcher;Lcom/android/systemui/controls/management/ControlsListingController;)V", "callback", "com/android/systemui/controls/management/ControlsRequestDialog$callback$1", "Lcom/android/systemui/controls/management/ControlsRequestDialog$callback$1;", "control", "Landroid/service/controls/Control;", "controlComponent", "Landroid/content/ComponentName;", "currentUserTracker", "com/android/systemui/controls/management/ControlsRequestDialog$currentUserTracker$1", "Lcom/android/systemui/controls/management/ControlsRequestDialog$currentUserTracker$1;", "dialog", "Landroid/app/Dialog;", "createDialog", "label", "", "isCurrentFavorite", "", "onCancel", "", "Landroid/content/DialogInterface;", "onClick", "which", "", "onCreate", "savedInstanceState", "Landroid/os/Bundle;", "onDestroy", "onResume", "verifyComponentAndGetLabel", "Companion", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000n\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\r\n\u0000\n\u0002\u0010\u000b\n\u0000\n\u0002\u0010\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\b\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0005*\u0002\f\u0013\b\u0016\u0018\u0000 (2\u00020\u00012\u00020\u00022\u00020\u0003:\u0001(B\u001f\b\u0007\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\u0006\u0010\u0006\u001a\u00020\u0007\u0012\u0006\u0010\b\u001a\u00020\t¢\u0006\u0002\u0010\nJ\u000e\u0010\u0017\u001a\u00020\u00162\u0006\u0010\u0018\u001a\u00020\u0019J\b\u0010\u001a\u001a\u00020\u001bH\u0002J\u0012\u0010\u001c\u001a\u00020\u001d2\b\u0010\u0015\u001a\u0004\u0018\u00010\u001eH\u0016J\u001a\u0010\u001f\u001a\u00020\u001d2\b\u0010\u0015\u001a\u0004\u0018\u00010\u001e2\u0006\u0010 \u001a\u00020!H\u0016J\u0012\u0010\"\u001a\u00020\u001d2\b\u0010#\u001a\u0004\u0018\u00010$H\u0014J\b\u0010%\u001a\u00020\u001dH\u0014J\b\u0010&\u001a\u00020\u001dH\u0014J\n\u0010'\u001a\u0004\u0018\u00010\u0019H\u0002R\u000e\u0010\u0006\u001a\u00020\u0007X\u0004¢\u0006\u0002\n\u0000R\u0010\u0010\u000b\u001a\u00020\fX\u0004¢\u0006\u0004\n\u0002\u0010\rR\u000e\u0010\u000e\u001a\u00020\u000fX.¢\u0006\u0002\n\u0000R\u000e\u0010\u0010\u001a\u00020\u0011X.¢\u0006\u0002\n\u0000R\u000e\u0010\u0004\u001a\u00020\u0005X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\b\u001a\u00020\tX\u0004¢\u0006\u0002\n\u0000R\u0010\u0010\u0012\u001a\u00020\u0013X\u0004¢\u0006\u0004\n\u0002\u0010\u0014R\u0010\u0010\u0015\u001a\u0004\u0018\u00010\u0016X\u000e¢\u0006\u0002\n\u0000¨\u0006)"}, mo65043d2 = {"Lcom/android/systemui/controls/management/ControlsRequestDialog;", "Lcom/android/systemui/util/LifecycleActivity;", "Landroid/content/DialogInterface$OnClickListener;", "Landroid/content/DialogInterface$OnCancelListener;", "controller", "Lcom/android/systemui/controls/controller/ControlsController;", "broadcastDispatcher", "Lcom/android/systemui/broadcast/BroadcastDispatcher;", "controlsListingController", "Lcom/android/systemui/controls/management/ControlsListingController;", "(Lcom/android/systemui/controls/controller/ControlsController;Lcom/android/systemui/broadcast/BroadcastDispatcher;Lcom/android/systemui/controls/management/ControlsListingController;)V", "callback", "com/android/systemui/controls/management/ControlsRequestDialog$callback$1", "Lcom/android/systemui/controls/management/ControlsRequestDialog$callback$1;", "control", "Landroid/service/controls/Control;", "controlComponent", "Landroid/content/ComponentName;", "currentUserTracker", "com/android/systemui/controls/management/ControlsRequestDialog$currentUserTracker$1", "Lcom/android/systemui/controls/management/ControlsRequestDialog$currentUserTracker$1;", "dialog", "Landroid/app/Dialog;", "createDialog", "label", "", "isCurrentFavorite", "", "onCancel", "", "Landroid/content/DialogInterface;", "onClick", "which", "", "onCreate", "savedInstanceState", "Landroid/os/Bundle;", "onDestroy", "onResume", "verifyComponentAndGetLabel", "Companion", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* compiled from: ControlsRequestDialog.kt */
 public class ControlsRequestDialog extends LifecycleActivity implements DialogInterface.OnClickListener, DialogInterface.OnCancelListener {
     public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
@@ -74,7 +74,7 @@ public class ControlsRequestDialog extends LifecycleActivity implements DialogIn
         this.currentUserTracker = new ControlsRequestDialog$currentUserTracker$1(this, broadcastDispatcher2);
     }
 
-    @Metadata(mo64986d1 = {"\u0000\u0012\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\u000e\n\u0000\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u000e\u0010\u0003\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000¨\u0006\u0005"}, mo64987d2 = {"Lcom/android/systemui/controls/management/ControlsRequestDialog$Companion;", "", "()V", "TAG", "", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u0000\u0012\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\u000e\n\u0000\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u000e\u0010\u0003\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000¨\u0006\u0005"}, mo65043d2 = {"Lcom/android/systemui/controls/management/ControlsRequestDialog$Companion;", "", "()V", "TAG", "", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* compiled from: ControlsRequestDialog.kt */
     public static final class Companion {
         public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
@@ -258,18 +258,18 @@ public class ControlsRequestDialog extends LifecycleActivity implements DialogIn
             control3 = null;
         }
         RenderInfo lookup$default = RenderInfo.Companion.lookup$default(companion, context, componentName, control3.getDeviceType(), 0, 8, (Object) null);
-        View inflate = LayoutInflater.from(context).inflate(C1893R.layout.controls_dialog, (ViewGroup) null);
-        ImageView imageView = (ImageView) inflate.requireViewById(C1893R.C1897id.icon);
+        View inflate = LayoutInflater.from(context).inflate(C1894R.layout.controls_dialog, (ViewGroup) null);
+        ImageView imageView = (ImageView) inflate.requireViewById(C1894R.C1898id.icon);
         imageView.setImageDrawable(lookup$default.getIcon());
         imageView.setImageTintList(imageView.getContext().getResources().getColorStateList(lookup$default.getForeground(), imageView.getContext().getTheme()));
-        TextView textView = (TextView) inflate.requireViewById(C1893R.C1897id.title);
+        TextView textView = (TextView) inflate.requireViewById(C1894R.C1898id.title);
         Control control4 = this.control;
         if (control4 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("control");
             control4 = null;
         }
         textView.setText(control4.getTitle());
-        TextView textView2 = (TextView) inflate.requireViewById(C1893R.C1897id.subtitle);
+        TextView textView2 = (TextView) inflate.requireViewById(C1894R.C1898id.subtitle);
         Control control5 = this.control;
         if (control5 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("control");
@@ -277,10 +277,10 @@ public class ControlsRequestDialog extends LifecycleActivity implements DialogIn
             control2 = control5;
         }
         textView2.setText(control2.getSubtitle());
-        inflate.requireViewById(C1893R.C1897id.control).setElevation(inflate.getResources().getFloat(C1893R.dimen.control_card_elevation));
-        AlertDialog.Builder message = new AlertDialog.Builder(context).setTitle(getString(C1893R.string.controls_dialog_title)).setMessage(getString(C1893R.string.controls_dialog_message, new Object[]{charSequence}));
+        inflate.requireViewById(C1894R.C1898id.control).setElevation(inflate.getResources().getFloat(C1894R.dimen.control_card_elevation));
+        AlertDialog.Builder message = new AlertDialog.Builder(context).setTitle(getString(C1894R.string.controls_dialog_title)).setMessage(getString(C1894R.string.controls_dialog_message, new Object[]{charSequence}));
         DialogInterface.OnClickListener onClickListener = this;
-        AlertDialog create = message.setPositiveButton(C1893R.string.controls_dialog_ok, onClickListener).setNegativeButton(17039360, onClickListener).setOnCancelListener(this).setView(inflate).create();
+        AlertDialog create = message.setPositiveButton(C1894R.string.controls_dialog_ok, onClickListener).setNegativeButton(17039360, onClickListener).setOnCancelListener(this).setView(inflate).create();
         Dialog dialog2 = create;
         SystemUIDialog.registerDismissListener(dialog2);
         create.setCanceledOnTouchOutside(true);

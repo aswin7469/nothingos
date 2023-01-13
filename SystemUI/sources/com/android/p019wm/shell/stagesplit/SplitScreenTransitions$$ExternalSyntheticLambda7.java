@@ -14,6 +14,6 @@ public final /* synthetic */ class SplitScreenTransitions$$ExternalSyntheticLamb
     }
 
     public final void onTransitionFinished(WindowContainerTransaction windowContainerTransaction, WindowContainerTransactionCallback windowContainerTransactionCallback) {
-        this.f$0.mo50990xf8dbd6b4(windowContainerTransaction, windowContainerTransactionCallback);
+        this.f$0.mo51001xf8dbd6b4(windowContainerTransaction, windowContainerTransactionCallback);
     }
 }

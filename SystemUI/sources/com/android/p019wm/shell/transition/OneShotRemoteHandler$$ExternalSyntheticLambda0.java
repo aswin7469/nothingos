@@ -15,6 +15,6 @@ public final /* synthetic */ class OneShotRemoteHandler$$ExternalSyntheticLambda
     }
 
     public final void binderDied() {
-        this.f$0.mo51253x2986f74a(this.f$1);
+        this.f$0.mo51264x2986f74a(this.f$1);
     }
 }

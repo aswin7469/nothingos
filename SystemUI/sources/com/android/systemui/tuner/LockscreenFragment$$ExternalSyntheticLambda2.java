@@ -17,6 +17,6 @@ public final /* synthetic */ class LockscreenFragment$$ExternalSyntheticLambda2 
     }
 
     public final void onTuningChanged(String str, String str2) {
-        this.f$0.mo46393xd5944fa2(this.f$1, this.f$2, str, str2);
+        this.f$0.mo46405xd5944fa2(this.f$1, this.f$2, str, str2);
     }
 }

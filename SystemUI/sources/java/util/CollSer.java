@@ -58,10 +58,10 @@ final class CollSer implements Serializable {
                 int i = this.tag;
                 int i2 = i & 255;
                 if (i2 == 1) {
-                    return List.m1733of((E[]) objArr);
+                    return List.m1739of((E[]) objArr);
                 }
                 if (i2 == 2) {
-                    return Set.m1761of((E[]) objArr);
+                    return Set.m1767of((E[]) objArr);
                 }
                 if (i2 != 3) {
                     throw new InvalidObjectException(String.format("invalid flags 0x%x", Integer.valueOf(i)));

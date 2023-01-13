@@ -20,6 +20,6 @@ public final /* synthetic */ class PipTaskOrganizer$$ExternalSyntheticLambda9 im
     }
 
     public final void runWithTransaction(SurfaceControl.Transaction transaction) {
-        this.f$0.m3455lambda$exitPip$1$comandroidwmshellpipPipTaskOrganizer(this.f$1, this.f$2, this.f$3, transaction);
+        this.f$0.m3459lambda$exitPip$1$comandroidwmshellpipPipTaskOrganizer(this.f$1, this.f$2, this.f$3, transaction);
     }
 }

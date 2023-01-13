@@ -9,6 +9,6 @@ public final /* synthetic */ class LockscreenShadeTransitionController$$External
     }
 
     public final void run() {
-        LockscreenShadeTransitionController.m3030onDraggedDown$lambda1(this.f$0);
+        LockscreenShadeTransitionController.m3034onDraggedDown$lambda1(this.f$0);
     }
 }

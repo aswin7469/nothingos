@@ -17,6 +17,6 @@ public final /* synthetic */ class SplitDecorManager$$ExternalSyntheticLambda0 i
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        this.f$0.mo49296xc8f85c2(this.f$1, this.f$2, valueAnimator);
+        this.f$0.mo49305xc8f85c2(this.f$1, this.f$2, valueAnimator);
     }
 }

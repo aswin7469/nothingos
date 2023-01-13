@@ -13,7 +13,7 @@ import android.view.ViewOverlay;
 import android.widget.FrameLayout;
 import android.widget.SeekBar;
 import com.android.settingslib.RestrictedLockUtils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Gefingerpoken;
 
 public class BrightnessSliderView extends FrameLayout {
@@ -54,11 +54,11 @@ public class BrightnessSliderView extends FrameLayout {
     public void onFinishInflate() {
         super.onFinishInflate();
         setLayerType(2, (Paint) null);
-        ToggleSeekBar toggleSeekBar = (ToggleSeekBar) requireViewById(C1893R.C1897id.slider);
+        ToggleSeekBar toggleSeekBar = (ToggleSeekBar) requireViewById(C1894R.C1898id.slider);
         this.mSlider = toggleSeekBar;
         toggleSeekBar.setAccessibilityLabel(getContentDescription().toString());
         try {
-            this.mProgressDrawable = ((LayerDrawable) ((DrawableWrapper) ((LayerDrawable) this.mSlider.getProgressDrawable()).findDrawableByLayerId(16908301)).getDrawable()).findDrawableByLayerId(C1893R.C1897id.slider_foreground);
+            this.mProgressDrawable = ((LayerDrawable) ((DrawableWrapper) ((LayerDrawable) this.mSlider.getProgressDrawable()).findDrawableByLayerId(16908301)).getDrawable()).findDrawableByLayerId(C1894R.C1898id.slider_foreground);
         } catch (Exception unused) {
         }
     }

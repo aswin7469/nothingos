@@ -19,7 +19,7 @@ import android.os.Looper;
 import android.provider.Settings;
 import com.android.settingslib.C1757R;
 import com.android.settingslib.Utils;
-import com.android.wifitrackerlib.C3341R;
+import com.android.wifitrackerlib.C3351R;
 import java.p026io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.HashSet;
@@ -109,8 +109,8 @@ public class WifiStatusTracker {
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onCapabilitiesChanged$0$com-android-settingslib-wifi-WifiStatusTracker$1 */
-            public /* synthetic */ void mo29433x3aaa41d1() {
-                WifiStatusTracker.this.mo29430xb5e646ae();
+            public /* synthetic */ void mo29443x3aaa41d1() {
+                WifiStatusTracker.this.mo29440xb5e646ae();
             }
 
             public void onLost(Network network) {
@@ -125,8 +125,8 @@ public class WifiStatusTracker {
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onLost$1$com-android-settingslib-wifi-WifiStatusTracker$1  reason: not valid java name */
-            public /* synthetic */ void m2511lambda$onLost$1$comandroidsettingslibwifiWifiStatusTracker$1() {
-                WifiStatusTracker.this.mo29430xb5e646ae();
+            public /* synthetic */ void m2517lambda$onLost$1$comandroidsettingslibwifiWifiStatusTracker$1() {
+                WifiStatusTracker.this.mo29440xb5e646ae();
             }
         };
         this.mDefaultNetworkCallback = new ConnectivityManager.NetworkCallback(1) {
@@ -139,8 +139,8 @@ public class WifiStatusTracker {
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onCapabilitiesChanged$0$com-android-settingslib-wifi-WifiStatusTracker$2 */
-            public /* synthetic */ void mo29435x3aaa41d2() {
-                WifiStatusTracker.this.mo29430xb5e646ae();
+            public /* synthetic */ void mo29445x3aaa41d2() {
+                WifiStatusTracker.this.mo29440xb5e646ae();
             }
 
             public void onLost(Network network) {
@@ -152,8 +152,8 @@ public class WifiStatusTracker {
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onLost$1$com-android-settingslib-wifi-WifiStatusTracker$2  reason: not valid java name */
-            public /* synthetic */ void m2512lambda$onLost$1$comandroidsettingslibwifiWifiStatusTracker$2() {
-                WifiStatusTracker.this.mo29430xb5e646ae();
+            public /* synthetic */ void m2518lambda$onLost$1$comandroidsettingslibwifiWifiStatusTracker$2() {
+                WifiStatusTracker.this.mo29440xb5e646ae();
             }
         };
         this.mDefaultNetwork = null;
@@ -180,24 +180,27 @@ public class WifiStatusTracker {
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$networkCacheUpdated$0$com-android-settingslib-wifi-WifiStatusTracker$3 */
-            public /* synthetic */ void mo29437x9a5f61ab() {
-                WifiStatusTracker.this.mo29430xb5e646ae();
+            public /* synthetic */ void mo29447x9a5f61ab() {
+                WifiStatusTracker.this.mo29440xb5e646ae();
             }
         };
     }
 
     public void setListening(boolean z) {
         if (z) {
-            this.mNetworkScoreManager.registerNetworkScoreCache(1, this.mWifiNetworkScoreCache, 1);
-            this.mWifiNetworkScoreCache.registerListener(this.mCacheListener);
-            this.mConnectivityManager.registerNetworkCallback(this.mNetworkRequest, this.mNetworkCallback, this.mHandler);
-            this.mConnectivityManager.registerDefaultNetworkCallback(this.mDefaultNetworkCallback, this.mHandler);
-            return;
+            try {
+                this.mNetworkScoreManager.registerNetworkScoreCache(1, this.mWifiNetworkScoreCache, 1);
+                this.mWifiNetworkScoreCache.registerListener(this.mCacheListener);
+                this.mConnectivityManager.registerNetworkCallback(this.mNetworkRequest, this.mNetworkCallback, this.mHandler);
+                this.mConnectivityManager.registerDefaultNetworkCallback(this.mDefaultNetworkCallback, this.mHandler);
+            } catch (Exception unused) {
+            }
+        } else {
+            this.mNetworkScoreManager.unregisterNetworkScoreCache(1, this.mWifiNetworkScoreCache);
+            this.mWifiNetworkScoreCache.unregisterListener();
+            this.mConnectivityManager.unregisterNetworkCallback(this.mNetworkCallback);
+            this.mConnectivityManager.unregisterNetworkCallback(this.mDefaultNetworkCallback);
         }
-        this.mNetworkScoreManager.unregisterNetworkScoreCache(1, this.mWifiNetworkScoreCache);
-        this.mWifiNetworkScoreCache.unregisterListener();
-        this.mConnectivityManager.unregisterNetworkCallback(this.mNetworkCallback);
-        this.mConnectivityManager.unregisterNetworkCallback(this.mDefaultNetworkCallback);
     }
 
     public void fetchInitialState() {
@@ -315,7 +318,7 @@ public class WifiStatusTracker {
                         return;
                     }
                 } else if (!this.isDefaultNetwork && (networkCapabilities2 = this.mDefaultNetworkCapabilities) != null && networkCapabilities2.hasTransport(0)) {
-                    this.statusLabel = this.mContext.getString(C3341R.string.wifi_connected_low_quality);
+                    this.statusLabel = this.mContext.getString(C3351R.string.wifi_connected_low_quality);
                     return;
                 }
             }
@@ -352,7 +355,7 @@ public class WifiStatusTracker {
 
     /* access modifiers changed from: private */
     /* renamed from: postResults */
-    public void mo29430xb5e646ae() {
+    public void mo29440xb5e646ae() {
         this.mCallback.run();
     }
 

@@ -12,6 +12,6 @@ public final /* synthetic */ class StreamsKt$$ExternalSyntheticLambda0 implement
     }
 
     public final Object get() {
-        return StreamsKt.m5222asStream$lambda4(this.f$0);
+        return StreamsKt.m5240asStream$lambda4(this.f$0);
     }
 }

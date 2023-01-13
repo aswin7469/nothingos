@@ -13,6 +13,6 @@ public final /* synthetic */ class ControlsFavoritePersistenceWrapper$$ExternalS
     }
 
     public final void run() {
-        ControlsFavoritePersistenceWrapper.m2625storeFavorites$lambda4(this.f$0, this.f$1);
+        ControlsFavoritePersistenceWrapper.m2630storeFavorites$lambda4(this.f$0, this.f$1);
     }
 }

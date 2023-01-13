@@ -5,7 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.asynclayoutinflater.view.AsyncLayoutInflater;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.statusbar.InflationTask;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 
@@ -27,7 +27,7 @@ public class RowInflaterTask implements InflationTask, AsyncLayoutInflater.OnInf
         AsyncLayoutInflater asyncLayoutInflater = new AsyncLayoutInflater(context);
         this.mEntry = notificationEntry;
         notificationEntry.setInflationTask(this);
-        asyncLayoutInflater.inflate(C1893R.layout.status_bar_notification_row, viewGroup, this);
+        asyncLayoutInflater.inflate(C1894R.layout.status_bar_notification_row, viewGroup, this);
     }
 
     public void abort() {

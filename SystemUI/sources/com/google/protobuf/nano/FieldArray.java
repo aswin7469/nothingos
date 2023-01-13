@@ -63,7 +63,7 @@ public final class FieldArray implements Cloneable {
     }
 
     /* renamed from: gc */
-    private void m1659gc() {
+    private void m1658gc() {
         int i = this.mSize;
         int[] iArr = this.mFieldNumbers;
         FieldData[] fieldDataArr = this.mData;
@@ -101,7 +101,7 @@ public final class FieldArray implements Cloneable {
             }
         }
         if (this.mGarbage && i3 >= this.mFieldNumbers.length) {
-            m1659gc();
+            m1658gc();
             i2 = ~binarySearch(i);
         }
         int i4 = this.mSize;
@@ -132,7 +132,7 @@ public final class FieldArray implements Cloneable {
     /* access modifiers changed from: package-private */
     public int size() {
         if (this.mGarbage) {
-            m1659gc();
+            m1658gc();
         }
         return this.mSize;
     }
@@ -144,7 +144,7 @@ public final class FieldArray implements Cloneable {
     /* access modifiers changed from: package-private */
     public FieldData dataAt(int i) {
         if (this.mGarbage) {
-            m1659gc();
+            m1658gc();
         }
         return this.mData[i];
     }
@@ -168,7 +168,7 @@ public final class FieldArray implements Cloneable {
 
     public int hashCode() {
         if (this.mGarbage) {
-            m1659gc();
+            m1658gc();
         }
         int i = 17;
         for (int i2 = 0; i2 < this.mSize; i2++) {

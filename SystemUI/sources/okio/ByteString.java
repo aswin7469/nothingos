@@ -21,7 +21,7 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
 public class ByteString implements Serializable, Comparable<ByteString> {
-    public static final ByteString EMPTY = m1815of(new byte[0]);
+    public static final ByteString EMPTY = m1821of(new byte[0]);
     static final char[] HEX_DIGITS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
     private static final long serialVersionUID = 1;
     final byte[] data;
@@ -33,7 +33,7 @@ public class ByteString implements Serializable, Comparable<ByteString> {
     }
 
     /* renamed from: of */
-    public static ByteString m1815of(byte... bArr) {
+    public static ByteString m1821of(byte... bArr) {
         if (bArr != null) {
             return new ByteString((byte[]) bArr.clone());
         }
@@ -41,7 +41,7 @@ public class ByteString implements Serializable, Comparable<ByteString> {
     }
 
     /* renamed from: of */
-    public static ByteString m1816of(byte[] bArr, int i, int i2) {
+    public static ByteString m1822of(byte[] bArr, int i, int i2) {
         if (bArr != null) {
             Util.checkOffsetAndCount((long) bArr.length, (long) i, (long) i2);
             byte[] bArr2 = new byte[i2];
@@ -52,7 +52,7 @@ public class ByteString implements Serializable, Comparable<ByteString> {
     }
 
     /* renamed from: of */
-    public static ByteString m1814of(ByteBuffer byteBuffer) {
+    public static ByteString m1820of(ByteBuffer byteBuffer) {
         if (byteBuffer != null) {
             byte[] bArr = new byte[byteBuffer.remaining()];
             byteBuffer.get(bArr);
@@ -119,7 +119,7 @@ public class ByteString implements Serializable, Comparable<ByteString> {
 
     private ByteString digest(String str) {
         try {
-            return m1815of(MessageDigest.getInstance(str).digest(this.data));
+            return m1821of(MessageDigest.getInstance(str).digest(this.data));
         } catch (NoSuchAlgorithmException e) {
             throw new AssertionError((Object) e);
         }
@@ -141,7 +141,7 @@ public class ByteString implements Serializable, Comparable<ByteString> {
         try {
             Mac instance = Mac.getInstance(str);
             instance.init(new SecretKeySpec(byteString.toByteArray(), str));
-            return m1815of(instance.doFinal(this.data));
+            return m1821of(instance.doFinal(this.data));
         } catch (NoSuchAlgorithmException e) {
             throw new AssertionError((Object) e);
         } catch (InvalidKeyException e2) {
@@ -189,7 +189,7 @@ public class ByteString implements Serializable, Comparable<ByteString> {
                 int i2 = i * 2;
                 bArr[i] = (byte) ((decodeHexDigit(str.charAt(i2)) << 4) + decodeHexDigit(str.charAt(i2 + 1)));
             }
-            return m1815of(bArr);
+            return m1821of(bArr);
         } else {
             throw new IllegalArgumentException("Unexpected hex string: " + str);
         }

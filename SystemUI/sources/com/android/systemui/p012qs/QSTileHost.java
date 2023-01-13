@@ -15,7 +15,7 @@ import android.util.Log;
 import com.android.internal.logging.InstanceId;
 import com.android.internal.logging.InstanceIdSequence;
 import com.android.internal.logging.UiEventLogger;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dumpable;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.dagger.SysUISingleton;
@@ -127,7 +127,7 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-qs-QSTileHost  reason: not valid java name */
-    public /* synthetic */ void m2940lambda$new$0$comandroidsystemuiqsQSTileHost(TunerService tunerService, Provider provider) {
+    public /* synthetic */ void m2945lambda$new$0$comandroidsystemuiqsQSTileHost(TunerService tunerService, Provider provider) {
         tunerService.addTunable(this, TILES_SETTING);
         this.mAutoTiles = (AutoTileManager) provider.get();
         this.mTileServiceRequestController.init();
@@ -214,7 +214,7 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
             Log.d(TAG, "Recreating tiles");
             String dealWithUnexpectedTiles = this.mEx.dealWithUnexpectedTiles(str2, this);
             if (dealWithUnexpectedTiles == null && UserManager.isDeviceInDemoMode(this.mContext)) {
-                dealWithUnexpectedTiles = this.mContext.getResources().getString(C1893R.string.quick_settings_tiles_retail_mode);
+                dealWithUnexpectedTiles = this.mContext.getResources().getString(C1894R.string.quick_settings_tiles_retail_mode);
             }
             List<String> loadTileSpecs = loadTileSpecs(this.mContext, dealWithUnexpectedTiles);
             int userId = this.mUserTracker.getUserId();
@@ -222,7 +222,7 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
                 this.mUserContext = this.mUserTracker.getUserContext();
                 AutoTileManager autoTileManager = this.mAutoTiles;
                 if (autoTileManager != null) {
-                    autoTileManager.mo43656xb844e8a5(UserHandle.of(userId));
+                    autoTileManager.mo43664xb844e8a5(UserHandle.of(userId));
                 }
             }
             if (!loadTileSpecs.equals(this.mTileSpecs) || userId != this.mCurrentUser) {
@@ -293,7 +293,7 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onTuningChanged$3$com-android-systemui-qs-QSTileHost  reason: not valid java name */
-    public /* synthetic */ void m2941lambda$onTuningChanged$3$comandroidsystemuiqsQSTileHost(Map.Entry entry) {
+    public /* synthetic */ void m2946lambda$onTuningChanged$3$comandroidsystemuiqsQSTileHost(Map.Entry entry) {
         Log.d(TAG, "Destroying tile: " + ((String) entry.getKey()));
         this.mQSLogger.logTileDestroyed((String) entry.getKey(), "Tile removed");
         ((QSTile) entry.getValue()).destroy();
@@ -418,8 +418,8 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
 
     public static List<String> loadTileSpecs(Context context, String str) {
         Resources resources = context.getResources();
-        if (TextUtils.isEmpty(str)) {
-            str = resources.getString(C1893R.string.quick_settings_tiles);
+        if (TextUtils.isEmpty(str) || QSTileHostEx.isTileListEmpty(str)) {
+            str = resources.getString(C1894R.string.quick_settings_tiles);
             if (DEBUG) {
                 Log.d(TAG, "Loaded tile specs from config: " + str);
             }
@@ -465,7 +465,7 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
 
     public static List<String> getDefaultSpecs(Context context) {
         ArrayList arrayList = new ArrayList();
-        arrayList.addAll(Arrays.asList(context.getResources().getString(C1893R.string.nt_quick_settings_tiles_default).split(NavigationBarInflaterView.BUTTON_SEPARATOR)));
+        arrayList.addAll(Arrays.asList(context.getResources().getString(C1894R.string.nt_quick_settings_tiles_default).split(NavigationBarInflaterView.BUTTON_SEPARATOR)));
         if (Build.IS_DEBUGGABLE) {
             arrayList.add(GarbageMonitor.MemoryTile.TILE_SPEC);
         }

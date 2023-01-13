@@ -7,13 +7,13 @@ import java.util.Vector;
 public class SequenceInputStream extends InputStream {
 
     /* renamed from: e */
-    Enumeration<? extends InputStream> f532e;
+    Enumeration<? extends InputStream> f530e;
 
     /* renamed from: in */
-    InputStream f533in;
+    InputStream f531in;
 
     public SequenceInputStream(Enumeration<? extends InputStream> enumeration) {
-        this.f532e = enumeration;
+        this.f530e = enumeration;
         try {
             nextStream();
         } catch (IOException unused) {
@@ -25,7 +25,7 @@ public class SequenceInputStream extends InputStream {
         Vector vector = new Vector(2);
         vector.addElement(inputStream);
         vector.addElement(inputStream2);
-        this.f532e = vector.elements();
+        this.f530e = vector.elements();
         try {
             nextStream();
         } catch (IOException unused) {
@@ -35,21 +35,21 @@ public class SequenceInputStream extends InputStream {
 
     /* access modifiers changed from: package-private */
     public final void nextStream() throws IOException {
-        InputStream inputStream = this.f533in;
+        InputStream inputStream = this.f531in;
         if (inputStream != null) {
             inputStream.close();
         }
-        if (this.f532e.hasMoreElements()) {
-            InputStream inputStream2 = (InputStream) this.f532e.nextElement();
-            this.f533in = inputStream2;
+        if (this.f530e.hasMoreElements()) {
+            InputStream inputStream2 = (InputStream) this.f530e.nextElement();
+            this.f531in = inputStream2;
             inputStream2.getClass();
             return;
         }
-        this.f533in = null;
+        this.f531in = null;
     }
 
     public int available() throws IOException {
-        InputStream inputStream = this.f533in;
+        InputStream inputStream = this.f531in;
         if (inputStream == null) {
             return 0;
         }
@@ -58,7 +58,7 @@ public class SequenceInputStream extends InputStream {
 
     public int read() throws IOException {
         while (true) {
-            InputStream inputStream = this.f533in;
+            InputStream inputStream = this.f531in;
             if (inputStream == null) {
                 return -1;
             }
@@ -71,7 +71,7 @@ public class SequenceInputStream extends InputStream {
     }
 
     public int read(byte[] bArr, int i, int i2) throws IOException {
-        if (this.f533in == null) {
+        if (this.f531in == null) {
             return -1;
         }
         bArr.getClass();
@@ -81,12 +81,12 @@ public class SequenceInputStream extends InputStream {
             return 0;
         } else {
             do {
-                int read = this.f533in.read(bArr, i, i2);
+                int read = this.f531in.read(bArr, i, i2);
                 if (read > 0) {
                     return read;
                 }
                 nextStream();
-            } while (this.f533in != null);
+            } while (this.f531in != null);
             return -1;
         }
     }
@@ -94,6 +94,6 @@ public class SequenceInputStream extends InputStream {
     public void close() throws IOException {
         do {
             nextStream();
-        } while (this.f533in != null);
+        } while (this.f531in != null);
     }
 }

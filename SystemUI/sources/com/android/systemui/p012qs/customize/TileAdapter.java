@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import com.android.internal.R;
 import com.android.internal.logging.UiEventLogger;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.p012qs.QSEditEvent;
 import com.android.systemui.p012qs.QSTileHost;
 import com.android.systemui.p012qs.customize.TileQueryHelper;
@@ -85,7 +85,7 @@ public class TileAdapter extends RecyclerView.Adapter<Holder> implements TileQue
 
     @Inject
     public TileAdapter(@QSThemedContext Context context, QSTileHost qSTileHost, UiEventLogger uiEventLogger) {
-        C23664 r0 = new GridLayoutManager.SpanSizeLookup() {
+        C23694 r0 = new GridLayoutManager.SpanSizeLookup() {
             public int getSpanSize(int i) {
                 int itemViewType = TileAdapter.this.getItemViewType(i);
                 if (itemViewType == 1 || itemViewType == 4 || itemViewType == 3) {
@@ -95,7 +95,7 @@ public class TileAdapter extends RecyclerView.Adapter<Holder> implements TileQue
             }
         };
         this.mSizeLookup = r0;
-        C23675 r1 = new ItemTouchHelper.Callback() {
+        C23705 r1 = new ItemTouchHelper.Callback() {
             public boolean isItemViewSwipeEnabled() {
                 return false;
             }
@@ -181,8 +181,8 @@ public class TileAdapter extends RecyclerView.Adapter<Holder> implements TileQue
         this.mItemTouchHelper = new ItemTouchHelper(r1);
         this.mDecoration = new TileItemDecoration(context);
         this.mMarginDecoration = new MarginTileDecoration();
-        this.mMinNumTiles = context.getResources().getInteger(C1893R.integer.quick_settings_min_num_tiles);
-        this.mNumColumns = context.getResources().getInteger(C1893R.integer.quick_settings_num_columns);
+        this.mMinNumTiles = context.getResources().getInteger(C1894R.integer.quick_settings_min_num_tiles);
+        this.mNumColumns = context.getResources().getInteger(C1894R.integer.quick_settings_num_columns);
         this.mAccessibilityDelegate = new TileAdapterDelegate();
         r0.setSpanIndexCacheEnabled(true);
     }
@@ -196,7 +196,7 @@ public class TileAdapter extends RecyclerView.Adapter<Holder> implements TileQue
     }
 
     public boolean updateNumColumns() {
-        int integer = this.mContext.getResources().getInteger(C1893R.integer.quick_settings_num_columns);
+        int integer = this.mContext.getResources().getInteger(C1894R.integer.quick_settings_num_columns);
         if (integer == this.mNumColumns) {
             return false;
         }
@@ -325,16 +325,16 @@ public class TileAdapter extends RecyclerView.Adapter<Holder> implements TileQue
         Context context = viewGroup.getContext();
         LayoutInflater from = LayoutInflater.from(context);
         if (i == 3) {
-            View inflate = from.inflate(C1893R.layout.qs_customize_header, viewGroup, false);
+            View inflate = from.inflate(C1894R.layout.qs_customize_header, viewGroup, false);
             inflate.setMinimumHeight(calculateHeaderMinHeight(context));
             return new Holder(inflate);
         } else if (i == 4) {
-            return new Holder(from.inflate(C1893R.layout.qs_customize_tile_divider, viewGroup, false));
+            return new Holder(from.inflate(C1894R.layout.qs_customize_tile_divider, viewGroup, false));
         } else {
             if (i == 1) {
-                return new Holder(from.inflate(C1893R.layout.qs_customize_divider, viewGroup, false));
+                return new Holder(from.inflate(C1894R.layout.qs_customize_divider, viewGroup, false));
             }
-            FrameLayout frameLayout = (FrameLayout) from.inflate(C1893R.layout.qs_customize_tile_frame, viewGroup, false);
+            FrameLayout frameLayout = (FrameLayout) from.inflate(C1894R.layout.qs_customize_tile_frame, viewGroup, false);
             frameLayout.addView(new CustomizeTileView(context, new QSIconViewImpl(context)));
             return new Holder(frameLayout);
         }
@@ -378,11 +378,11 @@ public class TileAdapter extends RecyclerView.Adapter<Holder> implements TileQue
         } else if (holder.getItemViewType() == 1) {
             Resources resources = this.mContext.getResources();
             if (this.mCurrentDrag == null) {
-                str = resources.getString(C1893R.string.drag_to_add_tiles);
+                str = resources.getString(C1894R.string.drag_to_add_tiles);
             } else if (canRemoveTiles() || this.mCurrentDrag.getAdapterPosition() >= this.mEditIndex) {
-                str = resources.getString(C1893R.string.drag_to_remove_tiles);
+                str = resources.getString(C1894R.string.drag_to_remove_tiles);
             } else {
-                str = resources.getString(C1893R.string.drag_to_remove_disabled, new Object[]{Integer.valueOf(this.mMinNumTiles)});
+                str = resources.getString(C1894R.string.drag_to_remove_disabled, new Object[]{Integer.valueOf(this.mMinNumTiles)});
             }
             ((TextView) holder.itemView.findViewById(16908310)).setText(str);
             setSelectableForHeaders(holder.itemView);
@@ -392,7 +392,7 @@ public class TileAdapter extends RecyclerView.Adapter<Holder> implements TileQue
             holder.mTileView.setFocusableInTouchMode(true);
             holder.mTileView.setVisibility(0);
             holder.mTileView.setImportantForAccessibility(1);
-            holder.mTileView.setContentDescription(this.mContext.getString(C1893R.string.accessibility_qs_edit_tile_add_to_position, new Object[]{Integer.valueOf(i)}));
+            holder.mTileView.setContentDescription(this.mContext.getString(C1894R.string.accessibility_qs_edit_tile_add_to_position, new Object[]{Integer.valueOf(i)}));
             holder.mTileView.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
                     TileAdapter.this.selectPosition(holder.getLayoutPosition());
@@ -403,11 +403,11 @@ public class TileAdapter extends RecyclerView.Adapter<Holder> implements TileQue
             TileQueryHelper.TileInfo tileInfo = this.mTiles.get(i);
             boolean z2 = i > 0 && i < this.mEditIndex;
             if (z2 && this.mAccessibilityAction == 1) {
-                tileInfo.state.contentDescription = this.mContext.getString(C1893R.string.accessibility_qs_edit_tile_add_to_position, new Object[]{Integer.valueOf(i)});
+                tileInfo.state.contentDescription = this.mContext.getString(C1894R.string.accessibility_qs_edit_tile_add_to_position, new Object[]{Integer.valueOf(i)});
             } else if (!z2 || this.mAccessibilityAction != 2) {
                 tileInfo.state.contentDescription = tileInfo.state.label;
             } else {
-                tileInfo.state.contentDescription = this.mContext.getString(C1893R.string.accessibility_qs_edit_tile_move_to_position, new Object[]{Integer.valueOf(i)});
+                tileInfo.state.contentDescription = this.mContext.getString(C1894R.string.accessibility_qs_edit_tile_move_to_position, new Object[]{Integer.valueOf(i)});
             }
             tileInfo.state.expandedAccessibilityClassName = "";
             CustomizeTileView customizeTileView = (CustomizeTileView) Objects.requireNonNull(holder.getTileAsCustomizeView(), "The holder must have a tileView");
@@ -504,7 +504,7 @@ public class TileAdapter extends RecyclerView.Adapter<Holder> implements TileQue
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startAccessibleAdd$0$com-android-systemui-qs-customize-TileAdapter */
-    public /* synthetic */ void mo36528xba7506ba(int i) {
+    public /* synthetic */ void mo36532xba7506ba(int i) {
         RecyclerView recyclerView = this.mRecyclerView;
         if (recyclerView != null) {
             recyclerView.smoothScrollToPosition(i);
@@ -666,13 +666,13 @@ public class TileAdapter extends RecyclerView.Adapter<Holder> implements TileQue
 
         private void add() {
             if (TileAdapter.this.addFromPosition(getLayoutPosition())) {
-                this.itemView.announceForAccessibility(this.itemView.getContext().getText(C1893R.string.accessibility_qs_edit_tile_added));
+                this.itemView.announceForAccessibility(this.itemView.getContext().getText(C1894R.string.accessibility_qs_edit_tile_added));
             }
         }
 
         private void remove() {
             if (TileAdapter.this.removeFromPosition(getLayoutPosition())) {
-                this.itemView.announceForAccessibility(this.itemView.getContext().getText(C1893R.string.accessibility_qs_edit_tile_removed));
+                this.itemView.announceForAccessibility(this.itemView.getContext().getText(C1894R.string.accessibility_qs_edit_tile_removed));
             }
         }
 
@@ -702,7 +702,7 @@ public class TileAdapter extends RecyclerView.Adapter<Holder> implements TileQue
         private final Drawable mDrawable;
 
         private TileItemDecoration(Context context) {
-            this.mDrawable = context.getDrawable(C1893R.C1895drawable.qs_customize_tile_decoration);
+            this.mDrawable = context.getDrawable(C1894R.C1896drawable.qs_customize_tile_decoration);
         }
 
         public void onDraw(Canvas canvas, RecyclerView recyclerView, RecyclerView.State state) {
@@ -766,7 +766,7 @@ public class TileAdapter extends RecyclerView.Adapter<Holder> implements TileQue
 
     private static int calculateHeaderMinHeight(Context context) {
         Resources resources = context.getResources();
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(C1893R.style.QSCustomizeToolbar, R.styleable.Toolbar);
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(C1894R.style.QSCustomizeToolbar, R.styleable.Toolbar);
         int i = 0;
         int resourceId = obtainStyledAttributes.getResourceId(27, 0);
         obtainStyledAttributes.recycle();
@@ -775,6 +775,6 @@ public class TileAdapter extends RecyclerView.Adapter<Holder> implements TileQue
             i = obtainStyledAttributes2.getDimensionPixelSize(36, 0);
             obtainStyledAttributes2.recycle();
         }
-        return ((((resources.getDimensionPixelSize(C1893R.dimen.qs_panel_padding_top) + resources.getDimensionPixelSize(C1893R.dimen.brightness_mirror_height)) + resources.getDimensionPixelSize(C1893R.dimen.qs_brightness_margin_top)) + resources.getDimensionPixelSize(C1893R.dimen.qs_brightness_margin_bottom)) - i) - resources.getDimensionPixelSize(C1893R.dimen.qs_tile_margin_top_bottom);
+        return ((((resources.getDimensionPixelSize(C1894R.dimen.qs_panel_padding_top) + resources.getDimensionPixelSize(C1894R.dimen.brightness_mirror_height)) + resources.getDimensionPixelSize(C1894R.dimen.qs_brightness_margin_top)) + resources.getDimensionPixelSize(C1894R.dimen.qs_brightness_margin_bottom)) - i) - resources.getDimensionPixelSize(C1894R.dimen.qs_tile_margin_top_bottom);
     }
 }

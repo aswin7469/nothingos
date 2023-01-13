@@ -42,7 +42,7 @@ public final class IsoFields {
             }
 
             public ValueRange range() {
-                return ValueRange.m956of(1, 90, 92);
+                return ValueRange.m954of(1, 90, 92);
             }
 
             public boolean isSupportedBy(TemporalAccessor temporalAccessor) {
@@ -53,12 +53,12 @@ public final class IsoFields {
                 if (isSupportedBy(temporalAccessor)) {
                     long j = temporalAccessor.getLong(QUARTER_OF_YEAR);
                     if (j == 1) {
-                        return IsoChronology.INSTANCE.isLeapYear(temporalAccessor.getLong(ChronoField.YEAR)) ? ValueRange.m955of(1, 91) : ValueRange.m955of(1, 90);
+                        return IsoChronology.INSTANCE.isLeapYear(temporalAccessor.getLong(ChronoField.YEAR)) ? ValueRange.m953of(1, 91) : ValueRange.m953of(1, 90);
                     } else if (j == 2) {
-                        return ValueRange.m955of(1, 91);
+                        return ValueRange.m953of(1, 91);
                     } else {
                         if (j == 3 || j == 4) {
-                            return ValueRange.m955of(1, 92);
+                            return ValueRange.m953of(1, 92);
                         }
                         return range();
                     }
@@ -92,10 +92,10 @@ public final class IsoFields {
                 long longValue = map.get(DAY_OF_QUARTER).longValue();
                 Field.ensureIso(temporalAccessor);
                 if (resolverStyle == ResolverStyle.LENIENT) {
-                    localDate = LocalDate.m908of(checkValidIntValue, 1, 1).plusMonths(Math.multiplyExact(Math.subtractExact(l2.longValue(), 1), 3));
+                    localDate = LocalDate.m906of(checkValidIntValue, 1, 1).plusMonths(Math.multiplyExact(Math.subtractExact(l2.longValue(), 1), 3));
                     j = Math.subtractExact(longValue, 1);
                 } else {
-                    localDate = LocalDate.m908of(checkValidIntValue, ((QUARTER_OF_YEAR.range().checkValidIntValue(l2.longValue(), QUARTER_OF_YEAR) - 1) * 3) + 1, 1);
+                    localDate = LocalDate.m906of(checkValidIntValue, ((QUARTER_OF_YEAR.range().checkValidIntValue(l2.longValue(), QUARTER_OF_YEAR) - 1) * 3) + 1, 1);
                     if (longValue < 1 || longValue > 90) {
                         if (resolverStyle == ResolverStyle.STRICT) {
                             rangeRefinedBy(localDate).checkValidValue(longValue, this);
@@ -125,7 +125,7 @@ public final class IsoFields {
             }
 
             public ValueRange range() {
-                return ValueRange.m955of(1, 4);
+                return ValueRange.m953of(1, 4);
             }
 
             public boolean isSupportedBy(TemporalAccessor temporalAccessor) {
@@ -172,7 +172,7 @@ public final class IsoFields {
             }
 
             public ValueRange range() {
-                return ValueRange.m956of(1, 52, 53);
+                return ValueRange.m954of(1, 52, 53);
             }
 
             public boolean isSupportedBy(TemporalAccessor temporalAccessor) {
@@ -209,7 +209,7 @@ public final class IsoFields {
                 int checkValidIntValue = WEEK_BASED_YEAR.range().checkValidIntValue(l.longValue(), WEEK_BASED_YEAR);
                 long longValue = map.get(WEEK_OF_WEEK_BASED_YEAR).longValue();
                 Field.ensureIso(temporalAccessor);
-                LocalDate of = LocalDate.m908of(checkValidIntValue, 1, 4);
+                LocalDate of = LocalDate.m906of(checkValidIntValue, 1, 4);
                 if (resolverStyle == ResolverStyle.LENIENT) {
                     long longValue2 = l2.longValue();
                     if (longValue2 > 7) {
@@ -286,7 +286,7 @@ public final class IsoFields {
                     if (r4 == 53 && Field.getWeekRange(checkValidIntValue) == 52) {
                         r4 = 52;
                     }
-                    LocalDate of = LocalDate.m908of(checkValidIntValue, 1, 4);
+                    LocalDate of = LocalDate.m906of(checkValidIntValue, 1, 4);
                     return r.with(of.plusDays((long) ((i - of.get(ChronoField.DAY_OF_WEEK)) + ((r4 - 1) * 7))));
                 }
                 throw new UnsupportedTemporalTypeException("Unsupported field: WeekBasedYear");
@@ -321,12 +321,12 @@ public final class IsoFields {
 
         /* access modifiers changed from: private */
         public static ValueRange getWeekRange(LocalDate localDate) {
-            return ValueRange.m955of(1, (long) getWeekRange(getWeekBasedYear(localDate)));
+            return ValueRange.m953of(1, (long) getWeekRange(getWeekBasedYear(localDate)));
         }
 
         /* access modifiers changed from: private */
         public static int getWeekRange(int i) {
-            LocalDate of = LocalDate.m908of(i, 1, 1);
+            LocalDate of = LocalDate.m906of(i, 1, 1);
             if (of.getDayOfWeek() != DayOfWeek.THURSDAY) {
                 return (of.getDayOfWeek() != DayOfWeek.WEDNESDAY || !of.isLeapYear()) ? 52 : 53;
             }
@@ -404,7 +404,7 @@ public final class IsoFields {
         }
 
         public <R extends Temporal> R addTo(R r, long j) {
-            int i = C28851.$SwitchMap$java$time$temporal$IsoFields$Unit[ordinal()];
+            int i = C28911.$SwitchMap$java$time$temporal$IsoFields$Unit[ordinal()];
             if (i == 1) {
                 return r.with(IsoFields.WEEK_BASED_YEAR, Math.addExact((long) r.get(IsoFields.WEEK_BASED_YEAR), j));
             }
@@ -418,7 +418,7 @@ public final class IsoFields {
             if (temporal.getClass() != temporal2.getClass()) {
                 return temporal.until(temporal2, this);
             }
-            int i = C28851.$SwitchMap$java$time$temporal$IsoFields$Unit[ordinal()];
+            int i = C28911.$SwitchMap$java$time$temporal$IsoFields$Unit[ordinal()];
             if (i == 1) {
                 return Math.subtractExact(temporal2.getLong(IsoFields.WEEK_BASED_YEAR), temporal.getLong(IsoFields.WEEK_BASED_YEAR));
             }
@@ -434,7 +434,7 @@ public final class IsoFields {
     }
 
     /* renamed from: java.time.temporal.IsoFields$1 */
-    static /* synthetic */ class C28851 {
+    static /* synthetic */ class C28911 {
         static final /* synthetic */ int[] $SwitchMap$java$time$temporal$IsoFields$Unit;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(6:0|1|2|3|4|6) */
@@ -462,7 +462,7 @@ public final class IsoFields {
             L_0x001d:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: java.time.temporal.IsoFields.C28851.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: java.time.temporal.IsoFields.C28911.<clinit>():void");
         }
     }
 

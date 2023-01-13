@@ -16,6 +16,6 @@ public final /* synthetic */ class InputSession$$ExternalSyntheticLambda0 implem
     }
 
     public final void onInputEvent(InputEvent inputEvent) {
-        this.f$0.m2746lambda$new$0$comandroidsystemuidreamstouchInputSession(this.f$1, this.f$2, inputEvent);
+        this.f$0.m2751lambda$new$0$comandroidsystemuidreamstouchInputSession(this.f$1, this.f$2, inputEvent);
     }
 }

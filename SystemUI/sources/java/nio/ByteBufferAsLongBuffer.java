@@ -6,14 +6,14 @@ class ByteBufferAsLongBuffer extends LongBuffer {
     static final /* synthetic */ boolean $assertionsDisabled = false;
 
     /* renamed from: bb */
-    protected final ByteBuffer f565bb;
+    protected final ByteBuffer f563bb;
     protected final int offset;
     private final ByteOrder order;
 
     ByteBufferAsLongBuffer(ByteBuffer byteBuffer, int i, int i2, int i3, int i4, int i5, ByteOrder byteOrder) {
         super(i, i2, i3, i4);
         ByteBuffer duplicate = byteBuffer.duplicate();
-        this.f565bb = duplicate;
+        this.f563bb = duplicate;
         this.isReadOnly = byteBuffer.isReadOnly;
         if (byteBuffer instanceof DirectByteBuffer) {
             this.address = byteBuffer.address + ((long) i5);
@@ -27,20 +27,20 @@ class ByteBufferAsLongBuffer extends LongBuffer {
         int position = position();
         int limit = limit();
         int i = position <= limit ? limit - position : 0;
-        return new ByteBufferAsLongBuffer(this.f565bb, -1, 0, i, i, (position << 3) + this.offset, this.order);
+        return new ByteBufferAsLongBuffer(this.f563bb, -1, 0, i, i, (position << 3) + this.offset, this.order);
     }
 
     public LongBuffer duplicate() {
-        return new ByteBufferAsLongBuffer(this.f565bb, markValue(), position(), limit(), capacity(), this.offset, this.order);
+        return new ByteBufferAsLongBuffer(this.f563bb, markValue(), position(), limit(), capacity(), this.offset, this.order);
     }
 
     public LongBuffer asReadOnlyBuffer() {
-        return new ByteBufferAsLongBuffer(this.f565bb.asReadOnlyBuffer(), markValue(), position(), limit(), capacity(), this.offset, this.order);
+        return new ByteBufferAsLongBuffer(this.f563bb.asReadOnlyBuffer(), markValue(), position(), limit(), capacity(), this.offset, this.order);
     }
 
     /* access modifiers changed from: protected */
     /* renamed from: ix */
-    public int mo60871ix(int i) {
+    public int mo60927ix(int i) {
         return (i << 3) + this.offset;
     }
 
@@ -49,13 +49,13 @@ class ByteBufferAsLongBuffer extends LongBuffer {
     }
 
     public long get(int i) {
-        return this.f565bb.getLongUnchecked(mo60871ix(checkIndex(i)));
+        return this.f563bb.getLongUnchecked(mo60927ix(checkIndex(i)));
     }
 
     public LongBuffer get(long[] jArr, int i, int i2) {
         checkBounds(i, i2, jArr.length);
         if (i2 <= remaining()) {
-            this.f565bb.getUnchecked(mo60871ix(this.position), jArr, i, i2);
+            this.f563bb.getUnchecked(mo60927ix(this.position), jArr, i, i2);
             this.position += i2;
             return this;
         }
@@ -69,7 +69,7 @@ class ByteBufferAsLongBuffer extends LongBuffer {
 
     public LongBuffer put(int i, long j) {
         if (!this.isReadOnly) {
-            this.f565bb.putLongUnchecked(mo60871ix(checkIndex(i)), j);
+            this.f563bb.putLongUnchecked(mo60927ix(checkIndex(i)), j);
             return this;
         }
         throw new ReadOnlyBufferException();
@@ -78,7 +78,7 @@ class ByteBufferAsLongBuffer extends LongBuffer {
     public LongBuffer put(long[] jArr, int i, int i2) {
         checkBounds(i, i2, jArr.length);
         if (i2 <= remaining()) {
-            this.f565bb.putUnchecked(mo60871ix(this.position), jArr, i, i2);
+            this.f563bb.putUnchecked(mo60927ix(this.position), jArr, i, i2);
             this.position += i2;
             return this;
         }
@@ -90,11 +90,11 @@ class ByteBufferAsLongBuffer extends LongBuffer {
             int position = position();
             int limit = limit();
             int i = position <= limit ? limit - position : 0;
-            ByteBuffer byteBuffer = this.f565bb;
+            ByteBuffer byteBuffer = this.f563bb;
             if (!(byteBuffer instanceof DirectByteBuffer)) {
-                System.arraycopy((Object) byteBuffer.array(), mo60871ix(position), (Object) this.f565bb.array(), mo60871ix(0), i << 3);
+                System.arraycopy((Object) byteBuffer.array(), mo60927ix(position), (Object) this.f563bb.array(), mo60927ix(0), i << 3);
             } else {
-                Memory.memmove(this, mo60871ix(0), this, mo60871ix(position), (long) (i << 3));
+                Memory.memmove(this, mo60927ix(0), this, mo60927ix(position), (long) (i << 3));
             }
             position(i);
             limit(capacity());
@@ -105,7 +105,7 @@ class ByteBufferAsLongBuffer extends LongBuffer {
     }
 
     public boolean isDirect() {
-        return this.f565bb.isDirect();
+        return this.f563bb.isDirect();
     }
 
     public boolean isReadOnly() {

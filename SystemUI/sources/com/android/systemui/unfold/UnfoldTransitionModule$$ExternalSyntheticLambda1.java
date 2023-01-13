@@ -15,6 +15,6 @@ public final /* synthetic */ class UnfoldTransitionModule$$ExternalSyntheticLamb
     }
 
     public final Object apply(Object obj) {
-        return UnfoldTransitionModule.m3283provideNaturalRotationProgressProvider$lambda1(this.f$0, this.f$1, (UnfoldTransitionProgressProvider) obj);
+        return UnfoldTransitionModule.m3288provideNaturalRotationProgressProvider$lambda1(this.f$0, this.f$1, (UnfoldTransitionProgressProvider) obj);
     }
 }

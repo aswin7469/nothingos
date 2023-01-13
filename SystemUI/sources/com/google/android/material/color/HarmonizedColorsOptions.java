@@ -1,6 +1,6 @@
 package com.google.android.material.color;
 
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 
 public class HarmonizedColorsOptions {
     private final int colorAttributeToHarmonizeWith;
@@ -31,7 +31,7 @@ public class HarmonizedColorsOptions {
 
     public static class Builder {
         /* access modifiers changed from: private */
-        public int colorAttributeToHarmonizeWith = C3621R.attr.colorPrimary;
+        public int colorAttributeToHarmonizeWith = C3631R.attr.colorPrimary;
         /* access modifiers changed from: private */
         public HarmonizedColorAttributes colorAttributes;
         /* access modifiers changed from: private */

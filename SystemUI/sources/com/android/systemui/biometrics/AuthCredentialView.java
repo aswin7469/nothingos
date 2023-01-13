@@ -23,7 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.internal.widget.VerifyCredentialResponse;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.animation.Interpolators;
 import com.android.systemui.dagger.qualifiers.Background;
 import com.android.systemui.util.concurrency.DelayableExecutor;
@@ -118,7 +118,7 @@ public abstract class AuthCredentialView extends LinearLayout {
         }
 
         public void onTick(long j) {
-            this.mErrorView.setText(this.mContext.getString(C1893R.string.biometric_dialog_credential_too_many_attempts, new Object[]{Integer.valueOf((int) (j / 1000))}));
+            this.mErrorView.setText(this.mContext.getString(C1894R.string.biometric_dialog_credential_too_many_attempts, new Object[]{Integer.valueOf((int) (j / 1000))}));
         }
 
         public void onFinish() {
@@ -221,14 +221,14 @@ public abstract class AuthCredentialView extends LinearLayout {
         announceForAccessibility(title);
         if (this.mIconView != null) {
             if (Utils.isManagedProfile(this.mContext, this.mEffectiveUserId)) {
-                drawable = getResources().getDrawable(C1893R.C1895drawable.auth_dialog_enterprise, this.mContext.getTheme());
+                drawable = getResources().getDrawable(C1894R.C1896drawable.auth_dialog_enterprise, this.mContext.getTheme());
             } else {
-                drawable = getResources().getDrawable(C1893R.C1895drawable.auth_dialog_lock, this.mContext.getTheme());
+                drawable = getResources().getDrawable(C1894R.C1896drawable.auth_dialog_lock, this.mContext.getTheme());
             }
             this.mIconView.setImageDrawable(drawable);
         }
         if (this.mShouldAnimateContents) {
-            setTranslationY(getResources().getDimension(C1893R.dimen.biometric_dialog_credential_translation_offset));
+            setTranslationY(getResources().getDimension(C1894R.dimen.biometric_dialog_credential_translation_offset));
             setAlpha(0.0f);
             postOnAnimation(new AuthCredentialView$$ExternalSyntheticLambda4(this));
         }
@@ -236,7 +236,7 @@ public abstract class AuthCredentialView extends LinearLayout {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onAttachedToWindow$0$com-android-systemui-biometrics-AuthCredentialView */
-    public /* synthetic */ void mo30658xa3c15763() {
+    public /* synthetic */ void mo30669xa3c15763() {
         animate().translationY(0.0f).setDuration(150).alpha(1.0f).setInterpolator(Interpolators.LINEAR_OUT_SLOW_IN).withLayer().start();
     }
 
@@ -252,11 +252,11 @@ public abstract class AuthCredentialView extends LinearLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mTitleView = (TextView) findViewById(C1893R.C1897id.title);
-        this.mSubtitleView = (TextView) findViewById(C1893R.C1897id.subtitle);
-        this.mDescriptionView = (TextView) findViewById(C1893R.C1897id.description);
-        this.mIconView = (ImageView) findViewById(C1893R.C1897id.icon);
-        this.mErrorView = (TextView) findViewById(C1893R.C1897id.error);
+        this.mTitleView = (TextView) findViewById(C1894R.C1898id.title);
+        this.mSubtitleView = (TextView) findViewById(C1894R.C1898id.subtitle);
+        this.mDescriptionView = (TextView) findViewById(C1894R.C1898id.description);
+        this.mIconView = (ImageView) findViewById(C1894R.C1898id.icon);
+        this.mErrorView = (TextView) findViewById(C1894R.C1898id.error);
     }
 
     /* access modifiers changed from: protected */
@@ -280,7 +280,7 @@ public abstract class AuthCredentialView extends LinearLayout {
             this.mLockPatternUtils.removeGatekeeperPasswordHandle(gatekeeperPasswordHandle);
         } else if (i > 0) {
             this.mHandler.removeCallbacks(this.mClearErrorRunnable);
-            C19722 r0 = new ErrorTimer(this.mContext, this.mLockPatternUtils.setLockoutAttemptDeadline(this.mEffectiveUserId, i) - SystemClock.elapsedRealtime(), 1000, this.mErrorView) {
+            C19732 r0 = new ErrorTimer(this.mContext, this.mLockPatternUtils.setLockoutAttemptDeadline(this.mEffectiveUserId, i) - SystemClock.elapsedRealtime(), 1000, this.mErrorView) {
                 public void onFinish() {
                     AuthCredentialView.this.onErrorTimeoutFinish();
                     AuthCredentialView.this.mClearErrorRunnable.run();
@@ -290,7 +290,7 @@ public abstract class AuthCredentialView extends LinearLayout {
             r0.start();
         } else if (!reportFailedAttempt()) {
             int i2 = this.mCredentialType;
-            showError(getResources().getString(i2 != 1 ? i2 != 2 ? C1893R.string.biometric_dialog_wrong_password : C1893R.string.biometric_dialog_wrong_pattern : C1893R.string.biometric_dialog_wrong_pin));
+            showError(getResources().getString(i2 != 1 ? i2 != 2 ? C1894R.string.biometric_dialog_wrong_password : C1894R.string.biometric_dialog_wrong_pattern : C1894R.string.biometric_dialog_wrong_pin));
         }
     }
 
@@ -306,7 +306,7 @@ public abstract class AuthCredentialView extends LinearLayout {
             return false;
         }
         if (this.mErrorView != null) {
-            showError(getResources().getString(C1893R.string.biometric_dialog_credential_attempts_before_wipe, new Object[]{Integer.valueOf(i), Integer.valueOf(maximumFailedPasswordsForWipe)}));
+            showError(getResources().getString(C1894R.string.biometric_dialog_credential_attempts_before_wipe, new Object[]{Integer.valueOf(i), Integer.valueOf(maximumFailedPasswordsForWipe)}));
         }
         int i2 = maximumFailedPasswordsForWipe - i;
         if (i2 == 1) {
@@ -323,8 +323,8 @@ public abstract class AuthCredentialView extends LinearLayout {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$showLastAttemptBeforeWipeDialog$1$com-android-systemui-biometrics-AuthCredentialView */
-    public /* synthetic */ void mo30659x46d71122() {
-        AlertDialog create = new AlertDialog.Builder(this.mContext).setTitle(C1893R.string.biometric_dialog_last_attempt_before_wipe_dialog_title).setMessage(getLastAttemptBeforeWipeMessage(getUserTypeForWipe(), this.mCredentialType)).setPositiveButton(17039370, (DialogInterface.OnClickListener) null).create();
+    public /* synthetic */ void mo30670x46d71122() {
+        AlertDialog create = new AlertDialog.Builder(this.mContext).setTitle(C1894R.string.biometric_dialog_last_attempt_before_wipe_dialog_title).setMessage(getLastAttemptBeforeWipeMessage(getUserTypeForWipe(), this.mCredentialType)).setPositiveButton(17039370, (DialogInterface.OnClickListener) null).create();
         create.getWindow().setType(2017);
         Handler handler = this.mHandler;
         Objects.requireNonNull(create);
@@ -337,8 +337,8 @@ public abstract class AuthCredentialView extends LinearLayout {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$showNowWipingDialog$3$com-android-systemui-biometrics-AuthCredentialView */
-    public /* synthetic */ void mo30661xefe00c23() {
-        AlertDialog create = new AlertDialog.Builder(this.mContext).setMessage(getNowWipingMessage(getUserTypeForWipe())).setPositiveButton(C1893R.string.failed_attempts_now_wiping_dialog_dismiss, (DialogInterface.OnClickListener) null).setOnDismissListener(new AuthCredentialView$$ExternalSyntheticLambda6(this)).create();
+    public /* synthetic */ void mo30672xefe00c23() {
+        AlertDialog create = new AlertDialog.Builder(this.mContext).setMessage(getNowWipingMessage(getUserTypeForWipe())).setPositiveButton(C1894R.string.failed_attempts_now_wiping_dialog_dismiss, (DialogInterface.OnClickListener) null).setOnDismissListener(new AuthCredentialView$$ExternalSyntheticLambda6(this)).create();
         create.getWindow().setType(2017);
         Handler handler = this.mHandler;
         Objects.requireNonNull(create);
@@ -347,7 +347,7 @@ public abstract class AuthCredentialView extends LinearLayout {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$showNowWipingDialog$2$com-android-systemui-biometrics-AuthCredentialView */
-    public /* synthetic */ void mo30660xc20771c4(DialogInterface dialogInterface) {
+    public /* synthetic */ void mo30671xc20771c4(DialogInterface dialogInterface) {
         this.mContainerView.animateAway(5);
     }
 
@@ -374,12 +374,12 @@ public abstract class AuthCredentialView extends LinearLayout {
 
     private String getLastAttemptBeforeWipeDeviceMessage(int i) {
         if (i == 1) {
-            return this.mContext.getString(C1893R.string.biometric_dialog_last_pin_attempt_before_wipe_device);
+            return this.mContext.getString(C1894R.string.biometric_dialog_last_pin_attempt_before_wipe_device);
         }
         if (i != 2) {
-            return this.mContext.getString(C1893R.string.biometric_dialog_last_password_attempt_before_wipe_device);
+            return this.mContext.getString(C1894R.string.biometric_dialog_last_password_attempt_before_wipe_device);
         }
-        return this.mContext.getString(C1893R.string.biometric_dialog_last_pattern_attempt_before_wipe_device);
+        return this.mContext.getString(C1894R.string.biometric_dialog_last_pattern_attempt_before_wipe_device);
     }
 
     private String getLastAttemptBeforeWipeProfileMessage(int i) {
@@ -388,12 +388,12 @@ public abstract class AuthCredentialView extends LinearLayout {
 
     /* access modifiers changed from: private */
     /* renamed from: getLastAttemptBeforeWipeProfileDefaultMessage */
-    public String mo30656x9489c268(int i) {
-        return this.mContext.getString(i != 1 ? i != 2 ? C1893R.string.biometric_dialog_last_password_attempt_before_wipe_profile : C1893R.string.biometric_dialog_last_pattern_attempt_before_wipe_profile : C1893R.string.biometric_dialog_last_pin_attempt_before_wipe_profile);
+    public String mo30667x9489c268(int i) {
+        return this.mContext.getString(i != 1 ? i != 2 ? C1894R.string.biometric_dialog_last_password_attempt_before_wipe_profile : C1894R.string.biometric_dialog_last_pattern_attempt_before_wipe_profile : C1894R.string.biometric_dialog_last_pin_attempt_before_wipe_profile);
     }
 
     private String getLastAttemptBeforeWipeUserMessage(int i) {
-        return this.mContext.getString(i != 1 ? i != 2 ? C1893R.string.biometric_dialog_last_password_attempt_before_wipe_user : C1893R.string.biometric_dialog_last_pattern_attempt_before_wipe_user : C1893R.string.biometric_dialog_last_pin_attempt_before_wipe_user);
+        return this.mContext.getString(i != 1 ? i != 2 ? C1894R.string.biometric_dialog_last_password_attempt_before_wipe_user : C1894R.string.biometric_dialog_last_pattern_attempt_before_wipe_user : C1894R.string.biometric_dialog_last_pin_attempt_before_wipe_user);
     }
 
     private String getNowWipingMessage(int i) {
@@ -402,14 +402,14 @@ public abstract class AuthCredentialView extends LinearLayout {
 
     /* access modifiers changed from: private */
     /* renamed from: getNowWipingDefaultMessage */
-    public String mo30657xf2e2be23(int i) {
+    public String mo30668xf2e2be23(int i) {
         int i2;
         if (i == 1) {
-            i2 = C1893R.string.failed_attempts_now_wiping_device;
+            i2 = C1894R.string.failed_attempts_now_wiping_device;
         } else if (i == 2) {
-            i2 = C1893R.string.failed_attempts_now_wiping_profile;
+            i2 = C1894R.string.failed_attempts_now_wiping_profile;
         } else if (i == 3) {
-            i2 = C1893R.string.failed_attempts_now_wiping_user;
+            i2 = C1894R.string.failed_attempts_now_wiping_user;
         } else {
             throw new IllegalArgumentException("Unrecognized user type:" + i);
         }

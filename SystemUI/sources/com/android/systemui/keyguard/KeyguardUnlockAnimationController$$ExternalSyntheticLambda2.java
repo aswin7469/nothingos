@@ -9,6 +9,6 @@ public final /* synthetic */ class KeyguardUnlockAnimationController$$ExternalSy
     }
 
     public final void run() {
-        KeyguardUnlockAnimationController.m2758unlockToLauncherWithInWindowAnimations$lambda6(this.f$0);
+        KeyguardUnlockAnimationController.m2763unlockToLauncherWithInWindowAnimations$lambda6(this.f$0);
     }
 }

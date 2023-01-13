@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import androidx.core.graphics.drawable.IconCompat;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.broadcast.BroadcastSender;
 
 public class MediaOutputGroupDialog extends MediaOutputBaseDialog {
@@ -20,7 +20,7 @@ public class MediaOutputGroupDialog extends MediaOutputBaseDialog {
 
     /* access modifiers changed from: package-private */
     public int getHeaderIconRes() {
-        return C1893R.C1895drawable.ic_arrow_back;
+        return C1894R.C1896drawable.ic_arrow_back;
     }
 
     /* access modifiers changed from: package-private */
@@ -43,21 +43,21 @@ public class MediaOutputGroupDialog extends MediaOutputBaseDialog {
 
     /* access modifiers changed from: package-private */
     public int getHeaderIconSize() {
-        return this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.media_output_dialog_header_back_icon_size);
+        return this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.media_output_dialog_header_back_icon_size);
     }
 
     /* access modifiers changed from: package-private */
     public CharSequence getHeaderText() {
-        return this.mContext.getString(C1893R.string.media_output_dialog_add_output);
+        return this.mContext.getString(C1894R.string.media_output_dialog_add_output);
     }
 
     /* access modifiers changed from: package-private */
     public CharSequence getHeaderSubtitle() {
         int size = this.mMediaOutputController.getSelectedMediaDevice().size();
         if (size == 1) {
-            return this.mContext.getText(C1893R.string.media_output_dialog_single_device);
+            return this.mContext.getText(C1894R.string.media_output_dialog_single_device);
         }
-        return this.mContext.getString(C1893R.string.media_output_dialog_multiple_devices, new Object[]{Integer.valueOf(size)});
+        return this.mContext.getString(C1894R.string.media_output_dialog_multiple_devices, new Object[]{Integer.valueOf(size)});
     }
 
     /* access modifiers changed from: package-private */

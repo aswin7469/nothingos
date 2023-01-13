@@ -14,6 +14,6 @@ public final /* synthetic */ class ThumbnailBehavior$$ExternalSyntheticLambda1 i
     }
 
     public final void onClick(View view) {
-        ThumbnailBehavior.m2729initialize$lambda0(this.f$0, this.f$1, view);
+        ThumbnailBehavior.m2734initialize$lambda0(this.f$0, this.f$1, view);
     }
 }

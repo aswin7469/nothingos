@@ -51,13 +51,13 @@ public class PartnerCustomizationLayout extends TemplateLayout {
     public PartnerCustomizationLayout(Context context, int i, int i2) {
         super(context, i, i2);
         this.windowFocusChangeListener = new PartnerCustomizationLayout$$ExternalSyntheticLambda0(this);
-        init((AttributeSet) null, C3931R.attr.sucLayoutTheme);
+        init((AttributeSet) null, C3941R.attr.sucLayoutTheme);
     }
 
     public PartnerCustomizationLayout(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         this.windowFocusChangeListener = new PartnerCustomizationLayout$$ExternalSyntheticLambda0(this);
-        init(attributeSet, C3931R.attr.sucLayoutTheme);
+        init(attributeSet, C3941R.attr.sucLayoutTheme);
     }
 
     public PartnerCustomizationLayout(Context context, AttributeSet attributeSet, int i) {
@@ -68,8 +68,8 @@ public class PartnerCustomizationLayout extends TemplateLayout {
 
     private void init(AttributeSet attributeSet, int i) {
         if (!isInEditMode()) {
-            TypedArray obtainStyledAttributes = getContext().obtainStyledAttributes(attributeSet, C3931R.styleable.SucPartnerCustomizationLayout, i, 0);
-            boolean z = obtainStyledAttributes.getBoolean(C3931R.styleable.SucPartnerCustomizationLayout_sucLayoutFullscreen, true);
+            TypedArray obtainStyledAttributes = getContext().obtainStyledAttributes(attributeSet, C3941R.styleable.SucPartnerCustomizationLayout, i, 0);
+            boolean z = obtainStyledAttributes.getBoolean(C3941R.styleable.SucPartnerCustomizationLayout_sucLayoutFullscreen, true);
             obtainStyledAttributes.recycle();
             if (z) {
                 setSystemUiVisibility(1024);
@@ -87,7 +87,7 @@ public class PartnerCustomizationLayout extends TemplateLayout {
     /* access modifiers changed from: protected */
     public View onInflateTemplate(LayoutInflater layoutInflater, int i) {
         if (i == 0) {
-            i = C3931R.layout.partner_customization_layout;
+            i = C3941R.layout.partner_customization_layout;
         }
         return inflateTemplate(layoutInflater, 0, i);
     }
@@ -99,16 +99,16 @@ public class PartnerCustomizationLayout extends TemplateLayout {
         Activity lookupActivityFromContext = lookupActivityFromContext(getContext());
         this.activity = lookupActivityFromContext;
         boolean isAnySetupWizard = WizardManagerHelper.isAnySetupWizard(lookupActivityFromContext.getIntent());
-        TypedArray obtainStyledAttributes = getContext().obtainStyledAttributes(attributeSet, C3931R.styleable.SucPartnerCustomizationLayout, i, 0);
-        if (!obtainStyledAttributes.hasValue(C3931R.styleable.SucPartnerCustomizationLayout_sucUsePartnerResource)) {
-            LOG.mo55159e("Attribute sucUsePartnerResource not found in " + this.activity.getComponentName());
+        TypedArray obtainStyledAttributes = getContext().obtainStyledAttributes(attributeSet, C3941R.styleable.SucPartnerCustomizationLayout, i, 0);
+        if (!obtainStyledAttributes.hasValue(C3941R.styleable.SucPartnerCustomizationLayout_sucUsePartnerResource)) {
+            LOG.mo55170e("Attribute sucUsePartnerResource not found in " + this.activity.getComponentName());
         }
-        if (!isAnySetupWizard && !obtainStyledAttributes.getBoolean(C3931R.styleable.SucPartnerCustomizationLayout_sucUsePartnerResource, true)) {
+        if (!isAnySetupWizard && !obtainStyledAttributes.getBoolean(C3941R.styleable.SucPartnerCustomizationLayout_sucUsePartnerResource, true)) {
             z = false;
         }
         this.usePartnerResourceAttr = z;
-        this.useDynamicColor = obtainStyledAttributes.hasValue(C3931R.styleable.SucPartnerCustomizationLayout_sucFullDynamicColor);
-        this.useFullDynamicColorAttr = obtainStyledAttributes.getBoolean(C3931R.styleable.SucPartnerCustomizationLayout_sucFullDynamicColor, false);
+        this.useDynamicColor = obtainStyledAttributes.hasValue(C3941R.styleable.SucPartnerCustomizationLayout_sucFullDynamicColor);
+        this.useFullDynamicColorAttr = obtainStyledAttributes.getBoolean(C3941R.styleable.SucPartnerCustomizationLayout_sucFullDynamicColor, false);
         obtainStyledAttributes.recycle();
         LOG.atDebug("activity=" + this.activity.getClass().getSimpleName() + " isSetupFlow=" + isAnySetupWizard + " enablePartnerResourceLoading=" + enablePartnerResourceLoading() + " usePartnerResourceAttr=" + this.usePartnerResourceAttr + " useDynamicColor=" + this.useDynamicColor + " useFullDynamicColorAttr=" + this.useFullDynamicColorAttr);
     }
@@ -116,7 +116,7 @@ public class PartnerCustomizationLayout extends TemplateLayout {
     /* access modifiers changed from: protected */
     public ViewGroup findContainer(int i) {
         if (i == 0) {
-            i = C3931R.C3933id.suc_layout_content;
+            i = C3941R.C3943id.suc_layout_content;
         }
         return super.findContainer(i);
     }

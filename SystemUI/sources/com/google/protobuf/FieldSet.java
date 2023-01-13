@@ -235,7 +235,7 @@ final class FieldSet<FieldDescriptorType extends FieldDescriptorLite<FieldDescri
     private static void verifyType(com.google.protobuf.WireFormat.FieldType r2, java.lang.Object r3) {
         /*
             r3.getClass()
-            int[] r0 = com.google.protobuf.FieldSet.C40641.$SwitchMap$com$google$protobuf$WireFormat$JavaType
+            int[] r0 = com.google.protobuf.FieldSet.C40741.$SwitchMap$com$google$protobuf$WireFormat$JavaType
             com.google.protobuf.WireFormat$JavaType r2 = r2.getJavaType()
             int r2 = r2.ordinal()
             r2 = r0[r2]
@@ -448,7 +448,7 @@ final class FieldSet<FieldDescriptorType extends FieldDescriptorLite<FieldDescri
     }
 
     /* renamed from: com.google.protobuf.FieldSet$1 */
-    static /* synthetic */ class C40641 {
+    static /* synthetic */ class C40741 {
         static final /* synthetic */ int[] $SwitchMap$com$google$protobuf$WireFormat$FieldType;
         static final /* synthetic */ int[] $SwitchMap$com$google$protobuf$WireFormat$JavaType;
 
@@ -640,12 +640,12 @@ final class FieldSet<FieldDescriptorType extends FieldDescriptorLite<FieldDescri
             L_0x0139:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: com.google.protobuf.FieldSet.C40641.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: com.google.protobuf.FieldSet.C40741.<clinit>():void");
         }
     }
 
     static void writeElementNoTag(CodedOutputStream codedOutputStream, WireFormat.FieldType fieldType, Object obj) throws IOException {
-        switch (C40641.$SwitchMap$com$google$protobuf$WireFormat$FieldType[fieldType.ordinal()]) {
+        switch (C40741.$SwitchMap$com$google$protobuf$WireFormat$FieldType[fieldType.ordinal()]) {
             case 1:
                 codedOutputStream.writeDoubleNoTag(((Double) obj).doubleValue());
                 return;
@@ -791,7 +791,7 @@ final class FieldSet<FieldDescriptorType extends FieldDescriptorLite<FieldDescri
     }
 
     static int computeElementSizeNoTag(WireFormat.FieldType fieldType, Object obj) {
-        switch (C40641.$SwitchMap$com$google$protobuf$WireFormat$FieldType[fieldType.ordinal()]) {
+        switch (C40741.$SwitchMap$com$google$protobuf$WireFormat$FieldType[fieldType.ordinal()]) {
             case 1:
                 return CodedOutputStream.computeDoubleSizeNoTag(((Double) obj).doubleValue());
             case 2:

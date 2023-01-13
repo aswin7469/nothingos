@@ -8,7 +8,7 @@ import android.os.Handler;
 import android.provider.Settings;
 import android.util.KeyValueListParser;
 import android.util.Log;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.SysUISingleton;
 import javax.inject.Inject;
 
@@ -89,9 +89,9 @@ public class AlwaysOnDisplayPolicy {
                 AlwaysOnDisplayPolicy.this.defaultDozeBrightness = resources.getInteger(17694923);
                 AlwaysOnDisplayPolicy.this.dimBrightness = resources.getInteger(17694922);
                 AlwaysOnDisplayPolicy alwaysOnDisplayPolicy6 = AlwaysOnDisplayPolicy.this;
-                alwaysOnDisplayPolicy6.screenBrightnessArray = alwaysOnDisplayPolicy6.mParser.getIntArray(AlwaysOnDisplayPolicy.KEY_SCREEN_BRIGHTNESS_ARRAY, resources.getIntArray(C1893R.array.config_doze_brightness_sensor_to_brightness));
+                alwaysOnDisplayPolicy6.screenBrightnessArray = alwaysOnDisplayPolicy6.mParser.getIntArray(AlwaysOnDisplayPolicy.KEY_SCREEN_BRIGHTNESS_ARRAY, resources.getIntArray(C1894R.array.config_doze_brightness_sensor_to_brightness));
                 AlwaysOnDisplayPolicy alwaysOnDisplayPolicy7 = AlwaysOnDisplayPolicy.this;
-                alwaysOnDisplayPolicy7.dimmingScrimArray = alwaysOnDisplayPolicy7.mParser.getIntArray(AlwaysOnDisplayPolicy.KEY_DIMMING_SCRIM_ARRAY, resources.getIntArray(C1893R.array.config_doze_brightness_sensor_to_scrim_opacity));
+                alwaysOnDisplayPolicy7.dimmingScrimArray = alwaysOnDisplayPolicy7.mParser.getIntArray(AlwaysOnDisplayPolicy.KEY_DIMMING_SCRIM_ARRAY, resources.getIntArray(C1894R.array.config_doze_brightness_sensor_to_scrim_opacity));
             }
         }
     }

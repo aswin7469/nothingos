@@ -16,8 +16,8 @@ import kotlin.jvm.internal.Intrinsics;
 import kotlinx.coroutines.CoroutineScope;
 import kotlinx.coroutines.flow.Flow;
 
-@Metadata(mo64986d1 = {"\u0000\n\n\u0000\n\u0002\u0010\u0002\n\u0002\u0018\u0002\u0010\u0000\u001a\u00020\u0001*\u00020\u0002H@"}, mo64987d2 = {"<anonymous>", "", "Lkotlinx/coroutines/CoroutineScope;"}, mo64988k = 3, mo64989mv = {1, 7, 1}, mo64991xi = 48)
-@DebugMetadata(mo65240c = "androidx.databinding.ViewDataBindingKtx$StateFlowListener$startCollection$1", mo65241f = "ViewDataBindingKtx.kt", mo65242i = {}, mo65243l = {95}, mo65244m = "invokeSuspend", mo65245n = {}, mo65246s = {})
+@Metadata(mo65042d1 = {"\u0000\n\n\u0000\n\u0002\u0010\u0002\n\u0002\u0018\u0002\u0010\u0000\u001a\u00020\u0001*\u00020\u0002H@"}, mo65043d2 = {"<anonymous>", "", "Lkotlinx/coroutines/CoroutineScope;"}, mo65044k = 3, mo65045mv = {1, 7, 1}, mo65047xi = 48)
+@DebugMetadata(mo65296c = "androidx.databinding.ViewDataBindingKtx$StateFlowListener$startCollection$1", mo65297f = "ViewDataBindingKtx.kt", mo65298i = {}, mo65299l = {95}, mo65300m = "invokeSuspend", mo65301n = {}, mo65302s = {})
 /* compiled from: ViewDataBindingKtx.kt */
 final class ViewDataBindingKtx$StateFlowListener$startCollection$1 extends SuspendLambda implements Function2<CoroutineScope, Continuation<? super Unit>, Object> {
     final /* synthetic */ Flow<Object> $flow;
@@ -41,8 +41,8 @@ final class ViewDataBindingKtx$StateFlowListener$startCollection$1 extends Suspe
         return ((ViewDataBindingKtx$StateFlowListener$startCollection$1) create(coroutineScope, continuation)).invokeSuspend(Unit.INSTANCE);
     }
 
-    @Metadata(mo64986d1 = {"\u0000\n\n\u0000\n\u0002\u0010\u0002\n\u0002\u0018\u0002\u0010\u0000\u001a\u00020\u0001*\u00020\u0002H@"}, mo64987d2 = {"<anonymous>", "", "Lkotlinx/coroutines/CoroutineScope;"}, mo64988k = 3, mo64989mv = {1, 7, 1}, mo64991xi = 48)
-    @DebugMetadata(mo65240c = "androidx.databinding.ViewDataBindingKtx$StateFlowListener$startCollection$1$1", mo65241f = "ViewDataBindingKtx.kt", mo65242i = {}, mo65243l = {123}, mo65244m = "invokeSuspend", mo65245n = {}, mo65246s = {})
+    @Metadata(mo65042d1 = {"\u0000\n\n\u0000\n\u0002\u0010\u0002\n\u0002\u0018\u0002\u0010\u0000\u001a\u00020\u0001*\u00020\u0002H@"}, mo65043d2 = {"<anonymous>", "", "Lkotlinx/coroutines/CoroutineScope;"}, mo65044k = 3, mo65045mv = {1, 7, 1}, mo65047xi = 48)
+    @DebugMetadata(mo65296c = "androidx.databinding.ViewDataBindingKtx$StateFlowListener$startCollection$1$1", mo65297f = "ViewDataBindingKtx.kt", mo65298i = {}, mo65299l = {123}, mo65300m = "invokeSuspend", mo65301n = {}, mo65302s = {})
     /* renamed from: androidx.databinding.ViewDataBindingKtx$StateFlowListener$startCollection$1$1 */
     /* compiled from: ViewDataBindingKtx.kt */
     static final class C05851 extends SuspendLambda implements Function2<CoroutineScope, Continuation<? super Unit>, Object> {

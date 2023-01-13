@@ -12,6 +12,6 @@ public final /* synthetic */ class TvPipMenuView$$ExternalSyntheticLambda2 imple
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        this.f$0.m3482lambda$hideEduText$1$comandroidwmshellpiptvTvPipMenuView(valueAnimator);
+        this.f$0.m3486lambda$hideEduText$1$comandroidwmshellpiptvTvPipMenuView(valueAnimator);
     }
 }

@@ -12,6 +12,6 @@ public final /* synthetic */ class UdfpsControllerOverlay$$ExternalSyntheticLamb
     }
 
     public final boolean onHover(View view, MotionEvent motionEvent) {
-        return UdfpsControllerOverlay.m2587show$lambda4$lambda3$lambda1(this.f$0, view, motionEvent);
+        return UdfpsControllerOverlay.m2593show$lambda4$lambda3$lambda1(this.f$0, view, motionEvent);
     }
 }

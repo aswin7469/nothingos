@@ -12,6 +12,6 @@ public final /* synthetic */ class ScreenshotSelectorView$$ExternalSyntheticLamb
     }
 
     public final boolean onTouch(View view, MotionEvent motionEvent) {
-        return this.f$0.mo37472x302dc8e6(view, motionEvent);
+        return this.f$0.mo37473x302dc8e6(view, motionEvent);
     }
 }

@@ -40,7 +40,7 @@ public class FormattedFloatingDecimal {
         int digits = binaryToASCIIConverter.getDigits(buffer);
         int decimalExponent = binaryToASCIIConverter.getDecimalExponent();
         boolean isNegative = binaryToASCIIConverter.isNegative();
-        int i2 = C45772.$SwitchMap$jdk$internal$math$FormattedFloatingDecimal$Form[form.ordinal()];
+        int i2 = C45892.$SwitchMap$jdk$internal$math$FormattedFloatingDecimal$Form[form.ordinal()];
         if (i2 == 1) {
             this.decExponentRounded = decimalExponent;
             fillCompatible(i, buffer, digits, decimalExponent, isNegative);
@@ -65,7 +65,7 @@ public class FormattedFloatingDecimal {
     }
 
     /* renamed from: jdk.internal.math.FormattedFloatingDecimal$2 */
-    static /* synthetic */ class C45772 {
+    static /* synthetic */ class C45892 {
         static final /* synthetic */ int[] $SwitchMap$jdk$internal$math$FormattedFloatingDecimal$Form;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(8:0|1|2|3|4|5|6|(3:7|8|10)) */
@@ -104,7 +104,7 @@ public class FormattedFloatingDecimal {
             L_0x0033:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: jdk.internal.math.FormattedFloatingDecimal.C45772.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: jdk.internal.math.FormattedFloatingDecimal.C45892.<clinit>():void");
         }
     }
 

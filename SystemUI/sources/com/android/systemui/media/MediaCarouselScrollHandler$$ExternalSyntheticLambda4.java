@@ -13,6 +13,6 @@ public final /* synthetic */ class MediaCarouselScrollHandler$$ExternalSynthetic
     }
 
     public final void run() {
-        MediaCarouselScrollHandler.m2776scrollToPlayer$lambda4(this.f$0, this.f$1);
+        MediaCarouselScrollHandler.m2781scrollToPlayer$lambda4(this.f$0, this.f$1);
     }
 }

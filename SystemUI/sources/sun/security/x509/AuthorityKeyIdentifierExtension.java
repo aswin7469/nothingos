@@ -17,7 +17,7 @@ public class AuthorityKeyIdentifierExtension extends Extension implements CertAt
     private static final byte TAG_SERIAL_NUM = 2;
 
     /* renamed from: id */
-    private KeyIdentifier f927id;
+    private KeyIdentifier f925id;
     private GeneralNames names;
     private SerialNumber serialNum;
 
@@ -26,15 +26,15 @@ public class AuthorityKeyIdentifierExtension extends Extension implements CertAt
     }
 
     private void encodeThis() throws IOException {
-        if (this.f927id == null && this.names == null && this.serialNum == null) {
+        if (this.f925id == null && this.names == null && this.serialNum == null) {
             this.extensionValue = null;
             return;
         }
         DerOutputStream derOutputStream = new DerOutputStream();
         DerOutputStream derOutputStream2 = new DerOutputStream();
-        if (this.f927id != null) {
+        if (this.f925id != null) {
             DerOutputStream derOutputStream3 = new DerOutputStream();
-            this.f927id.encode(derOutputStream3);
+            this.f925id.encode(derOutputStream3);
             derOutputStream2.writeImplicit(DerValue.createTag(Byte.MIN_VALUE, false, (byte) 0), derOutputStream3);
         }
         try {
@@ -56,7 +56,7 @@ public class AuthorityKeyIdentifierExtension extends Extension implements CertAt
     }
 
     public AuthorityKeyIdentifierExtension(KeyIdentifier keyIdentifier, GeneralNames generalNames, SerialNumber serialNumber) throws IOException {
-        this.f927id = keyIdentifier;
+        this.f925id = keyIdentifier;
         this.names = generalNames;
         this.serialNum = serialNumber;
         this.extensionId = PKIXExtensions.AuthorityKey_Id;
@@ -65,7 +65,7 @@ public class AuthorityKeyIdentifierExtension extends Extension implements CertAt
     }
 
     public AuthorityKeyIdentifierExtension(Boolean bool, Object obj) throws IOException {
-        this.f927id = null;
+        this.f925id = null;
         this.names = null;
         this.serialNum = null;
         this.extensionId = PKIXExtensions.AuthorityKey_Id;
@@ -91,9 +91,9 @@ public class AuthorityKeyIdentifierExtension extends Extension implements CertAt
                     } else {
                         throw new IOException("Duplicate GeneralNames in AuthorityKeyIdentifier.");
                     }
-                } else if (this.f927id == null) {
+                } else if (this.f925id == null) {
                     derValue2.resetTag((byte) 4);
-                    this.f927id = new KeyIdentifier(derValue2);
+                    this.f925id = new KeyIdentifier(derValue2);
                 } else {
                     throw new IOException("Duplicate KeyIdentifier in AuthorityKeyIdentifier.");
                 }
@@ -105,8 +105,8 @@ public class AuthorityKeyIdentifierExtension extends Extension implements CertAt
 
     public String toString() {
         String str = super.toString() + "AuthorityKeyIdentifier [\n";
-        if (this.f927id != null) {
-            str = str + this.f927id.toString();
+        if (this.f925id != null) {
+            str = str + this.f925id.toString();
         }
         if (this.names != null) {
             str = str + this.names.toString() + "\n";
@@ -131,7 +131,7 @@ public class AuthorityKeyIdentifierExtension extends Extension implements CertAt
     public void set(String str, Object obj) throws IOException {
         if (str.equalsIgnoreCase("key_id")) {
             if (obj instanceof KeyIdentifier) {
-                this.f927id = (KeyIdentifier) obj;
+                this.f925id = (KeyIdentifier) obj;
             } else {
                 throw new IOException("Attribute value should be of type KeyIdentifier.");
             }
@@ -153,7 +153,7 @@ public class AuthorityKeyIdentifierExtension extends Extension implements CertAt
 
     public Object get(String str) throws IOException {
         if (str.equalsIgnoreCase("key_id")) {
-            return this.f927id;
+            return this.f925id;
         }
         if (str.equalsIgnoreCase(AUTH_NAME)) {
             return this.names;
@@ -166,7 +166,7 @@ public class AuthorityKeyIdentifierExtension extends Extension implements CertAt
 
     public void delete(String str) throws IOException {
         if (str.equalsIgnoreCase("key_id")) {
-            this.f927id = null;
+            this.f925id = null;
         } else if (str.equalsIgnoreCase(AUTH_NAME)) {
             this.names = null;
         } else if (str.equalsIgnoreCase(SERIAL_NUMBER)) {
@@ -186,11 +186,11 @@ public class AuthorityKeyIdentifierExtension extends Extension implements CertAt
     }
 
     public byte[] getEncodedKeyIdentifier() throws IOException {
-        if (this.f927id == null) {
+        if (this.f925id == null) {
             return null;
         }
         DerOutputStream derOutputStream = new DerOutputStream();
-        this.f927id.encode(derOutputStream);
+        this.f925id.encode(derOutputStream);
         return derOutputStream.toByteArray();
     }
 }

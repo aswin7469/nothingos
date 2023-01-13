@@ -586,7 +586,7 @@ public class Cipher {
         if (str2 == null || (attribute = service.getAttribute(str)) == null) {
             return true;
         }
-        return str2.toUpperCase(Locale.f700US).matches(attribute.toUpperCase(Locale.f700US));
+        return str2.toUpperCase(Locale.f698US).matches(attribute.toUpperCase(Locale.f698US));
     }
 
     static class Transform {
@@ -764,7 +764,7 @@ public class Cipher {
                                 cipherSpi.engineSetPadding(str);
                             }
                             if (initParams != null) {
-                                int i = C45591.$SwitchMap$javax$crypto$Cipher$InitType[initParams.initType.ordinal()];
+                                int i = C45711.$SwitchMap$javax$crypto$Cipher$InitType[initParams.initType.ordinal()];
                                 if (i == 1) {
                                     cipherSpi.engineInit(initParams.opmode, initParams.key, initParams.params, initParams.random);
                                 } else if (i == 2) {
@@ -786,7 +786,7 @@ public class Cipher {
     }
 
     /* renamed from: javax.crypto.Cipher$1 */
-    static /* synthetic */ class C45591 {
+    static /* synthetic */ class C45711 {
         static final /* synthetic */ int[] $SwitchMap$javax$crypto$Cipher$InitType;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(6:0|1|2|3|4|(3:5|6|8)) */
@@ -818,7 +818,7 @@ public class Cipher {
             L_0x0028:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: javax.crypto.Cipher.C45591.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: javax.crypto.Cipher.C45711.<clinit>():void");
         }
     }
 }

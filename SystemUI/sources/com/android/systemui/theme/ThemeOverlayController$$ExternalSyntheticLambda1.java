@@ -9,6 +9,6 @@ public final /* synthetic */ class ThemeOverlayController$$ExternalSyntheticLamb
     }
 
     public final void run() {
-        this.f$0.m3250lambda$start$1$comandroidsystemuithemeThemeOverlayController();
+        this.f$0.m3255lambda$start$1$comandroidsystemuithemeThemeOverlayController();
     }
 }

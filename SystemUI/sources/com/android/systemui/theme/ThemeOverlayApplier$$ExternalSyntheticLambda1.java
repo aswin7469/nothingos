@@ -14,6 +14,6 @@ public final /* synthetic */ class ThemeOverlayApplier$$ExternalSyntheticLambda1
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo46304xdea0f261(this.f$1, (String) obj);
+        this.f$0.mo46316xdea0f261(this.f$1, (String) obj);
     }
 }

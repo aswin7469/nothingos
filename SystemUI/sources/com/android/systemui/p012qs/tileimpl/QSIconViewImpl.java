@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import com.android.settingslib.Utils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.navigationbar.NavigationBarInflaterView;
 import com.android.systemui.p012qs.AlphaControlledSignalTileView;
 import com.android.systemui.plugins.p011qs.QSIconView;
@@ -53,7 +53,7 @@ public class QSIconViewImpl extends QSIconView {
 
     public QSIconViewImpl(Context context) {
         super(context);
-        this.mIconSizePx = context.getResources().getDimensionPixelSize(C1893R.dimen.qs_icon_size);
+        this.mIconSizePx = context.getResources().getDimensionPixelSize(C1894R.dimen.qs_icon_size);
         this.mIcon = createIcon();
         this.mCircleIconDrawable = this.mEx.getCircleIconDrawable(context);
         this.mColorAnimator.setDuration(350);
@@ -114,10 +114,10 @@ public class QSIconViewImpl extends QSIconView {
 
     /* access modifiers changed from: protected */
     /* renamed from: updateIcon */
-    public void m2957lambda$setIcon$0$comandroidsystemuiqstileimplQSIconViewImpl(ImageView imageView, QSTile.State state, boolean z) {
+    public void m2962lambda$setIcon$0$comandroidsystemuiqstileimplQSIconViewImpl(ImageView imageView, QSTile.State state, boolean z) {
         Drawable drawable;
         QSTile.Icon icon = state.iconSupplier != null ? state.iconSupplier.get() : state.icon;
-        if (!Objects.equals(icon, imageView.getTag(C1893R.C1897id.qs_icon_tag)) || !Objects.equals(state.slash, imageView.getTag(C1893R.C1897id.qs_slash_tag))) {
+        if (!Objects.equals(icon, imageView.getTag(C1894R.C1898id.qs_icon_tag)) || !Objects.equals(state.slash, imageView.getTag(C1894R.C1898id.qs_slash_tag))) {
             boolean z2 = z && shouldAnimate(imageView);
             this.mLastIcon = icon;
             if (icon != null) {
@@ -140,8 +140,8 @@ public class QSIconViewImpl extends QSIconView {
             } else {
                 imageView.setImageDrawable(drawable);
             }
-            imageView.setTag(C1893R.C1897id.qs_icon_tag, icon);
-            imageView.setTag(C1893R.C1897id.qs_slash_tag, state.slash);
+            imageView.setTag(C1894R.C1898id.qs_icon_tag, icon);
+            imageView.setTag(C1894R.C1898id.qs_slash_tag, state.slash);
             imageView.setPadding(0, padding, 0, padding);
             if (drawable instanceof Animatable2) {
                 final Animatable2 animatable2 = (Animatable2) drawable;
@@ -164,7 +164,7 @@ public class QSIconViewImpl extends QSIconView {
     /* access modifiers changed from: protected */
     public void setIcon(ImageView imageView, QSTile.State state, boolean z) {
         if (state.disabledByPolicy) {
-            imageView.setColorFilter(getContext().getColor(C1893R.C1894color.qs_tile_disabled_color));
+            imageView.setColorFilter(getContext().getColor(C1894R.C1895color.qs_tile_disabled_color));
         } else {
             imageView.clearColorFilter();
         }
@@ -174,7 +174,7 @@ public class QSIconViewImpl extends QSIconView {
                 imageView.setImageTintList((ColorStateList) null);
                 this.mTint = 0;
             }
-            m2957lambda$setIcon$0$comandroidsystemuiqstileimplQSIconViewImpl(imageView, state, z);
+            m2962lambda$setIcon$0$comandroidsystemuiqstileimplQSIconViewImpl(imageView, state, z);
         } else if (state.state != this.mState || this.mTint == 0) {
             int color = getColor(state.state);
             this.mState = state.state;
@@ -184,12 +184,12 @@ public class QSIconViewImpl extends QSIconView {
                 } else {
                     setTint(imageView, color);
                 }
-                m2957lambda$setIcon$0$comandroidsystemuiqstileimplQSIconViewImpl(imageView, state, z);
+                m2962lambda$setIcon$0$comandroidsystemuiqstileimplQSIconViewImpl(imageView, state, z);
                 return;
             }
             animateGrayScale(this.mTint, color, imageView, new QSIconViewImpl$$ExternalSyntheticLambda1(this, imageView, state, z));
         } else {
-            m2957lambda$setIcon$0$comandroidsystemuiqstileimplQSIconViewImpl(imageView, state, z);
+            m2962lambda$setIcon$0$comandroidsystemuiqstileimplQSIconViewImpl(imageView, state, z);
         }
     }
 
@@ -219,7 +219,7 @@ public class QSIconViewImpl extends QSIconView {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$animateGrayScale$1$com-android-systemui-qs-tileimpl-QSIconViewImpl */
-    public /* synthetic */ void mo36730xff879a00(ImageView imageView, ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo36734xff879a00(ImageView imageView, ValueAnimator valueAnimator) {
         setTint(imageView, ((Integer) valueAnimator.getAnimatedValue()).intValue());
     }
 
@@ -267,7 +267,7 @@ public class QSIconViewImpl extends QSIconView {
     /* access modifiers changed from: protected */
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        this.mCircleIconSize = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.circle_qs_icon_size);
+        this.mCircleIconSize = this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.circle_qs_icon_size);
         this.mCircleIconFrame = new FrameLayout(this.mContext);
         ImageView imageView = new ImageView(this.mContext);
         this.mCircleIconBg = imageView;
@@ -308,8 +308,8 @@ public class QSIconViewImpl extends QSIconView {
 
     private boolean isIconSizeChanged() {
         Resources resources = this.mContext.getResources();
-        int dimensionPixelSize = resources.getDimensionPixelSize(C1893R.dimen.qs_icon_size);
-        int dimensionPixelSize2 = resources.getDimensionPixelSize(C1893R.dimen.qs_icon_size_for_fast_pair);
+        int dimensionPixelSize = resources.getDimensionPixelSize(C1894R.dimen.qs_icon_size);
+        int dimensionPixelSize2 = resources.getDimensionPixelSize(C1894R.dimen.qs_icon_size_for_fast_pair);
         int i = this.mCircleIconSize;
         boolean z = this.mIsFastPair;
         if (z && !this.mIsTesla && this.mIconSizePx != dimensionPixelSize2) {

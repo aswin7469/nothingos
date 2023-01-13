@@ -5,7 +5,7 @@ import android.os.UserHandle;
 import android.os.UserManager;
 import android.view.View;
 import android.view.ViewGroup;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.DejankUtils;
 import com.android.systemui.animation.ActivityLaunchAnimator;
 import com.android.systemui.flags.FeatureFlags;
@@ -54,7 +54,7 @@ public class MultiUserSwitchController extends ViewController<MultiUserSwitch> {
         }
 
         public MultiUserSwitchController create(FooterActionsView footerActionsView) {
-            return new MultiUserSwitchController((MultiUserSwitch) footerActionsView.findViewById(C1893R.C1897id.multi_user_switch), this.mUserManager, this.mUserSwitcherController, this.mFalsingManager, this.mUserSwitchDialogController, this.mFeatureFlags, this.mActivityStarter);
+            return new MultiUserSwitchController((MultiUserSwitch) footerActionsView.findViewById(C1894R.C1898id.multi_user_switch), this.mUserManager, this.mUserSwitcherController, this.mFalsingManager, this.mUserSwitchDialogController, this.mFeatureFlags, this.mActivityStarter);
         }
     }
 
@@ -123,7 +123,7 @@ public class MultiUserSwitchController extends ViewController<MultiUserSwitch> {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$getCurrentUser$0$com-android-systemui-statusbar-phone-MultiUserSwitchController */
-    public /* synthetic */ Boolean mo44441x1cd39df6() {
+    public /* synthetic */ Boolean mo44456x1cd39df6() {
         return Boolean.valueOf(this.mUserManager.isUserSwitcherEnabled());
     }
 
@@ -133,7 +133,7 @@ public class MultiUserSwitchController extends ViewController<MultiUserSwitch> {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$isMultiUserEnabled$1$com-android-systemui-statusbar-phone-MultiUserSwitchController */
-    public /* synthetic */ Boolean mo44442x1fc8e3dc() {
-        return Boolean.valueOf(this.mUserManager.isUserSwitcherEnabled(getResources().getBoolean(C1893R.bool.qs_show_user_switcher_for_single_user)));
+    public /* synthetic */ Boolean mo44457x1fc8e3dc() {
+        return Boolean.valueOf(this.mUserManager.isUserSwitcherEnabled(getResources().getBoolean(C1894R.bool.qs_show_user_switcher_for_single_user)));
     }
 }

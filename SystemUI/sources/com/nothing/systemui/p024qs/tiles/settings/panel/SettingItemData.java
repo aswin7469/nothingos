@@ -20,6 +20,7 @@ public class SettingItemData {
     public boolean isSwithEnabled;
     public String macAddress;
     public String subTitle;
+    public boolean supportAirpods;
     public boolean supportAnc;
     public CompoundButton.OnCheckedChangeListener switchListener;
     public String title;

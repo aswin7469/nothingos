@@ -12,6 +12,6 @@ public final /* synthetic */ class ComplicationHostViewController$$ExternalSynth
     }
 
     public final void onChanged(Object obj) {
-        this.f$0.mo32562xf450732d((Collection) obj);
+        this.f$0.mo32573xf450732d((Collection) obj);
     }
 }

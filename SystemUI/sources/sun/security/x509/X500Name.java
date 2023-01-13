@@ -60,7 +60,7 @@ public class X500Name implements GeneralNameInterface, Principal {
     private String canonicalDn;
 
     /* renamed from: dn */
-    private String f936dn;
+    private String f934dn;
     private byte[] encoded;
     private RDN[] names;
     private volatile List<RDN> rdnList;
@@ -294,10 +294,10 @@ public class X500Name implements GeneralNameInterface, Principal {
     }
 
     public String toString() {
-        if (this.f936dn == null) {
+        if (this.f934dn == null) {
             generateDN();
         }
-        return this.f936dn;
+        return this.f934dn;
     }
 
     public String getRFC1779Name() {
@@ -575,7 +575,7 @@ public class X500Name implements GeneralNameInterface, Principal {
     private void generateDN() {
         RDN[] rdnArr = this.names;
         if (rdnArr.length == 1) {
-            this.f936dn = rdnArr[0].toString();
+            this.f934dn = rdnArr[0].toString();
             return;
         }
         StringBuilder sb = new StringBuilder(48);
@@ -588,7 +588,7 @@ public class X500Name implements GeneralNameInterface, Principal {
                 sb.append(this.names[length].toString());
             }
         }
-        this.f936dn = sb.toString();
+        this.f934dn = sb.toString();
     }
 
     private String generateRFC1779DN(Map<String, String> map) {

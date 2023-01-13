@@ -61,7 +61,7 @@ public class MapEntryLite<K, V> {
     }
 
     /* renamed from: com.google.protobuf.MapEntryLite$1 */
-    static /* synthetic */ class C40681 {
+    static /* synthetic */ class C40781 {
         static final /* synthetic */ int[] $SwitchMap$com$google$protobuf$WireFormat$FieldType;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(6:0|1|2|3|4|(3:5|6|8)) */
@@ -93,12 +93,12 @@ public class MapEntryLite<K, V> {
             L_0x0028:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: com.google.protobuf.MapEntryLite.C40681.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: com.google.protobuf.MapEntryLite.C40781.<clinit>():void");
         }
     }
 
     static <T> T parseField(CodedInputStream codedInputStream, ExtensionRegistryLite extensionRegistryLite, WireFormat.FieldType fieldType, T t) throws IOException {
-        int i = C40681.$SwitchMap$com$google$protobuf$WireFormat$FieldType[fieldType.ordinal()];
+        int i = C40781.$SwitchMap$com$google$protobuf$WireFormat$FieldType[fieldType.ordinal()];
         if (i == 1) {
             MessageLite.Builder builder = ((MessageLite) t).toBuilder();
             codedInputStream.readMessage(builder, extensionRegistryLite);

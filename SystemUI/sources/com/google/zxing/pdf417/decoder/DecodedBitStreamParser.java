@@ -9,10 +9,10 @@ import java.util.Arrays;
 final class DecodedBitStreamParser {
 
     /* renamed from: AL */
-    private static final int f487AL = 28;
+    private static final int f486AL = 28;
 
     /* renamed from: AS */
-    private static final int f488AS = 27;
+    private static final int f487AS = 27;
     private static final int BEGIN_MACRO_PDF417_CONTROL_BLOCK = 928;
     private static final int BEGIN_MACRO_PDF417_OPTIONAL_FIELD = 923;
     private static final int BYTE_COMPACTION_MODE_LATCH = 901;
@@ -23,7 +23,7 @@ final class DecodedBitStreamParser {
     private static final BigInteger[] EXP900;
 
     /* renamed from: LL */
-    private static final int f489LL = 27;
+    private static final int f488LL = 27;
     private static final int MACRO_PDF417_OPTIONAL_FIELD_ADDRESSEE = 4;
     private static final int MACRO_PDF417_OPTIONAL_FIELD_CHECKSUM = 6;
     private static final int MACRO_PDF417_OPTIONAL_FIELD_FILE_NAME = 0;
@@ -36,17 +36,17 @@ final class DecodedBitStreamParser {
     private static final char[] MIXED_CHARS = "0123456789&\r\t,:#-.$/+%*=^".toCharArray();
 
     /* renamed from: ML */
-    private static final int f490ML = 28;
+    private static final int f489ML = 28;
     private static final int MODE_SHIFT_TO_BYTE_COMPACTION_MODE = 913;
     private static final int NUMBER_OF_SEQUENCE_CODEWORDS = 2;
     private static final int NUMERIC_COMPACTION_MODE_LATCH = 902;
     private static final int PAL = 29;
 
     /* renamed from: PL */
-    private static final int f491PL = 25;
+    private static final int f490PL = 25;
 
     /* renamed from: PS */
-    private static final int f492PS = 29;
+    private static final int f491PS = 29;
     private static final char[] PUNCT_CHARS = ";<>@[\\]_`~!\r\t,:\n-.$/\"|*()?{}'".toCharArray();
     private static final int TEXT_COMPACTION_MODE_LATCH = 900;
 
@@ -387,7 +387,7 @@ final class DecodedBitStreamParser {
         L_0x000a:
             if (r6 >= r5) goto L_0x00f0
             r7 = r15[r6]
-            int[] r8 = com.google.zxing.pdf417.decoder.DecodedBitStreamParser.C41001.f493x45bba1d
+            int[] r8 = com.google.zxing.pdf417.decoder.DecodedBitStreamParser.C41101.f492x45bba1d
             int r9 = r3.ordinal()
             r8 = r8[r9]
             r9 = 32
@@ -603,10 +603,10 @@ final class DecodedBitStreamParser {
     }
 
     /* renamed from: com.google.zxing.pdf417.decoder.DecodedBitStreamParser$1 */
-    static /* synthetic */ class C41001 {
+    static /* synthetic */ class C41101 {
 
         /* renamed from: $SwitchMap$com$google$zxing$pdf417$decoder$DecodedBitStreamParser$Mode */
-        static final /* synthetic */ int[] f493x45bba1d;
+        static final /* synthetic */ int[] f492x45bba1d;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(14:0|1|2|3|4|5|6|7|8|9|10|11|12|14) */
         /* JADX WARNING: Failed to process nested try/catch */
@@ -620,37 +620,37 @@ final class DecodedBitStreamParser {
                 com.google.zxing.pdf417.decoder.DecodedBitStreamParser$Mode[] r0 = com.google.zxing.pdf417.decoder.DecodedBitStreamParser.Mode.values()
                 int r0 = r0.length
                 int[] r0 = new int[r0]
-                f493x45bba1d = r0
+                f492x45bba1d = r0
                 com.google.zxing.pdf417.decoder.DecodedBitStreamParser$Mode r1 = com.google.zxing.pdf417.decoder.DecodedBitStreamParser.Mode.ALPHA     // Catch:{ NoSuchFieldError -> 0x0012 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
                 r2 = 1
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0012 }
             L_0x0012:
-                int[] r0 = f493x45bba1d     // Catch:{ NoSuchFieldError -> 0x001d }
+                int[] r0 = f492x45bba1d     // Catch:{ NoSuchFieldError -> 0x001d }
                 com.google.zxing.pdf417.decoder.DecodedBitStreamParser$Mode r1 = com.google.zxing.pdf417.decoder.DecodedBitStreamParser.Mode.LOWER     // Catch:{ NoSuchFieldError -> 0x001d }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
                 r2 = 2
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x001d }
             L_0x001d:
-                int[] r0 = f493x45bba1d     // Catch:{ NoSuchFieldError -> 0x0028 }
+                int[] r0 = f492x45bba1d     // Catch:{ NoSuchFieldError -> 0x0028 }
                 com.google.zxing.pdf417.decoder.DecodedBitStreamParser$Mode r1 = com.google.zxing.pdf417.decoder.DecodedBitStreamParser.Mode.MIXED     // Catch:{ NoSuchFieldError -> 0x0028 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0028 }
                 r2 = 3
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0028 }
             L_0x0028:
-                int[] r0 = f493x45bba1d     // Catch:{ NoSuchFieldError -> 0x0033 }
+                int[] r0 = f492x45bba1d     // Catch:{ NoSuchFieldError -> 0x0033 }
                 com.google.zxing.pdf417.decoder.DecodedBitStreamParser$Mode r1 = com.google.zxing.pdf417.decoder.DecodedBitStreamParser.Mode.PUNCT     // Catch:{ NoSuchFieldError -> 0x0033 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0033 }
                 r2 = 4
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0033 }
             L_0x0033:
-                int[] r0 = f493x45bba1d     // Catch:{ NoSuchFieldError -> 0x003e }
+                int[] r0 = f492x45bba1d     // Catch:{ NoSuchFieldError -> 0x003e }
                 com.google.zxing.pdf417.decoder.DecodedBitStreamParser$Mode r1 = com.google.zxing.pdf417.decoder.DecodedBitStreamParser.Mode.ALPHA_SHIFT     // Catch:{ NoSuchFieldError -> 0x003e }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x003e }
                 r2 = 5
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x003e }
             L_0x003e:
-                int[] r0 = f493x45bba1d     // Catch:{ NoSuchFieldError -> 0x0049 }
+                int[] r0 = f492x45bba1d     // Catch:{ NoSuchFieldError -> 0x0049 }
                 com.google.zxing.pdf417.decoder.DecodedBitStreamParser$Mode r1 = com.google.zxing.pdf417.decoder.DecodedBitStreamParser.Mode.PUNCT_SHIFT     // Catch:{ NoSuchFieldError -> 0x0049 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0049 }
                 r2 = 6
@@ -658,7 +658,7 @@ final class DecodedBitStreamParser {
             L_0x0049:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: com.google.zxing.pdf417.decoder.DecodedBitStreamParser.C41001.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: com.google.zxing.pdf417.decoder.DecodedBitStreamParser.C41101.<clinit>():void");
         }
     }
 

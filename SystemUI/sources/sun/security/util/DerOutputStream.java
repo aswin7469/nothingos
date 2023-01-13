@@ -272,7 +272,7 @@ public class DerOutputStream extends ByteArrayOutputStream implements DerEncoder
             b = 24;
             str = "yyyyMMddHHmmss'Z'";
         }
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(str, Locale.f700US);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(str, Locale.f698US);
         simpleDateFormat.setTimeZone(timeZone);
         byte[] bytes = simpleDateFormat.format(date).getBytes("ISO-8859-1");
         write(b);

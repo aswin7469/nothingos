@@ -13,6 +13,6 @@ public final /* synthetic */ class C1832xeb3ea61d implements Comparator {
     }
 
     public final int compare(Object obj, Object obj2) {
-        return this.f$0.mo28800x360cd944((Preference) obj, (Preference) obj2);
+        return this.f$0.mo28805x360cd944((Preference) obj, (Preference) obj2);
     }
 }

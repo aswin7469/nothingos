@@ -84,7 +84,7 @@ public class ShortcutParser {
         int resourceId2 = obtainAttributes.getResourceId(3, 0);
         shortcut.pkg = this.mPkg;
         shortcut.icon = Icon.createWithResource(this.mPkg, resourceId);
-        shortcut.f396id = string;
+        shortcut.f395id = string;
         shortcut.label = this.mResources.getString(resourceId2);
         shortcut.name = this.mName;
         while (true) {
@@ -105,7 +105,7 @@ public class ShortcutParser {
         public Icon icon;
 
         /* renamed from: id */
-        public String f396id;
+        public String f395id;
         public Intent intent;
         public String label;
         public String name;
@@ -115,7 +115,7 @@ public class ShortcutParser {
             String[] split = str.split("::");
             try {
                 for (Shortcut next : new ShortcutParser(context, new ComponentName(split[0], split[1])).getShortcuts()) {
-                    if (next.f396id.equals(split[2])) {
+                    if (next.f395id.equals(split[2])) {
                         return next;
                     }
                 }
@@ -126,7 +126,7 @@ public class ShortcutParser {
         }
 
         public String toString() {
-            return this.pkg + "::" + this.name + "::" + this.f396id;
+            return this.pkg + "::" + this.name + "::" + this.f395id;
         }
     }
 }

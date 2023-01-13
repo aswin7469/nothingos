@@ -19,15 +19,15 @@ public class PSource {
         public static final PSpecified DEFAULT = new PSpecified(new byte[0]);
 
         /* renamed from: p */
-        private byte[] f824p = new byte[0];
+        private byte[] f822p = new byte[0];
 
         public PSpecified(byte[] bArr) {
             super("PSpecified");
-            this.f824p = (byte[]) bArr.clone();
+            this.f822p = (byte[]) bArr.clone();
         }
 
         public byte[] getValue() {
-            byte[] bArr = this.f824p;
+            byte[] bArr = this.f822p;
             return bArr.length == 0 ? bArr : (byte[]) bArr.clone();
         }
     }

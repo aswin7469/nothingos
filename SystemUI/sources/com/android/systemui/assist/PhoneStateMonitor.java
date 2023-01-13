@@ -78,7 +78,7 @@ public final class PhoneStateMonitor {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-assist-PhoneStateMonitor  reason: not valid java name */
-    public /* synthetic */ void m2551lambda$new$0$comandroidsystemuiassistPhoneStateMonitor() {
+    public /* synthetic */ void m2557lambda$new$0$comandroidsystemuiassistPhoneStateMonitor() {
         this.mDefaultHome = getCurrentDefaultHome();
     }
 

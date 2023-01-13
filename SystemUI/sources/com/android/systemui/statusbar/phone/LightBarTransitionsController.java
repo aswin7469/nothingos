@@ -184,7 +184,7 @@ public class LightBarTransitionsController implements Dumpable, CommandQueue.Cal
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$animateIconTint$0$com-android-systemui-statusbar-phone-LightBarTransitionsController */
-    public /* synthetic */ void mo44383x56438732(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo44398x56438732(ValueAnimator valueAnimator) {
         setIconTintInternal(((Float) valueAnimator.getAnimatedValue()).floatValue());
     }
 

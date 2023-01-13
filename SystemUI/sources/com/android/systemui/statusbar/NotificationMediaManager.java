@@ -200,7 +200,7 @@ public class NotificationMediaManager implements Dumpable {
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onMediaDataRemoved$1$com-android-systemui-statusbar-NotificationMediaManager$3 */
-            public /* synthetic */ void mo38785x391306a6(NotificationEntry notificationEntry) {
+            public /* synthetic */ void mo38786x391306a6(NotificationEntry notificationEntry) {
                 NotificationMediaManager.this.mNotifCollection.dismissNotification(notificationEntry, NotificationMediaManager.this.getDismissedByUserStats(notificationEntry));
             }
         });
@@ -732,7 +732,7 @@ public class NotificationMediaManager implements Dumpable {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$finishUpdateMediaMetaData$1$com-android-systemui-statusbar-NotificationMediaManager */
-    public /* synthetic */ void mo38775xe70f84e3() {
+    public /* synthetic */ void mo38776xe70f84e3() {
         this.mBackdrop.setVisibility(8);
         this.mBackdropFront.animate().cancel();
         this.mBackdropBack.setImageDrawable((Drawable) null);

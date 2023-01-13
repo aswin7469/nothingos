@@ -5,7 +5,7 @@ import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 import kotlin.jvm.internal.FunctionReferenceImpl;
 
-@Metadata(mo64988k = 3, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65044k = 3, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* renamed from: com.android.wm.shell.animation.PhysicsAnimator$startAction$1 */
 /* compiled from: PhysicsAnimator.kt */
 /* synthetic */ class PhysicsAnimator$startAction$1 extends FunctionReferenceImpl implements Function0<Unit> {

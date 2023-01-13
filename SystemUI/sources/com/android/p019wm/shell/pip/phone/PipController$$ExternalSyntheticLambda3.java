@@ -12,6 +12,6 @@ public final /* synthetic */ class PipController$$ExternalSyntheticLambda3 imple
     }
 
     public final void accept(Object obj, Object obj2, Object obj3) {
-        this.f$0.m3460lambda$init$3$comandroidwmshellpipphonePipController((Boolean) obj, (Integer) obj2, (Boolean) obj3);
+        this.f$0.m3464lambda$init$3$comandroidwmshellpipphonePipController((Boolean) obj, (Integer) obj2, (Boolean) obj3);
     }
 }

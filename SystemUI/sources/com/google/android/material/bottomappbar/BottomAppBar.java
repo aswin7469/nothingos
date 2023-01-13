@@ -22,7 +22,7 @@ import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.customview.view.AbsSavedState;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.animation.TransformationCallback;
 import com.google.android.material.behavior.HideBottomViewOnScrollBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -38,7 +38,7 @@ import java.util.List;
 
 public class BottomAppBar extends Toolbar implements CoordinatorLayout.AttachedBehavior {
     private static final long ANIMATION_DURATION = 300;
-    private static final int DEF_STYLE_RES = C3621R.style.Widget_MaterialComponents_BottomAppBar;
+    private static final int DEF_STYLE_RES = C3631R.style.Widget_MaterialComponents_BottomAppBar;
     public static final int FAB_ALIGNMENT_MODE_CENTER = 0;
     public static final int FAB_ALIGNMENT_MODE_END = 1;
     public static final int FAB_ANIMATION_MODE_SCALE = 0;
@@ -106,7 +106,7 @@ public class BottomAppBar extends Toolbar implements CoordinatorLayout.AttachedB
     }
 
     public BottomAppBar(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, C3621R.attr.bottomAppBarStyle);
+        this(context, attributeSet, C3631R.attr.bottomAppBarStyle);
     }
 
     /* JADX WARNING: Illegal instructions before constructor call */
@@ -133,55 +133,55 @@ public class BottomAppBar extends Toolbar implements CoordinatorLayout.AttachedB
             r0.<init>()
             r10.fabTransformationCallback = r0
             android.content.Context r8 = r10.getContext()
-            int[] r2 = com.google.android.material.C3621R.styleable.BottomAppBar
+            int[] r2 = com.google.android.material.C3631R.styleable.BottomAppBar
             int[] r5 = new int[r7]
             r0 = r8
             r1 = r12
             r3 = r13
             r4 = r6
             android.content.res.TypedArray r0 = com.google.android.material.internal.ThemeEnforcement.obtainStyledAttributes(r0, r1, r2, r3, r4, r5)
-            int r1 = com.google.android.material.C3621R.styleable.BottomAppBar_backgroundTint
+            int r1 = com.google.android.material.C3631R.styleable.BottomAppBar_backgroundTint
             android.content.res.ColorStateList r1 = com.google.android.material.resources.MaterialResources.getColorStateList((android.content.Context) r8, (android.content.res.TypedArray) r0, (int) r1)
-            int r2 = com.google.android.material.C3621R.styleable.BottomAppBar_navigationIconTint
+            int r2 = com.google.android.material.C3631R.styleable.BottomAppBar_navigationIconTint
             boolean r2 = r0.hasValue(r2)
             if (r2 == 0) goto L_0x0050
-            int r2 = com.google.android.material.C3621R.styleable.BottomAppBar_navigationIconTint
+            int r2 = com.google.android.material.C3631R.styleable.BottomAppBar_navigationIconTint
             r3 = -1
             int r2 = r0.getColor(r2, r3)
             r10.setNavigationIconTint(r2)
         L_0x0050:
-            int r2 = com.google.android.material.C3621R.styleable.BottomAppBar_elevation
+            int r2 = com.google.android.material.C3631R.styleable.BottomAppBar_elevation
             int r2 = r0.getDimensionPixelSize(r2, r7)
-            int r3 = com.google.android.material.C3621R.styleable.BottomAppBar_fabCradleMargin
+            int r3 = com.google.android.material.C3631R.styleable.BottomAppBar_fabCradleMargin
             int r3 = r0.getDimensionPixelOffset(r3, r7)
             float r3 = (float) r3
-            int r4 = com.google.android.material.C3621R.styleable.BottomAppBar_fabCradleRoundedCornerRadius
+            int r4 = com.google.android.material.C3631R.styleable.BottomAppBar_fabCradleRoundedCornerRadius
             int r4 = r0.getDimensionPixelOffset(r4, r7)
             float r4 = (float) r4
-            int r5 = com.google.android.material.C3621R.styleable.BottomAppBar_fabCradleVerticalOffset
+            int r5 = com.google.android.material.C3631R.styleable.BottomAppBar_fabCradleVerticalOffset
             int r5 = r0.getDimensionPixelOffset(r5, r7)
             float r5 = (float) r5
-            int r9 = com.google.android.material.C3621R.styleable.BottomAppBar_fabAlignmentMode
+            int r9 = com.google.android.material.C3631R.styleable.BottomAppBar_fabAlignmentMode
             int r9 = r0.getInt(r9, r7)
             r10.fabAlignmentMode = r9
-            int r9 = com.google.android.material.C3621R.styleable.BottomAppBar_fabAnimationMode
+            int r9 = com.google.android.material.C3631R.styleable.BottomAppBar_fabAnimationMode
             int r9 = r0.getInt(r9, r7)
             r10.fabAnimationMode = r9
-            int r9 = com.google.android.material.C3621R.styleable.BottomAppBar_hideOnScroll
+            int r9 = com.google.android.material.C3631R.styleable.BottomAppBar_hideOnScroll
             boolean r9 = r0.getBoolean(r9, r7)
             r10.hideOnScroll = r9
-            int r9 = com.google.android.material.C3621R.styleable.BottomAppBar_paddingBottomSystemWindowInsets
+            int r9 = com.google.android.material.C3631R.styleable.BottomAppBar_paddingBottomSystemWindowInsets
             boolean r9 = r0.getBoolean(r9, r7)
             r10.paddingBottomSystemWindowInsets = r9
-            int r9 = com.google.android.material.C3621R.styleable.BottomAppBar_paddingLeftSystemWindowInsets
+            int r9 = com.google.android.material.C3631R.styleable.BottomAppBar_paddingLeftSystemWindowInsets
             boolean r9 = r0.getBoolean(r9, r7)
             r10.paddingLeftSystemWindowInsets = r9
-            int r9 = com.google.android.material.C3621R.styleable.BottomAppBar_paddingRightSystemWindowInsets
+            int r9 = com.google.android.material.C3631R.styleable.BottomAppBar_paddingRightSystemWindowInsets
             boolean r7 = r0.getBoolean(r9, r7)
             r10.paddingRightSystemWindowInsets = r7
             r0.recycle()
             android.content.res.Resources r0 = r10.getResources()
-            int r7 = com.google.android.material.C3621R.dimen.mtrl_bottomappbar_fabOffsetEndMode
+            int r7 = com.google.android.material.C3631R.dimen.mtrl_bottomappbar_fabOffsetEndMode
             int r0 = r0.getDimensionPixelOffset(r7)
             r10.fabOffsetEndMode = r0
             com.google.android.material.bottomappbar.BottomAppBarTopEdgeTreatment r0 = new com.google.android.material.bottomappbar.BottomAppBarTopEdgeTreatment
@@ -605,7 +605,7 @@ public class BottomAppBar extends Toolbar implements CoordinatorLayout.AttachedB
 
     /* access modifiers changed from: private */
     public void translateActionMenuView(final ActionMenuView actionMenuView, final int i, final boolean z, boolean z2) {
-        C36538 r0 = new Runnable() {
+        C36638 r0 = new Runnable() {
             public void run() {
                 ActionMenuView actionMenuView = actionMenuView;
                 actionMenuView.setTranslationX((float) BottomAppBar.this.getActionMenuViewTranslationX(actionMenuView, i, z));
@@ -752,7 +752,7 @@ public class BottomAppBar extends Toolbar implements CoordinatorLayout.AttachedB
                 bottomAppBar.setFabCornerSize(floatingActionButton.getShapeAppearanceModel().getTopLeftCornerSize().getCornerSize(new RectF(Behavior.this.fabContentRect)));
                 CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) view.getLayoutParams();
                 if (Behavior.this.originalBottomMargin == 0) {
-                    layoutParams.bottomMargin = bottomAppBar.getBottomInset() + (bottomAppBar.getResources().getDimensionPixelOffset(C3621R.dimen.mtrl_bottomappbar_fab_bottom_margin) - ((floatingActionButton.getMeasuredHeight() - height) / 2));
+                    layoutParams.bottomMargin = bottomAppBar.getBottomInset() + (bottomAppBar.getResources().getDimensionPixelOffset(C3631R.dimen.mtrl_bottomappbar_fab_bottom_margin) - ((floatingActionButton.getMeasuredHeight() - height) / 2));
                     layoutParams.leftMargin = bottomAppBar.getLeftInset();
                     layoutParams.rightMargin = bottomAppBar.getRightInset();
                     if (ViewUtils.isLayoutRtl(floatingActionButton)) {
@@ -785,10 +785,10 @@ public class BottomAppBar extends Toolbar implements CoordinatorLayout.AttachedB
                 if (access$3100 instanceof FloatingActionButton) {
                     FloatingActionButton floatingActionButton = (FloatingActionButton) access$3100;
                     if (floatingActionButton.getShowMotionSpec() == null) {
-                        floatingActionButton.setShowMotionSpecResource(C3621R.animator.mtrl_fab_show_motion_spec);
+                        floatingActionButton.setShowMotionSpecResource(C3631R.animator.mtrl_fab_show_motion_spec);
                     }
                     if (floatingActionButton.getHideMotionSpec() == null) {
-                        floatingActionButton.setHideMotionSpecResource(C3621R.animator.mtrl_fab_hide_motion_spec);
+                        floatingActionButton.setHideMotionSpecResource(C3631R.animator.mtrl_fab_hide_motion_spec);
                     }
                     floatingActionButton.addOnLayoutChangeListener(this.fabLayoutListener);
                     bottomAppBar.addFabAnimationListeners(floatingActionButton);

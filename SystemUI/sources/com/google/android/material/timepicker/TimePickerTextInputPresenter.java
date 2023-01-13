@@ -15,7 +15,7 @@ import android.widget.TextView;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.internal.TextWatcherAdapter;
 import com.google.android.material.timepicker.TimePickerView;
@@ -61,20 +61,20 @@ class TimePickerTextInputPresenter implements TimePickerView.OnSelectionChange, 
         this.timePickerView = linearLayout;
         this.time = timeModel;
         Resources resources = linearLayout.getResources();
-        ChipTextInputComboView chipTextInputComboView = (ChipTextInputComboView) linearLayout.findViewById(C3621R.C3624id.material_minute_text_input);
+        ChipTextInputComboView chipTextInputComboView = (ChipTextInputComboView) linearLayout.findViewById(C3631R.C3634id.material_minute_text_input);
         this.minuteTextInput = chipTextInputComboView;
-        ChipTextInputComboView chipTextInputComboView2 = (ChipTextInputComboView) linearLayout.findViewById(C3621R.C3624id.material_hour_text_input);
+        ChipTextInputComboView chipTextInputComboView2 = (ChipTextInputComboView) linearLayout.findViewById(C3631R.C3634id.material_hour_text_input);
         this.hourTextInput = chipTextInputComboView2;
-        ((TextView) chipTextInputComboView.findViewById(C3621R.C3624id.material_label)).setText(resources.getString(C3621R.string.material_timepicker_minute));
-        ((TextView) chipTextInputComboView2.findViewById(C3621R.C3624id.material_label)).setText(resources.getString(C3621R.string.material_timepicker_hour));
-        chipTextInputComboView.setTag(C3621R.C3624id.selection_type, 12);
-        chipTextInputComboView2.setTag(C3621R.C3624id.selection_type, 10);
+        ((TextView) chipTextInputComboView.findViewById(C3631R.C3634id.material_label)).setText(resources.getString(C3631R.string.material_timepicker_minute));
+        ((TextView) chipTextInputComboView2.findViewById(C3631R.C3634id.material_label)).setText(resources.getString(C3631R.string.material_timepicker_hour));
+        chipTextInputComboView.setTag(C3631R.C3634id.selection_type, 12);
+        chipTextInputComboView2.setTag(C3631R.C3634id.selection_type, 10);
         if (timeModel.format == 0) {
             setupPeriodToggle();
         }
-        C38743 r0 = new View.OnClickListener() {
+        C38843 r0 = new View.OnClickListener() {
             public void onClick(View view) {
-                TimePickerTextInputPresenter.this.onSelectionChanged(((Integer) view.getTag(C3621R.C3624id.selection_type)).intValue());
+                TimePickerTextInputPresenter.this.onSelectionChanged(((Integer) view.getTag(C3631R.C3634id.selection_type)).intValue());
             }
         };
         chipTextInputComboView2.setOnClickListener(r0);
@@ -84,16 +84,16 @@ class TimePickerTextInputPresenter implements TimePickerView.OnSelectionChange, 
         this.hourEditText = chipTextInputComboView2.getTextInput().getEditText();
         this.minuteEditText = chipTextInputComboView.getTextInput().getEditText();
         this.controller = new TimePickerTextInputKeyController(chipTextInputComboView2, chipTextInputComboView, timeModel);
-        chipTextInputComboView2.setChipDelegate(new ClickActionDelegate(linearLayout.getContext(), C3621R.string.material_hour_selection) {
+        chipTextInputComboView2.setChipDelegate(new ClickActionDelegate(linearLayout.getContext(), C3631R.string.material_hour_selection) {
             public void onInitializeAccessibilityNodeInfo(View view, AccessibilityNodeInfoCompat accessibilityNodeInfoCompat) {
                 super.onInitializeAccessibilityNodeInfo(view, accessibilityNodeInfoCompat);
-                accessibilityNodeInfoCompat.setContentDescription(view.getResources().getString(C3621R.string.material_hour_suffix, new Object[]{String.valueOf(timeModel.getHourForDisplay())}));
+                accessibilityNodeInfoCompat.setContentDescription(view.getResources().getString(C3631R.string.material_hour_suffix, new Object[]{String.valueOf(timeModel.getHourForDisplay())}));
             }
         });
-        chipTextInputComboView.setChipDelegate(new ClickActionDelegate(linearLayout.getContext(), C3621R.string.material_minute_selection) {
+        chipTextInputComboView.setChipDelegate(new ClickActionDelegate(linearLayout.getContext(), C3631R.string.material_minute_selection) {
             public void onInitializeAccessibilityNodeInfo(View view, AccessibilityNodeInfoCompat accessibilityNodeInfoCompat) {
                 super.onInitializeAccessibilityNodeInfo(view, accessibilityNodeInfoCompat);
-                accessibilityNodeInfoCompat.setContentDescription(view.getResources().getString(C3621R.string.material_minute_suffix, new Object[]{String.valueOf(timeModel.minute)}));
+                accessibilityNodeInfoCompat.setContentDescription(view.getResources().getString(C3631R.string.material_minute_suffix, new Object[]{String.valueOf(timeModel.minute)}));
             }
         });
         initialize();
@@ -127,11 +127,11 @@ class TimePickerTextInputPresenter implements TimePickerView.OnSelectionChange, 
     }
 
     private void setupPeriodToggle() {
-        MaterialButtonToggleGroup materialButtonToggleGroup = (MaterialButtonToggleGroup) this.timePickerView.findViewById(C3621R.C3624id.material_clock_period_toggle);
+        MaterialButtonToggleGroup materialButtonToggleGroup = (MaterialButtonToggleGroup) this.timePickerView.findViewById(C3631R.C3634id.material_clock_period_toggle);
         this.toggle = materialButtonToggleGroup;
         materialButtonToggleGroup.addOnButtonCheckedListener(new MaterialButtonToggleGroup.OnButtonCheckedListener() {
             public void onButtonChecked(MaterialButtonToggleGroup materialButtonToggleGroup, int i, boolean z) {
-                TimePickerTextInputPresenter.this.time.setPeriod(i == C3621R.C3624id.material_clock_period_pm_button ? 1 : 0);
+                TimePickerTextInputPresenter.this.time.setPeriod(i == C3631R.C3634id.material_clock_period_pm_button ? 1 : 0);
             }
         });
         this.toggle.setVisibility(0);
@@ -143,9 +143,9 @@ class TimePickerTextInputPresenter implements TimePickerView.OnSelectionChange, 
         MaterialButtonToggleGroup materialButtonToggleGroup = this.toggle;
         if (materialButtonToggleGroup != null) {
             if (this.time.period == 0) {
-                i = C3621R.C3624id.material_clock_period_am_button;
+                i = C3631R.C3634id.material_clock_period_am_button;
             } else {
-                i = C3621R.C3624id.material_clock_period_pm_button;
+                i = C3631R.C3634id.material_clock_period_pm_button;
             }
             materialButtonToggleGroup.check(i);
         }

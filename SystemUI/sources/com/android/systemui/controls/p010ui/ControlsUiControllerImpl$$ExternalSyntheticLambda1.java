@@ -12,6 +12,6 @@ public final /* synthetic */ class ControlsUiControllerImpl$$ExternalSyntheticLa
     }
 
     public final void accept(Object obj) {
-        ControlsUiControllerImpl.m2708onSeedingComplete$lambda2(this.f$0, (Boolean) obj);
+        ControlsUiControllerImpl.m2713onSeedingComplete$lambda2(this.f$0, (Boolean) obj);
     }
 }

@@ -9,6 +9,6 @@ public final /* synthetic */ class KeyguardIndicationController$$ExternalSynthet
     }
 
     public final void run() {
-        this.f$0.mo38589x47a25d4d();
+        this.f$0.mo38590x47a25d4d();
     }
 }

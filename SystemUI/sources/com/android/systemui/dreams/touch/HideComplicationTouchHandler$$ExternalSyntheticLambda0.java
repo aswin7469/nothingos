@@ -16,6 +16,6 @@ public final /* synthetic */ class HideComplicationTouchHandler$$ExternalSynthet
     }
 
     public final void run() {
-        this.f$0.mo32654xd71ee26(this.f$1, this.f$2);
+        this.f$0.mo32665xd71ee26(this.f$1, this.f$2);
     }
 }

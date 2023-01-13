@@ -95,12 +95,12 @@ public class DatagramSocketAdaptor extends DatagramSocket {
     };
 
     /* renamed from: dc */
-    private final DatagramChannelImpl f881dc;
+    private final DatagramChannelImpl f879dc;
     private volatile int timeout = 0;
 
     private DatagramSocketAdaptor(DatagramChannelImpl datagramChannelImpl) throws IOException {
         super(dummyDatagramSocket);
-        this.f881dc = datagramChannelImpl;
+        this.f879dc = datagramChannelImpl;
     }
 
     public static DatagramSocket create(DatagramChannelImpl datagramChannelImpl) {
@@ -119,7 +119,7 @@ public class DatagramSocketAdaptor extends DatagramSocket {
             throw new IllegalArgumentException("connect: null address");
         } else if (!isClosed()) {
             try {
-                this.f881dc.connect(socketAddress);
+                this.f879dc.connect(socketAddress);
             } catch (Exception e) {
                 Net.translateToSocketException(e);
             }
@@ -135,7 +135,7 @@ public class DatagramSocketAdaptor extends DatagramSocket {
                 return;
             }
         }
-        this.f881dc.bind(socketAddress);
+        this.f879dc.bind(socketAddress);
     }
 
     public void connect(InetAddress inetAddress, int i) {
@@ -155,30 +155,30 @@ public class DatagramSocketAdaptor extends DatagramSocket {
 
     public void disconnect() {
         try {
-            this.f881dc.disconnect();
+            this.f879dc.disconnect();
         } catch (IOException e) {
             throw new Error((Throwable) e);
         }
     }
 
     public boolean isBound() {
-        return this.f881dc.localAddress() != null;
+        return this.f879dc.localAddress() != null;
     }
 
     public boolean isConnected() {
-        return this.f881dc.remoteAddress() != null;
+        return this.f879dc.remoteAddress() != null;
     }
 
     public InetAddress getInetAddress() {
         if (isConnected()) {
-            return Net.asInetSocketAddress(this.f881dc.remoteAddress()).getAddress();
+            return Net.asInetSocketAddress(this.f879dc.remoteAddress()).getAddress();
         }
         return null;
     }
 
     public int getPort() {
         if (isConnected()) {
-            return Net.asInetSocketAddress(this.f881dc.remoteAddress()).getPort();
+            return Net.asInetSocketAddress(this.f879dc.remoteAddress()).getPort();
         }
         return -1;
     }
@@ -215,10 +215,10 @@ public class DatagramSocketAdaptor extends DatagramSocket {
     public void send(java.net.DatagramPacket r5) throws java.p026io.IOException {
         /*
             r4 = this;
-            sun.nio.ch.DatagramChannelImpl r0 = r4.f881dc
+            sun.nio.ch.DatagramChannelImpl r0 = r4.f879dc
             java.lang.Object r0 = r0.blockingLock()
             monitor-enter(r0)
-            sun.nio.ch.DatagramChannelImpl r1 = r4.f881dc     // Catch:{ all -> 0x006e }
+            sun.nio.ch.DatagramChannelImpl r1 = r4.f879dc     // Catch:{ all -> 0x006e }
             boolean r1 = r1.isBlocking()     // Catch:{ all -> 0x006e }
             if (r1 == 0) goto L_0x0068
             monitor-enter(r5)     // Catch:{ IOException -> 0x0062 }
@@ -226,28 +226,28 @@ public class DatagramSocketAdaptor extends DatagramSocket {
             int r2 = r5.getOffset()     // Catch:{ all -> 0x005f }
             int r3 = r5.getLength()     // Catch:{ all -> 0x005f }
             java.nio.ByteBuffer r1 = java.nio.ByteBuffer.wrap(r1, r2, r3)     // Catch:{ all -> 0x005f }
-            sun.nio.ch.DatagramChannelImpl r2 = r4.f881dc     // Catch:{ all -> 0x005f }
+            sun.nio.ch.DatagramChannelImpl r2 = r4.f879dc     // Catch:{ all -> 0x005f }
             boolean r2 = r2.isConnected()     // Catch:{ all -> 0x005f }
             if (r2 == 0) goto L_0x0054
             java.net.InetAddress r2 = r5.getAddress()     // Catch:{ all -> 0x005f }
             if (r2 != 0) goto L_0x004a
-            sun.nio.ch.DatagramChannelImpl r2 = r4.f881dc     // Catch:{ all -> 0x005f }
+            sun.nio.ch.DatagramChannelImpl r2 = r4.f879dc     // Catch:{ all -> 0x005f }
             java.net.SocketAddress r2 = r2.remoteAddress()     // Catch:{ all -> 0x005f }
             java.net.InetSocketAddress r2 = (java.net.InetSocketAddress) r2     // Catch:{ all -> 0x005f }
             int r3 = r2.getPort()     // Catch:{ all -> 0x005f }
             r5.setPort(r3)     // Catch:{ all -> 0x005f }
             java.net.InetAddress r2 = r2.getAddress()     // Catch:{ all -> 0x005f }
             r5.setAddress(r2)     // Catch:{ all -> 0x005f }
-            sun.nio.ch.DatagramChannelImpl r4 = r4.f881dc     // Catch:{ all -> 0x005f }
+            sun.nio.ch.DatagramChannelImpl r4 = r4.f879dc     // Catch:{ all -> 0x005f }
             r4.write(r1)     // Catch:{ all -> 0x005f }
             goto L_0x005d
         L_0x004a:
-            sun.nio.ch.DatagramChannelImpl r4 = r4.f881dc     // Catch:{ all -> 0x005f }
+            sun.nio.ch.DatagramChannelImpl r4 = r4.f879dc     // Catch:{ all -> 0x005f }
             java.net.SocketAddress r2 = r5.getSocketAddress()     // Catch:{ all -> 0x005f }
             r4.send(r1, r2)     // Catch:{ all -> 0x005f }
             goto L_0x005d
         L_0x0054:
-            sun.nio.ch.DatagramChannelImpl r4 = r4.f881dc     // Catch:{ all -> 0x005f }
+            sun.nio.ch.DatagramChannelImpl r4 = r4.f879dc     // Catch:{ all -> 0x005f }
             java.net.SocketAddress r2 = r5.getSocketAddress()     // Catch:{ all -> 0x005f }
             r4.send(r1, r2)     // Catch:{ all -> 0x005f }
         L_0x005d:
@@ -278,34 +278,34 @@ public class DatagramSocketAdaptor extends DatagramSocket {
     private SocketAddress receive(ByteBuffer byteBuffer) throws IOException {
         SocketAddress receive;
         if (this.timeout == 0) {
-            return this.f881dc.receive(byteBuffer);
+            return this.f879dc.receive(byteBuffer);
         }
-        this.f881dc.configureBlocking(false);
+        this.f879dc.configureBlocking(false);
         try {
-            SocketAddress receive2 = this.f881dc.receive(byteBuffer);
+            SocketAddress receive2 = this.f879dc.receive(byteBuffer);
             if (receive2 != null) {
                 return receive2;
             }
             long j = (long) this.timeout;
-            while (this.f881dc.isOpen()) {
+            while (this.f879dc.isOpen()) {
                 long currentTimeMillis = System.currentTimeMillis();
-                int poll = this.f881dc.poll(Net.POLLIN, j);
-                if (poll <= 0 || (poll & Net.POLLIN) == 0 || (receive = this.f881dc.receive(byteBuffer)) == null) {
+                int poll = this.f879dc.poll(Net.POLLIN, j);
+                if (poll <= 0 || (poll & Net.POLLIN) == 0 || (receive = this.f879dc.receive(byteBuffer)) == null) {
                     j -= System.currentTimeMillis() - currentTimeMillis;
                     if (j <= 0) {
                         throw new SocketTimeoutException();
                     }
                 } else {
-                    if (this.f881dc.isOpen()) {
-                        this.f881dc.configureBlocking(true);
+                    if (this.f879dc.isOpen()) {
+                        this.f879dc.configureBlocking(true);
                     }
                     return receive;
                 }
             }
             throw new ClosedChannelException();
         } finally {
-            if (this.f881dc.isOpen()) {
-                this.f881dc.configureBlocking(true);
+            if (this.f879dc.isOpen()) {
+                this.f879dc.configureBlocking(true);
             }
         }
     }
@@ -342,10 +342,10 @@ public class DatagramSocketAdaptor extends DatagramSocket {
     public void receive(java.net.DatagramPacket r5) throws java.p026io.IOException {
         /*
             r4 = this;
-            sun.nio.ch.DatagramChannelImpl r0 = r4.f881dc
+            sun.nio.ch.DatagramChannelImpl r0 = r4.f879dc
             java.lang.Object r0 = r0.blockingLock()
             monitor-enter(r0)
-            sun.nio.ch.DatagramChannelImpl r1 = r4.f881dc     // Catch:{ all -> 0x0044 }
+            sun.nio.ch.DatagramChannelImpl r1 = r4.f879dc     // Catch:{ all -> 0x0044 }
             boolean r1 = r1.isBlocking()     // Catch:{ all -> 0x0044 }
             if (r1 == 0) goto L_0x003e
             monitor-enter(r5)     // Catch:{ IOException -> 0x0038 }
@@ -387,7 +387,7 @@ public class DatagramSocketAdaptor extends DatagramSocket {
         if (isClosed()) {
             return null;
         }
-        Object localAddress = this.f881dc.localAddress();
+        Object localAddress = this.f879dc.localAddress();
         if (localAddress == null) {
             localAddress = new InetSocketAddress(0);
         }
@@ -409,7 +409,7 @@ public class DatagramSocketAdaptor extends DatagramSocket {
             return -1;
         }
         try {
-            SocketAddress localAddress = this.f881dc.getLocalAddress();
+            SocketAddress localAddress = this.f879dc.getLocalAddress();
             if (localAddress != null) {
                 return ((InetSocketAddress) localAddress).getPort();
             }
@@ -429,7 +429,7 @@ public class DatagramSocketAdaptor extends DatagramSocket {
 
     private void setBooleanOption(SocketOption<Boolean> socketOption, boolean z) throws SocketException {
         try {
-            this.f881dc.setOption(socketOption, Boolean.valueOf(z));
+            this.f879dc.setOption(socketOption, Boolean.valueOf(z));
         } catch (IOException e) {
             Net.translateToSocketException(e);
         }
@@ -437,7 +437,7 @@ public class DatagramSocketAdaptor extends DatagramSocket {
 
     private void setIntOption(SocketOption<Integer> socketOption, int i) throws SocketException {
         try {
-            this.f881dc.setOption(socketOption, Integer.valueOf(i));
+            this.f879dc.setOption(socketOption, Integer.valueOf(i));
         } catch (IOException e) {
             Net.translateToSocketException(e);
         }
@@ -449,7 +449,7 @@ public class DatagramSocketAdaptor extends DatagramSocket {
     private boolean getBooleanOption(java.net.SocketOption<java.lang.Boolean> r1) throws java.net.SocketException {
         /*
             r0 = this;
-            sun.nio.ch.DatagramChannelImpl r0 = r0.f881dc     // Catch:{ IOException -> 0x000d }
+            sun.nio.ch.DatagramChannelImpl r0 = r0.f879dc     // Catch:{ IOException -> 0x000d }
             java.lang.Object r0 = r0.getOption(r1)     // Catch:{ IOException -> 0x000d }
             java.lang.Boolean r0 = (java.lang.Boolean) r0     // Catch:{ IOException -> 0x000d }
             boolean r0 = r0.booleanValue()     // Catch:{ IOException -> 0x000d }
@@ -469,7 +469,7 @@ public class DatagramSocketAdaptor extends DatagramSocket {
     private int getIntOption(java.net.SocketOption<java.lang.Integer> r1) throws java.net.SocketException {
         /*
             r0 = this;
-            sun.nio.ch.DatagramChannelImpl r0 = r0.f881dc     // Catch:{ IOException -> 0x000d }
+            sun.nio.ch.DatagramChannelImpl r0 = r0.f879dc     // Catch:{ IOException -> 0x000d }
             java.lang.Object r0 = r0.getOption(r1)     // Catch:{ IOException -> 0x000d }
             java.lang.Integer r0 = (java.lang.Integer) r0     // Catch:{ IOException -> 0x000d }
             int r0 = r0.intValue()     // Catch:{ IOException -> 0x000d }
@@ -533,21 +533,21 @@ public class DatagramSocketAdaptor extends DatagramSocket {
 
     public void close() {
         try {
-            this.f881dc.close();
+            this.f879dc.close();
         } catch (IOException e) {
             throw new Error((Throwable) e);
         }
     }
 
     public boolean isClosed() {
-        return !this.f881dc.isOpen();
+        return !this.f879dc.isOpen();
     }
 
     public DatagramChannel getChannel() {
-        return this.f881dc;
+        return this.f879dc;
     }
 
     public final FileDescriptor getFileDescriptor$() {
-        return this.f881dc.f880fd;
+        return this.f879dc.f878fd;
     }
 }

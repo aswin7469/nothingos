@@ -214,7 +214,7 @@ public abstract class DoublePipeline<E_IN> extends AbstractPipeline<E_IN, Double
 
                     /* access modifiers changed from: package-private */
                     /* renamed from: lambda$accept$0$java-util-stream-DoublePipeline$5$1  reason: not valid java name */
-                    public /* synthetic */ void m3869lambda$accept$0$javautilstreamDoublePipeline$5$1(double d) {
+                    public /* synthetic */ void m3887lambda$accept$0$javautilstreamDoublePipeline$5$1(double d) {
                         this.downstream.accept(d);
                     }
                 };
@@ -325,7 +325,7 @@ public abstract class DoublePipeline<E_IN> extends AbstractPipeline<E_IN, Double
     public final OptionalDouble average() {
         double[] dArr = (double[]) collect(new DoublePipeline$$ExternalSyntheticLambda5(), new DoublePipeline$$ExternalSyntheticLambda6(), new DoublePipeline$$ExternalSyntheticLambda7());
         if (dArr[2] > 0.0d) {
-            return OptionalDouble.m1747of(Collectors.computeFinalSum(dArr) / dArr[2]);
+            return OptionalDouble.m1753of(Collectors.computeFinalSum(dArr) / dArr[2]);
         }
         return OptionalDouble.empty();
     }

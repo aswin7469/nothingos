@@ -16,6 +16,6 @@ public final /* synthetic */ class ImageExporter$$ExternalSyntheticLambda1 imple
     }
 
     public final void run() {
-        this.f$0.m2995lambda$delete$4$comandroidsystemuiscreenshotImageExporter(this.f$1, this.f$2);
+        this.f$0.m2999lambda$delete$4$comandroidsystemuiscreenshotImageExporter(this.f$1, this.f$2);
     }
 }

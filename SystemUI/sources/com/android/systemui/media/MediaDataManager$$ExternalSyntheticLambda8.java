@@ -14,6 +14,6 @@ public final /* synthetic */ class MediaDataManager$$ExternalSyntheticLambda8 im
     }
 
     public final boolean onDismiss() {
-        return MediaDataManager.m2788createActionsFromNotification$lambda27$lambda25(this.f$0, this.f$1);
+        return MediaDataManager.m2793createActionsFromNotification$lambda27$lambda25(this.f$0, this.f$1);
     }
 }

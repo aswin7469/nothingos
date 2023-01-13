@@ -96,7 +96,7 @@ public class BubbleCoordinator implements Coordinator {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$attach$0$com-android-systemui-statusbar-notification-collection-coordinator-BubbleCoordinator */
-    public /* synthetic */ void mo40179x34e6e404(BubblesManager bubblesManager) {
+    public /* synthetic */ void mo40181x34e6e404(BubblesManager bubblesManager) {
         bubblesManager.addNotifCallback(this.mNotifCallback);
     }
 

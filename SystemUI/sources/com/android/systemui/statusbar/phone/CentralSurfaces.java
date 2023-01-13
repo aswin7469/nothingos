@@ -375,6 +375,9 @@ public interface CentralSurfaces extends Dumpable, ActivityStarter, LifecycleOwn
 
     void togglePanel();
 
+    void unlockedScreenOffAnimationCancel() {
+    }
+
     void updateBubblesVisibility();
 
     boolean updateIsKeyguard();

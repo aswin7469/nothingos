@@ -13,6 +13,6 @@ public final /* synthetic */ class QSTileHost$$ExternalSyntheticLambda1 implemen
     }
 
     public final void accept(Object obj) {
-        this.f$0.m2941lambda$onTuningChanged$3$comandroidsystemuiqsQSTileHost((Map.Entry) obj);
+        this.f$0.m2946lambda$onTuningChanged$3$comandroidsystemuiqsQSTileHost((Map.Entry) obj);
     }
 }

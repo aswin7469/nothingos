@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentMap;
 public final class WeekFields implements Serializable {
     private static final ConcurrentMap<String, WeekFields> CACHE = new ConcurrentHashMap(4, 0.75f, 2);
     public static final WeekFields ISO = new WeekFields(DayOfWeek.MONDAY, 4);
-    public static final WeekFields SUNDAY_START = m958of(DayOfWeek.SUNDAY, 1);
+    public static final WeekFields SUNDAY_START = m956of(DayOfWeek.SUNDAY, 1);
     public static final TemporalUnit WEEK_BASED_YEARS = IsoFields.WEEK_BASED_YEARS;
     private static final long serialVersionUID = -1177360819670808121L;
     /* access modifiers changed from: private */
@@ -37,10 +37,10 @@ public final class WeekFields implements Serializable {
     private final transient TemporalField weekOfYear = ComputedDayOfField.ofWeekOfYearField(this);
 
     /* renamed from: of */
-    public static WeekFields m959of(Locale locale) {
+    public static WeekFields m957of(Locale locale) {
         Objects.requireNonNull(locale, "locale");
         Calendar.WeekData weekData = Calendar.getInstance(locale).getWeekData();
-        return m958of(DayOfWeek.SUNDAY.plus((long) (retrieveFirstDayOfWeek(locale, weekData) - 1)), weekData.minimalDaysInFirstWeek);
+        return m956of(DayOfWeek.SUNDAY.plus((long) (retrieveFirstDayOfWeek(locale, weekData) - 1)), weekData.minimalDaysInFirstWeek);
     }
 
     private static int retrieveFirstDayOfWeek(Locale locale, Calendar.WeekData weekData) {
@@ -114,7 +114,7 @@ public final class WeekFields implements Serializable {
     }
 
     /* renamed from: of */
-    public static WeekFields m958of(DayOfWeek dayOfWeek2, int i) {
+    public static WeekFields m956of(DayOfWeek dayOfWeek2, int i) {
         String str = dayOfWeek2.toString() + i;
         ConcurrentMap<String, WeekFields> concurrentMap = CACHE;
         WeekFields weekFields = concurrentMap.get(str);
@@ -148,7 +148,7 @@ public final class WeekFields implements Serializable {
 
     private Object readResolve() throws InvalidObjectException {
         try {
-            return m958of(this.firstDayOfWeek, this.minimalDays);
+            return m956of(this.firstDayOfWeek, this.minimalDays);
         } catch (IllegalArgumentException e) {
             throw new InvalidObjectException("Invalid serialized WeekFields: " + e.getMessage());
         }
@@ -204,10 +204,10 @@ public final class WeekFields implements Serializable {
     }
 
     static class ComputedDayOfField implements TemporalField {
-        private static final ValueRange DAY_OF_WEEK_RANGE = ValueRange.m955of(1, 7);
-        private static final ValueRange WEEK_OF_MONTH_RANGE = ValueRange.m957of(0, 1, 4, 6);
-        private static final ValueRange WEEK_OF_WEEK_BASED_YEAR_RANGE = ValueRange.m956of(1, 52, 53);
-        private static final ValueRange WEEK_OF_YEAR_RANGE = ValueRange.m957of(0, 1, 52, 54);
+        private static final ValueRange DAY_OF_WEEK_RANGE = ValueRange.m953of(1, 7);
+        private static final ValueRange WEEK_OF_MONTH_RANGE = ValueRange.m955of(0, 1, 4, 6);
+        private static final ValueRange WEEK_OF_WEEK_BASED_YEAR_RANGE = ValueRange.m954of(1, 52, 53);
+        private static final ValueRange WEEK_OF_YEAR_RANGE = ValueRange.m955of(0, 1, 52, 54);
         private final TemporalUnit baseUnit;
         private final String name;
         private final ValueRange range;
@@ -517,7 +517,7 @@ public final class WeekFields implements Serializable {
         private ValueRange rangeByWeek(TemporalAccessor temporalAccessor, TemporalField temporalField) {
             int startOfWeekOffset = startOfWeekOffset(temporalAccessor.get(temporalField), localizedDayOfWeek(temporalAccessor));
             ValueRange range2 = temporalAccessor.range(temporalField);
-            return ValueRange.m955of((long) computeWeek(startOfWeekOffset, (int) range2.getMinimum()), (long) computeWeek(startOfWeekOffset, (int) range2.getMaximum()));
+            return ValueRange.m953of((long) computeWeek(startOfWeekOffset, (int) range2.getMinimum()), (long) computeWeek(startOfWeekOffset, (int) range2.getMaximum()));
         }
 
         private ValueRange rangeWeekOfWeekBasedYear(TemporalAccessor temporalAccessor) {
@@ -536,7 +536,7 @@ public final class WeekFields implements Serializable {
             if (computeWeek >= computeWeek2) {
                 return rangeWeekOfWeekBasedYear(Chronology.from(temporalAccessor).date(temporalAccessor).plus((long) ((maximum - i) + 1 + 7), (TemporalUnit) ChronoUnit.DAYS));
             }
-            return ValueRange.m955of(1, (long) (computeWeek2 - 1));
+            return ValueRange.m953of(1, (long) (computeWeek2 - 1));
         }
 
         public String toString() {

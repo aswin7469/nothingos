@@ -73,32 +73,32 @@ public class PinnedStackListenerForwarder {
         }
 
         public void onMovementBoundsChanged(boolean z) {
-            PinnedStackListenerForwarder.this.mMainExecutor.execute(new C3504x2eacda58(this, z));
+            PinnedStackListenerForwarder.this.mMainExecutor.execute(new C3514x2eacda58(this, z));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onMovementBoundsChanged$0$com-android-wm-shell-pip-PinnedStackListenerForwarder$PinnedTaskListenerImpl */
-        public /* synthetic */ void mo49985xbe9c536b(boolean z) {
+        public /* synthetic */ void mo49994xbe9c536b(boolean z) {
             PinnedStackListenerForwarder.this.onMovementBoundsChanged(z);
         }
 
         public void onImeVisibilityChanged(boolean z, int i) {
-            PinnedStackListenerForwarder.this.mMainExecutor.execute(new C3502x2eacda56(this, z, i));
+            PinnedStackListenerForwarder.this.mMainExecutor.execute(new C3512x2eacda56(this, z, i));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onImeVisibilityChanged$1$com-android-wm-shell-pip-PinnedStackListenerForwarder$PinnedTaskListenerImpl */
-        public /* synthetic */ void mo49984x9304c9c1(boolean z, int i) {
+        public /* synthetic */ void mo49993x9304c9c1(boolean z, int i) {
             PinnedStackListenerForwarder.this.onImeVisibilityChanged(z, i);
         }
 
         public void onActivityHidden(ComponentName componentName) {
-            PinnedStackListenerForwarder.this.mMainExecutor.execute(new C3503x2eacda57(this, componentName));
+            PinnedStackListenerForwarder.this.mMainExecutor.execute(new C3513x2eacda57(this, componentName));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onActivityHidden$2$com-android-wm-shell-pip-PinnedStackListenerForwarder$PinnedTaskListenerImpl */
-        public /* synthetic */ void mo49983x83040748(ComponentName componentName) {
+        public /* synthetic */ void mo49992x83040748(ComponentName componentName) {
             PinnedStackListenerForwarder.this.onActivityHidden(componentName);
         }
     }

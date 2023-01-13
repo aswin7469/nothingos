@@ -12,6 +12,6 @@ public final /* synthetic */ class KeyguardStatusBarViewController$$ExternalSynt
     }
 
     public final void accept(Object obj, Object obj2) {
-        this.f$0.mo44295xd1760466((View) obj, (Float) obj2);
+        this.f$0.mo44310xd1760466((View) obj, (Float) obj2);
     }
 }

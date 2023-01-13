@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextClock;
 import com.android.internal.colorextraction.ColorExtractor;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.colorextraction.SysuiColorExtractor;
 import com.android.systemui.plugins.ClockPlugin;
 import java.util.TimeZone;
@@ -45,12 +45,12 @@ public class AnalogClockController implements ClockPlugin {
     }
 
     private void createViews() {
-        ClockLayout clockLayout = (ClockLayout) this.mLayoutInflater.inflate(C1893R.layout.analog_clock, (ViewGroup) null);
+        ClockLayout clockLayout = (ClockLayout) this.mLayoutInflater.inflate(C1894R.layout.analog_clock, (ViewGroup) null);
         this.mBigClockView = clockLayout;
-        this.mAnalogClock = (ImageClock) clockLayout.findViewById(C1893R.C1897id.analog_clock);
-        View inflate = this.mLayoutInflater.inflate(C1893R.layout.digital_clock, (ViewGroup) null);
+        this.mAnalogClock = (ImageClock) clockLayout.findViewById(C1894R.C1898id.analog_clock);
+        View inflate = this.mLayoutInflater.inflate(C1894R.layout.digital_clock, (ViewGroup) null);
         this.mView = inflate;
-        this.mLockClock = (TextClock) inflate.findViewById(C1893R.C1897id.lock_screen_clock);
+        this.mLockClock = (TextClock) inflate.findViewById(C1894R.C1898id.lock_screen_clock);
     }
 
     public void onDestroyView() {
@@ -61,11 +61,11 @@ public class AnalogClockController implements ClockPlugin {
     }
 
     public String getTitle() {
-        return this.mResources.getString(C1893R.string.clock_title_analog);
+        return this.mResources.getString(C1894R.string.clock_title_analog);
     }
 
     public Bitmap getThumbnail() {
-        return BitmapFactory.decodeResource(this.mResources, C1893R.C1895drawable.analog_thumbnail);
+        return BitmapFactory.decodeResource(this.mResources, C1894R.C1896drawable.analog_thumbnail);
     }
 
     public Bitmap getPreview(int i, int i2) {

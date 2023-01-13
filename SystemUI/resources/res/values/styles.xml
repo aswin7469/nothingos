@@ -2907,15 +2907,12 @@
     <style name="InternetDialog.Network">
         <item name="android:layout_gravity">right|center_horizontal|clip_horizontal</item>
         <item name="android:orientation">@null</item>
-        <item name="android:background">?android:attr/selectableItemBackground</item>
         <item name="android:focusable">true</item>
         <item name="android:clickable">true</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">88dp</item>
-        <item name="android:paddingStart">22dp</item>
-        <item name="android:paddingEnd">22dp</item>
-        <item name="android:layout_marginStart">@dimen/internet_dialog_network_layout_margin</item>
-        <item name="android:layout_marginEnd">@dimen/internet_dialog_network_layout_margin</item>
+        <item name="android:paddingStart">10dp</item>
+        <item name="android:paddingEnd">@dimen/settings_panel_title_margin</item>
     </style>
     <style name="InternetDialog.NetworkSummary">
         <item name="android:textAppearance">@style/TextAppearance.InternetDialog.Secondary</item>
@@ -5300,7 +5297,7 @@
     </style>
     <style name="TextAppearance.InternetDialog.Secondary">
         <item name="android:textSize">@dimen/internet_dialog_text_size_second</item>
-        <item name="android:textColor">?android:attr/textColorSecondary</item>
+        <item name="android:textColor">@color/tesla_color_secondary</item>
     </style>
     <style name="TextAppearance.InternetDialog.Secondary.Active">
     </style>

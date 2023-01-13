@@ -8,7 +8,7 @@ import java.util.stream.StreamSupport;
 public abstract class CharBuffer extends Buffer implements Comparable<CharBuffer>, Appendable, CharSequence, Readable {
 
     /* renamed from: hb */
-    final char[] f567hb;
+    final char[] f565hb;
     boolean isReadOnly;
     final int offset;
 
@@ -46,7 +46,7 @@ public abstract class CharBuffer extends Buffer implements Comparable<CharBuffer
 
     CharBuffer(int i, int i2, int i3, int i4, char[] cArr, int i5) {
         super(i, i2, i3, i4, 1);
-        this.f567hb = cArr;
+        this.f565hb = cArr;
         this.offset = i5;
     }
 
@@ -183,11 +183,11 @@ public abstract class CharBuffer extends Buffer implements Comparable<CharBuffer
     }
 
     public final boolean hasArray() {
-        return this.f567hb != null && !this.isReadOnly;
+        return this.f565hb != null && !this.isReadOnly;
     }
 
     public final char[] array() {
-        char[] cArr = this.f567hb;
+        char[] cArr = this.f565hb;
         if (cArr == null) {
             throw new UnsupportedOperationException();
         } else if (!this.isReadOnly) {
@@ -198,7 +198,7 @@ public abstract class CharBuffer extends Buffer implements Comparable<CharBuffer
     }
 
     public final int arrayOffset() {
-        if (this.f567hb == null) {
+        if (this.f565hb == null) {
             throw new UnsupportedOperationException();
         } else if (!this.isReadOnly) {
             return this.offset;
@@ -323,7 +323,7 @@ public abstract class CharBuffer extends Buffer implements Comparable<CharBuffer
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$chars$0$java-nio-CharBuffer  reason: not valid java name */
-    public /* synthetic */ Spliterator.OfInt m3704lambda$chars$0$javanioCharBuffer() {
+    public /* synthetic */ Spliterator.OfInt m3722lambda$chars$0$javanioCharBuffer() {
         return new CharBufferSpliterator(this);
     }
 }

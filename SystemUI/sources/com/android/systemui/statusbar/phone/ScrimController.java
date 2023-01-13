@@ -22,7 +22,7 @@ import com.android.keyguard.BouncerPanelExpansionCalculator;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardUpdateMonitorCallback;
 import com.android.settingslib.Utils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.DejankUtils;
 import com.android.systemui.Dumpable;
 import com.android.systemui.animation.ShadeInterpolation;
@@ -66,9 +66,9 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, Dump
     public static final int OPAQUE = 2;
     public static final int SEMI_TRANSPARENT = 1;
     static final String TAG = "ScrimController";
-    private static final int TAG_END_ALPHA = 2131428780;
-    static final int TAG_KEY_ANIM = 2131428779;
-    private static final int TAG_START_ALPHA = 2131428781;
+    private static final int TAG_END_ALPHA = 2131428783;
+    static final int TAG_KEY_ANIM = 2131428782;
+    private static final int TAG_START_ALPHA = 2131428784;
     public static final int TRANSPARENT = 0;
     public static final float WAKE_SENSOR_SCRIM_ALPHA = 0.6f;
     private float mAdditionalScrimBehindAlphaKeyguard = 0.0f;
@@ -202,7 +202,7 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, Dump
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-statusbar-phone-ScrimController */
-    public /* synthetic */ void mo45047x8c817aac(PanelExpansionChangeEvent panelExpansionChangeEvent) {
+    public /* synthetic */ void mo45062x8c817aac(PanelExpansionChangeEvent panelExpansionChangeEvent) {
         setRawPanelExpansionFraction(panelExpansionChangeEvent.getFraction());
     }
 
@@ -317,7 +317,7 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, Dump
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$transitionTo$1$com-android-systemui-statusbar-phone-ScrimController */
-    public /* synthetic */ void mo45049x3926e8e1() {
+    public /* synthetic */ void mo45064x3926e8e1() {
         this.mTimeTicker.schedule(this.mDozeParameters.getWallpaperAodDuration(), 1);
     }
 
@@ -424,7 +424,7 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, Dump
             } else if (i == 0) {
                 this.mAnimatingPanelExpansionOnUnlock = false;
             } else if (!this.mKeyguardUnlockAnimationController.isPlayingCannedUnlockAnimation() && z && this.mAnimatingPanelExpansionOnUnlock) {
-                NTLogUtil.m1680d(TAG, "onUnlockAnimationFinished and expand case, remove animating flag, mPanelExpansionFraction = " + this.mPanelExpansionFraction + ", panelExpansionFraction = " + f);
+                NTLogUtil.m1686d(TAG, "onUnlockAnimationFinished and expand case, remove animating flag, mPanelExpansionFraction = " + this.mPanelExpansionFraction + ", panelExpansionFraction = " + f);
                 this.mAnimatingPanelExpansionOnUnlock = false;
             }
             this.mPanelExpansionFraction = f;
@@ -525,9 +525,9 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, Dump
                 updateScrimColor(view, currentScrimAlpha, getCurrentScrimTint(view));
                 return;
             }
-            ValueAnimator valueAnimator = (ValueAnimator) view.getTag(C1893R.C1897id.scrim);
-            view.setTag(C1893R.C1897id.scrim_alpha_start, Float.valueOf(((Float) view.getTag(C1893R.C1897id.scrim_alpha_start)).floatValue() + (currentScrimAlpha - ((Float) view.getTag(C1893R.C1897id.scrim_alpha_end)).floatValue())));
-            view.setTag(C1893R.C1897id.scrim_alpha_end, Float.valueOf(currentScrimAlpha));
+            ValueAnimator valueAnimator = (ValueAnimator) view.getTag(C1894R.C1898id.scrim);
+            view.setTag(C1894R.C1898id.scrim_alpha_start, Float.valueOf(((Float) view.getTag(C1894R.C1898id.scrim_alpha_start)).floatValue() + (currentScrimAlpha - ((Float) view.getTag(C1894R.C1898id.scrim_alpha_end)).floatValue())));
+            view.setTag(C1894R.C1898id.scrim_alpha_end, Float.valueOf(currentScrimAlpha));
             valueAnimator.setCurrentPlayTime(valueAnimator.getCurrentPlayTime());
         }
     }
@@ -676,7 +676,7 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, Dump
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$applyAndDispatchState$2$com-android-systemui-statusbar-phone-ScrimController */
-    public /* synthetic */ void mo45044xcbfcf15c() {
+    public /* synthetic */ void mo45059xcbfcf15c() {
         this.mTimeTicker.schedule(this.mDozeParameters.getWallpaperAodDuration(), 1);
     }
 
@@ -851,21 +851,21 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, Dump
             }
 
             public void onAnimationEnd(Animator animator) {
-                view.setTag(C1893R.C1897id.scrim, (Object) null);
+                view.setTag(C1894R.C1898id.scrim, (Object) null);
                 ScrimController.this.onFinished(this.mLastCallback, this.mLastState);
                 ScrimController.this.dispatchScrimsVisible();
             }
         });
-        view.setTag(C1893R.C1897id.scrim_alpha_start, Float.valueOf(f));
-        view.setTag(C1893R.C1897id.scrim_alpha_end, Float.valueOf(getCurrentScrimAlpha(view)));
-        view.setTag(C1893R.C1897id.scrim, ofFloat);
+        view.setTag(C1894R.C1898id.scrim_alpha_start, Float.valueOf(f));
+        view.setTag(C1894R.C1898id.scrim_alpha_end, Float.valueOf(getCurrentScrimAlpha(view)));
+        view.setTag(C1894R.C1898id.scrim, ofFloat);
         ofFloat.start();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startScrimAnimation$3$com-android-systemui-statusbar-phone-ScrimController */
-    public /* synthetic */ void mo45048x6161ffc9(View view, int i, ValueAnimator valueAnimator) {
-        float floatValue = ((Float) view.getTag(C1893R.C1897id.scrim_alpha_start)).floatValue();
+    public /* synthetic */ void mo45063x6161ffc9(View view, int i, ValueAnimator valueAnimator) {
+        float floatValue = ((Float) view.getTag(C1894R.C1898id.scrim_alpha_start)).floatValue();
         float floatValue2 = ((Float) valueAnimator.getAnimatedValue()).floatValue();
         updateScrimColor(view, MathUtils.constrain(MathUtils.lerp(floatValue, getCurrentScrimAlpha(view), floatValue2), 0.0f, 1.0f), ColorUtils.blendARGB(i, getCurrentScrimTint(view), floatValue2));
         dispatchScrimsVisible();
@@ -941,7 +941,7 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, Dump
     }
 
     private boolean isAnimating(View view) {
-        return (view == null || view.getTag(C1893R.C1897id.scrim) == null) ? false : true;
+        return (view == null || view.getTag(C1894R.C1898id.scrim) == null) ? false : true;
     }
 
     /* access modifiers changed from: package-private */
@@ -952,7 +952,7 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, Dump
     private void updateScrim(ScrimView scrimView, float f) {
         Callback callback;
         float viewAlpha = scrimView.getViewAlpha();
-        ValueAnimator valueAnimator = (ValueAnimator) ViewState.getChildTag(scrimView, C1893R.C1897id.scrim);
+        ValueAnimator valueAnimator = (ValueAnimator) ViewState.getChildTag(scrimView, C1894R.C1898id.scrim);
         if (valueAnimator != null) {
             cancelAnimator(valueAnimator);
         }
@@ -999,7 +999,7 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, Dump
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$blankDisplay$5$com-android-systemui-statusbar-phone-ScrimController */
-    public /* synthetic */ void mo45046xcbf2177f() {
+    public /* synthetic */ void mo45061xcbf2177f() {
         Callback callback = this.mCallback;
         if (callback != null) {
             callback.onDisplayBlanked();
@@ -1015,7 +1015,7 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, Dump
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$blankDisplay$4$com-android-systemui-statusbar-phone-ScrimController */
-    public /* synthetic */ void mo45045xb1d698e0() {
+    public /* synthetic */ void mo45060xb1d698e0() {
         this.mBlankingTransitionRunnable = null;
         this.mPendingFrameCallback = null;
         this.mBlankScreen = false;

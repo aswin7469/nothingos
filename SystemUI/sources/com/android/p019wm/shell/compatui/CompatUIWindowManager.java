@@ -7,7 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.ShellTaskOrganizer;
 import com.android.p019wm.shell.common.DisplayLayout;
 import com.android.p019wm.shell.common.SyncTransactionQueue;
@@ -64,7 +64,7 @@ class CompatUIWindowManager extends CompatUIWindowManagerAbstract {
 
     /* access modifiers changed from: package-private */
     public CompatUILayout inflateLayout() {
-        return (CompatUILayout) LayoutInflater.from(this.mContext).inflate(C3343R.layout.compat_ui_layout, (ViewGroup) null);
+        return (CompatUILayout) LayoutInflater.from(this.mContext).inflate(C3353R.layout.compat_ui_layout, (ViewGroup) null);
     }
 
     public boolean updateCompatInfo(TaskInfo taskInfo, ShellTaskOrganizer.TaskListener taskListener, boolean z) {

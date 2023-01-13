@@ -6,12 +6,12 @@ import android.content.pm.ShortcutInfo;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import com.android.launcher3.icons.BaseIconFactory;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 
 /* renamed from: com.android.wm.shell.bubbles.BubbleIconFactory */
 public class BubbleIconFactory extends BaseIconFactory {
     public BubbleIconFactory(Context context) {
-        super(context, context.getResources().getConfiguration().densityDpi, context.getResources().getDimensionPixelSize(C3343R.dimen.bubble_size));
+        super(context, context.getResources().getConfiguration().densityDpi, context.getResources().getDimensionPixelSize(C3353R.dimen.bubble_size));
     }
 
     /* access modifiers changed from: package-private */

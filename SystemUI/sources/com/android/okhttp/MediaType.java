@@ -28,8 +28,8 @@ public final class MediaType {
         if (!matcher.lookingAt()) {
             return null;
         }
-        String lowerCase = matcher.group(1).toLowerCase(Locale.f700US);
-        String lowerCase2 = matcher.group(2).toLowerCase(Locale.f700US);
+        String lowerCase = matcher.group(1).toLowerCase(Locale.f698US);
+        String lowerCase2 = matcher.group(2).toLowerCase(Locale.f698US);
         Matcher matcher2 = PARAMETER.matcher(str);
         String str3 = null;
         for (int end = matcher.end(); end < str.length(); end = matcher2.end()) {

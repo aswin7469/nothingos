@@ -127,7 +127,7 @@ public interface ChronoLocalDate extends Temporal, TemporalAdjuster, Comparable<
     }
 
     ChronoLocalDateTime<?> atTime(LocalTime localTime) {
-        return ChronoLocalDateTimeImpl.m940of(this, localTime);
+        return ChronoLocalDateTimeImpl.m938of(this, localTime);
     }
 
     long toEpochDay() {

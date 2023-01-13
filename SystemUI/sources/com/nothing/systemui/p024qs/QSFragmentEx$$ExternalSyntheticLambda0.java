@@ -10,6 +10,6 @@ public final /* synthetic */ class QSFragmentEx$$ExternalSyntheticLambda0 implem
     }
 
     public final void run() {
-        QSFragmentEx.m3508onSignalPageChanged$lambda0(this.f$0);
+        QSFragmentEx.m3512onSignalPageChanged$lambda0(this.f$0);
     }
 }

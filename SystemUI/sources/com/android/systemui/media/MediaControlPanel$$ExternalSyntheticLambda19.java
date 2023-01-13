@@ -13,6 +13,6 @@ public final /* synthetic */ class MediaControlPanel$$ExternalSyntheticLambda19 
     }
 
     public final void run() {
-        this.f$0.m2779lambda$bindPlayer$5$comandroidsystemuimediaMediaControlPanel(this.f$1);
+        this.f$0.m2784lambda$bindPlayer$5$comandroidsystemuimediaMediaControlPanel(this.f$1);
     }
 }

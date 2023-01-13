@@ -16,6 +16,6 @@ public final /* synthetic */ class AuthRippleController$$ExternalSyntheticLambda
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        AuthRippleController.m2560onKeyguardFadingAwayChanged$lambda3$lambda2(this.f$0, this.f$1, this.f$2, valueAnimator);
+        AuthRippleController.m2566onKeyguardFadingAwayChanged$lambda3$lambda2(this.f$0, this.f$1, this.f$2, valueAnimator);
     }
 }

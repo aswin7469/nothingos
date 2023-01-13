@@ -9,6 +9,6 @@ public final /* synthetic */ class PanelViewController$$ExternalSyntheticLambda4
     }
 
     public final void run() {
-        this.f$0.mo44933x15a26b9b();
+        this.f$0.mo44948x15a26b9b();
     }
 }

@@ -12,6 +12,6 @@ public final /* synthetic */ class DreamOverlayNotificationCountProvider$$Extern
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo32499x28738356((StatusBarNotification) obj);
+        this.f$0.mo32510x28738356((StatusBarNotification) obj);
     }
 }

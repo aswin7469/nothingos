@@ -7,7 +7,7 @@ import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.FunctionReferenceImpl;
 import kotlin.jvm.internal.Intrinsics;
 
-@Metadata(mo64988k = 3, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65044k = 3, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* compiled from: ControlsProviderSelectorActivity.kt */
 /* synthetic */ class ControlsProviderSelectorActivity$onStart$2 extends FunctionReferenceImpl implements Function1<ComponentName, Integer> {
     ControlsProviderSelectorActivity$onStart$2(Object obj) {

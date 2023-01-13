@@ -16,6 +16,6 @@ public final /* synthetic */ class ChallengeDialogs$$ExternalSyntheticLambda5 im
     }
 
     public final void onShow(DialogInterface dialogInterface) {
-        ChallengeDialogs.m2668createPinDialog$lambda5$lambda4(this.f$0, this.f$1, this.f$2, dialogInterface);
+        ChallengeDialogs.m2673createPinDialog$lambda5$lambda4(this.f$0, this.f$1, this.f$2, dialogInterface);
     }
 }

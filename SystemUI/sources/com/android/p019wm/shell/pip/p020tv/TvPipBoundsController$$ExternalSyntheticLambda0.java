@@ -14,6 +14,6 @@ public final /* synthetic */ class TvPipBoundsController$$ExternalSyntheticLambd
     }
 
     public final void run() {
-        this.f$0.mo50536xd823d93d(this.f$1);
+        this.f$0.mo50545xd823d93d(this.f$1);
     }
 }

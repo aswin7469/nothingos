@@ -7,7 +7,7 @@ import android.content.res.Resources;
 import android.provider.Settings;
 import android.view.DisplayCutout;
 import com.android.internal.policy.SystemBarUtils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.shared.system.QuickStepContract;
 import java.util.List;
 import java.util.function.Consumer;
@@ -58,7 +58,7 @@ public class Utils {
     }
 
     public static boolean useCollapsedMediaInLandscape(Resources resources) {
-        return resources.getBoolean(C1893R.bool.config_quickSettingsMediaLandscapeCollapsed);
+        return resources.getBoolean(C1894R.bool.config_quickSettingsMediaLandscapeCollapsed);
     }
 
     public static int getStatusBarHeaderHeightKeyguard(Context context) {
@@ -70,6 +70,6 @@ public class Utils {
         } else {
             i = cutout.getWaterfallInsets().top;
         }
-        return Math.max(statusBarHeight, context.getResources().getDimensionPixelSize(C1893R.dimen.status_bar_header_height_keyguard) + i);
+        return Math.max(statusBarHeight, context.getResources().getDimensionPixelSize(C1894R.dimen.status_bar_header_height_keyguard) + i);
     }
 }

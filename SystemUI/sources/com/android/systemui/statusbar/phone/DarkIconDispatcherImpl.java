@@ -6,7 +6,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Rect;
 import android.util.ArrayMap;
 import android.widget.ImageView;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.dump.DumpManager;
 import com.android.systemui.plugins.DarkIconDispatcher;
@@ -31,8 +31,8 @@ public class DarkIconDispatcherImpl implements SysuiDarkIconDispatcher, LightBar
 
     @Inject
     public DarkIconDispatcherImpl(Context context, LightBarTransitionsController.Factory factory, DumpManager dumpManager) {
-        this.mDarkModeIconColorSingleTone = context.getColor(C1893R.C1894color.dark_mode_icon_color_single_tone);
-        this.mLightModeIconColorSingleTone = context.getColor(C1893R.C1894color.light_mode_icon_color_single_tone);
+        this.mDarkModeIconColorSingleTone = context.getColor(C1894R.C1895color.dark_mode_icon_color_single_tone);
+        this.mLightModeIconColorSingleTone = context.getColor(C1894R.C1895color.light_mode_icon_color_single_tone);
         this.mTransitionsController = factory.create(this);
         dumpManager.registerDumpable(getClass().getSimpleName(), this);
     }
@@ -54,7 +54,7 @@ public class DarkIconDispatcherImpl implements SysuiDarkIconDispatcher, LightBar
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$addDarkReceiver$0$com-android-systemui-statusbar-phone-DarkIconDispatcherImpl */
-    public /* synthetic */ void mo43968xf0c28192(ImageView imageView, ArrayList arrayList, float f, int i) {
+    public /* synthetic */ void mo43978xf0c28192(ImageView imageView, ArrayList arrayList, float f, int i) {
         imageView.setImageTintList(ColorStateList.valueOf(DarkIconDispatcher.getTint(this.mTintAreas, imageView, this.mIconTint)));
     }
 

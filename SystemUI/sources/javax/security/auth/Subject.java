@@ -408,32 +408,32 @@ public final class Subject implements Serializable {
             return new Iterator<E>(this.elements) {
 
                 /* renamed from: i */
-                ListIterator<E> f829i;
+                ListIterator<E> f827i;
                 final /* synthetic */ LinkedList val$list;
 
                 {
                     this.val$list = r2;
-                    this.f829i = r2.listIterator(0);
+                    this.f827i = r2.listIterator(0);
                 }
 
                 public boolean hasNext() {
-                    return this.f829i.hasNext();
+                    return this.f827i.hasNext();
                 }
 
                 public E next() {
                     if (SecureSet.this.which != 3) {
-                        return this.f829i.next();
+                        return this.f827i.next();
                     }
                     SecurityManager securityManager = System.getSecurityManager();
                     if (securityManager != null) {
                         try {
-                            securityManager.checkPermission(new PrivateCredentialPermission(this.val$list.get(this.f829i.nextIndex()).getClass().getName(), SecureSet.this.subject.getPrincipals()));
+                            securityManager.checkPermission(new PrivateCredentialPermission(this.val$list.get(this.f827i.nextIndex()).getClass().getName(), SecureSet.this.subject.getPrincipals()));
                         } catch (SecurityException e) {
-                            this.f829i.next();
+                            this.f827i.next();
                             throw e;
                         }
                     }
-                    return this.f829i.next();
+                    return this.f827i.next();
                 }
 
                 public void remove() {
@@ -449,7 +449,7 @@ public final class Subject implements Serializable {
                                 securityManager.checkPermission(AuthPermissionHolder.MODIFY_PUBLIC_CREDENTIALS_PERMISSION);
                             }
                         }
-                        this.f829i.remove();
+                        this.f827i.remove();
                         return;
                     }
                     throw new IllegalStateException(ResourcesMgr.getString("Subject.is.read.only"));
@@ -670,13 +670,13 @@ public final class Subject implements Serializable {
     private class ClassSet<T> extends AbstractSet<T> {
 
         /* renamed from: c */
-        private Class<T> f828c;
+        private Class<T> f826c;
         private Set<T> set = new HashSet();
         private int which;
 
         ClassSet(int i, Class<T> cls) {
             this.which = i;
-            this.f828c = cls;
+            this.f826c = cls;
             if (i == 1) {
                 synchronized (Subject.this.principals) {
                     populateSet();
@@ -713,7 +713,7 @@ public final class Subject implements Serializable {
                 } else {
                     obj = it.next();
                 }
-                if (this.f828c.isAssignableFrom(obj.getClass())) {
+                if (this.f826c.isAssignableFrom(obj.getClass())) {
                     if (this.which != 3) {
                         this.set.add(obj);
                     } else {
@@ -736,10 +736,10 @@ public final class Subject implements Serializable {
         }
 
         public boolean add(T t) {
-            if (t.getClass().isAssignableFrom(this.f828c)) {
+            if (t.getClass().isAssignableFrom(this.f826c)) {
                 return this.set.add(t);
             }
-            throw new SecurityException(new MessageFormat(ResourcesMgr.getString("attempting.to.add.an.object.which.is.not.an.instance.of.class")).format(new Object[]{this.f828c.toString()}));
+            throw new SecurityException(new MessageFormat(ResourcesMgr.getString("attempting.to.add.an.object.which.is.not.an.instance.of.class")).format(new Object[]{this.f826c.toString()}));
         }
     }
 

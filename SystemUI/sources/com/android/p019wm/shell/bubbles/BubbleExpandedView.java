@@ -29,7 +29,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import com.android.internal.policy.ScreenDecorationsUtils;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.TaskView;
 import com.android.p019wm.shell.common.AlphaOptimizedButton;
 import com.android.p019wm.shell.common.TriangleShape;
@@ -130,7 +130,7 @@ public class BubbleExpandedView extends LinearLayout {
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onInitialized$0$com-android-wm-shell-bubbles-BubbleExpandedView$1 */
-            public /* synthetic */ void mo48563x8f806467(ActivityOptions activityOptions, Rect rect) {
+            public /* synthetic */ void mo48572x8f806467(ActivityOptions activityOptions, Rect rect) {
                 try {
                     activityOptions.setTaskAlwaysOnTop(true);
                     activityOptions.setLaunchedFromBubble(true);
@@ -173,7 +173,7 @@ public class BubbleExpandedView extends LinearLayout {
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onTaskRemovalStarted$1$com-android-wm-shell-bubbles-BubbleExpandedView$1 */
-            public /* synthetic */ void mo48564x47a7b2a6() {
+            public /* synthetic */ void mo48573x47a7b2a6() {
                 BubbleExpandedView.this.mController.removeBubble(BubbleExpandedView.this.mBubble.getKey(), 3);
             }
 
@@ -188,9 +188,9 @@ public class BubbleExpandedView extends LinearLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mManageButton = (AlphaOptimizedButton) LayoutInflater.from(getContext()).inflate(C3343R.layout.bubble_manage_button, this, false);
+        this.mManageButton = (AlphaOptimizedButton) LayoutInflater.from(getContext()).inflate(C3353R.layout.bubble_manage_button, this, false);
         updateDimensions();
-        View findViewById = findViewById(C3343R.C3346id.pointer_view);
+        View findViewById = findViewById(C3353R.C3356id.pointer_view);
         this.mPointerView = findViewById;
         this.mCurrentPointer = this.mTopPointer;
         findViewById.setVisibility(4);
@@ -212,7 +212,7 @@ public class BubbleExpandedView extends LinearLayout {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onFinishInflate$0$com-android-wm-shell-bubbles-BubbleExpandedView */
-    public /* synthetic */ boolean mo48545xcc02307a(View view, MotionEvent motionEvent) {
+    public /* synthetic */ boolean mo48554xcc02307a(View view, MotionEvent motionEvent) {
         if (this.mTaskView == null) {
             return false;
         }
@@ -231,7 +231,7 @@ public class BubbleExpandedView extends LinearLayout {
         this.mIsOverflow = z;
         this.mPositioner = bubbleController.getPositioner();
         if (this.mIsOverflow) {
-            BubbleOverflowContainerView bubbleOverflowContainerView = (BubbleOverflowContainerView) LayoutInflater.from(getContext()).inflate(C3343R.layout.bubble_overflow_container, (ViewGroup) null);
+            BubbleOverflowContainerView bubbleOverflowContainerView = (BubbleOverflowContainerView) LayoutInflater.from(getContext()).inflate(C3353R.layout.bubble_overflow_container, (ViewGroup) null);
             this.mOverflowView = bubbleOverflowContainerView;
             bubbleOverflowContainerView.setBubbleController(this.mController);
             this.mExpandedViewContainer.addView(this.mOverflowView, new FrameLayout.LayoutParams(-1, -1));
@@ -251,11 +251,11 @@ public class BubbleExpandedView extends LinearLayout {
     public void updateDimensions() {
         Resources resources = getResources();
         updateFontSize();
-        this.mPointerWidth = resources.getDimensionPixelSize(C3343R.dimen.bubble_pointer_width);
-        this.mPointerHeight = resources.getDimensionPixelSize(C3343R.dimen.bubble_pointer_height);
-        this.mPointerRadius = (float) getResources().getDimensionPixelSize(C3343R.dimen.bubble_pointer_radius);
+        this.mPointerWidth = resources.getDimensionPixelSize(C3353R.dimen.bubble_pointer_width);
+        this.mPointerHeight = resources.getDimensionPixelSize(C3353R.dimen.bubble_pointer_height);
+        this.mPointerRadius = (float) getResources().getDimensionPixelSize(C3353R.dimen.bubble_pointer_radius);
         this.mPointerEffect = new CornerPathEffect(this.mPointerRadius);
-        this.mPointerOverlap = (float) getResources().getDimensionPixelSize(C3343R.dimen.bubble_pointer_overlap);
+        this.mPointerOverlap = (float) getResources().getDimensionPixelSize(C3353R.dimen.bubble_pointer_overlap);
         this.mTopPointer = new ShapeDrawable(TriangleShape.create((float) this.mPointerWidth, (float) this.mPointerHeight, true));
         this.mLeftPointer = new ShapeDrawable(TriangleShape.createHorizontal((float) this.mPointerWidth, (float) this.mPointerHeight, true));
         this.mRightPointer = new ShapeDrawable(TriangleShape.createHorizontal((float) this.mPointerWidth, (float) this.mPointerHeight, false));
@@ -266,7 +266,7 @@ public class BubbleExpandedView extends LinearLayout {
         if (alphaOptimizedButton != null) {
             int visibility = alphaOptimizedButton.getVisibility();
             removeView(this.mManageButton);
-            AlphaOptimizedButton alphaOptimizedButton2 = (AlphaOptimizedButton) LayoutInflater.from(getContext()).inflate(C3343R.layout.bubble_manage_button, this, false);
+            AlphaOptimizedButton alphaOptimizedButton2 = (AlphaOptimizedButton) LayoutInflater.from(getContext()).inflate(C3353R.layout.bubble_manage_button, this, false);
             this.mManageButton = alphaOptimizedButton2;
             addView(alphaOptimizedButton2);
             this.mManageButton.setVisibility(visibility);
@@ -444,7 +444,7 @@ public class BubbleExpandedView extends LinearLayout {
         boolean z = this.mBubble == null || didBackingContentChange(bubble);
         if (z || (bubble != null && bubble.getKey().equals(this.mBubble.getKey()))) {
             this.mBubble = bubble;
-            this.mManageButton.setContentDescription(getResources().getString(C3343R.string.bubbles_settings_button_description, new Object[]{bubble.getAppName()}));
+            this.mManageButton.setContentDescription(getResources().getString(C3353R.string.bubbles_settings_button_description, new Object[]{bubble.getAppName()}));
             this.mManageButton.setAccessibilityDelegate(new View.AccessibilityDelegate() {
                 public void onInitializeAccessibilityNodeInfo(View view, AccessibilityNodeInfo accessibilityNodeInfo) {
                     super.onInitializeAccessibilityNodeInfo(view, accessibilityNodeInfo);
@@ -545,7 +545,7 @@ public class BubbleExpandedView extends LinearLayout {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setPointerPosition$1$com-android-wm-shell-bubbles-BubbleExpandedView */
-    public /* synthetic */ void mo48546xadb67084(boolean z, boolean z2, float f, boolean z3, boolean z4) {
+    public /* synthetic */ void mo48555xadb67084(boolean z, boolean z2, float f, boolean z3, boolean z4) {
         float f2;
         float f3;
         float f4;

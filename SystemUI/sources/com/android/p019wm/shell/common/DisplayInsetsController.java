@@ -174,52 +174,52 @@ public class DisplayInsetsController implements DisplayController.OnDisplaysChan
             }
 
             public void topFocusedWindowChanged(String str, InsetsVisibilities insetsVisibilities) throws RemoteException {
-                DisplayInsetsController.this.mMainExecutor.execute(new C3429x9b4a9e26(this, str, insetsVisibilities));
+                DisplayInsetsController.this.mMainExecutor.execute(new C3439x9b4a9e26(this, str, insetsVisibilities));
             }
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$topFocusedWindowChanged$0$com-android-wm-shell-common-DisplayInsetsController$PerDisplay$DisplayWindowInsetsControllerImpl */
-            public /* synthetic */ void mo49077x2b1167c0(String str, InsetsVisibilities insetsVisibilities) {
+            public /* synthetic */ void mo49086x2b1167c0(String str, InsetsVisibilities insetsVisibilities) {
                 PerDisplay.this.topFocusedWindowChanged(str, insetsVisibilities);
             }
 
             public void insetsChanged(InsetsState insetsState) throws RemoteException {
-                DisplayInsetsController.this.mMainExecutor.execute(new C3428x9b4a9e25(this, insetsState));
+                DisplayInsetsController.this.mMainExecutor.execute(new C3438x9b4a9e25(this, insetsState));
             }
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$insetsChanged$1$com-android-wm-shell-common-DisplayInsetsController$PerDisplay$DisplayWindowInsetsControllerImpl */
-            public /* synthetic */ void mo49074x57bb9b23(InsetsState insetsState) {
+            public /* synthetic */ void mo49083x57bb9b23(InsetsState insetsState) {
                 PerDisplay.this.insetsChanged(insetsState);
             }
 
             public void insetsControlChanged(InsetsState insetsState, InsetsSourceControl[] insetsSourceControlArr) throws RemoteException {
-                DisplayInsetsController.this.mMainExecutor.execute(new C3430x9b4a9e27(this, insetsState, insetsSourceControlArr));
+                DisplayInsetsController.this.mMainExecutor.execute(new C3440x9b4a9e27(this, insetsState, insetsSourceControlArr));
             }
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$insetsControlChanged$2$com-android-wm-shell-common-DisplayInsetsController$PerDisplay$DisplayWindowInsetsControllerImpl */
-            public /* synthetic */ void mo49075xea796379(InsetsState insetsState, InsetsSourceControl[] insetsSourceControlArr) {
+            public /* synthetic */ void mo49084xea796379(InsetsState insetsState, InsetsSourceControl[] insetsSourceControlArr) {
                 PerDisplay.this.insetsControlChanged(insetsState, insetsSourceControlArr);
             }
 
             public void showInsets(int i, boolean z) throws RemoteException {
-                DisplayInsetsController.this.mMainExecutor.execute(new C3427x9b4a9e24(this, i, z));
+                DisplayInsetsController.this.mMainExecutor.execute(new C3437x9b4a9e24(this, i, z));
             }
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$showInsets$3$com-android-wm-shell-common-DisplayInsetsController$PerDisplay$DisplayWindowInsetsControllerImpl */
-            public /* synthetic */ void mo49076x7182b072(int i, boolean z) {
+            public /* synthetic */ void mo49085x7182b072(int i, boolean z) {
                 PerDisplay.this.showInsets(i, z);
             }
 
             public void hideInsets(int i, boolean z) throws RemoteException {
-                DisplayInsetsController.this.mMainExecutor.execute(new C3431x9b4a9e28(this, i, z));
+                DisplayInsetsController.this.mMainExecutor.execute(new C3441x9b4a9e28(this, i, z));
             }
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$hideInsets$4$com-android-wm-shell-common-DisplayInsetsController$PerDisplay$DisplayWindowInsetsControllerImpl */
-            public /* synthetic */ void mo49073xdee033ec(int i, boolean z) {
+            public /* synthetic */ void mo49082xdee033ec(int i, boolean z) {
                 PerDisplay.this.hideInsets(i, z);
             }
         }

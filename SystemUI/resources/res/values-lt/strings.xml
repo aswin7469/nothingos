@@ -708,9 +708,15 @@
     <string name="force_rtl_layout_all_locales_summary">Nust. visų lokalių ekran. išdėst. iš deš. į kairę</string>
     <string name="forced_resizable_secondary_display">Programa gali neveikti antriniame ekrane.</string>
     <string name="game_status">Leidžiama</string>
+    <string name="gamemode_description">Jei žaidžiate, žaidimų režimas tai nustatys ir automatiškai įsijungs</string>
+    <string name="gamemode_gamedashboard_title">Žaidimo skydas</string>
+    <string name="gamemode_notification_content">Palieskite, kad eitumėte į skyrių „Nustatymai“</string>
+    <string name="gamemode_notification_title">Žaidimų režimas dabar yra įjungtas</string>
     <string name="global_action_lock_message">Atrakinkite telefoną, kad galėtumėte naudoti daugiau parinkčių</string>
     <string name="global_action_screenshot">Ekrano kopija</string>
     <string name="global_action_smart_lock_disabled">„Smart Lock“ išjungta</string>
+    <string name="gm_guide_status_on">ĮJUNGTA</string>
+    <string name="gm_notification_title">Žaidimų režimas</string>
     <string name="go_to_web">Eiti į naršyklę</string>
     <string name="got_it">Supratau</string>
     <string name="guest_exit_guest">Pašalinti svečią</string>

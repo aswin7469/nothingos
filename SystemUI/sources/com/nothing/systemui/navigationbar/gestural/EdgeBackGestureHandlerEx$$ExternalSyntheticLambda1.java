@@ -9,6 +9,6 @@ public final /* synthetic */ class EdgeBackGestureHandlerEx$$ExternalSyntheticLa
     }
 
     public final void run() {
-        this.f$0.mo57506xae11b8a1();
+        this.f$0.mo57527xae11b8a1();
     }
 }

@@ -870,34 +870,34 @@ public final class Spliterators {
         private long est;
 
         /* renamed from: it */
-        private Iterator<? extends T> f706it;
+        private Iterator<? extends T> f704it;
 
         public IteratorSpliterator(Collection<? extends T> collection2, int i) {
             this.collection = collection2;
-            this.f706it = null;
+            this.f704it = null;
             this.characteristics = (i & 4096) == 0 ? i | 64 | 16384 : i;
         }
 
         public IteratorSpliterator(Iterator<? extends T> it, long j, int i) {
             this.collection = null;
-            this.f706it = it;
+            this.f704it = it;
             this.est = j;
             this.characteristics = (i & 4096) == 0 ? i | 64 | 16384 : i;
         }
 
         public IteratorSpliterator(Iterator<? extends T> it, int i) {
             this.collection = null;
-            this.f706it = it;
+            this.f704it = it;
             this.est = Long.MAX_VALUE;
             this.characteristics = i & -16449;
         }
 
         public Spliterator<T> trySplit() {
             long j;
-            Iterator<? extends T> it = this.f706it;
+            Iterator<? extends T> it = this.f704it;
             if (it == null) {
                 it = this.collection.iterator();
-                this.f706it = it;
+                this.f704it = it;
                 j = (long) this.collection.size();
                 this.est = j;
             } else {
@@ -936,10 +936,10 @@ public final class Spliterators {
 
         public void forEachRemaining(Consumer<? super T> consumer) {
             consumer.getClass();
-            Iterator<? extends T> it = this.f706it;
+            Iterator<? extends T> it = this.f704it;
             if (it == null) {
                 it = this.collection.iterator();
-                this.f706it = it;
+                this.f704it = it;
                 this.est = (long) this.collection.size();
             }
             it.forEachRemaining(consumer);
@@ -947,22 +947,22 @@ public final class Spliterators {
 
         public boolean tryAdvance(Consumer<? super T> consumer) {
             consumer.getClass();
-            if (this.f706it == null) {
-                this.f706it = this.collection.iterator();
+            if (this.f704it == null) {
+                this.f704it = this.collection.iterator();
                 this.est = (long) this.collection.size();
             }
-            if (!this.f706it.hasNext()) {
+            if (!this.f704it.hasNext()) {
                 return false;
             }
-            consumer.accept(this.f706it.next());
+            consumer.accept(this.f704it.next());
             return true;
         }
 
         public long estimateSize() {
-            if (this.f706it != null) {
+            if (this.f704it != null) {
                 return this.est;
             }
-            this.f706it = this.collection.iterator();
+            this.f704it = this.collection.iterator();
             long size = (long) this.collection.size();
             this.est = size;
             return size;
@@ -988,22 +988,22 @@ public final class Spliterators {
         private long est;
 
         /* renamed from: it */
-        private PrimitiveIterator.OfInt f705it;
+        private PrimitiveIterator.OfInt f703it;
 
         public IntIteratorSpliterator(PrimitiveIterator.OfInt ofInt, long j, int i) {
-            this.f705it = ofInt;
+            this.f703it = ofInt;
             this.est = j;
             this.characteristics = (i & 4096) == 0 ? i | 64 | 16384 : i;
         }
 
         public IntIteratorSpliterator(PrimitiveIterator.OfInt ofInt, int i) {
-            this.f705it = ofInt;
+            this.f703it = ofInt;
             this.est = Long.MAX_VALUE;
             this.characteristics = i & -16449;
         }
 
         public Spliterator.OfInt trySplit() {
-            PrimitiveIterator.OfInt ofInt = this.f705it;
+            PrimitiveIterator.OfInt ofInt = this.f703it;
             long j = this.est;
             if (j <= 1 || !ofInt.hasNext()) {
                 return null;
@@ -1038,15 +1038,15 @@ public final class Spliterators {
 
         public void forEachRemaining(IntConsumer intConsumer) {
             intConsumer.getClass();
-            this.f705it.forEachRemaining(intConsumer);
+            this.f703it.forEachRemaining(intConsumer);
         }
 
         public boolean tryAdvance(IntConsumer intConsumer) {
             intConsumer.getClass();
-            if (!this.f705it.hasNext()) {
+            if (!this.f703it.hasNext()) {
                 return false;
             }
-            intConsumer.accept(this.f705it.nextInt());
+            intConsumer.accept(this.f703it.nextInt());
             return true;
         }
 
@@ -1074,22 +1074,22 @@ public final class Spliterators {
         private long est;
 
         /* renamed from: it */
-        private PrimitiveIterator.OfLong f707it;
+        private PrimitiveIterator.OfLong f705it;
 
         public LongIteratorSpliterator(PrimitiveIterator.OfLong ofLong, long j, int i) {
-            this.f707it = ofLong;
+            this.f705it = ofLong;
             this.est = j;
             this.characteristics = (i & 4096) == 0 ? i | 64 | 16384 : i;
         }
 
         public LongIteratorSpliterator(PrimitiveIterator.OfLong ofLong, int i) {
-            this.f707it = ofLong;
+            this.f705it = ofLong;
             this.est = Long.MAX_VALUE;
             this.characteristics = i & -16449;
         }
 
         public Spliterator.OfLong trySplit() {
-            PrimitiveIterator.OfLong ofLong = this.f707it;
+            PrimitiveIterator.OfLong ofLong = this.f705it;
             long j = this.est;
             if (j <= 1 || !ofLong.hasNext()) {
                 return null;
@@ -1124,15 +1124,15 @@ public final class Spliterators {
 
         public void forEachRemaining(LongConsumer longConsumer) {
             longConsumer.getClass();
-            this.f707it.forEachRemaining(longConsumer);
+            this.f705it.forEachRemaining(longConsumer);
         }
 
         public boolean tryAdvance(LongConsumer longConsumer) {
             longConsumer.getClass();
-            if (!this.f707it.hasNext()) {
+            if (!this.f705it.hasNext()) {
                 return false;
             }
-            longConsumer.accept(this.f707it.nextLong());
+            longConsumer.accept(this.f705it.nextLong());
             return true;
         }
 
@@ -1160,22 +1160,22 @@ public final class Spliterators {
         private long est;
 
         /* renamed from: it */
-        private PrimitiveIterator.OfDouble f704it;
+        private PrimitiveIterator.OfDouble f702it;
 
         public DoubleIteratorSpliterator(PrimitiveIterator.OfDouble ofDouble, long j, int i) {
-            this.f704it = ofDouble;
+            this.f702it = ofDouble;
             this.est = j;
             this.characteristics = (i & 4096) == 0 ? i | 64 | 16384 : i;
         }
 
         public DoubleIteratorSpliterator(PrimitiveIterator.OfDouble ofDouble, int i) {
-            this.f704it = ofDouble;
+            this.f702it = ofDouble;
             this.est = Long.MAX_VALUE;
             this.characteristics = i & -16449;
         }
 
         public Spliterator.OfDouble trySplit() {
-            PrimitiveIterator.OfDouble ofDouble = this.f704it;
+            PrimitiveIterator.OfDouble ofDouble = this.f702it;
             long j = this.est;
             if (j <= 1 || !ofDouble.hasNext()) {
                 return null;
@@ -1210,15 +1210,15 @@ public final class Spliterators {
 
         public void forEachRemaining(DoubleConsumer doubleConsumer) {
             doubleConsumer.getClass();
-            this.f704it.forEachRemaining(doubleConsumer);
+            this.f702it.forEachRemaining(doubleConsumer);
         }
 
         public boolean tryAdvance(DoubleConsumer doubleConsumer) {
             doubleConsumer.getClass();
-            if (!this.f704it.hasNext()) {
+            if (!this.f702it.hasNext()) {
                 return false;
             }
-            doubleConsumer.accept(this.f704it.nextDouble());
+            doubleConsumer.accept(this.f702it.nextDouble());
             return true;
         }
 

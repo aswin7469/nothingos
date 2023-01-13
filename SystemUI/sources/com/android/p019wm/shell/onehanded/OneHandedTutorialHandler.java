@@ -16,7 +16,7 @@ import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.common.DisplayLayout;
 import com.android.p019wm.shell.onehanded.OneHandedAnimationController;
 import com.android.p019wm.shell.onehanded.OneHandedState;
@@ -108,7 +108,7 @@ public class OneHandedTutorialHandler implements OneHandedTransitionCallback, On
     /* access modifiers changed from: package-private */
     public void createViewAndAttachToWindow(Context context) {
         if (!isAttached()) {
-            this.mTutorialView = LayoutInflater.from(context).inflate(C3343R.layout.one_handed_tutorial, (ViewGroup) null);
+            this.mTutorialView = LayoutInflater.from(context).inflate(C3353R.layout.one_handed_tutorial, (ViewGroup) null);
             FrameLayout frameLayout = new FrameLayout(context);
             this.mTargetViewContainer = frameLayout;
             frameLayout.setClipChildren(false);
@@ -176,9 +176,9 @@ public class OneHandedTutorialHandler implements OneHandedTransitionCallback, On
             int color = obtainStyledAttributes.getColor(0, 0);
             int color2 = obtainStyledAttributes.getColor(1, 0);
             obtainStyledAttributes.recycle();
-            ((ImageView) this.mTutorialView.findViewById(C3343R.C3346id.one_handed_tutorial_image)).setImageTintList(ColorStateList.valueOf(color));
-            ((TextView) this.mTutorialView.findViewById(C3343R.C3346id.one_handed_tutorial_title)).setTextColor(color);
-            ((TextView) this.mTutorialView.findViewById(C3343R.C3346id.one_handed_tutorial_description)).setTextColor(color2);
+            ((ImageView) this.mTutorialView.findViewById(C3353R.C3356id.one_handed_tutorial_image)).setImageTintList(ColorStateList.valueOf(color));
+            ((TextView) this.mTutorialView.findViewById(C3353R.C3356id.one_handed_tutorial_title)).setTextColor(color);
+            ((TextView) this.mTutorialView.findViewById(C3353R.C3356id.one_handed_tutorial_description)).setTextColor(color2);
         }
     }
 
@@ -206,7 +206,7 @@ public class OneHandedTutorialHandler implements OneHandedTransitionCallback, On
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setupAlphaTransition$0$com-android-wm-shell-onehanded-OneHandedTutorialHandler */
-    public /* synthetic */ void mo49952xe327c1d6(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo49961xe327c1d6(ValueAnimator valueAnimator) {
         this.mTargetViewContainer.setAlpha(((Float) valueAnimator.getAnimatedValue()).floatValue());
     }
 

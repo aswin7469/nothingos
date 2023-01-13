@@ -170,7 +170,11 @@ public class ScreenMediaRecorder {
 
     /* access modifiers changed from: package-private */
     public void end() {
-        this.mMediaRecorder.stop();
+        try {
+            this.mMediaRecorder.stop();
+        } catch (RuntimeException e) {
+            Log.e(TAG, "Error stopping MediaRecorder", e);
+        }
         this.mMediaRecorder.release();
         this.mInputSurface.release();
         this.mVirtualDisplay.release();

@@ -18,7 +18,7 @@ public class Monitor implements CallbackController<Callback> {
     private final Condition.Callback mConditionCallback = new Condition.Callback() {
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onConditionChanged$0$com-android-systemui-util-condition-Monitor$1 */
-        public /* synthetic */ void mo46977x452b1c27() {
+        public /* synthetic */ void mo46989x452b1c27() {
             Monitor.this.updateConditionMetState();
         }
 
@@ -46,7 +46,7 @@ public class Monitor implements CallbackController<Callback> {
         }
         if (set2 != null) {
             for (Callback addCallbackLocked : set2) {
-                m3308lambda$addCallback$4$comandroidsystemuiutilconditionMonitor(addCallbackLocked);
+                m3313lambda$addCallback$4$comandroidsystemuiutilconditionMonitor(addCallbackLocked);
             }
         }
     }
@@ -82,7 +82,7 @@ public class Monitor implements CallbackController<Callback> {
 
     /* access modifiers changed from: private */
     /* renamed from: addConditionLocked */
-    public void mo46971xac6d6b3d(Condition condition) {
+    public void mo46983xac6d6b3d(Condition condition) {
         this.mConditions.add(condition);
         if (this.mHaveConditionsStarted) {
             condition.addCallback(this.mConditionCallback);
@@ -100,7 +100,7 @@ public class Monitor implements CallbackController<Callback> {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$removeCondition$2$com-android-systemui-util-condition-Monitor */
-    public /* synthetic */ void mo46974x48bc2f61(Condition condition) {
+    public /* synthetic */ void mo46986x48bc2f61(Condition condition) {
         this.mConditions.remove(condition);
         if (this.mHaveConditionsStarted) {
             condition.removeCallback(this.mConditionCallback);
@@ -110,7 +110,7 @@ public class Monitor implements CallbackController<Callback> {
 
     /* access modifiers changed from: private */
     /* renamed from: addCallbackLocked */
-    public void m3308lambda$addCallback$4$comandroidsystemuiutilconditionMonitor(Callback callback) {
+    public void m3313lambda$addCallback$4$comandroidsystemuiutilconditionMonitor(Callback callback) {
         if (!this.mCallbacks.contains(callback)) {
             if (shouldLog()) {
                 Log.d(this.mTag, "adding callback");
@@ -130,7 +130,7 @@ public class Monitor implements CallbackController<Callback> {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$addCallbackLocked$3$com-android-systemui-util-condition-Monitor */
-    public /* synthetic */ void mo46970xa85fcf1b(Condition condition) {
+    public /* synthetic */ void mo46982xa85fcf1b(Condition condition) {
         condition.addCallback(this.mConditionCallback);
     }
 
@@ -144,7 +144,7 @@ public class Monitor implements CallbackController<Callback> {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$removeCallback$6$com-android-systemui-util-condition-Monitor */
-    public /* synthetic */ void mo46973x9e1341b1(Callback callback) {
+    public /* synthetic */ void mo46985x9e1341b1(Callback callback) {
         if (shouldLog()) {
             Log.d(this.mTag, "removing callback");
         }
@@ -167,7 +167,7 @@ public class Monitor implements CallbackController<Callback> {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$removeCallback$5$com-android-systemui-util-condition-Monitor */
-    public /* synthetic */ void mo46972x3727f30(Condition condition) {
+    public /* synthetic */ void mo46984x3727f30(Condition condition) {
         condition.removeCallback(this.mConditionCallback);
     }
 

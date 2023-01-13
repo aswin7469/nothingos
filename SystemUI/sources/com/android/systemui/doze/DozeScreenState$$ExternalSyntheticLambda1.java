@@ -11,6 +11,6 @@ public final /* synthetic */ class DozeScreenState$$ExternalSyntheticLambda1 imp
     }
 
     public final void run() {
-        this.f$0.m2735lambda$transitionTo$0$comandroidsystemuidozeDozeScreenState(this.f$1);
+        this.f$0.m2740lambda$transitionTo$0$comandroidsystemuidozeDozeScreenState(this.f$1);
     }
 }

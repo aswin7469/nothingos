@@ -66,7 +66,7 @@ public interface MediaModule {
         if (!mediaTttFlags.isMediaTttEnabled()) {
             return Optional.empty();
         }
-        return Optional.m1745of(lazy.get());
+        return Optional.m1751of(lazy.get());
     }
 
     @SysUISingleton
@@ -75,7 +75,7 @@ public interface MediaModule {
         if (!mediaTttFlags.isMediaTttEnabled()) {
             return Optional.empty();
         }
-        return Optional.m1745of(lazy.get());
+        return Optional.m1751of(lazy.get());
     }
 
     @SysUISingleton
@@ -98,7 +98,7 @@ public interface MediaModule {
         if (!mediaTttFlags.isMediaTttEnabled()) {
             return Optional.empty();
         }
-        return Optional.m1745of(lazy.get());
+        return Optional.m1751of(lazy.get());
     }
 
     @SysUISingleton
@@ -107,7 +107,7 @@ public interface MediaModule {
         if (!mediaFlags.areMuteAwaitConnectionsEnabled()) {
             return Optional.empty();
         }
-        return Optional.m1745of(lazy.get());
+        return Optional.m1751of(lazy.get());
     }
 
     @SysUISingleton
@@ -116,6 +116,6 @@ public interface MediaModule {
         if (!mediaFlags.areNearbyMediaDevicesEnabled()) {
             return Optional.empty();
         }
-        return Optional.m1745of(lazy.get());
+        return Optional.m1751of(lazy.get());
     }
 }

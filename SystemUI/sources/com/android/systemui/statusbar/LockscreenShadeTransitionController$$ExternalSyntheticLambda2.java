@@ -11,6 +11,6 @@ public final /* synthetic */ class LockscreenShadeTransitionController$$External
     }
 
     public final void onClick(View view) {
-        LockscreenShadeTransitionController.m3027bindController$lambda0(this.f$0, view);
+        LockscreenShadeTransitionController.m3031bindController$lambda0(this.f$0, view);
     }
 }

@@ -9,6 +9,6 @@ public final /* synthetic */ class PartialConversationInfo$$ExternalSyntheticLam
     }
 
     public final void onChannelEditorDialogFinished() {
-        this.f$0.mo41714x969fdfa0();
+        this.f$0.mo41722x969fdfa0();
     }
 }

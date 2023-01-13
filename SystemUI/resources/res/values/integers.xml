@@ -180,7 +180,7 @@
     <integer name="status_bar_notification_info_maxnum">999</integer>
     <integer name="sudTransitionDuration">450</integer>
     <integer name="touch_acceptance_delay">700</integer>
-    <integer name="volume_dialog_gravity">21</integer>
+    <integer name="volume_dialog_gravity">19</integer>
     <integer name="watch_heap_limit">256000</integer>
     <integer name="wired_charging_keyguard_text_animation_distance">-30</integer>
     <integer name="wired_charging_keyguard_text_animation_duration_down">500</integer>

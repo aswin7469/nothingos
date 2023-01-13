@@ -12,6 +12,6 @@ public final /* synthetic */ class SlashDrawable$$ExternalSyntheticLambda0 imple
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        this.f$0.m2944lambda$setSlashed$0$comandroidsystemuiqsSlashDrawable(valueAnimator);
+        this.f$0.m2949lambda$setSlashed$0$comandroidsystemuiqsSlashDrawable(valueAnimator);
     }
 }

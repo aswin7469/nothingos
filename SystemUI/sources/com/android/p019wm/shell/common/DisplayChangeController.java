@@ -69,12 +69,12 @@ public class DisplayChangeController {
         }
 
         public void onRotateDisplay(int i, int i2, int i3, IDisplayWindowRotationCallback iDisplayWindowRotationCallback) {
-            DisplayChangeController.this.mMainExecutor.execute(new C3417x93d164a5(this, i, i2, i3, iDisplayWindowRotationCallback));
+            DisplayChangeController.this.mMainExecutor.execute(new C3427x93d164a5(this, i, i2, i3, iDisplayWindowRotationCallback));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onRotateDisplay$0$com-android-wm-shell-common-DisplayChangeController$DisplayWindowRotationControllerImpl */
-        public /* synthetic */ void mo49011x15447031(int i, int i2, int i3, IDisplayWindowRotationCallback iDisplayWindowRotationCallback) {
+        public /* synthetic */ void mo49020x15447031(int i, int i2, int i3, IDisplayWindowRotationCallback iDisplayWindowRotationCallback) {
             DisplayChangeController.this.onRotateDisplay(i, i2, i3, iDisplayWindowRotationCallback);
         }
     }

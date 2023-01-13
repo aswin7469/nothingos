@@ -127,7 +127,7 @@ public class OneHandedTouchHandler implements OneHandedTransitionCallback {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateIsEnabled$0$com-android-wm-shell-onehanded-OneHandedTouchHandler */
-    public /* synthetic */ void mo49945x59cb9e83() {
+    public /* synthetic */ void mo49954x59cb9e83() {
         this.mInputEventReceiver = new EventReceiver(this.mInputMonitor.getInputChannel(), Looper.myLooper());
     }
 

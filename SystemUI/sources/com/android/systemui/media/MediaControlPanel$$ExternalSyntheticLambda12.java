@@ -11,6 +11,6 @@ public final /* synthetic */ class MediaControlPanel$$ExternalSyntheticLambda12 
     }
 
     public final Object invoke() {
-        return this.f$0.m2780lambda$new$0$comandroidsystemuimediaMediaControlPanel();
+        return this.f$0.m2785lambda$new$0$comandroidsystemuimediaMediaControlPanel();
     }
 }

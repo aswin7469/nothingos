@@ -6,29 +6,29 @@ import java.security.spec.KeySpec;
 public class DHPublicKeySpec implements KeySpec {
 
     /* renamed from: g */
-    private BigInteger f819g;
+    private BigInteger f817g;
 
     /* renamed from: p */
-    private BigInteger f820p;
+    private BigInteger f818p;
 
     /* renamed from: y */
-    private BigInteger f821y;
+    private BigInteger f819y;
 
     public DHPublicKeySpec(BigInteger bigInteger, BigInteger bigInteger2, BigInteger bigInteger3) {
-        this.f821y = bigInteger;
-        this.f820p = bigInteger2;
-        this.f819g = bigInteger3;
+        this.f819y = bigInteger;
+        this.f818p = bigInteger2;
+        this.f817g = bigInteger3;
     }
 
     public BigInteger getY() {
-        return this.f821y;
+        return this.f819y;
     }
 
     public BigInteger getP() {
-        return this.f820p;
+        return this.f818p;
     }
 
     public BigInteger getG() {
-        return this.f819g;
+        return this.f817g;
     }
 }

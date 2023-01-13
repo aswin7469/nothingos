@@ -18,6 +18,6 @@ public final /* synthetic */ class DefaultTransitionHandler$$ExternalSyntheticLa
     }
 
     public final void run() {
-        this.f$0.mo51229x36d5eb30(this.f$1, this.f$2, this.f$3);
+        this.f$0.mo51240x36d5eb30(this.f$1, this.f$2, this.f$3);
     }
 }

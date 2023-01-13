@@ -13,6 +13,6 @@ public final /* synthetic */ class ScreenDecorations$$ExternalSyntheticLambda5 i
     }
 
     public final void run() {
-        this.f$0.m2525lambda$onTuningChanged$5$comandroidsystemuiScreenDecorations(this.f$1, this.f$2);
+        this.f$0.m2531lambda$onTuningChanged$5$comandroidsystemuiScreenDecorations(this.f$1, this.f$2);
     }
 }

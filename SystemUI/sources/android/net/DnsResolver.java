@@ -260,7 +260,7 @@ public final class DnsResolver {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$query$6$android-net-DnsResolver  reason: not valid java name */
-    public /* synthetic */ void m1877lambda$query$6$androidnetDnsResolver(Object obj, boolean z, FileDescriptor fileDescriptor, boolean z2, FileDescriptor fileDescriptor2) {
+    public /* synthetic */ void m1883lambda$query$6$androidnetDnsResolver(Object obj, boolean z, FileDescriptor fileDescriptor, boolean z2, FileDescriptor fileDescriptor2) {
         synchronized (obj) {
             if (z) {
                 try {
@@ -357,7 +357,7 @@ public final class DnsResolver {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$addCancellationSignal$10$android-net-DnsResolver  reason: not valid java name */
-    public /* synthetic */ void m1876lambda$addCancellationSignal$10$androidnetDnsResolver(Object obj, FileDescriptor fileDescriptor) {
+    public /* synthetic */ void m1882lambda$addCancellationSignal$10$androidnetDnsResolver(Object obj, FileDescriptor fileDescriptor) {
         synchronized (obj) {
             cancelQuery(fileDescriptor);
         }

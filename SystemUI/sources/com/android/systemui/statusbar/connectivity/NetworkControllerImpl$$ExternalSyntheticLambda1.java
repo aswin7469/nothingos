@@ -11,6 +11,6 @@ public final /* synthetic */ class NetworkControllerImpl$$ExternalSyntheticLambd
     }
 
     public final void onActiveDataSubscriptionIdChanged(int i) {
-        this.f$0.mo39412x3a598c2c(i);
+        this.f$0.mo39414x3a598c2c(i);
     }
 }

@@ -9,7 +9,7 @@ import android.graphics.Point;
 import android.util.AttributeSet;
 import android.view.RoundedCorner;
 import android.view.View;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 
 /* renamed from: com.android.wm.shell.common.split.DividerRoundedCorner */
 public class DividerRoundedCorner extends View {
@@ -17,7 +17,7 @@ public class DividerRoundedCorner extends View {
     private InvertedRoundedCornerDrawInfo mBottomRightCorner;
     private final Paint mDividerBarBackground;
     /* access modifiers changed from: private */
-    public final int mDividerWidth = getResources().getDimensionPixelSize(C3343R.dimen.split_divider_bar_width);
+    public final int mDividerWidth = getResources().getDimensionPixelSize(C3353R.dimen.split_divider_bar_width);
     private final Point mStartPos = new Point();
     private InvertedRoundedCornerDrawInfo mTopLeftCorner;
     private InvertedRoundedCornerDrawInfo mTopRightCorner;
@@ -30,7 +30,7 @@ public class DividerRoundedCorner extends View {
         super(context, attributeSet);
         Paint paint = new Paint();
         this.mDividerBarBackground = paint;
-        paint.setColor(getResources().getColor(C3343R.C3344color.split_divider_background, (Resources.Theme) null));
+        paint.setColor(getResources().getColor(C3353R.C3354color.split_divider_background, (Resources.Theme) null));
         paint.setFlags(1);
         paint.setStyle(Paint.Style.FILL);
     }

@@ -11,6 +11,6 @@ public final /* synthetic */ class StatusBarNotificationPresenter$$ExternalSynth
     }
 
     public final void run() {
-        this.f$0.mo45329x4e722c2d(this.f$1);
+        this.f$0.mo45341x4e722c2d(this.f$1);
     }
 }

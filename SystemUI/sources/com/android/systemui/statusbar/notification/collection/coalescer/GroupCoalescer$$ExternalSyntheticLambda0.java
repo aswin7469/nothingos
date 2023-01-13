@@ -11,6 +11,6 @@ public final /* synthetic */ class GroupCoalescer$$ExternalSyntheticLambda0 impl
     }
 
     public final void run() {
-        this.f$0.mo40164xba716d66(this.f$1);
+        this.f$0.mo40166xba716d66(this.f$1);
     }
 }

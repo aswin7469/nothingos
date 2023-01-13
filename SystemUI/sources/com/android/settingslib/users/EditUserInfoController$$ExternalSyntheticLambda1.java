@@ -13,6 +13,6 @@ public final /* synthetic */ class EditUserInfoController$$ExternalSyntheticLamb
     }
 
     public final void onClick(DialogInterface dialogInterface, int i) {
-        this.f$0.mo29226x9daba9d6(this.f$1, dialogInterface, i);
+        this.f$0.mo29231x9daba9d6(this.f$1, dialogInterface, i);
     }
 }

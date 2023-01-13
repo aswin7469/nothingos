@@ -3,7 +3,7 @@ package com.android.systemui.p012qs.tiles;
 import android.os.Handler;
 import android.os.Looper;
 import com.android.internal.logging.MetricsLogger;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.DejankUtils;
 import com.android.systemui.dagger.qualifiers.Background;
 import com.android.systemui.dagger.qualifiers.Main;
@@ -43,6 +43,6 @@ public class MicrophoneToggleTile extends SensorPrivacyToggleTile {
     }
 
     public CharSequence getTileLabel() {
-        return this.mContext.getString(C1893R.string.quick_settings_mic_label);
+        return this.mContext.getString(C1894R.string.quick_settings_mic_label);
     }
 }

@@ -16,6 +16,6 @@ public final /* synthetic */ class NearestTouchFrame$$ExternalSyntheticLambda2 i
     }
 
     public final boolean test(Object obj) {
-        return this.f$0.mo35020x13cd0412(this.f$1, this.f$2, (View) obj);
+        return this.f$0.mo35024x13cd0412(this.f$1, this.f$2, (View) obj);
     }
 }

@@ -13,6 +13,6 @@ public final /* synthetic */ class TileServiceRequestController$$ExternalSynthet
     }
 
     public final void onCancel(DialogInterface dialogInterface) {
-        TileServiceRequestController.m2951createDialog$lambda5$lambda3(this.f$0, dialogInterface);
+        TileServiceRequestController.m2956createDialog$lambda5$lambda3(this.f$0, dialogInterface);
     }
 }

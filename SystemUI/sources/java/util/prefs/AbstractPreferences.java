@@ -684,7 +684,7 @@ public abstract class AbstractPreferences extends Preferences {
          */
         /* JADX WARNING: Code restructure failed: missing block: B:6:0x0017, code lost:
             r1 = 0;
-            r0 = (java.util.EventObject) java.util.prefs.AbstractPreferences.m3838$$Nest$sfgeteventQueue().remove(0);
+            r0 = (java.util.EventObject) java.util.prefs.AbstractPreferences.m3856$$Nest$sfgeteventQueue().remove(0);
          */
         /* JADX WARNING: Code restructure failed: missing block: B:9:0x0023, code lost:
             r3 = (java.util.prefs.AbstractPreferences) r0.getSource();

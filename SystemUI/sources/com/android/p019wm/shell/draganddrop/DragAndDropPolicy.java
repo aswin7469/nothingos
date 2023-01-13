@@ -22,7 +22,7 @@ import android.util.Slog;
 import androidx.core.content.p003pm.ShortcutManagerCompat;
 import com.android.internal.logging.InstanceId;
 import com.android.internal.protolog.common.ProtoLog;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.common.DisplayLayout;
 import com.android.p019wm.shell.protolog.ShellProtoLogGroup;
 import com.android.p019wm.shell.splitscreen.SplitScreenController;
@@ -119,7 +119,7 @@ public class DragAndDropPolicy {
         boolean isLandscape = this.mSession.displayLayout.isLandscape();
         SplitScreenController splitScreenController = this.mSplitScreen;
         boolean z = splitScreenController != null && splitScreenController.isSplitScreenVisible();
-        float dimensionPixelSize = (float) this.mContext.getResources().getDimensionPixelSize(C3343R.dimen.split_divider_bar_width);
+        float dimensionPixelSize = (float) this.mContext.getResources().getDimensionPixelSize(C3353R.dimen.split_divider_bar_width);
         if (z || (this.mSession.runningTaskActType == 1 && this.mSession.runningTaskWinMode == 1)) {
             Rect rect4 = new Rect();
             Rect rect5 = new Rect();

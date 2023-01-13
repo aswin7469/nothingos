@@ -181,13 +181,13 @@ public class PasspointNetworkDetailsTracker extends NetworkDetailsTracker {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$conditionallyUpdateConfig$2$com-android-wifitrackerlib-PasspointNetworkDetailsTracker */
-    public /* synthetic */ boolean mo47819x38068e71(PasspointConfiguration passpointConfiguration) {
+    public /* synthetic */ boolean mo47828x38068e71(PasspointConfiguration passpointConfiguration) {
         return TextUtils.equals(PasspointWifiEntry.uniqueIdToPasspointWifiEntryKey(passpointConfiguration.getUniqueId()), this.mChosenEntry.getKey());
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$conditionallyUpdateConfig$3$com-android-wifitrackerlib-PasspointNetworkDetailsTracker */
-    public /* synthetic */ void mo47820x48bc5b32(PasspointConfiguration passpointConfiguration) {
+    public /* synthetic */ void mo47829x48bc5b32(PasspointConfiguration passpointConfiguration) {
         this.mChosenEntry.updatePasspointConfig(passpointConfiguration);
     }
 

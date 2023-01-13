@@ -13,6 +13,6 @@ public final /* synthetic */ class TunerServiceImpl$$ExternalSyntheticLambda2 im
     }
 
     public final Object get() {
-        return this.f$0.m3261lambda$addTunable$1$comandroidsystemuitunerTunerServiceImpl(this.f$1);
+        return this.f$0.m3266lambda$addTunable$1$comandroidsystemuitunerTunerServiceImpl(this.f$1);
     }
 }

@@ -9,7 +9,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.statusbar.AlphaOptimizedImageView;
 
 public class DreamOverlayDotImageView extends AlphaOptimizedImageView {
@@ -29,7 +29,7 @@ public class DreamOverlayDotImageView extends AlphaOptimizedImageView {
 
     public DreamOverlayDotImageView(Context context, AttributeSet attributeSet, int i, int i2) {
         super(context, attributeSet, i, i2);
-        TypedArray obtainStyledAttributes = context.getTheme().obtainStyledAttributes(attributeSet, C1893R.styleable.DreamOverlayDotImageView, 0, 0);
+        TypedArray obtainStyledAttributes = context.getTheme().obtainStyledAttributes(attributeSet, C1894R.styleable.DreamOverlayDotImageView, 0, 0);
         try {
             this.mDotColor = obtainStyledAttributes.getColor(0, -1);
         } finally {

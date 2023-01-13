@@ -13,6 +13,6 @@ public final /* synthetic */ class NotificationIconAreaController$$ExternalSynth
     }
 
     public final void run() {
-        this.f$0.mo44464x70773fbd(this.f$1);
+        this.f$0.mo44479x70773fbd(this.f$1);
     }
 }

@@ -12,7 +12,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.view.AccessibilityDelegateCompat;
 import androidx.core.view.ViewCompat;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.timepicker.ClockHandView;
@@ -58,25 +58,25 @@ class TimePickerView extends ConstraintLayout implements TimePickerControls {
         this.selectionListener = new View.OnClickListener() {
             public void onClick(View view) {
                 if (TimePickerView.this.onSelectionChangeListener != null) {
-                    TimePickerView.this.onSelectionChangeListener.onSelectionChanged(((Integer) view.getTag(C3621R.C3624id.selection_type)).intValue());
+                    TimePickerView.this.onSelectionChangeListener.onSelectionChanged(((Integer) view.getTag(C3631R.C3634id.selection_type)).intValue());
                 }
             }
         };
-        LayoutInflater.from(context).inflate(C3621R.layout.material_timepicker, this);
-        this.clockFace = (ClockFaceView) findViewById(C3621R.C3624id.material_clock_face);
-        MaterialButtonToggleGroup materialButtonToggleGroup = (MaterialButtonToggleGroup) findViewById(C3621R.C3624id.material_clock_period_toggle);
+        LayoutInflater.from(context).inflate(C3631R.layout.material_timepicker, this);
+        this.clockFace = (ClockFaceView) findViewById(C3631R.C3634id.material_clock_face);
+        MaterialButtonToggleGroup materialButtonToggleGroup = (MaterialButtonToggleGroup) findViewById(C3631R.C3634id.material_clock_period_toggle);
         this.toggle = materialButtonToggleGroup;
         materialButtonToggleGroup.addOnButtonCheckedListener(new MaterialButtonToggleGroup.OnButtonCheckedListener() {
             public void onButtonChecked(MaterialButtonToggleGroup materialButtonToggleGroup, int i, boolean z) {
-                int i2 = i == C3621R.C3624id.material_clock_period_pm_button ? 1 : 0;
+                int i2 = i == C3631R.C3634id.material_clock_period_pm_button ? 1 : 0;
                 if (TimePickerView.this.onPeriodChangeListener != null && z) {
                     TimePickerView.this.onPeriodChangeListener.onPeriodChange(i2);
                 }
             }
         });
-        this.minuteView = (Chip) findViewById(C3621R.C3624id.material_minute_tv);
-        this.hourView = (Chip) findViewById(C3621R.C3624id.material_hour_tv);
-        this.clockHandView = (ClockHandView) findViewById(C3621R.C3624id.material_clock_hand);
+        this.minuteView = (Chip) findViewById(C3631R.C3634id.material_minute_tv);
+        this.hourView = (Chip) findViewById(C3631R.C3634id.material_hour_tv);
+        this.clockHandView = (ClockHandView) findViewById(C3631R.C3634id.material_clock_hand);
         setupDoubleTap();
         setUpDisplay();
     }
@@ -92,7 +92,7 @@ class TimePickerView extends ConstraintLayout implements TimePickerControls {
                 return true;
             }
         });
-        C38814 r1 = new View.OnTouchListener() {
+        C38914 r1 = new View.OnTouchListener() {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (((Checkable) view).isChecked()) {
                     return gestureDetector.onTouchEvent(motionEvent);
@@ -113,8 +113,8 @@ class TimePickerView extends ConstraintLayout implements TimePickerControls {
     }
 
     private void setUpDisplay() {
-        this.minuteView.setTag(C3621R.C3624id.selection_type, 12);
-        this.hourView.setTag(C3621R.C3624id.selection_type, 10);
+        this.minuteView.setTag(C3631R.C3634id.selection_type, 12);
+        this.hourView.setTag(C3631R.C3634id.selection_type, 10);
         this.minuteView.setOnClickListener(this.selectionListener);
         this.hourView.setOnClickListener(this.selectionListener);
         this.minuteView.setAccessibilityClassName(GENERIC_VIEW_ACCESSIBILITY_CLASS_NAME);
@@ -140,9 +140,9 @@ class TimePickerView extends ConstraintLayout implements TimePickerControls {
     public void updateTime(int i, int i2, int i3) {
         int i4;
         if (i == 1) {
-            i4 = C3621R.C3624id.material_clock_period_pm_button;
+            i4 = C3631R.C3634id.material_clock_period_pm_button;
         } else {
-            i4 = C3621R.C3624id.material_clock_period_am_button;
+            i4 = C3631R.C3634id.material_clock_period_am_button;
         }
         this.toggle.check(i4);
         Locale locale = getResources().getConfiguration().locale;
@@ -220,7 +220,7 @@ class TimePickerView extends ConstraintLayout implements TimePickerControls {
             if (ViewCompat.getLayoutDirection(this) == 0) {
                 i = 2;
             }
-            constraintSet.clear(C3621R.C3624id.material_clock_display, i);
+            constraintSet.clear(C3631R.C3634id.material_clock_display, i);
             constraintSet.applyTo(this);
         }
     }

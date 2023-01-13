@@ -15,6 +15,6 @@ public final /* synthetic */ class ControlActionCoordinatorImpl$$ExternalSynthet
     }
 
     public final void onCancel(DialogInterface dialogInterface) {
-        ControlActionCoordinatorImpl.m2682showSettingsDialogIfNeeded$lambda8(this.f$0, this.f$1, dialogInterface);
+        ControlActionCoordinatorImpl.m2687showSettingsDialogIfNeeded$lambda8(this.f$0, this.f$1, dialogInterface);
     }
 }

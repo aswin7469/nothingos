@@ -14,6 +14,6 @@ public final /* synthetic */ class ApplicationsState$AppEntry$$ExternalSynthetic
     }
 
     public final void run() {
-        this.f$0.mo27985x3d24fd27(this.f$1);
+        this.f$0.mo27990x3d24fd27(this.f$1);
     }
 }

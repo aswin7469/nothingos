@@ -488,13 +488,13 @@ public class Base64 {
     private static class EncOutputStream extends FilterOutputStream {
 
         /* renamed from: b0 */
-        private int f636b0;
+        private int f634b0;
 
         /* renamed from: b1 */
-        private int f637b1;
+        private int f635b1;
 
         /* renamed from: b2 */
-        private int f638b2;
+        private int f636b2;
         private final char[] base64;
         private boolean closed = false;
         private final boolean doPadding;
@@ -532,7 +532,7 @@ public class Base64 {
                 if (i3 != 0) {
                     if (i3 == 1) {
                         int i4 = i + 1;
-                        this.f637b1 = bArr[i] & 255;
+                        this.f635b1 = bArr[i] & 255;
                         i2--;
                         if (i2 == 0) {
                             this.leftover = i3 + 1;
@@ -540,13 +540,13 @@ public class Base64 {
                         }
                         i = i4;
                     }
-                    this.f638b2 = bArr[i] & 255;
+                    this.f636b2 = bArr[i] & 255;
                     i2--;
                     checkNewline();
-                    this.out.write((int) this.base64[this.f636b0 >> 2]);
-                    this.out.write((int) this.base64[((this.f636b0 << 4) & 63) | (this.f637b1 >> 4)]);
-                    this.out.write((int) this.base64[((this.f637b1 << 2) & 63) | (this.f638b2 >> 6)]);
-                    this.out.write((int) this.base64[this.f638b2 & 63]);
+                    this.out.write((int) this.base64[this.f634b0 >> 2]);
+                    this.out.write((int) this.base64[((this.f634b0 << 4) & 63) | (this.f635b1 >> 4)]);
+                    this.out.write((int) this.base64[((this.f635b1 << 2) & 63) | (this.f636b2 >> 6)]);
+                    this.out.write((int) this.base64[this.f636b2 & 63]);
                     this.linepos += 4;
                     i++;
                 }
@@ -571,10 +571,10 @@ public class Base64 {
                 }
                 int i9 = this.leftover;
                 if (i9 == 1) {
-                    this.f636b0 = bArr[i] & 255;
+                    this.f634b0 = bArr[i] & 255;
                 } else if (i9 == 2) {
-                    this.f636b0 = bArr[i] & 255;
-                    this.f637b1 = bArr[i + 1] & 255;
+                    this.f634b0 = bArr[i] & 255;
+                    this.f635b1 = bArr[i + 1] & 255;
                 }
             }
         }
@@ -585,17 +585,17 @@ public class Base64 {
                 int i = this.leftover;
                 if (i == 1) {
                     checkNewline();
-                    this.out.write((int) this.base64[this.f636b0 >> 2]);
-                    this.out.write((int) this.base64[(this.f636b0 << 4) & 63]);
+                    this.out.write((int) this.base64[this.f634b0 >> 2]);
+                    this.out.write((int) this.base64[(this.f634b0 << 4) & 63]);
                     if (this.doPadding) {
                         this.out.write(61);
                         this.out.write(61);
                     }
                 } else if (i == 2) {
                     checkNewline();
-                    this.out.write((int) this.base64[this.f636b0 >> 2]);
-                    this.out.write((int) this.base64[((this.f636b0 << 4) & 63) | (this.f637b1 >> 4)]);
-                    this.out.write((int) this.base64[(this.f637b1 << 2) & 63]);
+                    this.out.write((int) this.base64[this.f634b0 >> 2]);
+                    this.out.write((int) this.base64[((this.f634b0 << 4) & 63) | (this.f635b1 >> 4)]);
+                    this.out.write((int) this.base64[(this.f635b1 << 2) & 63]);
                     if (this.doPadding) {
                         this.out.write(61);
                     }
@@ -613,14 +613,14 @@ public class Base64 {
         private boolean eof = false;
 
         /* renamed from: is */
-        private final InputStream f635is;
+        private final InputStream f633is;
         private final boolean isMIME;
         private int nextin = 18;
         private int nextout = -8;
         private byte[] sbBuf = new byte[1];
 
         DecInputStream(InputStream inputStream, int[] iArr, boolean z) {
-            this.f635is = inputStream;
+            this.f633is = inputStream;
             this.base64 = iArr;
             this.isMIME = z;
         }
@@ -666,7 +666,7 @@ public class Base64 {
                     if (i2 <= 0) {
                         break;
                     }
-                    int read = this.f635is.read();
+                    int read = this.f633is.read();
                     if (read == -1) {
                         this.eof = true;
                         int i9 = this.nextin;
@@ -696,7 +696,7 @@ public class Base64 {
                         return i3 - i;
                     } else if (read == 61) {
                         int i13 = this.nextin;
-                        if (i13 == 18 || i13 == 12 || (i13 == 6 && this.f635is.read() != 61)) {
+                        if (i13 == 18 || i13 == 12 || (i13 == 6 && this.f633is.read() != 61)) {
                             throw new IOException("Illegal base64 ending sequence:" + this.nextin);
                         }
                         int i14 = i3 + 1;
@@ -754,7 +754,7 @@ public class Base64 {
 
         public int available() throws IOException {
             if (!this.closed) {
-                return this.f635is.available();
+                return this.f633is.available();
             }
             throw new IOException("Stream is closed");
         }
@@ -762,7 +762,7 @@ public class Base64 {
         public void close() throws IOException {
             if (!this.closed) {
                 this.closed = true;
-                this.f635is.close();
+                this.f633is.close();
             }
         }
     }

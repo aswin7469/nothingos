@@ -12,6 +12,6 @@ public final /* synthetic */ class OperatorNameViewController$$ExternalSynthetic
     }
 
     public final void onDarkChanged(ArrayList arrayList, float f, int i) {
-        this.f$0.mo38980x9ffb20e7(arrayList, f, i);
+        this.f$0.mo38981x9ffb20e7(arrayList, f, i);
     }
 }

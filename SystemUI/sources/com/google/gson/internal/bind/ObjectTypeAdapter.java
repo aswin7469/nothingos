@@ -26,7 +26,7 @@ public final class ObjectTypeAdapter extends TypeAdapter<Object> {
     }
 
     /* renamed from: com.google.gson.internal.bind.ObjectTypeAdapter$2 */
-    static /* synthetic */ class C40182 {
+    static /* synthetic */ class C40282 {
         static final /* synthetic */ int[] $SwitchMap$com$google$gson$stream$JsonToken;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(14:0|1|2|3|4|5|6|7|8|9|10|11|12|14) */
@@ -79,12 +79,12 @@ public final class ObjectTypeAdapter extends TypeAdapter<Object> {
             L_0x0049:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: com.google.gson.internal.bind.ObjectTypeAdapter.C40182.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: com.google.gson.internal.bind.ObjectTypeAdapter.C40282.<clinit>():void");
         }
     }
 
     public Object read(JsonReader jsonReader) throws IOException {
-        switch (C40182.$SwitchMap$com$google$gson$stream$JsonToken[jsonReader.peek().ordinal()]) {
+        switch (C40282.$SwitchMap$com$google$gson$stream$JsonToken[jsonReader.peek().ordinal()]) {
             case 1:
                 ArrayList arrayList = new ArrayList();
                 jsonReader.beginArray();

@@ -17,7 +17,7 @@ import com.android.internal.logging.InstanceId;
 import com.android.internal.logging.UiEventLogger;
 import com.android.internal.protolog.common.ProtoLog;
 import com.android.launcher3.icons.IconProvider;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.common.DisplayController;
 import com.android.p019wm.shell.common.ShellExecutor;
 import com.android.p019wm.shell.protolog.ShellProtoLogGroup;
@@ -87,7 +87,7 @@ public class DragAndDropController implements DisplayController.OnDisplaysChange
             layoutParams.layoutInDisplayCutoutMode = 3;
             layoutParams.setFitInsetsTypes(0);
             layoutParams.setTitle("ShellDropTarget");
-            FrameLayout frameLayout = (FrameLayout) LayoutInflater.from(createWindowContext).inflate(C3343R.layout.global_drop_target, (ViewGroup) null);
+            FrameLayout frameLayout = (FrameLayout) LayoutInflater.from(createWindowContext).inflate(C3353R.layout.global_drop_target, (ViewGroup) null);
             frameLayout.setOnDragListener(this);
             frameLayout.setVisibility(4);
             DragLayout dragLayout = new DragLayout(createWindowContext, this.mSplitScreen, this.mIconProvider);
@@ -118,7 +118,7 @@ public class DragAndDropController implements DisplayController.OnDisplaysChange
         ProtoLog.v(ShellProtoLogGroup.WM_SHELL_DRAG_AND_DROP, "Display removed: %d", new Object[]{Integer.valueOf(i)});
         PerDisplay perDisplay = this.mDisplayDropTargets.get(i);
         if (perDisplay != null) {
-            perDisplay.f405wm.removeViewImmediate(perDisplay.rootView);
+            perDisplay.f404wm.removeViewImmediate(perDisplay.rootView);
             this.mDisplayDropTargets.remove(i);
         }
     }
@@ -178,7 +178,7 @@ public class DragAndDropController implements DisplayController.OnDisplaysChange
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onDrag$0$com-android-wm-shell-draganddrop-DragAndDropController */
-    public /* synthetic */ void mo49481x2f313c31(PerDisplay perDisplay) {
+    public /* synthetic */ void mo49490x2f313c31(PerDisplay perDisplay) {
         if (perDisplay.activeDragCount == 0) {
             setDropTargetWindowVisibility(perDisplay, 4);
         }
@@ -191,7 +191,7 @@ public class DragAndDropController implements DisplayController.OnDisplaysChange
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$handleDrop$1$com-android-wm-shell-draganddrop-DragAndDropController */
-    public /* synthetic */ void mo49480x1217bc8c(PerDisplay perDisplay) {
+    public /* synthetic */ void mo49489x1217bc8c(PerDisplay perDisplay) {
         if (perDisplay.activeDragCount == 0) {
             setDropTargetWindowVisibility(perDisplay, 4);
         }
@@ -240,12 +240,12 @@ public class DragAndDropController implements DisplayController.OnDisplaysChange
         final FrameLayout rootView;
 
         /* renamed from: wm */
-        final WindowManager f405wm;
+        final WindowManager f404wm;
 
         PerDisplay(int i, Context context2, WindowManager windowManager, FrameLayout frameLayout, DragLayout dragLayout2) {
             this.displayId = i;
             this.context = context2;
-            this.f405wm = windowManager;
+            this.f404wm = windowManager;
             this.rootView = frameLayout;
             this.dragLayout = dragLayout2;
         }
@@ -262,7 +262,7 @@ public class DragAndDropController implements DisplayController.OnDisplaysChange
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onThemeChanged$0$com-android-wm-shell-draganddrop-DragAndDropController$DragAndDropImpl */
-        public /* synthetic */ void mo49485x5a5d1aa8() {
+        public /* synthetic */ void mo49494x5a5d1aa8() {
             DragAndDropController.this.onThemeChange();
         }
 
@@ -272,7 +272,7 @@ public class DragAndDropController implements DisplayController.OnDisplaysChange
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onConfigChanged$1$com-android-wm-shell-draganddrop-DragAndDropController$DragAndDropImpl */
-        public /* synthetic */ void mo49484x8bb88078(Configuration configuration) {
+        public /* synthetic */ void mo49493x8bb88078(Configuration configuration) {
             DragAndDropController.this.onConfigChanged(configuration);
         }
     }

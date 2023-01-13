@@ -6,7 +6,7 @@ import android.os.Looper;
 import android.view.View;
 import android.widget.Switch;
 import com.android.internal.logging.MetricsLogger;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.qualifiers.Background;
 import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.p012qs.QSHost;
@@ -84,7 +84,7 @@ public class BatterySaverTile extends QSTileImpl<QSTile.BooleanState> implements
     }
 
     public CharSequence getTileLabel() {
-        return this.mContext.getString(C1893R.string.battery_detail_switch_title);
+        return this.mContext.getString(C1894R.string.battery_detail_switch_title);
     }
 
     /* access modifiers changed from: protected */
@@ -98,7 +98,7 @@ public class BatterySaverTile extends QSTileImpl<QSTile.BooleanState> implements
         }
         booleanState.state = i;
         booleanState.icon = this.mIcon;
-        booleanState.label = this.mContext.getString(C1893R.string.battery_detail_switch_title);
+        booleanState.label = this.mContext.getString(C1894R.string.battery_detail_switch_title);
         booleanState.secondaryLabel = "";
         booleanState.contentDescription = booleanState.label;
         booleanState.value = this.mPowerSave;

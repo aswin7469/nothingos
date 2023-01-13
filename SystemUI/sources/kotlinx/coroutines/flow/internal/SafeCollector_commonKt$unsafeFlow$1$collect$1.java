@@ -5,7 +5,7 @@ import kotlin.coroutines.Continuation;
 import kotlin.coroutines.jvm.internal.ContinuationImpl;
 import kotlinx.coroutines.flow.FlowCollector;
 
-@Metadata(mo64988k = 3, mo64989mv = {1, 5, 1}, mo64991xi = 48)
+@Metadata(mo65044k = 3, mo65045mv = {1, 5, 1}, mo65047xi = 48)
 /* compiled from: SafeCollector.common.kt */
 public final class SafeCollector_commonKt$unsafeFlow$1$collect$1 extends ContinuationImpl {
     int label;

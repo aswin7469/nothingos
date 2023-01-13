@@ -1103,7 +1103,7 @@ public final class DateTimeFormatterBuilder {
             if (str.length() <= this.maxWidth) {
                 String convertNumberToI18N = decimalStyle.convertNumberToI18N(str);
                 if (value2 >= 0) {
-                    int i = C28773.$SwitchMap$java$time$format$SignStyle[this.signStyle.ordinal()];
+                    int i = C28833.$SwitchMap$java$time$format$SignStyle[this.signStyle.ordinal()];
                     if (i == 1) {
                         int i2 = this.minWidth;
                         if (i2 < 19 && value2 >= EXCEED_POINTS[i2]) {
@@ -1113,7 +1113,7 @@ public final class DateTimeFormatterBuilder {
                         sb.append(decimalStyle.getPositiveSign());
                     }
                 } else {
-                    int i3 = C28773.$SwitchMap$java$time$format$SignStyle[this.signStyle.ordinal()];
+                    int i3 = C28833.$SwitchMap$java$time$format$SignStyle[this.signStyle.ordinal()];
                     if (i3 == 1 || i3 == 2 || i3 == 3) {
                         sb.append(decimalStyle.getNegativeSign());
                     } else if (i3 == 4) {
@@ -1399,7 +1399,7 @@ public final class DateTimeFormatterBuilder {
     }
 
     /* renamed from: java.time.format.DateTimeFormatterBuilder$3 */
-    static /* synthetic */ class C28773 {
+    static /* synthetic */ class C28833 {
         static final /* synthetic */ int[] $SwitchMap$java$time$format$SignStyle;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(8:0|1|2|3|4|5|6|(3:7|8|10)) */
@@ -1438,12 +1438,12 @@ public final class DateTimeFormatterBuilder {
             L_0x0033:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: java.time.format.DateTimeFormatterBuilder.C28773.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: java.time.format.DateTimeFormatterBuilder.C28833.<clinit>():void");
         }
     }
 
     static final class ReducedPrinterParser extends NumberPrinterParser {
-        static final LocalDate BASE_DATE = LocalDate.m908of(2000, 1, 1);
+        static final LocalDate BASE_DATE = LocalDate.m906of(2000, 1, 1);
         private final ChronoLocalDate baseDate;
         private final int baseValue;
 
@@ -1491,7 +1491,7 @@ public final class DateTimeFormatterBuilder {
             int i3 = this.baseValue;
             if (this.baseDate != null) {
                 i3 = dateTimeParseContext.getEffectiveChronology().date(this.baseDate).get(this.field);
-                dateTimeParseContext.addChronoChangedListener(new C2880xdc213142(this, dateTimeParseContext, j, i, i2));
+                dateTimeParseContext.addChronoChangedListener(new C2886xdc213142(this, dateTimeParseContext, j, i, i2));
             }
             if (i2 - i == this.minWidth && j >= 0) {
                 long j2 = EXCEED_POINTS[this.minWidth];
@@ -1507,7 +1507,7 @@ public final class DateTimeFormatterBuilder {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$setValue$0$java-time-format-DateTimeFormatterBuilder$ReducedPrinterParser */
-        public /* synthetic */ void mo43507xdf3a601e(DateTimeParseContext dateTimeParseContext, long j, int i, int i2, Chronology chronology) {
+        public /* synthetic */ void mo43515xdf3a601e(DateTimeParseContext dateTimeParseContext, long j, int i, int i2, Chronology chronology) {
             setValue(dateTimeParseContext, j, i, i2);
         }
 
@@ -1857,7 +1857,7 @@ public final class DateTimeFormatterBuilder {
                 i2 = 59;
                 DateTimeParseContext dateTimeParseContext2 = dateTimeParseContext;
                 int i8 = i;
-                return dateTimeParseContext2.setParsedField(ChronoField.NANO_OF_SECOND, (long) intValue6, i8, dateTimeParseContext2.setParsedField(ChronoField.INSTANT_SECONDS, Math.multiplyExact(longValue / 10000, (long) SECONDS_PER_10000_YEARS) + LocalDateTime.m912of(((int) longValue) % 10000, intValue, intValue2, i3, intValue4, i2, 0).plusDays((long) i6).toEpochSecond(ZoneOffset.UTC), i8, parse));
+                return dateTimeParseContext2.setParsedField(ChronoField.NANO_OF_SECOND, (long) intValue6, i8, dateTimeParseContext2.setParsedField(ChronoField.INSTANT_SECONDS, Math.multiplyExact(longValue / 10000, (long) SECONDS_PER_10000_YEARS) + LocalDateTime.m910of(((int) longValue) % 10000, intValue, intValue2, i3, intValue4, i2, 0).plusDays((long) i6).toEpochSecond(ZoneOffset.UTC), i8, parse));
             } else {
                 i3 = intValue3;
             }
@@ -1865,7 +1865,7 @@ public final class DateTimeFormatterBuilder {
             try {
                 DateTimeParseContext dateTimeParseContext22 = dateTimeParseContext;
                 int i82 = i;
-                return dateTimeParseContext22.setParsedField(ChronoField.NANO_OF_SECOND, (long) intValue6, i82, dateTimeParseContext22.setParsedField(ChronoField.INSTANT_SECONDS, Math.multiplyExact(longValue / 10000, (long) SECONDS_PER_10000_YEARS) + LocalDateTime.m912of(((int) longValue) % 10000, intValue, intValue2, i3, intValue4, i2, 0).plusDays((long) i6).toEpochSecond(ZoneOffset.UTC), i82, parse));
+                return dateTimeParseContext22.setParsedField(ChronoField.NANO_OF_SECOND, (long) intValue6, i82, dateTimeParseContext22.setParsedField(ChronoField.INSTANT_SECONDS, Math.multiplyExact(longValue / 10000, (long) SECONDS_PER_10000_YEARS) + LocalDateTime.m910of(((int) longValue) % 10000, intValue, intValue2, i3, intValue4, i2, 0).plusDays((long) i6).toEpochSecond(ZoneOffset.UTC), i82, parse));
             } catch (RuntimeException unused) {
                 return ~i4;
             }
@@ -2807,7 +2807,7 @@ public final class DateTimeFormatterBuilder {
                         if (length < i5 || !dateTimeParseContext.charEquals(charSequence.charAt(i2), '0')) {
                             return parseOffsetBased(dateTimeParseContext, charSequence, i, i2, OffsetIdPrinterParser.INSTANCE_ID_ZERO);
                         }
-                        dateTimeParseContext.setParsed(ZoneId.m932of("GMT0"));
+                        dateTimeParseContext.setParsed(ZoneId.m930of("GMT0"));
                         return i5;
                     }
                 }
@@ -2815,7 +2815,7 @@ public final class DateTimeFormatterBuilder {
                 ParsePosition parsePosition = new ParsePosition(i);
                 String match = tree.match(charSequence, parsePosition);
                 if (match != null) {
-                    dateTimeParseContext.setParsed(ZoneId.m932of(match));
+                    dateTimeParseContext.setParsed(ZoneId.m930of(match));
                     return parsePosition.getIndex();
                 } else if (!dateTimeParseContext.charEquals(charAt, 'Z')) {
                     return ~i;
@@ -2829,13 +2829,13 @@ public final class DateTimeFormatterBuilder {
         private int parseOffsetBased(DateTimeParseContext dateTimeParseContext, CharSequence charSequence, int i, int i2, OffsetIdPrinterParser offsetIdPrinterParser) {
             String upperCase = charSequence.subSequence(i, i2).toString().toUpperCase();
             if (i2 >= charSequence.length()) {
-                dateTimeParseContext.setParsed(ZoneId.m932of(upperCase));
+                dateTimeParseContext.setParsed(ZoneId.m930of(upperCase));
                 return i2;
             } else if (charSequence.charAt(i2) == '0' && upperCase.equals("GMT")) {
-                dateTimeParseContext.setParsed(ZoneId.m932of("GMT0"));
+                dateTimeParseContext.setParsed(ZoneId.m930of("GMT0"));
                 return i2 + 1;
             } else if (charSequence.charAt(i2) == '0' || dateTimeParseContext.charEquals(charSequence.charAt(i2), 'Z')) {
-                dateTimeParseContext.setParsed(ZoneId.m932of(upperCase));
+                dateTimeParseContext.setParsed(ZoneId.m930of(upperCase));
                 return i2;
             } else {
                 DateTimeParseContext copy = dateTimeParseContext.copy();
@@ -2845,7 +2845,7 @@ public final class DateTimeFormatterBuilder {
                         if (offsetIdPrinterParser == OffsetIdPrinterParser.INSTANCE_ID_Z) {
                             return ~i;
                         }
-                        dateTimeParseContext.setParsed(ZoneId.m932of(upperCase));
+                        dateTimeParseContext.setParsed(ZoneId.m930of(upperCase));
                         return i2;
                     } catch (DateTimeException unused) {
                         return ~i;
@@ -2865,7 +2865,7 @@ public final class DateTimeFormatterBuilder {
     static class PrefixTree {
 
         /* renamed from: c0 */
-        protected char f383c0;
+        protected char f382c0;
         protected PrefixTree child;
         protected String key;
         protected PrefixTree sibling;
@@ -2886,9 +2886,9 @@ public final class DateTimeFormatterBuilder {
             this.value = str2;
             this.child = prefixTree;
             if (str.isEmpty()) {
-                this.f383c0 = 65535;
+                this.f382c0 = 65535;
             } else {
-                this.f383c0 = this.key.charAt(0);
+                this.f382c0 = this.key.charAt(0);
             }
         }
 
@@ -2896,7 +2896,7 @@ public final class DateTimeFormatterBuilder {
             if (dateTimeParseContext.isCaseSensitive()) {
                 return new PrefixTree("", (String) null, (PrefixTree) null);
             }
-            return new C2878CI("", (String) null, (PrefixTree) null);
+            return new C2884CI("", (String) null, (PrefixTree) null);
         }
 
         public static PrefixTree newTree(Set<String> set, DateTimeParseContext dateTimeParseContext) {
@@ -2941,7 +2941,7 @@ public final class DateTimeFormatterBuilder {
             } else if (prefixLength < key2.length()) {
                 String substring = key2.substring(prefixLength);
                 for (PrefixTree prefixTree = this.child; prefixTree != null; prefixTree = prefixTree.sibling) {
-                    if (isEqual(prefixTree.f383c0, substring.charAt(0))) {
+                    if (isEqual(prefixTree.f382c0, substring.charAt(0))) {
                         return prefixTree.add0(substring, str2);
                     }
                 }
@@ -2964,7 +2964,7 @@ public final class DateTimeFormatterBuilder {
                 return this.value;
             }
             PrefixTree prefixTree = this.child;
-            while (!isEqual(prefixTree.f383c0, charSequence.charAt(length))) {
+            while (!isEqual(prefixTree.f382c0, charSequence.charAt(length))) {
                 prefixTree = prefixTree.sibling;
                 if (prefixTree == null) {
                     return this.value;
@@ -2987,7 +2987,7 @@ public final class DateTimeFormatterBuilder {
             PrefixTree prefixTree = this.child;
             if (prefixTree != null && length2 != length) {
                 while (true) {
-                    if (!isEqual(prefixTree.f383c0, charSequence.charAt(length2))) {
+                    if (!isEqual(prefixTree.f382c0, charSequence.charAt(length2))) {
                         prefixTree = prefixTree.sibling;
                         if (prefixTree == null) {
                             break;
@@ -3045,14 +3045,14 @@ public final class DateTimeFormatterBuilder {
         }
 
         /* renamed from: java.time.format.DateTimeFormatterBuilder$PrefixTree$CI */
-        private static class C2878CI extends PrefixTree {
-            private C2878CI(String str, String str2, PrefixTree prefixTree) {
+        private static class C2884CI extends PrefixTree {
+            private C2884CI(String str, String str2, PrefixTree prefixTree) {
                 super(str, str2, prefixTree);
             }
 
             /* access modifiers changed from: protected */
-            public C2878CI newNode(String str, String str2, PrefixTree prefixTree) {
-                return new C2878CI(str, str2, prefixTree);
+            public C2884CI newNode(String str, String str2, PrefixTree prefixTree) {
+                return new C2884CI(str, str2, prefixTree);
             }
 
             /* access modifiers changed from: protected */
@@ -3084,7 +3084,7 @@ public final class DateTimeFormatterBuilder {
             }
         }
 
-        private static class LENIENT extends C2878CI {
+        private static class LENIENT extends C2884CI {
             private boolean isLenientChar(char c) {
                 return c == ' ' || c == '_' || c == '/';
             }
@@ -3094,7 +3094,7 @@ public final class DateTimeFormatterBuilder {
             }
 
             /* access modifiers changed from: protected */
-            public C2878CI newNode(String str, String str2, PrefixTree prefixTree) {
+            public C2884CI newNode(String str, String str2, PrefixTree prefixTree) {
                 return new LENIENT(str, str2, prefixTree);
             }
 
@@ -3150,7 +3150,7 @@ public final class DateTimeFormatterBuilder {
                     if (i4 < length) {
                         PrefixTree prefixTree = this.child;
                         while (true) {
-                            if (!isEqual(prefixTree.f383c0, charSequence.charAt(i4))) {
+                            if (!isEqual(prefixTree.f382c0, charSequence.charAt(i4))) {
                                 prefixTree = prefixTree.sibling;
                                 if (prefixTree == null) {
                                     break;
@@ -3219,7 +3219,7 @@ public final class DateTimeFormatterBuilder {
         }
 
         private String getChronologyName(Chronology chronology, Locale locale) {
-            return (String) Objects.requireNonNullElseGet(LocaleDisplayNames.getInstance(ULocale.forLocale(locale)).keyValueDisplayName("calendar", chronology.getCalendarType()), new C2879xfcd16acd(chronology));
+            return (String) Objects.requireNonNullElseGet(LocaleDisplayNames.getInstance(ULocale.forLocale(locale)).keyValueDisplayName("calendar", chronology.getCalendarType()), new C2885xfcd16acd(chronology));
         }
     }
 
@@ -3310,7 +3310,7 @@ public final class DateTimeFormatterBuilder {
         private DateTimePrinterParser printerParser(Locale locale) {
             TemporalField temporalField;
             SignStyle signStyle;
-            WeekFields of = WeekFields.m959of(locale);
+            WeekFields of = WeekFields.m957of(locale);
             char c = this.chr;
             if (c == 'W') {
                 temporalField = of.weekOfMonth();

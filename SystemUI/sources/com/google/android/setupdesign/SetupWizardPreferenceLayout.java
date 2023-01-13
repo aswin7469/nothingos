@@ -29,7 +29,7 @@ public class SetupWizardPreferenceLayout extends SetupWizardRecyclerLayout {
     /* access modifiers changed from: protected */
     public ViewGroup findContainer(int i) {
         if (i == 0) {
-            i = C3953R.C3956id.sud_layout_content;
+            i = C3963R.C3966id.sud_layout_content;
         }
         return super.findContainer(i);
     }
@@ -41,13 +41,13 @@ public class SetupWizardPreferenceLayout extends SetupWizardRecyclerLayout {
     /* access modifiers changed from: protected */
     public View onInflateTemplate(LayoutInflater layoutInflater, int i) {
         if (i == 0) {
-            i = C3953R.layout.sud_preference_template;
+            i = C3963R.layout.sud_preference_template;
         }
         return super.onInflateTemplate(layoutInflater, i);
     }
 
     /* access modifiers changed from: protected */
     public void onTemplateInflated() {
-        this.recyclerMixin = new RecyclerMixin(this, (RecyclerView) LayoutInflater.from(getContext()).inflate(C3953R.layout.sud_preference_recycler_view, this, false));
+        this.recyclerMixin = new RecyclerMixin(this, (RecyclerView) LayoutInflater.from(getContext()).inflate(C3963R.layout.sud_preference_recycler_view, this, false));
     }
 }

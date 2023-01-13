@@ -11,6 +11,6 @@ public final /* synthetic */ class PhoneStatusBarPolicy$$ExternalSyntheticLambda
     }
 
     public final Object get() {
-        return this.f$0.mo44961xc8809635();
+        return this.f$0.mo44976xc8809635();
     }
 }

@@ -7,25 +7,25 @@ import java.p026io.PrintStream;
 class RegexpNode {
 
     /* renamed from: c */
-    char f861c;
+    char f859c;
     int depth;
     boolean exact;
     RegexpNode firstchild;
     RegexpNode nextsibling;
 
     /* renamed from: re */
-    String f862re;
+    String f860re;
     Object result;
 
     RegexpNode() {
-        this.f862re = null;
-        this.f861c = '#';
+        this.f860re = null;
+        this.f859c = '#';
         this.depth = 0;
     }
 
     RegexpNode(char c, int i) {
-        this.f862re = null;
-        this.f861c = c;
+        this.f860re = null;
+        this.f859c = c;
         this.depth = i;
     }
 
@@ -37,7 +37,7 @@ class RegexpNode {
             regexpNode = new RegexpNode(c, this.depth + 1);
         } else {
             while (regexpNode2 != null) {
-                if (regexpNode2.f861c == c) {
+                if (regexpNode2.f859c == c) {
                     return regexpNode2;
                 }
                 regexpNode2 = regexpNode2.nextsibling;
@@ -52,7 +52,7 @@ class RegexpNode {
     /* access modifiers changed from: package-private */
     public RegexpNode find(char c) {
         for (RegexpNode regexpNode = this.firstchild; regexpNode != null; regexpNode = regexpNode.nextsibling) {
-            if (regexpNode.f861c == c) {
+            if (regexpNode.f859c == c) {
                 return regexpNode;
             }
         }
@@ -64,7 +64,7 @@ class RegexpNode {
         if (this.nextsibling != null) {
             printStream.print(NavigationBarInflaterView.KEY_CODE_START);
             while (this != null) {
-                printStream.write((int) this.f861c);
+                printStream.write((int) this.f859c);
                 RegexpNode regexpNode = this.firstchild;
                 if (regexpNode != null) {
                     regexpNode.print(printStream);
@@ -74,7 +74,7 @@ class RegexpNode {
             }
             return;
         }
-        printStream.write((int) this.f861c);
+        printStream.write((int) this.f859c);
         RegexpNode regexpNode2 = this.firstchild;
         if (regexpNode2 != null) {
             regexpNode2.print(printStream);

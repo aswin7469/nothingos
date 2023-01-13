@@ -12,6 +12,6 @@ public final /* synthetic */ class SensorPrivacyToggleTile$$ExternalSyntheticLam
     }
 
     public final void run() {
-        this.f$0.mo36923xb55eac88(this.f$1);
+        this.f$0.mo36921xb55eac88(this.f$1);
     }
 }

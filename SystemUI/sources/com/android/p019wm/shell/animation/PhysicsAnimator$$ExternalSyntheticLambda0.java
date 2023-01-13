@@ -15,6 +15,6 @@ public final /* synthetic */ class PhysicsAnimator$$ExternalSyntheticLambda0 imp
     }
 
     public final void onAnimationUpdate(DynamicAnimation dynamicAnimation, float f, float f2) {
-        PhysicsAnimator.m3394configureDynamicAnimation$lambda4(this.f$0, this.f$1, dynamicAnimation, f, f2);
+        PhysicsAnimator.m3398configureDynamicAnimation$lambda4(this.f$0, this.f$1, dynamicAnimation, f, f2);
     }
 }

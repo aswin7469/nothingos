@@ -11,7 +11,7 @@ import android.graphics.drawable.RippleDrawable;
 import android.util.AttributeSet;
 import android.view.View;
 import com.android.internal.util.ArrayUtils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 
 public class NotificationBackgroundView extends View {
     private int mActualHeight = -1;
@@ -23,7 +23,7 @@ public class NotificationBackgroundView extends View {
     private int mClipBottomAmount;
     private int mClipTopAmount;
     private final float[] mCornerRadii = new float[8];
-    private final boolean mDontModifyCorners = getResources().getBoolean(C1893R.bool.config_clipNotificationsToOutline);
+    private final boolean mDontModifyCorners = getResources().getBoolean(C1894R.bool.config_clipNotificationsToOutline);
     private int mDrawableAlpha = 255;
     private int mExpandAnimationHeight = -1;
     private boolean mExpandAnimationRunning;

@@ -51,10 +51,10 @@ public class WifiP2pServiceRequest implements Parcelable {
 
     public String getSupplicantQuery() {
         StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append(String.format(Locale.f700US, "%02x", Integer.valueOf(this.mLength & 255)));
-        stringBuffer.append(String.format(Locale.f700US, "%02x", Integer.valueOf((this.mLength >> 8) & 255)));
-        stringBuffer.append(String.format(Locale.f700US, "%02x", Integer.valueOf(this.mProtocolType)));
-        stringBuffer.append(String.format(Locale.f700US, "%02x", Integer.valueOf(this.mTransId)));
+        stringBuffer.append(String.format(Locale.f698US, "%02x", Integer.valueOf(this.mLength & 255)));
+        stringBuffer.append(String.format(Locale.f698US, "%02x", Integer.valueOf((this.mLength >> 8) & 255)));
+        stringBuffer.append(String.format(Locale.f698US, "%02x", Integer.valueOf(this.mProtocolType)));
+        stringBuffer.append(String.format(Locale.f698US, "%02x", Integer.valueOf(this.mTransId)));
         String str = this.mQuery;
         if (str != null) {
             stringBuffer.append(str);

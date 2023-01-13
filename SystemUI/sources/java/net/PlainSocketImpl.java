@@ -14,7 +14,7 @@ import sun.net.ExtendedOptionsImpl;
 
 class PlainSocketImpl extends AbstractPlainSocketImpl {
     PlainSocketImpl() {
-        this.f559fd = new FileDescriptor();
+        this.f557fd = new FileDescriptor();
     }
 
     /* access modifiers changed from: protected */
@@ -57,36 +57,36 @@ class PlainSocketImpl extends AbstractPlainSocketImpl {
 
     /* access modifiers changed from: package-private */
     public void socketCreate(boolean z) throws IOException {
-        this.f559fd.setInt$(IoBridge.socket(OsConstants.AF_INET6, z ? OsConstants.SOCK_STREAM : OsConstants.SOCK_DGRAM, 0).getInt$());
-        IoUtils.setFdOwner(this.f559fd, this);
+        this.f557fd.setInt$(IoBridge.socket(OsConstants.AF_INET6, z ? OsConstants.SOCK_STREAM : OsConstants.SOCK_DGRAM, 0).getInt$());
+        IoUtils.setFdOwner(this.f557fd, this);
         if (this.serverSocket != null) {
-            IoUtils.setBlocking(this.f559fd, false);
-            IoBridge.setSocketOption(this.f559fd, 4, true);
+            IoUtils.setBlocking(this.f557fd, false);
+            IoBridge.setSocketOption(this.f557fd, 4, true);
         }
     }
 
     /* access modifiers changed from: package-private */
     public void socketConnect(InetAddress inetAddress, int i, int i2) throws IOException {
-        if (this.f559fd == null || !this.f559fd.valid()) {
+        if (this.f557fd == null || !this.f557fd.valid()) {
             throw new SocketException("Socket closed");
         }
-        IoBridge.connect(this.f559fd, inetAddress, i, i2);
+        IoBridge.connect(this.f557fd, inetAddress, i, i2);
         this.address = inetAddress;
         this.port = i;
         if (this.localport == 0 && !isClosedOrPending()) {
-            this.localport = IoBridge.getLocalInetSocketAddress(this.f559fd).getPort();
+            this.localport = IoBridge.getLocalInetSocketAddress(this.f557fd).getPort();
         }
     }
 
     /* access modifiers changed from: package-private */
     public void socketBind(InetAddress inetAddress, int i) throws IOException {
-        if (this.f559fd == null || !this.f559fd.valid()) {
+        if (this.f557fd == null || !this.f557fd.valid()) {
             throw new SocketException("Socket closed");
         }
-        IoBridge.bind(this.f559fd, inetAddress, i);
+        IoBridge.bind(this.f557fd, inetAddress, i);
         this.address = inetAddress;
         if (i == 0) {
-            this.localport = IoBridge.getLocalInetSocketAddress(this.f559fd).getPort();
+            this.localport = IoBridge.getLocalInetSocketAddress(this.f557fd).getPort();
         } else {
             this.localport = i;
         }
@@ -94,11 +94,11 @@ class PlainSocketImpl extends AbstractPlainSocketImpl {
 
     /* access modifiers changed from: package-private */
     public void socketListen(int i) throws IOException {
-        if (this.f559fd == null || !this.f559fd.valid()) {
+        if (this.f557fd == null || !this.f557fd.valid()) {
             throw new SocketException("Socket closed");
         }
         try {
-            Libcore.f857os.listen(this.f559fd, i);
+            Libcore.f855os.listen(this.f557fd, i);
         } catch (ErrnoException e) {
             throw e.rethrowAsSocketException();
         }
@@ -106,18 +106,18 @@ class PlainSocketImpl extends AbstractPlainSocketImpl {
 
     /* access modifiers changed from: package-private */
     public void socketAccept(SocketImpl socketImpl) throws IOException {
-        if (this.f559fd == null || !this.f559fd.valid()) {
+        if (this.f557fd == null || !this.f557fd.valid()) {
             throw new SocketException("Socket closed");
         }
         if (this.timeout <= 0) {
-            IoBridge.poll(this.f559fd, OsConstants.POLLIN | OsConstants.POLLERR, -1);
+            IoBridge.poll(this.f557fd, OsConstants.POLLIN | OsConstants.POLLERR, -1);
         } else {
-            IoBridge.poll(this.f559fd, OsConstants.POLLIN | OsConstants.POLLERR, this.timeout);
+            IoBridge.poll(this.f557fd, OsConstants.POLLIN | OsConstants.POLLERR, this.timeout);
         }
         InetSocketAddress inetSocketAddress = new InetSocketAddress();
         try {
-            socketImpl.f559fd.setInt$(Libcore.f857os.accept(this.f559fd, inetSocketAddress).getInt$());
-            IoUtils.setFdOwner(socketImpl.f559fd, socketImpl);
+            socketImpl.f557fd.setInt$(Libcore.f855os.accept(this.f557fd, inetSocketAddress).getInt$());
+            IoUtils.setFdOwner(socketImpl.f557fd, socketImpl);
             socketImpl.address = inetSocketAddress.getAddress();
             socketImpl.port = inetSocketAddress.getPort();
         } catch (ErrnoException e) {
@@ -131,28 +131,28 @@ class PlainSocketImpl extends AbstractPlainSocketImpl {
                 e.rethrowAsSocketException();
             }
         }
-        socketImpl.localport = IoBridge.getLocalInetSocketAddress(socketImpl.f559fd).getPort();
+        socketImpl.localport = IoBridge.getLocalInetSocketAddress(socketImpl.f557fd).getPort();
     }
 
     /* access modifiers changed from: package-private */
     public int socketAvailable() throws IOException {
-        return IoBridge.available(this.f559fd);
+        return IoBridge.available(this.f557fd);
     }
 
     /* access modifiers changed from: package-private */
     public void socketClose0(boolean z) throws IOException {
-        if (this.f559fd == null || !this.f559fd.valid()) {
+        if (this.f557fd == null || !this.f557fd.valid()) {
             throw new SocketException("socket already closed");
         }
         FileDescriptor markerFD = z ? getMarkerFD() : null;
         if (!z || markerFD == null) {
-            IoBridge.closeAndSignalBlockedThreads(this.f559fd);
+            IoBridge.closeAndSignalBlockedThreads(this.f557fd);
             return;
         }
         try {
-            Libcore.f857os.dup2(markerFD, this.f559fd.getInt$());
-            Libcore.f857os.close(markerFD);
-            AsynchronousCloseMonitor.signalBlockedThreads(this.f559fd);
+            Libcore.f855os.dup2(markerFD, this.f557fd.getInt$());
+            Libcore.f855os.close(markerFD);
+            AsynchronousCloseMonitor.signalBlockedThreads(this.f557fd);
         } catch (ErrnoException unused) {
         }
     }
@@ -161,9 +161,9 @@ class PlainSocketImpl extends AbstractPlainSocketImpl {
         FileDescriptor fileDescriptor = new FileDescriptor();
         FileDescriptor fileDescriptor2 = new FileDescriptor();
         try {
-            Libcore.f857os.socketpair(OsConstants.AF_UNIX, OsConstants.SOCK_STREAM, 0, fileDescriptor, fileDescriptor2);
-            Libcore.f857os.shutdown(fileDescriptor, OsConstants.SHUT_RDWR);
-            Libcore.f857os.close(fileDescriptor2);
+            Libcore.f855os.socketpair(OsConstants.AF_UNIX, OsConstants.SOCK_STREAM, 0, fileDescriptor, fileDescriptor2);
+            Libcore.f855os.shutdown(fileDescriptor, OsConstants.SHUT_RDWR);
+            Libcore.f855os.close(fileDescriptor2);
             return fileDescriptor;
         } catch (ErrnoException unused) {
             return null;
@@ -173,7 +173,7 @@ class PlainSocketImpl extends AbstractPlainSocketImpl {
     /* access modifiers changed from: package-private */
     public void socketShutdown(int i) throws IOException {
         try {
-            Libcore.f857os.shutdown(this.f559fd, i);
+            Libcore.f855os.shutdown(this.f557fd, i);
         } catch (ErrnoException e) {
             throw e.rethrowAsIOException();
         }
@@ -182,22 +182,22 @@ class PlainSocketImpl extends AbstractPlainSocketImpl {
     /* access modifiers changed from: package-private */
     public void socketSetOption0(int i, Object obj) throws SocketException {
         if (i != 4102) {
-            IoBridge.setSocketOption(this.f559fd, i, obj);
+            IoBridge.setSocketOption(this.f557fd, i, obj);
         }
     }
 
     /* access modifiers changed from: package-private */
     public Object socketGetOption(int i) throws SocketException {
-        return IoBridge.getSocketOption(this.f559fd, i);
+        return IoBridge.getSocketOption(this.f557fd, i);
     }
 
     /* access modifiers changed from: package-private */
     public void socketSendUrgentData(int i) throws IOException {
-        if (this.f559fd == null || !this.f559fd.valid()) {
+        if (this.f557fd == null || !this.f557fd.valid()) {
             throw new SocketException("Socket closed");
         }
         try {
-            Libcore.f857os.sendto(this.f559fd, new byte[]{(byte) i}, 0, 1, OsConstants.MSG_OOB, (InetAddress) null, 0);
+            Libcore.f855os.sendto(this.f557fd, new byte[]{(byte) i}, 0, 1, OsConstants.MSG_OOB, (InetAddress) null, 0);
         } catch (ErrnoException e) {
             throw e.rethrowAsSocketException();
         }

@@ -12,7 +12,7 @@ import android.text.format.DateFormat;
 import android.util.Log;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardUpdateMonitorCallback;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.util.Utils;
@@ -54,7 +54,7 @@ public class CalendarManager {
 
     @Inject
     public CalendarManager(Context context, @Main Handler handler, KeyguardUpdateMonitor keyguardUpdateMonitor) {
-        C41731 r0 = new KeyguardUpdateMonitorCallback() {
+        C41851 r0 = new KeyguardUpdateMonitorCallback() {
             public void onKeyguardVisibilityChanged(boolean z) {
                 if (CalendarManager.this.mLocalObserver != null && z && CalendarManager.this.mSwitchOn && !CalendarManager.this.mLocalObserver.isCalendarEventsRegister()) {
                     CalendarManager.this.mLocalObserver.registerCalendarEvents();
@@ -79,7 +79,7 @@ public class CalendarManager {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$beginLoadEvent$1$com-nothing-systemui-keyguard-calendar-CalendarManager */
-    public /* synthetic */ void mo57445xa89c5f78() {
+    public /* synthetic */ void mo57466xa89c5f78() {
         CalendarSimpleData queryCalendarEvent;
         if (hasCalendarReadPermission() && this.mCurrentCalendarEvent != (queryCalendarEvent = CalendarDataLoader.getInstance().queryCalendarEvent(this.mContext))) {
             Log.i(TAG, "new event = " + queryCalendarEvent);
@@ -100,9 +100,9 @@ public class CalendarManager {
     public String getCalendarDescription(CalendarSimpleData calendarSimpleData) {
         int eventStatus = calendarSimpleData.getEventStatus();
         if (eventStatus != 1) {
-            return eventStatus == 2 ? this.mContext.getResources().getString(C1893R.string.quick_look_widget_calendar_now) : "";
+            return eventStatus == 2 ? this.mContext.getResources().getString(C1894R.string.quick_look_widget_calendar_now) : "";
         }
-        return this.mContext.getResources().getString(C1893R.string.quick_look_widget_calendar_in_time, new Object[]{Long.valueOf(calendarSimpleData.getToBeginTime())});
+        return this.mContext.getResources().getString(C1894R.string.quick_look_widget_calendar_in_time, new Object[]{Long.valueOf(calendarSimpleData.getToBeginTime())});
     }
 
     public void addCallback(Callback callback) {
@@ -124,9 +124,9 @@ public class CalendarManager {
             return CalendarUtils.formatTime(j, str);
         }
         if (CalendarUtils.isNextDay(j2, j)) {
-            return String.format("%s %s", this.mContext.getString(C1893R.string.quick_look_widget_calendar_tomorrow), CalendarUtils.formatTime(j, str));
+            return String.format("%s %s", this.mContext.getString(C1894R.string.quick_look_widget_calendar_tomorrow), CalendarUtils.formatTime(j, str));
         } else if (CalendarUtils.isPreDay(j2, j)) {
-            return String.format("%s %s", this.mContext.getString(C1893R.string.quick_look_widget_calendar_yesterday), CalendarUtils.formatTime(j, str));
+            return String.format("%s %s", this.mContext.getString(C1894R.string.quick_look_widget_calendar_yesterday), CalendarUtils.formatTime(j, str));
         } else if (CalendarUtils.isSameYear(j, j2)) {
             return CalendarUtils.formatTime(j, SAME_YEAR_SKELETON + str);
         } else {
@@ -139,7 +139,7 @@ public class CalendarManager {
         String formatTime = formatTime(calendarSimpleData.getStartTime(), currentTimeMillis);
         String formatTime2 = formatTime(calendarSimpleData.getEndTime(), currentTimeMillis);
         if (CalendarUtils.isNextDay(currentTimeMillis, calendarSimpleData.getStartTime()) && CalendarUtils.isNextDay(currentTimeMillis, calendarSimpleData.getEndTime())) {
-            String format = String.format("%s ", this.mContext.getString(C1893R.string.quick_look_widget_calendar_tomorrow));
+            String format = String.format("%s ", this.mContext.getString(C1894R.string.quick_look_widget_calendar_tomorrow));
             if (formatTime2.startsWith(format)) {
                 formatTime2 = formatTime2.replaceFirst(format, "");
             }
@@ -181,7 +181,7 @@ public class CalendarManager {
     /* access modifiers changed from: private */
     public void fireCalendarSwitchChanged() {
         this.mSwitchOn = updateCalendarSwitchOn();
-        NTLogUtil.m1682i(TAG, "fireCalendarSwitchChanged =" + this.mSwitchOn);
+        NTLogUtil.m1688i(TAG, "fireCalendarSwitchChanged =" + this.mSwitchOn);
         if (!this.mSwitchOn || hasCalendarReadPermission()) {
             Utils.safeForeach(this.mCallbacks, new CalendarManager$$ExternalSyntheticLambda2(this));
         } else {
@@ -191,13 +191,13 @@ public class CalendarManager {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$fireCalendarSwitchChanged$2$com-nothing-systemui-keyguard-calendar-CalendarManager */
-    public /* synthetic */ void mo57446x9aec6e50(Callback callback) {
+    public /* synthetic */ void mo57467x9aec6e50(Callback callback) {
         callback.onCalendarSwitchChanged(this.mSwitchOn);
     }
 
     /* access modifiers changed from: private */
     public void fireCalendarDataChanged() {
-        NTLogUtil.m1682i(TAG, "fireCalendarDataChanged =" + this.mSwitchOn);
+        NTLogUtil.m1688i(TAG, "fireCalendarDataChanged =" + this.mSwitchOn);
         if (this.mSwitchOn) {
             beginLoadEvent();
         }
@@ -217,7 +217,7 @@ public class CalendarManager {
             if (this.mRegistered) {
                 this.mResolver.unregisterContentObserver(this);
             }
-            NTLogUtil.m1682i(CalendarManager.TAG, "register");
+            NTLogUtil.m1688i(CalendarManager.TAG, "register");
             this.mResolver.registerContentObserver(CalendarManager.mCalendarSwitchUri, true, this);
             this.mRegistered = true;
             CalendarManager.this.fireCalendarSwitchChanged();
@@ -230,7 +230,7 @@ public class CalendarManager {
 
         public void registerCalendarEvents() {
             if (!this.mCalendarRegistered && CalendarManager.this.hasCalendarReadPermission()) {
-                NTLogUtil.m1682i(CalendarManager.TAG, "registerCalendarEvents");
+                NTLogUtil.m1688i(CalendarManager.TAG, "registerCalendarEvents");
                 this.mCalendarRegistered = true;
                 this.mResolver.registerContentObserver(CalendarDataLoader.CALENDAR_EVENTS_URL, true, this);
                 CalendarManager.this.fireCalendarDataChanged();
@@ -238,7 +238,7 @@ public class CalendarManager {
         }
 
         public void onChange(boolean z, Uri uri) {
-            NTLogUtil.m1682i(CalendarManager.TAG, "onChange uri=" + uri);
+            NTLogUtil.m1688i(CalendarManager.TAG, "onChange uri=" + uri);
             if (CalendarManager.mCalendarSwitchUri.equals(uri)) {
                 CalendarManager.this.fireCalendarSwitchChanged();
             } else {

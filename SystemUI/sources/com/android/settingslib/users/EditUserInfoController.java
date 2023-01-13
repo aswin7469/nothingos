@@ -123,7 +123,7 @@ public class EditUserInfoController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$buildDialog$1$com-android-settingslib-users-EditUserInfoController */
-    public /* synthetic */ void mo29225x83902b37(Drawable drawable, EditText editText, String str, BiConsumer biConsumer, DialogInterface dialogInterface, int i) {
+    public /* synthetic */ void mo29230x83902b37(Drawable drawable, EditText editText, String str, BiConsumer biConsumer, DialogInterface dialogInterface, int i) {
         EditUserPhotoController editUserPhotoController = this.mEditUserPhotoController;
         Drawable newUserPhotoDrawable = editUserPhotoController != null ? editUserPhotoController.getNewUserPhotoDrawable() : null;
         if (newUserPhotoDrawable != null) {
@@ -141,7 +141,7 @@ public class EditUserInfoController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$buildDialog$2$com-android-settingslib-users-EditUserInfoController */
-    public /* synthetic */ void mo29226x9daba9d6(Runnable runnable, DialogInterface dialogInterface, int i) {
+    public /* synthetic */ void mo29231x9daba9d6(Runnable runnable, DialogInterface dialogInterface, int i) {
         clear();
         if (runnable != null) {
             runnable.run();
@@ -150,7 +150,7 @@ public class EditUserInfoController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$buildDialog$3$com-android-settingslib-users-EditUserInfoController */
-    public /* synthetic */ void mo29227xb7c72875(Runnable runnable, DialogInterface dialogInterface) {
+    public /* synthetic */ void mo29232xb7c72875(Runnable runnable, DialogInterface dialogInterface) {
         clear();
         if (runnable != null) {
             runnable.run();

@@ -11,6 +11,6 @@ public final /* synthetic */ class AppControlView$$ExternalSyntheticLambda0 impl
     }
 
     public final void onClick(View view) {
-        AppControlView.m3133onFinishInflate$lambda0(this.f$0, view);
+        AppControlView.m3137onFinishInflate$lambda0(this.f$0, view);
     }
 }

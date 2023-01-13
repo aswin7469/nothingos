@@ -55,7 +55,7 @@ public final class ICU {
     }
 
     public static void initializeCacheInZygote() {
-        Locale[] localeArr = {Locale.f700US, Locale.getDefault()};
+        Locale[] localeArr = {Locale.f698US, Locale.getDefault()};
         for (int i = 0; i < 2; i++) {
             Locale locale = localeArr[i];
             getTimePattern(locale, false, false);

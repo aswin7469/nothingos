@@ -61,18 +61,18 @@ public final class OffsetDateTime implements Temporal, TemporalAdjuster, Compara
     }
 
     /* renamed from: of */
-    public static OffsetDateTime m924of(LocalDate localDate, LocalTime localTime, ZoneOffset zoneOffset) {
-        return new OffsetDateTime(LocalDateTime.m916of(localDate, localTime), zoneOffset);
+    public static OffsetDateTime m922of(LocalDate localDate, LocalTime localTime, ZoneOffset zoneOffset) {
+        return new OffsetDateTime(LocalDateTime.m914of(localDate, localTime), zoneOffset);
     }
 
     /* renamed from: of */
-    public static OffsetDateTime m925of(LocalDateTime localDateTime, ZoneOffset zoneOffset) {
+    public static OffsetDateTime m923of(LocalDateTime localDateTime, ZoneOffset zoneOffset) {
         return new OffsetDateTime(localDateTime, zoneOffset);
     }
 
     /* renamed from: of */
-    public static OffsetDateTime m923of(int i, int i2, int i3, int i4, int i5, int i6, int i7, ZoneOffset zoneOffset) {
-        return new OffsetDateTime(LocalDateTime.m912of(i, i2, i3, i4, i5, i6, i7), zoneOffset);
+    public static OffsetDateTime m921of(int i, int i2, int i3, int i4, int i5, int i6, int i7, ZoneOffset zoneOffset) {
+        return new OffsetDateTime(LocalDateTime.m910of(i, i2, i3, i4, i5, i6, i7), zoneOffset);
     }
 
     public static OffsetDateTime ofInstant(Instant instant, ZoneId zoneId) {
@@ -93,7 +93,7 @@ public final class OffsetDateTime implements Temporal, TemporalAdjuster, Compara
             if (localDate == null || localTime == null) {
                 return ofInstant(Instant.from(temporalAccessor), from);
             }
-            return m924of(localDate, localTime, from);
+            return m922of(localDate, localTime, from);
         } catch (DateTimeException e) {
             throw new DateTimeException("Unable to obtain OffsetDateTime from TemporalAccessor: " + temporalAccessor + " of type " + temporalAccessor.getClass().getName(), e);
         }
@@ -148,7 +148,7 @@ public final class OffsetDateTime implements Temporal, TemporalAdjuster, Compara
     }
 
     /* renamed from: java.time.OffsetDateTime$1 */
-    static /* synthetic */ class C28561 {
+    static /* synthetic */ class C28621 {
         static final /* synthetic */ int[] $SwitchMap$java$time$temporal$ChronoField;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(6:0|1|2|3|4|6) */
@@ -176,7 +176,7 @@ public final class OffsetDateTime implements Temporal, TemporalAdjuster, Compara
             L_0x001d:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: java.time.OffsetDateTime.C28561.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: java.time.OffsetDateTime.C28621.<clinit>():void");
         }
     }
 
@@ -184,7 +184,7 @@ public final class OffsetDateTime implements Temporal, TemporalAdjuster, Compara
         if (!(temporalField instanceof ChronoField)) {
             return super.get(temporalField);
         }
-        int i = C28561.$SwitchMap$java$time$temporal$ChronoField[((ChronoField) temporalField).ordinal()];
+        int i = C28621.$SwitchMap$java$time$temporal$ChronoField[((ChronoField) temporalField).ordinal()];
         if (i == 1) {
             throw new UnsupportedTemporalTypeException("Invalid field 'InstantSeconds' for get() method, use getLong() instead");
         } else if (i != 2) {
@@ -198,7 +198,7 @@ public final class OffsetDateTime implements Temporal, TemporalAdjuster, Compara
         if (!(temporalField instanceof ChronoField)) {
             return temporalField.getFrom(this);
         }
-        int i = C28561.$SwitchMap$java$time$temporal$ChronoField[((ChronoField) temporalField).ordinal()];
+        int i = C28621.$SwitchMap$java$time$temporal$ChronoField[((ChronoField) temporalField).ordinal()];
         if (i == 1) {
             return toEpochSecond();
         }
@@ -296,7 +296,7 @@ public final class OffsetDateTime implements Temporal, TemporalAdjuster, Compara
             return (OffsetDateTime) temporalField.adjustInto(this, j);
         }
         ChronoField chronoField = (ChronoField) temporalField;
-        int i = C28561.$SwitchMap$java$time$temporal$ChronoField[chronoField.ordinal()];
+        int i = C28621.$SwitchMap$java$time$temporal$ChronoField[chronoField.ordinal()];
         if (i == 1) {
             return ofInstant(Instant.ofEpochSecond(j, (long) getNano()), this.offset);
         }
@@ -536,11 +536,11 @@ public final class OffsetDateTime implements Temporal, TemporalAdjuster, Compara
     }
 
     public OffsetTime toOffsetTime() {
-        return OffsetTime.m927of(this.dateTime.toLocalTime(), this.offset);
+        return OffsetTime.m925of(this.dateTime.toLocalTime(), this.offset);
     }
 
     public ZonedDateTime toZonedDateTime() {
-        return ZonedDateTime.m938of(this.dateTime, this.offset);
+        return ZonedDateTime.m936of(this.dateTime, this.offset);
     }
 
     public Instant toInstant() {
@@ -607,6 +607,6 @@ public final class OffsetDateTime implements Temporal, TemporalAdjuster, Compara
     }
 
     static OffsetDateTime readExternal(ObjectInput objectInput) throws IOException, ClassNotFoundException {
-        return m925of(LocalDateTime.readExternal(objectInput), ZoneOffset.readExternal(objectInput));
+        return m923of(LocalDateTime.readExternal(objectInput), ZoneOffset.readExternal(objectInput));
     }
 }

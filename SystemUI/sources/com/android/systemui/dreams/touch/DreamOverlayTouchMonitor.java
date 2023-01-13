@@ -126,14 +126,14 @@ public class DreamOverlayTouchMonitor {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$push$1$com-android-systemui-dreams-touch-DreamOverlayTouchMonitor */
-    public /* synthetic */ Object mo32638xd0f73b3(TouchSessionImpl touchSessionImpl, CallbackToFutureAdapter.Completer completer) throws Exception {
+    public /* synthetic */ Object mo32649xd0f73b3(TouchSessionImpl touchSessionImpl, CallbackToFutureAdapter.Completer completer) throws Exception {
         this.mExecutor.execute(new DreamOverlayTouchMonitor$$ExternalSyntheticLambda5(this, touchSessionImpl, completer));
         return "DreamOverlayTouchMonitor::push";
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$push$0$com-android-systemui-dreams-touch-DreamOverlayTouchMonitor */
-    public /* synthetic */ void mo32637x70ba854(TouchSessionImpl touchSessionImpl, CallbackToFutureAdapter.Completer completer) {
+    public /* synthetic */ void mo32648x70ba854(TouchSessionImpl touchSessionImpl, CallbackToFutureAdapter.Completer completer) {
         if (!this.mActiveTouchSessions.remove(touchSessionImpl)) {
             completer.set(null);
             return;
@@ -150,14 +150,14 @@ public class DreamOverlayTouchMonitor {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$pop$3$com-android-systemui-dreams-touch-DreamOverlayTouchMonitor */
-    public /* synthetic */ Object mo32636x8724b574(TouchSessionImpl touchSessionImpl, CallbackToFutureAdapter.Completer completer) throws Exception {
+    public /* synthetic */ Object mo32647x8724b574(TouchSessionImpl touchSessionImpl, CallbackToFutureAdapter.Completer completer) throws Exception {
         this.mExecutor.execute(new DreamOverlayTouchMonitor$$ExternalSyntheticLambda4(this, touchSessionImpl, completer));
         return "DreamOverlayTouchMonitor::pop";
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$pop$2$com-android-systemui-dreams-touch-DreamOverlayTouchMonitor */
-    public /* synthetic */ void mo32635x8120ea15(TouchSessionImpl touchSessionImpl, CallbackToFutureAdapter.Completer completer) {
+    public /* synthetic */ void mo32646x8120ea15(TouchSessionImpl touchSessionImpl, CallbackToFutureAdapter.Completer completer) {
         if (this.mActiveTouchSessions.remove(touchSessionImpl)) {
             touchSessionImpl.onRemoved();
             TouchSessionImpl access$900 = touchSessionImpl.getPredecessor();
@@ -224,7 +224,7 @@ public class DreamOverlayTouchMonitor {
 
         /* access modifiers changed from: private */
         public void onRemoved() {
-            this.mCallbacks.forEach(new C2100x6ef1d0c2());
+            this.mCallbacks.forEach(new C2102x6ef1d0c2());
         }
     }
 

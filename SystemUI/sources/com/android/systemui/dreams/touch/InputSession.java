@@ -25,7 +25,7 @@ public class InputSession {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-dreams-touch-InputSession  reason: not valid java name */
-    public /* synthetic */ void m2746lambda$new$0$comandroidsystemuidreamstouchInputSession(InputChannelCompat.InputEventListener inputEventListener, boolean z, InputEvent inputEvent) {
+    public /* synthetic */ void m2751lambda$new$0$comandroidsystemuidreamstouchInputSession(InputChannelCompat.InputEventListener inputEventListener, boolean z, InputEvent inputEvent) {
         inputEventListener.onInputEvent(inputEvent);
         if ((inputEvent instanceof MotionEvent) && this.mGestureDetector.onTouchEvent((MotionEvent) inputEvent) && z) {
             this.mInputMonitor.pilferPointers();

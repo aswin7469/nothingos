@@ -16,6 +16,6 @@ public final /* synthetic */ class SwipeHelper$$ExternalSyntheticLambda0 impleme
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        this.f$0.m2528lambda$snapChild$0$comandroidsystemuiSwipeHelper(this.f$1, this.f$2, valueAnimator);
+        this.f$0.m2534lambda$snapChild$0$comandroidsystemuiSwipeHelper(this.f$1, this.f$2, valueAnimator);
     }
 }

@@ -12,7 +12,7 @@ import android.window.DisplayAreaOrganizer;
 import android.window.WindowContainerToken;
 import android.window.WindowContainerTransaction;
 import com.android.internal.jank.InteractionJankMonitor;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.common.DisplayLayout;
 import com.android.p019wm.shell.common.ShellExecutor;
 import com.android.p019wm.shell.onehanded.OneHandedAnimationController;
@@ -87,7 +87,7 @@ public class OneHandedDisplayAreaOrganizer extends DisplayAreaOrganizer {
         this.mOneHandedSettingsUtil = oneHandedSettingsUtil;
         this.mAnimationController = oneHandedAnimationController;
         this.mJankMonitor = interactionJankMonitor;
-        this.mEnterExitAnimationDurationMs = SystemProperties.getInt(ONE_HANDED_MODE_TRANSLATE_ANIMATION_DURATION, context.getResources().getInteger(C3343R.integer.config_one_handed_translate_animation_duration));
+        this.mEnterExitAnimationDurationMs = SystemProperties.getInt(ONE_HANDED_MODE_TRANSLATE_ANIMATION_DURATION, context.getResources().getInteger(C3353R.integer.config_one_handed_translate_animation_duration));
         this.mSurfaceControlTransactionFactory = new OneHandedDisplayAreaOrganizer$$ExternalSyntheticLambda2();
         this.mTutorialHandler = oneHandedTutorialHandler;
     }
@@ -144,7 +144,7 @@ public class OneHandedDisplayAreaOrganizer extends DisplayAreaOrganizer {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$scheduleOffset$0$com-android-wm-shell-onehanded-OneHandedDisplayAreaOrganizer */
-    public /* synthetic */ void mo49900x42db20c2(float f, int i, int i2, WindowContainerToken windowContainerToken, SurfaceControl surfaceControl) {
+    public /* synthetic */ void mo49909x42db20c2(float f, int i, int i2, WindowContainerToken windowContainerToken, SurfaceControl surfaceControl) {
         animateWindows(windowContainerToken, surfaceControl, f, (float) i, i2, this.mEnterExitAnimationDurationMs);
     }
 
@@ -159,7 +159,7 @@ public class OneHandedDisplayAreaOrganizer extends DisplayAreaOrganizer {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$resetWindowsOffset$1$com-android-wm-shell-onehanded-OneHandedDisplayAreaOrganizer */
-    public /* synthetic */ void mo49899x4ed14564(SurfaceControl.Transaction transaction, WindowContainerToken windowContainerToken, SurfaceControl surfaceControl) {
+    public /* synthetic */ void mo49908x4ed14564(SurfaceControl.Transaction transaction, WindowContainerToken windowContainerToken, SurfaceControl surfaceControl) {
         OneHandedAnimationController.OneHandedTransitionAnimator remove = this.mAnimationController.getAnimatorMap().remove(windowContainerToken);
         if (remove != null && remove.isRunning()) {
             remove.cancel();

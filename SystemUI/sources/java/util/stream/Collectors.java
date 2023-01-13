@@ -29,12 +29,12 @@ import java.util.function.ToLongFunction;
 import java.util.stream.Collector;
 
 public final class Collectors {
-    static final Set<Collector.Characteristics> CH_CONCURRENT_ID = Collections.unmodifiableSet(EnumSet.m1718of(Collector.Characteristics.CONCURRENT, Collector.Characteristics.UNORDERED, Collector.Characteristics.IDENTITY_FINISH));
-    static final Set<Collector.Characteristics> CH_CONCURRENT_NOID = Collections.unmodifiableSet(EnumSet.m1717of(Collector.Characteristics.CONCURRENT, Collector.Characteristics.UNORDERED));
-    static final Set<Collector.Characteristics> CH_ID = Collections.unmodifiableSet(EnumSet.m1716of(Collector.Characteristics.IDENTITY_FINISH));
+    static final Set<Collector.Characteristics> CH_CONCURRENT_ID = Collections.unmodifiableSet(EnumSet.m1724of(Collector.Characteristics.CONCURRENT, Collector.Characteristics.UNORDERED, Collector.Characteristics.IDENTITY_FINISH));
+    static final Set<Collector.Characteristics> CH_CONCURRENT_NOID = Collections.unmodifiableSet(EnumSet.m1723of(Collector.Characteristics.CONCURRENT, Collector.Characteristics.UNORDERED));
+    static final Set<Collector.Characteristics> CH_ID = Collections.unmodifiableSet(EnumSet.m1722of(Collector.Characteristics.IDENTITY_FINISH));
     static final Set<Collector.Characteristics> CH_NOID = Collections.emptySet();
-    static final Set<Collector.Characteristics> CH_UNORDERED_ID = Collections.unmodifiableSet(EnumSet.m1717of(Collector.Characteristics.UNORDERED, Collector.Characteristics.IDENTITY_FINISH));
-    static final Set<Collector.Characteristics> CH_UNORDERED_NOID = Collections.unmodifiableSet(EnumSet.m1716of(Collector.Characteristics.UNORDERED));
+    static final Set<Collector.Characteristics> CH_UNORDERED_ID = Collections.unmodifiableSet(EnumSet.m1723of(Collector.Characteristics.UNORDERED, Collector.Characteristics.IDENTITY_FINISH));
+    static final Set<Collector.Characteristics> CH_UNORDERED_NOID = Collections.unmodifiableSet(EnumSet.m1722of(Collector.Characteristics.UNORDERED));
 
     static /* synthetic */ double[] lambda$averagingDouble$38() {
         return new double[4];
@@ -632,7 +632,7 @@ public final class Collectors {
                 }
 
                 public Iterator<Map.Entry<Boolean, T>> iterator() {
-                    return List.m1724of(new AbstractMap.SimpleImmutableEntry(false, Partition.this.forFalse), new AbstractMap.SimpleImmutableEntry(true, Partition.this.forTrue)).iterator();
+                    return List.m1730of(new AbstractMap.SimpleImmutableEntry(false, Partition.this.forFalse), new AbstractMap.SimpleImmutableEntry(true, Partition.this.forTrue)).iterator();
                 }
             };
         }

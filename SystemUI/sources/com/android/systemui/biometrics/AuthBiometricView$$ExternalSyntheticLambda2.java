@@ -9,6 +9,6 @@ public final /* synthetic */ class AuthBiometricView$$ExternalSyntheticLambda2 i
     }
 
     public final void run() {
-        this.f$0.mo30516x2a8e0afd();
+        this.f$0.mo30526x2a8e0afd();
     }
 }

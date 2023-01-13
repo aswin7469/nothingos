@@ -10,6 +10,6 @@ public final /* synthetic */ class StageCoordinator$$ExternalSyntheticLambda11 i
     }
 
     public final void run() {
-        this.f$0.onTransitionAnimationComplete();
+        this.f$0.mo50848xacd38448();
     }
 }

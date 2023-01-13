@@ -32,7 +32,7 @@ public class Driver implements Locator, XMLReader, Attributes {
     protected ErrorHandler errorHandler = new DefaultHandler();
 
     /* renamed from: pp */
-    protected XmlPullParser f859pp;
+    protected XmlPullParser f857pp;
     protected String systemId;
 
     public DTDHandler getDTDHandler() {
@@ -56,44 +56,44 @@ public class Driver implements Locator, XMLReader, Attributes {
     public Driver() throws XmlPullParserException {
         XmlPullParserFactory newInstance = XmlPullParserFactory.newInstance();
         newInstance.setNamespaceAware(true);
-        this.f859pp = newInstance.newPullParser();
+        this.f857pp = newInstance.newPullParser();
     }
 
     public Driver(XmlPullParser xmlPullParser) throws XmlPullParserException {
-        this.f859pp = xmlPullParser;
+        this.f857pp = xmlPullParser;
     }
 
     public int getLength() {
-        return this.f859pp.getAttributeCount();
+        return this.f857pp.getAttributeCount();
     }
 
     public String getURI(int i) {
-        return this.f859pp.getAttributeNamespace(i);
+        return this.f857pp.getAttributeNamespace(i);
     }
 
     public String getLocalName(int i) {
-        return this.f859pp.getAttributeName(i);
+        return this.f857pp.getAttributeName(i);
     }
 
     public String getQName(int i) {
-        String attributePrefix = this.f859pp.getAttributePrefix(i);
+        String attributePrefix = this.f857pp.getAttributePrefix(i);
         if (attributePrefix == null) {
-            return this.f859pp.getAttributeName(i);
+            return this.f857pp.getAttributeName(i);
         }
-        return attributePrefix + AccessibilityUtils.ENABLED_ACCESSIBILITY_SERVICES_SEPARATOR + this.f859pp.getAttributeName(i);
+        return attributePrefix + AccessibilityUtils.ENABLED_ACCESSIBILITY_SERVICES_SEPARATOR + this.f857pp.getAttributeName(i);
     }
 
     public String getType(int i) {
-        return this.f859pp.getAttributeType(i);
+        return this.f857pp.getAttributeType(i);
     }
 
     public String getValue(int i) {
-        return this.f859pp.getAttributeValue(i);
+        return this.f857pp.getAttributeValue(i);
     }
 
     public int getIndex(String str, String str2) {
-        for (int i = 0; i < this.f859pp.getAttributeCount(); i++) {
-            if (this.f859pp.getAttributeNamespace(i).equals(str) && this.f859pp.getAttributeName(i).equals(str2)) {
+        for (int i = 0; i < this.f857pp.getAttributeCount(); i++) {
+            if (this.f857pp.getAttributeNamespace(i).equals(str) && this.f857pp.getAttributeName(i).equals(str2)) {
                 return i;
             }
         }
@@ -101,8 +101,8 @@ public class Driver implements Locator, XMLReader, Attributes {
     }
 
     public int getIndex(String str) {
-        for (int i = 0; i < this.f859pp.getAttributeCount(); i++) {
-            if (this.f859pp.getAttributeName(i).equals(str)) {
+        for (int i = 0; i < this.f857pp.getAttributeCount(); i++) {
+            if (this.f857pp.getAttributeName(i).equals(str)) {
                 return i;
             }
         }
@@ -110,29 +110,29 @@ public class Driver implements Locator, XMLReader, Attributes {
     }
 
     public String getType(String str, String str2) {
-        for (int i = 0; i < this.f859pp.getAttributeCount(); i++) {
-            if (this.f859pp.getAttributeNamespace(i).equals(str) && this.f859pp.getAttributeName(i).equals(str2)) {
-                return this.f859pp.getAttributeType(i);
+        for (int i = 0; i < this.f857pp.getAttributeCount(); i++) {
+            if (this.f857pp.getAttributeNamespace(i).equals(str) && this.f857pp.getAttributeName(i).equals(str2)) {
+                return this.f857pp.getAttributeType(i);
             }
         }
         return null;
     }
 
     public String getType(String str) {
-        for (int i = 0; i < this.f859pp.getAttributeCount(); i++) {
-            if (this.f859pp.getAttributeName(i).equals(str)) {
-                return this.f859pp.getAttributeType(i);
+        for (int i = 0; i < this.f857pp.getAttributeCount(); i++) {
+            if (this.f857pp.getAttributeName(i).equals(str)) {
+                return this.f857pp.getAttributeType(i);
             }
         }
         return null;
     }
 
     public String getValue(String str, String str2) {
-        return this.f859pp.getAttributeValue(str, str2);
+        return this.f857pp.getAttributeValue(str, str2);
     }
 
     public String getValue(String str) {
-        return this.f859pp.getAttributeValue((String) null, str);
+        return this.f857pp.getAttributeValue((String) null, str);
     }
 
     public String getSystemId() {
@@ -140,38 +140,38 @@ public class Driver implements Locator, XMLReader, Attributes {
     }
 
     public int getLineNumber() {
-        return this.f859pp.getLineNumber();
+        return this.f857pp.getLineNumber();
     }
 
     public int getColumnNumber() {
-        return this.f859pp.getColumnNumber();
+        return this.f857pp.getColumnNumber();
     }
 
     public boolean getFeature(String str) throws SAXNotRecognizedException, SAXNotSupportedException {
         if (NAMESPACES_FEATURE.equals(str)) {
-            return this.f859pp.getFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES);
+            return this.f857pp.getFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES);
         }
         if (NAMESPACE_PREFIXES_FEATURE.equals(str)) {
-            return this.f859pp.getFeature(XmlPullParser.FEATURE_REPORT_NAMESPACE_ATTRIBUTES);
+            return this.f857pp.getFeature(XmlPullParser.FEATURE_REPORT_NAMESPACE_ATTRIBUTES);
         }
         if (VALIDATION_FEATURE.equals(str)) {
-            return this.f859pp.getFeature(XmlPullParser.FEATURE_VALIDATION);
+            return this.f857pp.getFeature(XmlPullParser.FEATURE_VALIDATION);
         }
-        return this.f859pp.getFeature(str);
+        return this.f857pp.getFeature(str);
     }
 
     public void setFeature(String str, boolean z) throws SAXNotRecognizedException, SAXNotSupportedException {
         try {
             if (NAMESPACES_FEATURE.equals(str)) {
-                this.f859pp.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, z);
+                this.f857pp.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, z);
             } else if (NAMESPACE_PREFIXES_FEATURE.equals(str)) {
-                if (this.f859pp.getFeature(XmlPullParser.FEATURE_REPORT_NAMESPACE_ATTRIBUTES) != z) {
-                    this.f859pp.setFeature(XmlPullParser.FEATURE_REPORT_NAMESPACE_ATTRIBUTES, z);
+                if (this.f857pp.getFeature(XmlPullParser.FEATURE_REPORT_NAMESPACE_ATTRIBUTES) != z) {
+                    this.f857pp.setFeature(XmlPullParser.FEATURE_REPORT_NAMESPACE_ATTRIBUTES, z);
                 }
             } else if (VALIDATION_FEATURE.equals(str)) {
-                this.f859pp.setFeature(XmlPullParser.FEATURE_VALIDATION, z);
+                this.f857pp.setFeature(XmlPullParser.FEATURE_VALIDATION, z);
             } else {
-                this.f859pp.setFeature(str, z);
+                this.f857pp.setFeature(str, z);
             }
         } catch (XmlPullParserException unused) {
         }
@@ -179,7 +179,7 @@ public class Driver implements Locator, XMLReader, Attributes {
 
     public Object getProperty(String str) throws SAXNotRecognizedException, SAXNotSupportedException {
         if (!DECLARATION_HANDLER_PROPERTY.equals(str) && !LEXICAL_HANDLER_PROPERTY.equals(str)) {
-            return this.f859pp.getProperty(str);
+            return this.f857pp.getProperty(str);
         }
         return null;
     }
@@ -189,7 +189,7 @@ public class Driver implements Locator, XMLReader, Attributes {
             throw new SAXNotSupportedException("not supported setting property " + str);
         } else if (!LEXICAL_HANDLER_PROPERTY.equals(str)) {
             try {
-                this.f859pp.setProperty(str, obj);
+                this.f857pp.setProperty(str, obj);
             } catch (XmlPullParserException e) {
                 throw new SAXNotSupportedException("not supported set property " + str + ": " + e);
             }
@@ -277,25 +277,25 @@ public class Driver implements Locator, XMLReader, Attributes {
             r6.fatalError(r1)     // Catch:{ XmlPullParserException -> 0x00c2 }
             return
         L_0x0064:
-            org.xmlpull.v1.XmlPullParser r6 = r5.f859pp     // Catch:{ XmlPullParserException -> 0x00c2 }
+            org.xmlpull.v1.XmlPullParser r6 = r5.f857pp     // Catch:{ XmlPullParserException -> 0x00c2 }
             r6.setInput(r2, r4)     // Catch:{ XmlPullParserException -> 0x00c2 }
             goto L_0x006f
         L_0x006a:
-            org.xmlpull.v1.XmlPullParser r6 = r5.f859pp     // Catch:{ XmlPullParserException -> 0x00c2 }
+            org.xmlpull.v1.XmlPullParser r6 = r5.f857pp     // Catch:{ XmlPullParserException -> 0x00c2 }
             r6.setInput(r2)     // Catch:{ XmlPullParserException -> 0x00c2 }
         L_0x006f:
             org.xml.sax.ContentHandler r6 = r5.contentHandler     // Catch:{ XmlPullParserException -> 0x00aa }
             r6.startDocument()     // Catch:{ XmlPullParserException -> 0x00aa }
-            org.xmlpull.v1.XmlPullParser r6 = r5.f859pp     // Catch:{ XmlPullParserException -> 0x00aa }
+            org.xmlpull.v1.XmlPullParser r6 = r5.f857pp     // Catch:{ XmlPullParserException -> 0x00aa }
             r6.next()     // Catch:{ XmlPullParserException -> 0x00aa }
-            org.xmlpull.v1.XmlPullParser r6 = r5.f859pp     // Catch:{ XmlPullParserException -> 0x00aa }
+            org.xmlpull.v1.XmlPullParser r6 = r5.f857pp     // Catch:{ XmlPullParserException -> 0x00aa }
             int r6 = r6.getEventType()     // Catch:{ XmlPullParserException -> 0x00aa }
             r0 = 2
             if (r6 == r0) goto L_0x009f
             org.xml.sax.SAXParseException r6 = new org.xml.sax.SAXParseException     // Catch:{ XmlPullParserException -> 0x00aa }
             java.lang.StringBuilder r0 = new java.lang.StringBuilder     // Catch:{ XmlPullParserException -> 0x00aa }
             r0.<init>((java.lang.String) r1)     // Catch:{ XmlPullParserException -> 0x00aa }
-            org.xmlpull.v1.XmlPullParser r1 = r5.f859pp     // Catch:{ XmlPullParserException -> 0x00aa }
+            org.xmlpull.v1.XmlPullParser r1 = r5.f857pp     // Catch:{ XmlPullParserException -> 0x00aa }
             java.lang.String r1 = r1.getPositionDescription()     // Catch:{ XmlPullParserException -> 0x00aa }
             r0.append((java.lang.String) r1)     // Catch:{ XmlPullParserException -> 0x00aa }
             java.lang.String r0 = r0.toString()     // Catch:{ XmlPullParserException -> 0x00aa }
@@ -304,7 +304,7 @@ public class Driver implements Locator, XMLReader, Attributes {
             r0.fatalError(r6)     // Catch:{ XmlPullParserException -> 0x00aa }
             return
         L_0x009f:
-            org.xmlpull.v1.XmlPullParser r6 = r5.f859pp
+            org.xmlpull.v1.XmlPullParser r6 = r5.f857pp
             r5.parseSubTree(r6)
             org.xml.sax.ContentHandler r5 = r5.contentHandler
             r5.endDocument()
@@ -342,7 +342,7 @@ public class Driver implements Locator, XMLReader, Attributes {
     public void parseSubTree(XmlPullParser xmlPullParser) throws SAXException, IOException {
         String str;
         String str2;
-        this.f859pp = xmlPullParser;
+        this.f857pp = xmlPullParser;
         boolean feature = xmlPullParser.getFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES);
         try {
             if (xmlPullParser.getEventType() == 2) {

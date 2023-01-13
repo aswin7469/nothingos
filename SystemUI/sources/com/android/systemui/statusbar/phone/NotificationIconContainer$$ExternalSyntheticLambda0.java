@@ -13,6 +13,6 @@ public final /* synthetic */ class NotificationIconContainer$$ExternalSyntheticL
     }
 
     public final void run() {
-        this.f$0.mo44491x92d0804b(this.f$1);
+        this.f$0.mo44506x92d0804b(this.f$1);
     }
 }

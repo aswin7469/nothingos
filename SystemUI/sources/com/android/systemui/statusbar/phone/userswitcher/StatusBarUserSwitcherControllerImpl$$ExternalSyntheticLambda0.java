@@ -11,6 +11,6 @@ public final /* synthetic */ class StatusBarUserSwitcherControllerImpl$$External
     }
 
     public final void onClick(View view) {
-        StatusBarUserSwitcherControllerImpl.m3221onViewAttached$lambda0(this.f$0, view);
+        StatusBarUserSwitcherControllerImpl.m3226onViewAttached$lambda0(this.f$0, view);
     }
 }

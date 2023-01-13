@@ -18,6 +18,6 @@ public final /* synthetic */ class ConversationNotificationManager$$ExternalSynt
     }
 
     public final Object apply(Object obj, Object obj2) {
-        return ConversationNotificationManager.m3086getUnreadCount$lambda5(this.f$0, this.f$1, this.f$2, (String) obj, (ConversationNotificationManager.ConversationState) obj2);
+        return ConversationNotificationManager.m3090getUnreadCount$lambda5(this.f$0, this.f$1, this.f$2, (String) obj, (ConversationNotificationManager.ConversationState) obj2);
     }
 }

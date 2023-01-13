@@ -13,6 +13,6 @@ public final /* synthetic */ class EdgeBackGestureHandlerEx$$ExternalSyntheticLa
     }
 
     public final void run() {
-        this.f$0.mo57507x19113d3d(this.f$1);
+        this.f$0.mo57528x19113d3d(this.f$1);
     }
 }

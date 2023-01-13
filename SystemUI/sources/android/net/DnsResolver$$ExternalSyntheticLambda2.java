@@ -16,6 +16,6 @@ public final /* synthetic */ class DnsResolver$$ExternalSyntheticLambda2 impleme
     }
 
     public final void onCancel() {
-        this.f$0.m1876lambda$addCancellationSignal$10$androidnetDnsResolver(this.f$1, this.f$2);
+        this.f$0.m1882lambda$addCancellationSignal$10$androidnetDnsResolver(this.f$1, this.f$2);
     }
 }

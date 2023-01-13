@@ -7,7 +7,7 @@ import android.os.SystemClock;
 import android.util.FloatProperty;
 import android.util.Slog;
 import android.view.MotionEvent;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dependency;
 import com.android.systemui.navigationbar.NavigationBarController;
 import com.android.systemui.navigationbar.NavigationBarInflaterView;
@@ -92,16 +92,16 @@ public class DeadZone {
     public void onConfigurationChanged(int i) {
         this.mDisplayRotation = i;
         Resources resources = this.mNavigationBarView.getResources();
-        this.mHold = resources.getInteger(C1893R.integer.navigation_bar_deadzone_hold);
-        this.mDecay = resources.getInteger(C1893R.integer.navigation_bar_deadzone_decay);
-        this.mSizeMin = resources.getDimensionPixelSize(C1893R.dimen.navigation_bar_deadzone_size);
-        this.mSizeMax = resources.getDimensionPixelSize(C1893R.dimen.navigation_bar_deadzone_size_max);
+        this.mHold = resources.getInteger(C1894R.integer.navigation_bar_deadzone_hold);
+        this.mDecay = resources.getInteger(C1894R.integer.navigation_bar_deadzone_decay);
+        this.mSizeMin = resources.getDimensionPixelSize(C1894R.dimen.navigation_bar_deadzone_size);
+        this.mSizeMax = resources.getDimensionPixelSize(C1894R.dimen.navigation_bar_deadzone_size_max);
         boolean z = true;
-        if (resources.getInteger(C1893R.integer.navigation_bar_deadzone_orientation) != 1) {
+        if (resources.getInteger(C1894R.integer.navigation_bar_deadzone_orientation) != 1) {
             z = false;
         }
         this.mVertical = z;
-        setFlashOnTouchCapture(resources.getBoolean(C1893R.bool.config_dead_zone_flash));
+        setFlashOnTouchCapture(resources.getBoolean(C1894R.bool.config_dead_zone_flash));
     }
 
     public boolean onTouchEvent(MotionEvent motionEvent) {

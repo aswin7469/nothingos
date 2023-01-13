@@ -3,7 +3,7 @@ package com.nothing.systemui.navigationbar.gestural;
 import android.content.Context;
 import android.os.SystemClock;
 import android.widget.Toast;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.nothing.gamemode.NTGameModeHelper;
 import com.nothing.systemui.NTDependencyEx;
 import java.util.concurrent.Executor;
@@ -42,8 +42,8 @@ public class EdgeBackGestureHandlerEx {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$showToast$0$com-nothing-systemui-navigationbar-gestural-EdgeBackGestureHandlerEx */
-    public /* synthetic */ void mo57507x19113d3d(Context context) {
-        Toast makeText = Toast.makeText(context, C1893R.string.swipe_again, 0);
+    public /* synthetic */ void mo57528x19113d3d(Context context) {
+        Toast makeText = Toast.makeText(context, C1894R.string.swipe_again, 0);
         this.mToast = makeText;
         makeText.show();
     }
@@ -54,7 +54,7 @@ public class EdgeBackGestureHandlerEx {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$hideToast$1$com-nothing-systemui-navigationbar-gestural-EdgeBackGestureHandlerEx */
-    public /* synthetic */ void mo57506xae11b8a1() {
+    public /* synthetic */ void mo57527xae11b8a1() {
         Toast toast = this.mToast;
         if (toast != null) {
             toast.cancel();

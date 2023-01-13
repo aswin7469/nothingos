@@ -13,7 +13,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import java.util.Objects;
 
 public class OverlayActionChip extends FrameLayout {
@@ -54,8 +54,8 @@ public class OverlayActionChip extends FrameLayout {
 
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
-        this.mIconView = (ImageView) Objects.requireNonNull((ImageView) findViewById(C1893R.C1897id.overlay_action_chip_icon));
-        TextView textView = (TextView) Objects.requireNonNull((TextView) findViewById(C1893R.C1897id.overlay_action_chip_text));
+        this.mIconView = (ImageView) Objects.requireNonNull((ImageView) findViewById(C1894R.C1898id.overlay_action_chip_icon));
+        TextView textView = (TextView) Objects.requireNonNull((TextView) findViewById(C1894R.C1898id.overlay_action_chip_text));
         this.mTextView = textView;
         updatePadding(textView.getText().length() > 0);
     }
@@ -98,13 +98,13 @@ public class OverlayActionChip extends FrameLayout {
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) this.mIconView.getLayoutParams();
         LinearLayout.LayoutParams layoutParams2 = (LinearLayout.LayoutParams) this.mTextView.getLayoutParams();
         if (z) {
-            int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.overlay_action_chip_padding_horizontal);
-            int dimensionPixelSize2 = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.overlay_action_chip_spacing);
+            int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.overlay_action_chip_padding_horizontal);
+            int dimensionPixelSize2 = this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.overlay_action_chip_spacing);
             layoutParams.setMarginStart(dimensionPixelSize);
             layoutParams.setMarginEnd(dimensionPixelSize2);
             layoutParams2.setMarginEnd(dimensionPixelSize);
         } else {
-            int dimensionPixelSize3 = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.overlay_action_chip_icon_only_padding_horizontal);
+            int dimensionPixelSize3 = this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.overlay_action_chip_icon_only_padding_horizontal);
             layoutParams.setMarginStart(dimensionPixelSize3);
             layoutParams.setMarginEnd(dimensionPixelSize3);
         }

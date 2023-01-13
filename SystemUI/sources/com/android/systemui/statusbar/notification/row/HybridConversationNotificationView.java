@@ -9,7 +9,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.android.internal.widget.ConversationLayout;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.statusbar.notification.NotificationFadeAware;
 
 public class HybridConversationNotificationView extends HybridNotificationView {
@@ -42,11 +42,11 @@ public class HybridConversationNotificationView extends HybridNotificationView {
         super.onFinishInflate();
         this.mConversationIconView = (ImageView) requireViewById(16908923);
         this.mConversationFacePile = requireViewById(16908918);
-        this.mConversationSenderName = (TextView) requireViewById(C1893R.C1897id.conversation_notification_sender);
-        this.mFacePileSize = getResources().getDimensionPixelSize(C1893R.dimen.conversation_single_line_face_pile_size);
-        this.mFacePileAvatarSize = getResources().getDimensionPixelSize(C1893R.dimen.conversation_single_line_face_pile_avatar_size);
-        this.mSingleAvatarSize = getResources().getDimensionPixelSize(C1893R.dimen.conversation_single_line_avatar_size);
-        this.mFacePileProtectionWidth = getResources().getDimensionPixelSize(C1893R.dimen.conversation_single_line_face_pile_protection_width);
+        this.mConversationSenderName = (TextView) requireViewById(C1894R.C1898id.conversation_notification_sender);
+        this.mFacePileSize = getResources().getDimensionPixelSize(C1894R.dimen.conversation_single_line_face_pile_size);
+        this.mFacePileAvatarSize = getResources().getDimensionPixelSize(C1894R.dimen.conversation_single_line_face_pile_avatar_size);
+        this.mSingleAvatarSize = getResources().getDimensionPixelSize(C1894R.dimen.conversation_single_line_avatar_size);
+        this.mFacePileProtectionWidth = getResources().getDimensionPixelSize(C1894R.dimen.conversation_single_line_face_pile_protection_width);
         this.mTransformationHelper.addViewTransformingToSimilar(this.mConversationIconView);
         this.mTransformationHelper.addTransformedView(this.mConversationSenderName);
     }

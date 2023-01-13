@@ -14,7 +14,7 @@ public class ZipInputStream extends InflaterInputStream implements ZipConstants 
     private static final int STORED = 0;
 
     /* renamed from: b */
-    private byte[] f810b;
+    private byte[] f808b;
     private boolean closed;
     private CRC32 crc;
     private ZipEntry entry;
@@ -24,7 +24,7 @@ public class ZipInputStream extends InflaterInputStream implements ZipConstants 
     private byte[] tmpbuf;
 
     /* renamed from: zc */
-    private ZipCoder f811zc;
+    private ZipCoder f809zc;
 
     private void ensureOpen() throws IOException {
         if (this.closed) {
@@ -42,11 +42,11 @@ public class ZipInputStream extends InflaterInputStream implements ZipConstants 
         this.tmpbuf = new byte[512];
         this.closed = false;
         this.entryEOF = false;
-        this.f810b = new byte[256];
+        this.f808b = new byte[256];
         if (inputStream == null) {
             throw new NullPointerException("in is null");
         } else if (charset != null) {
-            this.f811zc = ZipCoder.get(charset);
+            this.f809zc = ZipCoder.get(charset);
         } else {
             throw new NullPointerException("charset is null");
         }
@@ -110,7 +110,7 @@ public class ZipInputStream extends InflaterInputStream implements ZipConstants 
                 if (((long) i2) > j) {
                     i2 = (int) j;
                 }
-                int read = this.f521in.read(bArr, i, i2);
+                int read = this.f519in.read(bArr, i, i2);
                 if (read != -1) {
                     this.crc.update(bArr, i, read);
                     long j2 = this.remaining - ((long) read);
@@ -181,18 +181,18 @@ public class ZipInputStream extends InflaterInputStream implements ZipConstants 
             }
             this.flag = ZipUtils.get16(this.tmpbuf, 6);
             int r0 = ZipUtils.get16(this.tmpbuf, 26);
-            int length = this.f810b.length;
+            int length = this.f808b.length;
             if (r0 > length) {
                 do {
                     length *= 2;
                 } while (r0 > length);
-                this.f810b = new byte[length];
+                this.f808b = new byte[length];
             }
-            readFully(this.f810b, 0, r0);
+            readFully(this.f808b, 0, r0);
             if ((this.flag & 2048) != 0) {
-                str = this.f811zc.toStringUTF8(this.f810b, r0);
+                str = this.f809zc.toStringUTF8(this.f808b, r0);
             } else {
-                str = this.f811zc.toString(this.f810b, r0);
+                str = this.f809zc.toString(this.f808b, r0);
             }
             ZipEntry createZipEntry = createZipEntry(str);
             if ((this.flag & 1) != 1) {
@@ -228,7 +228,7 @@ public class ZipInputStream extends InflaterInputStream implements ZipConstants 
     private void readEnd(ZipEntry zipEntry) throws IOException {
         int remaining2 = this.inf.getRemaining();
         if (remaining2 > 0) {
-            ((PushbackInputStream) this.f521in).unread(this.buf, this.len - remaining2, remaining2);
+            ((PushbackInputStream) this.f519in).unread(this.buf, this.len - remaining2, remaining2);
         }
         if ((this.flag & 8) == 8) {
             if (this.inf.getBytesWritten() > UpdateParameter.UPDATE_CHECK_INTERVAL_NEVER || this.inf.getBytesRead() > UpdateParameter.UPDATE_CHECK_INTERVAL_NEVER) {
@@ -238,7 +238,7 @@ public class ZipInputStream extends InflaterInputStream implements ZipConstants 
                     zipEntry.crc = r4;
                     zipEntry.csize = ZipUtils.get64(this.tmpbuf, 4);
                     zipEntry.size = ZipUtils.get64(this.tmpbuf, 12);
-                    ((PushbackInputStream) this.f521in).unread(this.tmpbuf, 20, 4);
+                    ((PushbackInputStream) this.f519in).unread(this.tmpbuf, 20, 4);
                 } else {
                     zipEntry.crc = ZipUtils.get32(this.tmpbuf, 4);
                     zipEntry.csize = ZipUtils.get64(this.tmpbuf, 8);
@@ -251,7 +251,7 @@ public class ZipInputStream extends InflaterInputStream implements ZipConstants 
                     zipEntry.crc = r42;
                     zipEntry.csize = ZipUtils.get32(this.tmpbuf, 4);
                     zipEntry.size = ZipUtils.get32(this.tmpbuf, 8);
-                    ((PushbackInputStream) this.f521in).unread(this.tmpbuf, 12, 4);
+                    ((PushbackInputStream) this.f519in).unread(this.tmpbuf, 12, 4);
                 } else {
                     zipEntry.crc = ZipUtils.get32(this.tmpbuf, 4);
                     zipEntry.csize = ZipUtils.get32(this.tmpbuf, 8);
@@ -270,7 +270,7 @@ public class ZipInputStream extends InflaterInputStream implements ZipConstants 
 
     private void readFully(byte[] bArr, int i, int i2) throws IOException {
         while (i2 > 0) {
-            int read = this.f521in.read(bArr, i, i2);
+            int read = this.f519in.read(bArr, i, i2);
             if (read != -1) {
                 i += read;
                 i2 -= read;

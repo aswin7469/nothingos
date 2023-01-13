@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.view.ViewOverlay;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 
 /* renamed from: com.android.wm.shell.pip.phone.PipMenuActionView */
 public class PipMenuActionView extends FrameLayout {
@@ -35,8 +35,8 @@ public class PipMenuActionView extends FrameLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mImageView = (ImageView) findViewById(C3343R.C3346id.image);
-        this.mCustomCloseBackground = findViewById(C3343R.C3346id.custom_close_bg);
+        this.mImageView = (ImageView) findViewById(C3353R.C3356id.image);
+        this.mCustomCloseBackground = findViewById(C3353R.C3356id.custom_close_bg);
     }
 
     public void setImageDrawable(Drawable drawable) {

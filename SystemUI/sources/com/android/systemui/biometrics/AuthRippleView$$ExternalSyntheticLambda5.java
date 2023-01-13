@@ -11,6 +11,6 @@ public final /* synthetic */ class AuthRippleView$$ExternalSyntheticLambda5 impl
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        AuthRippleView.m2571startUnlockedRipple$lambda15$lambda14(this.f$0, valueAnimator);
+        AuthRippleView.m2577startUnlockedRipple$lambda15$lambda14(this.f$0, valueAnimator);
     }
 }

@@ -12,6 +12,6 @@ public final /* synthetic */ class DreamsSmartspaceController$$ExternalSynthetic
     }
 
     public final void notifySmartspaceEvent(SmartspaceTargetEvent smartspaceTargetEvent) {
-        DreamsSmartspaceController.m2744connectSession$lambda2(this.f$0, smartspaceTargetEvent);
+        DreamsSmartspaceController.m2749connectSession$lambda2(this.f$0, smartspaceTargetEvent);
     }
 }

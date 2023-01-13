@@ -8,7 +8,7 @@ import androidx.appcompat.widget.TintTypedArray;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.internal.ThemeEnforcement;
 import com.google.android.material.internal.ViewUtils;
 import com.google.android.material.navigation.NavigationBarMenuView;
@@ -38,20 +38,20 @@ public class BottomNavigationView extends NavigationBarView {
     }
 
     public BottomNavigationView(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, C3621R.attr.bottomNavigationStyle);
+        this(context, attributeSet, C3631R.attr.bottomNavigationStyle);
     }
 
     public BottomNavigationView(Context context, AttributeSet attributeSet, int i) {
-        this(context, attributeSet, i, C3621R.style.Widget_Design_BottomNavigationView);
+        this(context, attributeSet, i, C3631R.style.Widget_Design_BottomNavigationView);
     }
 
     public BottomNavigationView(Context context, AttributeSet attributeSet, int i, int i2) {
         super(context, attributeSet, i, i2);
         Context context2 = getContext();
-        TintTypedArray obtainTintedStyledAttributes = ThemeEnforcement.obtainTintedStyledAttributes(context2, attributeSet, C3621R.styleable.BottomNavigationView, i, i2, new int[0]);
-        setItemHorizontalTranslationEnabled(obtainTintedStyledAttributes.getBoolean(C3621R.styleable.BottomNavigationView_itemHorizontalTranslationEnabled, true));
-        if (obtainTintedStyledAttributes.hasValue(C3621R.styleable.BottomNavigationView_android_minHeight)) {
-            setMinimumHeight(obtainTintedStyledAttributes.getDimensionPixelSize(C3621R.styleable.BottomNavigationView_android_minHeight, 0));
+        TintTypedArray obtainTintedStyledAttributes = ThemeEnforcement.obtainTintedStyledAttributes(context2, attributeSet, C3631R.styleable.BottomNavigationView, i, i2, new int[0]);
+        setItemHorizontalTranslationEnabled(obtainTintedStyledAttributes.getBoolean(C3631R.styleable.BottomNavigationView_itemHorizontalTranslationEnabled, true));
+        if (obtainTintedStyledAttributes.hasValue(C3631R.styleable.BottomNavigationView_android_minHeight)) {
+            setMinimumHeight(obtainTintedStyledAttributes.getDimensionPixelSize(C3631R.styleable.BottomNavigationView_android_minHeight, 0));
         }
         obtainTintedStyledAttributes.recycle();
         if (shouldDrawCompatibilityTopDivider()) {
@@ -114,8 +114,8 @@ public class BottomNavigationView extends NavigationBarView {
 
     private void addCompatibilityTopDivider(Context context) {
         View view = new View(context);
-        view.setBackgroundColor(ContextCompat.getColor(context, C3621R.C3622color.design_bottom_navigation_shadow_color));
-        view.setLayoutParams(new FrameLayout.LayoutParams(-1, getResources().getDimensionPixelSize(C3621R.dimen.design_bottom_navigation_shadow_height)));
+        view.setBackgroundColor(ContextCompat.getColor(context, C3631R.C3632color.design_bottom_navigation_shadow_color));
+        view.setLayoutParams(new FrameLayout.LayoutParams(-1, getResources().getDimensionPixelSize(C3631R.dimen.design_bottom_navigation_shadow_height)));
         addView(view);
     }
 

@@ -7,8 +7,8 @@ import kotlin.coroutines.jvm.internal.ContinuationImpl;
 import kotlin.coroutines.jvm.internal.DebugMetadata;
 import kotlin.jvm.functions.Function1;
 
-@Metadata(mo64988k = 3, mo64989mv = {1, 5, 1}, mo64991xi = 48)
-@DebugMetadata(mo65240c = "kotlinx.coroutines.selects.WhileSelectKt", mo65241f = "WhileSelect.kt", mo65242i = {0}, mo65243l = {37}, mo65244m = "whileSelect", mo65245n = {"builder"}, mo65246s = {"L$0"})
+@Metadata(mo65044k = 3, mo65045mv = {1, 5, 1}, mo65047xi = 48)
+@DebugMetadata(mo65296c = "kotlinx.coroutines.selects.WhileSelectKt", mo65297f = "WhileSelect.kt", mo65298i = {0}, mo65299l = {37}, mo65300m = "whileSelect", mo65301n = {"builder"}, mo65302s = {"L$0"})
 /* compiled from: WhileSelect.kt */
 final class WhileSelectKt$whileSelect$1 extends ContinuationImpl {
     Object L$0;

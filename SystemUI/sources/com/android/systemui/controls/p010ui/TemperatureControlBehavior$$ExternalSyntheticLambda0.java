@@ -15,6 +15,6 @@ public final /* synthetic */ class TemperatureControlBehavior$$ExternalSynthetic
     }
 
     public final void onClick(View view) {
-        TemperatureControlBehavior.m2723bind$lambda0(this.f$0, this.f$1, view);
+        TemperatureControlBehavior.m2728bind$lambda0(this.f$0, this.f$1, view);
     }
 }

@@ -250,7 +250,7 @@ final class UNIXProcess extends Process {
             /*
                 r2 = this;
                 monitor-enter(r2)
-                java.io.InputStream r0 = r2.f521in     // Catch:{ IOException -> 0x0023, all -> 0x0020 }
+                java.io.InputStream r0 = r2.f519in     // Catch:{ IOException -> 0x0023, all -> 0x0020 }
                 if (r0 == 0) goto L_0x0023
                 byte[] r1 = drainInputStream(r0)     // Catch:{ IOException -> 0x0023, all -> 0x0020 }
                 r0.close()     // Catch:{ IOException -> 0x0023, all -> 0x0020 }
@@ -261,11 +261,11 @@ final class UNIXProcess extends Process {
                 java.io.ByteArrayInputStream r0 = new java.io.ByteArrayInputStream     // Catch:{ IOException -> 0x0023, all -> 0x0020 }
                 r0.<init>(r1)     // Catch:{ IOException -> 0x0023, all -> 0x0020 }
             L_0x0016:
-                r2.f521in = r0     // Catch:{ IOException -> 0x0023, all -> 0x0020 }
+                r2.f519in = r0     // Catch:{ IOException -> 0x0023, all -> 0x0020 }
                 byte[] r0 = r2.buf     // Catch:{ IOException -> 0x0023, all -> 0x0020 }
                 if (r0 != 0) goto L_0x0023
                 r0 = 0
-                r2.f521in = r0     // Catch:{ IOException -> 0x0023, all -> 0x0020 }
+                r2.f519in = r0     // Catch:{ IOException -> 0x0023, all -> 0x0020 }
                 goto L_0x0023
             L_0x0020:
                 r0 = move-exception

@@ -4,6 +4,7 @@ import com.android.keyguard.KeyguardViewController;
 import com.android.systemui.Dumpable;
 import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.dump.DumpManager;
+import com.nothing.systemui.util.NTLogUtil;
 import java.p026io.PrintWriter;
 import java.util.HashSet;
 import java.util.Set;
@@ -46,6 +47,7 @@ public class SystemUIDialogManager implements Dumpable {
             this.mDialogsShowing.remove(systemUIDialog);
         }
         if (shouldHideAffordance != shouldHideAffordance()) {
+            NTLogUtil.m1686d("SystemUIDialogManager", "shouldHideAffordance " + shouldHideAffordance());
             updateDialogListeners();
         }
     }

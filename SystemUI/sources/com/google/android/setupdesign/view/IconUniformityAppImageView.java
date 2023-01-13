@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewOutlineProvider;
 import android.widget.ImageView;
 import androidx.core.content.ContextCompat;
-import com.google.android.setupdesign.C3953R;
+import com.google.android.setupdesign.C3963R;
 import com.google.android.setupdesign.view.IconUniformityAppImageViewBindable;
 import com.google.android.setupdesign.widget.CardBackgroundDrawable;
 
@@ -50,7 +50,7 @@ public class IconUniformityAppImageView extends ImageView implements IconUniform
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.backdropColorResId = C3953R.C3954color.sud_uniformity_backdrop_color;
+        this.backdropColorResId = C3963R.C3964color.sud_uniformity_backdrop_color;
         this.backdropDrawable.setColor(ContextCompat.getColor(getContext(), this.backdropColorResId));
     }
 
@@ -60,7 +60,7 @@ public class IconUniformityAppImageView extends ImageView implements IconUniform
         if (ON_L_PLUS) {
             setBackgroundColor(ContextCompat.getColor(getContext(), this.backdropColorResId));
             this.backdropDrawable.setCornerRadius(floatValue);
-            setElevation(getContext().getResources().getDimension(C3953R.dimen.sud_icon_uniformity_elevation));
+            setElevation(getContext().getResources().getDimension(C3963R.dimen.sud_icon_uniformity_elevation));
             setClipToOutline(true);
             setOutlineProvider(new ViewOutlineProvider() {
                 public void getOutline(View view, Outline outline) {

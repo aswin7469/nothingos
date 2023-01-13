@@ -18,6 +18,6 @@ public final /* synthetic */ class SplitScreenController$SplitScreenImpl$$Extern
     }
 
     public final void run() {
-        this.f$0.mo50984xedc5cb80(this.f$1, this.f$2);
+        this.f$0.mo50995xedc5cb80(this.f$1, this.f$2);
     }
 }

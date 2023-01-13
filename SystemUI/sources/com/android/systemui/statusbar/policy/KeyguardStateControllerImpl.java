@@ -8,12 +8,13 @@ import android.os.Trace;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardUpdateMonitorCallback;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dumpable;
 import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.dump.DumpManager;
 import com.android.systemui.keyguard.KeyguardUnlockAnimationController;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
+import com.nothing.systemui.util.NTLogUtil;
 import dagger.Lazy;
 import java.p026io.PrintWriter;
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import javax.inject.Inject;
 public class KeyguardStateControllerImpl implements KeyguardStateController, Dumpable {
     private static final String AUTH_BROADCAST_KEY = "debug_trigger_auth";
     private static final boolean DEBUG_AUTH_WITH_ADB = false;
+    private final String TAG = "KeyguardStateControllerImpl";
     private boolean mBouncerShowing;
     private boolean mBypassFadingAnimation;
     private final ArrayList<KeyguardStateController.Callback> mCallbacks = new ArrayList<>();
@@ -110,6 +112,7 @@ public class KeyguardStateControllerImpl implements KeyguardStateController, Dum
         if (this.mShowing != z || this.mOccluded != z2) {
             this.mShowing = z;
             this.mOccluded = z2;
+            NTLogUtil.m1686d("KeyguardStateControllerImpl", "notifyKeyguardState mShowing: " + z + " mOccluded: " + z2);
             Trace.instantForTrack(4096, "UI Events", "Keyguard showing: " + z + " occluded: " + z2);
             notifyKeyguardChanged();
             notifyKeyguardDismissAmountChanged(z ? 0.0f : 1.0f, false);
@@ -189,7 +192,7 @@ public class KeyguardStateControllerImpl implements KeyguardStateController, Dum
     }
 
     public boolean isKeyguardScreenRotationAllowed() {
-        if (SystemProperties.getBoolean("lockscreen.rot_override", false) || this.mContext.getResources().getBoolean(C1893R.bool.config_enableLockScreenRotation)) {
+        if (SystemProperties.getBoolean("lockscreen.rot_override", false) || this.mContext.getResources().getBoolean(C1894R.bool.config_enableLockScreenRotation)) {
             return true;
         }
         return false;
@@ -281,6 +284,7 @@ public class KeyguardStateControllerImpl implements KeyguardStateController, Dum
     }
 
     public void setLaunchTransitionFadingAway(boolean z) {
+        NTLogUtil.m1686d("KeyguardStateControllerImpl", "setLaunchTransitionFadingAway " + z);
         this.mLaunchTransitionFadingAway = z;
         new ArrayList(this.mCallbacks).forEach(new KeyguardStateControllerImpl$$ExternalSyntheticLambda3());
     }

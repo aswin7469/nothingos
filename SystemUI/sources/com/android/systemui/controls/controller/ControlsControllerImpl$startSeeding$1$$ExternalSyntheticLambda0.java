@@ -23,6 +23,6 @@ public final /* synthetic */ class ControlsControllerImpl$startSeeding$1$$Extern
     }
 
     public final void run() {
-        ControlsControllerImpl$startSeeding$1.m2623accept$lambda2(this.f$0, this.f$1, this.f$2, this.f$3, this.f$4, this.f$5);
+        ControlsControllerImpl$startSeeding$1.m2628accept$lambda2(this.f$0, this.f$1, this.f$2, this.f$3, this.f$4, this.f$5);
     }
 }

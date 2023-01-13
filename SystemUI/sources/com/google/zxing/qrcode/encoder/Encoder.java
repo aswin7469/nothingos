@@ -415,7 +415,7 @@ public final class Encoder {
     }
 
     /* renamed from: com.google.zxing.qrcode.encoder.Encoder$1 */
-    static /* synthetic */ class C41121 {
+    static /* synthetic */ class C41221 {
         static final /* synthetic */ int[] $SwitchMap$com$google$zxing$qrcode$decoder$Mode;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(8:0|1|2|3|4|5|6|(3:7|8|10)) */
@@ -454,12 +454,12 @@ public final class Encoder {
             L_0x0033:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: com.google.zxing.qrcode.encoder.Encoder.C41121.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: com.google.zxing.qrcode.encoder.Encoder.C41221.<clinit>():void");
         }
     }
 
     static void appendBytes(String str, Mode mode, BitArray bitArray, Charset charset) throws WriterException {
-        int i = C41121.$SwitchMap$com$google$zxing$qrcode$decoder$Mode[mode.ordinal()];
+        int i = C41221.$SwitchMap$com$google$zxing$qrcode$decoder$Mode[mode.ordinal()];
         if (i == 1) {
             appendNumericBytes(str, bitArray);
         } else if (i == 2) {

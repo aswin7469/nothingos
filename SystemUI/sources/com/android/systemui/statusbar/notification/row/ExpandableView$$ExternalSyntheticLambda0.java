@@ -15,6 +15,6 @@ public final /* synthetic */ class ExpandableView$$ExternalSyntheticLambda0 impl
     }
 
     public final void run() {
-        this.f$0.mo41303x734e989(this.f$1, this.f$2);
+        this.f$0.mo41309x734e989(this.f$1, this.f$2);
     }
 }

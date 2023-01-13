@@ -9,7 +9,7 @@ import android.util.ArrayMap;
 import androidx.core.app.NotificationCompat;
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.logging.UiEventLogger;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dependency;
 import com.android.systemui.EventLogTags;
 import com.android.systemui.navigationbar.NavigationBarInflaterView;
@@ -64,11 +64,11 @@ public abstract class HeadsUpManager extends AlertingNotificationManager {
         this.mAccessibilityMgr = (AccessibilityManagerWrapper) Dependency.get(AccessibilityManagerWrapper.class);
         this.mUiEventLogger = (UiEventLogger) Dependency.get(UiEventLogger.class);
         Resources resources = context.getResources();
-        this.mMinimumDisplayTime = resources.getInteger(C1893R.integer.heads_up_notification_minimum_time);
-        this.mAutoDismissNotificationDecay = resources.getInteger(C1893R.integer.heads_up_notification_decay);
-        this.mTouchAcceptanceDelay = resources.getInteger(C1893R.integer.touch_acceptance_delay);
+        this.mMinimumDisplayTime = resources.getInteger(C1894R.integer.heads_up_notification_minimum_time);
+        this.mAutoDismissNotificationDecay = resources.getInteger(C1894R.integer.heads_up_notification_decay);
+        this.mTouchAcceptanceDelay = resources.getInteger(C1894R.integer.touch_acceptance_delay);
         this.mSnoozedPackages = new ArrayMap<>();
-        this.mSnoozeLengthMs = Settings.Global.getInt(context.getContentResolver(), SETTING_HEADS_UP_SNOOZE_LENGTH_MS, resources.getInteger(C1893R.integer.heads_up_default_snooze_length_ms));
+        this.mSnoozeLengthMs = Settings.Global.getInt(context.getContentResolver(), SETTING_HEADS_UP_SNOOZE_LENGTH_MS, resources.getInteger(C1894R.integer.heads_up_default_snooze_length_ms));
         context.getContentResolver().registerContentObserver(Settings.Global.getUriFor(SETTING_HEADS_UP_SNOOZE_LENGTH_MS), false, new ContentObserver(this.mHandler) {
             public void onChange(boolean z) {
                 int i = Settings.Global.getInt(context.getContentResolver(), HeadsUpManager.SETTING_HEADS_UP_SNOOZE_LENGTH_MS, -1);

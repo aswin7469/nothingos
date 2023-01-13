@@ -13,6 +13,6 @@ public final /* synthetic */ class AbstractPreferenceController$$ExternalSynthet
     }
 
     public final Object get() {
-        return this.f$0.mo28461x18600569(this.f$1);
+        return this.f$0.mo28466x18600569(this.f$1);
     }
 }

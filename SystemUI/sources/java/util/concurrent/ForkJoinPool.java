@@ -37,7 +37,7 @@ public class ForkJoinPool extends AbstractExecutorService {
     static final int OWNED = 1;
 
     /* renamed from: QA */
-    static final VarHandle f755QA;
+    static final VarHandle f753QA;
     static final int QLOCK = 1;
     static final int QUIET = 1073741824;
     private static final long RC_MASK = -281474976710656L;
@@ -333,7 +333,7 @@ public class ForkJoinPool extends AbstractExecutorService {
         int base = 4096;
 
         /* renamed from: id */
-        int f756id;
+        int f754id;
         int nsteals;
         final ForkJoinWorkerThread owner;
         volatile int phase;
@@ -613,7 +613,7 @@ public class ForkJoinPool extends AbstractExecutorService {
 
         /* access modifiers changed from: package-private */
         public final int getPoolIndex() {
-            return (this.f756id & 65535) >>> 1;
+            return (this.f754id & 65535) >>> 1;
         }
 
         /* access modifiers changed from: package-private */
@@ -678,7 +678,7 @@ public class ForkJoinPool extends AbstractExecutorService {
             if (forkJoinTaskArr == null || (length = forkJoinTaskArr.length) <= 0) {
                 return null;
             }
-            return forkJoinTaskArr[((this.f756id & 65536) != 0 ? this.base : this.top - 1) & (length - 1)];
+            return forkJoinTaskArr[((this.f754id & 65536) != 0 ? this.base : this.top - 1) & (length - 1)];
         }
 
         /* access modifiers changed from: package-private */
@@ -838,7 +838,7 @@ public class ForkJoinPool extends AbstractExecutorService {
                         }
                     }
                     int i8 = i4 | i6;
-                    workQueue.f756id = i8;
+                    workQueue.f754id = i8;
                     workQueue.phase = i8;
                     if (i6 < length) {
                         workQueueArr[i6] = workQueue;
@@ -853,7 +853,7 @@ public class ForkJoinPool extends AbstractExecutorService {
                             }
                             WorkQueue workQueue3 = workQueueArr[i];
                             if (workQueue3 != null) {
-                                workQueueArr2[workQueue3.f756id & i10 & 126] = workQueue3;
+                                workQueueArr2[workQueue3.f754id & i10 & 126] = workQueue3;
                             }
                             int i11 = i + 1;
                             if (i11 >= length) {
@@ -906,7 +906,7 @@ public class ForkJoinPool extends AbstractExecutorService {
                     }
                     z2 = true;
                 } else {
-                    i6 += i9 + workQueue.f756id;
+                    i6 += i9 + workQueue.f754id;
                 }
             }
             i5 = (i5 + i2) & i3;
@@ -962,7 +962,7 @@ public class ForkJoinPool extends AbstractExecutorService {
                     String str = this.workerNamePrefix;
                     WorkQueue workQueue2 = new WorkQueue(this, (ForkJoinWorkerThread) null);
                     workQueue2.array = new ForkJoinTask[8192];
-                    workQueue2.f756id = i2;
+                    workQueue2.f754id = i2;
                     workQueue2.source = 1073741824;
                     if (str != null) {
                         synchronized (str) {
@@ -1650,7 +1650,7 @@ public class ForkJoinPool extends AbstractExecutorService {
             MethodHandles.Lookup lookup = MethodHandles.lookup();
             CTL = lookup.findVarHandle(cls, "ctl", Long.TYPE);
             MODE = lookup.findVarHandle(cls, "mode", Integer.TYPE);
-            f755QA = MethodHandles.arrayElementVarHandle(ForkJoinTask[].class);
+            f753QA = MethodHandles.arrayElementVarHandle(ForkJoinTask[].class);
             Class<LockSupport> cls2 = LockSupport.class;
             int i = 256;
             try {

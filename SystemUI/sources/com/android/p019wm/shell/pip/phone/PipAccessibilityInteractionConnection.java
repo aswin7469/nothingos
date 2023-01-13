@@ -11,7 +11,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import android.view.accessibility.IAccessibilityInteractionConnection;
 import android.view.accessibility.IAccessibilityInteractionConnectionCallback;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.common.ShellExecutor;
 import com.android.p019wm.shell.pip.PipBoundsState;
 import com.android.p019wm.shell.pip.PipSnapAlgorithm;
@@ -74,15 +74,15 @@ public class PipAccessibilityInteractionConnection {
     public void performAccessibilityAction(long j, int i, Bundle bundle, int i2, IAccessibilityInteractionConnectionCallback iAccessibilityInteractionConnectionCallback, int i3, int i4, long j2) {
         boolean z = false;
         if (j == AccessibilityNodeInfo.ROOT_NODE_ID) {
-            if (i == C3343R.C3346id.action_pip_resize) {
+            if (i == C3353R.C3356id.action_pip_resize) {
                 if (this.mPipBoundsState.getBounds().width() == this.mNormalBounds.width() && this.mPipBoundsState.getBounds().height() == this.mNormalBounds.height()) {
                     setToExpandedBounds();
                 } else {
                     setToNormalBounds();
                 }
-            } else if (i == C3343R.C3346id.action_pip_stash) {
+            } else if (i == C3353R.C3356id.action_pip_stash) {
                 this.mMotionHelper.animateToStashedClosestEdge();
-            } else if (i == C3343R.C3346id.action_pip_unstash) {
+            } else if (i == C3353R.C3356id.action_pip_unstash) {
                 this.mUnstashCallback.run();
                 this.mPipBoundsState.setStashed(0);
             } else if (i == 16) {
@@ -113,7 +113,7 @@ public class PipAccessibilityInteractionConnection {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setToExpandedBounds$0$com-android-wm-shell-pip-phone-PipAccessibilityInteractionConnection */
-    public /* synthetic */ void mo50295x6e815584(Rect rect) {
+    public /* synthetic */ void mo50304x6e815584(Rect rect) {
         this.mMotionHelper.synchronizePinnedStackBounds();
         this.mUpdateMovementBoundCallback.run();
     }
@@ -125,7 +125,7 @@ public class PipAccessibilityInteractionConnection {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setToNormalBounds$1$com-android-wm-shell-pip-phone-PipAccessibilityInteractionConnection */
-    public /* synthetic */ void mo50296xd98a70b5(Rect rect) {
+    public /* synthetic */ void mo50305xd98a70b5(Rect rect) {
         this.mMotionHelper.synchronizePinnedStackBounds();
         this.mUpdateMovementBoundCallback.run();
     }
@@ -177,9 +177,9 @@ public class PipAccessibilityInteractionConnection {
         obtain.addAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_DISMISS);
         obtain.addAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_MOVE_WINDOW);
         obtain.addAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_EXPAND);
-        obtain.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3343R.C3346id.action_pip_resize, context.getString(C3343R.string.accessibility_action_pip_resize)));
-        obtain.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3343R.C3346id.action_pip_stash, context.getString(C3343R.string.accessibility_action_pip_stash)));
-        obtain.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3343R.C3346id.action_pip_unstash, context.getString(C3343R.string.accessibility_action_pip_unstash)));
+        obtain.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3353R.C3356id.action_pip_resize, context.getString(C3353R.string.accessibility_action_pip_resize)));
+        obtain.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3353R.C3356id.action_pip_stash, context.getString(C3353R.string.accessibility_action_pip_stash)));
+        obtain.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3353R.C3356id.action_pip_unstash, context.getString(C3353R.string.accessibility_action_pip_unstash)));
         obtain.setImportantForAccessibility(true);
         obtain.setClickable(true);
         obtain.setVisibleToUser(true);
@@ -208,62 +208,62 @@ public class PipAccessibilityInteractionConnection {
         }
 
         public void findAccessibilityNodeInfoByAccessibilityId(long j, Region region, int i, IAccessibilityInteractionConnectionCallback iAccessibilityInteractionConnectionCallback, int i2, int i3, long j2, MagnificationSpec magnificationSpec, float[] fArr, Bundle bundle) throws RemoteException {
-            PipAccessibilityInteractionConnection.this.mMainExcutor.execute(new C3522xdda251a1(this, j, region, i, iAccessibilityInteractionConnectionCallback, i2, i3, j2, magnificationSpec, bundle));
+            PipAccessibilityInteractionConnection.this.mMainExcutor.execute(new C3532xdda251a1(this, j, region, i, iAccessibilityInteractionConnectionCallback, i2, i3, j2, magnificationSpec, bundle));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$findAccessibilityNodeInfoByAccessibilityId$0$com-android-wm-shell-pip-phone-PipAccessibilityInteractionConnection$PipAccessibilityInteractionConnectionImpl */
-        public /* synthetic */ void mo50306x49b39ffd(long j, Region region, int i, IAccessibilityInteractionConnectionCallback iAccessibilityInteractionConnectionCallback, int i2, int i3, long j2, MagnificationSpec magnificationSpec, Bundle bundle) {
+        public /* synthetic */ void mo50315x49b39ffd(long j, Region region, int i, IAccessibilityInteractionConnectionCallback iAccessibilityInteractionConnectionCallback, int i2, int i3, long j2, MagnificationSpec magnificationSpec, Bundle bundle) {
             PipAccessibilityInteractionConnection.this.findAccessibilityNodeInfoByAccessibilityId(j, region, i, iAccessibilityInteractionConnectionCallback, i2, i3, j2, magnificationSpec, bundle);
         }
 
         public void findAccessibilityNodeInfosByViewId(long j, String str, Region region, int i, IAccessibilityInteractionConnectionCallback iAccessibilityInteractionConnectionCallback, int i2, int i3, long j2, MagnificationSpec magnificationSpec, float[] fArr) throws RemoteException {
-            PipAccessibilityInteractionConnection.this.mMainExcutor.execute(new C3523xdda251a2(this, j, str, region, i, iAccessibilityInteractionConnectionCallback, i2, i3, j2, magnificationSpec));
+            PipAccessibilityInteractionConnection.this.mMainExcutor.execute(new C3533xdda251a2(this, j, str, region, i, iAccessibilityInteractionConnectionCallback, i2, i3, j2, magnificationSpec));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$findAccessibilityNodeInfosByViewId$1$com-android-wm-shell-pip-phone-PipAccessibilityInteractionConnection$PipAccessibilityInteractionConnectionImpl */
-        public /* synthetic */ void mo50308xc7c7b304(long j, String str, Region region, int i, IAccessibilityInteractionConnectionCallback iAccessibilityInteractionConnectionCallback, int i2, int i3, long j2, MagnificationSpec magnificationSpec) {
+        public /* synthetic */ void mo50317xc7c7b304(long j, String str, Region region, int i, IAccessibilityInteractionConnectionCallback iAccessibilityInteractionConnectionCallback, int i2, int i3, long j2, MagnificationSpec magnificationSpec) {
             PipAccessibilityInteractionConnection.this.findAccessibilityNodeInfosByViewId(j, str, region, i, iAccessibilityInteractionConnectionCallback, i2, i3, j2, magnificationSpec);
         }
 
         public void findAccessibilityNodeInfosByText(long j, String str, Region region, int i, IAccessibilityInteractionConnectionCallback iAccessibilityInteractionConnectionCallback, int i2, int i3, long j2, MagnificationSpec magnificationSpec, float[] fArr) throws RemoteException {
-            PipAccessibilityInteractionConnection.this.mMainExcutor.execute(new C3520xdda2519f(this, j, str, region, i, iAccessibilityInteractionConnectionCallback, i2, i3, j2, magnificationSpec));
+            PipAccessibilityInteractionConnection.this.mMainExcutor.execute(new C3530xdda2519f(this, j, str, region, i, iAccessibilityInteractionConnectionCallback, i2, i3, j2, magnificationSpec));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$findAccessibilityNodeInfosByText$2$com-android-wm-shell-pip-phone-PipAccessibilityInteractionConnection$PipAccessibilityInteractionConnectionImpl */
-        public /* synthetic */ void mo50307xe9dd8d76(long j, String str, Region region, int i, IAccessibilityInteractionConnectionCallback iAccessibilityInteractionConnectionCallback, int i2, int i3, long j2, MagnificationSpec magnificationSpec) {
+        public /* synthetic */ void mo50316xe9dd8d76(long j, String str, Region region, int i, IAccessibilityInteractionConnectionCallback iAccessibilityInteractionConnectionCallback, int i2, int i3, long j2, MagnificationSpec magnificationSpec) {
             PipAccessibilityInteractionConnection.this.findAccessibilityNodeInfosByText(j, str, region, i, iAccessibilityInteractionConnectionCallback, i2, i3, j2, magnificationSpec);
         }
 
         public void findFocus(long j, int i, Region region, int i2, IAccessibilityInteractionConnectionCallback iAccessibilityInteractionConnectionCallback, int i3, int i4, long j2, MagnificationSpec magnificationSpec, float[] fArr) throws RemoteException {
-            PipAccessibilityInteractionConnection.this.mMainExcutor.execute(new C3521xdda251a0(this, j, i, region, i2, iAccessibilityInteractionConnectionCallback, i3, i4, j2, magnificationSpec));
+            PipAccessibilityInteractionConnection.this.mMainExcutor.execute(new C3531xdda251a0(this, j, i, region, i2, iAccessibilityInteractionConnectionCallback, i3, i4, j2, magnificationSpec));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$findFocus$3$com-android-wm-shell-pip-phone-PipAccessibilityInteractionConnection$PipAccessibilityInteractionConnectionImpl */
-        public /* synthetic */ void mo50309xa41f6ec2(long j, int i, Region region, int i2, IAccessibilityInteractionConnectionCallback iAccessibilityInteractionConnectionCallback, int i3, int i4, long j2, MagnificationSpec magnificationSpec) {
+        public /* synthetic */ void mo50318xa41f6ec2(long j, int i, Region region, int i2, IAccessibilityInteractionConnectionCallback iAccessibilityInteractionConnectionCallback, int i3, int i4, long j2, MagnificationSpec magnificationSpec) {
             PipAccessibilityInteractionConnection.this.findFocus(j, i, region, i2, iAccessibilityInteractionConnectionCallback, i3, i4, j2, magnificationSpec);
         }
 
         public void focusSearch(long j, int i, Region region, int i2, IAccessibilityInteractionConnectionCallback iAccessibilityInteractionConnectionCallback, int i3, int i4, long j2, MagnificationSpec magnificationSpec, float[] fArr) throws RemoteException {
-            PipAccessibilityInteractionConnection.this.mMainExcutor.execute(new C3518xdda2519d(this, j, i, region, i2, iAccessibilityInteractionConnectionCallback, i3, i4, j2, magnificationSpec));
+            PipAccessibilityInteractionConnection.this.mMainExcutor.execute(new C3528xdda2519d(this, j, i, region, i2, iAccessibilityInteractionConnectionCallback, i3, i4, j2, magnificationSpec));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$focusSearch$4$com-android-wm-shell-pip-phone-PipAccessibilityInteractionConnection$PipAccessibilityInteractionConnectionImpl */
-        public /* synthetic */ void mo50310xe838b180(long j, int i, Region region, int i2, IAccessibilityInteractionConnectionCallback iAccessibilityInteractionConnectionCallback, int i3, int i4, long j2, MagnificationSpec magnificationSpec) {
+        public /* synthetic */ void mo50319xe838b180(long j, int i, Region region, int i2, IAccessibilityInteractionConnectionCallback iAccessibilityInteractionConnectionCallback, int i3, int i4, long j2, MagnificationSpec magnificationSpec) {
             PipAccessibilityInteractionConnection.this.focusSearch(j, i, region, i2, iAccessibilityInteractionConnectionCallback, i3, i4, j2, magnificationSpec);
         }
 
         public void performAccessibilityAction(long j, int i, Bundle bundle, int i2, IAccessibilityInteractionConnectionCallback iAccessibilityInteractionConnectionCallback, int i3, int i4, long j2) throws RemoteException {
-            PipAccessibilityInteractionConnection.this.mMainExcutor.execute(new C3519xdda2519e(this, j, i, bundle, i2, iAccessibilityInteractionConnectionCallback, i3, i4, j2));
+            PipAccessibilityInteractionConnection.this.mMainExcutor.execute(new C3529xdda2519e(this, j, i, bundle, i2, iAccessibilityInteractionConnectionCallback, i3, i4, j2));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$performAccessibilityAction$5$com-android-wm-shell-pip-phone-PipAccessibilityInteractionConnection$PipAccessibilityInteractionConnectionImpl */
-        public /* synthetic */ void mo50311x2a817942(long j, int i, Bundle bundle, int i2, IAccessibilityInteractionConnectionCallback iAccessibilityInteractionConnectionCallback, int i3, int i4, long j2) {
+        public /* synthetic */ void mo50320x2a817942(long j, int i, Bundle bundle, int i2, IAccessibilityInteractionConnectionCallback iAccessibilityInteractionConnectionCallback, int i3, int i4, long j2) {
             PipAccessibilityInteractionConnection.this.performAccessibilityAction(j, i, bundle, i2, iAccessibilityInteractionConnectionCallback, i3, i4, j2);
         }
     }

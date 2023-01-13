@@ -15,7 +15,7 @@ public class NTHbmProviderImpl implements UdfpsHbmProvider {
                 runnable.run();
             }
             this.mHbmEnabled = true;
-            NTLogUtil.m1682i(TAG, "------HBM ENABLED-1---------");
+            NTLogUtil.m1688i(TAG, "------HBM ENABLED-1---------");
         }
     }
 
@@ -25,18 +25,18 @@ public class NTHbmProviderImpl implements UdfpsHbmProvider {
                 runnable.run();
             }
             this.mHbmEnabled = false;
-            NTLogUtil.m1682i(TAG, "------HBM DISABLED---------");
+            NTLogUtil.m1688i(TAG, "------HBM DISABLED---------");
         }
     }
 
     public void disableHbm() {
-        NTLogUtil.m1682i(TAG, "------HBM DISABLED-------disableHbm--");
+        NTLogUtil.m1688i(TAG, "------HBM DISABLED-------disableHbm--");
     }
 
     public void enableHbm() {
         if (!this.mHbmEnabled) {
             this.mHbmEnabled = true;
-            NTLogUtil.m1682i(TAG, "------HBM ENABLED----------");
+            NTLogUtil.m1688i(TAG, "------HBM ENABLED----------");
         }
     }
 

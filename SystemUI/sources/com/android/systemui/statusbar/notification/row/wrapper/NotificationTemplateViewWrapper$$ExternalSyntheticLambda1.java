@@ -15,6 +15,6 @@ public final /* synthetic */ class NotificationTemplateViewWrapper$$ExternalSynt
     }
 
     public final void onCanceled(PendingIntent pendingIntent) {
-        this.f$0.mo41788x8c7348a3(this.f$1, this.f$2, pendingIntent);
+        this.f$0.mo41796x8c7348a3(this.f$1, this.f$2, pendingIntent);
     }
 }

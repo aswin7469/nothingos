@@ -13,6 +13,6 @@ public final /* synthetic */ class ScrollCaptureController$$ExternalSyntheticLam
     }
 
     public final void run() {
-        this.f$0.mo37592xd64fc3a4(this.f$1);
+        this.f$0.mo37593xd64fc3a4(this.f$1);
     }
 }

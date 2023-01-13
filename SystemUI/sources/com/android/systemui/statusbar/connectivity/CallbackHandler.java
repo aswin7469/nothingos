@@ -103,7 +103,7 @@ public class CallbackHandler extends Handler implements NetworkController.Emerge
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setWifiIndicators$0$com-android-systemui-statusbar-connectivity-CallbackHandler */
-    public /* synthetic */ void mo39296x453840e1(WifiIndicators wifiIndicators) {
+    public /* synthetic */ void mo39297x453840e1(WifiIndicators wifiIndicators) {
         Iterator<SignalCallback> it = this.mSignalCallbacks.iterator();
         while (it.hasNext()) {
             it.next().setWifiIndicators(wifiIndicators);
@@ -117,7 +117,7 @@ public class CallbackHandler extends Handler implements NetworkController.Emerge
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setMobileDataIndicators$1$com-android-systemui-statusbar-connectivity-CallbackHandler */
-    public /* synthetic */ void mo39295xd2f936f9(MobileDataIndicators mobileDataIndicators) {
+    public /* synthetic */ void mo39296xd2f936f9(MobileDataIndicators mobileDataIndicators) {
         Iterator<SignalCallback> it = this.mSignalCallbacks.iterator();
         while (it.hasNext()) {
             it.next().setMobileDataIndicators(mobileDataIndicators);
@@ -135,7 +135,7 @@ public class CallbackHandler extends Handler implements NetworkController.Emerge
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setConnectivityStatus$2$com-android-systemui-statusbar-connectivity-CallbackHandler */
-    public /* synthetic */ void mo39294x4ce302b3(boolean z, boolean z2, boolean z3) {
+    public /* synthetic */ void mo39295x4ce302b3(boolean z, boolean z2, boolean z3) {
         Iterator<SignalCallback> it = this.mSignalCallbacks.iterator();
         while (it.hasNext()) {
             it.next().setConnectivityStatus(z, z2, z3);
@@ -153,7 +153,7 @@ public class CallbackHandler extends Handler implements NetworkController.Emerge
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setCallIndicator$3$com-android-systemui-statusbar-connectivity-CallbackHandler */
-    public /* synthetic */ void mo39293xc6d85692(IconState iconState, int i) {
+    public /* synthetic */ void mo39294xc6d85692(IconState iconState, int i) {
         Iterator<SignalCallback> it = this.mSignalCallbacks.iterator();
         while (it.hasNext()) {
             it.next().setCallIndicator(iconState, i);

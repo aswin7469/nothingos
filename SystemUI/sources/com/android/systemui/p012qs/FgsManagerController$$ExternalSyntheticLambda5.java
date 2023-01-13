@@ -12,6 +12,6 @@ public final /* synthetic */ class FgsManagerController$$ExternalSyntheticLambda
     }
 
     public final void onPropertiesChanged(DeviceConfig.Properties properties) {
-        FgsManagerController.m2886init$lambda2$lambda1(this.f$0, properties);
+        FgsManagerController.m2891init$lambda2$lambda1(this.f$0, properties);
     }
 }

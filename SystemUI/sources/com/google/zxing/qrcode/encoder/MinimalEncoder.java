@@ -87,7 +87,7 @@ final class MinimalEncoder {
     }
 
     static Version getVersion(VersionSize versionSize) {
-        int i = C41131.f502x9d14eba6[versionSize.ordinal()];
+        int i = C41231.f501x9d14eba6[versionSize.ordinal()];
         if (i == 1) {
             return Version.getVersionForNumber(9);
         }
@@ -106,11 +106,11 @@ final class MinimalEncoder {
     }
 
     /* renamed from: com.google.zxing.qrcode.encoder.MinimalEncoder$1 */
-    static /* synthetic */ class C41131 {
+    static /* synthetic */ class C41231 {
         static final /* synthetic */ int[] $SwitchMap$com$google$zxing$qrcode$decoder$Mode;
 
         /* renamed from: $SwitchMap$com$google$zxing$qrcode$encoder$MinimalEncoder$VersionSize */
-        static final /* synthetic */ int[] f502x9d14eba6;
+        static final /* synthetic */ int[] f501x9d14eba6;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(17:0|(2:1|2)|3|(2:5|6)|7|9|10|11|12|13|14|15|17|18|19|20|(3:21|22|24)) */
         /* JADX WARNING: Can't wrap try/catch for region: R(18:0|(2:1|2)|3|5|6|7|9|10|11|12|13|14|15|17|18|19|20|(3:21|22|24)) */
@@ -158,30 +158,30 @@ final class MinimalEncoder {
                 com.google.zxing.qrcode.encoder.MinimalEncoder$VersionSize[] r3 = com.google.zxing.qrcode.encoder.MinimalEncoder.VersionSize.values()
                 int r3 = r3.length
                 int[] r3 = new int[r3]
-                f502x9d14eba6 = r3
+                f501x9d14eba6 = r3
                 com.google.zxing.qrcode.encoder.MinimalEncoder$VersionSize r4 = com.google.zxing.qrcode.encoder.MinimalEncoder.VersionSize.SMALL     // Catch:{ NoSuchFieldError -> 0x004f }
                 int r4 = r4.ordinal()     // Catch:{ NoSuchFieldError -> 0x004f }
                 r3[r4] = r1     // Catch:{ NoSuchFieldError -> 0x004f }
             L_0x004f:
-                int[] r1 = f502x9d14eba6     // Catch:{ NoSuchFieldError -> 0x0059 }
+                int[] r1 = f501x9d14eba6     // Catch:{ NoSuchFieldError -> 0x0059 }
                 com.google.zxing.qrcode.encoder.MinimalEncoder$VersionSize r3 = com.google.zxing.qrcode.encoder.MinimalEncoder.VersionSize.MEDIUM     // Catch:{ NoSuchFieldError -> 0x0059 }
                 int r3 = r3.ordinal()     // Catch:{ NoSuchFieldError -> 0x0059 }
                 r1[r3] = r0     // Catch:{ NoSuchFieldError -> 0x0059 }
             L_0x0059:
-                int[] r0 = f502x9d14eba6     // Catch:{ NoSuchFieldError -> 0x0063 }
+                int[] r0 = f501x9d14eba6     // Catch:{ NoSuchFieldError -> 0x0063 }
                 com.google.zxing.qrcode.encoder.MinimalEncoder$VersionSize r1 = com.google.zxing.qrcode.encoder.MinimalEncoder.VersionSize.LARGE     // Catch:{ NoSuchFieldError -> 0x0063 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0063 }
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0063 }
             L_0x0063:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: com.google.zxing.qrcode.encoder.MinimalEncoder.C41131.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: com.google.zxing.qrcode.encoder.MinimalEncoder.C41231.<clinit>():void");
         }
     }
 
     /* access modifiers changed from: package-private */
     public boolean canEncode(Mode mode, char c) {
-        int i = C41131.$SwitchMap$com$google$zxing$qrcode$decoder$Mode[mode.ordinal()];
+        int i = C41231.$SwitchMap$com$google$zxing$qrcode$decoder$Mode[mode.ordinal()];
         if (i == 1) {
             return isDoubleByteKanji(c);
         }
@@ -196,7 +196,7 @@ final class MinimalEncoder {
 
     static int getCompactedOrdinal(Mode mode) {
         int i;
-        if (mode == null || (i = C41131.$SwitchMap$com$google$zxing$qrcode$decoder$Mode[mode.ordinal()]) == 1) {
+        if (mode == null || (i = C41231.$SwitchMap$com$google$zxing$qrcode$decoder$Mode[mode.ordinal()]) == 1) {
             return 0;
         }
         if (i == 2) {
@@ -236,16 +236,16 @@ final class MinimalEncoder {
         int i4 = length;
         for (int i5 = priorityEncoderIndex; i5 < i4; i5++) {
             if (this.encoders.canEncode(this.stringToEncode.charAt(i3), i5)) {
-                addEdge(edgeArr2, i3, new Edge(this, Mode.BYTE, i, i5, 1, edge, version, (C41131) null));
+                addEdge(edgeArr2, i3, new Edge(this, Mode.BYTE, i, i5, 1, edge, version, (C41231) null));
             }
         }
         if (canEncode(Mode.KANJI, this.stringToEncode.charAt(i3))) {
-            addEdge(edgeArr2, i3, new Edge(this, Mode.KANJI, i, 0, 1, edge, version, (C41131) null));
+            addEdge(edgeArr2, i3, new Edge(this, Mode.KANJI, i, 0, 1, edge, version, (C41231) null));
         }
         int length2 = this.stringToEncode.length();
         if (canEncode(Mode.ALPHANUMERIC, this.stringToEncode.charAt(i3))) {
             int i6 = i3 + 1;
-            addEdge(edgeArr2, i3, new Edge(this, Mode.ALPHANUMERIC, i, 0, (i6 >= length2 || !canEncode(Mode.ALPHANUMERIC, this.stringToEncode.charAt(i6))) ? 1 : 2, edge, version, (C41131) null));
+            addEdge(edgeArr2, i3, new Edge(this, Mode.ALPHANUMERIC, i, 0, (i6 >= length2 || !canEncode(Mode.ALPHANUMERIC, this.stringToEncode.charAt(i6))) ? 1 : 2, edge, version, (C41231) null));
         }
         if (canEncode(Mode.NUMERIC, this.stringToEncode.charAt(i3))) {
             Mode mode = Mode.NUMERIC;
@@ -256,7 +256,7 @@ final class MinimalEncoder {
                 int i8 = i3 + 2;
                 i2 = (i8 >= length2 || !canEncode(Mode.NUMERIC, this.stringToEncode.charAt(i8))) ? 2 : 3;
             }
-            addEdge(edgeArr2, i3, new Edge(this, mode, i, 0, i2, edge, version, (C41131) null));
+            addEdge(edgeArr2, i3, new Edge(this, mode, i, 0, i2, edge, version, (C41231) null));
         }
     }
 
@@ -313,7 +313,7 @@ final class MinimalEncoder {
         /* access modifiers changed from: private */
         public final Edge previous;
 
-        /* synthetic */ Edge(MinimalEncoder minimalEncoder, Mode mode2, int i, int i2, int i3, Edge edge, Version version, C41131 r8) {
+        /* synthetic */ Edge(MinimalEncoder minimalEncoder, Mode mode2, int i, int i2, int i3, Edge edge, Version version, C41231 r8) {
             this(mode2, i, i2, i3, edge, version);
         }
 
@@ -331,7 +331,7 @@ final class MinimalEncoder {
             }
             int i6 = 4;
             i5 = (edge == null || mode2 != edge.mode || z) ? i5 + mode2.getCharacterCountBits(version) + 4 : i5;
-            int i7 = C41131.$SwitchMap$com$google$zxing$qrcode$decoder$Mode[mode2.ordinal()];
+            int i7 = C41231.$SwitchMap$com$google$zxing$qrcode$decoder$Mode[mode2.ordinal()];
             if (i7 == 1) {
                 i5 += 13;
             } else if (i7 == 2) {
@@ -386,7 +386,7 @@ final class MinimalEncoder {
                 this.list.add(this.list.get(0).mode == Mode.ECI ? 1 : i3, new ResultNode(Mode.FNC1_FIRST_POSITION, 0, 0, 0));
             }
             int versionNumber = version2.getVersionNumber();
-            int i5 = C41131.f502x9d14eba6[MinimalEncoder.getVersionSize(version2).ordinal()];
+            int i5 = C41231.f501x9d14eba6[MinimalEncoder.getVersionSize(version2).ordinal()];
             if (i5 == 1) {
                 i2 = 9;
             } else if (i5 != 2) {
@@ -463,7 +463,7 @@ final class MinimalEncoder {
                 int i;
                 int i2 = 4;
                 int characterCountBits = this.mode.getCharacterCountBits(version) + 4;
-                int i3 = C41131.$SwitchMap$com$google$zxing$qrcode$decoder$Mode[this.mode.ordinal()];
+                int i3 = C41231.$SwitchMap$com$google$zxing$qrcode$decoder$Mode[this.mode.ordinal()];
                 if (i3 != 1) {
                     int i4 = 0;
                     if (i3 == 2) {

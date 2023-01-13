@@ -20,6 +20,6 @@ public final /* synthetic */ class OneHandedDisplayAreaOrganizer$$ExternalSynthe
     }
 
     public final void accept(Object obj, Object obj2) {
-        this.f$0.mo49900x42db20c2(this.f$1, this.f$2, this.f$3, (WindowContainerToken) obj, (SurfaceControl) obj2);
+        this.f$0.mo49909x42db20c2(this.f$1, this.f$2, this.f$3, (WindowContainerToken) obj, (SurfaceControl) obj2);
     }
 }

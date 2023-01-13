@@ -12,6 +12,6 @@ public final /* synthetic */ class BubbleData$$ExternalSyntheticLambda1 implemen
     }
 
     public final boolean test(Object obj) {
-        return this.f$0.m3412lambda$trim$6$comandroidwmshellbubblesBubbleData((Bubble) obj);
+        return this.f$0.m3416lambda$trim$6$comandroidwmshellbubblesBubbleData((Bubble) obj);
     }
 }

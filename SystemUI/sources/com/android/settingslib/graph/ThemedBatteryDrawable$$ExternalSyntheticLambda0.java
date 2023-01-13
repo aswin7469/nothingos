@@ -11,6 +11,6 @@ public final /* synthetic */ class ThemedBatteryDrawable$$ExternalSyntheticLambd
     }
 
     public final void run() {
-        ThemedBatteryDrawable.m2503postInvalidate$lambda5(this.f$0);
+        ThemedBatteryDrawable.m2509postInvalidate$lambda5(this.f$0);
     }
 }

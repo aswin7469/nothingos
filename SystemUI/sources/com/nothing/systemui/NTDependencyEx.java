@@ -9,10 +9,13 @@ import com.android.systemui.media.MediaDataManager;
 import com.android.systemui.plugins.FalsingManager;
 import com.android.systemui.power.TemperatureController;
 import com.android.systemui.statusbar.LockscreenShadeTransitionController;
+import com.android.systemui.statusbar.notification.stack.NotificationRoundnessManager;
 import com.android.systemui.statusbar.phone.ConfigurationControllerImpl;
 import com.android.systemui.statusbar.phone.ScrimController;
 import com.nothing.gamemode.NTGameModeHelper;
 import com.nothing.keyguard.LockIconViewControllerEx;
+import com.nothing.systemui.assist.AssistManagerEx;
+import com.nothing.systemui.biometrics.AuthRippleControllerEx;
 import com.nothing.systemui.biometrics.NTColorController;
 import com.nothing.systemui.doze.AODController;
 import com.nothing.systemui.doze.LiftWakeGestureController;
@@ -66,6 +69,10 @@ public class NTDependencyEx {
     Lazy<AODController> mAODController;
     @Inject
     Lazy<AmbientStateEx> mAmbientStateEx;
+    @Inject
+    Lazy<AssistManagerEx> mAssistManagerEx;
+    @Inject
+    Lazy<AuthRippleControllerEx> mAuthRippleControllerEx;
     @Inject
     Lazy<BatteryControllerImplEx> mBatteryControllerImplEx;
     @Inject
@@ -133,6 +140,8 @@ public class NTDependencyEx {
     Lazy<NavigationModeControllerEx> mNavigationModeControllerEx;
     @Inject
     Lazy<NfcController> mNfcController;
+    @Inject
+    Lazy<NotificationRoundnessManager> mNotificationRoundnessManager;
     @Inject
     Lazy<OngoingPrivacyChipEx> mOngoingPrivacyChipEx;
     @Inject
@@ -326,6 +335,15 @@ public class NTDependencyEx {
         Lazy<ConfigurationControllerImpl> lazy52 = this.mConfigurationControllerImpl;
         Objects.requireNonNull(lazy52);
         this.mProviders.put(ConfigurationControllerImpl.class, new NTDependencyEx$$ExternalSyntheticLambda0(lazy52));
+        Lazy<AssistManagerEx> lazy53 = this.mAssistManagerEx;
+        Objects.requireNonNull(lazy53);
+        this.mProviders.put(AssistManagerEx.class, new NTDependencyEx$$ExternalSyntheticLambda0(lazy53));
+        Lazy<NotificationRoundnessManager> lazy54 = this.mNotificationRoundnessManager;
+        Objects.requireNonNull(lazy54);
+        this.mProviders.put(NotificationRoundnessManager.class, new NTDependencyEx$$ExternalSyntheticLambda0(lazy54));
+        Lazy<AuthRippleControllerEx> lazy55 = this.mAuthRippleControllerEx;
+        Objects.requireNonNull(lazy55);
+        this.mProviders.put(AuthRippleControllerEx.class, new NTDependencyEx$$ExternalSyntheticLambda0(lazy55));
         setInstance(this);
     }
 

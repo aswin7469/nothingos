@@ -13,7 +13,7 @@ import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.view.ViewTreeObserver;
 import com.android.internal.graphics.ColorUtils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.animation.Interpolators;
 import com.android.systemui.statusbar.KeyguardAffordanceView;
 import java.lang.annotation.Retention;
@@ -22,7 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 public class LockIcon extends KeyguardAffordanceView {
     static final int ERROR = 0;
     static final int LOCK = 2;
-    private static final int[][] LOCK_ANIM_RES_IDS = {new int[]{C1893R.anim.lock_to_error, C1893R.anim.lock_unlock, C1893R.anim.lock_lock, C1893R.anim.lock_scanning}, new int[]{C1893R.anim.lock_to_error_circular, C1893R.anim.lock_unlock_circular, C1893R.anim.lock_lock_circular, C1893R.anim.lock_scanning_circular}, new int[]{C1893R.anim.lock_to_error_filled, C1893R.anim.lock_unlock_filled, C1893R.anim.lock_lock_filled, C1893R.anim.lock_scanning_filled}, new int[]{C1893R.anim.lock_to_error_rounded, C1893R.anim.lock_unlock_rounded, C1893R.anim.lock_lock_rounded, C1893R.anim.lock_scanning_rounded}};
+    private static final int[][] LOCK_ANIM_RES_IDS = {new int[]{C1894R.anim.lock_to_error, C1894R.anim.lock_unlock, C1894R.anim.lock_lock, C1894R.anim.lock_scanning}, new int[]{C1894R.anim.lock_to_error_circular, C1894R.anim.lock_unlock_circular, C1894R.anim.lock_lock_circular, C1894R.anim.lock_scanning_circular}, new int[]{C1894R.anim.lock_to_error_filled, C1894R.anim.lock_unlock_filled, C1894R.anim.lock_lock_filled, C1894R.anim.lock_scanning_filled}, new int[]{C1894R.anim.lock_to_error_rounded, C1894R.anim.lock_unlock_rounded, C1894R.anim.lock_lock_rounded, C1894R.anim.lock_scanning_rounded}};
     static final int SCANNING = 3;
     static final int STATE_BIOMETRICS_ERROR = 3;
     static final int STATE_LOCKED = 0;
@@ -44,7 +44,7 @@ public class LockIcon extends KeyguardAffordanceView {
             LockIcon.this.setImageDrawable(access$200, false);
             if (access$100 == 2) {
                 LockIcon lockIcon = LockIcon.this;
-                lockIcon.announceForAccessibility(lockIcon.getResources().getString(C1893R.string.accessibility_scanning_face));
+                lockIcon.announceForAccessibility(lockIcon.getResources().getString(C1894R.string.accessibility_scanning_face));
             }
             if (!(access$200 instanceof AnimatedVectorDrawable)) {
                 return true;

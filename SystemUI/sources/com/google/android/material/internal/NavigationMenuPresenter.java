@@ -24,7 +24,7 @@ import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import androidx.core.widget.TextViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerViewAccessibilityDelegate;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import java.util.ArrayList;
 
 public class NavigationMenuPresenter implements MenuPresenter {
@@ -41,7 +41,7 @@ public class NavigationMenuPresenter implements MenuPresenter {
     ColorStateList iconTintList;
 
     /* renamed from: id */
-    private int f443id;
+    private int f442id;
     boolean isBehindStatusBar = true;
     Drawable itemBackground;
     RippleDrawable itemForeground;
@@ -103,12 +103,12 @@ public class NavigationMenuPresenter implements MenuPresenter {
     public void initForMenu(Context context, MenuBuilder menuBuilder) {
         this.layoutInflater = LayoutInflater.from(context);
         this.menu = menuBuilder;
-        this.paddingSeparator = context.getResources().getDimensionPixelOffset(C3621R.dimen.design_navigation_separator_vertical_padding);
+        this.paddingSeparator = context.getResources().getDimensionPixelOffset(C3631R.dimen.design_navigation_separator_vertical_padding);
     }
 
     public MenuView getMenuView(ViewGroup viewGroup) {
         if (this.menuView == null) {
-            NavigationMenuView navigationMenuView = (NavigationMenuView) this.layoutInflater.inflate(C3621R.layout.design_navigation_menu, viewGroup, false);
+            NavigationMenuView navigationMenuView = (NavigationMenuView) this.layoutInflater.inflate(C3631R.layout.design_navigation_menu, viewGroup, false);
             this.menuView = navigationMenuView;
             navigationMenuView.setAccessibilityDelegateCompat(new NavigationMenuViewAccessibilityDelegate(this.menuView));
             if (this.adapter == null) {
@@ -118,7 +118,7 @@ public class NavigationMenuPresenter implements MenuPresenter {
             if (i != -1) {
                 this.menuView.setOverScrollMode(i);
             }
-            this.headerLayout = (LinearLayout) this.layoutInflater.inflate(C3621R.layout.design_navigation_item_header, this.menuView, false);
+            this.headerLayout = (LinearLayout) this.layoutInflater.inflate(C3631R.layout.design_navigation_item_header, this.menuView, false);
             this.menuView.setAdapter(this.adapter);
         }
         return this.menuView;
@@ -143,11 +143,11 @@ public class NavigationMenuPresenter implements MenuPresenter {
     }
 
     public int getId() {
-        return this.f443id;
+        return this.f442id;
     }
 
     public void setId(int i) {
-        this.f443id = i;
+        this.f442id = i;
     }
 
     public Parcelable onSaveInstanceState() {
@@ -401,20 +401,20 @@ public class NavigationMenuPresenter implements MenuPresenter {
 
     private static class NormalViewHolder extends ViewHolder {
         public NormalViewHolder(LayoutInflater layoutInflater, ViewGroup viewGroup, View.OnClickListener onClickListener) {
-            super(layoutInflater.inflate(C3621R.layout.design_navigation_item, viewGroup, false));
+            super(layoutInflater.inflate(C3631R.layout.design_navigation_item, viewGroup, false));
             this.itemView.setOnClickListener(onClickListener);
         }
     }
 
     private static class SubheaderViewHolder extends ViewHolder {
         public SubheaderViewHolder(LayoutInflater layoutInflater, ViewGroup viewGroup) {
-            super(layoutInflater.inflate(C3621R.layout.design_navigation_item_subheader, viewGroup, false));
+            super(layoutInflater.inflate(C3631R.layout.design_navigation_item_subheader, viewGroup, false));
         }
     }
 
     private static class SeparatorViewHolder extends ViewHolder {
         public SeparatorViewHolder(LayoutInflater layoutInflater, ViewGroup viewGroup) {
-            super(layoutInflater.inflate(C3621R.layout.design_navigation_item_separator, viewGroup, false));
+            super(layoutInflater.inflate(C3631R.layout.design_navigation_item_separator, viewGroup, false));
         }
     }
 

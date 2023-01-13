@@ -9,6 +9,6 @@ public final /* synthetic */ class AnimatedDialog$$ExternalSyntheticLambda5 impl
     }
 
     public final void run() {
-        AnimatedDialog.m2538onDialogDismissed$lambda3(this.f$0);
+        AnimatedDialog.m2544onDialogDismissed$lambda3(this.f$0);
     }
 }

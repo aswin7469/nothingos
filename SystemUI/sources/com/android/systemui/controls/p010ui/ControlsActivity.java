@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowInsets;
 import com.android.settingslib.core.lifecycle.Lifecycle;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.controls.management.ControlsAnimations;
 import com.android.systemui.util.LifecycleActivity;
@@ -22,7 +22,7 @@ import javax.inject.Inject;
 import kotlin.Metadata;
 import kotlin.jvm.internal.Intrinsics;
 
-@Metadata(mo64986d1 = {"\u00004\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0004\u0018\u00002\u00020\u0001B\u0017\b\u0007\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005¢\u0006\u0002\u0010\u0006J\b\u0010\u000b\u001a\u00020\fH\u0002J\b\u0010\r\u001a\u00020\fH\u0016J\u0012\u0010\u000e\u001a\u00020\f2\b\u0010\u000f\u001a\u0004\u0018\u00010\u0010H\u0014J\b\u0010\u0011\u001a\u00020\fH\u0014J\b\u0010\u0012\u001a\u00020\fH\u0014J\b\u0010\u0013\u001a\u00020\fH\u0014R\u000e\u0010\u0004\u001a\u00020\u0005X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0007\u001a\u00020\bX.¢\u0006\u0002\n\u0000R\u000e\u0010\t\u001a\u00020\nX.¢\u0006\u0002\n\u0000R\u000e\u0010\u0002\u001a\u00020\u0003X\u0004¢\u0006\u0002\n\u0000¨\u0006\u0014"}, mo64987d2 = {"Lcom/android/systemui/controls/ui/ControlsActivity;", "Lcom/android/systemui/util/LifecycleActivity;", "uiController", "Lcom/android/systemui/controls/ui/ControlsUiController;", "broadcastDispatcher", "Lcom/android/systemui/broadcast/BroadcastDispatcher;", "(Lcom/android/systemui/controls/ui/ControlsUiController;Lcom/android/systemui/broadcast/BroadcastDispatcher;)V", "broadcastReceiver", "Landroid/content/BroadcastReceiver;", "parent", "Landroid/view/ViewGroup;", "initBroadcastReceiver", "", "onBackPressed", "onCreate", "savedInstanceState", "Landroid/os/Bundle;", "onDestroy", "onStart", "onStop", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u00004\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0004\u0018\u00002\u00020\u0001B\u0017\b\u0007\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005¢\u0006\u0002\u0010\u0006J\b\u0010\u000b\u001a\u00020\fH\u0002J\b\u0010\r\u001a\u00020\fH\u0016J\u0012\u0010\u000e\u001a\u00020\f2\b\u0010\u000f\u001a\u0004\u0018\u00010\u0010H\u0014J\b\u0010\u0011\u001a\u00020\fH\u0014J\b\u0010\u0012\u001a\u00020\fH\u0014J\b\u0010\u0013\u001a\u00020\fH\u0014R\u000e\u0010\u0004\u001a\u00020\u0005X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0007\u001a\u00020\bX.¢\u0006\u0002\n\u0000R\u000e\u0010\t\u001a\u00020\nX.¢\u0006\u0002\n\u0000R\u000e\u0010\u0002\u001a\u00020\u0003X\u0004¢\u0006\u0002\n\u0000¨\u0006\u0014"}, mo65043d2 = {"Lcom/android/systemui/controls/ui/ControlsActivity;", "Lcom/android/systemui/util/LifecycleActivity;", "uiController", "Lcom/android/systemui/controls/ui/ControlsUiController;", "broadcastDispatcher", "Lcom/android/systemui/broadcast/BroadcastDispatcher;", "(Lcom/android/systemui/controls/ui/ControlsUiController;Lcom/android/systemui/broadcast/BroadcastDispatcher;)V", "broadcastReceiver", "Landroid/content/BroadcastReceiver;", "parent", "Landroid/view/ViewGroup;", "initBroadcastReceiver", "", "onBackPressed", "onCreate", "savedInstanceState", "Landroid/os/Bundle;", "onDestroy", "onStart", "onStop", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* renamed from: com.android.systemui.controls.ui.ControlsActivity */
 /* compiled from: ControlsActivity.kt */
 public final class ControlsActivity extends LifecycleActivity {
@@ -61,23 +61,23 @@ public final class ControlsActivity extends LifecycleActivity {
     /* access modifiers changed from: protected */
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        setContentView(C1893R.layout.controls_fullscreen);
+        setContentView(C1894R.layout.controls_fullscreen);
         Lifecycle lifecycle = getLifecycle();
         ControlsAnimations controlsAnimations = ControlsAnimations.INSTANCE;
-        View requireViewById = requireViewById(C1893R.C1897id.control_detail_root);
+        View requireViewById = requireViewById(C1894R.C1898id.control_detail_root);
         Intrinsics.checkNotNullExpressionValue(requireViewById, "requireViewById<ViewGrou…R.id.control_detail_root)");
         Window window = getWindow();
         Intrinsics.checkNotNullExpressionValue(window, "window");
         Intent intent = getIntent();
         Intrinsics.checkNotNullExpressionValue(intent, "intent");
         lifecycle.addObserver(controlsAnimations.observerForAnimations((ViewGroup) requireViewById, window, intent));
-        ((ViewGroup) requireViewById(C1893R.C1897id.control_detail_root)).setOnApplyWindowInsetsListener(new ControlsActivity$$ExternalSyntheticLambda1());
+        ((ViewGroup) requireViewById(C1894R.C1898id.control_detail_root)).setOnApplyWindowInsetsListener(new ControlsActivity$$ExternalSyntheticLambda1());
         initBroadcastReceiver();
     }
 
     /* access modifiers changed from: private */
     /* renamed from: onCreate$lambda-2$lambda-1  reason: not valid java name */
-    public static final WindowInsets m2701onCreate$lambda2$lambda1(View view, WindowInsets windowInsets) {
+    public static final WindowInsets m2706onCreate$lambda2$lambda1(View view, WindowInsets windowInsets) {
         Intrinsics.checkNotNullParameter(view, DateFormat.ABBR_GENERIC_TZ);
         Intrinsics.checkNotNullParameter(windowInsets, "insets");
         view.setPadding(view.getPaddingLeft(), view.getPaddingTop(), view.getPaddingRight(), windowInsets.getInsets(WindowInsets.Type.systemBars()).bottom);
@@ -87,7 +87,7 @@ public final class ControlsActivity extends LifecycleActivity {
     /* access modifiers changed from: protected */
     public void onStart() {
         super.onStart();
-        View requireViewById = requireViewById(C1893R.C1897id.global_actions_controls);
+        View requireViewById = requireViewById(C1894R.C1898id.global_actions_controls);
         Intrinsics.checkNotNullExpressionValue(requireViewById, "requireViewById<ViewGrou….global_actions_controls)");
         ViewGroup viewGroup = (ViewGroup) requireViewById;
         this.parent = viewGroup;
@@ -116,7 +116,7 @@ public final class ControlsActivity extends LifecycleActivity {
 
     /* access modifiers changed from: private */
     /* renamed from: onStart$lambda-3  reason: not valid java name */
-    public static final void m2702onStart$lambda3(ControlsActivity controlsActivity) {
+    public static final void m2707onStart$lambda3(ControlsActivity controlsActivity) {
         Intrinsics.checkNotNullParameter(controlsActivity, "this$0");
         controlsActivity.finish();
     }

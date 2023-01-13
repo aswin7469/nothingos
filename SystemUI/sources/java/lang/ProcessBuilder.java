@@ -172,7 +172,7 @@ public final class ProcessBuilder {
         }
 
         /* renamed from: to */
-        public static Redirect m1691to(final File file) {
+        public static Redirect m1697to(final File file) {
             file.getClass();
             return new Redirect() {
                 /* access modifiers changed from: package-private */
@@ -278,11 +278,11 @@ public final class ProcessBuilder {
     }
 
     public ProcessBuilder redirectOutput(File file) {
-        return redirectOutput(Redirect.m1691to(file));
+        return redirectOutput(Redirect.m1697to(file));
     }
 
     public ProcessBuilder redirectError(File file) {
-        return redirectError(Redirect.m1691to(file));
+        return redirectError(Redirect.m1697to(file));
     }
 
     public Redirect redirectInput() {

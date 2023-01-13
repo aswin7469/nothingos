@@ -8,7 +8,7 @@ import android.widget.FrameLayout;
 import androidx.appcompat.widget.TintTypedArray;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.internal.ThemeEnforcement;
 import com.google.android.material.internal.ViewUtils;
 import com.google.android.material.navigation.NavigationBarView;
@@ -34,32 +34,32 @@ public class NavigationRailView extends NavigationBarView {
     }
 
     public NavigationRailView(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, C3621R.attr.navigationRailStyle);
+        this(context, attributeSet, C3631R.attr.navigationRailStyle);
     }
 
     public NavigationRailView(Context context, AttributeSet attributeSet, int i) {
-        this(context, attributeSet, i, C3621R.style.Widget_MaterialComponents_NavigationRailView);
+        this(context, attributeSet, i, C3631R.style.Widget_MaterialComponents_NavigationRailView);
     }
 
     public NavigationRailView(Context context, AttributeSet attributeSet, int i, int i2) {
         super(context, attributeSet, i, i2);
         this.paddingTopSystemWindowInsets = null;
         this.paddingBottomSystemWindowInsets = null;
-        this.topMargin = getResources().getDimensionPixelSize(C3621R.dimen.mtrl_navigation_rail_margin);
-        TintTypedArray obtainTintedStyledAttributes = ThemeEnforcement.obtainTintedStyledAttributes(getContext(), attributeSet, C3621R.styleable.NavigationRailView, i, i2, new int[0]);
-        int resourceId = obtainTintedStyledAttributes.getResourceId(C3621R.styleable.NavigationRailView_headerLayout, 0);
+        this.topMargin = getResources().getDimensionPixelSize(C3631R.dimen.mtrl_navigation_rail_margin);
+        TintTypedArray obtainTintedStyledAttributes = ThemeEnforcement.obtainTintedStyledAttributes(getContext(), attributeSet, C3631R.styleable.NavigationRailView, i, i2, new int[0]);
+        int resourceId = obtainTintedStyledAttributes.getResourceId(C3631R.styleable.NavigationRailView_headerLayout, 0);
         if (resourceId != 0) {
             addHeaderView(resourceId);
         }
-        setMenuGravity(obtainTintedStyledAttributes.getInt(C3621R.styleable.NavigationRailView_menuGravity, 49));
-        if (obtainTintedStyledAttributes.hasValue(C3621R.styleable.NavigationRailView_itemMinHeight)) {
-            setItemMinimumHeight(obtainTintedStyledAttributes.getDimensionPixelSize(C3621R.styleable.NavigationRailView_itemMinHeight, -1));
+        setMenuGravity(obtainTintedStyledAttributes.getInt(C3631R.styleable.NavigationRailView_menuGravity, 49));
+        if (obtainTintedStyledAttributes.hasValue(C3631R.styleable.NavigationRailView_itemMinHeight)) {
+            setItemMinimumHeight(obtainTintedStyledAttributes.getDimensionPixelSize(C3631R.styleable.NavigationRailView_itemMinHeight, -1));
         }
-        if (obtainTintedStyledAttributes.hasValue(C3621R.styleable.NavigationRailView_paddingTopSystemWindowInsets)) {
-            this.paddingTopSystemWindowInsets = Boolean.valueOf(obtainTintedStyledAttributes.getBoolean(C3621R.styleable.NavigationRailView_paddingTopSystemWindowInsets, false));
+        if (obtainTintedStyledAttributes.hasValue(C3631R.styleable.NavigationRailView_paddingTopSystemWindowInsets)) {
+            this.paddingTopSystemWindowInsets = Boolean.valueOf(obtainTintedStyledAttributes.getBoolean(C3631R.styleable.NavigationRailView_paddingTopSystemWindowInsets, false));
         }
-        if (obtainTintedStyledAttributes.hasValue(C3621R.styleable.NavigationRailView_paddingBottomSystemWindowInsets)) {
-            this.paddingBottomSystemWindowInsets = Boolean.valueOf(obtainTintedStyledAttributes.getBoolean(C3621R.styleable.NavigationRailView_paddingBottomSystemWindowInsets, false));
+        if (obtainTintedStyledAttributes.hasValue(C3631R.styleable.NavigationRailView_paddingBottomSystemWindowInsets)) {
+            this.paddingBottomSystemWindowInsets = Boolean.valueOf(obtainTintedStyledAttributes.getBoolean(C3631R.styleable.NavigationRailView_paddingBottomSystemWindowInsets, false));
         }
         obtainTintedStyledAttributes.recycle();
         applyWindowInsets();

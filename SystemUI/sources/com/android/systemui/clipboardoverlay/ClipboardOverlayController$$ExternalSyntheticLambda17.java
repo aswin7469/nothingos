@@ -11,6 +11,6 @@ public final /* synthetic */ class ClipboardOverlayController$$ExternalSynthetic
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        this.f$0.mo31298x4c15a9b0(valueAnimator);
+        this.f$0.mo31309x4c15a9b0(valueAnimator);
     }
 }

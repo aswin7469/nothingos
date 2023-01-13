@@ -100,12 +100,12 @@ public interface LongStream extends BaseStream<Long, LongStream> {
     }
 
     /* renamed from: of */
-    static LongStream m1778of(long j) {
+    static LongStream m1784of(long j) {
         return StreamSupport.longStream(new Streams.LongStreamBuilderImpl(j), false);
     }
 
     /* renamed from: of */
-    static LongStream m1779of(long... jArr) {
+    static LongStream m1785of(long... jArr) {
         return Arrays.stream(jArr);
     }
 
@@ -114,7 +114,7 @@ public interface LongStream extends BaseStream<Long, LongStream> {
         return StreamSupport.longStream(Spliterators.spliteratorUnknownSize((PrimitiveIterator.OfLong) new PrimitiveIterator.OfLong(j, longUnaryOperator) {
 
             /* renamed from: t */
-            long f779t;
+            long f777t;
             final /* synthetic */ LongUnaryOperator val$f;
             final /* synthetic */ long val$seed;
 
@@ -125,12 +125,12 @@ public interface LongStream extends BaseStream<Long, LongStream> {
             {
                 this.val$seed = r1;
                 this.val$f = r3;
-                this.f779t = r1;
+                this.f777t = r1;
             }
 
             public long nextLong() {
-                long j = this.f779t;
-                this.f779t = this.val$f.applyAsLong(j);
+                long j = this.f777t;
+                this.f777t = this.val$f.applyAsLong(j);
                 return j;
             }
         }, 1296), false);

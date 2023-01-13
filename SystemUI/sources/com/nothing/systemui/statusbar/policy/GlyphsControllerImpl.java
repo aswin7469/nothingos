@@ -22,7 +22,7 @@ public class GlyphsControllerImpl implements GlyphsController {
 
     @Inject
     public GlyphsControllerImpl(Context context) {
-        C42271 r0 = new ContentObserver(new Handler()) {
+        C42381 r0 = new ContentObserver(new Handler()) {
             public void onChange(boolean z) {
                 super.onChange(z);
                 boolean z2 = false;

@@ -11,6 +11,6 @@ public final /* synthetic */ class DelayedWakeLock$$ExternalSyntheticLambda0 imp
     }
 
     public final void run() {
-        this.f$0.mo47179x7da1638c(this.f$1);
+        this.f$0.mo47191x7da1638c(this.f$1);
     }
 }

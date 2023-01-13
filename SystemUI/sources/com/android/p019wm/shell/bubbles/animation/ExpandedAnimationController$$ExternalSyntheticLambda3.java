@@ -14,6 +14,6 @@ public final /* synthetic */ class ExpandedAnimationController$$ExternalSyntheti
     }
 
     public final void configureAnimationForChildAtIndex(int i, PhysicsAnimationLayout.PhysicsPropertyAnimator physicsPropertyAnimator) {
-        this.f$0.mo48855x3be5d015(this.f$1, i, physicsPropertyAnimator);
+        this.f$0.mo48864x3be5d015(this.f$1, i, physicsPropertyAnimator);
     }
 }

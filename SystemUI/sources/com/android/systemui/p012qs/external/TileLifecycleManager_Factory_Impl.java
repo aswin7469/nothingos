@@ -8,9 +8,9 @@ import javax.inject.Provider;
 
 /* renamed from: com.android.systemui.qs.external.TileLifecycleManager_Factory_Impl */
 public final class TileLifecycleManager_Factory_Impl implements TileLifecycleManager.Factory {
-    private final C4822TileLifecycleManager_Factory delegateFactory;
+    private final C4834TileLifecycleManager_Factory delegateFactory;
 
-    TileLifecycleManager_Factory_Impl(C4822TileLifecycleManager_Factory tileLifecycleManager_Factory) {
+    TileLifecycleManager_Factory_Impl(C4834TileLifecycleManager_Factory tileLifecycleManager_Factory) {
         this.delegateFactory = tileLifecycleManager_Factory;
     }
 
@@ -18,7 +18,7 @@ public final class TileLifecycleManager_Factory_Impl implements TileLifecycleMan
         return this.delegateFactory.get(intent, userHandle);
     }
 
-    public static Provider<TileLifecycleManager.Factory> create(C4822TileLifecycleManager_Factory tileLifecycleManager_Factory) {
+    public static Provider<TileLifecycleManager.Factory> create(C4834TileLifecycleManager_Factory tileLifecycleManager_Factory) {
         return InstanceFactory.create(new TileLifecycleManager_Factory_Impl(tileLifecycleManager_Factory));
     }
 }

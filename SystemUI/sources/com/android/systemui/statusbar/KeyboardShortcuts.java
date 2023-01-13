@@ -40,7 +40,7 @@ import com.android.internal.app.AssistUtils;
 import com.android.internal.logging.MetricsLogger;
 import com.android.launcher3.icons.cache.BaseIconCache;
 import com.android.settingslib.Utils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.navigationbar.NavigationBarInflaterView;
 import com.nothing.p023os.device.DeviceConstant;
 import java.util.ArrayList;
@@ -155,47 +155,47 @@ public final class KeyboardShortcuts {
 
     private void loadResources(Context context) {
         Context context2 = context;
-        this.mSpecialCharacterNames.put(3, context2.getString(C1893R.string.keyboard_key_home));
-        this.mSpecialCharacterNames.put(4, context2.getString(C1893R.string.keyboard_key_back));
-        this.mSpecialCharacterNames.put(19, context2.getString(C1893R.string.keyboard_key_dpad_up));
-        this.mSpecialCharacterNames.put(20, context2.getString(C1893R.string.keyboard_key_dpad_down));
-        this.mSpecialCharacterNames.put(21, context2.getString(C1893R.string.keyboard_key_dpad_left));
-        this.mSpecialCharacterNames.put(22, context2.getString(C1893R.string.keyboard_key_dpad_right));
-        this.mSpecialCharacterNames.put(23, context2.getString(C1893R.string.keyboard_key_dpad_center));
+        this.mSpecialCharacterNames.put(3, context2.getString(C1894R.string.keyboard_key_home));
+        this.mSpecialCharacterNames.put(4, context2.getString(C1894R.string.keyboard_key_back));
+        this.mSpecialCharacterNames.put(19, context2.getString(C1894R.string.keyboard_key_dpad_up));
+        this.mSpecialCharacterNames.put(20, context2.getString(C1894R.string.keyboard_key_dpad_down));
+        this.mSpecialCharacterNames.put(21, context2.getString(C1894R.string.keyboard_key_dpad_left));
+        this.mSpecialCharacterNames.put(22, context2.getString(C1894R.string.keyboard_key_dpad_right));
+        this.mSpecialCharacterNames.put(23, context2.getString(C1894R.string.keyboard_key_dpad_center));
         this.mSpecialCharacterNames.put(56, BaseIconCache.EMPTY_CLASS_NAME);
-        this.mSpecialCharacterNames.put(61, context2.getString(C1893R.string.keyboard_key_tab));
-        this.mSpecialCharacterNames.put(62, context2.getString(C1893R.string.keyboard_key_space));
-        this.mSpecialCharacterNames.put(66, context2.getString(C1893R.string.keyboard_key_enter));
-        this.mSpecialCharacterNames.put(67, context2.getString(C1893R.string.keyboard_key_backspace));
-        this.mSpecialCharacterNames.put(85, context2.getString(C1893R.string.keyboard_key_media_play_pause));
-        this.mSpecialCharacterNames.put(86, context2.getString(C1893R.string.keyboard_key_media_stop));
-        this.mSpecialCharacterNames.put(87, context2.getString(C1893R.string.keyboard_key_media_next));
-        this.mSpecialCharacterNames.put(88, context2.getString(C1893R.string.keyboard_key_media_previous));
-        this.mSpecialCharacterNames.put(89, context2.getString(C1893R.string.keyboard_key_media_rewind));
-        this.mSpecialCharacterNames.put(90, context2.getString(C1893R.string.keyboard_key_media_fast_forward));
-        this.mSpecialCharacterNames.put(92, context2.getString(C1893R.string.keyboard_key_page_up));
-        this.mSpecialCharacterNames.put(93, context2.getString(C1893R.string.keyboard_key_page_down));
-        this.mSpecialCharacterNames.put(96, context2.getString(C1893R.string.keyboard_key_button_template, new Object[]{ExifInterface.GPS_MEASUREMENT_IN_PROGRESS}));
-        this.mSpecialCharacterNames.put(97, context2.getString(C1893R.string.keyboard_key_button_template, new Object[]{"B"}));
-        this.mSpecialCharacterNames.put(98, context2.getString(C1893R.string.keyboard_key_button_template, new Object[]{"C"}));
-        this.mSpecialCharacterNames.put(99, context2.getString(C1893R.string.keyboard_key_button_template, new Object[]{"X"}));
-        this.mSpecialCharacterNames.put(100, context2.getString(C1893R.string.keyboard_key_button_template, new Object[]{"Y"}));
-        this.mSpecialCharacterNames.put(101, context2.getString(C1893R.string.keyboard_key_button_template, new Object[]{"Z"}));
-        this.mSpecialCharacterNames.put(102, context2.getString(C1893R.string.keyboard_key_button_template, new Object[]{"L1"}));
-        this.mSpecialCharacterNames.put(103, context2.getString(C1893R.string.keyboard_key_button_template, new Object[]{"R1"}));
-        this.mSpecialCharacterNames.put(104, context2.getString(C1893R.string.keyboard_key_button_template, new Object[]{"L2"}));
-        this.mSpecialCharacterNames.put(105, context2.getString(C1893R.string.keyboard_key_button_template, new Object[]{"R2"}));
-        this.mSpecialCharacterNames.put(108, context2.getString(C1893R.string.keyboard_key_button_template, new Object[]{"Start"}));
-        this.mSpecialCharacterNames.put(109, context2.getString(C1893R.string.keyboard_key_button_template, new Object[]{"Select"}));
-        this.mSpecialCharacterNames.put(110, context2.getString(C1893R.string.keyboard_key_button_template, new Object[]{"Mode"}));
-        this.mSpecialCharacterNames.put(112, context2.getString(C1893R.string.keyboard_key_forward_del));
+        this.mSpecialCharacterNames.put(61, context2.getString(C1894R.string.keyboard_key_tab));
+        this.mSpecialCharacterNames.put(62, context2.getString(C1894R.string.keyboard_key_space));
+        this.mSpecialCharacterNames.put(66, context2.getString(C1894R.string.keyboard_key_enter));
+        this.mSpecialCharacterNames.put(67, context2.getString(C1894R.string.keyboard_key_backspace));
+        this.mSpecialCharacterNames.put(85, context2.getString(C1894R.string.keyboard_key_media_play_pause));
+        this.mSpecialCharacterNames.put(86, context2.getString(C1894R.string.keyboard_key_media_stop));
+        this.mSpecialCharacterNames.put(87, context2.getString(C1894R.string.keyboard_key_media_next));
+        this.mSpecialCharacterNames.put(88, context2.getString(C1894R.string.keyboard_key_media_previous));
+        this.mSpecialCharacterNames.put(89, context2.getString(C1894R.string.keyboard_key_media_rewind));
+        this.mSpecialCharacterNames.put(90, context2.getString(C1894R.string.keyboard_key_media_fast_forward));
+        this.mSpecialCharacterNames.put(92, context2.getString(C1894R.string.keyboard_key_page_up));
+        this.mSpecialCharacterNames.put(93, context2.getString(C1894R.string.keyboard_key_page_down));
+        this.mSpecialCharacterNames.put(96, context2.getString(C1894R.string.keyboard_key_button_template, new Object[]{ExifInterface.GPS_MEASUREMENT_IN_PROGRESS}));
+        this.mSpecialCharacterNames.put(97, context2.getString(C1894R.string.keyboard_key_button_template, new Object[]{"B"}));
+        this.mSpecialCharacterNames.put(98, context2.getString(C1894R.string.keyboard_key_button_template, new Object[]{"C"}));
+        this.mSpecialCharacterNames.put(99, context2.getString(C1894R.string.keyboard_key_button_template, new Object[]{"X"}));
+        this.mSpecialCharacterNames.put(100, context2.getString(C1894R.string.keyboard_key_button_template, new Object[]{"Y"}));
+        this.mSpecialCharacterNames.put(101, context2.getString(C1894R.string.keyboard_key_button_template, new Object[]{"Z"}));
+        this.mSpecialCharacterNames.put(102, context2.getString(C1894R.string.keyboard_key_button_template, new Object[]{"L1"}));
+        this.mSpecialCharacterNames.put(103, context2.getString(C1894R.string.keyboard_key_button_template, new Object[]{"R1"}));
+        this.mSpecialCharacterNames.put(104, context2.getString(C1894R.string.keyboard_key_button_template, new Object[]{"L2"}));
+        this.mSpecialCharacterNames.put(105, context2.getString(C1894R.string.keyboard_key_button_template, new Object[]{"R2"}));
+        this.mSpecialCharacterNames.put(108, context2.getString(C1894R.string.keyboard_key_button_template, new Object[]{"Start"}));
+        this.mSpecialCharacterNames.put(109, context2.getString(C1894R.string.keyboard_key_button_template, new Object[]{"Select"}));
+        this.mSpecialCharacterNames.put(110, context2.getString(C1894R.string.keyboard_key_button_template, new Object[]{"Mode"}));
+        this.mSpecialCharacterNames.put(112, context2.getString(C1894R.string.keyboard_key_forward_del));
         this.mSpecialCharacterNames.put(111, "Esc");
         this.mSpecialCharacterNames.put(120, "SysRq");
         this.mSpecialCharacterNames.put(121, "Break");
         this.mSpecialCharacterNames.put(116, "Scroll Lock");
-        this.mSpecialCharacterNames.put(122, context2.getString(C1893R.string.keyboard_key_move_home));
-        this.mSpecialCharacterNames.put(123, context2.getString(C1893R.string.keyboard_key_move_end));
-        this.mSpecialCharacterNames.put(124, context2.getString(C1893R.string.keyboard_key_insert));
+        this.mSpecialCharacterNames.put(122, context2.getString(C1894R.string.keyboard_key_move_home));
+        this.mSpecialCharacterNames.put(123, context2.getString(C1894R.string.keyboard_key_move_end));
+        this.mSpecialCharacterNames.put(124, context2.getString(C1894R.string.keyboard_key_insert));
         this.mSpecialCharacterNames.put(131, "F1");
         this.mSpecialCharacterNames.put(132, "F2");
         this.mSpecialCharacterNames.put(133, "F3");
@@ -208,27 +208,27 @@ public final class KeyboardShortcuts {
         this.mSpecialCharacterNames.put(140, "F10");
         this.mSpecialCharacterNames.put(141, "F11");
         this.mSpecialCharacterNames.put(142, "F12");
-        this.mSpecialCharacterNames.put(143, context2.getString(C1893R.string.keyboard_key_num_lock));
-        this.mSpecialCharacterNames.put(144, context2.getString(C1893R.string.keyboard_key_numpad_template, new Object[]{"0"}));
-        this.mSpecialCharacterNames.put(145, context2.getString(C1893R.string.keyboard_key_numpad_template, new Object[]{"1"}));
-        this.mSpecialCharacterNames.put(146, context2.getString(C1893R.string.keyboard_key_numpad_template, new Object[]{"2"}));
-        this.mSpecialCharacterNames.put(147, context2.getString(C1893R.string.keyboard_key_numpad_template, new Object[]{"3"}));
-        this.mSpecialCharacterNames.put(148, context2.getString(C1893R.string.keyboard_key_numpad_template, new Object[]{DeviceConstant.NOISE_CANCELLATION_ADAPTIVE}));
-        this.mSpecialCharacterNames.put(149, context2.getString(C1893R.string.keyboard_key_numpad_template, new Object[]{DeviceConstant.NOISE_CANCELLATION_OFF}));
-        this.mSpecialCharacterNames.put(150, context2.getString(C1893R.string.keyboard_key_numpad_template, new Object[]{"6"}));
-        this.mSpecialCharacterNames.put(151, context2.getString(C1893R.string.keyboard_key_numpad_template, new Object[]{DeviceConstant.NOISE_CANCELLATION_TRANSPARENCY}));
-        this.mSpecialCharacterNames.put(152, context2.getString(C1893R.string.keyboard_key_numpad_template, new Object[]{"8"}));
-        this.mSpecialCharacterNames.put(153, context2.getString(C1893R.string.keyboard_key_numpad_template, new Object[]{"9"}));
-        this.mSpecialCharacterNames.put(154, context2.getString(C1893R.string.keyboard_key_numpad_template, new Object[]{"/"}));
-        this.mSpecialCharacterNames.put(155, context2.getString(C1893R.string.keyboard_key_numpad_template, new Object[]{"*"}));
-        this.mSpecialCharacterNames.put(156, context2.getString(C1893R.string.keyboard_key_numpad_template, new Object[]{LanguageTag.SEP}));
-        this.mSpecialCharacterNames.put(157, context2.getString(C1893R.string.keyboard_key_numpad_template, new Object[]{"+"}));
-        this.mSpecialCharacterNames.put(158, context2.getString(C1893R.string.keyboard_key_numpad_template, new Object[]{BaseIconCache.EMPTY_CLASS_NAME}));
-        this.mSpecialCharacterNames.put(159, context2.getString(C1893R.string.keyboard_key_numpad_template, new Object[]{NavigationBarInflaterView.BUTTON_SEPARATOR}));
-        this.mSpecialCharacterNames.put(160, context2.getString(C1893R.string.keyboard_key_numpad_template, new Object[]{context2.getString(C1893R.string.keyboard_key_enter)}));
-        this.mSpecialCharacterNames.put(161, context2.getString(C1893R.string.keyboard_key_numpad_template, new Object[]{"="}));
-        this.mSpecialCharacterNames.put(162, context2.getString(C1893R.string.keyboard_key_numpad_template, new Object[]{NavigationBarInflaterView.KEY_CODE_START}));
-        this.mSpecialCharacterNames.put(163, context2.getString(C1893R.string.keyboard_key_numpad_template, new Object[]{NavigationBarInflaterView.KEY_CODE_END}));
+        this.mSpecialCharacterNames.put(143, context2.getString(C1894R.string.keyboard_key_num_lock));
+        this.mSpecialCharacterNames.put(144, context2.getString(C1894R.string.keyboard_key_numpad_template, new Object[]{"0"}));
+        this.mSpecialCharacterNames.put(145, context2.getString(C1894R.string.keyboard_key_numpad_template, new Object[]{"1"}));
+        this.mSpecialCharacterNames.put(146, context2.getString(C1894R.string.keyboard_key_numpad_template, new Object[]{"2"}));
+        this.mSpecialCharacterNames.put(147, context2.getString(C1894R.string.keyboard_key_numpad_template, new Object[]{"3"}));
+        this.mSpecialCharacterNames.put(148, context2.getString(C1894R.string.keyboard_key_numpad_template, new Object[]{DeviceConstant.NOISE_CANCELLATION_ADAPTIVE}));
+        this.mSpecialCharacterNames.put(149, context2.getString(C1894R.string.keyboard_key_numpad_template, new Object[]{DeviceConstant.NOISE_CANCELLATION_OFF}));
+        this.mSpecialCharacterNames.put(150, context2.getString(C1894R.string.keyboard_key_numpad_template, new Object[]{"6"}));
+        this.mSpecialCharacterNames.put(151, context2.getString(C1894R.string.keyboard_key_numpad_template, new Object[]{DeviceConstant.NOISE_CANCELLATION_TRANSPARENCY}));
+        this.mSpecialCharacterNames.put(152, context2.getString(C1894R.string.keyboard_key_numpad_template, new Object[]{"8"}));
+        this.mSpecialCharacterNames.put(153, context2.getString(C1894R.string.keyboard_key_numpad_template, new Object[]{"9"}));
+        this.mSpecialCharacterNames.put(154, context2.getString(C1894R.string.keyboard_key_numpad_template, new Object[]{"/"}));
+        this.mSpecialCharacterNames.put(155, context2.getString(C1894R.string.keyboard_key_numpad_template, new Object[]{"*"}));
+        this.mSpecialCharacterNames.put(156, context2.getString(C1894R.string.keyboard_key_numpad_template, new Object[]{LanguageTag.SEP}));
+        this.mSpecialCharacterNames.put(157, context2.getString(C1894R.string.keyboard_key_numpad_template, new Object[]{"+"}));
+        this.mSpecialCharacterNames.put(158, context2.getString(C1894R.string.keyboard_key_numpad_template, new Object[]{BaseIconCache.EMPTY_CLASS_NAME}));
+        this.mSpecialCharacterNames.put(159, context2.getString(C1894R.string.keyboard_key_numpad_template, new Object[]{NavigationBarInflaterView.BUTTON_SEPARATOR}));
+        this.mSpecialCharacterNames.put(160, context2.getString(C1894R.string.keyboard_key_numpad_template, new Object[]{context2.getString(C1894R.string.keyboard_key_enter)}));
+        this.mSpecialCharacterNames.put(161, context2.getString(C1894R.string.keyboard_key_numpad_template, new Object[]{"="}));
+        this.mSpecialCharacterNames.put(162, context2.getString(C1894R.string.keyboard_key_numpad_template, new Object[]{NavigationBarInflaterView.KEY_CODE_START}));
+        this.mSpecialCharacterNames.put(163, context2.getString(C1894R.string.keyboard_key_numpad_template, new Object[]{NavigationBarInflaterView.KEY_CODE_END}));
         this.mSpecialCharacterNames.put(211, "半角/全角");
         this.mSpecialCharacterNames.put(212, "英数");
         this.mSpecialCharacterNames.put(213, "無変換");
@@ -240,13 +240,13 @@ public final class KeyboardShortcuts {
         this.mModifierNames.put(1, "Shift");
         this.mModifierNames.put(4, "Sym");
         this.mModifierNames.put(8, "Fn");
-        this.mSpecialCharacterDrawables.put(67, context2.getDrawable(C1893R.C1895drawable.ic_ksh_key_backspace));
-        this.mSpecialCharacterDrawables.put(66, context2.getDrawable(C1893R.C1895drawable.ic_ksh_key_enter));
-        this.mSpecialCharacterDrawables.put(19, context2.getDrawable(C1893R.C1895drawable.ic_ksh_key_up));
-        this.mSpecialCharacterDrawables.put(22, context2.getDrawable(C1893R.C1895drawable.ic_ksh_key_right));
-        this.mSpecialCharacterDrawables.put(20, context2.getDrawable(C1893R.C1895drawable.ic_ksh_key_down));
-        this.mSpecialCharacterDrawables.put(21, context2.getDrawable(C1893R.C1895drawable.ic_ksh_key_left));
-        this.mModifierDrawables.put(65536, context2.getDrawable(C1893R.C1895drawable.ic_ksh_key_meta));
+        this.mSpecialCharacterDrawables.put(67, context2.getDrawable(C1894R.C1896drawable.ic_ksh_key_backspace));
+        this.mSpecialCharacterDrawables.put(66, context2.getDrawable(C1894R.C1896drawable.ic_ksh_key_enter));
+        this.mSpecialCharacterDrawables.put(19, context2.getDrawable(C1894R.C1896drawable.ic_ksh_key_up));
+        this.mSpecialCharacterDrawables.put(22, context2.getDrawable(C1894R.C1896drawable.ic_ksh_key_right));
+        this.mSpecialCharacterDrawables.put(20, context2.getDrawable(C1894R.C1896drawable.ic_ksh_key_down));
+        this.mSpecialCharacterDrawables.put(21, context2.getDrawable(C1894R.C1896drawable.ic_ksh_key_left));
+        this.mModifierDrawables.put(65536, context2.getDrawable(C1894R.C1896drawable.ic_ksh_key_meta));
     }
 
     private void retrieveKeyCharacterMap(int i) {
@@ -296,13 +296,13 @@ public final class KeyboardShortcuts {
 
     /* access modifiers changed from: private */
     public KeyboardShortcutGroup getSystemShortcuts() {
-        KeyboardShortcutGroup keyboardShortcutGroup = new KeyboardShortcutGroup(this.mContext.getString(C1893R.string.keyboard_shortcut_group_system), true);
-        keyboardShortcutGroup.addItem(new KeyboardShortcutInfo(this.mContext.getString(C1893R.string.keyboard_shortcut_group_system_home), 66, 65536));
-        keyboardShortcutGroup.addItem(new KeyboardShortcutInfo(this.mContext.getString(C1893R.string.keyboard_shortcut_group_system_back), 67, 65536));
-        keyboardShortcutGroup.addItem(new KeyboardShortcutInfo(this.mContext.getString(C1893R.string.keyboard_shortcut_group_system_recents), 61, 2));
-        keyboardShortcutGroup.addItem(new KeyboardShortcutInfo(this.mContext.getString(C1893R.string.keyboard_shortcut_group_system_notifications), 42, 65536));
-        keyboardShortcutGroup.addItem(new KeyboardShortcutInfo(this.mContext.getString(C1893R.string.keyboard_shortcut_group_system_shortcuts_helper), 76, 65536));
-        keyboardShortcutGroup.addItem(new KeyboardShortcutInfo(this.mContext.getString(C1893R.string.keyboard_shortcut_group_system_switch_input), 62, 65536));
+        KeyboardShortcutGroup keyboardShortcutGroup = new KeyboardShortcutGroup(this.mContext.getString(C1894R.string.keyboard_shortcut_group_system), true);
+        keyboardShortcutGroup.addItem(new KeyboardShortcutInfo(this.mContext.getString(C1894R.string.keyboard_shortcut_group_system_home), 66, 65536));
+        keyboardShortcutGroup.addItem(new KeyboardShortcutInfo(this.mContext.getString(C1894R.string.keyboard_shortcut_group_system_back), 67, 65536));
+        keyboardShortcutGroup.addItem(new KeyboardShortcutInfo(this.mContext.getString(C1894R.string.keyboard_shortcut_group_system_recents), 61, 2));
+        keyboardShortcutGroup.addItem(new KeyboardShortcutInfo(this.mContext.getString(C1894R.string.keyboard_shortcut_group_system_notifications), 42, 65536));
+        keyboardShortcutGroup.addItem(new KeyboardShortcutInfo(this.mContext.getString(C1894R.string.keyboard_shortcut_group_system_shortcuts_helper), 76, 65536));
+        keyboardShortcutGroup.addItem(new KeyboardShortcutInfo(this.mContext.getString(C1894R.string.keyboard_shortcut_group_system_switch_input), 62, 65536));
         return keyboardShortcutGroup;
     }
 
@@ -320,38 +320,38 @@ public final class KeyboardShortcuts {
                 packageInfo = null;
             }
             if (packageInfo != null) {
-                arrayList.add(new KeyboardShortcutInfo(this.mContext.getString(C1893R.string.keyboard_shortcut_group_applications_assist), Icon.createWithResource(packageInfo.applicationInfo.packageName, packageInfo.applicationInfo.icon), 0, 65536));
+                arrayList.add(new KeyboardShortcutInfo(this.mContext.getString(C1894R.string.keyboard_shortcut_group_applications_assist), Icon.createWithResource(packageInfo.applicationInfo.packageName, packageInfo.applicationInfo.icon), 0, 65536));
             }
         }
         Icon iconForIntentCategory = getIconForIntentCategory("android.intent.category.APP_BROWSER", userId);
         if (iconForIntentCategory != null) {
-            arrayList.add(new KeyboardShortcutInfo(this.mContext.getString(C1893R.string.keyboard_shortcut_group_applications_browser), iconForIntentCategory, 30, 65536));
+            arrayList.add(new KeyboardShortcutInfo(this.mContext.getString(C1894R.string.keyboard_shortcut_group_applications_browser), iconForIntentCategory, 30, 65536));
         }
         Icon iconForIntentCategory2 = getIconForIntentCategory("android.intent.category.APP_CONTACTS", userId);
         if (iconForIntentCategory2 != null) {
-            arrayList.add(new KeyboardShortcutInfo(this.mContext.getString(C1893R.string.keyboard_shortcut_group_applications_contacts), iconForIntentCategory2, 31, 65536));
+            arrayList.add(new KeyboardShortcutInfo(this.mContext.getString(C1894R.string.keyboard_shortcut_group_applications_contacts), iconForIntentCategory2, 31, 65536));
         }
         Icon iconForIntentCategory3 = getIconForIntentCategory("android.intent.category.APP_EMAIL", userId);
         if (iconForIntentCategory3 != null) {
-            arrayList.add(new KeyboardShortcutInfo(this.mContext.getString(C1893R.string.keyboard_shortcut_group_applications_email), iconForIntentCategory3, 33, 65536));
+            arrayList.add(new KeyboardShortcutInfo(this.mContext.getString(C1894R.string.keyboard_shortcut_group_applications_email), iconForIntentCategory3, 33, 65536));
         }
         Icon iconForIntentCategory4 = getIconForIntentCategory("android.intent.category.APP_MESSAGING", userId);
         if (iconForIntentCategory4 != null) {
-            arrayList.add(new KeyboardShortcutInfo(this.mContext.getString(C1893R.string.keyboard_shortcut_group_applications_sms), iconForIntentCategory4, 47, 65536));
+            arrayList.add(new KeyboardShortcutInfo(this.mContext.getString(C1894R.string.keyboard_shortcut_group_applications_sms), iconForIntentCategory4, 47, 65536));
         }
         Icon iconForIntentCategory5 = getIconForIntentCategory("android.intent.category.APP_MUSIC", userId);
         if (iconForIntentCategory5 != null) {
-            arrayList.add(new KeyboardShortcutInfo(this.mContext.getString(C1893R.string.keyboard_shortcut_group_applications_music), iconForIntentCategory5, 44, 65536));
+            arrayList.add(new KeyboardShortcutInfo(this.mContext.getString(C1894R.string.keyboard_shortcut_group_applications_music), iconForIntentCategory5, 44, 65536));
         }
         Icon iconForIntentCategory6 = getIconForIntentCategory("android.intent.category.APP_CALENDAR", userId);
         if (iconForIntentCategory6 != null) {
-            arrayList.add(new KeyboardShortcutInfo(this.mContext.getString(C1893R.string.keyboard_shortcut_group_applications_calendar), iconForIntentCategory6, 40, 65536));
+            arrayList.add(new KeyboardShortcutInfo(this.mContext.getString(C1894R.string.keyboard_shortcut_group_applications_calendar), iconForIntentCategory6, 40, 65536));
         }
         if (arrayList.size() == 0) {
             return null;
         }
         Collections.sort(arrayList, this.mApplicationItemsComparator);
-        return new KeyboardShortcutGroup(this.mContext.getString(C1893R.string.keyboard_shortcut_group_applications), arrayList, true);
+        return new KeyboardShortcutGroup(this.mContext.getString(C1894R.string.keyboard_shortcut_group_applications), arrayList, true);
     }
 
     private Icon getIconForIntentCategory(String str, int i) {
@@ -391,10 +391,10 @@ public final class KeyboardShortcuts {
     /* access modifiers changed from: private */
     public void handleShowKeyboardShortcuts(List<KeyboardShortcutGroup> list) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this.mContext);
-        View inflate = ((LayoutInflater) this.mContext.getSystemService("layout_inflater")).inflate(C1893R.layout.keyboard_shortcuts_view, (ViewGroup) null);
-        populateKeyboardShortcuts((LinearLayout) inflate.findViewById(C1893R.C1897id.keyboard_shortcuts_container), list);
+        View inflate = ((LayoutInflater) this.mContext.getSystemService("layout_inflater")).inflate(C1894R.layout.keyboard_shortcuts_view, (ViewGroup) null);
+        populateKeyboardShortcuts((LinearLayout) inflate.findViewById(C1894R.C1898id.keyboard_shortcuts_container), list);
         builder.setView(inflate);
-        builder.setPositiveButton(C1893R.string.quick_settings_done, this.mDialogCloseListener);
+        builder.setPositiveButton(C1894R.string.quick_settings_done, this.mDialogCloseListener);
         AlertDialog create = builder.create();
         this.mKeyboardShortcutsDialog = create;
         create.setCanceledOnTouchOutside(true);
@@ -425,23 +425,23 @@ public final class KeyboardShortcuts {
         int size = list.size();
         char c2 = 185;
         boolean z2 = false;
-        TextView textView = (TextView) from.inflate(C1893R.layout.keyboard_shortcuts_key_view, (ViewGroup) null, false);
+        TextView textView = (TextView) from.inflate(C1894R.layout.keyboard_shortcuts_key_view, (ViewGroup) null, false);
         textView.measure(0, 0);
         int measuredHeight = textView.getMeasuredHeight();
         int measuredHeight2 = (textView.getMeasuredHeight() - textView.getPaddingTop()) - textView.getPaddingBottom();
         int i9 = 0;
         while (i9 < size) {
             KeyboardShortcutGroup keyboardShortcutGroup2 = list.get(i9);
-            TextView textView2 = (TextView) from.inflate(C1893R.layout.keyboard_shortcuts_category_title, linearLayout2, z2);
+            TextView textView2 = (TextView) from.inflate(C1894R.layout.keyboard_shortcuts_category_title, linearLayout2, z2);
             textView2.setText(keyboardShortcutGroup2.getLabel());
             if (keyboardShortcutGroup2.isSystemGroup()) {
                 colorStateList = Utils.getColorAccent(this.mContext);
             } else {
-                colorStateList = ColorStateList.valueOf(this.mContext.getColor(C1893R.C1894color.ksh_application_group_color));
+                colorStateList = ColorStateList.valueOf(this.mContext.getColor(C1894R.C1895color.ksh_application_group_color));
             }
             textView2.setTextColor(colorStateList);
             linearLayout2.addView(textView2);
-            LinearLayout linearLayout3 = (LinearLayout) from.inflate(C1893R.layout.keyboard_shortcuts_container, linearLayout2, z2);
+            LinearLayout linearLayout3 = (LinearLayout) from.inflate(C1894R.layout.keyboard_shortcuts_container, linearLayout2, z2);
             int size2 = keyboardShortcutGroup2.getItems().size();
             int i10 = z2;
             while (i10 < size2) {
@@ -456,20 +456,20 @@ public final class KeyboardShortcuts {
                     keyboardShortcutGroup = keyboardShortcutGroup2;
                     i4 = size2;
                 } else {
-                    View inflate = from.inflate(C1893R.layout.keyboard_shortcut_app_item, linearLayout3, z2);
+                    View inflate = from.inflate(C1894R.layout.keyboard_shortcut_app_item, linearLayout3, z2);
                     if (keyboardShortcutInfo.getIcon() != null) {
-                        ImageView imageView = (ImageView) inflate.findViewById(C1893R.C1897id.keyboard_shortcuts_icon);
+                        ImageView imageView = (ImageView) inflate.findViewById(C1894R.C1898id.keyboard_shortcuts_icon);
                         imageView.setImageIcon(keyboardShortcutInfo.getIcon());
                         imageView.setVisibility(0);
                     }
-                    TextView textView3 = (TextView) inflate.findViewById(C1893R.C1897id.keyboard_shortcuts_keyword);
+                    TextView textView3 = (TextView) inflate.findViewById(C1894R.C1898id.keyboard_shortcuts_keyword);
                     textView3.setText(keyboardShortcutInfo.getLabel());
                     if (keyboardShortcutInfo.getIcon() != null) {
                         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) textView3.getLayoutParams();
                         layoutParams.removeRule(20);
                         textView3.setLayoutParams(layoutParams);
                     }
-                    ViewGroup viewGroup = (ViewGroup) inflate.findViewById(C1893R.C1897id.keyboard_shortcuts_item_container);
+                    ViewGroup viewGroup = (ViewGroup) inflate.findViewById(C1894R.C1898id.keyboard_shortcuts_item_container);
                     int size3 = humanReadableShortcutKeys.size();
                     int i11 = 0;
                     while (i11 < size3) {
@@ -478,7 +478,7 @@ public final class KeyboardShortcuts {
                         KeyboardShortcutGroup keyboardShortcutGroup3 = keyboardShortcutGroup2;
                         if (stringDrawableContainer.mDrawable != null) {
                             i8 = size2;
-                            ImageView imageView2 = (ImageView) from.inflate(C1893R.layout.keyboard_shortcuts_key_icon_view, viewGroup, false);
+                            ImageView imageView2 = (ImageView) from.inflate(C1894R.layout.keyboard_shortcuts_key_icon_view, viewGroup, false);
                             Bitmap createBitmap = Bitmap.createBitmap(measuredHeight2, measuredHeight2, Bitmap.Config.ARGB_8888);
                             i7 = measuredHeight2;
                             Canvas canvas = new Canvas(createBitmap);
@@ -498,7 +498,7 @@ public final class KeyboardShortcuts {
                             i8 = size2;
                             list2 = humanReadableShortcutKeys;
                             if (stringDrawableContainer.mString != null) {
-                                TextView textView4 = (TextView) from.inflate(C1893R.layout.keyboard_shortcuts_key_view, viewGroup, false);
+                                TextView textView4 = (TextView) from.inflate(C1894R.layout.keyboard_shortcuts_key_view, viewGroup, false);
                                 textView4.setMinimumWidth(measuredHeight);
                                 textView4.setText(stringDrawableContainer.mString);
                                 textView4.setAccessibilityDelegate(new ShortcutKeyAccessibilityDelegate(stringDrawableContainer.mString));
@@ -551,7 +551,7 @@ public final class KeyboardShortcuts {
             int i15 = i9;
             if (i15 < i13 - 1) {
                 z = false;
-                linearLayout5.addView(from.inflate(C1893R.layout.keyboard_shortcuts_category_separator, linearLayout5, false));
+                linearLayout5.addView(from.inflate(C1894R.layout.keyboard_shortcuts_category_separator, linearLayout5, false));
             } else {
                 z = false;
             }

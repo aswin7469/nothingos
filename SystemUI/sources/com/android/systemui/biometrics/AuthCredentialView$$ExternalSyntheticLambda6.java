@@ -11,6 +11,6 @@ public final /* synthetic */ class AuthCredentialView$$ExternalSyntheticLambda6 
     }
 
     public final void onDismiss(DialogInterface dialogInterface) {
-        this.f$0.mo30660xc20771c4(dialogInterface);
+        this.f$0.mo30671xc20771c4(dialogInterface);
     }
 }

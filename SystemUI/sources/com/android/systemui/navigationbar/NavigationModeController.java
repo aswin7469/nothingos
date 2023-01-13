@@ -51,7 +51,7 @@ public class NavigationModeController implements Dumpable {
 
     @Inject
     public NavigationModeController(Context context, DeviceProvisionedController deviceProvisionedController, ConfigurationController configurationController, @UiBackground Executor executor, DumpManager dumpManager) {
-        C22611 r0 = new DeviceProvisionedController.DeviceProvisionedListener() {
+        C22641 r0 = new DeviceProvisionedController.DeviceProvisionedListener() {
             public void onUserSwitched() {
                 Log.d(NavigationModeController.TAG, "onUserSwitched: " + ActivityManagerWrapper.getInstance().getCurrentUserId());
                 NavigationModeController.this.updateCurrentInteractionMode(true);
@@ -109,7 +109,7 @@ public class NavigationModeController implements Dumpable {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateCurrentInteractionMode$0$com-android-systemui-navigationbar-NavigationModeController */
-    public /* synthetic */ void mo34846x24e40a4b(int i) {
+    public /* synthetic */ void mo34850x24e40a4b(int i) {
         Settings.Secure.putString(this.mCurrentUserContext.getContentResolver(), "navigation_mode", String.valueOf(i));
     }
 

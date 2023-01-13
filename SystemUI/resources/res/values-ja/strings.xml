@@ -708,9 +708,15 @@
     <string name="force_rtl_layout_all_locales_summary">すべての言語/地域で画面レイアウト方向を RTL に設定</string>
     <string name="forced_resizable_secondary_display">アプリはセカンダリ ディスプレイでは動作しないことがあります。</string>
     <string name="game_status">プレイ中</string>
+    <string name="gamemode_description">ゲームモードは、あなたがゲーム中であるかどうかを判断して、自動的にオンになります</string>
+    <string name="gamemode_gamedashboard_title">ゲームダッシュボード</string>
+    <string name="gamemode_notification_content">タップして、設定に移動</string>
+    <string name="gamemode_notification_title">ゲームモードは現在オンです</string>
     <string name="global_action_lock_message">スマートフォンのロックを解除してその他のオプションを表示する</string>
     <string name="global_action_screenshot">スクリーンショット</string>
     <string name="global_action_smart_lock_disabled">Smart Lock は無効です</string>
+    <string name="gm_guide_status_on">ON</string>
+    <string name="gm_notification_title">ゲームモード</string>
     <string name="go_to_web">ブラウザに移動</string>
     <string name="got_it">OK</string>
     <string name="guest_exit_guest">ゲストを削除</string>

@@ -708,9 +708,15 @@
     <string name="force_rtl_layout_all_locales_summary">Nametni smjer zdesna ulijevo za sve zemlje/jezike</string>
     <string name="forced_resizable_secondary_display">Aplikacija možda neće funkcionirati na sekundarnom zaslonu.</string>
     <string name="game_status">Igranje</string>
+    <string name="gamemode_description">Način igre odredit će jeste li u igri i automatski će uključiti igru</string>
+    <string name="gamemode_gamedashboard_title">Nadzorna ploča igre</string>
+    <string name="gamemode_notification_content">Dodirnite za otvaranje Postavki</string>
+    <string name="gamemode_notification_title">Način igre trenutačno je uključen</string>
     <string name="global_action_lock_message">Za više opcija otključajte telefon</string>
     <string name="global_action_screenshot">Snimka zaslona</string>
     <string name="global_action_smart_lock_disabled">Smart Lock onemogućen</string>
+    <string name="gm_guide_status_on">UKLJUČENO</string>
+    <string name="gm_notification_title">Način igre</string>
     <string name="go_to_web">Otvori preglednik</string>
     <string name="got_it">Shvaćam</string>
     <string name="guest_exit_guest">Ukloni gosta</string>

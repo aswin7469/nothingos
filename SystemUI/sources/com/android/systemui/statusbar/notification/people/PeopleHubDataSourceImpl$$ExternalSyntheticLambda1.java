@@ -13,6 +13,6 @@ public final /* synthetic */ class PeopleHubDataSourceImpl$$ExternalSyntheticLam
     }
 
     public final void run() {
-        PeopleHubDataSourceImpl.m3126addVisibleEntry$lambda7$lambda6$lambda5(this.f$0, this.f$1, this.f$2);
+        PeopleHubDataSourceImpl.m3130addVisibleEntry$lambda7$lambda6$lambda5(this.f$0, this.f$1, this.f$2);
     }
 }

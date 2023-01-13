@@ -4,7 +4,7 @@ import android.view.View;
 import android.view.accessibility.AccessibilityManager;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.timepicker.ClockHandView;
 import com.google.android.material.timepicker.TimePickerView;
 import com.nothing.p023os.device.DeviceConstant;
@@ -101,19 +101,19 @@ class TimePickerClockPresenter implements ClockHandView.OnRotateListener, TimePi
         boolean z2 = i == 12;
         this.timePickerView.setAnimateOnTouchUp(z2);
         this.time.selection = i;
-        this.timePickerView.setValues(z2 ? MINUTE_CLOCK_VALUES : getHourClockValues(), z2 ? C3621R.string.material_minute_suffix : C3621R.string.material_hour_suffix);
+        this.timePickerView.setValues(z2 ? MINUTE_CLOCK_VALUES : getHourClockValues(), z2 ? C3631R.string.material_minute_suffix : C3631R.string.material_hour_suffix);
         this.timePickerView.setHandRotation(z2 ? this.minuteRotation : this.hourRotation, z);
         this.timePickerView.setActiveSelection(i);
-        this.timePickerView.setMinuteHourDelegate(new ClickActionDelegate(this.timePickerView.getContext(), C3621R.string.material_hour_selection) {
+        this.timePickerView.setMinuteHourDelegate(new ClickActionDelegate(this.timePickerView.getContext(), C3631R.string.material_hour_selection) {
             public void onInitializeAccessibilityNodeInfo(View view, AccessibilityNodeInfoCompat accessibilityNodeInfoCompat) {
                 super.onInitializeAccessibilityNodeInfo(view, accessibilityNodeInfoCompat);
-                accessibilityNodeInfoCompat.setContentDescription(view.getResources().getString(C3621R.string.material_hour_suffix, new Object[]{String.valueOf(TimePickerClockPresenter.this.time.getHourForDisplay())}));
+                accessibilityNodeInfoCompat.setContentDescription(view.getResources().getString(C3631R.string.material_hour_suffix, new Object[]{String.valueOf(TimePickerClockPresenter.this.time.getHourForDisplay())}));
             }
         });
-        this.timePickerView.setHourClickDelegate(new ClickActionDelegate(this.timePickerView.getContext(), C3621R.string.material_minute_selection) {
+        this.timePickerView.setHourClickDelegate(new ClickActionDelegate(this.timePickerView.getContext(), C3631R.string.material_minute_selection) {
             public void onInitializeAccessibilityNodeInfo(View view, AccessibilityNodeInfoCompat accessibilityNodeInfoCompat) {
                 super.onInitializeAccessibilityNodeInfo(view, accessibilityNodeInfoCompat);
-                accessibilityNodeInfoCompat.setContentDescription(view.getResources().getString(C3621R.string.material_minute_suffix, new Object[]{String.valueOf(TimePickerClockPresenter.this.time.minute)}));
+                accessibilityNodeInfoCompat.setContentDescription(view.getResources().getString(C3631R.string.material_minute_suffix, new Object[]{String.valueOf(TimePickerClockPresenter.this.time.minute)}));
             }
         });
     }

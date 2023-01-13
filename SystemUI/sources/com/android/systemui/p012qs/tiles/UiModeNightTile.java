@@ -10,7 +10,7 @@ import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.Switch;
 import com.android.internal.logging.MetricsLogger;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.qualifiers.Background;
 import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.p012qs.QSHost;
@@ -79,9 +79,9 @@ public class UiModeNightTile extends QSTileImpl<QSTile.BooleanState> implements 
         int i = 1;
         boolean z = (this.mContext.getResources().getConfiguration().uiMode & 48) == 32;
         if (isPowerSave) {
-            booleanState.secondaryLabel = this.mContext.getResources().getString(C1893R.string.quick_settings_dark_mode_secondary_label_battery_saver);
+            booleanState.secondaryLabel = this.mContext.getResources().getString(C1894R.string.quick_settings_dark_mode_secondary_label_battery_saver);
         } else if (nightMode == 0 && this.mLocationController.isLocationEnabled()) {
-            booleanState.secondaryLabel = this.mContext.getResources().getString(z ? C1893R.string.quick_settings_dark_mode_secondary_label_until_sunrise : C1893R.string.quick_settings_dark_mode_secondary_label_on_at_sunset);
+            booleanState.secondaryLabel = this.mContext.getResources().getString(z ? C1894R.string.quick_settings_dark_mode_secondary_label_until_sunrise : C1894R.string.quick_settings_dark_mode_secondary_label_on_at_sunset);
         } else if (nightMode == 3) {
             int nightModeCustomType = this.mUiModeManager.getNightModeCustomType();
             if (nightModeCustomType == 0) {
@@ -92,12 +92,12 @@ public class UiModeNightTile extends QSTileImpl<QSTile.BooleanState> implements 
                     localTime = this.mUiModeManager.getCustomNightModeStart();
                 }
                 Resources resources = this.mContext.getResources();
-                int i2 = z ? C1893R.string.quick_settings_dark_mode_secondary_label_until : C1893R.string.quick_settings_dark_mode_secondary_label_on_at;
+                int i2 = z ? C1894R.string.quick_settings_dark_mode_secondary_label_until : C1894R.string.quick_settings_dark_mode_secondary_label_on_at;
                 Object[] objArr = new Object[1];
                 objArr[0] = is24HourFormat ? localTime.toString() : formatter.format(localTime);
                 booleanState.secondaryLabel = resources.getString(i2, objArr);
             } else if (nightModeCustomType == 1) {
-                booleanState.secondaryLabel = this.mContext.getResources().getString(z ? C1893R.string.quick_settings_dark_mode_secondary_label_until_bedtime_ends : C1893R.string.quick_settings_dark_mode_secondary_label_on_at_bedtime);
+                booleanState.secondaryLabel = this.mContext.getResources().getString(z ? C1894R.string.quick_settings_dark_mode_secondary_label_until_bedtime_ends : C1894R.string.quick_settings_dark_mode_secondary_label_on_at_bedtime);
             } else {
                 booleanState.secondaryLabel = null;
             }
@@ -105,7 +105,7 @@ public class UiModeNightTile extends QSTileImpl<QSTile.BooleanState> implements 
             booleanState.secondaryLabel = null;
         }
         booleanState.value = z;
-        booleanState.label = this.mContext.getString(C1893R.string.quick_settings_ui_mode_night_label);
+        booleanState.label = this.mContext.getString(C1894R.string.quick_settings_ui_mode_night_label);
         booleanState.icon = this.mIcon;
         if (TextUtils.isEmpty(booleanState.secondaryLabel)) {
             charSequence = booleanState.label;

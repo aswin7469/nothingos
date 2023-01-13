@@ -394,7 +394,7 @@ final class Parsed implements TemporalAccessor {
         if (this.resolverStyle == ResolverStyle.SMART && j == 24 && checkValidIntValue == 0 && j3 == 0 && checkValidIntValue2 == 0) {
             updateCheckConflict(LocalTime.MIDNIGHT, Period.ofDays(1));
         } else {
-            updateCheckConflict(LocalTime.m919of(ChronoField.HOUR_OF_DAY.checkValidIntValue(j), checkValidIntValue, ChronoField.SECOND_OF_MINUTE.checkValidIntValue(j3), checkValidIntValue2), Period.ZERO);
+            updateCheckConflict(LocalTime.m917of(ChronoField.HOUR_OF_DAY.checkValidIntValue(j), checkValidIntValue, ChronoField.SECOND_OF_MINUTE.checkValidIntValue(j3), checkValidIntValue2), Period.ZERO);
         }
     }
 

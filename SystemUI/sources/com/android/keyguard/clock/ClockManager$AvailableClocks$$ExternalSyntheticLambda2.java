@@ -15,6 +15,6 @@ public final /* synthetic */ class ClockManager$AvailableClocks$$ExternalSynthet
     }
 
     public final Object get() {
-        return this.f$0.mo26607xc832a94a(this.f$1);
+        return this.f$0.mo26608xc832a94a(this.f$1);
     }
 }

@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.p014tv.TvBottomSheetActivity;
 import com.android.systemui.usb.UsbDialogHelper;
 
@@ -48,7 +48,7 @@ abstract class TvUsbDialogActivity extends TvBottomSheetActivity implements View
     }
 
     public void onClick(View view) {
-        if (view.getId() == C1893R.C1897id.bottom_sheet_positive_button) {
+        if (view.getId() == C1894R.C1898id.bottom_sheet_positive_button) {
             onConfirm();
         } else {
             finish();
@@ -57,12 +57,12 @@ abstract class TvUsbDialogActivity extends TvBottomSheetActivity implements View
 
     /* access modifiers changed from: package-private */
     public void initUI(CharSequence charSequence, CharSequence charSequence2) {
-        Button button = (Button) findViewById(C1893R.C1897id.bottom_sheet_positive_button);
-        Button button2 = (Button) findViewById(C1893R.C1897id.bottom_sheet_negative_button);
-        ((TextView) findViewById(C1893R.C1897id.bottom_sheet_title)).setText(charSequence);
-        ((TextView) findViewById(C1893R.C1897id.bottom_sheet_body)).setText(charSequence2);
-        ((ImageView) findViewById(C1893R.C1897id.bottom_sheet_icon)).setImageResource(17302883);
-        ((ImageView) findViewById(C1893R.C1897id.bottom_sheet_second_icon)).setVisibility(8);
+        Button button = (Button) findViewById(C1894R.C1898id.bottom_sheet_positive_button);
+        Button button2 = (Button) findViewById(C1894R.C1898id.bottom_sheet_negative_button);
+        ((TextView) findViewById(C1894R.C1898id.bottom_sheet_title)).setText(charSequence);
+        ((TextView) findViewById(C1894R.C1898id.bottom_sheet_body)).setText(charSequence2);
+        ((ImageView) findViewById(C1894R.C1898id.bottom_sheet_icon)).setImageResource(17302883);
+        ((ImageView) findViewById(C1894R.C1898id.bottom_sheet_second_icon)).setVisibility(8);
         button.setText(17039370);
         button.setOnClickListener(this);
         button2.setText(17039360);

@@ -12,6 +12,6 @@ public final /* synthetic */ class DeviceControlsControllerImpl$$ExternalSynthet
     }
 
     public final void accept(Object obj) {
-        DeviceControlsControllerImpl.m3232checkMigrationToQs$lambda0(this.f$0, (ControlsController) obj);
+        DeviceControlsControllerImpl.m3237checkMigrationToQs$lambda0(this.f$0, (ControlsController) obj);
     }
 }

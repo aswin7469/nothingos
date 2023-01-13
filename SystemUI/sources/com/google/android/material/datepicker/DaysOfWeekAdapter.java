@@ -44,7 +44,7 @@ class DaysOfWeekAdapter extends BaseAdapter {
             if (r6 != 0) goto L_0x0017
             android.content.Context r6 = r7.getContext()
             android.view.LayoutInflater r6 = android.view.LayoutInflater.from(r6)
-            int r0 = com.google.android.material.C3621R.layout.mtrl_calendar_day_of_week
+            int r0 = com.google.android.material.C3631R.layout.mtrl_calendar_day_of_week
             android.view.View r6 = r6.inflate(r0, r7, r1)
             r0 = r6
             android.widget.TextView r0 = (android.widget.TextView) r0
@@ -61,7 +61,7 @@ class DaysOfWeekAdapter extends BaseAdapter {
             java.lang.String r5 = r6.getDisplayName(r2, r3, r5)
             r0.setText(r5)
             android.content.Context r5 = r7.getContext()
-            int r6 = com.google.android.material.C3621R.string.mtrl_picker_day_of_week_column_header
+            int r6 = com.google.android.material.C3631R.string.mtrl_picker_day_of_week_column_header
             java.lang.String r5 = r5.getString(r6)
             r6 = 1
             java.lang.Object[] r6 = new java.lang.Object[r6]

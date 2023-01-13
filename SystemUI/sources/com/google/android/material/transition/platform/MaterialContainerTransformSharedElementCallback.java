@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.Window;
 import androidx.core.graphics.BlendModeColorFilterCompat;
 import androidx.core.graphics.BlendModeCompat;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.internal.ContextUtils;
 import com.google.android.material.shape.ShapeAppearanceModel;
 import com.google.android.material.shape.Shapeable;
@@ -54,7 +54,7 @@ public class MaterialContainerTransformSharedElementCallback extends SharedEleme
         ShapeAppearanceModel provideShape;
         View onCreateSnapshotView = super.onCreateSnapshotView(context, parcelable);
         if (!(onCreateSnapshotView == null || (weakReference = capturedSharedElement) == null || this.shapeProvider == null || (view = weakReference.get()) == null || (provideShape = this.shapeProvider.provideShape(view)) == null)) {
-            onCreateSnapshotView.setTag(C3621R.C3624id.mtrl_motion_snapshot_view, provideShape);
+            onCreateSnapshotView.setTag(C3631R.C3634id.mtrl_motion_snapshot_view, provideShape);
         }
         return onCreateSnapshotView;
     }
@@ -74,7 +74,7 @@ public class MaterialContainerTransformSharedElementCallback extends SharedEleme
 
     public void onSharedElementStart(List<String> list, List<View> list2, List<View> list3) {
         if (!list2.isEmpty() && !list3.isEmpty()) {
-            list2.get(0).setTag(C3621R.C3624id.mtrl_motion_snapshot_view, list3.get(0));
+            list2.get(0).setTag(C3631R.C3634id.mtrl_motion_snapshot_view, list3.get(0));
         }
         if (!this.entering && !list2.isEmpty() && this.returnEndBounds != null) {
             View view = list2.get(0);
@@ -84,8 +84,8 @@ public class MaterialContainerTransformSharedElementCallback extends SharedEleme
     }
 
     public void onSharedElementEnd(List<String> list, List<View> list2, List<View> list3) {
-        if (!list2.isEmpty() && (list2.get(0).getTag(C3621R.C3624id.mtrl_motion_snapshot_view) instanceof View)) {
-            list2.get(0).setTag(C3621R.C3624id.mtrl_motion_snapshot_view, (Object) null);
+        if (!list2.isEmpty() && (list2.get(0).getTag(C3631R.C3634id.mtrl_motion_snapshot_view) instanceof View)) {
+            list2.get(0).setTag(C3631R.C3634id.mtrl_motion_snapshot_view, (Object) null);
         }
         if (!this.entering && !list2.isEmpty()) {
             this.returnEndBounds = TransitionUtils.getRelativeBoundsRect(list2.get(0));

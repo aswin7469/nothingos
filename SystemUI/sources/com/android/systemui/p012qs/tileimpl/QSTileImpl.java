@@ -120,7 +120,7 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile,
         this.mInstanceId = qSHost.getNewInstanceId();
         this.mUiEventLogger = qSHost.getUiEventLogger();
         this.mUiHandler = handler;
-        this.mHandler = new C2383H(looper);
+        this.mHandler = new C2386H(looper);
         this.mFalsingManager = falsingManager;
         this.mQSLogger = qSLogger;
         this.mMetricsLogger = metricsLogger;
@@ -133,7 +133,7 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile,
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-qs-tileimpl-QSTileImpl  reason: not valid java name */
-    public /* synthetic */ void m2958lambda$new$0$comandroidsystemuiqstileimplQSTileImpl() {
+    public /* synthetic */ void m2963lambda$new$0$comandroidsystemuiqstileimplQSTileImpl() {
         this.mLifecycle.setCurrentState(Lifecycle.State.CREATED);
     }
 
@@ -292,15 +292,12 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile,
     /* access modifiers changed from: protected */
     public final void handleRefreshState(Object obj) {
         handleUpdateState(this.mTmpState, obj);
-        boolean copyTo = this.mTmpState.copyTo(this.mState);
+        this.mTmpState.copyTo(this.mState);
         if (this.mReadyState == 1) {
             this.mReadyState = 2;
-            copyTo = true;
         }
-        if (copyTo) {
-            this.mQSLogger.logTileUpdated(this.mTileSpec, this.mState);
-            handleStateChanged();
-        }
+        this.mQSLogger.logTileUpdated(this.mTileSpec, this.mState);
+        handleStateChanged();
         this.mHandler.removeMessages(11);
         this.mHandler.sendEmptyMessageDelayed(11, getStaleTimeout());
         setListening(this.mStaleListener, false);
@@ -341,7 +338,7 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile,
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$handleSetListeningInternal$1$com-android-systemui-qs-tileimpl-QSTileImpl */
-    public /* synthetic */ void mo36753xdf09088() {
+    public /* synthetic */ void mo36757xdf09088() {
         if (!this.mLifecycle.getCurrentState().equals(Lifecycle.State.DESTROYED)) {
             this.mLifecycle.setCurrentState(Lifecycle.State.RESUMED);
             if (this.mReadyState == 0) {
@@ -353,7 +350,7 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile,
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$handleSetListeningInternal$2$com-android-systemui-qs-tileimpl-QSTileImpl */
-    public /* synthetic */ void mo36754xa8915309() {
+    public /* synthetic */ void mo36758xa8915309() {
         if (!this.mLifecycle.getCurrentState().equals(Lifecycle.State.DESTROYED)) {
             this.mLifecycle.setCurrentState(Lifecycle.State.STARTED);
         }
@@ -392,7 +389,7 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile,
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$handleDestroy$3$com-android-systemui-qs-tileimpl-QSTileImpl */
-    public /* synthetic */ void mo36752x7f70ed04() {
+    public /* synthetic */ void mo36756x7f70ed04() {
         this.mLifecycle.setCurrentState(Lifecycle.State.DESTROYED);
     }
 
@@ -417,7 +414,7 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile,
     }
 
     /* renamed from: com.android.systemui.qs.tileimpl.QSTileImpl$H */
-    protected final class C2383H extends Handler {
+    protected final class C2386H extends Handler {
         private static final int ADD_CALLBACK = 1;
         private static final int CLICK = 2;
         private static final int DESTROY = 7;
@@ -431,7 +428,7 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile,
         protected static final int STALE = 11;
         private static final int USER_SWITCH = 6;
 
-        protected C2383H(Looper looper) {
+        protected C2386H(Looper looper) {
             super(looper);
         }
 

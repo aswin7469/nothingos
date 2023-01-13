@@ -63,7 +63,7 @@ public class RegionInterceptingFrameLayout extends FrameLayout {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-RegionInterceptingFrameLayout  reason: not valid java name */
-    public /* synthetic */ void m2522lambda$new$0$comandroidsystemuiRegionInterceptingFrameLayout(ViewTreeObserver.InternalInsetsInfo internalInsetsInfo) {
+    public /* synthetic */ void m2528lambda$new$0$comandroidsystemuiRegionInterceptingFrameLayout(ViewTreeObserver.InternalInsetsInfo internalInsetsInfo) {
         Region interceptRegion;
         internalInsetsInfo.setTouchableInsets(3);
         internalInsetsInfo.touchableRegion.setEmpty();

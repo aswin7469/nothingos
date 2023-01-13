@@ -68,12 +68,12 @@ public class HideDisplayCutoutController {
         }
 
         public void onConfigurationChanged(Configuration configuration) {
-            HideDisplayCutoutController.this.mMainExecutor.execute(new C3463x58c373ff(this, configuration));
+            HideDisplayCutoutController.this.mMainExecutor.execute(new C3473x58c373ff(this, configuration));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onConfigurationChanged$0$com-android-wm-shell-hidedisplaycutout-HideDisplayCutoutController$HideDisplayCutoutImpl */
-        public /* synthetic */ void mo49570x72f8b0c3(Configuration configuration) {
+        public /* synthetic */ void mo49579x72f8b0c3(Configuration configuration) {
             HideDisplayCutoutController.this.onConfigurationChanged(configuration);
         }
     }

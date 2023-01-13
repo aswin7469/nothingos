@@ -12,6 +12,6 @@ public final /* synthetic */ class ScrollCaptureClient$SessionWrapper$$ExternalS
     }
 
     public final Object attachCompleter(CallbackToFutureAdapter.Completer completer) {
-        return this.f$0.mo37583x975269da(completer);
+        return this.f$0.mo37584x975269da(completer);
     }
 }

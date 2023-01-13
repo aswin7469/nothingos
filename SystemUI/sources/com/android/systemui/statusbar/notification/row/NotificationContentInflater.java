@@ -112,21 +112,21 @@ public class NotificationContentInflater implements NotificationRowContentBinder
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$freeNotificationView$0$com-android-systemui-statusbar-notification-row-NotificationContentInflater */
-    public /* synthetic */ void mo41417xc53fc971(ExpandableNotificationRow expandableNotificationRow, NotificationEntry notificationEntry) {
+    public /* synthetic */ void mo41423xc53fc971(ExpandableNotificationRow expandableNotificationRow, NotificationEntry notificationEntry) {
         expandableNotificationRow.getPrivateLayout().setContractedChild((View) null);
         this.mRemoteViewCache.removeCachedView(notificationEntry, 1);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$freeNotificationView$1$com-android-systemui-statusbar-notification-row-NotificationContentInflater */
-    public /* synthetic */ void mo41418xc60e47f2(ExpandableNotificationRow expandableNotificationRow, NotificationEntry notificationEntry) {
+    public /* synthetic */ void mo41424xc60e47f2(ExpandableNotificationRow expandableNotificationRow, NotificationEntry notificationEntry) {
         expandableNotificationRow.getPrivateLayout().setExpandedChild((View) null);
         this.mRemoteViewCache.removeCachedView(notificationEntry, 2);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$freeNotificationView$2$com-android-systemui-statusbar-notification-row-NotificationContentInflater */
-    public /* synthetic */ void mo41419xc6dcc673(ExpandableNotificationRow expandableNotificationRow, NotificationEntry notificationEntry) {
+    public /* synthetic */ void mo41425xc6dcc673(ExpandableNotificationRow expandableNotificationRow, NotificationEntry notificationEntry) {
         expandableNotificationRow.getPrivateLayout().setHeadsUpChild((View) null);
         this.mRemoteViewCache.removeCachedView(notificationEntry, 4);
         expandableNotificationRow.getPrivateLayout().setHeadsUpInflatedSmartReplies((InflatedSmartReplyViewHolder) null);
@@ -146,7 +146,7 @@ public class NotificationContentInflater implements NotificationRowContentBinder
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$freeNotificationView$3$com-android-systemui-statusbar-notification-row-NotificationContentInflater */
-    public /* synthetic */ void mo41420xc7ab44f4(ExpandableNotificationRow expandableNotificationRow, NotificationEntry notificationEntry) {
+    public /* synthetic */ void mo41426xc7ab44f4(ExpandableNotificationRow expandableNotificationRow, NotificationEntry notificationEntry) {
         expandableNotificationRow.getPublicLayout().setContractedChild((View) null);
         this.mRemoteViewCache.removeCachedView(notificationEntry, 8);
     }
@@ -311,7 +311,7 @@ public class NotificationContentInflater implements NotificationRowContentBinder
             final RemoteViews remoteViews2 = remoteViews;
             final NotificationContentView notificationContentView3 = notificationContentView;
             final RemoteViews.InteractionHandler interactionHandler3 = interactionHandler;
-            C27585 r1 = new RemoteViews.OnViewAppliedListener() {
+            C27645 r1 = new RemoteViews.OnViewAppliedListener() {
                 public void onViewInflated(View view) {
                     if (view instanceof ImageMessageConsumer) {
                         ((ImageMessageConsumer) view).setImageResolver(ExpandableNotificationRow.this.getImageResolver());

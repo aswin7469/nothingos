@@ -558,7 +558,7 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T>, AutoCloseable 
         static final int OPEN = 64;
 
         /* renamed from: QA */
-        static final VarHandle f760QA;
+        static final VarHandle f758QA;
         static final int REQS = 4;
         static final int RUN = 32;
         Object[] array;
@@ -1076,7 +1076,7 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T>, AutoCloseable 
                 MethodHandles.Lookup lookup = MethodHandles.lookup();
                 CTL = lookup.findVarHandle(cls, "ctl", Integer.TYPE);
                 DEMAND = lookup.findVarHandle(cls, "demand", Long.TYPE);
-                f760QA = MethodHandles.arrayElementVarHandle(Object[].class);
+                f758QA = MethodHandles.arrayElementVarHandle(Object[].class);
                 Class<LockSupport> cls2 = LockSupport.class;
             } catch (ReflectiveOperationException e) {
                 throw new ExceptionInInitializerError((Throwable) e);

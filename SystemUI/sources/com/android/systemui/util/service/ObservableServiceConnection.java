@@ -84,7 +84,7 @@ public class ObservableServiceConnection<T> implements ServiceConnection {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$addCallback$0$com-android-systemui-util-service-ObservableServiceConnection */
-    public /* synthetic */ void mo47103xbbde41de(Callback callback) {
+    public /* synthetic */ void mo47115xbbde41de(Callback callback) {
         Iterator<WeakReference<Callback<T>>> it = this.mCallbacks.iterator();
         while (it.hasNext()) {
             if (it.next().get() == callback) {
@@ -113,7 +113,7 @@ public class ObservableServiceConnection<T> implements ServiceConnection {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$removeCallback$2$com-android-systemui-util-service-ObservableServiceConnection */
-    public /* synthetic */ void mo47106x2dd4631d(Callback callback) {
+    public /* synthetic */ void mo47118x2dd4631d(Callback callback) {
         this.mCallbacks.removeIf(new ObservableServiceConnection$$ExternalSyntheticLambda1(callback));
     }
 
@@ -122,7 +122,7 @@ public class ObservableServiceConnection<T> implements ServiceConnection {
             Log.d(TAG, "onDisconnected:" + i);
         }
         if (this.mBoundCalled) {
-            this.mLastDisconnectReason = Optional.m1745of(Integer.valueOf(i));
+            this.mLastDisconnectReason = Optional.m1751of(Integer.valueOf(i));
             unbind();
             this.mProxy = null;
             applyToCallbacksLocked(new ObservableServiceConnection$$ExternalSyntheticLambda4(this));
@@ -131,7 +131,7 @@ public class ObservableServiceConnection<T> implements ServiceConnection {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onDisconnected$3$com-android-systemui-util-service-ObservableServiceConnection */
-    public /* synthetic */ void mo47104x9aee602f(Callback callback) {
+    public /* synthetic */ void mo47116x9aee602f(Callback callback) {
         callback.onDisconnected(this, this.mLastDisconnectReason.get().intValue());
     }
 
@@ -145,7 +145,7 @@ public class ObservableServiceConnection<T> implements ServiceConnection {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onServiceConnected$4$com-android-systemui-util-service-ObservableServiceConnection */
-    public /* synthetic */ void mo47105x7eb59809(Callback callback) {
+    public /* synthetic */ void mo47117x7eb59809(Callback callback) {
         callback.onConnected(this, this.mProxy);
     }
 

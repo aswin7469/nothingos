@@ -11,6 +11,6 @@ public final /* synthetic */ class ClipboardOverlayController$$ExternalSynthetic
     }
 
     public final void onClick(View view) {
-        this.f$0.mo31307xdd00aaf4(view);
+        this.f$0.mo31318xdd00aaf4(view);
     }
 }

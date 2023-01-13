@@ -18,7 +18,7 @@ final class TcpSocketKeepalive extends SocketKeepalive {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startImpl$0$android-net-TcpSocketKeepalive  reason: not valid java name */
-    public /* synthetic */ void m1936lambda$startImpl$0$androidnetTcpSocketKeepalive(int i) {
+    public /* synthetic */ void m1942lambda$startImpl$0$androidnetTcpSocketKeepalive(int i) {
         try {
             this.mService.startTcpKeepalive(this.mNetwork, this.mPfd, i, this.mCallback);
         } catch (RemoteException e) {
@@ -34,7 +34,7 @@ final class TcpSocketKeepalive extends SocketKeepalive {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$stopImpl$1$android-net-TcpSocketKeepalive  reason: not valid java name */
-    public /* synthetic */ void m1937lambda$stopImpl$1$androidnetTcpSocketKeepalive() {
+    public /* synthetic */ void m1943lambda$stopImpl$1$androidnetTcpSocketKeepalive() {
         try {
             if (this.mSlot != null) {
                 this.mService.stopKeepalive(this.mNetwork, this.mSlot.intValue());

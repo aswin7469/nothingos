@@ -11,6 +11,6 @@ public final /* synthetic */ class NotificationConversationInfo$$ExternalSynthet
     }
 
     public final void onClick(View view) {
-        this.f$0.mo41539x1773ccb7(view);
+        this.f$0.mo41545x1773ccb7(view);
     }
 }

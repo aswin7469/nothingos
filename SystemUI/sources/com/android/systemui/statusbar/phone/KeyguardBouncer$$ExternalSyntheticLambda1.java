@@ -9,6 +9,6 @@ public final /* synthetic */ class KeyguardBouncer$$ExternalSyntheticLambda1 imp
     }
 
     public final void run() {
-        this.f$0.mo44190x93953a0e();
+        this.f$0.mo44205x93953a0e();
     }
 }

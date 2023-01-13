@@ -11,6 +11,6 @@ public final /* synthetic */ class LightsOutNotifController$$ExternalSyntheticLa
     }
 
     public final void onChanged(Object obj) {
-        this.f$0.mo44394xc5976051((Boolean) obj);
+        this.f$0.mo44409xc5976051((Boolean) obj);
     }
 }

@@ -11,6 +11,6 @@ public final /* synthetic */ class NavigationBarEdgePanel$$ExternalSyntheticLamb
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        this.f$0.mo35074x6e8f2d95(valueAnimator);
+        this.f$0.mo35078x6e8f2d95(valueAnimator);
     }
 }

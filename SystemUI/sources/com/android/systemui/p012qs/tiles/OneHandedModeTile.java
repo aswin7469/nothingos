@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Switch;
 import com.android.internal.logging.MetricsLogger;
 import com.android.p019wm.shell.onehanded.OneHanded;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.qualifiers.Background;
 import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.p012qs.QSHost;
@@ -77,14 +77,14 @@ public class OneHandedModeTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     public CharSequence getTileLabel() {
-        return this.mContext.getString(C1893R.string.quick_settings_onehanded_label);
+        return this.mContext.getString(C1894R.string.quick_settings_onehanded_label);
     }
 
     /* access modifiers changed from: protected */
     public void handleUpdateState(QSTile.BooleanState booleanState, Object obj) {
         int i = 1;
         booleanState.value = (obj instanceof Integer ? ((Integer) obj).intValue() : this.mSetting.getValue()) != 0;
-        booleanState.label = this.mContext.getString(C1893R.string.quick_settings_onehanded_label);
+        booleanState.label = this.mContext.getString(C1894R.string.quick_settings_onehanded_label);
         booleanState.icon = this.mIcon;
         if (booleanState.slash == null) {
             booleanState.slash = new QSTile.SlashState();

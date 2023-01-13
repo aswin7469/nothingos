@@ -9,17 +9,17 @@ final class Cam16 {
     private final float hue;
 
     /* renamed from: j */
-    private final float f432j;
+    private final float f431j;
     private final float jstar;
 
     /* renamed from: m */
-    private final float f433m;
+    private final float f432m;
 
     /* renamed from: q */
-    private final float f434q;
+    private final float f433q;
 
     /* renamed from: s */
-    private final float f435s;
+    private final float f434s;
 
     /* access modifiers changed from: package-private */
     public float distance(Cam16 cam16) {
@@ -38,19 +38,19 @@ final class Cam16 {
     }
 
     public float getJ() {
-        return this.f432j;
+        return this.f431j;
     }
 
     public float getQ() {
-        return this.f434q;
+        return this.f433q;
     }
 
     public float getM() {
-        return this.f433m;
+        return this.f432m;
     }
 
     public float getS() {
-        return this.f435s;
+        return this.f434s;
     }
 
     public float getJStar() {
@@ -68,10 +68,10 @@ final class Cam16 {
     private Cam16(float f, float f2, float f3, float f4, float f5, float f6, float f7, float f8, float f9) {
         this.hue = f;
         this.chroma = f2;
-        this.f432j = f3;
-        this.f434q = f4;
-        this.f433m = f5;
-        this.f435s = f6;
+        this.f431j = f3;
+        this.f433q = f4;
+        this.f432m = f5;
+        this.f434s = f6;
         this.jstar = f7;
         this.astar = f8;
         this.bstar = f9;

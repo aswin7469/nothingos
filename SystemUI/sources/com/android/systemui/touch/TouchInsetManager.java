@@ -24,7 +24,7 @@ public class TouchInsetManager {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$new$0$com-android-systemui-touch-TouchInsetManager$TouchInsetSession */
-        public /* synthetic */ void mo46344x84eaf2ea(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
+        public /* synthetic */ void mo46356x84eaf2ea(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
             updateTouchRegion();
         }
 
@@ -40,7 +40,7 @@ public class TouchInsetManager {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$addViewToTracking$1$com-android-systemui-touch-TouchInsetManager$TouchInsetSession */
-        public /* synthetic */ void mo46342xcffa8ed1(View view) {
+        public /* synthetic */ void mo46354xcffa8ed1(View view) {
             this.mTrackedViews.add(view);
             view.addOnLayoutChangeListener(this.mOnLayoutChangeListener);
             updateTouchRegion();
@@ -52,7 +52,7 @@ public class TouchInsetManager {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$removeViewFromTracking$2$com-android-systemui-touch-TouchInsetManager$TouchInsetSession */
-        public /* synthetic */ void mo46345x54fb6084(View view) {
+        public /* synthetic */ void mo46357x54fb6084(View view) {
             this.mTrackedViews.remove(view);
             view.removeOnLayoutChangeListener(this.mOnLayoutChangeListener);
             updateTouchRegion();
@@ -77,14 +77,14 @@ public class TouchInsetManager {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$clear$4$com-android-systemui-touch-TouchInsetManager$TouchInsetSession */
-        public /* synthetic */ void mo46343x30b0b819() {
+        public /* synthetic */ void mo46355x30b0b819() {
             this.mManager.clearRegion(this);
             this.mTrackedViews.clear();
         }
     }
 
     public TouchInsetManager(Executor executor, View view) {
-        C32151 r0 = new View.OnAttachStateChangeListener() {
+        C32251 r0 = new View.OnAttachStateChangeListener() {
             public void onViewDetachedFromWindow(View view) {
             }
 
@@ -108,13 +108,13 @@ public class TouchInsetManager {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$checkWithinTouchRegion$1$com-android-systemui-touch-TouchInsetManager */
-    public /* synthetic */ void mo46333x676c2f3b(CallbackToFutureAdapter.Completer completer, int i, int i2) {
+    public /* synthetic */ void mo46345x676c2f3b(CallbackToFutureAdapter.Completer completer, int i, int i2) {
         completer.set(Boolean.valueOf(this.mDefinedRegions.values().stream().anyMatch(new TouchInsetManager$$ExternalSyntheticLambda1(i, i2))));
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$checkWithinTouchRegion$2$com-android-systemui-touch-TouchInsetManager */
-    public /* synthetic */ Object mo46334x20e3bcda(int i, int i2, CallbackToFutureAdapter.Completer completer) throws Exception {
+    public /* synthetic */ Object mo46346x20e3bcda(int i, int i2, CallbackToFutureAdapter.Completer completer) throws Exception {
         this.mExecutor.execute(new TouchInsetManager$$ExternalSyntheticLambda4(this, completer, i, i2));
         return "DreamOverlayTouchMonitor::checkWithinTouchRegion";
     }
@@ -139,7 +139,7 @@ public class TouchInsetManager {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setTouchRegion$3$com-android-systemui-touch-TouchInsetManager */
-    public /* synthetic */ void mo46336xdb199988(TouchInsetSession touchInsetSession, Region region) {
+    public /* synthetic */ void mo46348xdb199988(TouchInsetSession touchInsetSession, Region region) {
         this.mDefinedRegions.put(touchInsetSession, region);
         updateTouchInset();
     }
@@ -151,7 +151,7 @@ public class TouchInsetManager {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$clearRegion$4$com-android-systemui-touch-TouchInsetManager */
-    public /* synthetic */ void mo46335x2e387df1(TouchInsetSession touchInsetSession) {
+    public /* synthetic */ void mo46347x2e387df1(TouchInsetSession touchInsetSession) {
         Region remove = this.mDefinedRegions.remove(touchInsetSession);
         if (remove != null) {
             remove.recycle();

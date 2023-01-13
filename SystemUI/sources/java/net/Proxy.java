@@ -4,7 +4,7 @@ public class Proxy {
     public static final Proxy NO_PROXY = new Proxy();
 
     /* renamed from: sa */
-    private SocketAddress f558sa;
+    private SocketAddress f556sa;
     private Type type;
 
     public enum Type {
@@ -15,7 +15,7 @@ public class Proxy {
 
     private Proxy() {
         this.type = Type.DIRECT;
-        this.f558sa = null;
+        this.f556sa = null;
     }
 
     public Proxy(Type type2, SocketAddress socketAddress) {
@@ -23,7 +23,7 @@ public class Proxy {
             throw new IllegalArgumentException("type " + type2 + " is not compatible with address " + socketAddress);
         }
         this.type = type2;
-        this.f558sa = socketAddress;
+        this.f556sa = socketAddress;
     }
 
     public Type type() {
@@ -31,7 +31,7 @@ public class Proxy {
     }
 
     public SocketAddress address() {
-        return this.f558sa;
+        return this.f556sa;
     }
 
     public String toString() {

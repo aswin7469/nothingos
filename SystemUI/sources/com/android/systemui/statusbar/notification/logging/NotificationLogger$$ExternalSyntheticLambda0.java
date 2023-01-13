@@ -15,6 +15,6 @@ public final /* synthetic */ class NotificationLogger$$ExternalSyntheticLambda0 
     }
 
     public final void run() {
-        this.f$0.mo40793xde1be78(this.f$1, this.f$2);
+        this.f$0.mo40796xde1be78(this.f$1, this.f$2);
     }
 }

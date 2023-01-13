@@ -114,7 +114,7 @@ public final class WMShell extends CoreStartable implements CommandQueue.Callbac
                 pip.showPictureInPictureMenu();
             }
         });
-        C33252 r0 = new KeyguardUpdateMonitorCallback() {
+        C33352 r0 = new KeyguardUpdateMonitorCallback() {
             public void onKeyguardVisibilityChanged(boolean z) {
                 pip.onKeyguardVisibilityChanged(z, WMShell.this.mKeyguardStateController.isAnimatingBetweenKeyguardAndSurfaceBehind());
             }
@@ -144,7 +144,7 @@ public final class WMShell extends CoreStartable implements CommandQueue.Callbac
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$initPip$0$com-android-systemui-wmshell-WMShell  reason: not valid java name */
-    public /* synthetic */ void m3326lambda$initPip$0$comandroidsystemuiwmshellWMShell(Pip pip, int i) {
+    public /* synthetic */ void m3330lambda$initPip$0$comandroidsystemuiwmshellWMShell(Pip pip, int i) {
         boolean z = (INVALID_SYSUI_STATE_MASK & i) == 0;
         this.mIsSysUiStateValid = z;
         pip.onSystemUiStateChanged(z, i);
@@ -152,7 +152,7 @@ public final class WMShell extends CoreStartable implements CommandQueue.Callbac
 
     /* access modifiers changed from: package-private */
     public void initSplitScreen(final SplitScreen splitScreen) {
-        C33274 r0 = new KeyguardUpdateMonitorCallback() {
+        C33374 r0 = new KeyguardUpdateMonitorCallback() {
             public void onKeyguardVisibilityChanged(boolean z) {
                 splitScreen.onKeyguardVisibilityChanged(z);
             }
@@ -175,7 +175,7 @@ public final class WMShell extends CoreStartable implements CommandQueue.Callbac
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onStartTransition$0$com-android-systemui-wmshell-WMShell$6 */
-            public /* synthetic */ void mo47563x3fd4fb56() {
+            public /* synthetic */ void mo47572x3fd4fb56() {
                 WMShell.this.mSysUiState.setFlag(65536, true).commitUpdate(0);
             }
 
@@ -185,7 +185,7 @@ public final class WMShell extends CoreStartable implements CommandQueue.Callbac
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onStartFinished$1$com-android-systemui-wmshell-WMShell$6  reason: not valid java name */
-            public /* synthetic */ void m3327lambda$onStartFinished$1$comandroidsystemuiwmshellWMShell$6() {
+            public /* synthetic */ void m3331lambda$onStartFinished$1$comandroidsystemuiwmshellWMShell$6() {
                 WMShell.this.mSysUiState.setFlag(65536, true).commitUpdate(0);
             }
 
@@ -195,7 +195,7 @@ public final class WMShell extends CoreStartable implements CommandQueue.Callbac
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onStopFinished$2$com-android-systemui-wmshell-WMShell$6  reason: not valid java name */
-            public /* synthetic */ void m3328lambda$onStopFinished$2$comandroidsystemuiwmshellWMShell$6() {
+            public /* synthetic */ void m3332lambda$onStopFinished$2$comandroidsystemuiwmshellWMShell$6() {
                 WMShell.this.mSysUiState.setFlag(65536, false).commitUpdate(0);
             }
         });
@@ -206,11 +206,11 @@ public final class WMShell extends CoreStartable implements CommandQueue.Callbac
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$notifyExpandNotification$0$com-android-systemui-wmshell-WMShell$7 */
-            public /* synthetic */ void mo47568x2ae04327() {
+            public /* synthetic */ void mo47577x2ae04327() {
                 WMShell.this.mCommandQueue.handleSystemKey(281);
             }
         });
-        C33318 r0 = new KeyguardUpdateMonitorCallback() {
+        C33418 r0 = new KeyguardUpdateMonitorCallback() {
             public void onKeyguardVisibilityChanged(boolean z) {
                 oneHanded.onKeyguardVisibilityChanged(z);
                 oneHanded.stopOneHanded();
@@ -222,7 +222,7 @@ public final class WMShell extends CoreStartable implements CommandQueue.Callbac
         };
         this.mOneHandedKeyguardCallback = r0;
         this.mKeyguardUpdateMonitor.registerCallback(r0);
-        C33329 r02 = new WakefulnessLifecycle.Observer() {
+        C33429 r02 = new WakefulnessLifecycle.Observer() {
             public void onFinishedWakingUp() {
                 oneHanded.setLockedDisabled(false, false);
             }
@@ -268,7 +268,7 @@ public final class WMShell extends CoreStartable implements CommandQueue.Callbac
 
     /* access modifiers changed from: package-private */
     public void initCompatUi(final CompatUI compatUI) {
-        C332314 r0 = new KeyguardStateController.Callback() {
+        C333314 r0 = new KeyguardStateController.Callback() {
             public void onKeyguardShowingChanged() {
                 compatUI.onKeyguardShowingChanged(WMShell.this.mKeyguardStateController.isShowing());
             }

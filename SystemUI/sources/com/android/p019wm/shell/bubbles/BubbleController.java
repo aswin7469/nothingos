@@ -100,7 +100,7 @@ public class BubbleController {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onReceive$0$com-android-wm-shell-bubbles-BubbleController$5 */
-        public /* synthetic */ void mo48387x329914d8() {
+        public /* synthetic */ void mo48396x329914d8() {
             BubbleController.this.collapseStack();
         }
     };
@@ -181,13 +181,13 @@ public class BubbleController {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$applyUpdate$1$com-android-wm-shell-bubbles-BubbleController$6 */
-        public /* synthetic */ void mo48391x57fdc12d(Bubble bubble, BubbleEntry bubbleEntry) {
+        public /* synthetic */ void mo48400x57fdc12d(Bubble bubble, BubbleEntry bubbleEntry) {
             BubbleController.this.mMainExecutor.execute(new BubbleController$6$$ExternalSyntheticLambda0(this, bubbleEntry, bubble));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$applyUpdate$0$com-android-wm-shell-bubbles-BubbleController$6 */
-        public /* synthetic */ void mo48390x5874272c(BubbleEntry bubbleEntry, Bubble bubble) {
+        public /* synthetic */ void mo48399x5874272c(BubbleEntry bubbleEntry, Bubble bubble) {
             if (bubbleEntry != null) {
                 if (BubbleController.this.getBubblesInGroup(bubbleEntry.getStatusBarNotification().getGroupKey()).isEmpty()) {
                     BubbleController.this.mSysuiProxy.notifyMaybeCancelSummary(bubble.getKey());
@@ -348,7 +348,7 @@ public class BubbleController {
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onTaskMovedToFront$0$com-android-wm-shell-bubbles-BubbleController$3 */
-            public /* synthetic */ void mo48383x2959a68b(int i) {
+            public /* synthetic */ void mo48392x2959a68b(int i) {
                 int taskId = (BubbleController.this.mStackView == null || BubbleController.this.mStackView.getExpandedBubble() == null || !BubbleController.this.isStackExpanded() || BubbleController.this.mStackView.isExpansionAnimating() || BubbleController.this.mStackView.isSwitchAnimating()) ? -1 : BubbleController.this.mStackView.getExpandedBubble().getTaskId();
                 if (taskId != -1 && taskId != i) {
                     BubbleController.this.mBubbleData.setExpanded(false);
@@ -386,7 +386,7 @@ public class BubbleController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$initialize$1$com-android-wm-shell-bubbles-BubbleController */
-    public /* synthetic */ void mo48348xbb0fdd6e(Bubble bubble) {
+    public /* synthetic */ void mo48357xbb0fdd6e(Bubble bubble) {
         if (bubble.getBubbleIntent() != null) {
             if (bubble.isIntentActive() || this.mBubbleData.hasBubbleInStackWithKey(bubble.getKey())) {
                 bubble.setPendingIntentCanceled();
@@ -398,13 +398,13 @@ public class BubbleController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$initialize$0$com-android-wm-shell-bubbles-BubbleController */
-    public /* synthetic */ void mo48347x4595b72d(Bubble bubble) {
+    public /* synthetic */ void mo48356x4595b72d(Bubble bubble) {
         removeBubble(bubble.getKey(), 10);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$initialize$2$com-android-wm-shell-bubbles-BubbleController */
-    public /* synthetic */ void mo48349x308a03af(int i, LocusId locusId, boolean z) {
+    public /* synthetic */ void mo48358x308a03af(int i, LocusId locusId, boolean z) {
         this.mBubbleData.onLocusVisibilityChanged(i, locusId, z);
     }
 
@@ -742,7 +742,7 @@ public class BubbleController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$addToWindowManagerMaybe$3$com-android-wm-shell-bubbles-BubbleController */
-    public /* synthetic */ WindowInsets mo48345x78e0266d(View view, WindowInsets windowInsets) {
+    public /* synthetic */ WindowInsets mo48354x78e0266d(View view, WindowInsets windowInsets) {
         if (!windowInsets.equals(this.mWindowInsets)) {
             this.mWindowInsets = windowInsets;
             this.mBubblePositioner.update();
@@ -780,7 +780,7 @@ public class BubbleController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$removeFromWindowManagerMaybe$4$com-android-wm-shell-bubbles-BubbleController */
-    public /* synthetic */ void mo48353xa95b691a() {
+    public /* synthetic */ void mo48362xa95b691a() {
         this.mContext.unregisterReceiver(this.mBroadcastReceiver);
     }
 
@@ -816,13 +816,13 @@ public class BubbleController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$restoreBubbles$6$com-android-wm-shell-bubbles-BubbleController */
-    public /* synthetic */ void mo48355xcd7c7b9c(List list) {
+    public /* synthetic */ void mo48364xcd7c7b9c(List list) {
         this.mMainExecutor.execute(new BubbleController$$ExternalSyntheticLambda14(this, list));
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$restoreBubbles$5$com-android-wm-shell-bubbles-BubbleController */
-    public /* synthetic */ void mo48354x5802555b(List list) {
+    public /* synthetic */ void mo48363x5802555b(List list) {
         Iterator it = list.iterator();
         while (it.hasNext()) {
             BubbleEntry bubbleEntry = (BubbleEntry) it.next();
@@ -986,14 +986,14 @@ public class BubbleController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$loadOverflowBubblesFromDisk$10$com-android-wm-shell-bubbles-BubbleController */
-    public /* synthetic */ Unit mo48350x791ab4ce(List list) {
+    public /* synthetic */ Unit mo48359x791ab4ce(List list) {
         list.forEach(new BubbleController$$ExternalSyntheticLambda16(this));
         return null;
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$loadOverflowBubblesFromDisk$9$com-android-wm-shell-bubbles-BubbleController */
-    public /* synthetic */ void mo48352x83f06a52(Bubble bubble) {
+    public /* synthetic */ void mo48361x83f06a52(Bubble bubble) {
         if (!this.mBubbleData.hasAnyBubbleWithKey(bubble.getKey())) {
             bubble.inflate(new BubbleController$$ExternalSyntheticLambda10(this, bubble), this.mContext, this, this.mStackView, this.mBubbleIconFactory, this.mBubbleBadgeIconFactory, true);
         }
@@ -1001,7 +1001,7 @@ public class BubbleController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$loadOverflowBubblesFromDisk$8$com-android-wm-shell-bubbles-BubbleController */
-    public /* synthetic */ void mo48351xe764411(Bubble bubble, Bubble bubble2) {
+    public /* synthetic */ void mo48360xe764411(Bubble bubble, Bubble bubble2) {
         this.mBubbleData.overflowBubble(15, bubble);
     }
 
@@ -1033,7 +1033,7 @@ public class BubbleController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$inflateAndAdd$11$com-android-wm-shell-bubbles-BubbleController */
-    public /* synthetic */ void mo48346xf3a157c4(boolean z, boolean z2, Bubble bubble) {
+    public /* synthetic */ void mo48355xf3a157c4(boolean z, boolean z2, Bubble bubble) {
         this.mBubbleData.notificationEntryUpdated(bubble, z, z2);
     }
 
@@ -1148,13 +1148,13 @@ public class BubbleController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setIsBubble$13$com-android-wm-shell-bubbles-BubbleController */
-    public /* synthetic */ void mo48357xe71339bf(boolean z, Bubble bubble, BubbleEntry bubbleEntry) {
+    public /* synthetic */ void mo48366xe71339bf(boolean z, Bubble bubble, BubbleEntry bubbleEntry) {
         this.mMainExecutor.execute(new BubbleController$$ExternalSyntheticLambda12(this, bubbleEntry, z, bubble));
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setIsBubble$12$com-android-wm-shell-bubbles-BubbleController */
-    public /* synthetic */ void mo48356x7199137e(BubbleEntry bubbleEntry, boolean z, Bubble bubble) {
+    public /* synthetic */ void mo48365x7199137e(BubbleEntry bubbleEntry, boolean z, Bubble bubble) {
         if (bubbleEntry != null) {
             setIsBubble(bubbleEntry, z, bubble.shouldAutoExpand());
         } else if (z) {
@@ -1402,7 +1402,7 @@ public class BubbleController {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$removeSuppressedSummaryIfNecessary$2$com-android-wm-shell-bubbles-BubbleController$BubblesImpl */
-        public /* synthetic */ void mo48421xf75b9d06(Consumer consumer, Executor executor, String str) {
+        public /* synthetic */ void mo48430xf75b9d06(Consumer consumer, Executor executor, String str) {
             BubbleController.this.removeSuppressedSummaryIfNecessary(str, consumer != null ? new BubbleController$BubblesImpl$$ExternalSyntheticLambda19(executor, consumer) : null);
         }
 
@@ -1412,7 +1412,7 @@ public class BubbleController {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$collapseStack$3$com-android-wm-shell-bubbles-BubbleController$BubblesImpl */
-        public /* synthetic */ void mo48402x74b5bc04() {
+        public /* synthetic */ void mo48411x74b5bc04() {
             BubbleController.this.collapseStack();
         }
 
@@ -1422,7 +1422,7 @@ public class BubbleController {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$updateForThemeChanges$4$com-android-wm-shell-bubbles-BubbleController$BubblesImpl */
-        public /* synthetic */ void mo48424x1cf05284() {
+        public /* synthetic */ void mo48433x1cf05284() {
             BubbleController.this.updateForThemeChanges();
         }
 
@@ -1432,7 +1432,7 @@ public class BubbleController {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$expandStackAndSelectBubble$5$com-android-wm-shell-bubbles-BubbleController$BubblesImpl */
-        public /* synthetic */ void mo48404x9261b9f6(BubbleEntry bubbleEntry) {
+        public /* synthetic */ void mo48413x9261b9f6(BubbleEntry bubbleEntry) {
             BubbleController.this.expandStackAndSelectBubble(bubbleEntry);
         }
 
@@ -1442,7 +1442,7 @@ public class BubbleController {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$expandStackAndSelectBubble$6$com-android-wm-shell-bubbles-BubbleController$BubblesImpl */
-        public /* synthetic */ void mo48405xa31786b7(Bubble bubble) {
+        public /* synthetic */ void mo48414xa31786b7(Bubble bubble) {
             BubbleController.this.expandStackAndSelectBubble(bubble);
         }
 
@@ -1452,7 +1452,7 @@ public class BubbleController {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onTaskbarChanged$7$com-android-wm-shell-bubbles-BubbleController$BubblesImpl */
-        public /* synthetic */ void mo48416xcdb7a1ac(Bundle bundle) {
+        public /* synthetic */ void mo48425xcdb7a1ac(Bundle bundle) {
             BubbleController.this.onTaskbarChanged(bundle);
         }
 
@@ -1462,7 +1462,7 @@ public class BubbleController {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$openBubbleOverflow$8$com-android-wm-shell-bubbles-BubbleController$BubblesImpl */
-        public /* synthetic */ void mo48420xd9466820() {
+        public /* synthetic */ void mo48429xd9466820() {
             BubbleController.this.openBubbleOverflow();
         }
 
@@ -1472,7 +1472,7 @@ public class BubbleController {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$handleDismissalInterception$11$com-android-wm-shell-bubbles-BubbleController$BubblesImpl */
-        public /* synthetic */ Boolean mo48406x17cb9c45(BubbleEntry bubbleEntry, List list, IntConsumer intConsumer) {
+        public /* synthetic */ Boolean mo48415x17cb9c45(BubbleEntry bubbleEntry, List list, IntConsumer intConsumer) {
             return Boolean.valueOf(BubbleController.this.handleDismissalInterception(bubbleEntry, list, intConsumer));
         }
 
@@ -1482,7 +1482,7 @@ public class BubbleController {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$setSysuiProxy$12$com-android-wm-shell-bubbles-BubbleController$BubblesImpl */
-        public /* synthetic */ void mo48423x9584960a(Bubbles.SysuiProxy sysuiProxy) {
+        public /* synthetic */ void mo48432x9584960a(Bubbles.SysuiProxy sysuiProxy) {
             BubbleController.this.setSysuiProxy(sysuiProxy);
         }
 
@@ -1492,7 +1492,7 @@ public class BubbleController {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$setExpandListener$13$com-android-wm-shell-bubbles-BubbleController$BubblesImpl */
-        public /* synthetic */ void mo48422x6c92ec4a(Bubbles.BubbleExpandListener bubbleExpandListener) {
+        public /* synthetic */ void mo48431x6c92ec4a(Bubbles.BubbleExpandListener bubbleExpandListener) {
             BubbleController.this.setExpandListener(bubbleExpandListener);
         }
 
@@ -1502,7 +1502,7 @@ public class BubbleController {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onEntryAdded$14$com-android-wm-shell-bubbles-BubbleController$BubblesImpl */
-        public /* synthetic */ void mo48409xc5408694(BubbleEntry bubbleEntry) {
+        public /* synthetic */ void mo48418xc5408694(BubbleEntry bubbleEntry) {
             BubbleController.this.onEntryAdded(bubbleEntry);
         }
 
@@ -1512,7 +1512,7 @@ public class BubbleController {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onEntryUpdated$15$com-android-wm-shell-bubbles-BubbleController$BubblesImpl */
-        public /* synthetic */ void mo48411x42a76ffa(BubbleEntry bubbleEntry, boolean z) {
+        public /* synthetic */ void mo48420x42a76ffa(BubbleEntry bubbleEntry, boolean z) {
             BubbleController.this.onEntryUpdated(bubbleEntry, z);
         }
 
@@ -1522,7 +1522,7 @@ public class BubbleController {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onEntryRemoved$16$com-android-wm-shell-bubbles-BubbleController$BubblesImpl */
-        public /* synthetic */ void mo48410x5a95736(BubbleEntry bubbleEntry) {
+        public /* synthetic */ void mo48419x5a95736(BubbleEntry bubbleEntry) {
             BubbleController.this.onEntryRemoved(bubbleEntry);
         }
 
@@ -1532,7 +1532,7 @@ public class BubbleController {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onRankingUpdated$17$com-android-wm-shell-bubbles-BubbleController$BubblesImpl */
-        public /* synthetic */ void mo48413xe34b5a40(NotificationListenerService.RankingMap rankingMap, HashMap hashMap) {
+        public /* synthetic */ void mo48422xe34b5a40(NotificationListenerService.RankingMap rankingMap, HashMap hashMap) {
             BubbleController.this.onRankingUpdated(rankingMap, hashMap);
         }
 
@@ -1544,7 +1544,7 @@ public class BubbleController {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onNotificationChannelModified$18$com-android-wm-shell-bubbles-BubbleController$BubblesImpl */
-        public /* synthetic */ void mo48412xbb00851d(String str, UserHandle userHandle, NotificationChannel notificationChannel, int i) {
+        public /* synthetic */ void mo48421xbb00851d(String str, UserHandle userHandle, NotificationChannel notificationChannel, int i) {
             BubbleController.this.onNotificationChannelModified(str, userHandle, notificationChannel, i);
         }
 
@@ -1554,7 +1554,7 @@ public class BubbleController {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onStatusBarVisibilityChanged$19$com-android-wm-shell-bubbles-BubbleController$BubblesImpl */
-        public /* synthetic */ void mo48415xdb819c66(boolean z) {
+        public /* synthetic */ void mo48424xdb819c66(boolean z) {
             BubbleController.this.onStatusBarVisibilityChanged(z);
         }
 
@@ -1564,7 +1564,7 @@ public class BubbleController {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onZenStateChanged$20$com-android-wm-shell-bubbles-BubbleController$BubblesImpl */
-        public /* synthetic */ void mo48419xf029d3ef() {
+        public /* synthetic */ void mo48428xf029d3ef() {
             BubbleController.this.onZenStateChanged();
         }
 
@@ -1574,7 +1574,7 @@ public class BubbleController {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onStatusBarStateChanged$21$com-android-wm-shell-bubbles-BubbleController$BubblesImpl */
-        public /* synthetic */ void mo48414xa2f96552(boolean z) {
+        public /* synthetic */ void mo48423xa2f96552(boolean z) {
             BubbleController.this.onStatusBarStateChanged(z);
         }
 
@@ -1584,7 +1584,7 @@ public class BubbleController {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onUserChanged$22$com-android-wm-shell-bubbles-BubbleController$BubblesImpl */
-        public /* synthetic */ void mo48417xa9e04d0e(int i) {
+        public /* synthetic */ void mo48426xa9e04d0e(int i) {
             BubbleController.this.onUserChanged(i);
         }
 
@@ -1594,7 +1594,7 @@ public class BubbleController {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onCurrentProfilesChanged$23$com-android-wm-shell-bubbles-BubbleController$BubblesImpl */
-        public /* synthetic */ void mo48408x7a7c810f(SparseArray sparseArray) {
+        public /* synthetic */ void mo48417x7a7c810f(SparseArray sparseArray) {
             BubbleController.this.onCurrentProfilesChanged(sparseArray);
         }
 
@@ -1604,7 +1604,7 @@ public class BubbleController {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onUserRemoved$24$com-android-wm-shell-bubbles-BubbleController$BubblesImpl */
-        public /* synthetic */ void mo48418x12225064(int i) {
+        public /* synthetic */ void mo48427x12225064(int i) {
             BubbleController.this.onUserRemoved(i);
         }
 
@@ -1614,7 +1614,7 @@ public class BubbleController {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onConfigChanged$25$com-android-wm-shell-bubbles-BubbleController$BubblesImpl */
-        public /* synthetic */ void mo48407xe5287048(Configuration configuration) {
+        public /* synthetic */ void mo48416xe5287048(Configuration configuration) {
             BubbleController.this.onConfigChanged(configuration);
         }
 
@@ -1628,7 +1628,7 @@ public class BubbleController {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$dump$26$com-android-wm-shell-bubbles-BubbleController$BubblesImpl */
-        public /* synthetic */ void mo48403x9ab570ce(PrintWriter printWriter, String[] strArr) {
+        public /* synthetic */ void mo48412x9ab570ce(PrintWriter printWriter, String[] strArr) {
             BubbleController.this.dump(printWriter, strArr);
             this.mCachedState.dump(printWriter);
         }

@@ -13,12 +13,12 @@ import com.airbnb.lottie.LottieComposition;
 import com.airbnb.lottie.LottieProperty;
 import com.airbnb.lottie.model.KeyPath;
 import com.airbnb.lottie.value.LottieFrameInfo;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import kotlin.Metadata;
 import kotlin.collections.CollectionsKt;
 import kotlin.jvm.internal.Intrinsics;
 
-@Metadata(mo64986d1 = {"\u0000D\n\u0000\n\u0002\u0010\u000e\n\u0000\n\u0002\u0010\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u000b\n\u0000\n\u0002\u0010\u0007\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\u001a\u0014\u0010\u0002\u001a\u00020\u0003*\u00020\u00042\u0006\u0010\u0005\u001a\u00020\u0006H\u0002\u001a\u0014\u0010\u0007\u001a\u00020\b*\u00020\t2\u0006\u0010\n\u001a\u00020\u000bH\u0003\u001a\u0014\u0010\f\u001a\u00020\r*\u00020\t2\u0006\u0010\n\u001a\u00020\u000bH\u0002\u001a\f\u0010\u000e\u001a\u00020\u000b*\u00020\u000fH\u0002\u001a\f\u0010\u0010\u001a\u00020\u000b*\u00020\tH\u0002\u001a\u0014\u0010\u0011\u001a\u00020\u000b*\u00020\b2\u0006\u0010\u0012\u001a\u00020\u0013H\u0002\u001a\f\u0010\u0014\u001a\u00020\u000b*\u00020\u0015H\u0002\u001a\f\u0010\u0016\u001a\u00020\u0001*\u00020\u0013H\u0002\"\u000e\u0010\u0000\u001a\u00020\u0001XT¢\u0006\u0002\n\u0000¨\u0006\u0017"}, mo64987d2 = {"TAG", "", "addOverlayDynamicColor", "", "Lcom/airbnb/lottie/LottieAnimationView;", "context", "Landroid/content/Context;", "asSideFpsAnimation", "", "Landroid/view/Display;", "yAligned", "", "asSideFpsAnimationRotation", "", "hasBigNavigationBar", "Landroid/view/WindowInsets;", "isNaturalOrientation", "isReasonToShow", "activityTaskManager", "Landroid/app/ActivityTaskManager;", "isYAligned", "Landroid/hardware/biometrics/SensorLocationInternal;", "topClass", "SystemUI_nothingRelease"}, mo64988k = 2, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000D\n\u0000\n\u0002\u0010\u000e\n\u0000\n\u0002\u0010\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u000b\n\u0000\n\u0002\u0010\u0007\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\u001a\u0014\u0010\u0002\u001a\u00020\u0003*\u00020\u00042\u0006\u0010\u0005\u001a\u00020\u0006H\u0002\u001a\u0014\u0010\u0007\u001a\u00020\b*\u00020\t2\u0006\u0010\n\u001a\u00020\u000bH\u0003\u001a\u0014\u0010\f\u001a\u00020\r*\u00020\t2\u0006\u0010\n\u001a\u00020\u000bH\u0002\u001a\f\u0010\u000e\u001a\u00020\u000b*\u00020\u000fH\u0002\u001a\f\u0010\u0010\u001a\u00020\u000b*\u00020\tH\u0002\u001a\u0014\u0010\u0011\u001a\u00020\u000b*\u00020\b2\u0006\u0010\u0012\u001a\u00020\u0013H\u0002\u001a\f\u0010\u0014\u001a\u00020\u000b*\u00020\u0015H\u0002\u001a\f\u0010\u0016\u001a\u00020\u0001*\u00020\u0013H\u0002\"\u000e\u0010\u0000\u001a\u00020\u0001XT¢\u0006\u0002\n\u0000¨\u0006\u0017"}, mo65043d2 = {"TAG", "", "addOverlayDynamicColor", "", "Lcom/airbnb/lottie/LottieAnimationView;", "context", "Landroid/content/Context;", "asSideFpsAnimation", "", "Landroid/view/Display;", "yAligned", "", "asSideFpsAnimationRotation", "", "hasBigNavigationBar", "Landroid/view/WindowInsets;", "isNaturalOrientation", "isReasonToShow", "activityTaskManager", "Landroid/app/ActivityTaskManager;", "isYAligned", "Landroid/hardware/biometrics/SensorLocationInternal;", "topClass", "SystemUI_nothingRelease"}, mo65044k = 2, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* compiled from: SidefpsController.kt */
 public final class SidefpsControllerKt {
     private static final String TAG = "SidefpsController";
@@ -65,15 +65,15 @@ public final class SidefpsControllerKt {
         if (rotation != 0) {
             if (rotation != 2) {
                 if (!z) {
-                    return C1893R.raw.sfps_pulse;
+                    return C1894R.raw.sfps_pulse;
                 }
             } else if (z) {
-                return C1893R.raw.sfps_pulse;
+                return C1894R.raw.sfps_pulse;
             }
         } else if (z) {
-            return C1893R.raw.sfps_pulse;
+            return C1894R.raw.sfps_pulse;
         }
-        return C1893R.raw.sfps_pulse_landscape;
+        return C1894R.raw.sfps_pulse_landscape;
     }
 
     /* access modifiers changed from: private */
@@ -105,7 +105,7 @@ public final class SidefpsControllerKt {
     }
 
     private static final void addOverlayDynamicColor$update(Context context, LottieAnimationView lottieAnimationView) {
-        int color = context.getColor(C1893R.C1894color.biometric_dialog_accent);
+        int color = context.getColor(C1894R.C1895color.biometric_dialog_accent);
         for (String str : CollectionsKt.listOf(".blue600", ".blue400")) {
             lottieAnimationView.addValueCallback(new KeyPath(str, "**"), LottieProperty.COLOR_FILTER, new SidefpsControllerKt$$ExternalSyntheticLambda0(color));
         }
@@ -113,7 +113,7 @@ public final class SidefpsControllerKt {
 
     /* access modifiers changed from: private */
     /* renamed from: addOverlayDynamicColor$update$lambda-0  reason: not valid java name */
-    public static final ColorFilter m2578addOverlayDynamicColor$update$lambda0(int i, LottieFrameInfo lottieFrameInfo) {
+    public static final ColorFilter m2584addOverlayDynamicColor$update$lambda0(int i, LottieFrameInfo lottieFrameInfo) {
         return new PorterDuffColorFilter(i, PorterDuff.Mode.SRC_ATOP);
     }
 
@@ -128,7 +128,7 @@ public final class SidefpsControllerKt {
 
     /* access modifiers changed from: private */
     /* renamed from: addOverlayDynamicColor$lambda-1  reason: not valid java name */
-    public static final void m2577addOverlayDynamicColor$lambda1(Context context, LottieAnimationView lottieAnimationView, LottieComposition lottieComposition) {
+    public static final void m2583addOverlayDynamicColor$lambda1(Context context, LottieAnimationView lottieAnimationView, LottieComposition lottieComposition) {
         Intrinsics.checkNotNullParameter(context, "$context");
         Intrinsics.checkNotNullParameter(lottieAnimationView, "$this_addOverlayDynamicColor");
         addOverlayDynamicColor$update(context, lottieAnimationView);

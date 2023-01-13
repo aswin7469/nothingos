@@ -47,8 +47,8 @@ public final class MinguoDate extends ChronoLocalDateImpl<MinguoDate> implements
     }
 
     /* renamed from: of */
-    public static MinguoDate m949of(int i, int i2, int i3) {
-        return new MinguoDate(LocalDate.m908of(i + 1911, i2, i3));
+    public static MinguoDate m947of(int i, int i2, int i3) {
+        return new MinguoDate(LocalDate.m906of(i + 1911, i2, i3));
     }
 
     public static MinguoDate from(TemporalAccessor temporalAccessor) {
@@ -78,7 +78,7 @@ public final class MinguoDate extends ChronoLocalDateImpl<MinguoDate> implements
         }
         if (isSupported(temporalField)) {
             ChronoField chronoField = (ChronoField) temporalField;
-            int i = C28721.$SwitchMap$java$time$temporal$ChronoField[chronoField.ordinal()];
+            int i = C28781.$SwitchMap$java$time$temporal$ChronoField[chronoField.ordinal()];
             if (i == 1 || i == 2 || i == 3) {
                 return this.isoDate.range(temporalField);
             }
@@ -86,13 +86,13 @@ public final class MinguoDate extends ChronoLocalDateImpl<MinguoDate> implements
                 return getChronology().range(chronoField);
             }
             ValueRange range = ChronoField.YEAR.range();
-            return ValueRange.m955of(1, getProlepticYear() <= 0 ? (-range.getMinimum()) + 1 + 1911 : range.getMaximum() - 1911);
+            return ValueRange.m953of(1, getProlepticYear() <= 0 ? (-range.getMinimum()) + 1 + 1911 : range.getMaximum() - 1911);
         }
         throw new UnsupportedTemporalTypeException("Unsupported field: " + temporalField);
     }
 
     /* renamed from: java.time.chrono.MinguoDate$1 */
-    static /* synthetic */ class C28721 {
+    static /* synthetic */ class C28781 {
         static final /* synthetic */ int[] $SwitchMap$java$time$temporal$ChronoField;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(14:0|1|2|3|4|5|6|7|8|9|10|11|12|(3:13|14|16)) */
@@ -153,7 +153,7 @@ public final class MinguoDate extends ChronoLocalDateImpl<MinguoDate> implements
             L_0x0054:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: java.time.chrono.MinguoDate.C28721.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: java.time.chrono.MinguoDate.C28781.<clinit>():void");
         }
     }
 
@@ -161,7 +161,7 @@ public final class MinguoDate extends ChronoLocalDateImpl<MinguoDate> implements
         if (!(temporalField instanceof ChronoField)) {
             return temporalField.getFrom(this);
         }
-        int i = C28721.$SwitchMap$java$time$temporal$ChronoField[((ChronoField) temporalField).ordinal()];
+        int i = C28781.$SwitchMap$java$time$temporal$ChronoField[((ChronoField) temporalField).ordinal()];
         int i2 = 1;
         if (i == 4) {
             int prolepticYear = getProlepticYear();
@@ -209,7 +209,7 @@ public final class MinguoDate extends ChronoLocalDateImpl<MinguoDate> implements
             if (r1 != 0) goto L_0x0010
             return r6
         L_0x0010:
-            int[] r1 = java.time.chrono.MinguoDate.C28721.$SwitchMap$java$time$temporal$ChronoField
+            int[] r1 = java.time.chrono.MinguoDate.C28781.$SwitchMap$java$time$temporal$ChronoField
             int r2 = r0.ordinal()
             r1 = r1[r2]
             r2 = 7
@@ -233,7 +233,7 @@ public final class MinguoDate extends ChronoLocalDateImpl<MinguoDate> implements
             java.time.chrono.MinguoChronology r1 = r6.getChronology()
             java.time.temporal.ValueRange r1 = r1.range(r0)
             int r1 = r1.checkValidIntValue(r8, r0)
-            int[] r5 = java.time.chrono.MinguoDate.C28721.$SwitchMap$java$time$temporal$ChronoField
+            int[] r5 = java.time.chrono.MinguoDate.C28781.$SwitchMap$java$time$temporal$ChronoField
             int r0 = r0.ordinal()
             r0 = r5[r0]
             r5 = 1

@@ -708,9 +708,15 @@
     <string name="force_rtl_layout_all_locales_summary">Paksa arah reka letak skrin RTL bagi semua tempat peristiwa</string>
     <string name="forced_resizable_secondary_display">Apl mungkin tidak berfungsi pada paparan kedua.</string>
     <string name="game_status">Memainkan</string>
+    <string name="gamemode_description">Mod Permainan akan menentukan sama ada anda dalam permainan dan akan menghidupkannya secara automatik untuk anda</string>
+    <string name="gamemode_gamedashboard_title">Papan pemuka permainan</string>
+    <string name="gamemode_notification_content">Ketik untuk pergi ke Tetapan</string>
+    <string name="gamemode_notification_title">Mod Permainan dihidupkan</string>
     <string name="global_action_lock_message">Buka kunci telefon anda untuk mendapatkan lagi pilihan</string>
     <string name="global_action_screenshot">Tangkapan skrin</string>
     <string name="global_action_smart_lock_disabled">Smart Lock dilumpuhkan</string>
+    <string name="gm_guide_status_on">HIDUP</string>
+    <string name="gm_notification_title">Mod Permainan</string>
     <string name="go_to_web">Pergi ke penyemak imbas</string>
     <string name="got_it">Ok</string>
     <string name="guest_exit_guest">Alih keluar tetamu</string>

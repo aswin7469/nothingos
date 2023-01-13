@@ -13,6 +13,6 @@ public final /* synthetic */ class ImageWallpaper$GLEngine$$ExternalSyntheticLam
     }
 
     public final void accept(Object obj) {
-        this.f$0.m2519lambda$onCreate$0$comandroidsystemuiImageWallpaper$GLEngine((Bitmap) obj);
+        this.f$0.m2525lambda$onCreate$0$comandroidsystemuiImageWallpaper$GLEngine((Bitmap) obj);
     }
 }

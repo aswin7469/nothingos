@@ -17,6 +17,6 @@ public final /* synthetic */ class FooterActionsController$$ExternalSyntheticLam
     }
 
     public final void onVisibilityChanged(int i) {
-        FooterActionsController.m2898onViewAttached$lambda5(this.f$0, this.f$1, this.f$2, i);
+        FooterActionsController.m2903onViewAttached$lambda5(this.f$0, this.f$1, this.f$2, i);
     }
 }

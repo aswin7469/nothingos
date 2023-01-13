@@ -4,7 +4,7 @@ import android.content.Context;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.SysUISingleton;
 import java.util.HashMap;
 import javax.inject.Inject;
@@ -20,8 +20,8 @@ public class CarrierNameCustomization {
 
     @Inject
     public CarrierNameCustomization(Context context) {
-        this.mRoamingCustomizationCarrierNameEnabled = context.getResources().getBoolean(C1893R.bool.config_show_roaming_customization_carrier_name);
-        this.mConnector = context.getResources().getString(C1893R.string.connector);
+        this.mRoamingCustomizationCarrierNameEnabled = context.getResources().getBoolean(C1894R.bool.config_show_roaming_customization_carrier_name);
+        this.mConnector = context.getResources().getString(C1894R.string.connector);
         this.mTelephonyManager = (TelephonyManager) context.getSystemService(TelephonyManager.class);
         if (this.mRoamingCustomizationCarrierNameEnabled) {
             loadCarrierMap(context);
@@ -48,7 +48,7 @@ public class CarrierNameCustomization {
     }
 
     private void loadCarrierMap(Context context) {
-        for (String str : context.getResources().getStringArray(C1893R.array.customization_carrier_name_list)) {
+        for (String str : context.getResources().getStringArray(C1894R.array.customization_carrier_name_list)) {
             String[] split = str.trim().split(":");
             if (split.length != 2) {
                 Log.e("CarrierNameCustomization", "invalid key value config " + str);

@@ -20,7 +20,7 @@ import androidx.lifecycle.LifecycleObserver;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.android.settingslib.utils.ThreadUtils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.p012qs.QSFragment;
 import com.android.systemui.p012qs.tiles.dialog.InternetDialogController;
 import com.android.systemui.p012qs.tiles.dialog.InternetDialogFactory;
@@ -71,13 +71,13 @@ public class BluetoothPanelDialog extends SystemUIDialog implements Window.Callb
 
     public BluetoothPanelDialog(Context context, InternetDialogFactory internetDialogFactory, InternetDialogController internetDialogController, boolean z, Handler handler) {
         super(((QSFragmentEx) NTDependencyEx.get(QSFragmentEx.class)).getQSFragment().getView().getContext());
-        NTLogUtil.m1680d(TAG, "Init BluetoothPanelDialog");
+        NTLogUtil.m1686d(TAG, "Init BluetoothPanelDialog");
         Context context2 = getContext();
         this.mContext = context2;
         this.mHandler = handler;
         this.mDialogController = internetDialogController;
         this.mDialogFactory = internetDialogFactory;
-        this.mMaxHeight = context2.getResources().getDimensionPixelSize(C1893R.dimen.output_switcher_slice_max_height);
+        this.mMaxHeight = context2.getResources().getDimensionPixelSize(C1894R.dimen.output_switcher_slice_max_height);
         this.mContentRegistry = new SettingContentRegistry();
         this.mPanel = new BluetoothPanel(this.mContext, this.mContentRegistry, this);
         if (!z) {
@@ -87,28 +87,28 @@ public class BluetoothPanelDialog extends SystemUIDialog implements Window.Callb
 
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        NTLogUtil.m1680d(TAG, "onCreate");
-        this.mLayoutView = LayoutInflater.from(this.mContext).inflate(C1893R.layout.nt_panel_layout, (ViewGroup) null);
+        NTLogUtil.m1686d(TAG, "onCreate");
+        this.mLayoutView = LayoutInflater.from(this.mContext).inflate(C1894R.layout.nt_panel_layout, (ViewGroup) null);
         Window window = getWindow();
         window.setContentView(this.mLayoutView);
-        window.setWindowAnimations(C1893R.style.Animation_InternetDialog);
-        window.setBackgroundDrawable(this.mContext.getResources().getDrawable(C1893R.C1895drawable.nt_settings_panel_rounded_top_corner_background));
+        window.setWindowAnimations(C1894R.style.Animation_InternetDialog);
+        window.setBackgroundDrawable(this.mContext.getResources().getDrawable(C1894R.C1896drawable.nt_settings_panel_rounded_top_corner_background));
         updateWindowSize(true);
-        RecyclerView recyclerView = (RecyclerView) this.mLayoutView.findViewById(C1893R.C1897id.panel_parent_layout);
+        RecyclerView recyclerView = (RecyclerView) this.mLayoutView.findViewById(C1894R.C1898id.panel_parent_layout);
         this.mPanelLists = recyclerView;
-        recyclerView.setLayoutManager(new LinearLayoutManager(this.mContext));
+        recyclerView.setLayoutManager(new LayoutManagerWrapper(this.mContext));
         createPanelContent();
     }
 
     public void onStart() {
         super.onStart();
-        NTLogUtil.m1680d(TAG, "onStart");
+        NTLogUtil.m1686d(TAG, "onStart");
         this.mPanel.onStart();
     }
 
     public void onStop() {
         super.onStop();
-        NTLogUtil.m1680d(TAG, "onStop");
+        NTLogUtil.m1686d(TAG, "onStop");
         this.mPanel.onStop();
         this.mContentRegistry.reset();
         this.mDoneButton.setOnClickListener((View.OnClickListener) null);
@@ -122,14 +122,14 @@ public class BluetoothPanelDialog extends SystemUIDialog implements Window.Callb
 
     public void updateWindowSize(boolean z) {
         int i;
-        int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.settings_panel_width);
+        int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.settings_panel_width);
         if (this.mBluetoothTileEx.isBluetoothEnabled() || this.mBluetoothTileEx.shouldShowTeslaInfo()) {
-            i = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.settings_panel_height);
+            i = this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.settings_panel_height);
         } else {
             i = -2;
         }
         int i2 = this.mBluetoothTileEx.isBluetoothEnabled() ? 0 : 500;
-        NTLogUtil.m1680d(TAG, "updateWindowSize: " + dimensionPixelSize + ", " + i);
+        NTLogUtil.m1686d(TAG, "updateWindowSize: " + dimensionPixelSize + ", " + i);
         if (z) {
             getWindow().setLayout(dimensionPixelSize, i);
         } else {
@@ -139,18 +139,18 @@ public class BluetoothPanelDialog extends SystemUIDialog implements Window.Callb
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateWindowSize$0$com-nothing-systemui-qs-tiles-settings-panel-BluetoothPanelDialog */
-    public /* synthetic */ void mo57849x5c51ff7b(int i, int i2) {
+    public /* synthetic */ void mo57885x5c51ff7b(int i, int i2) {
         getWindow().setLayout(i, i2);
     }
 
     public void dismissDialog() {
-        NTLogUtil.m1680d(TAG, "dismissBtDialog");
+        NTLogUtil.m1686d(TAG, "dismissBtDialog");
         onStop();
         dismiss();
     }
 
     public void startActivity(Intent intent, View view) {
-        NTLogUtil.m1680d(TAG, "startActivity");
+        NTLogUtil.m1686d(TAG, "startActivity");
         dismissDialog();
         this.mDialogController.startActivityDismissingKeyguard(intent, view);
     }
@@ -160,14 +160,14 @@ public class BluetoothPanelDialog extends SystemUIDialog implements Window.Callb
     }
 
     private void createPanelContent() {
-        this.mDoneButton = (Button) this.mLayoutView.findViewById(C1893R.C1897id.done);
-        this.mTitleView = (TextView) this.mLayoutView.findViewById(C1893R.C1897id.panel_title);
-        this.mPanelHeader = (LinearLayout) this.mLayoutView.findViewById(C1893R.C1897id.panel_header);
-        this.mTitleIcon = (ImageView) this.mLayoutView.findViewById(C1893R.C1897id.title_icon);
-        this.mTitleGroup = (LinearLayout) this.mLayoutView.findViewById(C1893R.C1897id.title_group);
-        this.mHeaderLayout = (LinearLayout) this.mLayoutView.findViewById(C1893R.C1897id.header_layout);
-        this.mHeaderTitle = (TextView) this.mLayoutView.findViewById(C1893R.C1897id.header_title);
-        ProgressBar progressBar = (ProgressBar) this.mLayoutView.findViewById(C1893R.C1897id.progress_bar);
+        this.mDoneButton = (Button) this.mLayoutView.findViewById(C1894R.C1898id.done);
+        this.mTitleView = (TextView) this.mLayoutView.findViewById(C1894R.C1898id.panel_title);
+        this.mPanelHeader = (LinearLayout) this.mLayoutView.findViewById(C1894R.C1898id.panel_header);
+        this.mTitleIcon = (ImageView) this.mLayoutView.findViewById(C1894R.C1898id.title_icon);
+        this.mTitleGroup = (LinearLayout) this.mLayoutView.findViewById(C1894R.C1898id.title_group);
+        this.mHeaderLayout = (LinearLayout) this.mLayoutView.findViewById(C1894R.C1898id.header_layout);
+        this.mHeaderTitle = (TextView) this.mLayoutView.findViewById(C1894R.C1898id.header_title);
+        ProgressBar progressBar = (ProgressBar) this.mLayoutView.findViewById(C1894R.C1898id.progress_bar);
         this.mProgressBar = progressBar;
         progressBar.setMax(100);
         this.mProgressBar.setMin(0);
@@ -197,7 +197,7 @@ public class BluetoothPanelDialog extends SystemUIDialog implements Window.Callb
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$createPanelContent$1$com-nothing-systemui-qs-tiles-settings-panel-BluetoothPanelDialog */
-    public /* synthetic */ void mo57848xb8efffb3(View view) {
+    public /* synthetic */ void mo57884xb8efffb3(View view) {
         dismiss();
     }
 
@@ -228,7 +228,7 @@ public class BluetoothPanelDialog extends SystemUIDialog implements Window.Callb
                 this.mTitleIcon.setLayoutParams(new LinearLayout.LayoutParams(-2, -2));
                 return;
             }
-            int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.output_switcher_panel_icon_size);
+            int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.output_switcher_panel_icon_size);
             this.mTitleIcon.setLayoutParams(new LinearLayout.LayoutParams(dimensionPixelSize, dimensionPixelSize));
             return;
         }
@@ -263,8 +263,8 @@ public class BluetoothPanelDialog extends SystemUIDialog implements Window.Callb
 
                 /* access modifiers changed from: package-private */
                 /* renamed from: lambda$onLoaded$0$com-nothing-systemui-qs-tiles-settings-panel-BluetoothPanelDialog$2 */
-                public /* synthetic */ void mo57853xb71dffd3() {
-                    NTLogUtil.m1680d(BluetoothPanelDialog.TAG, "updateTeslaInfos");
+                public /* synthetic */ void mo57889xb71dffd3() {
+                    NTLogUtil.m1686d(BluetoothPanelDialog.TAG, "updateTeslaInfos");
                     BluetoothPanelDialog.this.updateTeslaInfos();
                 }
 
@@ -274,8 +274,8 @@ public class BluetoothPanelDialog extends SystemUIDialog implements Window.Callb
 
                 /* access modifiers changed from: package-private */
                 /* renamed from: lambda$onStatusChange$1$com-nothing-systemui-qs-tiles-settings-panel-BluetoothPanelDialog$2 */
-                public /* synthetic */ void mo57854xd34ebad1(CmdObjectList cmdObjectList) {
-                    NTLogUtil.m1680d(BluetoothPanelDialog.TAG, "updateTeslaItemsStatus");
+                public /* synthetic */ void mo57890xd34ebad1(CmdObjectList cmdObjectList) {
+                    NTLogUtil.m1686d(BluetoothPanelDialog.TAG, "updateTeslaItemsStatus");
                     BluetoothPanelDialog.this.updateTeslaItemsStatus(cmdObjectList);
                 }
             });
@@ -320,35 +320,46 @@ public class BluetoothPanelDialog extends SystemUIDialog implements Window.Callb
         }
 
         public void onHeaderChanged() {
-            ThreadUtils.postOnMainThread(new C4205x2f862a15(this));
+            ThreadUtils.postOnMainThread(new C4217x2f862a15(this));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onHeaderChanged$0$com-nothing-systemui-qs-tiles-settings-panel-BluetoothPanelDialog$LocalPanelCallback */
-        public /* synthetic */ void mo57858x9b516e33() {
+        public /* synthetic */ void mo57894x9b516e33() {
             BluetoothPanelDialog bluetoothPanelDialog = BluetoothPanelDialog.this;
             bluetoothPanelDialog.enablePanelHeader(bluetoothPanelDialog.mPanel.getIcon(), BluetoothPanelDialog.this.mPanel.getTitle(), BluetoothPanelDialog.this.mPanel.getSubTitle());
         }
 
         public void onTitleChanged() {
-            ThreadUtils.postOnMainThread(new C4204x2f862a14(this));
+            ThreadUtils.postOnMainThread(new C4216x2f862a14(this));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onTitleChanged$1$com-nothing-systemui-qs-tiles-settings-panel-BluetoothPanelDialog$LocalPanelCallback */
-        public /* synthetic */ void mo57860xec0e97e5() {
+        public /* synthetic */ void mo57896xec0e97e5() {
             BluetoothPanelDialog bluetoothPanelDialog = BluetoothPanelDialog.this;
             bluetoothPanelDialog.enableTitle(bluetoothPanelDialog.mPanel.getTitle());
         }
 
         public void onProgressBarVisibleChanged() {
-            ThreadUtils.postOnMainThread(new C4203x2f862a13(this));
+            ThreadUtils.postOnMainThread(new C4215x2f862a13(this));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onProgressBarVisibleChanged$2$com-nothing-systemui-qs-tiles-settings-panel-BluetoothPanelDialog$LocalPanelCallback */
-        public /* synthetic */ void mo57859x8a5d3990() {
+        public /* synthetic */ void mo57895x8a5d3990() {
             BluetoothPanelDialog.this.updateProgressBar();
+        }
+    }
+
+    /* renamed from: com.nothing.systemui.qs.tiles.settings.panel.BluetoothPanelDialog$LayoutManagerWrapper */
+    private class LayoutManagerWrapper extends LinearLayoutManager {
+        public boolean supportsPredictiveItemAnimations() {
+            return false;
+        }
+
+        LayoutManagerWrapper(Context context) {
+            super(context);
         }
     }
 }

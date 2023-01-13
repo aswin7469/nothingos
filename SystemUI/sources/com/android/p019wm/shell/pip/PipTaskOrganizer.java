@@ -21,7 +21,7 @@ import android.window.TaskSnapshot;
 import android.window.WindowContainerToken;
 import android.window.WindowContainerTransaction;
 import com.android.internal.protolog.common.ProtoLog;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.ShellTaskOrganizer;
 import com.android.p019wm.shell.animation.Interpolators;
 import com.android.p019wm.shell.common.DisplayController;
@@ -164,9 +164,9 @@ public class PipTaskOrganizer implements ShellTaskOrganizer.TaskListener, Displa
         this.mPipMenuController = pipMenuController;
         this.mPipTransitionController = pipTransitionController2;
         this.mPipParamsChangedForwarder = pipParamsChangedForwarder;
-        this.mEnterAnimationDuration = context.getResources().getInteger(C3343R.integer.config_pipEnterAnimationDuration);
-        this.mExitAnimationDuration = context.getResources().getInteger(C3343R.integer.config_pipExitAnimationDuration);
-        this.mCrossFadeAnimationDuration = context.getResources().getInteger(C3343R.integer.config_pipCrossfadeAnimationDuration);
+        this.mEnterAnimationDuration = context.getResources().getInteger(C3353R.integer.config_pipEnterAnimationDuration);
+        this.mExitAnimationDuration = context.getResources().getInteger(C3353R.integer.config_pipExitAnimationDuration);
+        this.mCrossFadeAnimationDuration = context.getResources().getInteger(C3353R.integer.config_pipCrossfadeAnimationDuration);
         this.mSurfaceTransactionHelper = pipSurfaceTransactionHelper;
         this.mPipAnimationController = pipAnimationController;
         this.mPipUiEventLoggerLogger = pipUiEventLogger;
@@ -182,7 +182,7 @@ public class PipTaskOrganizer implements ShellTaskOrganizer.TaskListener, Displa
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-wm-shell-pip-PipTaskOrganizer  reason: not valid java name */
-    public /* synthetic */ void m3457lambda$new$0$comandroidwmshellpipPipTaskOrganizer() {
+    public /* synthetic */ void m3461lambda$new$0$comandroidwmshellpipPipTaskOrganizer() {
         this.mTaskOrganizer.addListenerForType(this, -4);
     }
 
@@ -288,7 +288,7 @@ public class PipTaskOrganizer implements ShellTaskOrganizer.TaskListener, Displa
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$exitPip$1$com-android-wm-shell-pip-PipTaskOrganizer  reason: not valid java name */
-    public /* synthetic */ void m3455lambda$exitPip$1$comandroidwmshellpipPipTaskOrganizer(Rect rect, int i, int i2, SurfaceControl.Transaction transaction) {
+    public /* synthetic */ void m3459lambda$exitPip$1$comandroidwmshellpipPipTaskOrganizer(Rect rect, int i, int i2, SurfaceControl.Transaction transaction) {
         PipAnimationController.PipTransitionAnimator<?> animateResizePip = animateResizePip(this.mPipBoundsState.getBounds(), rect, PipBoundsAlgorithm.getValidSourceHintRect(this.mPictureInPictureParams, rect), i, i2, 0.0f);
         if (animateResizePip != null) {
             animateResizePip.applySurfaceControlTransaction(this.mLeash, transaction, 0.0f);
@@ -427,7 +427,7 @@ public class PipTaskOrganizer implements ShellTaskOrganizer.TaskListener, Displa
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$enterPipWithAlphaAnimation$2$com-android-wm-shell-pip-PipTaskOrganizer */
-    public /* synthetic */ void mo50212x7a6279a5(Rect rect, long j) {
+    public /* synthetic */ void mo50221x7a6279a5(Rect rect, long j) {
         this.mPipAnimationController.getAnimator(this.mTaskInfo, this.mLeash, rect, 0.0f, 1.0f).setTransitionDirection(2).setPipAnimationCallback(this.mPipAnimationCallback).setPipTransactionHandler(this.mPipTransactionHandler).setDuration(j).start();
         this.mPipTransitionState.setTransitionState(3);
     }
@@ -446,7 +446,7 @@ public class PipTaskOrganizer implements ShellTaskOrganizer.TaskListener, Displa
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onEndOfSwipePipToHomeTransition$3$com-android-wm-shell-pip-PipTaskOrganizer */
-    public /* synthetic */ void mo50217x18bb1b00(Rect rect, SurfaceControl surfaceControl) {
+    public /* synthetic */ void mo50226x18bb1b00(Rect rect, SurfaceControl surfaceControl) {
         finishResizeForMenu(rect);
         sendOnPipTransitionFinished(2);
         if (surfaceControl != null) {
@@ -584,7 +584,7 @@ public class PipTaskOrganizer implements ShellTaskOrganizer.TaskListener, Displa
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onFixedRotationFinished$5$com-android-wm-shell-pip-PipTaskOrganizer */
-    public /* synthetic */ void mo50218x8e3e81e8(Rect rect) {
+    public /* synthetic */ void mo50227x8e3e81e8(Rect rect) {
         finishResizeForMenu(rect);
         sendOnPipTransitionFinished(2);
     }
@@ -868,7 +868,7 @@ public class PipTaskOrganizer implements ShellTaskOrganizer.TaskListener, Displa
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$finishResize$6$com-android-wm-shell-pip-PipTaskOrganizer  reason: not valid java name */
-    public /* synthetic */ void m3456lambda$finishResize$6$comandroidwmshellpipPipTaskOrganizer(SurfaceControl surfaceControl, Rect rect, Rect rect2, SurfaceControl.Transaction transaction) {
+    public /* synthetic */ void m3460lambda$finishResize$6$comandroidwmshellpipPipTaskOrganizer(SurfaceControl surfaceControl, Rect rect, Rect rect2, SurfaceControl.Transaction transaction) {
         this.mSurfaceTransactionHelper.scale(transaction, surfaceControl, rect, rect2);
         fadeOutAndRemoveOverlay(surfaceControl, (Runnable) null, false);
     }
@@ -902,7 +902,7 @@ public class PipTaskOrganizer implements ShellTaskOrganizer.TaskListener, Displa
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$applyFinishBoundsResize$7$com-android-wm-shell-pip-PipTaskOrganizer */
-    public /* synthetic */ void mo50211xfcb41eef(boolean z, WindowContainerTransaction windowContainerTransaction, SplitScreenController splitScreenController) {
+    public /* synthetic */ void mo50220xfcb41eef(boolean z, WindowContainerTransaction windowContainerTransaction, SplitScreenController splitScreenController) {
         splitScreenController.enterSplitScreen(this.mTaskInfo.taskId, z, windowContainerTransaction);
     }
 
@@ -1001,7 +1001,7 @@ public class PipTaskOrganizer implements ShellTaskOrganizer.TaskListener, Displa
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$fadeOutAndRemoveOverlay$8$com-android-wm-shell-pip-PipTaskOrganizer */
-    public /* synthetic */ void mo50214x5530480d(SurfaceControl surfaceControl, ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo50223x5530480d(SurfaceControl surfaceControl, ValueAnimator valueAnimator) {
         if (this.mPipTransitionState.getTransitionState() == 0) {
             ProtoLog.d(ShellProtoLogGroup.WM_SHELL_PICTURE_IN_PICTURE, "%s: Task vanished, skip fadeOutAndRemoveOverlay", new Object[]{TAG});
             PipAnimationController.quietCancel(valueAnimator);

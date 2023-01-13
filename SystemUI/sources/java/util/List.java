@@ -81,63 +81,63 @@ public interface List<E> extends Collection<E> {
     }
 
     /* renamed from: of */
-    static <E> List<E> m1722of() {
+    static <E> List<E> m1728of() {
         return ImmutableCollections.emptyList();
     }
 
     /* renamed from: of */
-    static <E> List<E> m1723of(E e) {
+    static <E> List<E> m1729of(E e) {
         return new ImmutableCollections.List12(e);
     }
 
     /* renamed from: of */
-    static <E> List<E> m1724of(E e, E e2) {
+    static <E> List<E> m1730of(E e, E e2) {
         return new ImmutableCollections.List12(e, e2);
     }
 
     /* renamed from: of */
-    static <E> List<E> m1725of(E e, E e2, E e3) {
+    static <E> List<E> m1731of(E e, E e2, E e3) {
         return new ImmutableCollections.ListN(e, e2, e3);
     }
 
     /* renamed from: of */
-    static <E> List<E> m1726of(E e, E e2, E e3, E e4) {
+    static <E> List<E> m1732of(E e, E e2, E e3, E e4) {
         return new ImmutableCollections.ListN(e, e2, e3, e4);
     }
 
     /* renamed from: of */
-    static <E> List<E> m1727of(E e, E e2, E e3, E e4, E e5) {
+    static <E> List<E> m1733of(E e, E e2, E e3, E e4, E e5) {
         return new ImmutableCollections.ListN(e, e2, e3, e4, e5);
     }
 
     /* renamed from: of */
-    static <E> List<E> m1728of(E e, E e2, E e3, E e4, E e5, E e6) {
+    static <E> List<E> m1734of(E e, E e2, E e3, E e4, E e5, E e6) {
         return new ImmutableCollections.ListN(e, e2, e3, e4, e5, e6);
     }
 
     /* renamed from: of */
-    static <E> List<E> m1729of(E e, E e2, E e3, E e4, E e5, E e6, E e7) {
+    static <E> List<E> m1735of(E e, E e2, E e3, E e4, E e5, E e6, E e7) {
         return new ImmutableCollections.ListN(e, e2, e3, e4, e5, e6, e7);
     }
 
     /* renamed from: of */
-    static <E> List<E> m1730of(E e, E e2, E e3, E e4, E e5, E e6, E e7, E e8) {
+    static <E> List<E> m1736of(E e, E e2, E e3, E e4, E e5, E e6, E e7, E e8) {
         return new ImmutableCollections.ListN(e, e2, e3, e4, e5, e6, e7, e8);
     }
 
     /* renamed from: of */
-    static <E> List<E> m1731of(E e, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9) {
+    static <E> List<E> m1737of(E e, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9) {
         return new ImmutableCollections.ListN(e, e2, e3, e4, e5, e6, e7, e8, e9);
     }
 
     /* renamed from: of */
-    static <E> List<E> m1732of(E e, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9, E e10) {
+    static <E> List<E> m1738of(E e, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9, E e10) {
         return new ImmutableCollections.ListN(e, e2, e3, e4, e5, e6, e7, e8, e9, e10);
     }
 
     @SafeVarargs
     /* renamed from: of */
-    static <E> List<E> m1733of(E... eArr) {
+    static <E> List<E> m1739of(E... eArr) {
         int length = eArr.length;
         if (length == 0) {
             return ImmutableCollections.emptyList();

@@ -24,7 +24,7 @@ public interface LongPredicate {
     }
 
     /* renamed from: or */
-    LongPredicate mo63127or(LongPredicate longPredicate) {
+    LongPredicate mo63183or(LongPredicate longPredicate) {
         Objects.requireNonNull(longPredicate);
         return new LongPredicate$$ExternalSyntheticLambda0(this, longPredicate);
     }

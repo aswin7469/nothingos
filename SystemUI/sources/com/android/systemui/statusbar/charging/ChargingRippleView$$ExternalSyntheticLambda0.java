@@ -11,6 +11,6 @@ public final /* synthetic */ class ChargingRippleView$$ExternalSyntheticLambda0 
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        ChargingRippleView.m3048startRipple$lambda0(this.f$0, valueAnimator);
+        ChargingRippleView.m3052startRipple$lambda0(this.f$0, valueAnimator);
     }
 }

@@ -9,6 +9,6 @@ public final /* synthetic */ class KeyguardWeatherControllerImpl$$ExternalSynthe
     }
 
     public final void run() {
-        this.f$0.mo57467xfcac0ac3();
+        this.f$0.mo57488xfcac0ac3();
     }
 }

@@ -7,7 +7,7 @@ import kotlin.jvm.functions.Function0;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Lambda;
 
-@Metadata(mo64986d1 = {"\u0000\b\n\u0000\n\u0002\u0010\u0002\n\u0000\u0010\u0000\u001a\u00020\u0001H\n¢\u0006\u0002\b\u0002"}, mo64987d2 = {"<anonymous>", "", "invoke"}, mo64988k = 3, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000\b\n\u0000\n\u0002\u0010\u0002\n\u0000\u0010\u0000\u001a\u00020\u0001H\n¢\u0006\u0002\b\u0002"}, mo65043d2 = {"<anonymous>", "", "invoke"}, mo65044k = 3, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* compiled from: DialogLaunchAnimator.kt */
 final class AnimatedDialog$maybeStartLaunchAnimation$2 extends Lambda implements Function0<Unit> {
     final /* synthetic */ AnimatedDialog this$0;
@@ -19,7 +19,7 @@ final class AnimatedDialog$maybeStartLaunchAnimation$2 extends Lambda implements
     }
 
     public final void invoke() {
-        this.this$0.getTouchSurface().setTag(C1937R.C1938id.tag_launch_animation_running, (Object) null);
+        this.this$0.getTouchSurface().setTag(C1938R.C1939id.tag_launch_animation_running, (Object) null);
         this.this$0.getTouchSurface().setVisibility(4);
         this.this$0.isLaunching = false;
         if (this.this$0.dismissRequested) {

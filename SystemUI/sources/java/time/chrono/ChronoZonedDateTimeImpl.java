@@ -127,7 +127,7 @@ final class ChronoZonedDateTimeImpl<D extends ChronoLocalDate> implements Chrono
             return ensureValid(getChronology(), temporalField.adjustInto(this, j));
         }
         ChronoField chronoField = (ChronoField) temporalField;
-        int i = C28651.$SwitchMap$java$time$temporal$ChronoField[chronoField.ordinal()];
+        int i = C28711.$SwitchMap$java$time$temporal$ChronoField[chronoField.ordinal()];
         if (i == 1) {
             return plus(j - toEpochSecond(), (TemporalUnit) ChronoUnit.SECONDS);
         }
@@ -138,7 +138,7 @@ final class ChronoZonedDateTimeImpl<D extends ChronoLocalDate> implements Chrono
     }
 
     /* renamed from: java.time.chrono.ChronoZonedDateTimeImpl$1 */
-    static /* synthetic */ class C28651 {
+    static /* synthetic */ class C28711 {
         static final /* synthetic */ int[] $SwitchMap$java$time$temporal$ChronoField;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(6:0|1|2|3|4|6) */
@@ -166,7 +166,7 @@ final class ChronoZonedDateTimeImpl<D extends ChronoLocalDate> implements Chrono
             L_0x001d:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: java.time.chrono.ChronoZonedDateTimeImpl.C28651.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: java.time.chrono.ChronoZonedDateTimeImpl.C28711.<clinit>():void");
         }
     }
 

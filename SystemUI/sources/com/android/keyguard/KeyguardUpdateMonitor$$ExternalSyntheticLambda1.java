@@ -13,6 +13,6 @@ public final /* synthetic */ class KeyguardUpdateMonitor$$ExternalSyntheticLambd
     }
 
     public final Object get() {
-        return this.f$0.mo26260xb00e8296(this.f$1);
+        return this.f$0.mo26261xb00e8296(this.f$1);
     }
 }

@@ -11,6 +11,6 @@ public final /* synthetic */ class PersistentConnectionManager$$ExternalSyntheti
     }
 
     public final void onSourceChanged() {
-        this.f$0.mo47120xf835ab20();
+        this.f$0.mo47132xf835ab20();
     }
 }

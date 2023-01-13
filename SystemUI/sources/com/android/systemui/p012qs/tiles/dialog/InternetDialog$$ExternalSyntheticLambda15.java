@@ -10,6 +10,6 @@ public final /* synthetic */ class InternetDialog$$ExternalSyntheticLambda15 imp
     }
 
     public final void run() {
-        this.f$0.mo36980xe006193b();
+        this.f$0.mo36987x5f608568();
     }
 }

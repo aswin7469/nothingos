@@ -72,11 +72,11 @@ public class GuestResumeSessionReceiver extends BroadcastReceiver {
 
         ResetSessionDialog(Context context, UserSwitcherController userSwitcherController, UiEventLogger uiEventLogger, int i) {
             super(context, false);
-            setTitle(context.getString(C1893R.string.guest_wipe_session_title));
-            setMessage(context.getString(C1893R.string.guest_wipe_session_message));
+            setTitle(context.getString(C1894R.string.guest_wipe_session_title));
+            setMessage(context.getString(C1894R.string.guest_wipe_session_message));
             setCanceledOnTouchOutside(false);
-            setButton(-2, context.getString(C1893R.string.guest_wipe_session_wipe), this);
-            setButton(-1, context.getString(C1893R.string.guest_wipe_session_dontwipe), this);
+            setButton(-2, context.getString(C1894R.string.guest_wipe_session_wipe), this);
+            setButton(-1, context.getString(C1894R.string.guest_wipe_session_dontwipe), this);
             this.mUserSwitcherController = userSwitcherController;
             this.mUiEventLogger = uiEventLogger;
             this.mUserId = i;

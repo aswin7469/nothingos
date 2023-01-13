@@ -108,7 +108,7 @@ public class NavigationBarController implements CommandQueue.Callbacks, Configur
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onNavigationModeChanged$0$com-android-systemui-navigationbar-NavigationBarController */
-    public /* synthetic */ void mo34703xf469dbe4(int i) {
+    public /* synthetic */ void mo34707xf469dbe4(int i) {
         if (i != this.mNavMode) {
             updateNavbarForTaskbar();
         }

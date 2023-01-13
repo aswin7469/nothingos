@@ -9,6 +9,6 @@ public final /* synthetic */ class MagnifierView$$ExternalSyntheticLambda0 imple
     }
 
     public final void run() {
-        this.f$0.mo37390xdc81bcfd();
+        this.f$0.mo37391xdc81bcfd();
     }
 }

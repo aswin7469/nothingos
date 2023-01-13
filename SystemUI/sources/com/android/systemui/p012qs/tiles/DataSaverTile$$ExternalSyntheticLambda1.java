@@ -12,6 +12,6 @@ public final /* synthetic */ class DataSaverTile$$ExternalSyntheticLambda1 imple
     }
 
     public final void onClick(DialogInterface dialogInterface, int i) {
-        this.f$0.m2972lambda$handleClick$0$comandroidsystemuiqstilesDataSaverTile(dialogInterface, i);
+        this.f$0.m2977lambda$handleClick$0$comandroidsystemuiqstilesDataSaverTile(dialogInterface, i);
     }
 }

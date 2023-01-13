@@ -9,6 +9,6 @@ public final /* synthetic */ class MediaHierarchyManager$$ExternalSyntheticLambd
     }
 
     public final void run() {
-        MediaHierarchyManager.m2810startAnimation$lambda2(this.f$0);
+        MediaHierarchyManager.m2815startAnimation$lambda2(this.f$0);
     }
 }

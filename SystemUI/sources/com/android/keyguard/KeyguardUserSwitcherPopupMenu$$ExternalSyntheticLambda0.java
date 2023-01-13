@@ -12,6 +12,6 @@ public final /* synthetic */ class KeyguardUserSwitcherPopupMenu$$ExternalSynthe
     }
 
     public final boolean onTouch(View view, MotionEvent motionEvent) {
-        return this.f$0.m2298lambda$show$0$comandroidkeyguardKeyguardUserSwitcherPopupMenu(view, motionEvent);
+        return this.f$0.m2304lambda$show$0$comandroidkeyguardKeyguardUserSwitcherPopupMenu(view, motionEvent);
     }
 }

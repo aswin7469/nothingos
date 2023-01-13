@@ -12,6 +12,6 @@ public final /* synthetic */ class CompatUILayout$$ExternalSyntheticLambda2 impl
     }
 
     public final void onClick(View view) {
-        this.f$0.mo49376xcbf2988b(view);
+        this.f$0.mo49385xcbf2988b(view);
     }
 }

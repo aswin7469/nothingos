@@ -11,6 +11,6 @@ public final /* synthetic */ class NotificationShadeDepthController$$ExternalSyn
     }
 
     public final void accept(Object obj) {
-        NotificationShadeDepthController.m3037_init_$lambda2(this.f$0, (Integer) obj);
+        NotificationShadeDepthController.m3041_init_$lambda2(this.f$0, (Integer) obj);
     }
 }

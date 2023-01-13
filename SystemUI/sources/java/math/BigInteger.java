@@ -2880,7 +2880,7 @@ public class BigInteger extends Number implements Comparable<BigInteger> {
     }
 
     /* renamed from: or */
-    public BigInteger mo60203or(BigInteger bigInteger) {
+    public BigInteger mo60259or(BigInteger bigInteger) {
         int max = Math.max(intLength(), bigInteger.intLength());
         int[] iArr = new int[max];
         for (int i = 0; i < max; i++) {

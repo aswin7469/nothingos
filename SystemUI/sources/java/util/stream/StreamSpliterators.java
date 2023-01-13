@@ -29,7 +29,7 @@ class StreamSpliterators {
         long nextToConsume;
 
         /* renamed from: ph */
-        final PipelineHelper<P_OUT> f797ph;
+        final PipelineHelper<P_OUT> f795ph;
         BooleanSupplier pusher;
         Spliterator<P_IN> spliterator;
         private Supplier<Spliterator<P_IN>> spliteratorSupplier;
@@ -41,14 +41,14 @@ class StreamSpliterators {
         public abstract AbstractWrappingSpliterator<P_IN, P_OUT, ?> wrap(Spliterator<P_IN> spliterator2);
 
         AbstractWrappingSpliterator(PipelineHelper<P_OUT> pipelineHelper, Supplier<Spliterator<P_IN>> supplier, boolean z) {
-            this.f797ph = pipelineHelper;
+            this.f795ph = pipelineHelper;
             this.spliteratorSupplier = supplier;
             this.spliterator = null;
             this.isParallel = z;
         }
 
         AbstractWrappingSpliterator(PipelineHelper<P_OUT> pipelineHelper, Spliterator<P_IN> spliterator2, boolean z) {
-            this.f797ph = pipelineHelper;
+            this.f795ph = pipelineHelper;
             this.spliteratorSupplier = null;
             this.spliterator = spliterator2;
             this.isParallel = z;
@@ -121,7 +121,7 @@ class StreamSpliterators {
 
         public final long getExactSizeIfKnown() {
             init();
-            if (StreamOpFlag.SIZED.isKnown(this.f797ph.getStreamAndOpFlags())) {
+            if (StreamOpFlag.SIZED.isKnown(this.f795ph.getStreamAndOpFlags())) {
                 return this.spliterator.getExactSizeIfKnown();
             }
             return -1;
@@ -129,7 +129,7 @@ class StreamSpliterators {
 
         public final int characteristics() {
             init();
-            int characteristics = StreamOpFlag.toCharacteristics(StreamOpFlag.toStreamFlags(this.f797ph.getStreamAndOpFlags()));
+            int characteristics = StreamOpFlag.toCharacteristics(StreamOpFlag.toStreamFlags(this.f795ph.getStreamAndOpFlags()));
             return (characteristics & 64) != 0 ? (characteristics & -16449) | (this.spliterator.characteristics() & 16448) : characteristics;
         }
 
@@ -156,20 +156,20 @@ class StreamSpliterators {
 
         /* access modifiers changed from: package-private */
         public WrappingSpliterator<P_IN, P_OUT> wrap(Spliterator<P_IN> spliterator) {
-            return new WrappingSpliterator<>(this.f797ph, spliterator, this.isParallel);
+            return new WrappingSpliterator<>(this.f795ph, spliterator, this.isParallel);
         }
 
         /* access modifiers changed from: package-private */
         public void initPartialTraversalState() {
             SpinedBuffer spinedBuffer = new SpinedBuffer();
             this.buffer = spinedBuffer;
-            this.bufferSink = this.f797ph.wrapSink(new StreamSpliterators$WrappingSpliterator$$ExternalSyntheticLambda0(spinedBuffer));
+            this.bufferSink = this.f795ph.wrapSink(new StreamSpliterators$WrappingSpliterator$$ExternalSyntheticLambda0(spinedBuffer));
             this.pusher = new StreamSpliterators$WrappingSpliterator$$ExternalSyntheticLambda1(this);
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$initPartialTraversalState$0$java-util-stream-StreamSpliterators$WrappingSpliterator */
-        public /* synthetic */ boolean mo63819xf58cc34f() {
+        public /* synthetic */ boolean mo63875xf58cc34f() {
             return this.spliterator.tryAdvance(this.bufferSink);
         }
 
@@ -190,7 +190,7 @@ class StreamSpliterators {
             }
             Objects.requireNonNull(consumer);
             init();
-            PipelineHelper pipelineHelper = this.f797ph;
+            PipelineHelper pipelineHelper = this.f795ph;
             Objects.requireNonNull(consumer);
             pipelineHelper.wrapAndCopyInto(new StreamSpliterators$WrappingSpliterator$$ExternalSyntheticLambda2(consumer), this.spliterator);
             this.finished = true;
@@ -208,20 +208,20 @@ class StreamSpliterators {
 
         /* access modifiers changed from: package-private */
         public AbstractWrappingSpliterator<P_IN, Integer, ?> wrap(Spliterator<P_IN> spliterator) {
-            return new IntWrappingSpliterator((PipelineHelper<Integer>) this.f797ph, spliterator, this.isParallel);
+            return new IntWrappingSpliterator((PipelineHelper<Integer>) this.f795ph, spliterator, this.isParallel);
         }
 
         /* access modifiers changed from: package-private */
         public void initPartialTraversalState() {
             SpinedBuffer.OfInt ofInt = new SpinedBuffer.OfInt();
             this.buffer = ofInt;
-            this.bufferSink = this.f797ph.wrapSink(new C4545x808788ef(ofInt));
-            this.pusher = new C4546x808788f0(this);
+            this.bufferSink = this.f795ph.wrapSink(new C4557x808788ef(ofInt));
+            this.pusher = new C4558x808788f0(this);
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$initPartialTraversalState$0$java-util-stream-StreamSpliterators$IntWrappingSpliterator */
-        public /* synthetic */ boolean mo63795x68714704() {
+        public /* synthetic */ boolean mo63851x68714704() {
             return this.spliterator.tryAdvance(this.bufferSink);
         }
 
@@ -246,9 +246,9 @@ class StreamSpliterators {
             }
             Objects.requireNonNull(intConsumer);
             init();
-            PipelineHelper pipelineHelper = this.f797ph;
+            PipelineHelper pipelineHelper = this.f795ph;
             Objects.requireNonNull(intConsumer);
-            pipelineHelper.wrapAndCopyInto(new C4547x808788f1(intConsumer), this.spliterator);
+            pipelineHelper.wrapAndCopyInto(new C4559x808788f1(intConsumer), this.spliterator);
             this.finished = true;
         }
     }
@@ -264,20 +264,20 @@ class StreamSpliterators {
 
         /* access modifiers changed from: package-private */
         public AbstractWrappingSpliterator<P_IN, Long, ?> wrap(Spliterator<P_IN> spliterator) {
-            return new LongWrappingSpliterator((PipelineHelper<Long>) this.f797ph, spliterator, this.isParallel);
+            return new LongWrappingSpliterator((PipelineHelper<Long>) this.f795ph, spliterator, this.isParallel);
         }
 
         /* access modifiers changed from: package-private */
         public void initPartialTraversalState() {
             SpinedBuffer.OfLong ofLong = new SpinedBuffer.OfLong();
             this.buffer = ofLong;
-            this.bufferSink = this.f797ph.wrapSink(new C4549xa6d810a7(ofLong));
-            this.pusher = new C4550xa6d810a8(this);
+            this.bufferSink = this.f795ph.wrapSink(new C4561xa6d810a7(ofLong));
+            this.pusher = new C4562xa6d810a8(this);
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$initPartialTraversalState$0$java-util-stream-StreamSpliterators$LongWrappingSpliterator */
-        public /* synthetic */ boolean mo63796x44d1e433() {
+        public /* synthetic */ boolean mo63852x44d1e433() {
             return this.spliterator.tryAdvance(this.bufferSink);
         }
 
@@ -302,9 +302,9 @@ class StreamSpliterators {
             }
             Objects.requireNonNull(longConsumer);
             init();
-            PipelineHelper pipelineHelper = this.f797ph;
+            PipelineHelper pipelineHelper = this.f795ph;
             Objects.requireNonNull(longConsumer);
-            pipelineHelper.wrapAndCopyInto(new C4548xa6d810a6(longConsumer), this.spliterator);
+            pipelineHelper.wrapAndCopyInto(new C4560xa6d810a6(longConsumer), this.spliterator);
             this.finished = true;
         }
     }
@@ -320,20 +320,20 @@ class StreamSpliterators {
 
         /* access modifiers changed from: package-private */
         public AbstractWrappingSpliterator<P_IN, Double, ?> wrap(Spliterator<P_IN> spliterator) {
-            return new DoubleWrappingSpliterator((PipelineHelper<Double>) this.f797ph, spliterator, this.isParallel);
+            return new DoubleWrappingSpliterator((PipelineHelper<Double>) this.f795ph, spliterator, this.isParallel);
         }
 
         /* access modifiers changed from: package-private */
         public void initPartialTraversalState() {
             SpinedBuffer.OfDouble ofDouble = new SpinedBuffer.OfDouble();
             this.buffer = ofDouble;
-            this.bufferSink = this.f797ph.wrapSink(new C4542xc57d6cf1(ofDouble));
-            this.pusher = new C4543xc57d6cf2(this);
+            this.bufferSink = this.f795ph.wrapSink(new C4554xc57d6cf1(ofDouble));
+            this.pusher = new C4555xc57d6cf2(this);
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$initPartialTraversalState$0$java-util-stream-StreamSpliterators$DoubleWrappingSpliterator */
-        public /* synthetic */ boolean mo63794xbf8f913e() {
+        public /* synthetic */ boolean mo63850xbf8f913e() {
             return this.spliterator.tryAdvance(this.bufferSink);
         }
 
@@ -358,9 +358,9 @@ class StreamSpliterators {
             }
             Objects.requireNonNull(doubleConsumer);
             init();
-            PipelineHelper pipelineHelper = this.f797ph;
+            PipelineHelper pipelineHelper = this.f795ph;
             Objects.requireNonNull(doubleConsumer);
-            pipelineHelper.wrapAndCopyInto(new C4544xc57d6cf3(doubleConsumer), this.spliterator);
+            pipelineHelper.wrapAndCopyInto(new C4556xc57d6cf3(doubleConsumer), this.spliterator);
             this.finished = true;
         }
     }
@@ -368,7 +368,7 @@ class StreamSpliterators {
     static class DelegatingSpliterator<T, T_SPLITR extends Spliterator<T>> implements Spliterator<T> {
 
         /* renamed from: s */
-        private T_SPLITR f798s;
+        private T_SPLITR f796s;
         private final Supplier<? extends T_SPLITR> supplier;
 
         DelegatingSpliterator(Supplier<? extends T_SPLITR> supplier2) {
@@ -377,10 +377,10 @@ class StreamSpliterators {
 
         /* access modifiers changed from: package-private */
         public T_SPLITR get() {
-            if (this.f798s == null) {
-                this.f798s = (Spliterator) this.supplier.get();
+            if (this.f796s == null) {
+                this.f796s = (Spliterator) this.supplier.get();
             }
-            return this.f798s;
+            return this.f796s;
         }
 
         public T_SPLITR trySplit() {
@@ -494,7 +494,7 @@ class StreamSpliterators {
         long index;
 
         /* renamed from: s */
-        T_SPLITR f804s;
+        T_SPLITR f802s;
         final long sliceFence;
         final long sliceOrigin;
 
@@ -506,7 +506,7 @@ class StreamSpliterators {
         }
 
         SliceSpliterator(T_SPLITR t_splitr, long j, long j2, long j3, long j4) {
-            this.f804s = t_splitr;
+            this.f802s = t_splitr;
             this.sliceOrigin = j;
             this.sliceFence = j2;
             this.index = j3;
@@ -520,7 +520,7 @@ class StreamSpliterators {
                 return null;
             }
             while (true) {
-                T_SPLITR trySplit = this.f804s.trySplit();
+                T_SPLITR trySplit = this.f802s.trySplit();
                 if (trySplit == null) {
                     return null;
                 }
@@ -532,7 +532,7 @@ class StreamSpliterators {
                 } else {
                     long j4 = this.sliceFence;
                     if (min >= j4) {
-                        this.f804s = trySplit;
+                        this.f802s = trySplit;
                         this.fence = min;
                     } else {
                         long j5 = this.index;
@@ -557,7 +557,7 @@ class StreamSpliterators {
         }
 
         public int characteristics() {
-            return this.f804s.characteristics();
+            return this.f802s.characteristics();
         }
 
         static final class OfRef<T> extends SliceSpliterator<T, Spliterator<T>> implements Spliterator<T> {
@@ -586,14 +586,14 @@ class StreamSpliterators {
                     return false;
                 }
                 while (this.sliceOrigin > this.index) {
-                    this.f804s.tryAdvance(new C4555xaa59d8c1());
+                    this.f802s.tryAdvance(new C4567xaa59d8c1());
                     this.index++;
                 }
                 if (this.index >= this.fence) {
                     return false;
                 }
                 this.index++;
-                return this.f804s.tryAdvance(consumer);
+                return this.f802s.tryAdvance(consumer);
             }
 
             public void forEachRemaining(Consumer<? super T> consumer) {
@@ -601,18 +601,18 @@ class StreamSpliterators {
                 if (this.sliceOrigin >= this.fence || this.index >= this.fence) {
                     return;
                 }
-                if (this.index < this.sliceOrigin || this.index + this.f804s.estimateSize() > this.sliceFence) {
+                if (this.index < this.sliceOrigin || this.index + this.f802s.estimateSize() > this.sliceFence) {
                     while (this.sliceOrigin > this.index) {
-                        this.f804s.tryAdvance(new C4554xaa59d8c0());
+                        this.f802s.tryAdvance(new C4566xaa59d8c0());
                         this.index++;
                     }
                     while (this.index < this.fence) {
-                        this.f804s.tryAdvance(consumer);
+                        this.f802s.tryAdvance(consumer);
                         this.index++;
                     }
                     return;
                 }
-                this.f804s.forEachRemaining(consumer);
+                this.f802s.forEachRemaining(consumer);
                 this.index = this.fence;
             }
         }
@@ -639,14 +639,14 @@ class StreamSpliterators {
                     return false;
                 }
                 while (this.sliceOrigin > this.index) {
-                    ((Spliterator.OfPrimitive) this.f804s).tryAdvance(emptyConsumer());
+                    ((Spliterator.OfPrimitive) this.f802s).tryAdvance(emptyConsumer());
                     this.index++;
                 }
                 if (this.index >= this.fence) {
                     return false;
                 }
                 this.index++;
-                return ((Spliterator.OfPrimitive) this.f804s).tryAdvance(t_cons);
+                return ((Spliterator.OfPrimitive) this.f802s).tryAdvance(t_cons);
             }
 
             public void forEachRemaining(T_CONS t_cons) {
@@ -654,18 +654,18 @@ class StreamSpliterators {
                 if (this.sliceOrigin >= this.fence || this.index >= this.fence) {
                     return;
                 }
-                if (this.index < this.sliceOrigin || this.index + ((Spliterator.OfPrimitive) this.f804s).estimateSize() > this.sliceFence) {
+                if (this.index < this.sliceOrigin || this.index + ((Spliterator.OfPrimitive) this.f802s).estimateSize() > this.sliceFence) {
                     while (this.sliceOrigin > this.index) {
-                        ((Spliterator.OfPrimitive) this.f804s).tryAdvance(emptyConsumer());
+                        ((Spliterator.OfPrimitive) this.f802s).tryAdvance(emptyConsumer());
                         this.index++;
                     }
                     while (this.index < this.fence) {
-                        ((Spliterator.OfPrimitive) this.f804s).tryAdvance(t_cons);
+                        ((Spliterator.OfPrimitive) this.f802s).tryAdvance(t_cons);
                         this.index++;
                     }
                     return;
                 }
-                ((Spliterator.OfPrimitive) this.f804s).forEachRemaining(t_cons);
+                ((Spliterator.OfPrimitive) this.f802s).forEachRemaining(t_cons);
                 this.index = this.fence;
             }
         }
@@ -701,7 +701,7 @@ class StreamSpliterators {
 
             /* access modifiers changed from: protected */
             public IntConsumer emptyConsumer() {
-                return new C4552xd052fd1c();
+                return new C4564xd052fd1c();
             }
         }
 
@@ -736,7 +736,7 @@ class StreamSpliterators {
 
             /* access modifiers changed from: protected */
             public LongConsumer emptyConsumer() {
-                return new C4553xec23d6ed();
+                return new C4565xec23d6ed();
             }
         }
 
@@ -771,7 +771,7 @@ class StreamSpliterators {
 
             /* access modifiers changed from: protected */
             public DoubleConsumer emptyConsumer() {
-                return new C4551x1d92bb82();
+                return new C4563x1d92bb82();
             }
         }
     }
@@ -782,7 +782,7 @@ class StreamSpliterators {
         private final AtomicLong permits;
 
         /* renamed from: s */
-        protected final T_SPLITR f805s;
+        protected final T_SPLITR f803s;
         private final long skipThreshold;
         protected final boolean unlimited;
 
@@ -800,7 +800,7 @@ class StreamSpliterators {
         }
 
         UnorderedSliceSpliterator(T_SPLITR t_splitr, long j, long j2) {
-            this.f805s = t_splitr;
+            this.f803s = t_splitr;
             long j3 = 0;
             int i = (j2 > 0 ? 1 : (j2 == 0 ? 0 : -1));
             this.unlimited = i < 0;
@@ -809,7 +809,7 @@ class StreamSpliterators {
         }
 
         UnorderedSliceSpliterator(T_SPLITR t_splitr, UnorderedSliceSpliterator<T, T_SPLITR> unorderedSliceSpliterator) {
-            this.f805s = t_splitr;
+            this.f803s = t_splitr;
             this.unlimited = unorderedSliceSpliterator.unlimited;
             this.permits = unorderedSliceSpliterator.permits;
             this.skipThreshold = unorderedSliceSpliterator.skipThreshold;
@@ -872,18 +872,18 @@ class StreamSpliterators {
 
         public final T_SPLITR trySplit() {
             Spliterator trySplit;
-            if (this.permits.get() == 0 || (trySplit = this.f805s.trySplit()) == null) {
+            if (this.permits.get() == 0 || (trySplit = this.f803s.trySplit()) == null) {
                 return null;
             }
             return makeSpliterator(trySplit);
         }
 
         public final long estimateSize() {
-            return this.f805s.estimateSize();
+            return this.f803s.estimateSize();
         }
 
         public final int characteristics() {
-            return this.f805s.characteristics() & -16465;
+            return this.f803s.characteristics() & -16465;
         }
 
         static final class OfRef<T> extends UnorderedSliceSpliterator<T, Spliterator<T>> implements Spliterator<T>, Consumer<T> {
@@ -903,7 +903,7 @@ class StreamSpliterators {
 
             public boolean tryAdvance(Consumer<? super T> consumer) {
                 Objects.requireNonNull(consumer);
-                while (permitStatus() != PermitStatus.NO_MORE && this.f805s.tryAdvance(this)) {
+                while (permitStatus() != PermitStatus.NO_MORE && this.f803s.tryAdvance(this)) {
                     if (acquirePermits(1) == 1) {
                         consumer.accept(this.tmpSlot);
                         this.tmpSlot = null;
@@ -928,7 +928,7 @@ class StreamSpliterators {
                             ofRef.reset();
                         }
                         long j = 0;
-                        while (this.f805s.tryAdvance(ofRef)) {
+                        while (this.f803s.tryAdvance(ofRef)) {
                             j++;
                             if (j >= 128) {
                                 break;
@@ -940,7 +940,7 @@ class StreamSpliterators {
                             return;
                         }
                     } else {
-                        this.f805s.forEachRemaining(consumer);
+                        this.f803s.forEachRemaining(consumer);
                         return;
                     }
                 }
@@ -973,7 +973,7 @@ class StreamSpliterators {
 
             public boolean tryAdvance(T_CONS t_cons) {
                 Objects.requireNonNull(t_cons);
-                while (permitStatus() != PermitStatus.NO_MORE && ((Spliterator.OfPrimitive) this.f805s).tryAdvance(this)) {
+                while (permitStatus() != PermitStatus.NO_MORE && ((Spliterator.OfPrimitive) this.f803s).tryAdvance(this)) {
                     if (acquirePermits(1) == 1) {
                         acceptConsumed(t_cons);
                         return true;
@@ -997,7 +997,7 @@ class StreamSpliterators {
                             ofPrimitive.reset();
                         }
                         long j = 0;
-                        while (((Spliterator.OfPrimitive) this.f805s).tryAdvance(ofPrimitive)) {
+                        while (((Spliterator.OfPrimitive) this.f803s).tryAdvance(ofPrimitive)) {
                             j++;
                             if (j >= 128) {
                                 break;
@@ -1009,7 +1009,7 @@ class StreamSpliterators {
                             return;
                         }
                     } else {
-                        ((Spliterator.OfPrimitive) this.f805s).forEachRemaining(t_cons);
+                        ((Spliterator.OfPrimitive) this.f803s).forEachRemaining(t_cons);
                         return;
                     }
                 }
@@ -1150,7 +1150,7 @@ class StreamSpliterators {
         private static final Object NULL_VALUE = new Object();
 
         /* renamed from: s */
-        private final Spliterator<T> f799s;
+        private final Spliterator<T> f797s;
         private final ConcurrentHashMap<T, Boolean> seen;
         private T tmpSlot;
 
@@ -1159,7 +1159,7 @@ class StreamSpliterators {
         }
 
         private DistinctSpliterator(Spliterator<T> spliterator, ConcurrentHashMap<T, Boolean> concurrentHashMap) {
-            this.f799s = spliterator;
+            this.f797s = spliterator;
             this.seen = concurrentHashMap;
         }
 
@@ -1172,7 +1172,7 @@ class StreamSpliterators {
         }
 
         public boolean tryAdvance(Consumer<? super T> consumer) {
-            while (this.f799s.tryAdvance(this)) {
+            while (this.f797s.tryAdvance(this)) {
                 if (this.seen.putIfAbsent(mapNull(this.tmpSlot), Boolean.TRUE) == null) {
                     consumer.accept(this.tmpSlot);
                     this.tmpSlot = null;
@@ -1183,19 +1183,19 @@ class StreamSpliterators {
         }
 
         public void forEachRemaining(Consumer<? super T> consumer) {
-            this.f799s.forEachRemaining(new StreamSpliterators$DistinctSpliterator$$ExternalSyntheticLambda0(this, consumer));
+            this.f797s.forEachRemaining(new StreamSpliterators$DistinctSpliterator$$ExternalSyntheticLambda0(this, consumer));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$forEachRemaining$0$java-util-stream-StreamSpliterators$DistinctSpliterator */
-        public /* synthetic */ void mo63793xb9bff3f1(Consumer consumer, Object obj) {
+        public /* synthetic */ void mo63849xb9bff3f1(Consumer consumer, Object obj) {
             if (this.seen.putIfAbsent(mapNull(obj), Boolean.TRUE) == null) {
                 consumer.accept(obj);
             }
         }
 
         public Spliterator<T> trySplit() {
-            Spliterator<T> trySplit = this.f799s.trySplit();
+            Spliterator<T> trySplit = this.f797s.trySplit();
             if (trySplit != null) {
                 return new DistinctSpliterator(trySplit, this.seen);
             }
@@ -1203,15 +1203,15 @@ class StreamSpliterators {
         }
 
         public long estimateSize() {
-            return this.f799s.estimateSize();
+            return this.f797s.estimateSize();
         }
 
         public int characteristics() {
-            return (this.f799s.characteristics() & -16469) | 1;
+            return (this.f797s.characteristics() & -16469) | 1;
         }
 
         public Comparator<? super T> getComparator() {
-            return this.f799s.getComparator();
+            return this.f797s.getComparator();
         }
     }
 
@@ -1233,16 +1233,16 @@ class StreamSpliterators {
         static final class OfRef<T> extends InfiniteSupplyingSpliterator<T> {
 
             /* renamed from: s */
-            final Supplier<T> f803s;
+            final Supplier<T> f801s;
 
             OfRef(long j, Supplier<T> supplier) {
                 super(j);
-                this.f803s = supplier;
+                this.f801s = supplier;
             }
 
             public boolean tryAdvance(Consumer<? super T> consumer) {
                 Objects.requireNonNull(consumer);
-                consumer.accept(this.f803s.get());
+                consumer.accept(this.f801s.get());
                 return true;
             }
 
@@ -1252,23 +1252,23 @@ class StreamSpliterators {
                 }
                 long j = this.estimate >>> 1;
                 this.estimate = j;
-                return new OfRef(j, this.f803s);
+                return new OfRef(j, this.f801s);
             }
         }
 
         static final class OfInt extends InfiniteSupplyingSpliterator<Integer> implements Spliterator.OfInt {
 
             /* renamed from: s */
-            final IntSupplier f801s;
+            final IntSupplier f799s;
 
             OfInt(long j, IntSupplier intSupplier) {
                 super(j);
-                this.f801s = intSupplier;
+                this.f799s = intSupplier;
             }
 
             public boolean tryAdvance(IntConsumer intConsumer) {
                 Objects.requireNonNull(intConsumer);
-                intConsumer.accept(this.f801s.getAsInt());
+                intConsumer.accept(this.f799s.getAsInt());
                 return true;
             }
 
@@ -1278,23 +1278,23 @@ class StreamSpliterators {
                 }
                 long j = this.estimate >>> 1;
                 this.estimate = j;
-                return new OfInt(j, this.f801s);
+                return new OfInt(j, this.f799s);
             }
         }
 
         static final class OfLong extends InfiniteSupplyingSpliterator<Long> implements Spliterator.OfLong {
 
             /* renamed from: s */
-            final LongSupplier f802s;
+            final LongSupplier f800s;
 
             OfLong(long j, LongSupplier longSupplier) {
                 super(j);
-                this.f802s = longSupplier;
+                this.f800s = longSupplier;
             }
 
             public boolean tryAdvance(LongConsumer longConsumer) {
                 Objects.requireNonNull(longConsumer);
-                longConsumer.accept(this.f802s.getAsLong());
+                longConsumer.accept(this.f800s.getAsLong());
                 return true;
             }
 
@@ -1304,23 +1304,23 @@ class StreamSpliterators {
                 }
                 long j = this.estimate >>> 1;
                 this.estimate = j;
-                return new OfLong(j, this.f802s);
+                return new OfLong(j, this.f800s);
             }
         }
 
         static final class OfDouble extends InfiniteSupplyingSpliterator<Double> implements Spliterator.OfDouble {
 
             /* renamed from: s */
-            final DoubleSupplier f800s;
+            final DoubleSupplier f798s;
 
             OfDouble(long j, DoubleSupplier doubleSupplier) {
                 super(j);
-                this.f800s = doubleSupplier;
+                this.f798s = doubleSupplier;
             }
 
             public boolean tryAdvance(DoubleConsumer doubleConsumer) {
                 Objects.requireNonNull(doubleConsumer);
-                doubleConsumer.accept(this.f800s.getAsDouble());
+                doubleConsumer.accept(this.f798s.getAsDouble());
                 return true;
             }
 
@@ -1330,7 +1330,7 @@ class StreamSpliterators {
                 }
                 long j = this.estimate >>> 1;
                 this.estimate = j;
-                return new OfDouble(j, this.f800s);
+                return new OfDouble(j, this.f798s);
             }
         }
     }

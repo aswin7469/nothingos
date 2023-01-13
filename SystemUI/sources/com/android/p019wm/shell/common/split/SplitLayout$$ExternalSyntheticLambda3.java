@@ -12,6 +12,6 @@ public final /* synthetic */ class SplitLayout$$ExternalSyntheticLambda3 impleme
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        this.f$0.mo49321xe5a2de65(valueAnimator);
+        this.f$0.mo49330xe5a2de65(valueAnimator);
     }
 }

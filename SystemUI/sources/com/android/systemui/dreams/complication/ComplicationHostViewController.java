@@ -58,7 +58,7 @@ public class ComplicationHostViewController extends ViewController<ConstraintLay
 
     /* access modifiers changed from: private */
     /* renamed from: updateComplications */
-    public void mo32562xf450732d(Collection<ComplicationViewModel> collection) {
+    public void mo32573xf450732d(Collection<ComplicationViewModel> collection) {
         ((Collection) this.mComplications.keySet().stream().filter(new ComplicationHostViewController$$ExternalSyntheticLambda2((Collection) collection.stream().map(new ComplicationHostViewController$$ExternalSyntheticLambda1()).collect(Collectors.toSet()))).collect(Collectors.toSet())).forEach(new ComplicationHostViewController$$ExternalSyntheticLambda3(this));
         ((Collection) collection.stream().filter(new ComplicationHostViewController$$ExternalSyntheticLambda4(this)).collect(Collectors.toSet())).forEach(new ComplicationHostViewController$$ExternalSyntheticLambda5(this));
     }
@@ -69,20 +69,20 @@ public class ComplicationHostViewController extends ViewController<ConstraintLay
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateComplications$3$com-android-systemui-dreams-complication-ComplicationHostViewController */
-    public /* synthetic */ void mo32563xdb58a6b3(ComplicationId complicationId) {
+    public /* synthetic */ void mo32574xdb58a6b3(ComplicationId complicationId) {
         this.mLayoutEngine.removeComplication(complicationId);
         this.mComplications.remove(complicationId);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateComplications$4$com-android-systemui-dreams-complication-ComplicationHostViewController */
-    public /* synthetic */ boolean mo32564xa2648db4(ComplicationViewModel complicationViewModel) {
+    public /* synthetic */ boolean mo32575xa2648db4(ComplicationViewModel complicationViewModel) {
         return !this.mComplications.containsKey(complicationViewModel.getId());
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateComplications$5$com-android-systemui-dreams-complication-ComplicationHostViewController */
-    public /* synthetic */ void mo32565x697074b5(ComplicationViewModel complicationViewModel) {
+    public /* synthetic */ void mo32576x697074b5(ComplicationViewModel complicationViewModel) {
         ComplicationId id = complicationViewModel.getId();
         Complication.ViewHolder createView = complicationViewModel.getComplication().createView(complicationViewModel);
         this.mComplications.put(id, createView);

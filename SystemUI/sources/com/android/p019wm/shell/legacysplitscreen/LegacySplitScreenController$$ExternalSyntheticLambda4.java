@@ -13,6 +13,6 @@ public final /* synthetic */ class LegacySplitScreenController$$ExternalSyntheti
     }
 
     public final void runWithTransaction(SurfaceControl.Transaction transaction) {
-        this.f$0.mo49706xec5c9a3d(transaction);
+        this.f$0.mo49715xec5c9a3d(transaction);
     }
 }

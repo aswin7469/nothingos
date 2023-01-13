@@ -21,7 +21,7 @@ import android.os.UserHandle;
 import android.service.notification.StatusBarNotification;
 import android.util.ArraySet;
 import android.util.Pair;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.CoreStartable;
 import com.android.systemui.Dependency;
 import com.android.systemui.dagger.SysUISingleton;
@@ -53,7 +53,7 @@ public class InstantAppNotifier extends CoreStartable implements CommandQueue.Ca
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onUserSwitchComplete$0$com-android-systemui-statusbar-notification-InstantAppNotifier$1 */
-        public /* synthetic */ void mo39685xe9b5432d() {
+        public /* synthetic */ void mo39687xe9b5432d() {
             InstantAppNotifier.this.updateForegroundInstantApps();
         }
     };
@@ -102,7 +102,7 @@ public class InstantAppNotifier extends CoreStartable implements CommandQueue.Ca
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateForegroundInstantApps$1$com-android-systemui-statusbar-notification-InstantAppNotifier */
-    public /* synthetic */ void mo39684xfbaded69(NotificationManager notificationManager, IPackageManager iPackageManager) {
+    public /* synthetic */ void mo39686xfbaded69(NotificationManager notificationManager, IPackageManager iPackageManager) {
         int windowingMode;
         ArraySet arraySet = new ArraySet(this.mCurrentNotifs);
         try {
@@ -118,7 +118,7 @@ public class InstantAppNotifier extends CoreStartable implements CommandQueue.Ca
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateForegroundInstantApps$0$com-android-systemui-statusbar-notification-InstantAppNotifier */
-    public /* synthetic */ void mo39683x7d4ce98a(NotificationManager notificationManager, Pair pair) {
+    public /* synthetic */ void mo39685x7d4ce98a(NotificationManager notificationManager, Pair pair) {
         this.mCurrentNotifs.remove(pair);
         notificationManager.cancelAsUser((String) pair.first, 7, new UserHandle(((Integer) pair.second).intValue()));
     }
@@ -151,13 +151,13 @@ public class InstantAppNotifier extends CoreStartable implements CommandQueue.Ca
         int i4 = i;
         ApplicationInfo applicationInfo2 = applicationInfo;
         Bundle bundle = new Bundle();
-        bundle.putString("android.substName", this.mContext.getString(C1893R.string.instant_apps));
+        bundle.putString("android.substName", this.mContext.getString(C1894R.string.instant_apps));
         this.mCurrentNotifs.add(new Pair(str3, Integer.valueOf(i)));
-        String string = this.mContext.getString(C1893R.string.instant_apps_help_url);
+        String string = this.mContext.getString(C1894R.string.instant_apps_help_url);
         boolean z = !string.isEmpty();
-        String string2 = this.mContext.getString(z ? C1893R.string.instant_apps_message_with_help : C1893R.string.instant_apps_message);
+        String string2 = this.mContext.getString(z ? C1894R.string.instant_apps_message_with_help : C1894R.string.instant_apps_message);
         UserHandle of = UserHandle.of(i);
-        Notification.Action build = new Notification.Action.Builder((Icon) null, this.mContext.getString(C1893R.string.app_info), PendingIntent.getActivityAsUser(this.mContext, 0, new Intent("android.settings.APPLICATION_DETAILS_SETTINGS").setData(Uri.fromParts("package", str3, (String) null)), 67108864, (Bundle) null, of)).build();
+        Notification.Action build = new Notification.Action.Builder((Icon) null, this.mContext.getString(C1894R.string.app_info), PendingIntent.getActivityAsUser(this.mContext, 0, new Intent("android.settings.APPLICATION_DETAILS_SETTINGS").setData(Uri.fromParts("package", str3, (String) null)), 67108864, (Bundle) null, of)).build();
         if (z) {
             str2 = "android.intent.action.VIEW";
             action = build;
@@ -186,9 +186,9 @@ public class InstantAppNotifier extends CoreStartable implements CommandQueue.Ca
                 componentName = null;
             }
             builder = builder3;
-            builder.addAction(new Notification.Action.Builder((Icon) null, this.mContext.getString(C1893R.string.go_to_web), PendingIntent.getActivityAsUser(this.mContext, 0, new Intent().setComponent(componentName).setAction(str2).addCategory("android.intent.category.BROWSABLE").addCategory("unique:" + System.currentTimeMillis()).putExtra("android.intent.extra.PACKAGE_NAME", applicationInfo2.packageName).putExtra("android.intent.extra.VERSION_CODE", applicationInfo2.versionCode & Integer.MAX_VALUE).putExtra("android.intent.extra.LONG_VERSION_CODE", applicationInfo2.longVersionCode).putExtra("android.intent.extra.INSTANT_APP_FAILURE", activityAsUser), 67108864, (Bundle) null, of)).build());
+            builder.addAction(new Notification.Action.Builder((Icon) null, this.mContext.getString(C1894R.string.go_to_web), PendingIntent.getActivityAsUser(this.mContext, 0, new Intent().setComponent(componentName).setAction(str2).addCategory("android.intent.category.BROWSABLE").addCategory("unique:" + System.currentTimeMillis()).putExtra("android.intent.extra.PACKAGE_NAME", applicationInfo2.packageName).putExtra("android.intent.extra.VERSION_CODE", applicationInfo2.versionCode & Integer.MAX_VALUE).putExtra("android.intent.extra.LONG_VERSION_CODE", applicationInfo2.longVersionCode).putExtra("android.intent.extra.INSTANT_APP_FAILURE", activityAsUser), 67108864, (Bundle) null, of)).build());
         }
-        notificationManager.notifyAsUser(str3, 7, builder.addExtras(bundle).addAction(action).setContentIntent(pendingIntent2).setColor(this.mContext.getColor(C1893R.C1894color.instant_apps_color)).setContentTitle(this.mContext.getString(C1893R.string.instant_apps_title, new Object[]{applicationInfo2.loadLabel(this.mContext.getPackageManager())})).setLargeIcon(Icon.createWithResource(str3, applicationInfo2.icon)).setSmallIcon(Icon.createWithResource(this.mContext.getPackageName(), C1893R.C1895drawable.instant_icon)).setContentText(string2).setStyle(new Notification.BigTextStyle().bigText(string2)).setOngoing(true).build(), new UserHandle(i4));
+        notificationManager.notifyAsUser(str3, 7, builder.addExtras(bundle).addAction(action).setContentIntent(pendingIntent2).setColor(this.mContext.getColor(C1894R.C1895color.instant_apps_color)).setContentTitle(this.mContext.getString(C1894R.string.instant_apps_title, new Object[]{applicationInfo2.loadLabel(this.mContext.getPackageManager())})).setLargeIcon(Icon.createWithResource(str3, applicationInfo2.icon)).setSmallIcon(Icon.createWithResource(this.mContext.getPackageName(), C1894R.C1896drawable.instant_icon)).setContentText(string2).setStyle(new Notification.BigTextStyle().bigText(string2)).setOngoing(true).build(), new UserHandle(i4));
     }
 
     private Intent getTaskIntent(int i, int i2) {

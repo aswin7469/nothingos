@@ -12,6 +12,6 @@ public final /* synthetic */ class DividerImeController$$ExternalSyntheticLambda
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        this.f$0.mo49598xda26b353(valueAnimator);
+        this.f$0.mo49607xda26b353(valueAnimator);
     }
 }

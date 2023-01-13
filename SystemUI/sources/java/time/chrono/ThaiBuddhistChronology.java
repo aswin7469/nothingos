@@ -57,7 +57,7 @@ public final class ThaiBuddhistChronology extends AbstractChronology implements 
     }
 
     public ThaiBuddhistDate date(int i, int i2, int i3) {
-        return new ThaiBuddhistDate(LocalDate.m908of(i - 543, i2, i3));
+        return new ThaiBuddhistDate(LocalDate.m906of(i - 543, i2, i3));
     }
 
     public ThaiBuddhistDate dateYearDay(Era era, int i, int i2) {
@@ -115,15 +115,15 @@ public final class ThaiBuddhistChronology extends AbstractChronology implements 
     }
 
     public ThaiBuddhistEra eraOf(int i) {
-        return ThaiBuddhistEra.m952of(i);
+        return ThaiBuddhistEra.m950of(i);
     }
 
     public List<Era> eras() {
-        return List.m1733of((E[]) ThaiBuddhistEra.values());
+        return List.m1739of((E[]) ThaiBuddhistEra.values());
     }
 
     /* renamed from: java.time.chrono.ThaiBuddhistChronology$1 */
-    static /* synthetic */ class C28731 {
+    static /* synthetic */ class C28791 {
         static final /* synthetic */ int[] $SwitchMap$java$time$temporal$ChronoField;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(6:0|1|2|3|4|(3:5|6|8)) */
@@ -155,23 +155,23 @@ public final class ThaiBuddhistChronology extends AbstractChronology implements 
             L_0x0028:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: java.time.chrono.ThaiBuddhistChronology.C28731.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: java.time.chrono.ThaiBuddhistChronology.C28791.<clinit>():void");
         }
     }
 
     public ValueRange range(ChronoField chronoField) {
-        int i = C28731.$SwitchMap$java$time$temporal$ChronoField[chronoField.ordinal()];
+        int i = C28791.$SwitchMap$java$time$temporal$ChronoField[chronoField.ordinal()];
         if (i == 1) {
             ValueRange range = ChronoField.PROLEPTIC_MONTH.range();
-            return ValueRange.m955of(range.getMinimum() + 6516, range.getMaximum() + 6516);
+            return ValueRange.m953of(range.getMinimum() + 6516, range.getMaximum() + 6516);
         } else if (i == 2) {
             ValueRange range2 = ChronoField.YEAR.range();
-            return ValueRange.m956of(1, (-(range2.getMinimum() + 543)) + 1, range2.getMaximum() + 543);
+            return ValueRange.m954of(1, (-(range2.getMinimum() + 543)) + 1, range2.getMaximum() + 543);
         } else if (i != 3) {
             return chronoField.range();
         } else {
             ValueRange range3 = ChronoField.YEAR.range();
-            return ValueRange.m955of(range3.getMinimum() + 543, range3.getMaximum() + 543);
+            return ValueRange.m953of(range3.getMinimum() + 543, range3.getMaximum() + 543);
         }
     }
 

@@ -32,7 +32,7 @@ public class BatteryShareControllerImpl implements BatteryShareController {
 
     @Inject
     public BatteryShareControllerImpl(Context context, BatteryController batteryController) {
-        C42262 r0 = new ContentObserver(new Handler()) {
+        C42372 r0 = new ContentObserver(new Handler()) {
             public void onChange(boolean z) {
                 super.onChange(z);
                 boolean z2 = false;

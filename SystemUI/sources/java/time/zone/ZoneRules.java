@@ -37,7 +37,7 @@ public final class ZoneRules implements Serializable {
     private final ZoneOffset[] wallOffsets;
 
     /* renamed from: of */
-    public static ZoneRules m963of(ZoneOffset zoneOffset, ZoneOffset zoneOffset2, List<ZoneOffsetTransition> list, List<ZoneOffsetTransition> list2, List<ZoneOffsetTransitionRule> list3) {
+    public static ZoneRules m961of(ZoneOffset zoneOffset, ZoneOffset zoneOffset2, List<ZoneOffsetTransition> list, List<ZoneOffsetTransition> list2, List<ZoneOffsetTransitionRule> list3) {
         Objects.requireNonNull(zoneOffset, "baseStandardOffset");
         Objects.requireNonNull(zoneOffset2, "baseWallOffset");
         Objects.requireNonNull(list, "standardOffsetTransitionList");
@@ -47,7 +47,7 @@ public final class ZoneRules implements Serializable {
     }
 
     /* renamed from: of */
-    public static ZoneRules m962of(ZoneOffset zoneOffset) {
+    public static ZoneRules m960of(ZoneOffset zoneOffset) {
         Objects.requireNonNull(zoneOffset, ZoneGetter.KEY_OFFSET);
         return new ZoneRules(zoneOffset);
     }
@@ -464,7 +464,7 @@ public final class ZoneRules implements Serializable {
     }
 
     public List<ZoneOffsetTransitionRule> getTransitionRules() {
-        return List.m1733of((E[]) this.lastRules);
+        return List.m1739of((E[]) this.lastRules);
     }
 
     public boolean equals(Object obj) {

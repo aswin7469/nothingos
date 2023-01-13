@@ -11,6 +11,6 @@ public final /* synthetic */ class MediaControlPanel$$ExternalSyntheticLambda4 i
     }
 
     public final void onClick(View view) {
-        this.f$0.mo33653xf04bc630(view);
+        this.f$0.mo33657xf04bc630(view);
     }
 }

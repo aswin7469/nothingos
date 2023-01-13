@@ -12,6 +12,6 @@ public final /* synthetic */ class KeyguardHostViewController$$ExternalSynthetic
     }
 
     public final boolean onKey(View view, int i, KeyEvent keyEvent) {
-        return this.f$0.m2286lambda$new$0$comandroidkeyguardKeyguardHostViewController(view, i, keyEvent);
+        return this.f$0.m2292lambda$new$0$comandroidkeyguardKeyguardHostViewController(view, i, keyEvent);
     }
 }

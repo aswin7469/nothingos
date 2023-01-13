@@ -10,7 +10,7 @@ import android.view.ViewOverlay;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.volume.Interaction;
 import java.util.Objects;
 
@@ -86,12 +86,12 @@ public class SegmentedButtons extends LinearLayout {
     }
 
     public Button inflateButton() {
-        return (Button) this.mInflater.inflate(C1893R.layout.segmented_button, this, false);
+        return (Button) this.mInflater.inflate(C1894R.layout.segmented_button, this, false);
     }
 
     public void addButton(int i, int i2, Object obj) {
         Button inflateButton = inflateButton();
-        inflateButton.setTag(C1893R.C1897id.label, Integer.valueOf(i));
+        inflateButton.setTag(C1894R.C1898id.label, Integer.valueOf(i));
         inflateButton.setText(i);
         inflateButton.setContentDescription(getResources().getString(i2));
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) inflateButton.getLayoutParams();

@@ -14,6 +14,6 @@ public final /* synthetic */ class ToggleBehavior$$ExternalSyntheticLambda0 impl
     }
 
     public final void onClick(View view) {
-        ToggleBehavior.m2730initialize$lambda0(this.f$0, this.f$1, view);
+        ToggleBehavior.m2735initialize$lambda0(this.f$0, this.f$1, view);
     }
 }

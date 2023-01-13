@@ -12,6 +12,6 @@ public final /* synthetic */ class CentralSurfacesImpl$$ExternalSyntheticLambda0
     }
 
     public final boolean onTouch(View view, MotionEvent motionEvent) {
-        return this.f$0.mo43878xe84e9e0d(view, motionEvent);
+        return this.f$0.mo43887xe84e9e0d(view, motionEvent);
     }
 }

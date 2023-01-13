@@ -12,6 +12,6 @@ public final /* synthetic */ class PeopleSpaceWidgetManager$$ExternalSyntheticLa
     }
 
     public final boolean test(Object obj) {
-        return this.f$0.mo35177x6a1f398c((NotificationEntry) obj);
+        return this.f$0.mo35181x6a1f398c((NotificationEntry) obj);
     }
 }

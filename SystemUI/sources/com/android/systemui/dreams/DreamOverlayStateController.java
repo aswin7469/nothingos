@@ -56,7 +56,7 @@ public class DreamOverlayStateController implements CallbackController<Callback>
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$addComplication$1$com-android-systemui-dreams-DreamOverlayStateController */
-    public /* synthetic */ void mo32523x16d6304e(Complication complication) {
+    public /* synthetic */ void mo32534x16d6304e(Complication complication) {
         if (this.mComplications.add(complication)) {
             this.mCallbacks.stream().forEach(new DreamOverlayStateController$$ExternalSyntheticLambda5());
         }
@@ -68,7 +68,7 @@ public class DreamOverlayStateController implements CallbackController<Callback>
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$removeComplication$3$com-android-systemui-dreams-DreamOverlayStateController */
-    public /* synthetic */ void mo32527x404e664d(Complication complication) {
+    public /* synthetic */ void mo32538x404e664d(Complication complication) {
         if (this.mComplications.remove(complication)) {
             this.mCallbacks.stream().forEach(new DreamOverlayStateController$$ExternalSyntheticLambda3());
         }
@@ -80,7 +80,7 @@ public class DreamOverlayStateController implements CallbackController<Callback>
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$getComplications$4$com-android-systemui-dreams-DreamOverlayStateController */
-    public /* synthetic */ boolean mo32524x6071a1ab(Complication complication) {
+    public /* synthetic */ boolean mo32535x6071a1ab(Complication complication) {
         int requiredTypeAvailability = complication.getRequiredTypeAvailability();
         if (this.mShouldShowComplications) {
             if ((getAvailableComplicationTypes() & requiredTypeAvailability) == requiredTypeAvailability) {
@@ -110,7 +110,7 @@ public class DreamOverlayStateController implements CallbackController<Callback>
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$notifyCallbacks$5$com-android-systemui-dreams-DreamOverlayStateController */
-    public /* synthetic */ void mo32525xd88d64d8(Consumer consumer) {
+    public /* synthetic */ void mo32536xd88d64d8(Consumer consumer) {
         Iterator<Callback> it = this.mCallbacks.iterator();
         while (it.hasNext()) {
             consumer.accept(it.next());
@@ -123,7 +123,7 @@ public class DreamOverlayStateController implements CallbackController<Callback>
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$addCallback$6$com-android-systemui-dreams-DreamOverlayStateController */
-    public /* synthetic */ void mo32522x1974fc9a(Callback callback) {
+    public /* synthetic */ void mo32533x1974fc9a(Callback callback) {
         Objects.requireNonNull(callback, "Callback must not be null. b/128895449");
         if (!this.mCallbacks.contains(callback)) {
             this.mCallbacks.add(callback);
@@ -139,7 +139,7 @@ public class DreamOverlayStateController implements CallbackController<Callback>
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$removeCallback$7$com-android-systemui-dreams-DreamOverlayStateController */
-    public /* synthetic */ void mo32526x9c5cb018(Callback callback) {
+    public /* synthetic */ void mo32537x9c5cb018(Callback callback) {
         Objects.requireNonNull(callback, "Callback must not be null. b/128895449");
         this.mCallbacks.remove((Object) callback);
     }
@@ -178,7 +178,7 @@ public class DreamOverlayStateController implements CallbackController<Callback>
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setAvailableComplicationTypes$9$com-android-systemui-dreams-DreamOverlayStateController */
-    public /* synthetic */ void mo32528x8393206b(int i) {
+    public /* synthetic */ void mo32539x8393206b(int i) {
         this.mAvailableComplicationTypes = i;
         this.mCallbacks.forEach(new DreamOverlayStateController$$ExternalSyntheticLambda0());
     }
@@ -193,7 +193,7 @@ public class DreamOverlayStateController implements CallbackController<Callback>
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setShouldShowComplications$10$com-android-systemui-dreams-DreamOverlayStateController */
-    public /* synthetic */ void mo32529x9c0d6222(boolean z) {
+    public /* synthetic */ void mo32540x9c0d6222(boolean z) {
         this.mShouldShowComplications = z;
         this.mCallbacks.forEach(new DreamOverlayStateController$$ExternalSyntheticLambda0());
     }

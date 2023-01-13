@@ -4,7 +4,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.PluginModule;
 import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.shared.plugins.PluginActionManager;
@@ -75,6 +75,6 @@ public abstract class PluginsModule {
     @Provides
     @Named("plugin_privileged")
     static List<String> providesPrivilegedPlugins(Context context) {
-        return Arrays.asList(context.getResources().getStringArray(C1893R.array.config_pluginWhitelist));
+        return Arrays.asList(context.getResources().getStringArray(C1894R.array.config_pluginWhitelist));
     }
 }

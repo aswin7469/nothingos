@@ -12,13 +12,13 @@ import android.widget.TextView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.view.ViewCompat;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.internal.ToolbarUtils;
 import com.google.android.material.shape.MaterialShapeDrawable;
 import com.google.android.material.shape.MaterialShapeUtils;
 
 public class MaterialToolbar extends Toolbar {
-    private static final int DEF_STYLE_RES = C3621R.style.Widget_MaterialComponents_Toolbar;
+    private static final int DEF_STYLE_RES = C3631R.style.Widget_MaterialComponents_Toolbar;
     private static final ImageView.ScaleType[] LOGO_SCALE_TYPE_ARRAY = {ImageView.ScaleType.MATRIX, ImageView.ScaleType.FIT_XY, ImageView.ScaleType.FIT_START, ImageView.ScaleType.FIT_CENTER, ImageView.ScaleType.FIT_END, ImageView.ScaleType.CENTER, ImageView.ScaleType.CENTER_CROP, ImageView.ScaleType.CENTER_INSIDE};
     private Boolean logoAdjustViewBounds;
     private ImageView.ScaleType logoScaleType;
@@ -31,7 +31,7 @@ public class MaterialToolbar extends Toolbar {
     }
 
     public MaterialToolbar(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, C3621R.attr.toolbarStyle);
+        this(context, attributeSet, C3631R.attr.toolbarStyle);
     }
 
     /* JADX WARNING: Illegal instructions before constructor call */
@@ -43,28 +43,28 @@ public class MaterialToolbar extends Toolbar {
             android.content.Context r8 = com.google.android.material.theme.overlay.MaterialThemeOverlay.wrap(r8, r9, r10, r4)
             r7.<init>(r8, r9, r10)
             android.content.Context r8 = r7.getContext()
-            int[] r2 = com.google.android.material.C3621R.styleable.MaterialToolbar
+            int[] r2 = com.google.android.material.C3631R.styleable.MaterialToolbar
             r6 = 0
             int[] r5 = new int[r6]
             r0 = r8
             r1 = r9
             r3 = r10
             android.content.res.TypedArray r9 = com.google.android.material.internal.ThemeEnforcement.obtainStyledAttributes(r0, r1, r2, r3, r4, r5)
-            int r10 = com.google.android.material.C3621R.styleable.MaterialToolbar_navigationIconTint
+            int r10 = com.google.android.material.C3631R.styleable.MaterialToolbar_navigationIconTint
             boolean r10 = r9.hasValue(r10)
             r0 = -1
             if (r10 == 0) goto L_0x002b
-            int r10 = com.google.android.material.C3621R.styleable.MaterialToolbar_navigationIconTint
+            int r10 = com.google.android.material.C3631R.styleable.MaterialToolbar_navigationIconTint
             int r10 = r9.getColor(r10, r0)
             r7.setNavigationIconTint(r10)
         L_0x002b:
-            int r10 = com.google.android.material.C3621R.styleable.MaterialToolbar_titleCentered
+            int r10 = com.google.android.material.C3631R.styleable.MaterialToolbar_titleCentered
             boolean r10 = r9.getBoolean(r10, r6)
             r7.titleCentered = r10
-            int r10 = com.google.android.material.C3621R.styleable.MaterialToolbar_subtitleCentered
+            int r10 = com.google.android.material.C3631R.styleable.MaterialToolbar_subtitleCentered
             boolean r10 = r9.getBoolean(r10, r6)
             r7.subtitleCentered = r10
-            int r10 = com.google.android.material.C3621R.styleable.MaterialToolbar_logoScaleType
+            int r10 = com.google.android.material.C3631R.styleable.MaterialToolbar_logoScaleType
             int r10 = r9.getInt(r10, r0)
             if (r10 < 0) goto L_0x004c
             android.widget.ImageView$ScaleType[] r0 = LOGO_SCALE_TYPE_ARRAY
@@ -73,10 +73,10 @@ public class MaterialToolbar extends Toolbar {
             r10 = r0[r10]
             r7.logoScaleType = r10
         L_0x004c:
-            int r10 = com.google.android.material.C3621R.styleable.MaterialToolbar_logoAdjustViewBounds
+            int r10 = com.google.android.material.C3631R.styleable.MaterialToolbar_logoAdjustViewBounds
             boolean r10 = r9.hasValue(r10)
             if (r10 == 0) goto L_0x0060
-            int r10 = com.google.android.material.C3621R.styleable.MaterialToolbar_logoAdjustViewBounds
+            int r10 = com.google.android.material.C3631R.styleable.MaterialToolbar_logoAdjustViewBounds
             boolean r10 = r9.getBoolean(r10, r6)
             java.lang.Boolean r10 = java.lang.Boolean.valueOf((boolean) r10)
             r7.logoAdjustViewBounds = r10

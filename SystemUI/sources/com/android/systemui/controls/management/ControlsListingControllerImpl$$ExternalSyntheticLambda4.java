@@ -16,6 +16,6 @@ public final /* synthetic */ class ControlsListingControllerImpl$$ExternalSynthe
     }
 
     public final void run() {
-        ControlsListingControllerImpl.m2655serviceListingCallback$lambda3$lambda2(this.f$0, this.f$1, this.f$2);
+        ControlsListingControllerImpl.m2660serviceListingCallback$lambda3$lambda2(this.f$0, this.f$1, this.f$2);
     }
 }

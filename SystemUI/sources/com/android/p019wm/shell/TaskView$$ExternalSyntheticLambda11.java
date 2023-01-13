@@ -18,6 +18,6 @@ public final /* synthetic */ class TaskView$$ExternalSyntheticLambda11 implement
     }
 
     public final void run() {
-        this.f$0.m3385lambda$prepareOpenAnimation$15$comandroidwmshellTaskView(this.f$1, this.f$2, this.f$3);
+        this.f$0.m3389lambda$prepareOpenAnimation$15$comandroidwmshellTaskView(this.f$1, this.f$2, this.f$3);
     }
 }

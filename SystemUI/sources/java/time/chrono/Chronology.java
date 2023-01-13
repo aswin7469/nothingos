@@ -68,8 +68,8 @@ public interface Chronology extends Comparable<Chronology> {
     }
 
     /* renamed from: of */
-    static Chronology m941of(String str) {
-        return AbstractChronology.m939of(str);
+    static Chronology m939of(String str) {
+        return AbstractChronology.m937of(str);
     }
 
     static Set<Chronology> getAvailableChronologies() {

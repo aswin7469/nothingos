@@ -39,7 +39,7 @@ public class ObjectStreamClass implements Serializable {
     /* access modifiers changed from: private */
 
     /* renamed from: cl */
-    public Class<?> f526cl;
+    public Class<?> f524cl;
     /* access modifiers changed from: private */
     public Constructor<?> cons;
     private volatile ClassDataSlot[] dataLayout;
@@ -138,7 +138,7 @@ public class ObjectStreamClass implements Serializable {
         if (this.suid == null) {
             this.suid = (Long) AccessController.doPrivileged(new PrivilegedAction<Long>() {
                 public Long run() {
-                    return Long.valueOf(ObjectStreamClass.computeDefaultSUID(ObjectStreamClass.this.f526cl));
+                    return Long.valueOf(ObjectStreamClass.computeDefaultSUID(ObjectStreamClass.this.f524cl));
                 }
             });
         }
@@ -147,14 +147,14 @@ public class ObjectStreamClass implements Serializable {
 
     @CallerSensitive
     public Class<?> forClass() {
-        if (this.f526cl == null) {
+        if (this.f524cl == null) {
             return null;
         }
         requireInitialized();
-        if (System.getSecurityManager() != null && ReflectUtil.needsPackageAccessCheck(Reflection.getCallerClass().getClassLoader(), this.f526cl.getClassLoader())) {
-            ReflectUtil.checkPackageAccess(this.f526cl);
+        if (System.getSecurityManager() != null && ReflectUtil.needsPackageAccessCheck(Reflection.getCallerClass().getClassLoader(), this.f524cl.getClassLoader())) {
+            ReflectUtil.checkPackageAccess(this.f524cl);
         }
-        return this.f526cl;
+        return this.f524cl;
     }
 
     public ObjectStreamField[] getFields() {
@@ -334,7 +334,7 @@ public class ObjectStreamClass implements Serializable {
     }
 
     private ObjectStreamClass(final Class<?> cls) {
-        this.f526cl = cls;
+        this.f524cl = cls;
         this.name = cls.getName();
         this.isProxy = Proxy.isProxyClass(cls);
         this.isEnum = Enum.class.isAssignableFrom(cls);
@@ -430,7 +430,7 @@ public class ObjectStreamClass implements Serializable {
         } else {
             objectStreamClass2 = null;
         }
-        this.f526cl = cls;
+        this.f524cl = cls;
         this.resolveEx = classNotFoundException;
         this.superDesc = objectStreamClass;
         this.isProxy = true;
@@ -483,7 +483,7 @@ public class ObjectStreamClass implements Serializable {
         } else {
             objectStreamClass3 = null;
         }
-        this.f526cl = cls;
+        this.f524cl = cls;
         this.resolveEx = classNotFoundException;
         this.superDesc = objectStreamClass2;
         this.name = objectStreamClass.name;
@@ -922,7 +922,7 @@ public class ObjectStreamClass implements Serializable {
 
     private ClassDataSlot[] getClassDataLayout0() throws InvalidClassException {
         ArrayList arrayList = new ArrayList();
-        Class cls = this.f526cl;
+        Class cls = this.f524cl;
         Class cls2 = cls;
         while (cls2 != null && Serializable.class.isAssignableFrom(cls2)) {
             cls2 = cls2.getSuperclass();
@@ -931,7 +931,7 @@ public class ObjectStreamClass implements Serializable {
         while (this != null) {
             if (!hashSet.contains(this.name)) {
                 hashSet.add(this.name);
-                Class<?> cls3 = this.f526cl;
+                Class<?> cls3 = this.f524cl;
                 String name2 = cls3 != null ? cls3.getName() : this.name;
                 Class cls4 = cls;
                 while (true) {
@@ -1059,7 +1059,7 @@ public class ObjectStreamClass implements Serializable {
     }
 
     private ObjectStreamClass getVariantFor(Class<?> cls) throws InvalidClassException {
-        if (this.f526cl == cls) {
+        if (this.f524cl == cls) {
             return this;
         }
         ObjectStreamClass objectStreamClass = new ObjectStreamClass();
@@ -1657,7 +1657,7 @@ public class ObjectStreamClass implements Serializable {
     private static FieldReflector getReflector(ObjectStreamField[] objectStreamFieldArr, ObjectStreamClass objectStreamClass) throws InvalidClassException {
         Object obj;
         EntryFuture entryFuture = null;
-        Class<?> cls = (objectStreamClass == null || objectStreamFieldArr.length <= 0) ? null : objectStreamClass.f526cl;
+        Class<?> cls = (objectStreamClass == null || objectStreamFieldArr.length <= 0) ? null : objectStreamClass.f524cl;
         processQueue(Caches.reflectorsQueue, Caches.reflectors);
         FieldReflectorKey fieldReflectorKey = new FieldReflectorKey(cls, objectStreamFieldArr, Caches.reflectorsQueue);
         Reference reference = Caches.reflectors.get(fieldReflectorKey);

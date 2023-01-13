@@ -11,6 +11,6 @@ public final /* synthetic */ class KeyguardPatternViewController$$ExternalSynthe
     }
 
     public final void onPostureChanged(int i) {
-        this.f$0.m2288lambda$new$0$comandroidkeyguardKeyguardPatternViewController(i);
+        this.f$0.m2294lambda$new$0$comandroidkeyguardKeyguardPatternViewController(i);
     }
 }

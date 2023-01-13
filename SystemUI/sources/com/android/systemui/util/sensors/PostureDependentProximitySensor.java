@@ -56,7 +56,7 @@ class PostureDependentProximitySensor extends ProximitySensorImpl {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-util-sensors-PostureDependentProximitySensor */
-    public /* synthetic */ void mo47063xb7bbe84e(int i) {
+    public /* synthetic */ void mo47075xb7bbe84e(int i) {
         if (this.mDevicePosture != i) {
             this.mDevicePosture = i;
             chooseSensors();

@@ -11,6 +11,6 @@ public final /* synthetic */ class NavigationBar$$ExternalSyntheticLambda20 impl
     }
 
     public final void accept(Object obj) {
-        this.f$0.m2854lambda$new$9$comandroidsystemuinavigationbarNavigationBar((Integer) obj);
+        this.f$0.m2859lambda$new$9$comandroidsystemuinavigationbarNavigationBar((Integer) obj);
     }
 }

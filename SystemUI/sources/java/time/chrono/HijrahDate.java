@@ -36,7 +36,7 @@ public final class HijrahDate extends ChronoLocalDateImpl<HijrahDate> implements
     }
 
     /* renamed from: of */
-    static HijrahDate m943of(HijrahChronology hijrahChronology, int i, int i2, int i3) {
+    static HijrahDate m941of(HijrahChronology hijrahChronology, int i, int i2, int i3) {
         return new HijrahDate(hijrahChronology, i, i2, i3);
     }
 
@@ -57,7 +57,7 @@ public final class HijrahDate extends ChronoLocalDateImpl<HijrahDate> implements
     }
 
     /* renamed from: of */
-    public static HijrahDate m942of(int i, int i2, int i3) {
+    public static HijrahDate m940of(int i, int i2, int i3) {
         return HijrahChronology.INSTANCE.date(i, i2, i3);
     }
 
@@ -103,23 +103,23 @@ public final class HijrahDate extends ChronoLocalDateImpl<HijrahDate> implements
         }
         if (isSupported(temporalField)) {
             ChronoField chronoField = (ChronoField) temporalField;
-            int i = C28681.$SwitchMap$java$time$temporal$ChronoField[chronoField.ordinal()];
+            int i = C28741.$SwitchMap$java$time$temporal$ChronoField[chronoField.ordinal()];
             if (i == 1) {
-                return ValueRange.m955of(1, (long) lengthOfMonth());
+                return ValueRange.m953of(1, (long) lengthOfMonth());
             }
             if (i == 2) {
-                return ValueRange.m955of(1, (long) lengthOfYear());
+                return ValueRange.m953of(1, (long) lengthOfYear());
             }
             if (i != 3) {
                 return getChronology().range(chronoField);
             }
-            return ValueRange.m955of(1, 5);
+            return ValueRange.m953of(1, 5);
         }
         throw new UnsupportedTemporalTypeException("Unsupported field: " + temporalField);
     }
 
     /* renamed from: java.time.chrono.HijrahDate$1 */
-    static /* synthetic */ class C28681 {
+    static /* synthetic */ class C28741 {
         static final /* synthetic */ int[] $SwitchMap$java$time$temporal$ChronoField;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(26:0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|(3:25|26|28)) */
@@ -221,7 +221,7 @@ public final class HijrahDate extends ChronoLocalDateImpl<HijrahDate> implements
             L_0x009c:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: java.time.chrono.HijrahDate.C28681.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: java.time.chrono.HijrahDate.C28741.<clinit>():void");
         }
     }
 
@@ -231,7 +231,7 @@ public final class HijrahDate extends ChronoLocalDateImpl<HijrahDate> implements
         if (!(temporalField instanceof ChronoField)) {
             return temporalField.getFrom(this);
         }
-        switch (C28681.$SwitchMap$java$time$temporal$ChronoField[((ChronoField) temporalField).ordinal()]) {
+        switch (C28741.$SwitchMap$java$time$temporal$ChronoField[((ChronoField) temporalField).ordinal()]) {
             case 1:
                 i = this.dayOfMonth;
                 break;
@@ -287,7 +287,7 @@ public final class HijrahDate extends ChronoLocalDateImpl<HijrahDate> implements
         ChronoField chronoField = (ChronoField) temporalField;
         this.chrono.range(chronoField).checkValidValue(j, chronoField);
         int i = (int) j;
-        switch (C28681.$SwitchMap$java$time$temporal$ChronoField[chronoField.ordinal()]) {
+        switch (C28741.$SwitchMap$java$time$temporal$ChronoField[chronoField.ordinal()]) {
             case 1:
                 return resolvePreviousValid(this.prolepticYear, this.monthOfYear, i);
             case 2:
@@ -327,7 +327,7 @@ public final class HijrahDate extends ChronoLocalDateImpl<HijrahDate> implements
         if (i3 > monthLength) {
             i3 = monthLength;
         }
-        return m943of(this.chrono, i, i2, i3);
+        return m941of(this.chrono, i, i2, i3);
     }
 
     public HijrahDate with(TemporalAdjuster temporalAdjuster) {
@@ -345,7 +345,7 @@ public final class HijrahDate extends ChronoLocalDateImpl<HijrahDate> implements
         if (i3 <= dayOfYear) {
             dayOfYear = i3;
         }
-        return m943of(hijrahChronology, i, i2, dayOfYear);
+        return m941of(hijrahChronology, i, i2, dayOfYear);
     }
 
     public HijrahDate plus(TemporalAmount temporalAmount) {

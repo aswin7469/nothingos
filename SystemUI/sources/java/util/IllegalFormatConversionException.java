@@ -5,16 +5,16 @@ public class IllegalFormatConversionException extends IllegalFormatException {
     private Class<?> arg;
 
     /* renamed from: c */
-    private char f689c;
+    private char f687c;
 
     public IllegalFormatConversionException(char c, Class<?> cls) {
         cls.getClass();
-        this.f689c = c;
+        this.f687c = c;
         this.arg = cls;
     }
 
     public char getConversion() {
-        return this.f689c;
+        return this.f687c;
     }
 
     public Class<?> getArgumentClass() {
@@ -22,6 +22,6 @@ public class IllegalFormatConversionException extends IllegalFormatException {
     }
 
     public String getMessage() {
-        return String.format("%c != %s", Character.valueOf(this.f689c), this.arg.getName());
+        return String.format("%c != %s", Character.valueOf(this.f687c), this.arg.getName());
     }
 }

@@ -11,6 +11,6 @@ public final /* synthetic */ class KeyguardStatusBarViewController$$ExternalSynt
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        this.f$0.mo44298x7c172643(valueAnimator);
+        this.f$0.mo44313x7c172643(valueAnimator);
     }
 }

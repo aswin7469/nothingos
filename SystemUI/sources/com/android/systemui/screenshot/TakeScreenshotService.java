@@ -22,7 +22,7 @@ import android.util.Log;
 import android.widget.Toast;
 import com.android.internal.logging.UiEventLogger;
 import com.android.internal.util.ScreenshotHelper;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.qualifiers.Background;
 import java.util.concurrent.Executor;
 import javax.inject.Inject;
@@ -118,7 +118,7 @@ public class TakeScreenshotService extends Service {
         RequestCallbackImpl requestCallbackImpl = new RequestCallbackImpl(messenger);
         if (!this.mUserManager.isUserUnlocked()) {
             Log.w(TAG, "Skipping screenshot because storage is locked!");
-            this.mNotificationsController.notifyScreenshotError(C1893R.string.screenshot_failed_to_save_user_locked_text);
+            this.mNotificationsController.notifyScreenshotError(C1894R.string.screenshot_failed_to_save_user_locked_text);
             requestCallbackImpl.reportError();
             return true;
         } else if (this.mDevicePolicyManager.getScreenCaptureDisabled((ComponentName) null, -1)) {
@@ -151,7 +151,7 @@ public class TakeScreenshotService extends Service {
                 int userId = screenshotRequest.getUserId();
                 if (bundleToHardwareBitmap == null) {
                     Log.e(TAG, "Got null bitmap from screenshot message");
-                    this.mNotificationsController.notifyScreenshotError(C1893R.string.screenshot_failed_to_capture_text);
+                    this.mNotificationsController.notifyScreenshotError(C1894R.string.screenshot_failed_to_capture_text);
                     requestCallbackImpl.reportError();
                 } else {
                     this.mScreenshot.handleImageAsScreenshot(bundleToHardwareBitmap, boundsInScreen, insets, taskId, userId, topComponent, takeScreenshotService$$ExternalSyntheticLambda3, requestCallbackImpl);
@@ -163,7 +163,7 @@ public class TakeScreenshotService extends Service {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$handleMessage$3$com-android-systemui-screenshot-TakeScreenshotService */
-    public /* synthetic */ void mo37608xba8ba0e(RequestCallback requestCallback) {
+    public /* synthetic */ void mo37609xba8ba0e(RequestCallback requestCallback) {
         Log.w(TAG, "Skipping screenshot because an IT admin has disabled screenshots on the device");
         this.mHandler.post(new TakeScreenshotService$$ExternalSyntheticLambda1(this, this.mDevicePolicyManager.getResources().getString("SystemUi.SCREENSHOT_BLOCKED_BY_ADMIN", new TakeScreenshotService$$ExternalSyntheticLambda0(this))));
         requestCallback.reportError();
@@ -171,13 +171,13 @@ public class TakeScreenshotService extends Service {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$handleMessage$1$com-android-systemui-screenshot-TakeScreenshotService */
-    public /* synthetic */ String mo37606xb9000f8c() {
-        return this.mContext.getString(C1893R.string.screenshot_blocked_by_admin);
+    public /* synthetic */ String mo37607xb9000f8c() {
+        return this.mContext.getString(C1894R.string.screenshot_blocked_by_admin);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$handleMessage$2$com-android-systemui-screenshot-TakeScreenshotService */
-    public /* synthetic */ void mo37607xe25464cd(String str) {
+    public /* synthetic */ void mo37608xe25464cd(String str) {
         Toast.makeText(this.mContext, str, 0).show();
     }
 

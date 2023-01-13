@@ -3,7 +3,7 @@ package sun.util.locale;
 class Extension {
 
     /* renamed from: id */
-    private String f938id;
+    private String f936id;
     private final char key;
     private String value;
 
@@ -19,7 +19,7 @@ class Extension {
     /* access modifiers changed from: protected */
     public void setValue(String str) {
         this.value = str;
-        this.f938id = this.key + LanguageTag.SEP + str;
+        this.f936id = this.key + LanguageTag.SEP + str;
     }
 
     public char getKey() {
@@ -31,7 +31,7 @@ class Extension {
     }
 
     public String getID() {
-        return this.f938id;
+        return this.f936id;
     }
 
     public String toString() {

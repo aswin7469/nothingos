@@ -10,7 +10,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import androidx.core.view.accessibility.AccessibilityViewCommand;
 import com.android.keyguard.AlphaOptimizedImageButton;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 
 public class CaptionsToggleImageButton extends AlphaOptimizedImageButton {
     private boolean mCaptionsEnabled = false;
@@ -28,7 +28,7 @@ public class CaptionsToggleImageButton extends AlphaOptimizedImageButton {
 
     public CaptionsToggleImageButton(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        setContentDescription(getContext().getString(C1893R.string.volume_odi_captions_content_description));
+        setContentDescription(getContext().getString(C1894R.string.volume_odi_captions_content_description));
     }
 
     public boolean onTouchEvent(MotionEvent motionEvent) {
@@ -49,17 +49,17 @@ public class CaptionsToggleImageButton extends AlphaOptimizedImageButton {
         this.mCaptionsEnabled = z;
         AccessibilityNodeInfoCompat.AccessibilityActionCompat accessibilityActionCompat = AccessibilityNodeInfoCompat.AccessibilityActionCompat.ACTION_CLICK;
         if (this.mCaptionsEnabled) {
-            str = getContext().getString(C1893R.string.volume_odi_captions_hint_disable);
+            str = getContext().getString(C1894R.string.volume_odi_captions_hint_disable);
         } else {
-            str = getContext().getString(C1893R.string.volume_odi_captions_hint_enable);
+            str = getContext().getString(C1894R.string.volume_odi_captions_hint_enable);
         }
         ViewCompat.replaceAccessibilityAction(this, accessibilityActionCompat, str, new CaptionsToggleImageButton$$ExternalSyntheticLambda0(this));
-        return setImageResourceAsync(this.mCaptionsEnabled ? C1893R.C1895drawable.ic_volume_odi_captions : C1893R.C1895drawable.ic_volume_odi_captions_disabled);
+        return setImageResourceAsync(this.mCaptionsEnabled ? C1894R.C1896drawable.ic_volume_odi_captions : C1894R.C1896drawable.ic_volume_odi_captions_disabled);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setCaptionsEnabled$0$com-android-systemui-volume-CaptionsToggleImageButton */
-    public /* synthetic */ boolean mo47233x6e1d1350(View view, AccessibilityViewCommand.CommandArguments commandArguments) {
+    public /* synthetic */ boolean mo47245x6e1d1350(View view, AccessibilityViewCommand.CommandArguments commandArguments) {
         return tryToSendTapConfirmedEvent();
     }
 

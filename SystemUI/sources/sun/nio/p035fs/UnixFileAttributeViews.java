@@ -61,8 +61,8 @@ class UnixFileAttributeViews {
                         throw th;
                     }
                 }
-                long j = fileTime.mo61298to(TimeUnit.MICROSECONDS);
-                long j2 = fileTime2.mo61298to(TimeUnit.MICROSECONDS);
+                long j = fileTime.mo61354to(TimeUnit.MICROSECONDS);
+                long j2 = fileTime2.mo61354to(TimeUnit.MICROSECONDS);
                 try {
                     if (UnixNativeDispatcher.futimesSupported()) {
                         UnixNativeDispatcher.futimes(openForAttributeAccess, j2, j);

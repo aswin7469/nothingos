@@ -21,7 +21,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import androidx.core.graphics.drawable.TintAwareDrawable;
 import androidx.core.util.ObjectsCompat;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.elevation.ElevationOverlayProvider;
 import com.google.android.material.shadow.ShadowRenderer;
@@ -92,7 +92,7 @@ public class MaterialShapeDrawable extends Drawable implements TintAwareDrawable
     }
 
     public static MaterialShapeDrawable createWithElevationOverlay(Context context, float f) {
-        int color = MaterialColors.getColor(context, C3621R.attr.colorSurface, TAG);
+        int color = MaterialColors.getColor(context, C3631R.attr.colorSurface, TAG);
         MaterialShapeDrawable materialShapeDrawable = new MaterialShapeDrawable();
         materialShapeDrawable.initializeElevationOverlay(context);
         materialShapeDrawable.setFillColor(ColorStateList.valueOf(color));

@@ -9,6 +9,6 @@ public final /* synthetic */ class OverviewProxyService$$ExternalSyntheticLambda
     }
 
     public final void run() {
-        this.f$0.m2994lambda$new$0$comandroidsystemuirecentsOverviewProxyService();
+        this.f$0.m2998lambda$new$0$comandroidsystemuirecentsOverviewProxyService();
     }
 }

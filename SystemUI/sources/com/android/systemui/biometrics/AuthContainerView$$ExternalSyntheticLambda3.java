@@ -13,6 +13,6 @@ public final /* synthetic */ class AuthContainerView$$ExternalSyntheticLambda3 i
     }
 
     public final void run() {
-        this.f$0.mo30562xc1ecefaa(this.f$1, this.f$2);
+        this.f$0.mo30572xc1ecefaa(this.f$1, this.f$2);
     }
 }

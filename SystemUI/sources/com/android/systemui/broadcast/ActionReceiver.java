@@ -6,9 +6,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.util.ArraySet;
 import android.util.IndentingPrintWriter;
+import android.util.Log;
 import com.android.settingslib.SliceBroadcastRelay;
 import com.android.systemui.Dumpable;
 import com.android.systemui.broadcast.logging.BroadcastDispatcherLogger;
+import com.nothing.systemui.util.NTLogUtil;
 import java.p026io.PrintWriter;
 import java.util.Collection;
 import java.util.Iterator;
@@ -24,7 +26,7 @@ import kotlin.jvm.internal.Intrinsics;
 import kotlin.sequences.Sequence;
 import kotlin.sequences.SequencesKt;
 
-@Metadata(mo64986d1 = {"\u0000p\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u000e\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0010\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u000b\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\t\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0011\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0003\u0018\u0000 .2\u00020\u00012\u00020\u0002:\u0001.Bw\u0012\u0006\u0010\u0003\u001a\u00020\u0004\u0012\u0006\u0010\u0005\u001a\u00020\u0006\u0012\u001d\u0010\u0007\u001a\u0019\u0012\u0004\u0012\u00020\u0001\u0012\u0004\u0012\u00020\t\u0012\u0004\u0012\u00020\n0\b¢\u0006\u0002\b\u000b\u0012\u0017\u0010\f\u001a\u0013\u0012\u0004\u0012\u00020\u0001\u0012\u0004\u0012\u00020\n0\r¢\u0006\u0002\b\u000b\u0012\u0006\u0010\u000e\u001a\u00020\u000f\u0012\u0006\u0010\u0010\u001a\u00020\u0011\u0012\u0018\u0010\u0012\u001a\u0014\u0012\u0004\u0012\u00020\u0001\u0012\u0004\u0012\u00020\u0006\u0012\u0004\u0012\u00020\u00130\b¢\u0006\u0002\u0010\u0014J\u000e\u0010\u001d\u001a\u00020\n2\u0006\u0010\u001e\u001a\u00020\u0018J\b\u0010\u001f\u001a\u00020\tH\u0002J%\u0010 \u001a\u00020\n2\u0006\u0010!\u001a\u00020\"2\u000e\u0010#\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00040$H\u0016¢\u0006\u0002\u0010%J\u000e\u0010&\u001a\u00020\u00132\u0006\u0010'\u001a\u00020\u0001J\u0018\u0010(\u001a\u00020\n2\u0006\u0010)\u001a\u00020*2\u0006\u0010+\u001a\u00020,H\u0016J\u000e\u0010-\u001a\u00020\n2\u0006\u0010'\u001a\u00020\u0001R\u000e\u0010\u0003\u001a\u00020\u0004X\u0004¢\u0006\u0002\n\u0000R\u0014\u0010\u0015\u001a\b\u0012\u0004\u0012\u00020\u00040\u0016X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u000e\u001a\u00020\u000fX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0010\u001a\u00020\u0011X\u0004¢\u0006\u0002\n\u0000R\u0014\u0010\u0017\u001a\b\u0012\u0004\u0012\u00020\u00180\u0016X\u0004¢\u0006\u0002\n\u0000R%\u0010\u0007\u001a\u0019\u0012\u0004\u0012\u00020\u0001\u0012\u0004\u0012\u00020\t\u0012\u0004\u0012\u00020\n0\b¢\u0006\u0002\b\u000bX\u0004¢\u0006\u0002\n\u0000R\u001e\u0010\u001a\u001a\u00020\u00132\u0006\u0010\u0019\u001a\u00020\u0013@BX\u000e¢\u0006\b\n\u0000\u001a\u0004\b\u001b\u0010\u001cR \u0010\u0012\u001a\u0014\u0012\u0004\u0012\u00020\u0001\u0012\u0004\u0012\u00020\u0006\u0012\u0004\u0012\u00020\u00130\bX\u0004¢\u0006\u0002\n\u0000R\u001f\u0010\f\u001a\u0013\u0012\u0004\u0012\u00020\u0001\u0012\u0004\u0012\u00020\n0\r¢\u0006\u0002\b\u000bX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0005\u001a\u00020\u0006X\u0004¢\u0006\u0002\n\u0000¨\u0006/"}, mo64987d2 = {"Lcom/android/systemui/broadcast/ActionReceiver;", "Landroid/content/BroadcastReceiver;", "Lcom/android/systemui/Dumpable;", "action", "", "userId", "", "registerAction", "Lkotlin/Function2;", "Landroid/content/IntentFilter;", "", "Lkotlin/ExtensionFunctionType;", "unregisterAction", "Lkotlin/Function1;", "bgExecutor", "Ljava/util/concurrent/Executor;", "logger", "Lcom/android/systemui/broadcast/logging/BroadcastDispatcherLogger;", "testPendingRemovalAction", "", "(Ljava/lang/String;ILkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;Ljava/util/concurrent/Executor;Lcom/android/systemui/broadcast/logging/BroadcastDispatcherLogger;Lkotlin/jvm/functions/Function2;)V", "activeCategories", "Landroid/util/ArraySet;", "receiverDatas", "Lcom/android/systemui/broadcast/ReceiverData;", "<set-?>", "registered", "getRegistered", "()Z", "addReceiverData", "receiverData", "createFilter", "dump", "pw", "Ljava/io/PrintWriter;", "args", "", "(Ljava/io/PrintWriter;[Ljava/lang/String;)V", "hasReceiver", "receiver", "onReceive", "context", "Landroid/content/Context;", "intent", "Landroid/content/Intent;", "removeReceiver", "Companion", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000p\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u000e\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0010\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u000b\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\t\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0011\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0003\u0018\u0000 .2\u00020\u00012\u00020\u0002:\u0001.Bw\u0012\u0006\u0010\u0003\u001a\u00020\u0004\u0012\u0006\u0010\u0005\u001a\u00020\u0006\u0012\u001d\u0010\u0007\u001a\u0019\u0012\u0004\u0012\u00020\u0001\u0012\u0004\u0012\u00020\t\u0012\u0004\u0012\u00020\n0\b¢\u0006\u0002\b\u000b\u0012\u0017\u0010\f\u001a\u0013\u0012\u0004\u0012\u00020\u0001\u0012\u0004\u0012\u00020\n0\r¢\u0006\u0002\b\u000b\u0012\u0006\u0010\u000e\u001a\u00020\u000f\u0012\u0006\u0010\u0010\u001a\u00020\u0011\u0012\u0018\u0010\u0012\u001a\u0014\u0012\u0004\u0012\u00020\u0001\u0012\u0004\u0012\u00020\u0006\u0012\u0004\u0012\u00020\u00130\b¢\u0006\u0002\u0010\u0014J\u000e\u0010\u001d\u001a\u00020\n2\u0006\u0010\u001e\u001a\u00020\u0018J\b\u0010\u001f\u001a\u00020\tH\u0002J%\u0010 \u001a\u00020\n2\u0006\u0010!\u001a\u00020\"2\u000e\u0010#\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00040$H\u0016¢\u0006\u0002\u0010%J\u000e\u0010&\u001a\u00020\u00132\u0006\u0010'\u001a\u00020\u0001J\u0018\u0010(\u001a\u00020\n2\u0006\u0010)\u001a\u00020*2\u0006\u0010+\u001a\u00020,H\u0016J\u000e\u0010-\u001a\u00020\n2\u0006\u0010'\u001a\u00020\u0001R\u000e\u0010\u0003\u001a\u00020\u0004X\u0004¢\u0006\u0002\n\u0000R\u0014\u0010\u0015\u001a\b\u0012\u0004\u0012\u00020\u00040\u0016X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u000e\u001a\u00020\u000fX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0010\u001a\u00020\u0011X\u0004¢\u0006\u0002\n\u0000R\u0014\u0010\u0017\u001a\b\u0012\u0004\u0012\u00020\u00180\u0016X\u0004¢\u0006\u0002\n\u0000R%\u0010\u0007\u001a\u0019\u0012\u0004\u0012\u00020\u0001\u0012\u0004\u0012\u00020\t\u0012\u0004\u0012\u00020\n0\b¢\u0006\u0002\b\u000bX\u0004¢\u0006\u0002\n\u0000R\u001e\u0010\u001a\u001a\u00020\u00132\u0006\u0010\u0019\u001a\u00020\u0013@BX\u000e¢\u0006\b\n\u0000\u001a\u0004\b\u001b\u0010\u001cR \u0010\u0012\u001a\u0014\u0012\u0004\u0012\u00020\u0001\u0012\u0004\u0012\u00020\u0006\u0012\u0004\u0012\u00020\u00130\bX\u0004¢\u0006\u0002\n\u0000R\u001f\u0010\f\u001a\u0013\u0012\u0004\u0012\u00020\u0001\u0012\u0004\u0012\u00020\n0\r¢\u0006\u0002\b\u000bX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0005\u001a\u00020\u0006X\u0004¢\u0006\u0002\n\u0000¨\u0006/"}, mo65043d2 = {"Lcom/android/systemui/broadcast/ActionReceiver;", "Landroid/content/BroadcastReceiver;", "Lcom/android/systemui/Dumpable;", "action", "", "userId", "", "registerAction", "Lkotlin/Function2;", "Landroid/content/IntentFilter;", "", "Lkotlin/ExtensionFunctionType;", "unregisterAction", "Lkotlin/Function1;", "bgExecutor", "Ljava/util/concurrent/Executor;", "logger", "Lcom/android/systemui/broadcast/logging/BroadcastDispatcherLogger;", "testPendingRemovalAction", "", "(Ljava/lang/String;ILkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;Ljava/util/concurrent/Executor;Lcom/android/systemui/broadcast/logging/BroadcastDispatcherLogger;Lkotlin/jvm/functions/Function2;)V", "activeCategories", "Landroid/util/ArraySet;", "receiverDatas", "Lcom/android/systemui/broadcast/ReceiverData;", "<set-?>", "registered", "getRegistered", "()Z", "addReceiverData", "receiverData", "createFilter", "dump", "pw", "Ljava/io/PrintWriter;", "args", "", "(Ljava/io/PrintWriter;[Ljava/lang/String;)V", "hasReceiver", "receiver", "onReceive", "context", "Landroid/content/Context;", "intent", "Landroid/content/Intent;", "removeReceiver", "Companion", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* compiled from: ActionReceiver.kt */
 public final class ActionReceiver extends BroadcastReceiver implements Dumpable {
     public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
@@ -57,7 +59,7 @@ public final class ActionReceiver extends BroadcastReceiver implements Dumpable 
         this.testPendingRemovalAction = function22;
     }
 
-    @Metadata(mo64986d1 = {"\u0000\u0014\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0003\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u0011\u0010\u0003\u001a\u00020\u0004¢\u0006\b\n\u0000\u001a\u0004\b\u0005\u0010\u0006¨\u0006\u0007"}, mo64987d2 = {"Lcom/android/systemui/broadcast/ActionReceiver$Companion;", "", "()V", "index", "Ljava/util/concurrent/atomic/AtomicInteger;", "getIndex", "()Ljava/util/concurrent/atomic/AtomicInteger;", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u0000\u0014\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0003\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u0011\u0010\u0003\u001a\u00020\u0004¢\u0006\b\n\u0000\u001a\u0004\b\u0005\u0010\u0006¨\u0006\u0007"}, mo65043d2 = {"Lcom/android/systemui/broadcast/ActionReceiver$Companion;", "", "()V", "index", "Ljava/util/concurrent/atomic/AtomicInteger;", "getIndex", "()Ljava/util/concurrent/atomic/AtomicInteger;", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* compiled from: ActionReceiver.kt */
     public static final class Companion {
         public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
@@ -135,6 +137,7 @@ public final class ActionReceiver extends BroadcastReceiver implements Dumpable 
         if (Intrinsics.areEqual((Object) intent.getAction(), (Object) this.action)) {
             int andIncrement = index.getAndIncrement();
             this.logger.logBroadcastReceived(andIncrement, this.userId, intent);
+            NTLogUtil.m1688i("ActionReceiver", " onReceive:" + intent.getAction());
             this.bgExecutor.execute(new ActionReceiver$$ExternalSyntheticLambda0(this, intent, context, andIncrement));
             return;
         }
@@ -143,23 +146,24 @@ public final class ActionReceiver extends BroadcastReceiver implements Dumpable 
 
     /* access modifiers changed from: private */
     /* renamed from: onReceive$lambda-3  reason: not valid java name */
-    public static final void m2592onReceive$lambda3(ActionReceiver actionReceiver, Intent intent, Context context, int i) {
+    public static final void m2597onReceive$lambda3(ActionReceiver actionReceiver, Intent intent, Context context, int i) {
         Intrinsics.checkNotNullParameter(actionReceiver, "this$0");
         Intrinsics.checkNotNullParameter(intent, "$intent");
         Intrinsics.checkNotNullParameter(context, "$context");
         for (ReceiverData receiverData : actionReceiver.receiverDatas) {
             if (receiverData.getFilter().matchCategories(intent.getCategories()) == null && !actionReceiver.testPendingRemovalAction.invoke(receiverData.getReceiver(), Integer.valueOf(actionReceiver.userId)).booleanValue()) {
-                receiverData.getExecutor().execute(new ActionReceiver$$ExternalSyntheticLambda1(receiverData, actionReceiver, context, intent, i));
+                receiverData.getExecutor().execute(new ActionReceiver$$ExternalSyntheticLambda1(intent, receiverData, actionReceiver, context, i));
             }
         }
     }
 
     /* access modifiers changed from: private */
     /* renamed from: onReceive$lambda-3$lambda-2$lambda-1  reason: not valid java name */
-    public static final void m2593onReceive$lambda3$lambda2$lambda1(ReceiverData receiverData, ActionReceiver actionReceiver, Context context, Intent intent, int i) {
+    public static final void m2598onReceive$lambda3$lambda2$lambda1(Intent intent, ReceiverData receiverData, ActionReceiver actionReceiver, Context context, int i) {
+        Intrinsics.checkNotNullParameter(intent, "$intent");
         Intrinsics.checkNotNullParameter(actionReceiver, "this$0");
         Intrinsics.checkNotNullParameter(context, "$context");
-        Intrinsics.checkNotNullParameter(intent, "$intent");
+        Log.i("ActionReceiver", " onReceive:" + intent.getAction() + " for " + receiverData.getReceiver());
         receiverData.getReceiver().setPendingResult(actionReceiver.getPendingResult());
         receiverData.getReceiver().onReceive(context, intent);
         actionReceiver.logger.logBroadcastDispatched(i, actionReceiver.action, receiverData.getReceiver());

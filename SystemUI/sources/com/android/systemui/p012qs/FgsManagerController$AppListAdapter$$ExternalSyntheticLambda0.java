@@ -18,6 +18,6 @@ public final /* synthetic */ class FgsManagerController$AppListAdapter$$External
     }
 
     public final void onClick(View view) {
-        FgsManagerController.AppListAdapter.m2893onBindViewHolder$lambda2$lambda1(this.f$0, this.f$1, this.f$2, view);
+        FgsManagerController.AppListAdapter.m2898onBindViewHolder$lambda2$lambda1(this.f$0, this.f$1, this.f$2, view);
     }
 }

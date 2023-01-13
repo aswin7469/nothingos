@@ -18,6 +18,6 @@ public final /* synthetic */ class ControlsControllerImpl$$ExternalSyntheticLamb
     }
 
     public final void run() {
-        ControlsControllerImpl.m2614loadForComponent$lambda1(this.f$0, this.f$1, this.f$2, this.f$3);
+        ControlsControllerImpl.m2619loadForComponent$lambda1(this.f$0, this.f$1, this.f$2, this.f$3);
     }
 }

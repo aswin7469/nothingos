@@ -17,6 +17,6 @@ public final /* synthetic */ class ControlsControllerImpl$$ExternalSyntheticLamb
     }
 
     public final void run() {
-        ControlsControllerImpl.m2612addFavorite$lambda8(this.f$0, this.f$1, this.f$2, this.f$3);
+        ControlsControllerImpl.m2617addFavorite$lambda8(this.f$0, this.f$1, this.f$2, this.f$3);
     }
 }

@@ -12,6 +12,6 @@ public final /* synthetic */ class SidefpsControllerKt$$ExternalSyntheticLambda0
     }
 
     public final Object getValue(LottieFrameInfo lottieFrameInfo) {
-        return SidefpsControllerKt.m2578addOverlayDynamicColor$update$lambda0(this.f$0, lottieFrameInfo);
+        return SidefpsControllerKt.m2584addOverlayDynamicColor$update$lambda0(this.f$0, lottieFrameInfo);
     }
 }

@@ -12,6 +12,6 @@ public final /* synthetic */ class DeviceControlsControllerImpl$$ExternalSynthet
     }
 
     public final void accept(Object obj) {
-        DeviceControlsControllerImpl.m3236setCallback$lambda1(this.f$0, (ControlsListingController) obj);
+        DeviceControlsControllerImpl.m3241setCallback$lambda1(this.f$0, (ControlsListingController) obj);
     }
 }

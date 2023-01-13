@@ -63,7 +63,7 @@ public final class OkHostnameVerifier implements HostnameVerifier {
         if (!isPrintableAscii(str)) {
             return false;
         }
-        String lowerCase = str.toLowerCase(Locale.f700US);
+        String lowerCase = str.toLowerCase(Locale.f698US);
         List<String> subjectAltNames = getSubjectAltNames(x509Certificate, 2);
         int size = subjectAltNames.size();
         for (int i = 0; i < size; i++) {
@@ -120,7 +120,7 @@ public final class OkHostnameVerifier implements HostnameVerifier {
             if (!isPrintableAscii(str2)) {
                 return false;
             }
-            String lowerCase = str2.toLowerCase(Locale.f700US);
+            String lowerCase = str2.toLowerCase(Locale.f698US);
             if (!lowerCase.contains("*")) {
                 return str.equals(lowerCase);
             }

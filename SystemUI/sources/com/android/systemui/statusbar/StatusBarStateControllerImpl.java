@@ -57,7 +57,8 @@ public class StatusBarStateControllerImpl implements SysuiStatusBarStateControll
     private ValueAnimator mDarkAnimator;
     /* access modifiers changed from: private */
     public float mDozeAmount;
-    private float mDozeAmountTarget;
+    /* access modifiers changed from: private */
+    public float mDozeAmountTarget;
     private Interpolator mDozeInterpolator;
     private HistoricalState[] mHistoricalRecords;
     private int mHistoryIndex;
@@ -252,16 +253,17 @@ public class StatusBarStateControllerImpl implements SysuiStatusBarStateControll
         ofFloat.setDuration(500);
         ofFloat.addListener(new AnimatorListenerAdapter() {
             public void onAnimationCancel(Animator animator) {
-                NTLogUtil.m1680d(StatusBarStateControllerImpl.TAG, "onAnimationCancel");
+                NTLogUtil.m1686d(StatusBarStateControllerImpl.TAG, "onAnimationCancel mDozeAmount: " + StatusBarStateControllerImpl.this.mDozeAmount);
                 StatusBarStateControllerImpl.this.cancelInteractionJankMonitor();
             }
 
             public void onAnimationEnd(Animator animator) {
-                NTLogUtil.m1680d(StatusBarStateControllerImpl.TAG, "onAnimationEnd");
+                NTLogUtil.m1686d(StatusBarStateControllerImpl.TAG, "onAnimationEnd mDozeAmount: " + StatusBarStateControllerImpl.this.mDozeAmount);
                 StatusBarStateControllerImpl.this.endInteractionJankMonitor();
             }
 
             public void onAnimationStart(Animator animator) {
+                NTLogUtil.m1686d(StatusBarStateControllerImpl.TAG, "onAnimationStart mDozeAmount: " + StatusBarStateControllerImpl.this.mDozeAmount + " mDozeAmountTarget: " + StatusBarStateControllerImpl.this.mDozeAmountTarget);
                 StatusBarStateControllerImpl.this.beginInteractionJankMonitor();
             }
         });

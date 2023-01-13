@@ -11,6 +11,6 @@ public final /* synthetic */ class LockIconViewController$$ExternalSyntheticLamb
     }
 
     public final void onAccessibilityStateChanged(boolean z) {
-        this.f$0.m2303lambda$new$2$comandroidkeyguardLockIconViewController(z);
+        this.f$0.m2309lambda$new$2$comandroidkeyguardLockIconViewController(z);
     }
 }

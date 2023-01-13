@@ -19,6 +19,6 @@ public final /* synthetic */ class PeopleSpaceWidgetManager$$ExternalSyntheticLa
     }
 
     public final void run() {
-        this.f$0.mo35181xc690c0c0(this.f$1, this.f$2, this.f$3);
+        this.f$0.mo35185xc690c0c0(this.f$1, this.f$2, this.f$3);
     }
 }

@@ -11,6 +11,6 @@ public final /* synthetic */ class ControlsControllerImpl$$ExternalSyntheticLamb
     }
 
     public final Object get() {
-        return ControlsControllerImpl.m2611_init_$lambda0(this.f$0);
+        return ControlsControllerImpl.m2616_init_$lambda0(this.f$0);
     }
 }

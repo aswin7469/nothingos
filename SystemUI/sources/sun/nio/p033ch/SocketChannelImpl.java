@@ -35,10 +35,10 @@ class SocketChannelImpl extends SocketChannel implements SelChImpl {
     private static final int ST_UNINITIALIZED = -1;
 
     /* renamed from: nd */
-    private static NativeDispatcher f894nd = new SocketDispatcher();
+    private static NativeDispatcher f892nd = new SocketDispatcher();
 
     /* renamed from: fd */
-    private final FileDescriptor f895fd;
+    private final FileDescriptor f893fd;
     private final int fdVal;
     private final CloseGuard guard;
     private boolean isInputOpen = true;
@@ -64,7 +64,7 @@ class SocketChannelImpl extends SocketChannel implements SelChImpl {
         CloseGuard closeGuard = CloseGuard.get();
         this.guard = closeGuard;
         FileDescriptor socket2 = Net.socket(true);
-        this.f895fd = socket2;
+        this.f893fd = socket2;
         this.fdVal = IOUtil.fdVal(socket2);
         this.state = 0;
         if (socket2 != null && socket2.valid()) {
@@ -76,7 +76,7 @@ class SocketChannelImpl extends SocketChannel implements SelChImpl {
         super(sp);
         CloseGuard closeGuard = CloseGuard.get();
         this.guard = closeGuard;
-        this.f895fd = fd;
+        this.f893fd = fd;
         this.fdVal = IOUtil.fdVal(fd);
         this.state = 0;
         if (fd != null && fd.valid()) {
@@ -91,7 +91,7 @@ class SocketChannelImpl extends SocketChannel implements SelChImpl {
         super(sp);
         CloseGuard closeGuard = CloseGuard.get();
         this.guard = closeGuard;
-        this.f895fd = fd;
+        this.f893fd = fd;
         this.fdVal = IOUtil.fdVal(fd);
         this.state = 2;
         this.localAddress = Net.localAddress(fd);
@@ -144,10 +144,10 @@ class SocketChannelImpl extends SocketChannel implements SelChImpl {
                 if (!isOpen()) {
                     throw new ClosedChannelException();
                 } else if (socketOption == StandardSocketOptions.IP_TOS) {
-                    Net.setSocketOption(this.f895fd, Net.isIPv6Available() ? StandardProtocolFamily.INET6 : StandardProtocolFamily.INET, socketOption, t);
+                    Net.setSocketOption(this.f893fd, Net.isIPv6Available() ? StandardProtocolFamily.INET6 : StandardProtocolFamily.INET, socketOption, t);
                     return this;
                 } else if (socketOption != StandardSocketOptions.SO_REUSEADDR || !Net.useExclusiveBind()) {
-                    Net.setSocketOption(this.f895fd, Net.UNSPEC, socketOption, t);
+                    Net.setSocketOption(this.f893fd, Net.UNSPEC, socketOption, t);
                     return this;
                 } else {
                     this.isReuseAddress = ((Boolean) t).booleanValue();
@@ -170,10 +170,10 @@ class SocketChannelImpl extends SocketChannel implements SelChImpl {
                     T valueOf = Boolean.valueOf(this.isReuseAddress);
                     return valueOf;
                 } else if (socketOption == StandardSocketOptions.IP_TOS) {
-                    T socketOption2 = Net.getSocketOption(this.f895fd, Net.isIPv6Available() ? StandardProtocolFamily.INET6 : StandardProtocolFamily.INET, socketOption);
+                    T socketOption2 = Net.getSocketOption(this.f893fd, Net.isIPv6Available() ? StandardProtocolFamily.INET6 : StandardProtocolFamily.INET, socketOption);
                     return socketOption2;
                 } else {
-                    T socketOption3 = Net.getSocketOption(this.f895fd, Net.UNSPEC, socketOption);
+                    T socketOption3 = Net.getSocketOption(this.f893fd, Net.UNSPEC, socketOption);
                     return socketOption3;
                 }
             }
@@ -295,7 +295,7 @@ class SocketChannelImpl extends SocketChannel implements SelChImpl {
         r2 = th;
      */
     /* JADX WARNING: Code restructure failed: missing block: B:46:?, code lost:
-        r1 = sun.nio.p033ch.IOUtil.read(r10.f895fd, r11, -1, f894nd);
+        r1 = sun.nio.p033ch.IOUtil.read(r10.f893fd, r11, -1, f892nd);
      */
     /* JADX WARNING: Code restructure failed: missing block: B:47:0x0050, code lost:
         if (r1 != -3) goto L_0x0059;
@@ -399,8 +399,8 @@ class SocketChannelImpl extends SocketChannel implements SelChImpl {
             r10.readerThread = r7     // Catch:{ all -> 0x007b }
             monitor-exit(r6)     // Catch:{ all -> 0x007b }
         L_0x0044:
-            java.io.FileDescriptor r6 = r10.f895fd     // Catch:{ all -> 0x007e }
-            sun.nio.ch.NativeDispatcher r7 = f894nd     // Catch:{ all -> 0x007e }
+            java.io.FileDescriptor r6 = r10.f893fd     // Catch:{ all -> 0x007e }
+            sun.nio.ch.NativeDispatcher r7 = f892nd     // Catch:{ all -> 0x007e }
             r8 = -1
             int r6 = sun.nio.p033ch.IOUtil.read(r6, r11, r8, r7)     // Catch:{ all -> 0x007e }
             r1 = r6
@@ -594,8 +594,8 @@ class SocketChannelImpl extends SocketChannel implements SelChImpl {
             r1.readerThread = r6     // Catch:{ all -> 0x00a0 }
             monitor-exit(r10)     // Catch:{ all -> 0x00a0 }
         L_0x005e:
-            java.io.FileDescriptor r0 = r1.f895fd     // Catch:{ all -> 0x00a3 }
-            sun.nio.ch.NativeDispatcher r6 = f894nd     // Catch:{ all -> 0x00a3 }
+            java.io.FileDescriptor r0 = r1.f893fd     // Catch:{ all -> 0x00a3 }
+            sun.nio.ch.NativeDispatcher r6 = f892nd     // Catch:{ all -> 0x00a3 }
             long r6 = sun.nio.p033ch.IOUtil.read(r0, r2, r3, r4, r6)     // Catch:{ all -> 0x00a3 }
             r8 = r6
             r6 = -3
@@ -722,7 +722,7 @@ class SocketChannelImpl extends SocketChannel implements SelChImpl {
         r3 = th;
      */
     /* JADX WARNING: Code restructure failed: missing block: B:41:?, code lost:
-        r1 = sun.nio.p033ch.IOUtil.write(r9.f895fd, r10, -1, f894nd);
+        r1 = sun.nio.p033ch.IOUtil.write(r9.f893fd, r10, -1, f892nd);
      */
     /* JADX WARNING: Code restructure failed: missing block: B:42:0x004e, code lost:
         if (r1 != -3) goto L_0x0057;
@@ -820,8 +820,8 @@ class SocketChannelImpl extends SocketChannel implements SelChImpl {
             r9.writerThread = r6     // Catch:{ all -> 0x007d }
             monitor-exit(r5)     // Catch:{ all -> 0x007d }
         L_0x0042:
-            java.io.FileDescriptor r5 = r9.f895fd     // Catch:{ all -> 0x0080 }
-            sun.nio.ch.NativeDispatcher r6 = f894nd     // Catch:{ all -> 0x0080 }
+            java.io.FileDescriptor r5 = r9.f893fd     // Catch:{ all -> 0x0080 }
+            sun.nio.ch.NativeDispatcher r6 = f892nd     // Catch:{ all -> 0x0080 }
             r7 = -1
             int r5 = sun.nio.p033ch.IOUtil.write(r5, r10, r7, r6)     // Catch:{ all -> 0x0080 }
             r1 = r5
@@ -939,7 +939,7 @@ class SocketChannelImpl extends SocketChannel implements SelChImpl {
         r4 = th;
      */
     /* JADX WARNING: Code restructure failed: missing block: B:45:?, code lost:
-        r1 = sun.nio.p033ch.IOUtil.write(r12.f895fd, r13, r14, r15, f894nd);
+        r1 = sun.nio.p033ch.IOUtil.write(r12.f893fd, r13, r14, r15, f892nd);
      */
     /* JADX WARNING: Code restructure failed: missing block: B:46:0x005e, code lost:
         if (r1 != -3) goto L_0x0067;
@@ -1044,8 +1044,8 @@ class SocketChannelImpl extends SocketChannel implements SelChImpl {
             r12.writerThread = r10     // Catch:{ all -> 0x0092 }
             monitor-exit(r9)     // Catch:{ all -> 0x0092 }
         L_0x0051:
-            java.io.FileDescriptor r9 = r12.f895fd     // Catch:{ all -> 0x0095 }
-            sun.nio.ch.NativeDispatcher r10 = f894nd     // Catch:{ all -> 0x0095 }
+            java.io.FileDescriptor r9 = r12.f893fd     // Catch:{ all -> 0x0095 }
+            sun.nio.ch.NativeDispatcher r10 = f892nd     // Catch:{ all -> 0x0095 }
             long r9 = sun.nio.p033ch.IOUtil.write(r9, r13, r14, r15, r10)     // Catch:{ all -> 0x0095 }
             r1 = r9
             r9 = -3
@@ -1168,7 +1168,7 @@ class SocketChannelImpl extends SocketChannel implements SelChImpl {
         r3 = th;
      */
     /* JADX WARNING: Code restructure failed: missing block: B:40:?, code lost:
-        r1 = sendOutOfBandData(r8.f895fd, r9);
+        r1 = sendOutOfBandData(r8.f893fd, r9);
      */
     /* JADX WARNING: Code restructure failed: missing block: B:41:0x0048, code lost:
         if (r1 != -3) goto L_0x0051;
@@ -1265,7 +1265,7 @@ class SocketChannelImpl extends SocketChannel implements SelChImpl {
             r8.writerThread = r6     // Catch:{ all -> 0x0077 }
             monitor-exit(r5)     // Catch:{ all -> 0x0077 }
         L_0x0040:
-            java.io.FileDescriptor r5 = r8.f895fd     // Catch:{ all -> 0x007a }
+            java.io.FileDescriptor r5 = r8.f893fd     // Catch:{ all -> 0x007a }
             int r5 = sendOutOfBandData(r5, r9)     // Catch:{ all -> 0x007a }
             r1 = r5
             r5 = -3
@@ -1342,7 +1342,7 @@ class SocketChannelImpl extends SocketChannel implements SelChImpl {
 
     /* access modifiers changed from: protected */
     public void implConfigureBlocking(boolean block) throws IOException {
-        IOUtil.configureBlocking(this.f895fd, block);
+        IOUtil.configureBlocking(this.f893fd, block);
     }
 
     public InetSocketAddress localAddress() {
@@ -1375,9 +1375,9 @@ class SocketChannelImpl extends SocketChannel implements SelChImpl {
                         if (securityManager != null) {
                             securityManager.checkListen(inetSocketAddress.getPort());
                         }
-                        NetHooks.beforeTcpBind(this.f895fd, inetSocketAddress.getAddress(), inetSocketAddress.getPort());
-                        Net.bind(this.f895fd, inetSocketAddress.getAddress(), inetSocketAddress.getPort());
-                        this.localAddress = Net.localAddress(this.f895fd);
+                        NetHooks.beforeTcpBind(this.f893fd, inetSocketAddress.getAddress(), inetSocketAddress.getPort());
+                        Net.bind(this.f893fd, inetSocketAddress.getAddress(), inetSocketAddress.getPort());
+                        this.localAddress = Net.localAddress(this.f893fd);
                     } else {
                         throw new AlreadyBoundException();
                     }
@@ -1459,7 +1459,7 @@ class SocketChannelImpl extends SocketChannel implements SelChImpl {
         r10 = java.net.InetAddress.getLocalHost();
      */
     /* JADX WARNING: Code restructure failed: missing block: B:43:0x0072, code lost:
-        r6 = sun.nio.p033ch.Net.connect(r14.f895fd, r10, r3.getPort());
+        r6 = sun.nio.p033ch.Net.connect(r14.f893fd, r10, r3.getPort());
      */
     /* JADX WARNING: Code restructure failed: missing block: B:44:0x007e, code lost:
         if (r6 != -3) goto L_0x0088;
@@ -1504,7 +1504,7 @@ class SocketChannelImpl extends SocketChannel implements SelChImpl {
         if (isOpen() == false) goto L_0x00b1;
      */
     /* JADX WARNING: Code restructure failed: missing block: B:63:0x00a8, code lost:
-        r14.localAddress = sun.nio.p033ch.Net.localAddress(r14.f895fd);
+        r14.localAddress = sun.nio.p033ch.Net.localAddress(r14.f893fd);
      */
     /* JADX WARNING: Code restructure failed: missing block: B:64:0x00b1, code lost:
         monitor-exit(r7);
@@ -1522,7 +1522,7 @@ class SocketChannelImpl extends SocketChannel implements SelChImpl {
         if (isOpen() == false) goto L_0x00cd;
      */
     /* JADX WARNING: Code restructure failed: missing block: B:77:0x00c4, code lost:
-        r14.localAddress = sun.nio.p033ch.Net.localAddress(r14.f895fd);
+        r14.localAddress = sun.nio.p033ch.Net.localAddress(r14.f893fd);
      */
     /* JADX WARNING: Code restructure failed: missing block: B:78:0x00cd, code lost:
         monitor-exit(r7);
@@ -1575,7 +1575,7 @@ class SocketChannelImpl extends SocketChannel implements SelChImpl {
         L_0x004a:
             java.net.InetSocketAddress r11 = r14.localAddress     // Catch:{ all -> 0x00d5 }
             if (r11 != 0) goto L_0x005b
-            java.io.FileDescriptor r11 = r14.f895fd     // Catch:{ all -> 0x00d5 }
+            java.io.FileDescriptor r11 = r14.f893fd     // Catch:{ all -> 0x00d5 }
             java.net.InetAddress r12 = r3.getAddress()     // Catch:{ all -> 0x00d5 }
             int r13 = r3.getPort()     // Catch:{ all -> 0x00d5 }
             sun.net.NetHooks.beforeTcpConnect(r11, r12, r13)     // Catch:{ all -> 0x00d5 }
@@ -1590,7 +1590,7 @@ class SocketChannelImpl extends SocketChannel implements SelChImpl {
             java.net.InetAddress r11 = java.net.InetAddress.getLocalHost()     // Catch:{ all -> 0x00d8 }
             r10 = r11
         L_0x0072:
-            java.io.FileDescriptor r11 = r14.f895fd     // Catch:{ all -> 0x00d8 }
+            java.io.FileDescriptor r11 = r14.f893fd     // Catch:{ all -> 0x00d8 }
             int r12 = r3.getPort()     // Catch:{ all -> 0x00d8 }
             int r11 = sun.nio.p033ch.Net.connect(r11, r10, r12)     // Catch:{ all -> 0x00d8 }
             r6 = r11
@@ -1619,7 +1619,7 @@ class SocketChannelImpl extends SocketChannel implements SelChImpl {
             r14.state = r8     // Catch:{ all -> 0x00d2 }
             boolean r8 = r14.isOpen()     // Catch:{ all -> 0x00d2 }
             if (r8 == 0) goto L_0x00b0
-            java.io.FileDescriptor r8 = r14.f895fd     // Catch:{ all -> 0x00d2 }
+            java.io.FileDescriptor r8 = r14.f893fd     // Catch:{ all -> 0x00d2 }
             java.net.InetSocketAddress r8 = sun.nio.p033ch.Net.localAddress(r8)     // Catch:{ all -> 0x00d2 }
             r14.localAddress = r8     // Catch:{ all -> 0x00d2 }
         L_0x00b0:
@@ -1634,7 +1634,7 @@ class SocketChannelImpl extends SocketChannel implements SelChImpl {
             r14.state = r9     // Catch:{ all -> 0x00d2 }
             boolean r9 = r14.isOpen()     // Catch:{ all -> 0x00d2 }
             if (r9 == 0) goto L_0x00cc
-            java.io.FileDescriptor r9 = r14.f895fd     // Catch:{ all -> 0x00d2 }
+            java.io.FileDescriptor r9 = r14.f893fd     // Catch:{ all -> 0x00d2 }
             java.net.InetSocketAddress r9 = sun.nio.p033ch.Net.localAddress(r9)     // Catch:{ all -> 0x00d2 }
             r14.localAddress = r9     // Catch:{ all -> 0x00d2 }
         L_0x00cc:
@@ -1810,7 +1810,7 @@ class SocketChannelImpl extends SocketChannel implements SelChImpl {
         if (isBlocking() != false) goto L_0x007a;
      */
     /* JADX WARNING: Code restructure failed: missing block: B:64:0x0067, code lost:
-        r2 = checkConnect(r14.f895fd, false, r14.readyToConnect);
+        r2 = checkConnect(r14.f893fd, false, r14.readyToConnect);
      */
     /* JADX WARNING: Code restructure failed: missing block: B:65:0x0070, code lost:
         if (r2 != -3) goto L_0x0079;
@@ -1819,7 +1819,7 @@ class SocketChannelImpl extends SocketChannel implements SelChImpl {
         if (isOpen() == false) goto L_0x0079;
      */
     /* JADX WARNING: Code restructure failed: missing block: B:70:0x007a, code lost:
-        r2 = checkConnect(r14.f895fd, true, r14.readyToConnect);
+        r2 = checkConnect(r14.f893fd, true, r14.readyToConnect);
      */
     /* JADX WARNING: Code restructure failed: missing block: B:71:0x0083, code lost:
         if (r2 != 0) goto L_0x0086;
@@ -1883,7 +1883,7 @@ class SocketChannelImpl extends SocketChannel implements SelChImpl {
         if (isOpen() == false) goto L_0x00c1;
      */
     /* JADX WARNING: Code restructure failed: missing block: B:99:0x00b8, code lost:
-        r14.localAddress = sun.nio.p033ch.Net.localAddress(r14.f895fd);
+        r14.localAddress = sun.nio.p033ch.Net.localAddress(r14.f893fd);
      */
     /* JADX WARNING: Exception block dominator not found, dom blocks: [B:35:0x0035, B:131:0x00d8] */
     /* JADX WARNING: Unknown top exception splitter block from list: {B:56:0x0051=Splitter:B:56:0x0051, B:90:0x00a6=Splitter:B:90:0x00a6, B:46:0x0049=Splitter:B:46:0x0049, B:139:0x00e9=Splitter:B:139:0x00e9} */
@@ -1958,7 +1958,7 @@ class SocketChannelImpl extends SocketChannel implements SelChImpl {
             r12 = -3
             if (r11 != 0) goto L_0x007a
         L_0x0067:
-            java.io.FileDescriptor r11 = r14.f895fd     // Catch:{ all -> 0x00d1 }
+            java.io.FileDescriptor r11 = r14.f893fd     // Catch:{ all -> 0x00d1 }
             boolean r13 = r14.readyToConnect     // Catch:{ all -> 0x00d1 }
             int r11 = checkConnect(r11, r9, r13)     // Catch:{ all -> 0x00d1 }
             r2 = r11
@@ -1969,7 +1969,7 @@ class SocketChannelImpl extends SocketChannel implements SelChImpl {
         L_0x0079:
             goto L_0x008f
         L_0x007a:
-            java.io.FileDescriptor r11 = r14.f895fd     // Catch:{ all -> 0x00d1 }
+            java.io.FileDescriptor r11 = r14.f893fd     // Catch:{ all -> 0x00d1 }
             boolean r13 = r14.readyToConnect     // Catch:{ all -> 0x00d1 }
             int r11 = checkConnect(r11, r5, r13)     // Catch:{ all -> 0x00d1 }
             r2 = r11
@@ -2007,7 +2007,7 @@ class SocketChannelImpl extends SocketChannel implements SelChImpl {
             r14.state = r4     // Catch:{ all -> 0x00c5 }
             boolean r4 = r14.isOpen()     // Catch:{ all -> 0x00c5 }
             if (r4 == 0) goto L_0x00c0
-            java.io.FileDescriptor r4 = r14.f895fd     // Catch:{ all -> 0x00c5 }
+            java.io.FileDescriptor r4 = r14.f893fd     // Catch:{ all -> 0x00c5 }
             java.net.InetSocketAddress r4 = sun.nio.p033ch.Net.localAddress(r4)     // Catch:{ all -> 0x00c5 }
             r14.localAddress = r4     // Catch:{ all -> 0x00c5 }
         L_0x00c0:
@@ -2093,7 +2093,7 @@ class SocketChannelImpl extends SocketChannel implements SelChImpl {
             } else if (!isConnected()) {
                 throw new NotYetConnectedException();
             } else if (this.isInputOpen) {
-                Net.shutdown(this.f895fd, 0);
+                Net.shutdown(this.f893fd, 0);
                 if (this.readerThread != 0) {
                     NativeThread.signal(this.readerThread);
                 }
@@ -2110,7 +2110,7 @@ class SocketChannelImpl extends SocketChannel implements SelChImpl {
             } else if (!isConnected()) {
                 throw new NotYetConnectedException();
             } else if (this.isOutputOpen) {
-                Net.shutdown(this.f895fd, 1);
+                Net.shutdown(this.f893fd, 1);
                 if (this.writerThread != 0) {
                     NativeThread.signal(this.writerThread);
                 }
@@ -2143,7 +2143,7 @@ class SocketChannelImpl extends SocketChannel implements SelChImpl {
             this.isOutputOpen = false;
             if (this.state != 4) {
                 this.guard.close();
-                f894nd.preClose(this.f895fd);
+                f892nd.preClose(this.f893fd);
             }
             if (this.readerThread != 0) {
                 NativeThread.signal(this.readerThread);
@@ -2185,8 +2185,8 @@ class SocketChannelImpl extends SocketChannel implements SelChImpl {
             long r3 = r7.writerThread     // Catch:{ all -> 0x0030 }
             int r1 = (r3 > r5 ? 1 : (r3 == r5 ? 0 : -1))
             if (r1 != 0) goto L_0x002a
-            sun.nio.ch.NativeDispatcher r1 = f894nd     // Catch:{ all -> 0x0030 }
-            java.io.FileDescriptor r3 = r7.f895fd     // Catch:{ all -> 0x0030 }
+            sun.nio.ch.NativeDispatcher r1 = f892nd     // Catch:{ all -> 0x0030 }
+            java.io.FileDescriptor r3 = r7.f893fd     // Catch:{ all -> 0x0030 }
             r1.close(r3)     // Catch:{ all -> 0x0030 }
             r7.state = r2     // Catch:{ all -> 0x0030 }
             goto L_0x002d
@@ -2210,7 +2210,7 @@ class SocketChannelImpl extends SocketChannel implements SelChImpl {
         if (closeGuard != null) {
             closeGuard.warnIfOpen();
         }
-        if (this.f895fd != null) {
+        if (this.f893fd != null) {
             close();
         }
     }
@@ -2274,7 +2274,7 @@ class SocketChannelImpl extends SocketChannel implements SelChImpl {
         return 0;
      */
     /* JADX WARNING: Code restructure failed: missing block: B:23:0x002d, code lost:
-        r1 = sun.nio.p033ch.Net.poll(r7.f895fd, r8, r9);
+        r1 = sun.nio.p033ch.Net.poll(r7.f893fd, r8, r9);
      */
     /* JADX WARNING: Code restructure failed: missing block: B:25:?, code lost:
         readerCleanup();
@@ -2319,7 +2319,7 @@ class SocketChannelImpl extends SocketChannel implements SelChImpl {
             long r5 = sun.nio.p033ch.NativeThread.current()     // Catch:{ all -> 0x003b }
             r7.readerThread = r5     // Catch:{ all -> 0x003b }
             monitor-exit(r4)     // Catch:{ all -> 0x003b }
-            java.io.FileDescriptor r4 = r7.f895fd     // Catch:{ all -> 0x003e }
+            java.io.FileDescriptor r4 = r7.f893fd     // Catch:{ all -> 0x003e }
             int r4 = sun.nio.p033ch.Net.poll(r4, r8, r9)     // Catch:{ all -> 0x003e }
             r1 = r4
             r7.readerCleanup()     // Catch:{ all -> 0x004a }
@@ -2368,7 +2368,7 @@ class SocketChannelImpl extends SocketChannel implements SelChImpl {
     }
 
     public FileDescriptor getFD() {
-        return this.f895fd;
+        return this.f893fd;
     }
 
     public int getFDVal() {

@@ -32,7 +32,7 @@ import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.math.MathKt;
 
-@Metadata(mo64986d1 = {"\u0000Z\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u000b\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u0011\n\u0002\u0010\b\n\u0002\b\u000f\n\u0002\u0018\u0002\n\u0002\b\u0005\b\u0002\u0018\u00002\u00020\u0001:\u0001ABU\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\u0006\u0010\u0006\u001a\u00020\u0007\u0012\u0012\u0010\b\u001a\u000e\u0012\u0004\u0012\u00020\u0000\u0012\u0004\u0012\u00020\n0\t\u0012\u0006\u0010\u000b\u001a\u00020\f\u0012\u0006\u0010\r\u001a\u00020\u000e\u0012\n\b\u0002\u0010\u000f\u001a\u0004\u0018\u00010\u0000\u0012\u0006\u0010\u0010\u001a\u00020\u000e¢\u0006\u0002\u0010\u0011J\b\u00102\u001a\u00020\nH\u0002J\u0012\u00103\u001a\u0004\u0018\u00010\u00152\u0006\u00104\u001a\u00020\u0007H\u0002J\u001c\u00105\u001a\u00020\n2\u0012\u00106\u001a\u000e\u0012\u0004\u0012\u00020\u000e\u0012\u0004\u0012\u00020\n0\tH\u0002J\b\u00107\u001a\u00020\nH\u0002J\u0006\u0010\b\u001a\u00020\nJ\u0006\u00108\u001a\u00020\u0007J\b\u00109\u001a\u00020\u000eH\u0002J\u0006\u0010:\u001a\u00020\nJ0\u0010;\u001a\u00020\n2\u0006\u0010)\u001a\u00020\u000e2\u000e\b\u0002\u0010<\u001a\b\u0012\u0004\u0012\u00020\n0=2\u000e\b\u0002\u0010>\u001a\b\u0012\u0004\u0012\u00020\n0=H\u0002J\u0016\u0010?\u001a\u00020\n2\f\u0010@\u001a\b\u0012\u0004\u0012\u00020\n0=H\u0002R\u0010\u0010\u0012\u001a\u0004\u0018\u00010\u0013X\u0004¢\u0006\u0002\n\u0000R\u001b\u0010\u0014\u001a\u00020\u00158BX\u0002¢\u0006\f\n\u0004\b\u0018\u0010\u0019\u001a\u0004\b\u0016\u0010\u0017R\u0010\u0010\u001a\u001a\u0004\u0018\u00010\u001bX\u000e¢\u0006\u0002\n\u0000R\u0011\u0010\u000b\u001a\u00020\f¢\u0006\b\n\u0000\u001a\u0004\b\u001c\u0010\u001dR\u001c\u0010\u001e\u001a\u0004\u0018\u00010\u0015X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u001f\u0010\u0017\"\u0004\b \u0010!R\u000e\u0010\"\u001a\u00020\u000eX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0004\u001a\u00020\u0005X\u0004¢\u0006\u0002\n\u0000R\u001a\u0010#\u001a\u00020\u000eX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b$\u0010%\"\u0004\b&\u0010'R\u000e\u0010\u0010\u001a\u00020\u000eX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010(\u001a\u00020\u000eX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010)\u001a\u00020\u000eX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010*\u001a\u00020\u000eX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010+\u001a\u00020\u000eX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0002\u001a\u00020\u0003X\u0004¢\u0006\u0002\n\u0000R\u001a\u0010\b\u001a\u000e\u0012\u0004\u0012\u00020\u0000\u0012\u0004\u0012\u00020\n0\tX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010,\u001a\u00020-X\u000e¢\u0006\u0002\n\u0000R\u0010\u0010\u000f\u001a\u0004\u0018\u00010\u0000X\u0004¢\u0006\u0002\n\u0000R\u001a\u0010\u0006\u001a\u00020\u0007X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b.\u0010/\"\u0004\b0\u00101¨\u0006B"}, mo64987d2 = {"Lcom/android/systemui/animation/AnimatedDialog;", "", "launchAnimator", "Lcom/android/systemui/animation/LaunchAnimator;", "dreamManager", "Landroid/service/dreams/IDreamManager;", "touchSurface", "Landroid/view/View;", "onDialogDismissed", "Lkotlin/Function1;", "", "dialog", "Landroid/app/Dialog;", "animateBackgroundBoundsChange", "", "parentAnimatedDialog", "forceDisableSynchronization", "(Lcom/android/systemui/animation/LaunchAnimator;Landroid/service/dreams/IDreamManager;Landroid/view/View;Lkotlin/jvm/functions/Function1;Landroid/app/Dialog;ZLcom/android/systemui/animation/AnimatedDialog;Z)V", "backgroundLayoutListener", "Lcom/android/systemui/animation/AnimatedDialog$AnimatedBoundsLayoutListener;", "decorView", "Landroid/view/ViewGroup;", "getDecorView", "()Landroid/view/ViewGroup;", "decorView$delegate", "Lkotlin/Lazy;", "decorViewLayoutListener", "Landroid/view/View$OnLayoutChangeListener;", "getDialog", "()Landroid/app/Dialog;", "dialogContentWithBackground", "getDialogContentWithBackground", "setDialogContentWithBackground", "(Landroid/view/ViewGroup;)V", "dismissRequested", "exitAnimationDisabled", "getExitAnimationDisabled", "()Z", "setExitAnimationDisabled", "(Z)V", "isDismissing", "isLaunching", "isOriginalDialogViewLaidOut", "isTouchSurfaceGhostDrawn", "originalDialogBackgroundColor", "", "getTouchSurface", "()Landroid/view/View;", "setTouchSurface", "(Landroid/view/View;)V", "addTouchSurfaceGhost", "findFirstViewGroupWithBackground", "view", "hideDialogIntoView", "onAnimationFinished", "maybeStartLaunchAnimation", "prepareForStackDismiss", "shouldAnimateDialogIntoView", "start", "startAnimation", "onLaunchAnimationStart", "Lkotlin/Function0;", "onLaunchAnimationEnd", "synchronizeNextDraw", "then", "AnimatedBoundsLayoutListener", "animation_release"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000Z\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u000b\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u0011\n\u0002\u0010\b\n\u0002\b\u000f\n\u0002\u0018\u0002\n\u0002\b\u0005\b\u0002\u0018\u00002\u00020\u0001:\u0001ABU\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\u0006\u0010\u0006\u001a\u00020\u0007\u0012\u0012\u0010\b\u001a\u000e\u0012\u0004\u0012\u00020\u0000\u0012\u0004\u0012\u00020\n0\t\u0012\u0006\u0010\u000b\u001a\u00020\f\u0012\u0006\u0010\r\u001a\u00020\u000e\u0012\n\b\u0002\u0010\u000f\u001a\u0004\u0018\u00010\u0000\u0012\u0006\u0010\u0010\u001a\u00020\u000e¢\u0006\u0002\u0010\u0011J\b\u00102\u001a\u00020\nH\u0002J\u0012\u00103\u001a\u0004\u0018\u00010\u00152\u0006\u00104\u001a\u00020\u0007H\u0002J\u001c\u00105\u001a\u00020\n2\u0012\u00106\u001a\u000e\u0012\u0004\u0012\u00020\u000e\u0012\u0004\u0012\u00020\n0\tH\u0002J\b\u00107\u001a\u00020\nH\u0002J\u0006\u0010\b\u001a\u00020\nJ\u0006\u00108\u001a\u00020\u0007J\b\u00109\u001a\u00020\u000eH\u0002J\u0006\u0010:\u001a\u00020\nJ0\u0010;\u001a\u00020\n2\u0006\u0010)\u001a\u00020\u000e2\u000e\b\u0002\u0010<\u001a\b\u0012\u0004\u0012\u00020\n0=2\u000e\b\u0002\u0010>\u001a\b\u0012\u0004\u0012\u00020\n0=H\u0002J\u0016\u0010?\u001a\u00020\n2\f\u0010@\u001a\b\u0012\u0004\u0012\u00020\n0=H\u0002R\u0010\u0010\u0012\u001a\u0004\u0018\u00010\u0013X\u0004¢\u0006\u0002\n\u0000R\u001b\u0010\u0014\u001a\u00020\u00158BX\u0002¢\u0006\f\n\u0004\b\u0018\u0010\u0019\u001a\u0004\b\u0016\u0010\u0017R\u0010\u0010\u001a\u001a\u0004\u0018\u00010\u001bX\u000e¢\u0006\u0002\n\u0000R\u0011\u0010\u000b\u001a\u00020\f¢\u0006\b\n\u0000\u001a\u0004\b\u001c\u0010\u001dR\u001c\u0010\u001e\u001a\u0004\u0018\u00010\u0015X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u001f\u0010\u0017\"\u0004\b \u0010!R\u000e\u0010\"\u001a\u00020\u000eX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0004\u001a\u00020\u0005X\u0004¢\u0006\u0002\n\u0000R\u001a\u0010#\u001a\u00020\u000eX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b$\u0010%\"\u0004\b&\u0010'R\u000e\u0010\u0010\u001a\u00020\u000eX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010(\u001a\u00020\u000eX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010)\u001a\u00020\u000eX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010*\u001a\u00020\u000eX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010+\u001a\u00020\u000eX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0002\u001a\u00020\u0003X\u0004¢\u0006\u0002\n\u0000R\u001a\u0010\b\u001a\u000e\u0012\u0004\u0012\u00020\u0000\u0012\u0004\u0012\u00020\n0\tX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010,\u001a\u00020-X\u000e¢\u0006\u0002\n\u0000R\u0010\u0010\u000f\u001a\u0004\u0018\u00010\u0000X\u0004¢\u0006\u0002\n\u0000R\u001a\u0010\u0006\u001a\u00020\u0007X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b.\u0010/\"\u0004\b0\u00101¨\u0006B"}, mo65043d2 = {"Lcom/android/systemui/animation/AnimatedDialog;", "", "launchAnimator", "Lcom/android/systemui/animation/LaunchAnimator;", "dreamManager", "Landroid/service/dreams/IDreamManager;", "touchSurface", "Landroid/view/View;", "onDialogDismissed", "Lkotlin/Function1;", "", "dialog", "Landroid/app/Dialog;", "animateBackgroundBoundsChange", "", "parentAnimatedDialog", "forceDisableSynchronization", "(Lcom/android/systemui/animation/LaunchAnimator;Landroid/service/dreams/IDreamManager;Landroid/view/View;Lkotlin/jvm/functions/Function1;Landroid/app/Dialog;ZLcom/android/systemui/animation/AnimatedDialog;Z)V", "backgroundLayoutListener", "Lcom/android/systemui/animation/AnimatedDialog$AnimatedBoundsLayoutListener;", "decorView", "Landroid/view/ViewGroup;", "getDecorView", "()Landroid/view/ViewGroup;", "decorView$delegate", "Lkotlin/Lazy;", "decorViewLayoutListener", "Landroid/view/View$OnLayoutChangeListener;", "getDialog", "()Landroid/app/Dialog;", "dialogContentWithBackground", "getDialogContentWithBackground", "setDialogContentWithBackground", "(Landroid/view/ViewGroup;)V", "dismissRequested", "exitAnimationDisabled", "getExitAnimationDisabled", "()Z", "setExitAnimationDisabled", "(Z)V", "isDismissing", "isLaunching", "isOriginalDialogViewLaidOut", "isTouchSurfaceGhostDrawn", "originalDialogBackgroundColor", "", "getTouchSurface", "()Landroid/view/View;", "setTouchSurface", "(Landroid/view/View;)V", "addTouchSurfaceGhost", "findFirstViewGroupWithBackground", "view", "hideDialogIntoView", "onAnimationFinished", "maybeStartLaunchAnimation", "prepareForStackDismiss", "shouldAnimateDialogIntoView", "start", "startAnimation", "onLaunchAnimationStart", "Lkotlin/Function0;", "onLaunchAnimationEnd", "synchronizeNextDraw", "then", "AnimatedBoundsLayoutListener", "animation_release"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* compiled from: DialogLaunchAnimator.kt */
 final class AnimatedDialog {
     /* access modifiers changed from: private */
@@ -167,14 +167,14 @@ final class AnimatedDialog {
             viewGroup = frameLayout2;
         }
         this.dialogContentWithBackground = viewGroup;
-        viewGroup.setTag(C1937R.C1938id.tag_dialog_background, true);
+        viewGroup.setTag(C1938R.C1939id.tag_dialog_background, true);
         Drawable background = viewGroup.getBackground();
         GhostedViewLaunchAnimatorController.Companion companion = GhostedViewLaunchAnimatorController.Companion;
         Intrinsics.checkNotNullExpressionValue(background, "background");
         GradientDrawable findGradientDrawable = companion.findGradientDrawable(background);
         this.originalDialogBackgroundColor = (findGradientDrawable == null || (color = findGradientDrawable.getColor()) == null) ? ViewCompat.MEASURED_STATE_MASK : color.getDefaultColor();
         viewGroup.setTransitionVisibility(4);
-        window.getAttributes().windowAnimations = C1937R.style.Animation_LaunchAnimation;
+        window.getAttributes().windowAnimations = C1938R.style.Animation_LaunchAnimation;
         window.getAttributes().layoutInDisplayCutoutMode = 3;
         window.setAttributes(window.getAttributes());
         window.setDecorFitsSystemWindows(false);
@@ -193,14 +193,14 @@ final class AnimatedDialog {
 
     /* access modifiers changed from: private */
     /* renamed from: start$lambda-0  reason: not valid java name */
-    public static final void m2539start$lambda0(AnimatedDialog animatedDialog, View view) {
+    public static final void m2545start$lambda0(AnimatedDialog animatedDialog, View view) {
         Intrinsics.checkNotNullParameter(animatedDialog, "this$0");
         animatedDialog.dialog.dismiss();
     }
 
     /* access modifiers changed from: private */
     /* renamed from: start$lambda-1  reason: not valid java name */
-    public static final void m2540start$lambda1(Window window, FrameLayout frameLayout, View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
+    public static final void m2546start$lambda1(Window window, FrameLayout frameLayout, View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
         Intrinsics.checkNotNullParameter(window, "$window");
         Intrinsics.checkNotNullParameter(frameLayout, "$dialogContentWithBackground");
         if (window.getAttributes().width != -1 || window.getAttributes().height != -1) {
@@ -214,7 +214,7 @@ final class AnimatedDialog {
 
     /* access modifiers changed from: private */
     /* renamed from: start$lambda-2  reason: not valid java name */
-    public static final WindowInsets m2541start$lambda2(View view, WindowInsets windowInsets) {
+    public static final WindowInsets m2547start$lambda2(View view, WindowInsets windowInsets) {
         Insets insets = windowInsets.getInsets(WindowInsets.Type.displayCutout());
         view.setPadding(insets.left, insets.top, insets.right, insets.bottom);
         return WindowInsets.CONSUMED;
@@ -285,7 +285,7 @@ final class AnimatedDialog {
 
     /* access modifiers changed from: private */
     /* renamed from: onDialogDismissed$lambda-3  reason: not valid java name */
-    public static final void m2538onDialogDismissed$lambda3(AnimatedDialog animatedDialog) {
+    public static final void m2544onDialogDismissed$lambda3(AnimatedDialog animatedDialog) {
         Intrinsics.checkNotNullParameter(animatedDialog, "this$0");
         animatedDialog.onDialogDismissed();
     }
@@ -360,7 +360,7 @@ final class AnimatedDialog {
         return true;
     }
 
-    @Metadata(mo64986d1 = {"\u0000,\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0002\b\t\u0018\u0000 \u00142\u00020\u0001:\u0001\u0014B\u0005¢\u0006\u0002\u0010\u0002JP\u0010\u0007\u001a\u00020\b2\u0006\u0010\t\u001a\u00020\n2\u0006\u0010\u000b\u001a\u00020\f2\u0006\u0010\r\u001a\u00020\f2\u0006\u0010\u000e\u001a\u00020\f2\u0006\u0010\u000f\u001a\u00020\f2\u0006\u0010\u0010\u001a\u00020\f2\u0006\u0010\u0011\u001a\u00020\f2\u0006\u0010\u0012\u001a\u00020\f2\u0006\u0010\u0013\u001a\u00020\fH\u0016R\u0010\u0010\u0003\u001a\u0004\u0018\u00010\u0004X\u000e¢\u0006\u0002\n\u0000R\u0010\u0010\u0005\u001a\u0004\u0018\u00010\u0006X\u000e¢\u0006\u0002\n\u0000¨\u0006\u0015"}, mo64987d2 = {"Lcom/android/systemui/animation/AnimatedDialog$AnimatedBoundsLayoutListener;", "Landroid/view/View$OnLayoutChangeListener;", "()V", "currentAnimator", "Landroid/animation/ValueAnimator;", "lastBounds", "Landroid/graphics/Rect;", "onLayoutChange", "", "view", "Landroid/view/View;", "left", "", "top", "right", "bottom", "oldLeft", "oldTop", "oldRight", "oldBottom", "Companion", "animation_release"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u0000,\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0002\b\t\u0018\u0000 \u00142\u00020\u0001:\u0001\u0014B\u0005¢\u0006\u0002\u0010\u0002JP\u0010\u0007\u001a\u00020\b2\u0006\u0010\t\u001a\u00020\n2\u0006\u0010\u000b\u001a\u00020\f2\u0006\u0010\r\u001a\u00020\f2\u0006\u0010\u000e\u001a\u00020\f2\u0006\u0010\u000f\u001a\u00020\f2\u0006\u0010\u0010\u001a\u00020\f2\u0006\u0010\u0011\u001a\u00020\f2\u0006\u0010\u0012\u001a\u00020\f2\u0006\u0010\u0013\u001a\u00020\fH\u0016R\u0010\u0010\u0003\u001a\u0004\u0018\u00010\u0004X\u000e¢\u0006\u0002\n\u0000R\u0010\u0010\u0005\u001a\u0004\u0018\u00010\u0006X\u000e¢\u0006\u0002\n\u0000¨\u0006\u0015"}, mo65043d2 = {"Lcom/android/systemui/animation/AnimatedDialog$AnimatedBoundsLayoutListener;", "Landroid/view/View$OnLayoutChangeListener;", "()V", "currentAnimator", "Landroid/animation/ValueAnimator;", "lastBounds", "Landroid/graphics/Rect;", "onLayoutChange", "", "view", "Landroid/view/View;", "left", "", "top", "right", "bottom", "oldLeft", "oldTop", "oldRight", "oldBottom", "Companion", "animation_release"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* compiled from: DialogLaunchAnimator.kt */
     public static final class AnimatedBoundsLayoutListener implements View.OnLayoutChangeListener {
         private static final long ANIMATION_DURATION = 500;
@@ -369,7 +369,7 @@ final class AnimatedDialog {
         public ValueAnimator currentAnimator;
         private Rect lastBounds;
 
-        @Metadata(mo64986d1 = {"\u0000\u0012\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\t\n\u0000\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u000e\u0010\u0003\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000¨\u0006\u0005"}, mo64987d2 = {"Lcom/android/systemui/animation/AnimatedDialog$AnimatedBoundsLayoutListener$Companion;", "", "()V", "ANIMATION_DURATION", "", "animation_release"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+        @Metadata(mo65042d1 = {"\u0000\u0012\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\t\n\u0000\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u000e\u0010\u0003\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000¨\u0006\u0005"}, mo65043d2 = {"Lcom/android/systemui/animation/AnimatedDialog$AnimatedBoundsLayoutListener$Companion;", "", "()V", "ANIMATION_DURATION", "", "animation_release"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
         /* compiled from: DialogLaunchAnimator.kt */
         public static final class Companion {
             public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
@@ -422,15 +422,15 @@ final class AnimatedDialog {
             ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
             ofFloat.setDuration(500);
             ofFloat.setInterpolator(Interpolators.STANDARD);
-            ofFloat.addListener(new C1934xa7324177(this));
-            ofFloat.addUpdateListener(new C1933xc76fd79e(rect2, i17, i, i18, i2, i19, i3, i20, i4, view));
+            ofFloat.addListener(new C1935xa7324177(this));
+            ofFloat.addUpdateListener(new C1934xc76fd79e(rect2, i17, i, i18, i2, i19, i3, i20, i4, view));
             this.currentAnimator = ofFloat;
             ofFloat.start();
         }
 
         /* access modifiers changed from: private */
         /* renamed from: onLayoutChange$lambda-2$lambda-1  reason: not valid java name */
-        public static final void m2542onLayoutChange$lambda2$lambda1(Rect rect, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8, View view, ValueAnimator valueAnimator) {
+        public static final void m2548onLayoutChange$lambda2$lambda1(Rect rect, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8, View view, ValueAnimator valueAnimator) {
             Intrinsics.checkNotNullParameter(rect, "$bounds");
             Intrinsics.checkNotNullParameter(view, "$view");
             float animatedFraction = valueAnimator.getAnimatedFraction();

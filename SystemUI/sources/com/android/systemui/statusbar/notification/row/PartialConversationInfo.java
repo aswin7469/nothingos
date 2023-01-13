@@ -18,7 +18,7 @@ import android.view.accessibility.AccessibilityEvent;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.row.NotificationGuts;
 import com.android.systemui.statusbar.notification.row.NotificationInfo;
@@ -97,7 +97,7 @@ public class PartialConversationInfo extends LinearLayout implements Notificatio
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-statusbar-notification-row-PartialConversationInfo */
-    public /* synthetic */ void mo41716xcab7bb4(View view) {
+    public /* synthetic */ void mo41724xcab7bb4(View view) {
         this.mPressedApply = true;
         this.mGutsContainer.closeControls(view, true);
     }
@@ -124,21 +124,21 @@ public class PartialConversationInfo extends LinearLayout implements Notificatio
         this.mUniqueChannelsInRow = set;
         bindHeader();
         bindActions();
-        View findViewById = findViewById(C1893R.C1897id.turn_off_notifications);
+        View findViewById = findViewById(C1894R.C1898id.turn_off_notifications);
         findViewById.setOnClickListener(getTurnOffNotificationsClickListener());
         findViewById.setVisibility((!findViewById.hasOnClickListeners() || this.mIsNonBlockable) ? 8 : 0);
-        View findViewById2 = findViewById(C1893R.C1897id.done);
+        View findViewById2 = findViewById(C1894R.C1898id.done);
         findViewById2.setOnClickListener(this.mOnDone);
         findViewById2.setAccessibilityDelegate(this.mGutsContainer.getAccessibilityDelegate());
     }
 
     private void bindActions() {
         View.OnClickListener settingsOnClickListener = getSettingsOnClickListener();
-        View findViewById = findViewById(C1893R.C1897id.info);
+        View findViewById = findViewById(C1894R.C1898id.info);
         findViewById.setOnClickListener(settingsOnClickListener);
         findViewById.setVisibility(findViewById.hasOnClickListeners() ? 0 : 8);
-        findViewById(C1893R.C1897id.settings_link).setOnClickListener(settingsOnClickListener);
-        ((TextView) findViewById(C1893R.C1897id.non_configurable_text)).setText(getResources().getString(C1893R.string.no_shortcut, new Object[]{this.mAppName}));
+        findViewById(C1894R.C1898id.settings_link).setOnClickListener(settingsOnClickListener);
+        ((TextView) findViewById(C1894R.C1898id.non_configurable_text)).setText(getResources().getString(C1894R.string.no_shortcut, new Object[]{this.mAppName}));
     }
 
     private void bindHeader() {
@@ -156,7 +156,7 @@ public class PartialConversationInfo extends LinearLayout implements Notificatio
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$getSettingsOnClickListener$1$com-android-systemui-statusbar-notification-row-PartialConversationInfo */
-    public /* synthetic */ void mo41713x294cccd3(int i, View view) {
+    public /* synthetic */ void mo41721x294cccd3(int i, View view) {
         this.mOnSettingsClickListener.onClick(view, this.mNotificationChannel, i);
     }
 
@@ -166,7 +166,7 @@ public class PartialConversationInfo extends LinearLayout implements Notificatio
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$getTurnOffNotificationsClickListener$3$com-android-systemui-statusbar-notification-row-PartialConversationInfo */
-    public /* synthetic */ void mo41715x5dabc6a1(View view) {
+    public /* synthetic */ void mo41723x5dabc6a1(View view) {
         ChannelEditorDialogController channelEditorDialogController;
         if (!this.mPresentingChannelEditorDialog && (channelEditorDialogController = this.mChannelEditorDialogController) != null) {
             this.mPresentingChannelEditorDialog = true;
@@ -178,7 +178,7 @@ public class PartialConversationInfo extends LinearLayout implements Notificatio
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$getTurnOffNotificationsClickListener$2$com-android-systemui-statusbar-notification-row-PartialConversationInfo */
-    public /* synthetic */ void mo41714x969fdfa0() {
+    public /* synthetic */ void mo41722x969fdfa0() {
         this.mPresentingChannelEditorDialog = false;
         this.mGutsContainer.closeControls(this, false);
     }
@@ -193,12 +193,12 @@ public class PartialConversationInfo extends LinearLayout implements Notificatio
         } catch (PackageManager.NameNotFoundException unused) {
             this.mPkgIcon = this.mPm.getDefaultActivityIcon();
         }
-        ((TextView) findViewById(C1893R.C1897id.name)).setText(this.mAppName);
-        ((ImageView) findViewById(C1893R.C1897id.icon)).setImageDrawable(this.mPkgIcon);
+        ((TextView) findViewById(C1894R.C1898id.name)).setText(this.mAppName);
+        ((ImageView) findViewById(C1894R.C1898id.icon)).setImageDrawable(this.mPkgIcon);
     }
 
     private void bindDelegate() {
-        TextView textView = (TextView) findViewById(C1893R.C1897id.delegate_name);
+        TextView textView = (TextView) findViewById(C1894R.C1898id.delegate_name);
         if (!TextUtils.equals(this.mPackageName, this.mDelegatePkg)) {
             textView.setVisibility(0);
         } else {
@@ -218,7 +218,7 @@ public class PartialConversationInfo extends LinearLayout implements Notificatio
             } catch (RemoteException unused) {
             }
         }
-        TextView textView = (TextView) findViewById(C1893R.C1897id.group_name);
+        TextView textView = (TextView) findViewById(C1894R.C1898id.group_name);
         if (charSequence != null) {
             textView.setText(charSequence);
             textView.setVisibility(0);
@@ -244,10 +244,10 @@ public class PartialConversationInfo extends LinearLayout implements Notificatio
         super.onInitializeAccessibilityEvent(accessibilityEvent);
         if (this.mGutsContainer != null && accessibilityEvent.getEventType() == 32) {
             if (this.mGutsContainer.isExposed()) {
-                accessibilityEvent.getText().add(this.mContext.getString(C1893R.string.notification_channel_controls_opened_accessibility, new Object[]{this.mAppName}));
+                accessibilityEvent.getText().add(this.mContext.getString(C1894R.string.notification_channel_controls_opened_accessibility, new Object[]{this.mAppName}));
                 return;
             }
-            accessibilityEvent.getText().add(this.mContext.getString(C1893R.string.notification_channel_controls_closed_accessibility, new Object[]{this.mAppName}));
+            accessibilityEvent.getText().add(this.mContext.getString(C1894R.string.notification_channel_controls_closed_accessibility, new Object[]{this.mAppName}));
         }
     }
 

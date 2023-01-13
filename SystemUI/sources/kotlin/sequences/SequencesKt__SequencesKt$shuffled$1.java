@@ -12,8 +12,8 @@ import kotlin.coroutines.jvm.internal.RestrictedSuspendLambda;
 import kotlin.jvm.functions.Function2;
 import kotlin.random.Random;
 
-@Metadata(mo64986d1 = {"\u0000\f\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\u0010\u0000\u001a\u00020\u0001\"\u0004\b\u0000\u0010\u0002*\b\u0012\u0004\u0012\u0002H\u00020\u0003H@"}, mo64987d2 = {"<anonymous>", "", "T", "Lkotlin/sequences/SequenceScope;"}, mo64988k = 3, mo64989mv = {1, 7, 1}, mo64991xi = 48)
-@DebugMetadata(mo65240c = "kotlin.sequences.SequencesKt__SequencesKt$shuffled$1", mo65241f = "Sequences.kt", mo65242i = {0, 0}, mo65243l = {145}, mo65244m = "invokeSuspend", mo65245n = {"$this$sequence", "buffer"}, mo65246s = {"L$0", "L$1"})
+@Metadata(mo65042d1 = {"\u0000\f\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\u0010\u0000\u001a\u00020\u0001\"\u0004\b\u0000\u0010\u0002*\b\u0012\u0004\u0012\u0002H\u00020\u0003H@"}, mo65043d2 = {"<anonymous>", "", "T", "Lkotlin/sequences/SequenceScope;"}, mo65044k = 3, mo65045mv = {1, 7, 1}, mo65047xi = 48)
+@DebugMetadata(mo65296c = "kotlin.sequences.SequencesKt__SequencesKt$shuffled$1", mo65297f = "Sequences.kt", mo65298i = {0, 0}, mo65299l = {145}, mo65300m = "invokeSuspend", mo65301n = {"$this$sequence", "buffer"}, mo65302s = {"L$0", "L$1"})
 /* compiled from: Sequences.kt */
 final class SequencesKt__SequencesKt$shuffled$1 extends RestrictedSuspendLambda implements Function2<SequenceScope<? super T>, Continuation<? super Unit>, Object> {
     final /* synthetic */ Random $random;

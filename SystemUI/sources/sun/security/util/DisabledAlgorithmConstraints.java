@@ -124,7 +124,7 @@ public class DisabledAlgorithmConstraints extends AbstractAlgorithmConstraints {
                                 if (DisabledAlgorithmConstraints.debug != null) {
                                     DisabledAlgorithmConstraints.debug.println("Constraints set to keySize: " + trim2);
                                 }
-                                keySizeConstraint = new KeySizeConstraint(hashName, Constraint.Operator.m1819of(matcher.group(1)), Integer.parseInt(matcher.group(2)));
+                                keySizeConstraint = new KeySizeConstraint(hashName, Constraint.Operator.m1825of(matcher.group(1)), Integer.parseInt(matcher.group(2)));
                             } else if (trim2.equalsIgnoreCase("jdkCA")) {
                                 if (DisabledAlgorithmConstraints.debug != null) {
                                     DisabledAlgorithmConstraints.debug.println("Constraints set to jdkCA.");
@@ -225,7 +225,7 @@ public class DisabledAlgorithmConstraints extends AbstractAlgorithmConstraints {
             GE;
 
             /* renamed from: of */
-            static Operator m1819of(String str) {
+            static Operator m1825of(String str) {
                 str.hashCode();
                 char c = 65535;
                 switch (str.hashCode()) {
@@ -317,7 +317,7 @@ public class DisabledAlgorithmConstraints extends AbstractAlgorithmConstraints {
             super();
             this.algorithm = str;
             int i2 = 0;
-            switch (C48141.f919x2fd3bea0[operator.ordinal()]) {
+            switch (C48261.f917x2fd3bea0[operator.ordinal()]) {
                 case 1:
                     this.minSize = 0;
                     this.maxSize = Integer.MAX_VALUE;
@@ -391,10 +391,10 @@ public class DisabledAlgorithmConstraints extends AbstractAlgorithmConstraints {
     }
 
     /* renamed from: sun.security.util.DisabledAlgorithmConstraints$1 */
-    static /* synthetic */ class C48141 {
+    static /* synthetic */ class C48261 {
 
         /* renamed from: $SwitchMap$sun$security$util$DisabledAlgorithmConstraints$Constraint$Operator */
-        static final /* synthetic */ int[] f919x2fd3bea0;
+        static final /* synthetic */ int[] f917x2fd3bea0;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(14:0|1|2|3|4|5|6|7|8|9|10|11|12|14) */
         /* JADX WARNING: Failed to process nested try/catch */
@@ -408,37 +408,37 @@ public class DisabledAlgorithmConstraints extends AbstractAlgorithmConstraints {
                 sun.security.util.DisabledAlgorithmConstraints$Constraint$Operator[] r0 = sun.security.util.DisabledAlgorithmConstraints.Constraint.Operator.values()
                 int r0 = r0.length
                 int[] r0 = new int[r0]
-                f919x2fd3bea0 = r0
+                f917x2fd3bea0 = r0
                 sun.security.util.DisabledAlgorithmConstraints$Constraint$Operator r1 = sun.security.util.DisabledAlgorithmConstraints.Constraint.Operator.EQ     // Catch:{ NoSuchFieldError -> 0x0012 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
                 r2 = 1
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0012 }
             L_0x0012:
-                int[] r0 = f919x2fd3bea0     // Catch:{ NoSuchFieldError -> 0x001d }
+                int[] r0 = f917x2fd3bea0     // Catch:{ NoSuchFieldError -> 0x001d }
                 sun.security.util.DisabledAlgorithmConstraints$Constraint$Operator r1 = sun.security.util.DisabledAlgorithmConstraints.Constraint.Operator.NE     // Catch:{ NoSuchFieldError -> 0x001d }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
                 r2 = 2
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x001d }
             L_0x001d:
-                int[] r0 = f919x2fd3bea0     // Catch:{ NoSuchFieldError -> 0x0028 }
+                int[] r0 = f917x2fd3bea0     // Catch:{ NoSuchFieldError -> 0x0028 }
                 sun.security.util.DisabledAlgorithmConstraints$Constraint$Operator r1 = sun.security.util.DisabledAlgorithmConstraints.Constraint.Operator.LT     // Catch:{ NoSuchFieldError -> 0x0028 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0028 }
                 r2 = 3
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0028 }
             L_0x0028:
-                int[] r0 = f919x2fd3bea0     // Catch:{ NoSuchFieldError -> 0x0033 }
+                int[] r0 = f917x2fd3bea0     // Catch:{ NoSuchFieldError -> 0x0033 }
                 sun.security.util.DisabledAlgorithmConstraints$Constraint$Operator r1 = sun.security.util.DisabledAlgorithmConstraints.Constraint.Operator.LE     // Catch:{ NoSuchFieldError -> 0x0033 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0033 }
                 r2 = 4
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0033 }
             L_0x0033:
-                int[] r0 = f919x2fd3bea0     // Catch:{ NoSuchFieldError -> 0x003e }
+                int[] r0 = f917x2fd3bea0     // Catch:{ NoSuchFieldError -> 0x003e }
                 sun.security.util.DisabledAlgorithmConstraints$Constraint$Operator r1 = sun.security.util.DisabledAlgorithmConstraints.Constraint.Operator.GT     // Catch:{ NoSuchFieldError -> 0x003e }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x003e }
                 r2 = 5
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x003e }
             L_0x003e:
-                int[] r0 = f919x2fd3bea0     // Catch:{ NoSuchFieldError -> 0x0049 }
+                int[] r0 = f917x2fd3bea0     // Catch:{ NoSuchFieldError -> 0x0049 }
                 sun.security.util.DisabledAlgorithmConstraints$Constraint$Operator r1 = sun.security.util.DisabledAlgorithmConstraints.Constraint.Operator.GE     // Catch:{ NoSuchFieldError -> 0x0049 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0049 }
                 r2 = 6
@@ -446,7 +446,7 @@ public class DisabledAlgorithmConstraints extends AbstractAlgorithmConstraints {
             L_0x0049:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: sun.security.util.DisabledAlgorithmConstraints.C48141.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: sun.security.util.DisabledAlgorithmConstraints.C48261.<clinit>():void");
         }
     }
 }

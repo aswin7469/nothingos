@@ -11,6 +11,6 @@ public final /* synthetic */ class StatusBarUserSwitcherFeatureController$$Exter
     }
 
     public final void onFlagChanged(FlagListenable.FlagEvent flagEvent) {
-        StatusBarUserSwitcherFeatureController.m3222_init_$lambda0(this.f$0, flagEvent);
+        StatusBarUserSwitcherFeatureController.m3227_init_$lambda0(this.f$0, flagEvent);
     }
 }

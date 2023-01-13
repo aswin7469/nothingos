@@ -216,7 +216,7 @@ public class RemoteTransitionCompat implements Parcelable {
                 }
             }
             if (z && z2) {
-                if (!recentsAnimationListener.onSwitchToScreenshot(new C2517xa93a1be6(this))) {
+                if (!recentsAnimationListener.onSwitchToScreenshot(new C2523xa93a1be6(this))) {
                     Log.w(RemoteTransitionCompat.TAG, "Recents callback doesn't support support switching to screenshot, there might be a flicker.");
                     finish(true, false);
                 }
@@ -260,7 +260,7 @@ public class RemoteTransitionCompat implements Parcelable {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$merge$0$com-android-systemui-shared-system-RemoteTransitionCompat$RecentsControllerWrap */
-        public /* synthetic */ void mo38104xe8539ff0() {
+        public /* synthetic */ void mo38105xe8539ff0() {
             finish(true, false);
         }
 

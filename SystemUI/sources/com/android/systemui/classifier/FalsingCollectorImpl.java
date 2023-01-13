@@ -129,7 +129,7 @@ class FalsingCollectorImpl implements FalsingCollector {
 
     @Inject
     FalsingCollectorImpl(FalsingDataProvider falsingDataProvider, FalsingManager falsingManager, KeyguardUpdateMonitor keyguardUpdateMonitor, HistoryTracker historyTracker, ProximitySensor proximitySensor, StatusBarStateController statusBarStateController, KeyguardStateController keyguardStateController, BatteryController batteryController, DockManager dockManager, @Main DelayableExecutor delayableExecutor, SystemClock systemClock) {
-        C20081 r0 = new StatusBarStateController.StateListener() {
+        C20101 r0 = new StatusBarStateController.StateListener() {
             public void onStateChanged(int i) {
                 FalsingCollectorImpl.logDebug("StatusBarState=" + StatusBarState.toString(i));
                 int unused = FalsingCollectorImpl.this.mState = i;
@@ -137,7 +137,7 @@ class FalsingCollectorImpl implements FalsingCollector {
             }
         };
         this.mStatusBarStateListener = r0;
-        C20092 r1 = new KeyguardUpdateMonitorCallback() {
+        C20112 r1 = new KeyguardUpdateMonitorCallback() {
             public void onBiometricAuthenticated(int i, BiometricSourceType biometricSourceType, boolean z) {
                 if (i == KeyguardUpdateMonitor.getCurrentUser() && biometricSourceType == BiometricSourceType.FACE) {
                     FalsingCollectorImpl.this.mFalsingDataProvider.setJustUnlockedWithFace(true);
@@ -145,7 +145,7 @@ class FalsingCollectorImpl implements FalsingCollector {
             }
         };
         this.mKeyguardUpdateCallback = r1;
-        C20103 r2 = new BatteryController.BatteryStateChangeCallback() {
+        C20123 r2 = new BatteryController.BatteryStateChangeCallback() {
             public void onBatteryLevelChanged(int i, boolean z, boolean z2) {
             }
 
@@ -158,7 +158,7 @@ class FalsingCollectorImpl implements FalsingCollector {
             }
         };
         this.mBatteryListener = r2;
-        C20114 r3 = new DockManager.DockEventListener() {
+        C20134 r3 = new DockManager.DockEventListener() {
             public void onEvent(int i) {
                 if (i != 0 || FalsingCollectorImpl.this.mBatteryController.isWirelessCharging()) {
                     FalsingCollectorImpl.this.mProximitySensor.pause();

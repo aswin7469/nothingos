@@ -83,8 +83,8 @@ public class PluginActionManager<T extends Plugin> {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$reloadPackage$2$com-android-systemui-shared-plugins-PluginActionManager */
-    public /* synthetic */ void mo37858xda3d0589(String str) {
-        mo37856xbe1da2ee(str);
+    public /* synthetic */ void mo37859xda3d0589(String str) {
+        mo37857xbe1da2ee(str);
         queryPkg(str);
     }
 
@@ -157,14 +157,14 @@ public class PluginActionManager<T extends Plugin> {
 
     /* access modifiers changed from: private */
     /* renamed from: onPluginConnected */
-    public void mo37855x130037f9(PluginInstance<T> pluginInstance) {
+    public void mo37856x130037f9(PluginInstance<T> pluginInstance) {
         PluginPrefs.setHasPlugins(this.mContext);
         pluginInstance.onCreate(this.mContext, this.mListener);
     }
 
     /* access modifiers changed from: private */
     /* renamed from: onPluginDisconnected */
-    public void mo37859xe6709786(PluginInstance<T> pluginInstance) {
+    public void mo37860xe6709786(PluginInstance<T> pluginInstance) {
         pluginInstance.onDestroy(this.mListener);
     }
 
@@ -179,7 +179,7 @@ public class PluginActionManager<T extends Plugin> {
 
     /* access modifiers changed from: private */
     /* renamed from: removePkg */
-    public void mo37856xbe1da2ee(String str) {
+    public void mo37857xbe1da2ee(String str) {
         for (int size = this.mPluginInstances.size() - 1; size >= 0; size--) {
             PluginInstance pluginInstance = this.mPluginInstances.get(size);
             if (pluginInstance.getPackage().equals(str)) {

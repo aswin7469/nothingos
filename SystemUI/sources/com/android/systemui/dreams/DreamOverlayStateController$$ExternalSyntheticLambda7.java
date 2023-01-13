@@ -13,6 +13,6 @@ public final /* synthetic */ class DreamOverlayStateController$$ExternalSyntheti
     }
 
     public final void run() {
-        this.f$0.mo32523x16d6304e(this.f$1);
+        this.f$0.mo32534x16d6304e(this.f$1);
     }
 }

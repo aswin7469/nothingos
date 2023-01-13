@@ -43,7 +43,7 @@ public class HandlerRunnable<T> implements Runnable {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$run$1$com-android-launcher3-icons-cache-HandlerRunnable  reason: not valid java name */
-    public /* synthetic */ void m2318lambda$run$1$comandroidlauncher3iconscacheHandlerRunnable(Object obj) {
+    public /* synthetic */ void m2324lambda$run$1$comandroidlauncher3iconscacheHandlerRunnable(Object obj) {
         if (!this.mCanceled) {
             this.mCallback.accept(obj);
         }

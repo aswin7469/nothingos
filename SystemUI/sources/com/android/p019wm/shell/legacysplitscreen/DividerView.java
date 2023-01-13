@@ -32,7 +32,7 @@ import androidx.core.view.PointerIconCompat;
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.policy.DividerSnapAlgorithm;
 import com.android.internal.policy.DockedDividerUtils;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.animation.FlingAnimationUtils;
 import com.android.p019wm.shell.animation.Interpolators;
 import com.android.p019wm.shell.common.split.DividerHandleView;
@@ -164,46 +164,46 @@ public class DividerView extends FrameLayout implements View.OnTouchListener, Vi
                 super.onInitializeAccessibilityNodeInfo(view, accessibilityNodeInfo);
                 DividerSnapAlgorithm snapAlgorithm = DividerView.this.getSnapAlgorithm();
                 if (DividerView.this.isHorizontalDivision()) {
-                    accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3343R.C3346id.action_move_tl_full, DividerView.this.mContext.getString(C3343R.string.accessibility_action_divider_top_full)));
+                    accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3353R.C3356id.action_move_tl_full, DividerView.this.mContext.getString(C3353R.string.accessibility_action_divider_top_full)));
                     if (snapAlgorithm.isFirstSplitTargetAvailable()) {
-                        accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3343R.C3346id.action_move_tl_70, DividerView.this.mContext.getString(C3343R.string.accessibility_action_divider_top_70)));
+                        accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3353R.C3356id.action_move_tl_70, DividerView.this.mContext.getString(C3353R.string.accessibility_action_divider_top_70)));
                     }
                     if (snapAlgorithm.showMiddleSplitTargetForAccessibility()) {
-                        accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3343R.C3346id.action_move_tl_50, DividerView.this.mContext.getString(C3343R.string.accessibility_action_divider_top_50)));
+                        accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3353R.C3356id.action_move_tl_50, DividerView.this.mContext.getString(C3353R.string.accessibility_action_divider_top_50)));
                     }
                     if (snapAlgorithm.isLastSplitTargetAvailable()) {
-                        accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3343R.C3346id.action_move_tl_30, DividerView.this.mContext.getString(C3343R.string.accessibility_action_divider_top_30)));
+                        accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3353R.C3356id.action_move_tl_30, DividerView.this.mContext.getString(C3353R.string.accessibility_action_divider_top_30)));
                     }
-                    accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3343R.C3346id.action_move_rb_full, DividerView.this.mContext.getString(C3343R.string.accessibility_action_divider_bottom_full)));
+                    accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3353R.C3356id.action_move_rb_full, DividerView.this.mContext.getString(C3353R.string.accessibility_action_divider_bottom_full)));
                     return;
                 }
-                accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3343R.C3346id.action_move_tl_full, DividerView.this.mContext.getString(C3343R.string.accessibility_action_divider_left_full)));
+                accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3353R.C3356id.action_move_tl_full, DividerView.this.mContext.getString(C3353R.string.accessibility_action_divider_left_full)));
                 if (snapAlgorithm.isFirstSplitTargetAvailable()) {
-                    accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3343R.C3346id.action_move_tl_70, DividerView.this.mContext.getString(C3343R.string.accessibility_action_divider_left_70)));
+                    accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3353R.C3356id.action_move_tl_70, DividerView.this.mContext.getString(C3353R.string.accessibility_action_divider_left_70)));
                 }
                 if (snapAlgorithm.showMiddleSplitTargetForAccessibility()) {
-                    accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3343R.C3346id.action_move_tl_50, DividerView.this.mContext.getString(C3343R.string.accessibility_action_divider_left_50)));
+                    accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3353R.C3356id.action_move_tl_50, DividerView.this.mContext.getString(C3353R.string.accessibility_action_divider_left_50)));
                 }
                 if (snapAlgorithm.isLastSplitTargetAvailable()) {
-                    accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3343R.C3346id.action_move_tl_30, DividerView.this.mContext.getString(C3343R.string.accessibility_action_divider_left_30)));
+                    accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3353R.C3356id.action_move_tl_30, DividerView.this.mContext.getString(C3353R.string.accessibility_action_divider_left_30)));
                 }
-                accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3343R.C3346id.action_move_rb_full, DividerView.this.mContext.getString(C3343R.string.accessibility_action_divider_right_full)));
+                accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3353R.C3356id.action_move_rb_full, DividerView.this.mContext.getString(C3353R.string.accessibility_action_divider_right_full)));
             }
 
             public boolean performAccessibilityAction(View view, int i, Bundle bundle) {
                 DividerSnapAlgorithm.SnapTarget dismissStartTarget;
                 int currentPosition = DividerView.this.getCurrentPosition();
                 DividerSnapAlgorithm snapAlgorithm = DividerView.this.mSplitLayout.getSnapAlgorithm();
-                if (i == C3343R.C3346id.action_move_tl_full) {
+                if (i == C3353R.C3356id.action_move_tl_full) {
                     dismissStartTarget = snapAlgorithm.getDismissEndTarget();
-                } else if (i == C3343R.C3346id.action_move_tl_70) {
+                } else if (i == C3353R.C3356id.action_move_tl_70) {
                     dismissStartTarget = snapAlgorithm.getLastSplitTarget();
-                } else if (i == C3343R.C3346id.action_move_tl_50) {
+                } else if (i == C3353R.C3356id.action_move_tl_50) {
                     dismissStartTarget = snapAlgorithm.getMiddleTarget();
-                } else if (i == C3343R.C3346id.action_move_tl_30) {
+                } else if (i == C3353R.C3356id.action_move_tl_30) {
                     dismissStartTarget = snapAlgorithm.getFirstSplitTarget();
                 } else {
-                    dismissStartTarget = i == C3343R.C3346id.action_move_rb_full ? snapAlgorithm.getDismissStartTarget() : null;
+                    dismissStartTarget = i == C3353R.C3356id.action_move_rb_full ? snapAlgorithm.getDismissStartTarget() : null;
                 }
                 DividerSnapAlgorithm.SnapTarget snapTarget = dismissStartTarget;
                 if (snapTarget == null) {
@@ -229,16 +229,16 @@ public class DividerView extends FrameLayout implements View.OnTouchListener, Vi
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mHandle = (DividerHandleView) findViewById(C3343R.C3346id.docked_divider_handle);
-        this.mBackground = findViewById(C3343R.C3346id.docked_divider_background);
-        this.mMinimizedShadow = (MinimizedDockShadow) findViewById(C3343R.C3346id.minimized_dock_shadow);
+        this.mHandle = (DividerHandleView) findViewById(C3353R.C3356id.docked_divider_handle);
+        this.mBackground = findViewById(C3353R.C3356id.docked_divider_background);
+        this.mMinimizedShadow = (MinimizedDockShadow) findViewById(C3353R.C3356id.minimized_dock_shadow);
         this.mHandle.setOnTouchListener(this);
         int dimensionPixelSize = getResources().getDimensionPixelSize(17105201);
         int dimensionPixelSize2 = getResources().getDimensionPixelSize(17105200);
         this.mDividerInsets = dimensionPixelSize2;
         this.mDividerSize = dimensionPixelSize - (dimensionPixelSize2 * 2);
-        this.mTouchElevation = getResources().getDimensionPixelSize(C3343R.dimen.docked_stack_divider_lift_elevation);
-        this.mLongPressEntraceAnimDuration = getResources().getInteger(C3343R.integer.long_press_dock_anim_duration);
+        this.mTouchElevation = getResources().getDimensionPixelSize(C3353R.dimen.docked_stack_divider_lift_elevation);
+        this.mLongPressEntraceAnimDuration = getResources().getInteger(C3353R.integer.long_press_dock_anim_duration);
         this.mTouchSlop = ViewConfiguration.get(this.mContext).getScaledTouchSlop();
         this.mFlingAnimationUtils = new FlingAnimationUtils(getResources().getDisplayMetrics(), 0.3f);
         this.mHandle.setPointerIcon(PointerIcon.getSystemIcon(getContext(), getResources().getConfiguration().orientation == 2 ? PointerIconCompat.TYPE_HORIZONTAL_DOUBLE_ARROW : PointerIconCompat.TYPE_VERTICAL_DOUBLE_ARROW));
@@ -328,7 +328,7 @@ public class DividerView extends FrameLayout implements View.OnTouchListener, Vi
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setHidden$0$com-android-wm-shell-legacysplitscreen-DividerView */
-    public /* synthetic */ void mo49621x2cd07b0d(boolean z) {
+    public /* synthetic */ void mo49630x2cd07b0d(boolean z) {
         SurfaceControl windowSurfaceControl = getWindowSurfaceControl();
         if (windowSurfaceControl != null) {
             SurfaceControl.Transaction transaction = this.mTiles.getTransaction();
@@ -622,7 +622,7 @@ public class DividerView extends FrameLayout implements View.OnTouchListener, Vi
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$getFlingAnimator$1$com-android-wm-shell-legacysplitscreen-DividerView */
-    public /* synthetic */ void mo49619xdb116471(boolean z, DividerSnapAlgorithm.SnapTarget snapTarget, ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo49628xdb116471(boolean z, DividerSnapAlgorithm.SnapTarget snapTarget, ValueAnimator valueAnimator) {
         int i;
         int intValue = ((Integer) valueAnimator.getAnimatedValue()).intValue();
         if (!z || valueAnimator.getAnimatedFraction() != 1.0f) {
@@ -635,7 +635,7 @@ public class DividerView extends FrameLayout implements View.OnTouchListener, Vi
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$getFlingAnimator$2$com-android-wm-shell-legacysplitscreen-DividerView */
-    public /* synthetic */ void mo49620x8e9fed0(DividerSnapAlgorithm.SnapTarget snapTarget, Boolean bool) {
+    public /* synthetic */ void mo49629x8e9fed0(DividerSnapAlgorithm.SnapTarget snapTarget, Boolean bool) {
         boolean z = this.mIsInMinimizeInteraction;
         if (!bool.booleanValue() && !this.mDockedStackMinimized && this.mIsInMinimizeInteraction) {
             this.mIsInMinimizeInteraction = false;

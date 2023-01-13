@@ -9,7 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.ShellTaskOrganizer;
 import com.android.p019wm.shell.common.DisplayLayout;
 import com.android.p019wm.shell.common.SyncTransactionQueue;
@@ -50,7 +50,7 @@ public class LetterboxEduWindowManager extends CompatUIWindowManagerAbstract {
         this.mUserId = taskInfo.userId;
         this.mEligibleForLetterboxEducation = taskInfo.topActivityEligibleForLetterboxEducation;
         this.mSharedPreferences = this.mContext.getSharedPreferences(HAS_SEEN_LETTERBOX_EDUCATION_PREF_NAME, 0);
-        this.mDialogVerticalMargin = (int) this.mContext.getResources().getDimension(C3343R.dimen.letterbox_education_dialog_margin);
+        this.mDialogVerticalMargin = (int) this.mContext.getResources().getDimension(C3353R.dimen.letterbox_education_dialog_margin);
     }
 
     /* access modifiers changed from: protected */
@@ -90,7 +90,7 @@ public class LetterboxEduWindowManager extends CompatUIWindowManagerAbstract {
     }
 
     private LetterboxEduDialogLayout inflateLayout() {
-        return (LetterboxEduDialogLayout) LayoutInflater.from(this.mContext).inflate(C3343R.layout.letterbox_education_dialog_layout, (ViewGroup) null);
+        return (LetterboxEduDialogLayout) LayoutInflater.from(this.mContext).inflate(C3353R.layout.letterbox_education_dialog_layout, (ViewGroup) null);
     }
 
     /* access modifiers changed from: private */
@@ -121,7 +121,7 @@ public class LetterboxEduWindowManager extends CompatUIWindowManagerAbstract {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onDismiss$0$com-android-wm-shell-compatui-letterboxedu-LetterboxEduWindowManager */
-    public /* synthetic */ void mo49458xb7d877c7() {
+    public /* synthetic */ void mo49467xb7d877c7() {
         release();
         this.mOnDismissCallback.run();
     }

@@ -156,7 +156,7 @@ public class TetheringManager {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$android-net-TetheringManager  reason: not valid java name */
-    public /* synthetic */ void m1944lambda$new$0$androidnetTetheringManager(String str, ITetheringConnector iTetheringConnector) throws RemoteException {
+    public /* synthetic */ void m1950lambda$new$0$androidnetTetheringManager(String str, ITetheringConnector iTetheringConnector) throws RemoteException {
         iTetheringConnector.registerTetheringEventCallback(this.mCallback, str);
     }
 
@@ -174,7 +174,7 @@ public class TetheringManager {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$finalize$1$android-net-TetheringManager  reason: not valid java name */
-    public /* synthetic */ void m1942lambda$finalize$1$androidnetTetheringManager(String str, ITetheringConnector iTetheringConnector) throws RemoteException {
+    public /* synthetic */ void m1948lambda$finalize$1$androidnetTetheringManager(String str, ITetheringConnector iTetheringConnector) throws RemoteException {
         iTetheringConnector.unregisterTetheringEventCallback(this.mCallback, str);
     }
 
@@ -184,7 +184,7 @@ public class TetheringManager {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startPollingForConnector$2$android-net-TetheringManager  reason: not valid java name */
-    public /* synthetic */ void m1946lambda$startPollingForConnector$2$androidnetTetheringManager() {
+    public /* synthetic */ void m1952lambda$startPollingForConnector$2$androidnetTetheringManager() {
         IBinder iBinder;
         do {
             try {
@@ -345,7 +345,7 @@ public class TetheringManager {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$tether$3$android-net-TetheringManager  reason: not valid java name */
-    public /* synthetic */ void m1950lambda$tether$3$androidnetTetheringManager(String str, String str2, ITetheringConnector iTetheringConnector, IIntResultListener iIntResultListener) {
+    public /* synthetic */ void m1956lambda$tether$3$androidnetTetheringManager(String str, String str2, ITetheringConnector iTetheringConnector, IIntResultListener iIntResultListener) {
         try {
             iTetheringConnector.tether(str, str2, getAttributionTag(), iIntResultListener);
         } catch (RemoteException e) {
@@ -368,7 +368,7 @@ public class TetheringManager {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$untether$4$android-net-TetheringManager  reason: not valid java name */
-    public /* synthetic */ void m1951lambda$untether$4$androidnetTetheringManager(String str, String str2, ITetheringConnector iTetheringConnector, IIntResultListener iIntResultListener) {
+    public /* synthetic */ void m1957lambda$untether$4$androidnetTetheringManager(String str, String str2, ITetheringConnector iTetheringConnector, IIntResultListener iIntResultListener) {
         try {
             iTetheringConnector.untether(str, str2, getAttributionTag(), iIntResultListener);
         } catch (RemoteException e) {
@@ -387,7 +387,7 @@ public class TetheringManager {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setUsbTethering$5$android-net-TetheringManager  reason: not valid java name */
-    public /* synthetic */ void m1945lambda$setUsbTethering$5$androidnetTetheringManager(boolean z, String str, ITetheringConnector iTetheringConnector, IIntResultListener iIntResultListener) {
+    public /* synthetic */ void m1951lambda$setUsbTethering$5$androidnetTetheringManager(boolean z, String str, ITetheringConnector iTetheringConnector, IIntResultListener iIntResultListener) {
         try {
             iTetheringConnector.setUsbTethering(z, str, getAttributionTag(), iIntResultListener);
         } catch (RemoteException e) {
@@ -517,7 +517,7 @@ public class TetheringManager {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startTethering$6$android-net-TetheringManager  reason: not valid java name */
-    public /* synthetic */ void m1947lambda$startTethering$6$androidnetTetheringManager(TetheringRequest tetheringRequest, String str, IIntResultListener iIntResultListener, ITetheringConnector iTetheringConnector) throws RemoteException {
+    public /* synthetic */ void m1953lambda$startTethering$6$androidnetTetheringManager(TetheringRequest tetheringRequest, String str, IIntResultListener iIntResultListener, ITetheringConnector iTetheringConnector) throws RemoteException {
         iTetheringConnector.startTethering(tetheringRequest.getParcel(), str, getAttributionTag(), iIntResultListener);
     }
 
@@ -535,7 +535,7 @@ public class TetheringManager {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$stopTethering$7$android-net-TetheringManager  reason: not valid java name */
-    public /* synthetic */ void m1949lambda$stopTethering$7$androidnetTetheringManager(int i, String str, ITetheringConnector iTetheringConnector) throws RemoteException {
+    public /* synthetic */ void m1955lambda$stopTethering$7$androidnetTetheringManager(int i, String str, ITetheringConnector iTetheringConnector) throws RemoteException {
         iTetheringConnector.stopTethering(i, str, getAttributionTag(), new IIntResultListener.Stub() {
             public void onResult(int i) {
             }
@@ -731,12 +731,12 @@ public class TetheringManager {
 
                     /* access modifiers changed from: package-private */
                     /* renamed from: lambda$onCallbackStarted$1$android-net-TetheringManager$4  reason: not valid java name */
-                    public /* synthetic */ void m1952lambda$onCallbackStarted$1$androidnetTetheringManager$4(TetheringEventCallback tetheringEventCallback, TetheringCallbackStartedParcel tetheringCallbackStartedParcel) {
+                    public /* synthetic */ void m1958lambda$onCallbackStarted$1$androidnetTetheringManager$4(TetheringEventCallback tetheringEventCallback, TetheringCallbackStartedParcel tetheringCallbackStartedParcel) {
                         tetheringEventCallback.onSupportedTetheringTypes(TetheringManager.unpackBits(tetheringCallbackStartedParcel.supportedTypes));
                         tetheringEventCallback.onTetheringSupported(tetheringCallbackStartedParcel.supportedTypes != 0);
                         tetheringEventCallback.onUpstreamChanged(tetheringCallbackStartedParcel.upstreamNetwork);
                         sendErrorCallbacks(tetheringCallbackStartedParcel.states);
-                        m1953lambda$onConfigurationChanged$4$androidnetTetheringManager$4(tetheringCallbackStartedParcel.config);
+                        m1959lambda$onConfigurationChanged$4$androidnetTetheringManager$4(tetheringCallbackStartedParcel.config);
                         maybeSendTetherableIfacesChangedCallback(tetheringCallbackStartedParcel.states);
                         maybeSendTetheredIfacesChangedCallback(tetheringCallbackStartedParcel.states);
                         maybeSendLocalOnlyIfacesChangedCallback(tetheringCallbackStartedParcel.states);
@@ -754,7 +754,7 @@ public class TetheringManager {
 
                     /* access modifiers changed from: private */
                     /* renamed from: sendRegexpsChanged */
-                    public void m1953lambda$onConfigurationChanged$4$androidnetTetheringManager$4(TetheringConfigurationParcel tetheringConfigurationParcel) {
+                    public void m1959lambda$onConfigurationChanged$4$androidnetTetheringManager$4(TetheringConfigurationParcel tetheringConfigurationParcel) {
                         tetheringEventCallback.onTetherableInterfaceRegexpsChanged(new TetheringInterfaceRegexps(tetheringConfigurationParcel.tetherableBluetoothRegexs, tetheringConfigurationParcel.tetherableUsbRegexs, tetheringConfigurationParcel.tetherableWifiRegexs));
                     }
 
@@ -768,7 +768,7 @@ public class TetheringManager {
 
                     /* access modifiers changed from: package-private */
                     /* renamed from: lambda$onTetherStatesChanged$5$android-net-TetheringManager$4  reason: not valid java name */
-                    public /* synthetic */ void m1954lambda$onTetherStatesChanged$5$androidnetTetheringManager$4(TetherStatesParcel tetherStatesParcel) {
+                    public /* synthetic */ void m1960lambda$onTetherStatesChanged$5$androidnetTetheringManager$4(TetherStatesParcel tetherStatesParcel) {
                         sendErrorCallbacks(tetherStatesParcel);
                         maybeSendTetherableIfacesChangedCallback(tetherStatesParcel);
                         maybeSendTetheredIfacesChangedCallback(tetherStatesParcel);
@@ -897,7 +897,7 @@ public class TetheringManager {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$isTetheringSupported$11$android-net-TetheringManager  reason: not valid java name */
-    public /* synthetic */ void m1943lambda$isTetheringSupported$11$androidnetTetheringManager(String str, ITetheringConnector iTetheringConnector, IIntResultListener iIntResultListener) {
+    public /* synthetic */ void m1949lambda$isTetheringSupported$11$androidnetTetheringManager(String str, ITetheringConnector iTetheringConnector, IIntResultListener iIntResultListener) {
         try {
             iTetheringConnector.isTetheringSupported(str, getAttributionTag(), iIntResultListener);
         } catch (RemoteException e) {
@@ -914,7 +914,7 @@ public class TetheringManager {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$stopAllTethering$12$android-net-TetheringManager  reason: not valid java name */
-    public /* synthetic */ void m1948lambda$stopAllTethering$12$androidnetTetheringManager(String str, ITetheringConnector iTetheringConnector) throws RemoteException {
+    public /* synthetic */ void m1954lambda$stopAllTethering$12$androidnetTetheringManager(String str, ITetheringConnector iTetheringConnector) throws RemoteException {
         iTetheringConnector.stopAllTethering(str, getAttributionTag(), new IIntResultListener.Stub() {
             public void onResult(int i) {
             }

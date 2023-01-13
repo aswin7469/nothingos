@@ -16,6 +16,6 @@ public final /* synthetic */ class OneHandedController$OneHandedImpl$$ExternalSy
     }
 
     public final void run() {
-        this.f$0.mo49884x56e9a607(this.f$1, this.f$2);
+        this.f$0.mo49893x56e9a607(this.f$1, this.f$2);
     }
 }

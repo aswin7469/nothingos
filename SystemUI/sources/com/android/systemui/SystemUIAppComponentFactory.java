@@ -37,7 +37,7 @@ public class SystemUIAppComponentFactory extends AppComponentFactory {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$instantiateApplicationCompat$0$com-android-systemui-SystemUIAppComponentFactory */
-    public /* synthetic */ void mo29850x6aa5651e(Context context) {
+    public /* synthetic */ void mo29860x6aa5651e(Context context) {
         SystemUIFactory.createFromConfig(context);
         SystemUIFactory.getInstance().getSysUIComponent().inject(this);
     }

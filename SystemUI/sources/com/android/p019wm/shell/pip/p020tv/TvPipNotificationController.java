@@ -20,7 +20,7 @@ import android.text.TextUtils;
 import androidx.core.app.NotificationCompat;
 import com.android.internal.protolog.common.ProtoLog;
 import com.android.internal.util.ImageUtils;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.pip.PipMediaController;
 import com.android.p019wm.shell.pip.PipParamsChangedForwarder;
 import com.android.p019wm.shell.pip.PipUtils;
@@ -84,7 +84,7 @@ public class TvPipNotificationController {
         this.mNotificationManager = (NotificationManager) context.getSystemService(NotificationManager.class);
         this.mMainHandler = handler;
         this.mTvPipBoundsState = tvPipBoundsState;
-        this.mNotificationBuilder = new Notification.Builder(context, NOTIFICATION_CHANNEL).setLocalOnly(true).setOngoing(true).setCategory(NotificationCompat.CATEGORY_SYSTEM).setShowWhen(true).setSmallIcon(C3343R.C3345drawable.pip_icon).setAllowSystemGeneratedContextualActions(false).setContentIntent(createPendingIntent(context, ACTION_FULLSCREEN)).setDeleteIntent(getCloseAction().actionIntent).extend(new Notification.TvExtender().setContentIntent(createPendingIntent(context, ACTION_SHOW_PIP_MENU)).setDeleteIntent(createPendingIntent(context, ACTION_CLOSE_PIP)));
+        this.mNotificationBuilder = new Notification.Builder(context, NOTIFICATION_CHANNEL).setLocalOnly(true).setOngoing(true).setCategory(NotificationCompat.CATEGORY_SYSTEM).setShowWhen(true).setSmallIcon(C3353R.C3355drawable.pip_icon).setAllowSystemGeneratedContextualActions(false).setContentIntent(createPendingIntent(context, ACTION_FULLSCREEN)).setDeleteIntent(getCloseAction().actionIntent).extend(new Notification.TvExtender().setContentIntent(createPendingIntent(context, ACTION_SHOW_PIP_MENU)).setDeleteIntent(createPendingIntent(context, ACTION_CLOSE_PIP)));
         this.mActionBroadcastReceiver = new ActionBroadcastReceiver();
         pipMediaController.addActionListener(new TvPipNotificationController$$ExternalSyntheticLambda0(this));
         pipMediaController.addTokenListener(new TvPipNotificationController$$ExternalSyntheticLambda1(this));
@@ -150,9 +150,9 @@ public class TvPipNotificationController {
 
     private Notification.Action getToggleAction(boolean z) {
         if (z) {
-            return createSystemAction(C3343R.C3345drawable.pip_ic_collapse, C3343R.string.pip_collapse, ACTION_TOGGLE_EXPANDED_PIP);
+            return createSystemAction(C3353R.C3355drawable.pip_ic_collapse, C3353R.string.pip_collapse, ACTION_TOGGLE_EXPANDED_PIP);
         }
-        return createSystemAction(C3343R.C3345drawable.pip_ic_expand, C3343R.string.pip_expand, ACTION_TOGGLE_EXPANDED_PIP);
+        return createSystemAction(C3353R.C3355drawable.pip_ic_expand, C3353R.string.pip_expand, ACTION_TOGGLE_EXPANDED_PIP);
     }
 
     private Notification.Action createSystemAction(int i, int i2, String str) {
@@ -211,22 +211,22 @@ public class TvPipNotificationController {
     private Notification.Action getCloseAction() {
         RemoteAction remoteAction = this.mCustomCloseAction;
         if (remoteAction == null) {
-            return createSystemAction(C3343R.C3345drawable.pip_ic_close_white, C3343R.string.pip_close, ACTION_CLOSE_PIP);
+            return createSystemAction(C3353R.C3355drawable.pip_ic_close_white, C3353R.string.pip_close, ACTION_CLOSE_PIP);
         }
         return remoteToNotificationAction(remoteAction, 4);
     }
 
     private Notification.Action getFullscreenAction() {
-        return createSystemAction(C3343R.C3345drawable.pip_ic_fullscreen_white, C3343R.string.pip_fullscreen, ACTION_FULLSCREEN);
+        return createSystemAction(C3353R.C3355drawable.pip_ic_fullscreen_white, C3353R.string.pip_fullscreen, ACTION_FULLSCREEN);
     }
 
     private Notification.Action getMoveAction() {
-        return createSystemAction(C3343R.C3345drawable.pip_ic_move_white, C3343R.string.pip_move, ACTION_MOVE_PIP);
+        return createSystemAction(C3353R.C3355drawable.pip_ic_move_white, C3353R.string.pip_move, ACTION_MOVE_PIP);
     }
 
     /* access modifiers changed from: package-private */
     public void onConfigurationChanged(Context context) {
-        this.mDefaultTitle = context.getResources().getString(C3343R.string.pip_notification_unknown_title);
+        this.mDefaultTitle = context.getResources().getString(C3353R.string.pip_notification_unknown_title);
         updateNotificationContent();
     }
 
@@ -277,7 +277,7 @@ public class TvPipNotificationController {
         if (bitmap != null) {
             this.mNotificationBuilder.setLargeIcon(bitmap);
         } else {
-            this.mNotificationBuilder.setLargeIcon(Icon.createWithResource(this.mContext, C3343R.C3345drawable.pip_icon));
+            this.mNotificationBuilder.setLargeIcon(Icon.createWithResource(this.mContext, C3353R.C3355drawable.pip_icon));
         }
     }
 

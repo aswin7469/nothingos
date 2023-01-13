@@ -68,14 +68,14 @@ class ImageExporter {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$exportToRawFile$1$com-android-systemui-screenshot-ImageExporter */
-    public /* synthetic */ Object mo37338xb44b94b6(Executor executor, File file, Bitmap bitmap, CallbackToFutureAdapter.Completer completer) throws Exception {
+    public /* synthetic */ Object mo37339xb44b94b6(Executor executor, File file, Bitmap bitmap, CallbackToFutureAdapter.Completer completer) throws Exception {
         executor.execute(new ImageExporter$$ExternalSyntheticLambda2(this, file, bitmap, completer));
         return "Bitmap#compress";
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$exportToRawFile$0$com-android-systemui-screenshot-ImageExporter */
-    public /* synthetic */ void mo37337x3ed16e75(File file, Bitmap bitmap, CallbackToFutureAdapter.Completer completer) {
+    public /* synthetic */ void mo37338x3ed16e75(File file, Bitmap bitmap, CallbackToFutureAdapter.Completer completer) {
         FileOutputStream fileOutputStream;
         try {
             fileOutputStream = new FileOutputStream(file);
@@ -120,14 +120,14 @@ class ImageExporter {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$delete$5$com-android-systemui-screenshot-ImageExporter  reason: not valid java name */
-    public /* synthetic */ Object m2996lambda$delete$5$comandroidsystemuiscreenshotImageExporter(Executor executor, Uri uri, CallbackToFutureAdapter.Completer completer) throws Exception {
+    public /* synthetic */ Object m3000lambda$delete$5$comandroidsystemuiscreenshotImageExporter(Executor executor, Uri uri, CallbackToFutureAdapter.Completer completer) throws Exception {
         executor.execute(new ImageExporter$$ExternalSyntheticLambda1(this, uri, completer));
         return "ContentResolver#delete";
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$delete$4$com-android-systemui-screenshot-ImageExporter  reason: not valid java name */
-    public /* synthetic */ void m2995lambda$delete$4$comandroidsystemuiscreenshotImageExporter(Uri uri, CallbackToFutureAdapter.Completer completer) {
+    public /* synthetic */ void m2999lambda$delete$4$comandroidsystemuiscreenshotImageExporter(Uri uri, CallbackToFutureAdapter.Completer completer) {
         this.mResolver.delete(uri, (Bundle) null);
         Result result = new Result();
         result.uri = uri;
@@ -378,7 +378,7 @@ class ImageExporter {
     }
 
     /* renamed from: com.android.systemui.screenshot.ImageExporter$1 */
-    static /* synthetic */ class C24371 {
+    static /* synthetic */ class C24431 {
         static final /* synthetic */ int[] $SwitchMap$android$graphics$Bitmap$CompressFormat;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(12:0|1|2|3|4|5|6|7|8|9|10|12) */
@@ -427,12 +427,12 @@ class ImageExporter {
             L_0x003e:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.screenshot.ImageExporter.C24371.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.screenshot.ImageExporter.C24431.<clinit>():void");
         }
     }
 
     static String getMimeType(Bitmap.CompressFormat compressFormat) {
-        int i = C24371.$SwitchMap$android$graphics$Bitmap$CompressFormat[compressFormat.ordinal()];
+        int i = C24431.$SwitchMap$android$graphics$Bitmap$CompressFormat[compressFormat.ordinal()];
         if (i == 1) {
             return "image/jpeg";
         }
@@ -446,7 +446,7 @@ class ImageExporter {
     }
 
     static String fileExtension(Bitmap.CompressFormat compressFormat) {
-        int i = C24371.$SwitchMap$android$graphics$Bitmap$CompressFormat[compressFormat.ordinal()];
+        int i = C24431.$SwitchMap$android$graphics$Bitmap$CompressFormat[compressFormat.ordinal()];
         if (i == 1) {
             return "jpg";
         }

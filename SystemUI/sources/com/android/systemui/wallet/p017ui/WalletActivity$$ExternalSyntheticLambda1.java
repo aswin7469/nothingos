@@ -12,6 +12,6 @@ public final /* synthetic */ class WalletActivity$$ExternalSyntheticLambda1 impl
     }
 
     public final boolean onDismiss() {
-        return this.f$0.m3321lambda$onCreate$0$comandroidsystemuiwalletuiWalletActivity();
+        return this.f$0.m3325lambda$onCreate$0$comandroidsystemuiwalletuiWalletActivity();
     }
 }

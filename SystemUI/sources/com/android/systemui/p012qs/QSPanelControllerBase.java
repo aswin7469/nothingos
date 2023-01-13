@@ -77,7 +77,7 @@ public abstract class QSPanelControllerBase<T extends QSPanel> extends ViewContr
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-qs-QSPanelControllerBase  reason: not valid java name */
-    public /* synthetic */ Unit m2915lambda$new$0$comandroidsystemuiqsQSPanelControllerBase(Boolean bool) {
+    public /* synthetic */ Unit m2920lambda$new$0$comandroidsystemuiqsQSPanelControllerBase(Boolean bool) {
         Consumer<Boolean> consumer = this.mMediaVisibilityChangedListener;
         if (consumer != null) {
             consumer.accept(bool);

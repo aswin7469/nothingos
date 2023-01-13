@@ -12,6 +12,6 @@ public final /* synthetic */ class WifiPickerTracker$$ExternalSyntheticLambda12 
     }
 
     public final boolean test(Object obj) {
-        return this.f$0.mo47904x2fa767a8((Map.Entry) obj);
+        return this.f$0.mo47913x2fa767a8((Map.Entry) obj);
     }
 }

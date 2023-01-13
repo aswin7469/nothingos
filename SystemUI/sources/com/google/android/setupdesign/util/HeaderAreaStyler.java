@@ -14,7 +14,7 @@ import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
 import com.google.android.setupcompat.partnerconfig.PartnerConfig;
 import com.google.android.setupcompat.partnerconfig.PartnerConfigHelper;
 import com.google.android.setupcompat.util.BuildCompatUtils;
-import com.google.android.setupdesign.C3953R;
+import com.google.android.setupdesign.C3963R;
 import com.google.android.setupdesign.util.TextViewPartnerStyler;
 
 public final class HeaderAreaStyler {
@@ -56,11 +56,11 @@ public final class HeaderAreaStyler {
                 ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) layoutParams;
                 int i = marginLayoutParams.topMargin;
                 if (PartnerConfigHelper.get(context).isPartnerConfigAvailable(PartnerConfig.CONFIG_PROGRESS_BAR_MARGIN_TOP)) {
-                    i = (int) PartnerConfigHelper.get(context).getDimension(context, PartnerConfig.CONFIG_PROGRESS_BAR_MARGIN_TOP, context.getResources().getDimension(C3953R.dimen.sud_progress_bar_margin_top));
+                    i = (int) PartnerConfigHelper.get(context).getDimension(context, PartnerConfig.CONFIG_PROGRESS_BAR_MARGIN_TOP, context.getResources().getDimension(C3963R.dimen.sud_progress_bar_margin_top));
                 }
                 int i2 = marginLayoutParams.bottomMargin;
                 if (PartnerConfigHelper.get(context).isPartnerConfigAvailable(PartnerConfig.CONFIG_PROGRESS_BAR_MARGIN_BOTTOM)) {
-                    i2 = (int) PartnerConfigHelper.get(context).getDimension(context, PartnerConfig.CONFIG_PROGRESS_BAR_MARGIN_BOTTOM, context.getResources().getDimension(C3953R.dimen.sud_progress_bar_margin_bottom));
+                    i2 = (int) PartnerConfigHelper.get(context).getDimension(context, PartnerConfig.CONFIG_PROGRESS_BAR_MARGIN_BOTTOM, context.getResources().getDimension(C3963R.dimen.sud_progress_bar_margin_bottom));
                 }
                 if (i != marginLayoutParams.topMargin || i2 != marginLayoutParams.bottomMargin) {
                     marginLayoutParams.setMargins(marginLayoutParams.leftMargin, i, marginLayoutParams.rightMargin, i2);
@@ -105,7 +105,7 @@ public final class HeaderAreaStyler {
             int r4 = r4 * 2
             if (r2 <= r4) goto L_0x0062
             android.content.res.Resources r4 = r0.getResources()
-            int r2 = com.google.android.setupdesign.C3953R.dimen.sud_horizontal_icon_height
+            int r2 = com.google.android.setupdesign.C3963R.dimen.sud_horizontal_icon_height
             float r4 = r4.getDimension(r2)
             int r4 = (int) r4
             int r2 = r1.height

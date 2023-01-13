@@ -20,7 +20,7 @@ public class SingleInstanceRemoteListener<C extends RemoteCallable, L extends II
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$binderDied$0$com-android-wm-shell-common-SingleInstanceRemoteListener$1 */
-        public /* synthetic */ void mo49119xc5449869(RemoteCallable remoteCallable) {
+        public /* synthetic */ void mo49128xc5449869(RemoteCallable remoteCallable) {
             SingleInstanceRemoteListener.this.mListener = null;
             SingleInstanceRemoteListener.this.mOnUnregisterCallback.accept(remoteCallable);
         }

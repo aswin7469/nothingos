@@ -12,6 +12,6 @@ public final /* synthetic */ class ManageEducationView$$ExternalSyntheticLambda2
     }
 
     public final void onClick(View view) {
-        ManageEducationView.m3435show$lambda3$lambda2(this.f$0, view);
+        ManageEducationView.m3439show$lambda3$lambda2(this.f$0, view);
     }
 }

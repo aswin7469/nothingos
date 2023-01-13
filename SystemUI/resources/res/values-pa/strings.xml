@@ -708,9 +708,15 @@
     <string name="force_rtl_layout_all_locales_summary">ਸਾਰੀਆਂ ਭਾਸ਼ਾਵਾਂ ਲਈ ਸਕ੍ਰੀਨ \'ਤੇ ਸੱਜੇ ਤੋਂ ਖੱਬੇ ਵਾਲਾ ਖਾਕਾ ਲਾਗੂ ਕਰੋ</string>
     <string name="forced_resizable_secondary_display">ਹੋ ਸਕਦਾ ਹੈ ਕਿ ਐਪ ਸੈਕੰਡਰੀ ਡਿਸਪਲੇ \'ਤੇ ਕੰਮ ਨਾ ਕਰੇ।</string>
     <string name="game_status">ਖੇਡੀ ਜਾ ਰਹੀ ਹੈ</string>
+    <string name="gamemode_description">ਗੇਮ ਮੋਡ ਇਹ ਨਿਰਧਾਰਤ ਕਰੇਗਾ ਕਿ ਕੀ ਤੁਸੀਂ ਇੱਕ ਗੇਮ ਵਿੱਚ ਹੋ ਅਤੇ ਤੁਹਾਡੇ ਲਈ ਆਪਣੇ ਆਪ ਚਾਲੂ ਹੋ ਜਾਵੇਗਾ</string>
+    <string name="gamemode_gamedashboard_title">ਗੇਮ ਡੈਸ਼ਬੋਰਡ</string>
+    <string name="gamemode_notification_content">ਸੈਟਿੰਗਾਂ ’ਤੇ ਜਾਣ ਲਈ ਟੈਪ ਕਰੋ</string>
+    <string name="gamemode_notification_title">ਗੇਮ ਮੋਡ ਇਸ ਸਮੇਂ ਚਾਲੂ ਹੈ</string>
     <string name="global_action_lock_message">ਹੋਰ ਵਿਕਲਪਾਂ ਲਈ ਆਪਣਾ ਫ਼ੋਨ ਅਣਲਾਕ ਕਰੋ</string>
     <string name="global_action_screenshot">ਸਕ੍ਰੀਨਸ਼ਾਟ</string>
     <string name="global_action_smart_lock_disabled">Smart Lock ਬੰਦ ਕੀਤਾ ਗਿਆ</string>
+    <string name="gm_guide_status_on">ਚਾਲੂ</string>
+    <string name="gm_notification_title">ਗੇਮ ਮੋਡ</string>
     <string name="go_to_web">ਬ੍ਰਾਊਜ਼ਰ \'ਤੇ ਜਾਓ</string>
     <string name="got_it">ਸਮਝ ਲਿਆ</string>
     <string name="guest_exit_guest">ਮਹਿਮਾਨ ਹਟਾਓ</string>

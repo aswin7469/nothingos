@@ -240,7 +240,7 @@ public class CustomTile extends QSTileImpl<QSTile.State> implements TileLifecycl
 
     /* access modifiers changed from: private */
     /* renamed from: handleUpdateTileState */
-    public void mo36569x95f2ff5b(Tile tile) {
+    public void mo36573x95f2ff5b(Tile tile) {
         applyTileState(tile, true);
         if (this.mServiceManager.isActiveTile()) {
             this.mCustomTileStatePersister.persistState(this.mKey, tile);
@@ -474,7 +474,7 @@ public class CustomTile extends QSTileImpl<QSTile.State> implements TileLifecycl
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startUnlockAndRun$2$com-android-systemui-qs-external-CustomTile */
-    public /* synthetic */ void mo36568xbca43afd() {
+    public /* synthetic */ void mo36572xbca43afd() {
         try {
             this.mService.onUnlockComplete();
         } catch (RemoteException unused) {

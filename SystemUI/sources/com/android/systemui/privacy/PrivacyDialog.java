@@ -15,7 +15,7 @@ import android.view.WindowInsets;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.android.settingslib.Utils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.statusbar.phone.SystemUIDialog;
 import com.google.android.setupcompat.internal.FocusChangedMetricHelper;
 import com.nothing.systemui.NTDependencyEx;
@@ -32,7 +32,7 @@ import kotlin.Unit;
 import kotlin.jvm.functions.Function4;
 import kotlin.jvm.internal.Intrinsics;
 
-@Metadata(mo64986d1 = {"\u0000\u0001\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010 \n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\u0010\u000e\n\u0002\u0010\b\n\u0002\u0010\r\n\u0002\u0018\u0002\n\u0002\u0010\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010!\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0006\n\u0002\u0010\u000b\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0004\u0018\u00002\u00020\u0001:\u000234BE\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\f\u0010\u0004\u001a\b\u0012\u0004\u0012\u00020\u00060\u0005\u0012(\u0010\u0007\u001a$\u0012\u0004\u0012\u00020\t\u0012\u0004\u0012\u00020\n\u0012\u0006\u0012\u0004\u0018\u00010\u000b\u0012\u0006\u0012\u0004\u0018\u00010\f\u0012\u0004\u0012\u00020\r0\b¢\u0006\u0002\u0010\u000eJ\u000e\u0010\u001f\u001a\u00020\r2\u0006\u0010 \u001a\u00020\u0014J\u0010\u0010!\u001a\u00020\"2\u0006\u0010#\u001a\u00020\u0006H\u0002J\u0010\u0010$\u001a\u00020%2\u0006\u0010&\u001a\u00020'H\u0002J$\u0010(\u001a\u00020\u000b2\u0006\u0010)\u001a\u00020\u000b2\b\u0010*\u001a\u0004\u0018\u00010\u000b2\b\u0010+\u001a\u0004\u0018\u00010\u000bH\u0002J\u0010\u0010,\u001a\u00020\n2\u0006\u0010-\u001a\u00020.H\u0002J\u0012\u0010/\u001a\u00020\r2\b\u00100\u001a\u0004\u0018\u000101H\u0014J\b\u00102\u001a\u00020\rH\u0014R\u000e\u0010\u000f\u001a\u00020\u0010X\u0004¢\u0006\u0002\n\u0000R\u001a\u0010\u0011\u001a\u000e\u0012\n\u0012\b\u0012\u0004\u0012\u00020\u00140\u00130\u0012X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0015\u001a\u00020\u0016X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0017\u001a\u00020\tX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0018\u001a\u00020\nX\u0004¢\u0006\u0002\n\u0000R\u0014\u0010\u0004\u001a\b\u0012\u0004\u0012\u00020\u00060\u0005X\u0004¢\u0006\u0002\n\u0000R\u0016\u0010\u0019\u001a\n \u001b*\u0004\u0018\u00010\u001a0\u001aX\u000e¢\u0006\u0002\n\u0000R\u0016\u0010\u001c\u001a\n \u001b*\u0004\u0018\u00010\t0\tX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u001d\u001a\u00020\u001eX.¢\u0006\u0002\n\u0000¨\u00065"}, mo64987d2 = {"Lcom/android/systemui/privacy/PrivacyDialog;", "Lcom/android/systemui/statusbar/phone/SystemUIDialog;", "context", "Landroid/content/Context;", "list", "", "Lcom/android/systemui/privacy/PrivacyDialog$PrivacyElement;", "activityStarter", "Lkotlin/Function4;", "", "", "", "Landroid/content/Intent;", "", "(Landroid/content/Context;Ljava/util/List;Lkotlin/jvm/functions/Function4;)V", "clickListener", "Landroid/view/View$OnClickListener;", "dismissListeners", "", "Ljava/lang/ref/WeakReference;", "Lcom/android/systemui/privacy/PrivacyDialog$OnDialogDismissed;", "dismissed", "Ljava/util/concurrent/atomic/AtomicBoolean;", "enterpriseText", "iconColorSolid", "mEx", "Lcom/nothing/systemui/privacy/PrivacyDialogEx;", "kotlin.jvm.PlatformType", "phonecall", "rootView", "Landroid/view/ViewGroup;", "addOnDismissListener", "listener", "createView", "Landroid/view/View;", "element", "getDrawableForType", "Landroid/graphics/drawable/LayerDrawable;", "type", "Lcom/android/systemui/privacy/PrivacyType;", "getFinalText", "firstLine", "attributionLabel", "proxyLabel", "getStringIdForState", "active", "", "onCreate", "savedInstanceState", "Landroid/os/Bundle;", "onStop", "OnDialogDismissed", "PrivacyElement", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000\u0001\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010 \n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\u0010\u000e\n\u0002\u0010\b\n\u0002\u0010\r\n\u0002\u0018\u0002\n\u0002\u0010\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010!\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0006\n\u0002\u0010\u000b\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0004\u0018\u00002\u00020\u0001:\u000234BE\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\f\u0010\u0004\u001a\b\u0012\u0004\u0012\u00020\u00060\u0005\u0012(\u0010\u0007\u001a$\u0012\u0004\u0012\u00020\t\u0012\u0004\u0012\u00020\n\u0012\u0006\u0012\u0004\u0018\u00010\u000b\u0012\u0006\u0012\u0004\u0018\u00010\f\u0012\u0004\u0012\u00020\r0\b¢\u0006\u0002\u0010\u000eJ\u000e\u0010\u001f\u001a\u00020\r2\u0006\u0010 \u001a\u00020\u0014J\u0010\u0010!\u001a\u00020\"2\u0006\u0010#\u001a\u00020\u0006H\u0002J\u0010\u0010$\u001a\u00020%2\u0006\u0010&\u001a\u00020'H\u0002J$\u0010(\u001a\u00020\u000b2\u0006\u0010)\u001a\u00020\u000b2\b\u0010*\u001a\u0004\u0018\u00010\u000b2\b\u0010+\u001a\u0004\u0018\u00010\u000bH\u0002J\u0010\u0010,\u001a\u00020\n2\u0006\u0010-\u001a\u00020.H\u0002J\u0012\u0010/\u001a\u00020\r2\b\u00100\u001a\u0004\u0018\u000101H\u0014J\b\u00102\u001a\u00020\rH\u0014R\u000e\u0010\u000f\u001a\u00020\u0010X\u0004¢\u0006\u0002\n\u0000R\u001a\u0010\u0011\u001a\u000e\u0012\n\u0012\b\u0012\u0004\u0012\u00020\u00140\u00130\u0012X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0015\u001a\u00020\u0016X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0017\u001a\u00020\tX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0018\u001a\u00020\nX\u0004¢\u0006\u0002\n\u0000R\u0014\u0010\u0004\u001a\b\u0012\u0004\u0012\u00020\u00060\u0005X\u0004¢\u0006\u0002\n\u0000R\u0016\u0010\u0019\u001a\n \u001b*\u0004\u0018\u00010\u001a0\u001aX\u000e¢\u0006\u0002\n\u0000R\u0016\u0010\u001c\u001a\n \u001b*\u0004\u0018\u00010\t0\tX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u001d\u001a\u00020\u001eX.¢\u0006\u0002\n\u0000¨\u00065"}, mo65043d2 = {"Lcom/android/systemui/privacy/PrivacyDialog;", "Lcom/android/systemui/statusbar/phone/SystemUIDialog;", "context", "Landroid/content/Context;", "list", "", "Lcom/android/systemui/privacy/PrivacyDialog$PrivacyElement;", "activityStarter", "Lkotlin/Function4;", "", "", "", "Landroid/content/Intent;", "", "(Landroid/content/Context;Ljava/util/List;Lkotlin/jvm/functions/Function4;)V", "clickListener", "Landroid/view/View$OnClickListener;", "dismissListeners", "", "Ljava/lang/ref/WeakReference;", "Lcom/android/systemui/privacy/PrivacyDialog$OnDialogDismissed;", "dismissed", "Ljava/util/concurrent/atomic/AtomicBoolean;", "enterpriseText", "iconColorSolid", "mEx", "Lcom/nothing/systemui/privacy/PrivacyDialogEx;", "kotlin.jvm.PlatformType", "phonecall", "rootView", "Landroid/view/ViewGroup;", "addOnDismissListener", "listener", "createView", "Landroid/view/View;", "element", "getDrawableForType", "Landroid/graphics/drawable/LayerDrawable;", "type", "Lcom/android/systemui/privacy/PrivacyType;", "getFinalText", "firstLine", "attributionLabel", "proxyLabel", "getStringIdForState", "active", "", "onCreate", "savedInstanceState", "Landroid/os/Bundle;", "onStop", "OnDialogDismissed", "PrivacyElement", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* compiled from: PrivacyDialog.kt */
 public final class PrivacyDialog extends SystemUIDialog {
     private final View.OnClickListener clickListener;
@@ -45,13 +45,13 @@ public final class PrivacyDialog extends SystemUIDialog {
     private final String phonecall;
     private ViewGroup rootView;
 
-    @Metadata(mo64986d1 = {"\u0000\u0010\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\u0002\n\u0000\bf\u0018\u00002\u00020\u0001J\b\u0010\u0002\u001a\u00020\u0003H&ø\u0001\u0000\u0002\u0006\n\u0004\b!0\u0001¨\u0006\u0004À\u0006\u0001"}, mo64987d2 = {"Lcom/android/systemui/privacy/PrivacyDialog$OnDialogDismissed;", "", "onDialogDismissed", "", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u0000\u0010\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\u0002\n\u0000\bf\u0018\u00002\u00020\u0001J\b\u0010\u0002\u001a\u00020\u0003H&ø\u0001\u0000\u0002\u0006\n\u0004\b!0\u0001¨\u0006\u0004À\u0006\u0001"}, mo65043d2 = {"Lcom/android/systemui/privacy/PrivacyDialog$OnDialogDismissed;", "", "onDialogDismissed", "", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* compiled from: PrivacyDialog.kt */
     public interface OnDialogDismissed {
         void onDialogDismissed();
     }
 
-    @Metadata(mo64988k = 3, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65044k = 3, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* compiled from: PrivacyDialog.kt */
     public /* synthetic */ class WhenMappings {
         public static final /* synthetic */ int[] $EnumSwitchMapping$0;
@@ -67,18 +67,18 @@ public final class PrivacyDialog extends SystemUIDialog {
     }
 
     private final int getStringIdForState(boolean z) {
-        return z ? C1893R.string.ongoing_privacy_dialog_using_op : C1893R.string.ongoing_privacy_dialog_recent_op;
+        return z ? C1894R.string.ongoing_privacy_dialog_using_op : C1894R.string.ongoing_privacy_dialog_recent_op;
     }
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     public PrivacyDialog(Context context, List<PrivacyElement> list2, Function4<? super String, ? super Integer, ? super CharSequence, ? super Intent, Unit> function4) {
-        super(context, (int) C1893R.style.PrivacyDialog);
+        super(context, (int) C1894R.style.PrivacyDialog);
         Intrinsics.checkNotNullParameter(context, "context");
         Intrinsics.checkNotNullParameter(list2, "list");
         Intrinsics.checkNotNullParameter(function4, "activityStarter");
         this.list = list2;
-        this.enterpriseText = WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + context.getString(C1893R.string.ongoing_privacy_dialog_enterprise);
-        this.phonecall = context.getString(C1893R.string.ongoing_privacy_dialog_phonecall);
+        this.enterpriseText = WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + context.getString(C1894R.string.ongoing_privacy_dialog_enterprise);
+        this.phonecall = context.getString(C1894R.string.ongoing_privacy_dialog_phonecall);
         this.mEx = (PrivacyDialogEx) NTDependencyEx.get(PrivacyDialogEx.class);
         this.clickListener = new PrivacyDialog$$ExternalSyntheticLambda0(function4);
     }
@@ -92,9 +92,9 @@ public final class PrivacyDialog extends SystemUIDialog {
             window.getAttributes().receiveInsetsIgnoringZOrder = true;
             window.setGravity(49);
         }
-        setTitle(C1893R.string.ongoing_privacy_dialog_a11y_title);
-        setContentView(C1893R.layout.privacy_dialog);
-        View requireViewById = requireViewById(C1893R.C1897id.root);
+        setTitle(C1894R.string.ongoing_privacy_dialog_a11y_title);
+        setContentView(C1894R.layout.privacy_dialog);
+        View requireViewById = requireViewById(C1894R.C1898id.root);
         Intrinsics.checkNotNullExpressionValue(requireViewById, "requireViewById<ViewGroup>(R.id.root)");
         this.rootView = (ViewGroup) requireViewById;
         for (PrivacyElement privacyElement : this.list) {
@@ -137,12 +137,12 @@ public final class PrivacyDialog extends SystemUIDialog {
             Intrinsics.throwUninitializedPropertyAccessException("rootView");
             viewGroup = null;
         }
-        View inflate = from.inflate(C1893R.layout.privacy_dialog_item, viewGroup, false);
+        View inflate = from.inflate(C1894R.layout.privacy_dialog_item, viewGroup, false);
         if (inflate != null) {
             ViewGroup viewGroup2 = (ViewGroup) inflate;
             LayerDrawable drawableForType = getDrawableForType(privacyElement.getType());
-            drawableForType.findDrawableByLayerId(C1893R.C1897id.icon).setTint(this.iconColorSolid);
-            ImageView imageView = (ImageView) viewGroup2.requireViewById(C1893R.C1897id.icon);
+            drawableForType.findDrawableByLayerId(C1894R.C1898id.icon).setTint(this.iconColorSolid);
+            ImageView imageView = (ImageView) viewGroup2.requireViewById(C1894R.C1898id.icon);
             imageView.setImageDrawable(drawableForType);
             PrivacyType type = privacyElement.getType();
             Context context = imageView.getContext();
@@ -155,7 +155,7 @@ public final class PrivacyDialog extends SystemUIDialog {
             }
             String string = getContext().getString(stringIdForState, new Object[]{applicationName});
             Intrinsics.checkNotNullExpressionValue(string, "firstLine");
-            ((TextView) viewGroup2.requireViewById(C1893R.C1897id.text)).setText(getFinalText(string, privacyElement.getAttributionLabel(), privacyElement.getProxyLabel()));
+            ((TextView) viewGroup2.requireViewById(C1894R.C1898id.text)).setText(getFinalText(string, privacyElement.getAttributionLabel(), privacyElement.getProxyLabel()));
             PrivacyDialogEx privacyDialogEx = this.mEx;
             Context context2 = getContext();
             Intrinsics.checkNotNullExpressionValue(context2, "context");
@@ -169,11 +169,11 @@ public final class PrivacyDialog extends SystemUIDialog {
     private final CharSequence getFinalText(CharSequence charSequence, CharSequence charSequence2, CharSequence charSequence3) {
         CharSequence charSequence4;
         if (charSequence2 != null && charSequence3 != null) {
-            charSequence4 = getContext().getString(C1893R.string.ongoing_privacy_dialog_attribution_proxy_label, new Object[]{charSequence2, charSequence3});
+            charSequence4 = getContext().getString(C1894R.string.ongoing_privacy_dialog_attribution_proxy_label, new Object[]{charSequence2, charSequence3});
         } else if (charSequence2 != null) {
-            charSequence4 = getContext().getString(C1893R.string.ongoing_privacy_dialog_attribution_label, new Object[]{charSequence2});
+            charSequence4 = getContext().getString(C1894R.string.ongoing_privacy_dialog_attribution_label, new Object[]{charSequence2});
         } else if (charSequence3 != null) {
-            charSequence4 = getContext().getString(C1893R.string.ongoing_privacy_dialog_attribution_text, new Object[]{charSequence3});
+            charSequence4 = getContext().getString(C1894R.string.ongoing_privacy_dialog_attribution_text, new Object[]{charSequence3});
         } else {
             charSequence4 = null;
         }
@@ -190,13 +190,13 @@ public final class PrivacyDialog extends SystemUIDialog {
         Context context = getContext();
         int i2 = WhenMappings.$EnumSwitchMapping$0[privacyType.ordinal()];
         if (i2 == 1) {
-            i = C1893R.C1895drawable.privacy_item_circle_location;
+            i = C1894R.C1896drawable.privacy_item_circle_location;
         } else if (i2 == 2) {
-            i = C1893R.C1895drawable.privacy_item_circle_camera;
+            i = C1894R.C1896drawable.privacy_item_circle_camera;
         } else if (i2 == 3) {
-            i = C1893R.C1895drawable.privacy_item_circle_microphone;
+            i = C1894R.C1896drawable.privacy_item_circle_microphone;
         } else if (i2 == 4) {
-            i = C1893R.C1895drawable.privacy_item_circle_media_projection;
+            i = C1894R.C1896drawable.privacy_item_circle_media_projection;
         } else {
             throw new NoWhenBranchMatchedException();
         }
@@ -209,7 +209,7 @@ public final class PrivacyDialog extends SystemUIDialog {
 
     /* access modifiers changed from: private */
     /* renamed from: clickListener$lambda-4  reason: not valid java name */
-    public static final void m2871clickListener$lambda4(Function4 function4, View view) {
+    public static final void m2876clickListener$lambda4(Function4 function4, View view) {
         Intrinsics.checkNotNullParameter(function4, "$activityStarter");
         Object tag = view.getTag();
         if (tag != null) {
@@ -218,7 +218,7 @@ public final class PrivacyDialog extends SystemUIDialog {
         }
     }
 
-    @Metadata(mo64986d1 = {"\u0000L\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u000e\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0010\r\n\u0002\b\u0004\n\u0002\u0010\t\n\u0000\n\u0002\u0010\u000b\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\b\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b$\b\b\u0018\u00002\u00020\u0001B\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\u0006\u0010\u0006\u001a\u00020\u0007\u0012\u0006\u0010\b\u001a\u00020\t\u0012\b\u0010\n\u001a\u0004\u0018\u00010\t\u0012\b\u0010\u000b\u001a\u0004\u0018\u00010\t\u0012\b\u0010\f\u001a\u0004\u0018\u00010\t\u0012\u0006\u0010\r\u001a\u00020\u000e\u0012\u0006\u0010\u000f\u001a\u00020\u0010\u0012\u0006\u0010\u0011\u001a\u00020\u0010\u0012\u0006\u0010\u0012\u001a\u00020\u0010\u0012\u0006\u0010\u0013\u001a\u00020\t\u0012\b\u0010\u0014\u001a\u0004\u0018\u00010\u0015\u0012\b\u0010\u0016\u001a\u0004\u0018\u00010\u0017¢\u0006\u0002\u0010\u0018J\t\u00102\u001a\u00020\u0003HÆ\u0003J\t\u00103\u001a\u00020\u0010HÆ\u0003J\t\u00104\u001a\u00020\u0010HÆ\u0003J\t\u00105\u001a\u00020\tHÆ\u0003J\u000b\u00106\u001a\u0004\u0018\u00010\u0015HÆ\u0003J\u000b\u00107\u001a\u0004\u0018\u00010\u0017HÆ\u0003J\t\u00108\u001a\u00020\u0005HÆ\u0003J\t\u00109\u001a\u00020\u0007HÆ\u0003J\t\u0010:\u001a\u00020\tHÆ\u0003J\u000b\u0010;\u001a\u0004\u0018\u00010\tHÆ\u0003J\u000b\u0010<\u001a\u0004\u0018\u00010\tHÆ\u0003J\u000b\u0010=\u001a\u0004\u0018\u00010\tHÆ\u0003J\t\u0010>\u001a\u00020\u000eHÆ\u0003J\t\u0010?\u001a\u00020\u0010HÆ\u0003J\u0001\u0010@\u001a\u00020\u00002\b\b\u0002\u0010\u0002\u001a\u00020\u00032\b\b\u0002\u0010\u0004\u001a\u00020\u00052\b\b\u0002\u0010\u0006\u001a\u00020\u00072\b\b\u0002\u0010\b\u001a\u00020\t2\n\b\u0002\u0010\n\u001a\u0004\u0018\u00010\t2\n\b\u0002\u0010\u000b\u001a\u0004\u0018\u00010\t2\n\b\u0002\u0010\f\u001a\u0004\u0018\u00010\t2\b\b\u0002\u0010\r\u001a\u00020\u000e2\b\b\u0002\u0010\u000f\u001a\u00020\u00102\b\b\u0002\u0010\u0011\u001a\u00020\u00102\b\b\u0002\u0010\u0012\u001a\u00020\u00102\b\b\u0002\u0010\u0013\u001a\u00020\t2\n\b\u0002\u0010\u0014\u001a\u0004\u0018\u00010\u00152\n\b\u0002\u0010\u0016\u001a\u0004\u0018\u00010\u0017HÆ\u0001J\u0013\u0010A\u001a\u00020\u00102\b\u0010B\u001a\u0004\u0018\u00010\u0001HÖ\u0003J\t\u0010C\u001a\u00020\u0007HÖ\u0001J\b\u0010D\u001a\u00020\u0005H\u0016R\u0011\u0010\u000f\u001a\u00020\u0010¢\u0006\b\n\u0000\u001a\u0004\b\u0019\u0010\u001aR\u0011\u0010\b\u001a\u00020\t¢\u0006\b\n\u0000\u001a\u0004\b\u001b\u0010\u001cR\u0013\u0010\u000b\u001a\u0004\u0018\u00010\t¢\u0006\b\n\u0000\u001a\u0004\b\u001d\u0010\u001cR\u0013\u0010\n\u001a\u0004\u0018\u00010\t¢\u0006\b\n\u0000\u001a\u0004\b\u001e\u0010\u001cR\u0012\u0010\u001f\u001a\u00060 j\u0002`!X\u0004¢\u0006\u0002\n\u0000R\u0011\u0010\u0011\u001a\u00020\u0010¢\u0006\b\n\u0000\u001a\u0004\b\"\u0010\u001aR\u0011\u0010\r\u001a\u00020\u000e¢\u0006\b\n\u0000\u001a\u0004\b#\u0010$R\u0013\u0010\u0016\u001a\u0004\u0018\u00010\u0017¢\u0006\b\n\u0000\u001a\u0004\b%\u0010&R\u0013\u0010\u0014\u001a\u0004\u0018\u00010\u0015¢\u0006\b\n\u0000\u001a\u0004\b'\u0010(R\u0011\u0010\u0004\u001a\u00020\u0005¢\u0006\b\n\u0000\u001a\u0004\b)\u0010*R\u0011\u0010\u0013\u001a\u00020\t¢\u0006\b\n\u0000\u001a\u0004\b+\u0010\u001cR\u0011\u0010\u0012\u001a\u00020\u0010¢\u0006\b\n\u0000\u001a\u0004\b,\u0010\u001aR\u0013\u0010\f\u001a\u0004\u0018\u00010\t¢\u0006\b\n\u0000\u001a\u0004\b-\u0010\u001cR\u0011\u0010\u0002\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b.\u0010/R\u0011\u0010\u0006\u001a\u00020\u0007¢\u0006\b\n\u0000\u001a\u0004\b0\u00101¨\u0006E"}, mo64987d2 = {"Lcom/android/systemui/privacy/PrivacyDialog$PrivacyElement;", "", "type", "Lcom/android/systemui/privacy/PrivacyType;", "packageName", "", "userId", "", "applicationName", "", "attributionTag", "attributionLabel", "proxyLabel", "lastActiveTimestamp", "", "active", "", "enterprise", "phoneCall", "permGroupName", "navigationIntent", "Landroid/content/Intent;", "micModeInfo", "Lcom/nothing/systemui/privacy/PrivacyDialogControllerEx$MicModeInfo;", "(Lcom/android/systemui/privacy/PrivacyType;Ljava/lang/String;ILjava/lang/CharSequence;Ljava/lang/CharSequence;Ljava/lang/CharSequence;Ljava/lang/CharSequence;JZZZLjava/lang/CharSequence;Landroid/content/Intent;Lcom/nothing/systemui/privacy/PrivacyDialogControllerEx$MicModeInfo;)V", "getActive", "()Z", "getApplicationName", "()Ljava/lang/CharSequence;", "getAttributionLabel", "getAttributionTag", "builder", "Ljava/lang/StringBuilder;", "Lkotlin/text/StringBuilder;", "getEnterprise", "getLastActiveTimestamp", "()J", "getMicModeInfo", "()Lcom/nothing/systemui/privacy/PrivacyDialogControllerEx$MicModeInfo;", "getNavigationIntent", "()Landroid/content/Intent;", "getPackageName", "()Ljava/lang/String;", "getPermGroupName", "getPhoneCall", "getProxyLabel", "getType", "()Lcom/android/systemui/privacy/PrivacyType;", "getUserId", "()I", "component1", "component10", "component11", "component12", "component13", "component14", "component2", "component3", "component4", "component5", "component6", "component7", "component8", "component9", "copy", "equals", "other", "hashCode", "toString", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u0000L\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u000e\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0010\r\n\u0002\b\u0004\n\u0002\u0010\t\n\u0000\n\u0002\u0010\u000b\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\b\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b$\b\b\u0018\u00002\u00020\u0001B\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\u0006\u0010\u0006\u001a\u00020\u0007\u0012\u0006\u0010\b\u001a\u00020\t\u0012\b\u0010\n\u001a\u0004\u0018\u00010\t\u0012\b\u0010\u000b\u001a\u0004\u0018\u00010\t\u0012\b\u0010\f\u001a\u0004\u0018\u00010\t\u0012\u0006\u0010\r\u001a\u00020\u000e\u0012\u0006\u0010\u000f\u001a\u00020\u0010\u0012\u0006\u0010\u0011\u001a\u00020\u0010\u0012\u0006\u0010\u0012\u001a\u00020\u0010\u0012\u0006\u0010\u0013\u001a\u00020\t\u0012\b\u0010\u0014\u001a\u0004\u0018\u00010\u0015\u0012\b\u0010\u0016\u001a\u0004\u0018\u00010\u0017¢\u0006\u0002\u0010\u0018J\t\u00102\u001a\u00020\u0003HÆ\u0003J\t\u00103\u001a\u00020\u0010HÆ\u0003J\t\u00104\u001a\u00020\u0010HÆ\u0003J\t\u00105\u001a\u00020\tHÆ\u0003J\u000b\u00106\u001a\u0004\u0018\u00010\u0015HÆ\u0003J\u000b\u00107\u001a\u0004\u0018\u00010\u0017HÆ\u0003J\t\u00108\u001a\u00020\u0005HÆ\u0003J\t\u00109\u001a\u00020\u0007HÆ\u0003J\t\u0010:\u001a\u00020\tHÆ\u0003J\u000b\u0010;\u001a\u0004\u0018\u00010\tHÆ\u0003J\u000b\u0010<\u001a\u0004\u0018\u00010\tHÆ\u0003J\u000b\u0010=\u001a\u0004\u0018\u00010\tHÆ\u0003J\t\u0010>\u001a\u00020\u000eHÆ\u0003J\t\u0010?\u001a\u00020\u0010HÆ\u0003J\u0001\u0010@\u001a\u00020\u00002\b\b\u0002\u0010\u0002\u001a\u00020\u00032\b\b\u0002\u0010\u0004\u001a\u00020\u00052\b\b\u0002\u0010\u0006\u001a\u00020\u00072\b\b\u0002\u0010\b\u001a\u00020\t2\n\b\u0002\u0010\n\u001a\u0004\u0018\u00010\t2\n\b\u0002\u0010\u000b\u001a\u0004\u0018\u00010\t2\n\b\u0002\u0010\f\u001a\u0004\u0018\u00010\t2\b\b\u0002\u0010\r\u001a\u00020\u000e2\b\b\u0002\u0010\u000f\u001a\u00020\u00102\b\b\u0002\u0010\u0011\u001a\u00020\u00102\b\b\u0002\u0010\u0012\u001a\u00020\u00102\b\b\u0002\u0010\u0013\u001a\u00020\t2\n\b\u0002\u0010\u0014\u001a\u0004\u0018\u00010\u00152\n\b\u0002\u0010\u0016\u001a\u0004\u0018\u00010\u0017HÆ\u0001J\u0013\u0010A\u001a\u00020\u00102\b\u0010B\u001a\u0004\u0018\u00010\u0001HÖ\u0003J\t\u0010C\u001a\u00020\u0007HÖ\u0001J\b\u0010D\u001a\u00020\u0005H\u0016R\u0011\u0010\u000f\u001a\u00020\u0010¢\u0006\b\n\u0000\u001a\u0004\b\u0019\u0010\u001aR\u0011\u0010\b\u001a\u00020\t¢\u0006\b\n\u0000\u001a\u0004\b\u001b\u0010\u001cR\u0013\u0010\u000b\u001a\u0004\u0018\u00010\t¢\u0006\b\n\u0000\u001a\u0004\b\u001d\u0010\u001cR\u0013\u0010\n\u001a\u0004\u0018\u00010\t¢\u0006\b\n\u0000\u001a\u0004\b\u001e\u0010\u001cR\u0012\u0010\u001f\u001a\u00060 j\u0002`!X\u0004¢\u0006\u0002\n\u0000R\u0011\u0010\u0011\u001a\u00020\u0010¢\u0006\b\n\u0000\u001a\u0004\b\"\u0010\u001aR\u0011\u0010\r\u001a\u00020\u000e¢\u0006\b\n\u0000\u001a\u0004\b#\u0010$R\u0013\u0010\u0016\u001a\u0004\u0018\u00010\u0017¢\u0006\b\n\u0000\u001a\u0004\b%\u0010&R\u0013\u0010\u0014\u001a\u0004\u0018\u00010\u0015¢\u0006\b\n\u0000\u001a\u0004\b'\u0010(R\u0011\u0010\u0004\u001a\u00020\u0005¢\u0006\b\n\u0000\u001a\u0004\b)\u0010*R\u0011\u0010\u0013\u001a\u00020\t¢\u0006\b\n\u0000\u001a\u0004\b+\u0010\u001cR\u0011\u0010\u0012\u001a\u00020\u0010¢\u0006\b\n\u0000\u001a\u0004\b,\u0010\u001aR\u0013\u0010\f\u001a\u0004\u0018\u00010\t¢\u0006\b\n\u0000\u001a\u0004\b-\u0010\u001cR\u0011\u0010\u0002\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b.\u0010/R\u0011\u0010\u0006\u001a\u00020\u0007¢\u0006\b\n\u0000\u001a\u0004\b0\u00101¨\u0006E"}, mo65043d2 = {"Lcom/android/systemui/privacy/PrivacyDialog$PrivacyElement;", "", "type", "Lcom/android/systemui/privacy/PrivacyType;", "packageName", "", "userId", "", "applicationName", "", "attributionTag", "attributionLabel", "proxyLabel", "lastActiveTimestamp", "", "active", "", "enterprise", "phoneCall", "permGroupName", "navigationIntent", "Landroid/content/Intent;", "micModeInfo", "Lcom/nothing/systemui/privacy/PrivacyDialogControllerEx$MicModeInfo;", "(Lcom/android/systemui/privacy/PrivacyType;Ljava/lang/String;ILjava/lang/CharSequence;Ljava/lang/CharSequence;Ljava/lang/CharSequence;Ljava/lang/CharSequence;JZZZLjava/lang/CharSequence;Landroid/content/Intent;Lcom/nothing/systemui/privacy/PrivacyDialogControllerEx$MicModeInfo;)V", "getActive", "()Z", "getApplicationName", "()Ljava/lang/CharSequence;", "getAttributionLabel", "getAttributionTag", "builder", "Ljava/lang/StringBuilder;", "Lkotlin/text/StringBuilder;", "getEnterprise", "getLastActiveTimestamp", "()J", "getMicModeInfo", "()Lcom/nothing/systemui/privacy/PrivacyDialogControllerEx$MicModeInfo;", "getNavigationIntent", "()Landroid/content/Intent;", "getPackageName", "()Ljava/lang/String;", "getPermGroupName", "getPhoneCall", "getProxyLabel", "getType", "()Lcom/android/systemui/privacy/PrivacyType;", "getUserId", "()I", "component1", "component10", "component11", "component12", "component13", "component14", "component2", "component3", "component4", "component5", "component6", "component7", "component8", "component9", "copy", "equals", "other", "hashCode", "toString", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* compiled from: PrivacyDialog.kt */
     public static final class PrivacyElement {
         private final boolean active;

@@ -42,7 +42,7 @@ import androidx.core.widget.TextViewCompat;
 import androidx.customview.view.AbsSavedState;
 import androidx.transition.Fade;
 import androidx.transition.TransitionManager;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.animation.AnimationUtils;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.internal.CheckableImageButton;
@@ -61,7 +61,7 @@ public class TextInputLayout extends LinearLayout {
     public static final int BOX_BACKGROUND_FILLED = 1;
     public static final int BOX_BACKGROUND_NONE = 0;
     public static final int BOX_BACKGROUND_OUTLINE = 2;
-    private static final int DEF_STYLE_RES = C3621R.style.Widget_Design_TextInputLayout;
+    private static final int DEF_STYLE_RES = C3631R.style.Widget_Design_TextInputLayout;
     public static final int END_ICON_CLEAR_TEXT = 2;
     public static final int END_ICON_CUSTOM = -1;
     public static final int END_ICON_DROPDOWN_MENU = 3;
@@ -183,7 +183,7 @@ public class TextInputLayout extends LinearLayout {
     }
 
     public TextInputLayout(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, C3621R.attr.textInputStyle);
+        this(context, attributeSet, C3631R.attr.textInputStyle);
     }
 
     /* JADX WARNING: Illegal instructions before constructor call */
@@ -251,11 +251,11 @@ public class TextInputLayout extends LinearLayout {
             r6.setVisibility(r2)
             r4.setVisibility(r2)
             android.view.LayoutInflater r2 = android.view.LayoutInflater.from(r13)
-            int r3 = com.google.android.material.C3621R.layout.design_text_input_end_icon
+            int r3 = com.google.android.material.C3631R.layout.design_text_input_end_icon
             android.view.View r3 = r2.inflate(r3, r5, r11)
             com.google.android.material.internal.CheckableImageButton r3 = (com.google.android.material.internal.CheckableImageButton) r3
             r0.errorIconView = r3
-            int r10 = com.google.android.material.C3621R.layout.design_text_input_end_icon
+            int r10 = com.google.android.material.C3631R.layout.design_text_input_end_icon
             android.view.View r2 = r2.inflate(r10, r6, r11)
             r10 = r2
             com.google.android.material.internal.CheckableImageButton r10 = (com.google.android.material.internal.CheckableImageButton) r10
@@ -278,23 +278,23 @@ public class TextInputLayout extends LinearLayout {
             r1.setPositionInterpolator(r2)
             r2 = 8388659(0x800033, float:1.1755015E-38)
             r1.setCollapsedTextGravity(r2)
-            int[] r3 = com.google.android.material.C3621R.styleable.TextInputLayout
+            int[] r3 = com.google.android.material.C3631R.styleable.TextInputLayout
             r1 = 5
             int[] r14 = new int[r1]
-            int r1 = com.google.android.material.C3621R.styleable.TextInputLayout_counterTextAppearance
+            int r1 = com.google.android.material.C3631R.styleable.TextInputLayout_counterTextAppearance
             r2 = 0
             r14[r2] = r1
-            int r1 = com.google.android.material.C3621R.styleable.TextInputLayout_counterOverflowTextAppearance
+            int r1 = com.google.android.material.C3631R.styleable.TextInputLayout_counterOverflowTextAppearance
             r2 = 1
             r14[r2] = r1
-            int r1 = com.google.android.material.C3621R.styleable.TextInputLayout_errorTextAppearance
+            int r1 = com.google.android.material.C3631R.styleable.TextInputLayout_errorTextAppearance
             r2 = 2
             r14[r2] = r1
-            int r1 = com.google.android.material.C3621R.styleable.TextInputLayout_helperTextTextAppearance
+            int r1 = com.google.android.material.C3631R.styleable.TextInputLayout_helperTextTextAppearance
             r11 = 3
             r14[r11] = r1
             r1 = 4
-            int r17 = com.google.android.material.C3621R.styleable.TextInputLayout_hintTextAppearance
+            int r17 = com.google.android.material.C3631R.styleable.TextInputLayout_hintTextAppearance
             r14[r1] = r17
             r1 = r13
             r11 = r2
@@ -310,48 +310,48 @@ public class TextInputLayout extends LinearLayout {
             com.google.android.material.textfield.StartCompoundLayout r2 = new com.google.android.material.textfield.StartCompoundLayout
             r2.<init>(r0, r1)
             r0.startLayout = r2
-            int r3 = com.google.android.material.C3621R.styleable.TextInputLayout_hintEnabled
+            int r3 = com.google.android.material.C3631R.styleable.TextInputLayout_hintEnabled
             r4 = 1
             boolean r3 = r1.getBoolean(r3, r4)
             r0.hintEnabled = r3
-            int r3 = com.google.android.material.C3621R.styleable.TextInputLayout_android_hint
+            int r3 = com.google.android.material.C3631R.styleable.TextInputLayout_android_hint
             java.lang.CharSequence r3 = r1.getText(r3)
             r0.setHint((java.lang.CharSequence) r3)
-            int r3 = com.google.android.material.C3621R.styleable.TextInputLayout_hintAnimationEnabled
+            int r3 = com.google.android.material.C3631R.styleable.TextInputLayout_hintAnimationEnabled
             boolean r3 = r1.getBoolean(r3, r4)
             r0.hintAnimationEnabled = r3
-            int r3 = com.google.android.material.C3621R.styleable.TextInputLayout_expandedHintEnabled
+            int r3 = com.google.android.material.C3631R.styleable.TextInputLayout_expandedHintEnabled
             boolean r3 = r1.getBoolean(r3, r4)
             r0.expandedHintEnabled = r3
-            int r3 = com.google.android.material.C3621R.styleable.TextInputLayout_android_minEms
+            int r3 = com.google.android.material.C3631R.styleable.TextInputLayout_android_minEms
             boolean r3 = r1.hasValue(r3)
             if (r3 == 0) goto L_0x013e
-            int r3 = com.google.android.material.C3621R.styleable.TextInputLayout_android_minEms
+            int r3 = com.google.android.material.C3631R.styleable.TextInputLayout_android_minEms
             r4 = -1
             int r3 = r1.getInt(r3, r4)
             r0.setMinEms(r3)
             goto L_0x0150
         L_0x013e:
             r4 = -1
-            int r3 = com.google.android.material.C3621R.styleable.TextInputLayout_android_minWidth
+            int r3 = com.google.android.material.C3631R.styleable.TextInputLayout_android_minWidth
             boolean r3 = r1.hasValue(r3)
             if (r3 == 0) goto L_0x0150
-            int r3 = com.google.android.material.C3621R.styleable.TextInputLayout_android_minWidth
+            int r3 = com.google.android.material.C3631R.styleable.TextInputLayout_android_minWidth
             int r3 = r1.getDimensionPixelSize(r3, r4)
             r0.setMinWidth(r3)
         L_0x0150:
-            int r3 = com.google.android.material.C3621R.styleable.TextInputLayout_android_maxEms
+            int r3 = com.google.android.material.C3631R.styleable.TextInputLayout_android_maxEms
             boolean r3 = r1.hasValue(r3)
             if (r3 == 0) goto L_0x0162
-            int r3 = com.google.android.material.C3621R.styleable.TextInputLayout_android_maxEms
+            int r3 = com.google.android.material.C3631R.styleable.TextInputLayout_android_maxEms
             int r3 = r1.getInt(r3, r4)
             r0.setMaxEms(r3)
             goto L_0x0173
         L_0x0162:
-            int r3 = com.google.android.material.C3621R.styleable.TextInputLayout_android_maxWidth
+            int r3 = com.google.android.material.C3631R.styleable.TextInputLayout_android_maxWidth
             boolean r3 = r1.hasValue(r3)
             if (r3 == 0) goto L_0x0173
-            int r3 = com.google.android.material.C3621R.styleable.TextInputLayout_android_maxWidth
+            int r3 = com.google.android.material.C3631R.styleable.TextInputLayout_android_maxWidth
             int r3 = r1.getDimensionPixelSize(r3, r4)
             r0.setMaxWidth(r3)
         L_0x0173:
@@ -359,35 +359,35 @@ public class TextInputLayout extends LinearLayout {
             com.google.android.material.shape.ShapeAppearanceModel r3 = r3.build()
             r0.shapeAppearanceModel = r3
             android.content.res.Resources r3 = r13.getResources()
-            int r4 = com.google.android.material.C3621R.dimen.mtrl_textinput_box_label_cutout_padding
+            int r4 = com.google.android.material.C3631R.dimen.mtrl_textinput_box_label_cutout_padding
             int r3 = r3.getDimensionPixelOffset(r4)
             r0.boxLabelCutoutPaddingPx = r3
-            int r3 = com.google.android.material.C3621R.styleable.TextInputLayout_boxCollapsedPaddingTop
+            int r3 = com.google.android.material.C3631R.styleable.TextInputLayout_boxCollapsedPaddingTop
             r4 = 0
             int r3 = r1.getDimensionPixelOffset(r3, r4)
             r0.boxCollapsedPaddingTopPx = r3
-            int r3 = com.google.android.material.C3621R.styleable.TextInputLayout_boxStrokeWidth
+            int r3 = com.google.android.material.C3631R.styleable.TextInputLayout_boxStrokeWidth
             android.content.res.Resources r4 = r13.getResources()
-            int r5 = com.google.android.material.C3621R.dimen.mtrl_textinput_box_stroke_width_default
+            int r5 = com.google.android.material.C3631R.dimen.mtrl_textinput_box_stroke_width_default
             int r4 = r4.getDimensionPixelSize(r5)
             int r3 = r1.getDimensionPixelSize(r3, r4)
             r0.boxStrokeWidthDefaultPx = r3
-            int r3 = com.google.android.material.C3621R.styleable.TextInputLayout_boxStrokeWidthFocused
+            int r3 = com.google.android.material.C3631R.styleable.TextInputLayout_boxStrokeWidthFocused
             android.content.res.Resources r4 = r13.getResources()
-            int r5 = com.google.android.material.C3621R.dimen.mtrl_textinput_box_stroke_width_focused
+            int r5 = com.google.android.material.C3631R.dimen.mtrl_textinput_box_stroke_width_focused
             int r4 = r4.getDimensionPixelSize(r5)
             int r3 = r1.getDimensionPixelSize(r3, r4)
             r0.boxStrokeWidthFocusedPx = r3
             int r3 = r0.boxStrokeWidthDefaultPx
             r0.boxStrokeWidthPx = r3
-            int r3 = com.google.android.material.C3621R.styleable.TextInputLayout_boxCornerRadiusTopStart
+            int r3 = com.google.android.material.C3631R.styleable.TextInputLayout_boxCornerRadiusTopStart
             r4 = -1082130432(0xffffffffbf800000, float:-1.0)
             float r3 = r1.getDimension(r3, r4)
-            int r5 = com.google.android.material.C3621R.styleable.TextInputLayout_boxCornerRadiusTopEnd
+            int r5 = com.google.android.material.C3631R.styleable.TextInputLayout_boxCornerRadiusTopEnd
             float r5 = r1.getDimension(r5, r4)
-            int r6 = com.google.android.material.C3621R.styleable.TextInputLayout_boxCornerRadiusBottomEnd
+            int r6 = com.google.android.material.C3631R.styleable.TextInputLayout_boxCornerRadiusBottomEnd
             float r6 = r1.getDimension(r6, r4)
-            int r7 = com.google.android.material.C3621R.styleable.TextInputLayout_boxCornerRadiusBottomStart
+            int r7 = com.google.android.material.C3631R.styleable.TextInputLayout_boxCornerRadiusBottomStart
             float r4 = r1.getDimension(r7, r4)
             com.google.android.material.shape.ShapeAppearanceModel r7 = r0.shapeAppearanceModel
             com.google.android.material.shape.ShapeAppearanceModel$Builder r7 = r7.toBuilder()
@@ -410,7 +410,7 @@ public class TextInputLayout extends LinearLayout {
         L_0x01f7:
             com.google.android.material.shape.ShapeAppearanceModel r3 = r7.build()
             r0.shapeAppearanceModel = r3
-            int r3 = com.google.android.material.C3621R.styleable.TextInputLayout_boxBackgroundColor
+            int r3 = com.google.android.material.C3631R.styleable.TextInputLayout_boxBackgroundColor
             android.content.res.ColorStateList r3 = com.google.android.material.resources.MaterialResources.getColorStateList((android.content.Context) r13, (androidx.appcompat.widget.TintTypedArray) r1, (int) r3)
             if (r3 == 0) goto L_0x025f
             int r4 = r3.getDefaultColor()
@@ -439,7 +439,7 @@ public class TextInputLayout extends LinearLayout {
             r4 = -1
             int r3 = r0.defaultFilledBackgroundColor
             r0.focusedFilledBackgroundColor = r3
-            int r3 = com.google.android.material.C3621R.C3622color.mtrl_filled_background_color
+            int r3 = com.google.android.material.C3631R.C3632color.mtrl_filled_background_color
             android.content.res.ColorStateList r3 = androidx.appcompat.content.res.AppCompatResources.getColorStateList(r13, r3)
             r6 = 1
             int[] r7 = new int[r6]
@@ -461,44 +461,44 @@ public class TextInputLayout extends LinearLayout {
             r0.focusedFilledBackgroundColor = r8
             r0.hoveredFilledBackgroundColor = r8
         L_0x026a:
-            int r3 = com.google.android.material.C3621R.styleable.TextInputLayout_android_textColorHint
+            int r3 = com.google.android.material.C3631R.styleable.TextInputLayout_android_textColorHint
             boolean r3 = r1.hasValue(r3)
             if (r3 == 0) goto L_0x027c
-            int r3 = com.google.android.material.C3621R.styleable.TextInputLayout_android_textColorHint
+            int r3 = com.google.android.material.C3631R.styleable.TextInputLayout_android_textColorHint
             android.content.res.ColorStateList r3 = r1.getColorStateList(r3)
             r0.focusedTextColor = r3
             r0.defaultHintTextColor = r3
         L_0x027c:
-            int r3 = com.google.android.material.C3621R.styleable.TextInputLayout_boxStrokeColor
+            int r3 = com.google.android.material.C3631R.styleable.TextInputLayout_boxStrokeColor
             android.content.res.ColorStateList r3 = com.google.android.material.resources.MaterialResources.getColorStateList((android.content.Context) r13, (androidx.appcompat.widget.TintTypedArray) r1, (int) r3)
-            int r4 = com.google.android.material.C3621R.styleable.TextInputLayout_boxStrokeColor
+            int r4 = com.google.android.material.C3631R.styleable.TextInputLayout_boxStrokeColor
             r5 = 0
             int r4 = r1.getColor(r4, r5)
             r0.focusedStrokeColor = r4
-            int r4 = com.google.android.material.C3621R.C3622color.mtrl_textinput_default_box_stroke_color
+            int r4 = com.google.android.material.C3631R.C3632color.mtrl_textinput_default_box_stroke_color
             int r4 = androidx.core.content.ContextCompat.getColor(r13, r4)
             r0.defaultStrokeColor = r4
-            int r4 = com.google.android.material.C3621R.C3622color.mtrl_textinput_disabled_color
+            int r4 = com.google.android.material.C3631R.C3632color.mtrl_textinput_disabled_color
             int r4 = androidx.core.content.ContextCompat.getColor(r13, r4)
             r0.disabledColor = r4
-            int r4 = com.google.android.material.C3621R.C3622color.mtrl_textinput_hovered_box_stroke_color
+            int r4 = com.google.android.material.C3631R.C3632color.mtrl_textinput_hovered_box_stroke_color
             int r4 = androidx.core.content.ContextCompat.getColor(r13, r4)
             r0.hoveredStrokeColor = r4
             if (r3 == 0) goto L_0x02a8
             r0.setBoxStrokeColorStateList(r3)
         L_0x02a8:
-            int r3 = com.google.android.material.C3621R.styleable.TextInputLayout_boxStrokeErrorColor
+            int r3 = com.google.android.material.C3631R.styleable.TextInputLayout_boxStrokeErrorColor
             boolean r3 = r1.hasValue(r3)
             if (r3 == 0) goto L_0x02b9
-            int r3 = com.google.android.material.C3621R.styleable.TextInputLayout_boxStrokeErrorColor
+            int r3 = com.google.android.material.C3631R.styleable.TextInputLayout_boxStrokeErrorColor
             android.content.res.ColorStateList r3 = com.google.android.material.resources.MaterialResources.getColorStateList((android.content.Context) r13, (androidx.appcompat.widget.TintTypedArray) r1, (int) r3)
             r0.setBoxStrokeErrorColor(r3)
         L_0x02b9:
-            int r3 = com.google.android.material.C3621R.styleable.TextInputLayout_hintTextAppearance
+            int r3 = com.google.android.material.C3631R.styleable.TextInputLayout_hintTextAppearance
             r4 = -1
             int r3 = r1.getResourceId(r3, r4)
             if (r3 == r4) goto L_0x02cd
-            int r3 = com.google.android.material.C3621R.styleable.TextInputLayout_hintTextAppearance
+            int r3 = com.google.android.material.C3631R.styleable.TextInputLayout_hintTextAppearance
             r4 = 0
             int r3 = r1.getResourceId(r3, r4)
             r0.setHintTextAppearance(r3)
@@ -506,13 +506,13 @@ public class TextInputLayout extends LinearLayout {
         L_0x02cd:
             r4 = 0
         L_0x02ce:
-            int r3 = com.google.android.material.C3621R.styleable.TextInputLayout_errorTextAppearance
+            int r3 = com.google.android.material.C3631R.styleable.TextInputLayout_errorTextAppearance
             int r3 = r1.getResourceId(r3, r4)
-            int r5 = com.google.android.material.C3621R.styleable.TextInputLayout_errorContentDescription
+            int r5 = com.google.android.material.C3631R.styleable.TextInputLayout_errorContentDescription
             java.lang.CharSequence r5 = r1.getText(r5)
-            int r6 = com.google.android.material.C3621R.styleable.TextInputLayout_errorEnabled
+            int r6 = com.google.android.material.C3631R.styleable.TextInputLayout_errorEnabled
             boolean r6 = r1.getBoolean(r6, r4)
-            int r7 = com.google.android.material.C3621R.C3624id.text_input_error_icon
+            int r7 = com.google.android.material.C3631R.C3634id.text_input_error_icon
             r8 = r18
             r8.setId(r7)
             boolean r7 = com.google.android.material.resources.MaterialResources.isFontScaleAtLeast1_3(r13)
@@ -521,32 +521,32 @@ public class TextInputLayout extends LinearLayout {
             android.view.ViewGroup$MarginLayoutParams r7 = (android.view.ViewGroup.MarginLayoutParams) r7
             androidx.core.view.MarginLayoutParamsCompat.setMarginStart(r7, r4)
         L_0x02f6:
-            int r4 = com.google.android.material.C3621R.styleable.TextInputLayout_errorIconTint
+            int r4 = com.google.android.material.C3631R.styleable.TextInputLayout_errorIconTint
             boolean r4 = r1.hasValue(r4)
             if (r4 == 0) goto L_0x0306
-            int r4 = com.google.android.material.C3621R.styleable.TextInputLayout_errorIconTint
+            int r4 = com.google.android.material.C3631R.styleable.TextInputLayout_errorIconTint
             android.content.res.ColorStateList r4 = com.google.android.material.resources.MaterialResources.getColorStateList((android.content.Context) r13, (androidx.appcompat.widget.TintTypedArray) r1, (int) r4)
             r0.errorIconTintList = r4
         L_0x0306:
-            int r4 = com.google.android.material.C3621R.styleable.TextInputLayout_errorIconTintMode
+            int r4 = com.google.android.material.C3631R.styleable.TextInputLayout_errorIconTintMode
             boolean r4 = r1.hasValue(r4)
             r7 = 0
             if (r4 == 0) goto L_0x031c
-            int r4 = com.google.android.material.C3621R.styleable.TextInputLayout_errorIconTintMode
+            int r4 = com.google.android.material.C3631R.styleable.TextInputLayout_errorIconTintMode
             r9 = -1
             int r4 = r1.getInt(r4, r9)
             android.graphics.PorterDuff$Mode r4 = com.google.android.material.internal.ViewUtils.parseTintMode(r4, r7)
             r0.errorIconTintMode = r4
         L_0x031c:
-            int r4 = com.google.android.material.C3621R.styleable.TextInputLayout_errorIconDrawable
+            int r4 = com.google.android.material.C3631R.styleable.TextInputLayout_errorIconDrawable
             boolean r4 = r1.hasValue(r4)
             if (r4 == 0) goto L_0x032d
-            int r4 = com.google.android.material.C3621R.styleable.TextInputLayout_errorIconDrawable
+            int r4 = com.google.android.material.C3631R.styleable.TextInputLayout_errorIconDrawable
             android.graphics.drawable.Drawable r4 = r1.getDrawable(r4)
             r0.setErrorIconDrawable((android.graphics.drawable.Drawable) r4)
         L_0x032d:
             android.content.res.Resources r4 = r27.getResources()
-            int r9 = com.google.android.material.C3621R.string.error_icon_content_description
+            int r9 = com.google.android.material.C3631R.string.error_icon_content_description
             java.lang.CharSequence r4 = r4.getText(r9)
             r8.setContentDescription(r4)
             androidx.core.view.ViewCompat.setImportantForAccessibility(r8, r11)
@@ -554,41 +554,41 @@ public class TextInputLayout extends LinearLayout {
             r8.setClickable(r4)
             r8.setPressable(r4)
             r8.setFocusable(r4)
-            int r9 = com.google.android.material.C3621R.styleable.TextInputLayout_helperTextTextAppearance
+            int r9 = com.google.android.material.C3631R.styleable.TextInputLayout_helperTextTextAppearance
             int r9 = r1.getResourceId(r9, r4)
-            int r14 = com.google.android.material.C3621R.styleable.TextInputLayout_helperTextEnabled
+            int r14 = com.google.android.material.C3631R.styleable.TextInputLayout_helperTextEnabled
             boolean r14 = r1.getBoolean(r14, r4)
-            int r7 = com.google.android.material.C3621R.styleable.TextInputLayout_helperText
+            int r7 = com.google.android.material.C3631R.styleable.TextInputLayout_helperText
             java.lang.CharSequence r7 = r1.getText(r7)
-            int r11 = com.google.android.material.C3621R.styleable.TextInputLayout_placeholderTextAppearance
+            int r11 = com.google.android.material.C3631R.styleable.TextInputLayout_placeholderTextAppearance
             int r11 = r1.getResourceId(r11, r4)
-            int r4 = com.google.android.material.C3621R.styleable.TextInputLayout_placeholderText
+            int r4 = com.google.android.material.C3631R.styleable.TextInputLayout_placeholderText
             java.lang.CharSequence r4 = r1.getText(r4)
             r30 = r7
-            int r7 = com.google.android.material.C3621R.styleable.TextInputLayout_suffixTextAppearance
+            int r7 = com.google.android.material.C3631R.styleable.TextInputLayout_suffixTextAppearance
             r18 = r6
             r6 = 0
             int r7 = r1.getResourceId(r7, r6)
-            int r6 = com.google.android.material.C3621R.styleable.TextInputLayout_suffixText
+            int r6 = com.google.android.material.C3631R.styleable.TextInputLayout_suffixText
             java.lang.CharSequence r6 = r1.getText(r6)
             r22 = r6
-            int r6 = com.google.android.material.C3621R.styleable.TextInputLayout_counterEnabled
+            int r6 = com.google.android.material.C3631R.styleable.TextInputLayout_counterEnabled
             r23 = r14
             r14 = 0
             boolean r6 = r1.getBoolean(r6, r14)
-            int r14 = com.google.android.material.C3621R.styleable.TextInputLayout_counterMaxLength
+            int r14 = com.google.android.material.C3631R.styleable.TextInputLayout_counterMaxLength
             r24 = r6
             r6 = -1
             int r14 = r1.getInt(r14, r6)
             r0.setCounterMaxLength(r14)
-            int r6 = com.google.android.material.C3621R.styleable.TextInputLayout_counterTextAppearance
+            int r6 = com.google.android.material.C3631R.styleable.TextInputLayout_counterTextAppearance
             r14 = 0
             int r6 = r1.getResourceId(r6, r14)
             r0.counterTextAppearance = r6
-            int r6 = com.google.android.material.C3621R.styleable.TextInputLayout_counterOverflowTextAppearance
+            int r6 = com.google.android.material.C3631R.styleable.TextInputLayout_counterOverflowTextAppearance
             int r6 = r1.getResourceId(r6, r14)
             r0.counterOverflowTextAppearance = r6
-            int r6 = com.google.android.material.C3621R.styleable.TextInputLayout_boxBackgroundMode
+            int r6 = com.google.android.material.C3631R.styleable.TextInputLayout_boxBackgroundMode
             int r6 = r1.getInt(r6, r14)
             r0.setBoxBackgroundMode(r6)
             boolean r6 = com.google.android.material.resources.MaterialResources.isFontScaleAtLeast1_3(r13)
@@ -597,7 +597,7 @@ public class TextInputLayout extends LinearLayout {
             android.view.ViewGroup$MarginLayoutParams r6 = (android.view.ViewGroup.MarginLayoutParams) r6
             androidx.core.view.MarginLayoutParamsCompat.setMarginStart(r6, r14)
         L_0x03b6:
-            int r6 = com.google.android.material.C3621R.styleable.TextInputLayout_endIconDrawable
+            int r6 = com.google.android.material.C3631R.styleable.TextInputLayout_endIconDrawable
             int r6 = r1.getResourceId(r6, r14)
             com.google.android.material.textfield.CustomEndIconDelegate r14 = new com.google.android.material.textfield.CustomEndIconDelegate
             r14.<init>(r0, r6)
@@ -611,7 +611,7 @@ public class TextInputLayout extends LinearLayout {
             com.google.android.material.textfield.PasswordToggleEndIconDelegate r2 = new com.google.android.material.textfield.PasswordToggleEndIconDelegate
             if (r6 != 0) goto L_0x03dd
             r26 = r15
-            int r15 = com.google.android.material.C3621R.styleable.TextInputLayout_passwordToggleDrawable
+            int r15 = com.google.android.material.C3631R.styleable.TextInputLayout_passwordToggleDrawable
             int r15 = r1.getResourceId(r15, r14)
             goto L_0x03e0
         L_0x03dd:
@@ -629,75 +629,75 @@ public class TextInputLayout extends LinearLayout {
             r2.<init>(r0, r6)
             r6 = 3
             r12.append(r6, r2)
-            int r2 = com.google.android.material.C3621R.styleable.TextInputLayout_passwordToggleEnabled
+            int r2 = com.google.android.material.C3631R.styleable.TextInputLayout_passwordToggleEnabled
             boolean r2 = r1.hasValue(r2)
             if (r2 != 0) goto L_0x0427
-            int r2 = com.google.android.material.C3621R.styleable.TextInputLayout_endIconTint
+            int r2 = com.google.android.material.C3631R.styleable.TextInputLayout_endIconTint
             boolean r2 = r1.hasValue(r2)
             if (r2 == 0) goto L_0x0411
-            int r2 = com.google.android.material.C3621R.styleable.TextInputLayout_endIconTint
+            int r2 = com.google.android.material.C3631R.styleable.TextInputLayout_endIconTint
             android.content.res.ColorStateList r2 = com.google.android.material.resources.MaterialResources.getColorStateList((android.content.Context) r13, (androidx.appcompat.widget.TintTypedArray) r1, (int) r2)
             r0.endIconTintList = r2
         L_0x0411:
-            int r2 = com.google.android.material.C3621R.styleable.TextInputLayout_endIconTintMode
+            int r2 = com.google.android.material.C3631R.styleable.TextInputLayout_endIconTintMode
             boolean r2 = r1.hasValue(r2)
             if (r2 == 0) goto L_0x0427
-            int r2 = com.google.android.material.C3621R.styleable.TextInputLayout_endIconTintMode
+            int r2 = com.google.android.material.C3631R.styleable.TextInputLayout_endIconTintMode
             r6 = -1
             int r2 = r1.getInt(r2, r6)
             r6 = 0
             android.graphics.PorterDuff$Mode r2 = com.google.android.material.internal.ViewUtils.parseTintMode(r2, r6)
             r0.endIconTintMode = r2
         L_0x0427:
-            int r2 = com.google.android.material.C3621R.styleable.TextInputLayout_endIconMode
+            int r2 = com.google.android.material.C3631R.styleable.TextInputLayout_endIconMode
             boolean r2 = r1.hasValue(r2)
             if (r2 == 0) goto L_0x0455
-            int r2 = com.google.android.material.C3621R.styleable.TextInputLayout_endIconMode
+            int r2 = com.google.android.material.C3631R.styleable.TextInputLayout_endIconMode
             r6 = 0
             int r2 = r1.getInt(r2, r6)
             r0.setEndIconMode(r2)
-            int r2 = com.google.android.material.C3621R.styleable.TextInputLayout_endIconContentDescription
+            int r2 = com.google.android.material.C3631R.styleable.TextInputLayout_endIconContentDescription
             boolean r2 = r1.hasValue(r2)
             if (r2 == 0) goto L_0x044a
-            int r2 = com.google.android.material.C3621R.styleable.TextInputLayout_endIconContentDescription
+            int r2 = com.google.android.material.C3631R.styleable.TextInputLayout_endIconContentDescription
             java.lang.CharSequence r2 = r1.getText(r2)
             r0.setEndIconContentDescription((java.lang.CharSequence) r2)
         L_0x044a:
-            int r2 = com.google.android.material.C3621R.styleable.TextInputLayout_endIconCheckable
+            int r2 = com.google.android.material.C3631R.styleable.TextInputLayout_endIconCheckable
             r6 = 1
             boolean r2 = r1.getBoolean(r2, r6)
             r0.setEndIconCheckable(r2)
             goto L_0x0496
         L_0x0455:
-            int r2 = com.google.android.material.C3621R.styleable.TextInputLayout_passwordToggleEnabled
+            int r2 = com.google.android.material.C3631R.styleable.TextInputLayout_passwordToggleEnabled
             boolean r2 = r1.hasValue(r2)
             if (r2 == 0) goto L_0x0496
-            int r2 = com.google.android.material.C3621R.styleable.TextInputLayout_passwordToggleTint
+            int r2 = com.google.android.material.C3631R.styleable.TextInputLayout_passwordToggleTint
             boolean r2 = r1.hasValue(r2)
             if (r2 == 0) goto L_0x046d
-            int r2 = com.google.android.material.C3621R.styleable.TextInputLayout_passwordToggleTint
+            int r2 = com.google.android.material.C3631R.styleable.TextInputLayout_passwordToggleTint
             android.content.res.ColorStateList r2 = com.google.android.material.resources.MaterialResources.getColorStateList((android.content.Context) r13, (androidx.appcompat.widget.TintTypedArray) r1, (int) r2)
             r0.endIconTintList = r2
         L_0x046d:
-            int r2 = com.google.android.material.C3621R.styleable.TextInputLayout_passwordToggleTintMode
+            int r2 = com.google.android.material.C3631R.styleable.TextInputLayout_passwordToggleTintMode
             boolean r2 = r1.hasValue(r2)
             if (r2 == 0) goto L_0x0483
-            int r2 = com.google.android.material.C3621R.styleable.TextInputLayout_passwordToggleTintMode
+            int r2 = com.google.android.material.C3631R.styleable.TextInputLayout_passwordToggleTintMode
             r6 = -1
             int r2 = r1.getInt(r2, r6)
             r6 = 0
             android.graphics.PorterDuff$Mode r2 = com.google.android.material.internal.ViewUtils.parseTintMode(r2, r6)
             r0.endIconTintMode = r2
         L_0x0483:
-            int r2 = com.google.android.material.C3621R.styleable.TextInputLayout_passwordToggleEnabled
+            int r2 = com.google.android.material.C3631R.styleable.TextInputLayout_passwordToggleEnabled
             r6 = 0
             boolean r2 = r1.getBoolean(r2, r6)
             r0.setEndIconMode(r2)
-            int r2 = com.google.android.material.C3621R.styleable.TextInputLayout_passwordToggleContentDescription
+            int r2 = com.google.android.material.C3631R.styleable.TextInputLayout_passwordToggleContentDescription
             java.lang.CharSequence r2 = r1.getText(r2)
             r0.setEndIconContentDescription((java.lang.CharSequence) r2)
         L_0x0496:
-            int r2 = com.google.android.material.C3621R.C3624id.textinput_suffix_text
+            int r2 = com.google.android.material.C3631R.C3634id.textinput_suffix_text
             r6 = r19
             r6.setId(r2)
             android.widget.FrameLayout$LayoutParams r2 = new android.widget.FrameLayout$LayoutParams
@@ -717,56 +717,56 @@ public class TextInputLayout extends LinearLayout {
             r0.setPlaceholderText(r4)
             r0.setPlaceholderTextAppearance(r11)
             r0.setSuffixTextAppearance(r7)
-            int r2 = com.google.android.material.C3621R.styleable.TextInputLayout_errorTextColor
+            int r2 = com.google.android.material.C3631R.styleable.TextInputLayout_errorTextColor
             boolean r2 = r1.hasValue(r2)
             if (r2 == 0) goto L_0x04d9
-            int r2 = com.google.android.material.C3621R.styleable.TextInputLayout_errorTextColor
+            int r2 = com.google.android.material.C3631R.styleable.TextInputLayout_errorTextColor
             android.content.res.ColorStateList r2 = r1.getColorStateList(r2)
             r0.setErrorTextColor(r2)
         L_0x04d9:
-            int r2 = com.google.android.material.C3621R.styleable.TextInputLayout_helperTextTextColor
+            int r2 = com.google.android.material.C3631R.styleable.TextInputLayout_helperTextTextColor
             boolean r2 = r1.hasValue(r2)
             if (r2 == 0) goto L_0x04ea
-            int r2 = com.google.android.material.C3621R.styleable.TextInputLayout_helperTextTextColor
+            int r2 = com.google.android.material.C3631R.styleable.TextInputLayout_helperTextTextColor
             android.content.res.ColorStateList r2 = r1.getColorStateList(r2)
             r0.setHelperTextColor(r2)
         L_0x04ea:
-            int r2 = com.google.android.material.C3621R.styleable.TextInputLayout_hintTextColor
+            int r2 = com.google.android.material.C3631R.styleable.TextInputLayout_hintTextColor
             boolean r2 = r1.hasValue(r2)
             if (r2 == 0) goto L_0x04fb
-            int r2 = com.google.android.material.C3621R.styleable.TextInputLayout_hintTextColor
+            int r2 = com.google.android.material.C3631R.styleable.TextInputLayout_hintTextColor
             android.content.res.ColorStateList r2 = r1.getColorStateList(r2)
             r0.setHintTextColor(r2)
         L_0x04fb:
-            int r2 = com.google.android.material.C3621R.styleable.TextInputLayout_counterTextColor
+            int r2 = com.google.android.material.C3631R.styleable.TextInputLayout_counterTextColor
             boolean r2 = r1.hasValue(r2)
             if (r2 == 0) goto L_0x050c
-            int r2 = com.google.android.material.C3621R.styleable.TextInputLayout_counterTextColor
+            int r2 = com.google.android.material.C3631R.styleable.TextInputLayout_counterTextColor
             android.content.res.ColorStateList r2 = r1.getColorStateList(r2)
             r0.setCounterTextColor(r2)
         L_0x050c:
-            int r2 = com.google.android.material.C3621R.styleable.TextInputLayout_counterOverflowTextColor
+            int r2 = com.google.android.material.C3631R.styleable.TextInputLayout_counterOverflowTextColor
             boolean r2 = r1.hasValue(r2)
             if (r2 == 0) goto L_0x051d
-            int r2 = com.google.android.material.C3621R.styleable.TextInputLayout_counterOverflowTextColor
+            int r2 = com.google.android.material.C3631R.styleable.TextInputLayout_counterOverflowTextColor
             android.content.res.ColorStateList r2 = r1.getColorStateList(r2)
             r0.setCounterOverflowTextColor(r2)
         L_0x051d:
-            int r2 = com.google.android.material.C3621R.styleable.TextInputLayout_placeholderTextColor
+            int r2 = com.google.android.material.C3631R.styleable.TextInputLayout_placeholderTextColor
             boolean r2 = r1.hasValue(r2)
             if (r2 == 0) goto L_0x052e
-            int r2 = com.google.android.material.C3621R.styleable.TextInputLayout_placeholderTextColor
+            int r2 = com.google.android.material.C3631R.styleable.TextInputLayout_placeholderTextColor
             android.content.res.ColorStateList r2 = r1.getColorStateList(r2)
             r0.setPlaceholderTextColor(r2)
         L_0x052e:
-            int r2 = com.google.android.material.C3621R.styleable.TextInputLayout_suffixTextColor
+            int r2 = com.google.android.material.C3631R.styleable.TextInputLayout_suffixTextColor
             boolean r2 = r1.hasValue(r2)
             if (r2 == 0) goto L_0x053f
-            int r2 = com.google.android.material.C3621R.styleable.TextInputLayout_suffixTextColor
+            int r2 = com.google.android.material.C3631R.styleable.TextInputLayout_suffixTextColor
             android.content.res.ColorStateList r2 = r1.getColorStateList(r2)
             r0.setSuffixTextColor(r2)
         L_0x053f:
-            int r2 = com.google.android.material.C3621R.styleable.TextInputLayout_android_enabled
+            int r2 = com.google.android.material.C3631R.styleable.TextInputLayout_android_enabled
             r3 = 1
             boolean r2 = r1.getBoolean(r2, r3)
             r0.setEnabled(r2)
@@ -885,9 +885,9 @@ public class TextInputLayout extends LinearLayout {
             return;
         }
         if (MaterialResources.isFontScaleAtLeast2_0(getContext())) {
-            this.boxCollapsedPaddingTopPx = getResources().getDimensionPixelSize(C3621R.dimen.material_font_2_0_box_collapsed_padding_top);
+            this.boxCollapsedPaddingTopPx = getResources().getDimensionPixelSize(C3631R.dimen.material_font_2_0_box_collapsed_padding_top);
         } else if (MaterialResources.isFontScaleAtLeast1_3(getContext())) {
-            this.boxCollapsedPaddingTopPx = getResources().getDimensionPixelSize(C3621R.dimen.material_font_1_3_box_collapsed_padding_top);
+            this.boxCollapsedPaddingTopPx = getResources().getDimensionPixelSize(C3631R.dimen.material_font_1_3_box_collapsed_padding_top);
         }
     }
 
@@ -895,10 +895,10 @@ public class TextInputLayout extends LinearLayout {
         if (this.editText != null && this.boxBackgroundMode == 1) {
             if (MaterialResources.isFontScaleAtLeast2_0(getContext())) {
                 EditText editText2 = this.editText;
-                ViewCompat.setPaddingRelative(editText2, ViewCompat.getPaddingStart(editText2), getResources().getDimensionPixelSize(C3621R.dimen.material_filled_edittext_font_2_0_padding_top), ViewCompat.getPaddingEnd(this.editText), getResources().getDimensionPixelSize(C3621R.dimen.material_filled_edittext_font_2_0_padding_bottom));
+                ViewCompat.setPaddingRelative(editText2, ViewCompat.getPaddingStart(editText2), getResources().getDimensionPixelSize(C3631R.dimen.material_filled_edittext_font_2_0_padding_top), ViewCompat.getPaddingEnd(this.editText), getResources().getDimensionPixelSize(C3631R.dimen.material_filled_edittext_font_2_0_padding_bottom));
             } else if (MaterialResources.isFontScaleAtLeast1_3(getContext())) {
                 EditText editText3 = this.editText;
-                ViewCompat.setPaddingRelative(editText3, ViewCompat.getPaddingStart(editText3), getResources().getDimensionPixelSize(C3621R.dimen.material_filled_edittext_font_1_3_padding_top), ViewCompat.getPaddingEnd(this.editText), getResources().getDimensionPixelSize(C3621R.dimen.material_filled_edittext_font_1_3_padding_bottom));
+                ViewCompat.setPaddingRelative(editText3, ViewCompat.getPaddingStart(editText3), getResources().getDimensionPixelSize(C3631R.dimen.material_filled_edittext_font_1_3_padding_top), ViewCompat.getPaddingEnd(this.editText), getResources().getDimensionPixelSize(C3631R.dimen.material_filled_edittext_font_1_3_padding_bottom));
             }
         }
     }
@@ -1504,14 +1504,14 @@ public class TextInputLayout extends LinearLayout {
             if (z) {
                 AppCompatTextView appCompatTextView = new AppCompatTextView(getContext());
                 this.counterView = appCompatTextView;
-                appCompatTextView.setId(C3621R.C3624id.textinput_counter);
+                appCompatTextView.setId(C3631R.C3634id.textinput_counter);
                 Typeface typeface2 = this.typeface;
                 if (typeface2 != null) {
                     this.counterView.setTypeface(typeface2);
                 }
                 this.counterView.setMaxLines(1);
                 this.indicatorViewController.addIndicator(this.counterView, 2);
-                MarginLayoutParamsCompat.setMarginStart((ViewGroup.MarginLayoutParams) this.counterView.getLayoutParams(), getResources().getDimensionPixelOffset(C3621R.dimen.mtrl_textinput_counter_margin_start));
+                MarginLayoutParamsCompat.setMarginStart((ViewGroup.MarginLayoutParams) this.counterView.getLayoutParams(), getResources().getDimensionPixelOffset(C3631R.dimen.mtrl_textinput_counter_margin_start));
                 updateCounterTextAppearanceAndColor();
                 updateCounter();
             } else {
@@ -1596,7 +1596,7 @@ public class TextInputLayout extends LinearLayout {
             if (z != this.counterOverflowed) {
                 updateCounterTextAppearanceAndColor();
             }
-            this.counterView.setText(BidiFormatter.getInstance().unicodeWrap(getContext().getString(C3621R.string.character_counter_pattern, new Object[]{Integer.valueOf(i), Integer.valueOf(this.counterMaxLength)})));
+            this.counterView.setText(BidiFormatter.getInstance().unicodeWrap(getContext().getString(C3631R.string.character_counter_pattern, new Object[]{Integer.valueOf(i), Integer.valueOf(this.counterMaxLength)})));
         }
         if (this.editText != null && z != this.counterOverflowed) {
             updateLabelState(false);
@@ -1608,9 +1608,9 @@ public class TextInputLayout extends LinearLayout {
     private static void updateCounterContentDescription(Context context, TextView textView, int i, int i2, boolean z) {
         int i3;
         if (z) {
-            i3 = C3621R.string.character_counter_overflowed_content_description;
+            i3 = C3631R.string.character_counter_overflowed_content_description;
         } else {
-            i3 = C3621R.string.character_counter_content_description;
+            i3 = C3631R.string.character_counter_content_description;
         }
         textView.setContentDescription(context.getString(i3, new Object[]{Integer.valueOf(i), Integer.valueOf(i2)}));
     }
@@ -1619,7 +1619,7 @@ public class TextInputLayout extends LinearLayout {
         if (this.placeholderTextView == null) {
             AppCompatTextView appCompatTextView = new AppCompatTextView(getContext());
             this.placeholderTextView = appCompatTextView;
-            appCompatTextView.setId(C3621R.C3624id.textinput_placeholder);
+            appCompatTextView.setId(C3631R.C3634id.textinput_placeholder);
             ViewCompat.setImportantForAccessibility(this.placeholderTextView, 2);
             Fade createPlaceholderFadeTransition = createPlaceholderFadeTransition();
             this.placeholderFadeIn = createPlaceholderFadeTransition;
@@ -1807,7 +1807,7 @@ public class TextInputLayout extends LinearLayout {
 
     private void updateSuffixTextViewPadding() {
         if (this.editText != null) {
-            ViewCompat.setPaddingRelative(this.suffixTextView, getContext().getResources().getDimensionPixelSize(C3621R.dimen.material_input_text_to_prefix_suffix_padding), this.editText.getPaddingTop(), (isEndIconVisible() || isErrorIconVisible()) ? 0 : ViewCompat.getPaddingEnd(this.editText), this.editText.getPaddingBottom());
+            ViewCompat.setPaddingRelative(this.suffixTextView, getContext().getResources().getDimensionPixelSize(C3631R.dimen.material_input_text_to_prefix_suffix_padding), this.editText.getPaddingTop(), (isEndIconVisible() || isErrorIconVisible()) ? 0 : ViewCompat.getPaddingEnd(this.editText), this.editText.getPaddingBottom());
         }
     }
 
@@ -1866,8 +1866,8 @@ public class TextInputLayout extends LinearLayout {
         } catch (Exception unused) {
         }
         if (z) {
-            TextViewCompat.setTextAppearance(textView, C3621R.style.TextAppearance_AppCompat_Caption);
-            textView.setTextColor(ContextCompat.getColor(getContext(), C3621R.C3622color.design_error));
+            TextViewCompat.setTextAppearance(textView, C3631R.style.TextAppearance_AppCompat_Caption);
+            textView.setTextColor(ContextCompat.getColor(getContext(), C3631R.C3632color.design_error));
         }
     }
 
@@ -1959,7 +1959,7 @@ public class TextInputLayout extends LinearLayout {
     }
 
     private int calculateBoxBackgroundColor() {
-        return this.boxBackgroundMode == 1 ? MaterialColors.layer(MaterialColors.getColor((View) this, C3621R.attr.colorSurface, 0), this.boxBackgroundColor) : this.boxBackgroundColor;
+        return this.boxBackgroundMode == 1 ? MaterialColors.layer(MaterialColors.getColor((View) this, C3631R.attr.colorSurface, 0), this.boxBackgroundColor) : this.boxBackgroundColor;
     }
 
     private void applyBoxAttributes() {

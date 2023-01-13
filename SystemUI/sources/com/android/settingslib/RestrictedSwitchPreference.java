@@ -14,17 +14,18 @@ import android.widget.TextView;
 import androidx.core.content.res.TypedArrayUtils;
 import androidx.preference.PreferenceManager;
 import androidx.preference.PreferenceViewHolder;
-import androidx.preference.SwitchPreference;
 import com.android.settingslib.RestrictedLockUtils;
 import com.android.settingslib.utils.BuildCompatUtils;
+import com.nothing.ui.support.NtCustSwitchPreference;
 
-public class RestrictedSwitchPreference extends SwitchPreference {
+public class RestrictedSwitchPreference extends NtCustSwitchPreference {
     AppOpsManager mAppOpsManager;
     RestrictedPreferenceHelper mHelper;
     private int mIconSize;
     CharSequence mRestrictedSwitchSummary;
     boolean mUseAdditionalSummary;
 
+    /* JADX WARNING: type inference failed for: r2v0, types: [com.android.settingslib.RestrictedSwitchPreference, androidx.preference.Preference] */
     public RestrictedSwitchPreference(Context context, AttributeSet attributeSet, int i, int i2) {
         super(context, attributeSet, i, i2);
         this.mUseAdditionalSummary = false;
@@ -72,7 +73,7 @@ public class RestrictedSwitchPreference extends SwitchPreference {
     }
 
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
-        super.onBindViewHolder(preferenceViewHolder);
+        RestrictedSwitchPreference.super.onBindViewHolder(preferenceViewHolder);
         View findViewById = preferenceViewHolder.findViewById(16908352);
         if (findViewById != null) {
             findViewById.getRootView().setFilterTouchesWhenObscured(true);
@@ -120,7 +121,7 @@ public class RestrictedSwitchPreference extends SwitchPreference {
 
     public void performClick() {
         if (!this.mHelper.performClick()) {
-            super.performClick();
+            RestrictedSwitchPreference.super.performClick();
         }
     }
 
@@ -131,7 +132,7 @@ public class RestrictedSwitchPreference extends SwitchPreference {
     /* access modifiers changed from: protected */
     public void onAttachedToHierarchy(PreferenceManager preferenceManager) {
         this.mHelper.onAttachedToHierarchy();
-        super.onAttachedToHierarchy(preferenceManager);
+        RestrictedSwitchPreference.super.onAttachedToHierarchy(preferenceManager);
     }
 
     public void checkRestrictionAndSetDisabled(String str) {
@@ -157,7 +158,7 @@ public class RestrictedSwitchPreference extends SwitchPreference {
             this.mHelper.setDisabledByAppOps(false);
         }
         if (!z3) {
-            super.setEnabled(z);
+            RestrictedSwitchPreference.super.setEnabled(z);
         }
     }
 

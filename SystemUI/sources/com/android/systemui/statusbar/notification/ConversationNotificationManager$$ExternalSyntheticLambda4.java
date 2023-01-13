@@ -14,6 +14,6 @@ public final /* synthetic */ class ConversationNotificationManager$$ExternalSynt
     }
 
     public final void onExpansionChanged(boolean z) {
-        ConversationNotificationManager.m3087onEntryViewBound$lambda3(this.f$0, this.f$1, z);
+        ConversationNotificationManager.m3091onEntryViewBound$lambda3(this.f$0, this.f$1, z);
     }
 }

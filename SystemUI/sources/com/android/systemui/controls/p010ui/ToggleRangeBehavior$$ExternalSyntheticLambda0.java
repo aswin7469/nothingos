@@ -12,6 +12,6 @@ public final /* synthetic */ class ToggleRangeBehavior$$ExternalSyntheticLambda0
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        ToggleRangeBehavior.m2732updateRange$lambda2$lambda1(this.f$0, valueAnimator);
+        ToggleRangeBehavior.m2737updateRange$lambda2$lambda1(this.f$0, valueAnimator);
     }
 }

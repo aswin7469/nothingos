@@ -20,6 +20,6 @@ public final /* synthetic */ class ScreenRecordTile$$ExternalSyntheticLambda2 im
     }
 
     public final boolean onDismiss() {
-        return this.f$0.mo36917x9cc86c16(this.f$1, this.f$2, this.f$3);
+        return this.f$0.mo36915x9cc86c16(this.f$1, this.f$2, this.f$3);
     }
 }

@@ -238,7 +238,7 @@ public class BaseWifiTracker implements LifecycleObserver {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onStart$0$com-android-wifitrackerlib-BaseWifiTracker  reason: not valid java name */
-    public /* synthetic */ void m3369lambda$onStart$0$comandroidwifitrackerlibBaseWifiTracker() {
+    public /* synthetic */ void m3373lambda$onStart$0$comandroidwifitrackerlibBaseWifiTracker() {
         updateDefaultRouteInfo();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
@@ -261,7 +261,7 @@ public class BaseWifiTracker implements LifecycleObserver {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onStop$1$com-android-wifitrackerlib-BaseWifiTracker  reason: not valid java name */
-    public /* synthetic */ void m3370lambda$onStop$1$comandroidwifitrackerlibBaseWifiTracker() {
+    public /* synthetic */ void m3374lambda$onStop$1$comandroidwifitrackerlibBaseWifiTracker() {
         this.mScanner.stop();
         this.mContext.unregisterReceiver(this.mBroadcastReceiver);
         this.mConnectivityManager.unregisterNetworkCallback(this.mNetworkCallback);

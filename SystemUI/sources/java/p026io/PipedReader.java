@@ -9,7 +9,7 @@ public class PipedReader extends Reader {
     boolean connected;
 
     /* renamed from: in */
-    int f529in;
+    int f527in;
     int out;
     Thread readSide;
     Thread writeSide;
@@ -22,7 +22,7 @@ public class PipedReader extends Reader {
         this.closedByWriter = false;
         this.closedByReader = false;
         this.connected = false;
-        this.f529in = -1;
+        this.f527in = -1;
         this.out = 0;
         initPipe(i);
         connect(pipedWriter);
@@ -32,7 +32,7 @@ public class PipedReader extends Reader {
         this.closedByWriter = false;
         this.closedByReader = false;
         this.connected = false;
-        this.f529in = -1;
+        this.f527in = -1;
         this.out = 0;
         initPipe(1024);
     }
@@ -41,7 +41,7 @@ public class PipedReader extends Reader {
         this.closedByWriter = false;
         this.closedByReader = false;
         this.connected = false;
-        this.f529in = -1;
+        this.f527in = -1;
         this.out = 0;
         initPipe(i);
     }
@@ -90,7 +90,7 @@ public class PipedReader extends Reader {
             java.lang.Thread r0 = java.lang.Thread.currentThread()     // Catch:{ all -> 0x0075 }
             r4.writeSide = r0     // Catch:{ all -> 0x0075 }
         L_0x0026:
-            int r0 = r4.f529in     // Catch:{ all -> 0x0075 }
+            int r0 = r4.f527in     // Catch:{ all -> 0x0075 }
             int r1 = r4.out     // Catch:{ all -> 0x0075 }
             if (r0 != r1) goto L_0x004c
             java.lang.Thread r0 = r4.readSide     // Catch:{ all -> 0x0075 }
@@ -114,18 +114,18 @@ public class PipedReader extends Reader {
         L_0x004c:
             r1 = 0
             if (r0 >= 0) goto L_0x0053
-            r4.f529in = r1     // Catch:{ all -> 0x0075 }
+            r4.f527in = r1     // Catch:{ all -> 0x0075 }
             r4.out = r1     // Catch:{ all -> 0x0075 }
         L_0x0053:
             char[] r0 = r4.buffer     // Catch:{ all -> 0x0075 }
-            int r2 = r4.f529in     // Catch:{ all -> 0x0075 }
+            int r2 = r4.f527in     // Catch:{ all -> 0x0075 }
             int r3 = r2 + 1
-            r4.f529in = r3     // Catch:{ all -> 0x0075 }
+            r4.f527in = r3     // Catch:{ all -> 0x0075 }
             char r5 = (char) r5     // Catch:{ all -> 0x0075 }
             r0[r2] = r5     // Catch:{ all -> 0x0075 }
             int r5 = r0.length     // Catch:{ all -> 0x0075 }
             if (r3 < r5) goto L_0x0063
-            r4.f529in = r1     // Catch:{ all -> 0x0075 }
+            r4.f527in = r1     // Catch:{ all -> 0x0075 }
         L_0x0063:
             monitor-exit(r4)
             return
@@ -188,7 +188,7 @@ public class PipedReader extends Reader {
             if (r0 != 0) goto L_0x0024
             boolean r0 = r5.closedByWriter     // Catch:{ all -> 0x0082 }
             if (r0 != 0) goto L_0x0024
-            int r0 = r5.f529in     // Catch:{ all -> 0x0082 }
+            int r0 = r5.f527in     // Catch:{ all -> 0x0082 }
             if (r0 < 0) goto L_0x001c
             goto L_0x0024
         L_0x001c:
@@ -201,7 +201,7 @@ public class PipedReader extends Reader {
             r5.readSide = r0     // Catch:{ all -> 0x0082 }
             r0 = 2
         L_0x002b:
-            int r1 = r5.f529in     // Catch:{ all -> 0x0082 }
+            int r1 = r5.f527in     // Catch:{ all -> 0x0082 }
             r2 = -1
             if (r1 >= 0) goto L_0x005a
             boolean r1 = r5.closedByWriter     // Catch:{ all -> 0x0082 }
@@ -242,7 +242,7 @@ public class PipedReader extends Reader {
         L_0x006a:
             int r0 = r5.out     // Catch:{ all -> 0x0082 }
             if (r1 != r0) goto L_0x0070
-            r5.f529in = r2     // Catch:{ all -> 0x0082 }
+            r5.f527in = r2     // Catch:{ all -> 0x0082 }
         L_0x0070:
             monitor-exit(r5)
             return r3
@@ -282,7 +282,7 @@ public class PipedReader extends Reader {
             if (r0 != 0) goto L_0x0024
             boolean r0 = r8.closedByWriter     // Catch:{ all -> 0x007f }
             if (r0 != 0) goto L_0x0024
-            int r0 = r8.f529in     // Catch:{ all -> 0x007f }
+            int r0 = r8.f527in     // Catch:{ all -> 0x007f }
             if (r0 < 0) goto L_0x001c
             goto L_0x0024
         L_0x001c:
@@ -314,7 +314,7 @@ public class PipedReader extends Reader {
             r9[r10] = r1     // Catch:{ all -> 0x007f }
             r1 = 1
         L_0x0044:
-            int r3 = r8.f529in     // Catch:{ all -> 0x007f }
+            int r3 = r8.f527in     // Catch:{ all -> 0x007f }
             if (r3 < 0) goto L_0x0067
             int r11 = r11 + r2
             if (r11 <= 0) goto L_0x0067
@@ -332,7 +332,7 @@ public class PipedReader extends Reader {
         L_0x0060:
             int r4 = r8.out     // Catch:{ all -> 0x007f }
             if (r3 != r4) goto L_0x0044
-            r8.f529in = r2     // Catch:{ all -> 0x007f }
+            r8.f527in = r2     // Catch:{ all -> 0x007f }
             goto L_0x0044
         L_0x0067:
             monitor-exit(r8)
@@ -365,11 +365,11 @@ public class PipedReader extends Reader {
         } else if (!this.closedByReader) {
             Thread thread = this.writeSide;
             if (thread != null && !thread.isAlive() && !this.closedByWriter) {
-                if (this.f529in < 0) {
+                if (this.f527in < 0) {
                     throw new IOException("Write end dead");
                 }
             }
-            if (this.f529in < 0) {
+            if (this.f527in < 0) {
                 return false;
             }
             return true;
@@ -379,7 +379,7 @@ public class PipedReader extends Reader {
     }
 
     public void close() throws IOException {
-        this.f529in = -1;
+        this.f527in = -1;
         this.closedByReader = true;
     }
 }

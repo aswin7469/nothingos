@@ -18,27 +18,27 @@ public class SysUiStatsLog {
     public static final int ASSIST_GESTURE_FEEDBACK_REPORTED = 175;
 
     /* renamed from: ASSIST_GESTURE_FEEDBACK_REPORTED__FEEDBACK_TYPE__ASSIST_GESTURE_FEEDBACK_NOT_USED */
-    public static final int f345x510869ca = 1;
+    public static final int f344x510869ca = 1;
 
     /* renamed from: ASSIST_GESTURE_FEEDBACK_REPORTED__FEEDBACK_TYPE__ASSIST_GESTURE_FEEDBACK_UNKNOWN */
-    public static final int f346x83317009 = 0;
+    public static final int f345x83317009 = 0;
 
     /* renamed from: ASSIST_GESTURE_FEEDBACK_REPORTED__FEEDBACK_TYPE__ASSIST_GESTURE_FEEDBACK_USED */
-    public static final int f347xff0ad03e = 2;
+    public static final int f346xff0ad03e = 2;
     public static final int ASSIST_GESTURE_PROGRESS_REPORTED = 176;
     public static final int ASSIST_GESTURE_STAGE_REPORTED = 174;
 
     /* renamed from: ASSIST_GESTURE_STAGE_REPORTED__GESTURE_STAGE__ASSIST_GESTURE_STAGE_DETECTED */
-    public static final int f348x33ca7b67 = 3;
+    public static final int f347x33ca7b67 = 3;
 
     /* renamed from: ASSIST_GESTURE_STAGE_REPORTED__GESTURE_STAGE__ASSIST_GESTURE_STAGE_PRIMED */
-    public static final int f349xdd04fbea = 2;
+    public static final int f348xdd04fbea = 2;
 
     /* renamed from: ASSIST_GESTURE_STAGE_REPORTED__GESTURE_STAGE__ASSIST_GESTURE_STAGE_PROGRESS */
-    public static final int f350xb9a42712 = 1;
+    public static final int f349xb9a42712 = 1;
 
     /* renamed from: ASSIST_GESTURE_STAGE_REPORTED__GESTURE_STAGE__ASSIST_GESTURE_STAGE_UNKNOWN */
-    public static final int f351xc56312a5 = 0;
+    public static final int f350xc56312a5 = 0;
     public static final int BACK_GESTURE_REPORTED_REPORTED = 224;
     public static final int BACK_GESTURE__TYPE__COMPLETED = 1;
     public static final int BACK_GESTURE__TYPE__COMPLETED_REJECTED = 2;
@@ -104,22 +104,22 @@ public class SysUiStatsLog {
     public static final int MEDIAOUTPUT_OP_SWITCH_REPORTED = 277;
 
     /* renamed from: MEDIA_OUTPUT_OP_INTERACTION_REPORTED__INTERACTION_TYPE__ADJUST_VOLUME */
-    public static final int f352xaef4e68 = 1;
+    public static final int f351xaef4e68 = 1;
 
     /* renamed from: MEDIA_OUTPUT_OP_INTERACTION_REPORTED__INTERACTION_TYPE__EXPANSION */
-    public static final int f353x6bc1cc3d = 0;
+    public static final int f352x6bc1cc3d = 0;
 
     /* renamed from: MEDIA_OUTPUT_OP_INTERACTION_REPORTED__INTERACTION_TYPE__STOP_CASTING */
-    public static final int f354x2b797488 = 2;
+    public static final int f353x2b797488 = 2;
     public static final int MEDIA_OUTPUT_OP_INTERACTION_REPORTED__TARGET__BLUETOOTH = 300;
     public static final int MEDIA_OUTPUT_OP_INTERACTION_REPORTED__TARGET__BLUETOOTH_A2DP = 302;
 
     /* renamed from: MEDIA_OUTPUT_OP_INTERACTION_REPORTED__TARGET__BLUETOOTH_HEARING_AID */
-    public static final int f355x82b57ab4 = 301;
+    public static final int f354x82b57ab4 = 301;
     public static final int MEDIA_OUTPUT_OP_INTERACTION_REPORTED__TARGET__BUILTIN_SPEAKER = 1;
 
     /* renamed from: MEDIA_OUTPUT_OP_INTERACTION_REPORTED__TARGET__REMOTE_DYNAMIC_GROUP */
-    public static final int f356x7a920212 = 501;
+    public static final int f355x7a920212 = 501;
     public static final int MEDIA_OUTPUT_OP_INTERACTION_REPORTED__TARGET__REMOTE_GROUP = 500;
     public static final int MEDIA_OUTPUT_OP_INTERACTION_REPORTED__TARGET__REMOTE_SINGLE = 400;
     public static final int MEDIA_OUTPUT_OP_INTERACTION_REPORTED__TARGET__REMOTE_SPEAKER = 402;
@@ -133,13 +133,13 @@ public class SysUiStatsLog {
     public static final int MEDIA_OUTPUT_OP_INTERACTION_REPORTED__TARGET__USB_C_HEADSET = 202;
 
     /* renamed from: MEDIA_OUTPUT_OP_INTERACTION_REPORTED__TARGET__WIRED_3POINT5_MM_AUDIO */
-    public static final int f357xe9bb46ea = 100;
+    public static final int f356xe9bb46ea = 100;
 
     /* renamed from: MEDIA_OUTPUT_OP_INTERACTION_REPORTED__TARGET__WIRED_3POINT5_MM_HEADPHONES */
-    public static final int f358x25177ff1 = 102;
+    public static final int f357x25177ff1 = 102;
 
     /* renamed from: MEDIA_OUTPUT_OP_INTERACTION_REPORTED__TARGET__WIRED_3POINT5_MM_HEADSET */
-    public static final int f359xbed6d496 = 101;
+    public static final int f358xbed6d496 = 101;
     public static final int MEDIA_OUTPUT_OP_SWITCH_REPORTED__RESULT__ERROR = 0;
     public static final int MEDIA_OUTPUT_OP_SWITCH_REPORTED__RESULT__OK = 1;
     public static final int MEDIA_OUTPUT_OP_SWITCH_REPORTED__SOURCE__BLUETOOTH = 300;
@@ -161,10 +161,10 @@ public class SysUiStatsLog {
     public static final int MEDIA_OUTPUT_OP_SWITCH_REPORTED__SOURCE__WIRED_3POINT5_MM_AUDIO = 100;
 
     /* renamed from: MEDIA_OUTPUT_OP_SWITCH_REPORTED__SOURCE__WIRED_3POINT5_MM_HEADPHONES */
-    public static final int f360xc5b89aff = 102;
+    public static final int f359xc5b89aff = 102;
 
     /* renamed from: MEDIA_OUTPUT_OP_SWITCH_REPORTED__SOURCE__WIRED_3POINT5_MM_HEADSET */
-    public static final int f361x96dc4448 = 101;
+    public static final int f360x96dc4448 = 101;
     public static final int MEDIA_OUTPUT_OP_SWITCH_REPORTED__SUBRESULT__INVALID_COMMAND = 5;
     public static final int MEDIA_OUTPUT_OP_SWITCH_REPORTED__SUBRESULT__NETWORK_ERROR = 3;
     public static final int MEDIA_OUTPUT_OP_SWITCH_REPORTED__SUBRESULT__NO_ERROR = 1;
@@ -190,10 +190,10 @@ public class SysUiStatsLog {
     public static final int MEDIA_OUTPUT_OP_SWITCH_REPORTED__TARGET__WIRED_3POINT5_MM_AUDIO = 100;
 
     /* renamed from: MEDIA_OUTPUT_OP_SWITCH_REPORTED__TARGET__WIRED_3POINT5_MM_HEADPHONES */
-    public static final int f362xb52a4d49 = 102;
+    public static final int f361xb52a4d49 = 102;
 
     /* renamed from: MEDIA_OUTPUT_OP_SWITCH_REPORTED__TARGET__WIRED_3POINT5_MM_HEADSET */
-    public static final int f363x6f3ec63e = 101;
+    public static final int f362x6f3ec63e = 101;
     public static final int NOTIFICATION_PANEL_REPORTED = 245;
     public static final int RANKING_SELECTED = 260;
     public static final int SMARTSPACE_CARD_REPORTED = 352;
@@ -207,7 +207,7 @@ public class SysUiStatsLog {
     public static final int SMART_SPACE_CARD_REPORTED__CARD_TYPE__FLIGHT = 3;
 
     /* renamed from: SMART_SPACE_CARD_REPORTED__CARD_TYPE__HEADPHONE_MEDIA_RECOMMENDATIONS */
-    public static final int f364x2fcb7ab8 = 9;
+    public static final int f363x2fcb7ab8 = 9;
     public static final int SMART_SPACE_CARD_REPORTED__CARD_TYPE__HEADPHONE_RESUME_MEDIA = 8;
     public static final int SMART_SPACE_CARD_REPORTED__CARD_TYPE__PACKAGE_DELIVERED = 16;
     public static final int SMART_SPACE_CARD_REPORTED__CARD_TYPE__STOPWATCH = 11;
@@ -262,16 +262,16 @@ public class SysUiStatsLog {
     public static final int STYLE_UICHANGED__EFFECT_PREFERENCE__EFFECT_APPLIED_ON_SUCCESS = 1;
 
     /* renamed from: STYLE_UICHANGED__EFFECT_PREFERENCE__EFFECT_PREFERENCE_UNSPECIFIED */
-    public static final int f365x8360168a = 0;
+    public static final int f364x8360168a = 0;
 
     /* renamed from: STYLE_UICHANGED__LAUNCHED_PREFERENCE__LAUNCHED_CROP_AND_SET_ACTION */
-    public static final int f366x9c590dd3 = 6;
+    public static final int f365x9c590dd3 = 6;
     public static final int STYLE_UICHANGED__LAUNCHED_PREFERENCE__LAUNCHED_DEEP_LINK = 7;
     public static final int STYLE_UICHANGED__LAUNCHED_PREFERENCE__LAUNCHED_LAUNCHER = 1;
     public static final int STYLE_UICHANGED__LAUNCHED_PREFERENCE__LAUNCHED_LAUNCH_ICON = 5;
 
     /* renamed from: STYLE_UICHANGED__LAUNCHED_PREFERENCE__LAUNCHED_PREFERENCE_UNSPECIFIED */
-    public static final int f367xbd82d2a = 0;
+    public static final int f366xbd82d2a = 0;
     public static final int STYLE_UICHANGED__LAUNCHED_PREFERENCE__LAUNCHED_SETTINGS = 2;
     public static final int STYLE_UICHANGED__LAUNCHED_PREFERENCE__LAUNCHED_SETTINGS_SEARCH = 8;
     public static final int STYLE_UICHANGED__LAUNCHED_PREFERENCE__LAUNCHED_SUW = 3;
@@ -280,7 +280,7 @@ public class SysUiStatsLog {
     public static final int STYLE_UICHANGED__LOCATION_PREFERENCE__LOCATION_MANUAL = 3;
 
     /* renamed from: STYLE_UICHANGED__LOCATION_PREFERENCE__LOCATION_PREFERENCE_UNSPECIFIED */
-    public static final int f368x13cf4d4a = 0;
+    public static final int f367x13cf4d4a = 0;
     public static final int STYLE_UICHANGED__LOCATION_PREFERENCE__LOCATION_UNAVAILABLE = 1;
     public static final int STYLE_UI_CHANGED = 179;
     public static final int TASK_MANAGER_EVENT_REPORTED = 450;

@@ -120,7 +120,7 @@ public final class Instant implements Temporal, TemporalAdjuster, Comparable<Ins
         if (!(temporalField instanceof ChronoField)) {
             return range(temporalField).checkValidIntValue(temporalField.getFrom(this), temporalField);
         }
-        int i = C28501.$SwitchMap$java$time$temporal$ChronoField[((ChronoField) temporalField).ordinal()];
+        int i = C28561.$SwitchMap$java$time$temporal$ChronoField[((ChronoField) temporalField).ordinal()];
         if (i == 1) {
             return this.nanos;
         }
@@ -138,7 +138,7 @@ public final class Instant implements Temporal, TemporalAdjuster, Comparable<Ins
         if (!(temporalField instanceof ChronoField)) {
             return temporalField.getFrom(this);
         }
-        int i2 = C28501.$SwitchMap$java$time$temporal$ChronoField[((ChronoField) temporalField).ordinal()];
+        int i2 = C28561.$SwitchMap$java$time$temporal$ChronoField[((ChronoField) temporalField).ordinal()];
         if (i2 == 1) {
             i = this.nanos;
         } else if (i2 == 2) {
@@ -171,7 +171,7 @@ public final class Instant implements Temporal, TemporalAdjuster, Comparable<Ins
         }
         ChronoField chronoField = (ChronoField) temporalField;
         chronoField.checkValidValue(j);
-        int i = C28501.$SwitchMap$java$time$temporal$ChronoField[chronoField.ordinal()];
+        int i = C28561.$SwitchMap$java$time$temporal$ChronoField[chronoField.ordinal()];
         if (i == 1) {
             return j != ((long) this.nanos) ? create(this.seconds, (int) j) : this;
         }
@@ -209,7 +209,7 @@ public final class Instant implements Temporal, TemporalAdjuster, Comparable<Ins
     }
 
     /* renamed from: java.time.Instant$1 */
-    static /* synthetic */ class C28501 {
+    static /* synthetic */ class C28561 {
         static final /* synthetic */ int[] $SwitchMap$java$time$temporal$ChronoField;
         static final /* synthetic */ int[] $SwitchMap$java$time$temporal$ChronoUnit;
 
@@ -305,7 +305,7 @@ public final class Instant implements Temporal, TemporalAdjuster, Comparable<Ins
             L_0x008f:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: java.time.Instant.C28501.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: java.time.Instant.C28561.<clinit>():void");
         }
     }
 
@@ -313,7 +313,7 @@ public final class Instant implements Temporal, TemporalAdjuster, Comparable<Ins
         if (!(temporalUnit instanceof ChronoUnit)) {
             return (Instant) temporalUnit.addTo(this, j);
         }
-        switch (C28501.$SwitchMap$java$time$temporal$ChronoUnit[((ChronoUnit) temporalUnit).ordinal()]) {
+        switch (C28561.$SwitchMap$java$time$temporal$ChronoUnit[((ChronoUnit) temporalUnit).ordinal()]) {
             case 1:
                 return plusNanos(j);
             case 2:
@@ -409,7 +409,7 @@ public final class Instant implements Temporal, TemporalAdjuster, Comparable<Ins
         if (!(temporalUnit instanceof ChronoUnit)) {
             return temporalUnit.between(this, from);
         }
-        switch (C28501.$SwitchMap$java$time$temporal$ChronoUnit[((ChronoUnit) temporalUnit).ordinal()]) {
+        switch (C28561.$SwitchMap$java$time$temporal$ChronoUnit[((ChronoUnit) temporalUnit).ordinal()]) {
             case 1:
                 return nanosUntil(from);
             case 2:

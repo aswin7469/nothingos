@@ -7,6 +7,9 @@ import android.os.Trace;
 import android.util.Log;
 import com.android.internal.policy.IKeyguardDrawnCallback;
 import com.android.systemui.dagger.SysUISingleton;
+import com.android.systemui.statusbar.phone.ConfigurationControllerImpl;
+import com.android.systemui.statusbar.policy.ConfigurationController;
+import com.nothing.systemui.NTDependencyEx;
 import javax.inject.Inject;
 
 @SysUISingleton
@@ -20,11 +23,24 @@ public class KeyguardLifecyclesDispatcher {
     static final int STARTED_GOING_TO_SLEEP = 6;
     static final int STARTED_WAKING_UP = 4;
     private static final String TAG = "KeyguardLifecyclesDispatcher";
-    private Handler mHandler = new Handler() {
+    private ConfigurationController.ConfigurationListener mConfigListener = new ConfigurationController.ConfigurationListener() {
+        public void onOrientationChanged(int i) {
+            if (KeyguardLifecyclesDispatcher.this.mIsScreenTurningOn && i == 1) {
+                boolean unused = KeyguardLifecyclesDispatcher.this.mIsScreenTurningOn = false;
+                KeyguardLifecyclesDispatcher.this.mHandler.sendMessage(KeyguardLifecyclesDispatcher.this.mHandler.obtainMessage(0));
+            }
+        }
+    };
+    /* access modifiers changed from: private */
+    public Handler mHandler = new Handler() {
         public void handleMessage(Message message) {
             final Object obj = message.obj;
             switch (message.what) {
                 case 0:
+                    if (((ConfigurationControllerImpl) NTDependencyEx.get(ConfigurationControllerImpl.class)).getOrientation() == 2) {
+                        boolean unused = KeyguardLifecyclesDispatcher.this.mIsScreenTurningOn = true;
+                        return;
+                    }
                     Trace.beginSection("KeyguardLifecyclesDispatcher#SCREEN_TURNING_ON");
                     final int identityHashCode = System.identityHashCode(message);
                     Trace.beginAsyncSection("Waiting for KeyguardDrawnCallback#onDrawn", identityHashCode);
@@ -76,6 +92,8 @@ public class KeyguardLifecyclesDispatcher {
         }
     };
     /* access modifiers changed from: private */
+    public boolean mIsScreenTurningOn = false;
+    /* access modifiers changed from: private */
     public final ScreenLifecycle mScreenLifecycle;
     /* access modifiers changed from: private */
     public final WakefulnessLifecycle mWakefulnessLifecycle;
@@ -84,6 +102,7 @@ public class KeyguardLifecyclesDispatcher {
     public KeyguardLifecyclesDispatcher(ScreenLifecycle screenLifecycle, WakefulnessLifecycle wakefulnessLifecycle) {
         this.mScreenLifecycle = screenLifecycle;
         this.mWakefulnessLifecycle = wakefulnessLifecycle;
+        ((ConfigurationControllerImpl) NTDependencyEx.get(ConfigurationControllerImpl.class)).addCallback(this.mConfigListener);
     }
 
     /* access modifiers changed from: package-private */

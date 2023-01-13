@@ -22,12 +22,12 @@ class UnixUserPrincipals {
     static class User implements UserPrincipal {
 
         /* renamed from: id */
-        private final int f913id;
+        private final int f911id;
         private final boolean isGroup;
         private final String name;
 
         private User(int i, boolean z, String str) {
-            this.f913id = i;
+            this.f911id = i;
             this.isGroup = z;
             this.name = str;
         }
@@ -39,7 +39,7 @@ class UnixUserPrincipals {
         /* access modifiers changed from: package-private */
         public int uid() {
             if (!this.isGroup) {
-                return this.f913id;
+                return this.f911id;
             }
             throw new AssertionError();
         }
@@ -47,14 +47,14 @@ class UnixUserPrincipals {
         /* access modifiers changed from: package-private */
         public int gid() {
             if (this.isGroup) {
-                return this.f913id;
+                return this.f911id;
             }
             throw new AssertionError();
         }
 
         /* access modifiers changed from: package-private */
         public boolean isSpecial() {
-            return this.f913id == -1;
+            return this.f911id == -1;
         }
 
         public String getName() {
@@ -82,8 +82,8 @@ class UnixUserPrincipals {
                 return r2
             L_0x000a:
                 sun.nio.fs.UnixUserPrincipals$User r7 = (sun.nio.p035fs.UnixUserPrincipals.User) r7
-                int r1 = r6.f913id
-                int r3 = r7.f913id
+                int r1 = r6.f911id
+                int r3 = r7.f911id
                 if (r1 != r3) goto L_0x0028
                 boolean r4 = r6.isGroup
                 boolean r5 = r7.isGroup
@@ -106,7 +106,7 @@ class UnixUserPrincipals {
         }
 
         public int hashCode() {
-            int i = this.f913id;
+            int i = this.f911id;
             return i != -1 ? i : this.name.hashCode();
         }
     }

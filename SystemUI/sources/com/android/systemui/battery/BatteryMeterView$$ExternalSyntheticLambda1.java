@@ -11,6 +11,6 @@ public final /* synthetic */ class BatteryMeterView$$ExternalSyntheticLambda1 im
     }
 
     public final Object get() {
-        return this.f$0.mo30447xce37b50c();
+        return this.f$0.mo30457xce37b50c();
     }
 }

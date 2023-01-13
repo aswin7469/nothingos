@@ -9,6 +9,6 @@ public final /* synthetic */ class MediaTttChipControllerCommon$$ExternalSynthet
     }
 
     public final void run() {
-        MediaTttChipControllerCommon.m2843displayChip$lambda1(this.f$0);
+        MediaTttChipControllerCommon.m2848displayChip$lambda1(this.f$0);
     }
 }

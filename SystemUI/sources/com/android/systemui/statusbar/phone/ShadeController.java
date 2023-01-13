@@ -3,8 +3,6 @@ package com.android.systemui.statusbar.phone;
 public interface ShadeController {
     void addPostCollapseAction(Runnable runnable);
 
-    void addPostFullyCollapseAction(Runnable runnable);
-
     void animateCollapsePanels();
 
     void animateCollapsePanels(int i);
@@ -22,10 +20,6 @@ public interface ShadeController {
     boolean collapsePanel();
 
     void instantExpandNotificationsPanel();
-
-    boolean isPanelFullyCollapsed();
-
-    boolean isQsExpanded();
 
     boolean isShadeOpen();
 

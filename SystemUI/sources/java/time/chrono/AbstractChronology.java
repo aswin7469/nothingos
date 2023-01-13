@@ -90,7 +90,7 @@ public abstract class AbstractChronology implements Chronology {
     /* JADX WARNING: Removed duplicated region for block: B:9:0x0022  */
     /* renamed from: of */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    static java.time.chrono.Chronology m939of(java.lang.String r3) {
+    static java.time.chrono.Chronology m937of(java.lang.String r3) {
         /*
             java.lang.String r0 = "id"
             java.util.Objects.requireNonNull(r3, (java.lang.String) r0)
@@ -127,7 +127,7 @@ public abstract class AbstractChronology implements Chronology {
             r0.<init>(r3)
             throw r0
         */
-        throw new UnsupportedOperationException("Method not decompiled: java.time.chrono.AbstractChronology.m939of(java.lang.String):java.time.chrono.Chronology");
+        throw new UnsupportedOperationException("Method not decompiled: java.time.chrono.AbstractChronology.m937of(java.lang.String):java.time.chrono.Chronology");
     }
 
     private static Chronology of0(String str) {
@@ -289,7 +289,7 @@ public abstract class AbstractChronology implements Chronology {
             return resolveAligned(date(checkValidIntValue, 1, 1), Math.subtractExact(map.remove(ChronoField.MONTH_OF_YEAR).longValue(), 1), Math.subtractExact(map.remove(ChronoField.ALIGNED_WEEK_OF_MONTH).longValue(), 1), Math.subtractExact(map.remove(ChronoField.DAY_OF_WEEK).longValue(), 1));
         }
         int checkValidIntValue2 = range(ChronoField.MONTH_OF_YEAR).checkValidIntValue(map.remove(ChronoField.MONTH_OF_YEAR).longValue(), ChronoField.MONTH_OF_YEAR);
-        ChronoLocalDate with = date(checkValidIntValue, checkValidIntValue2, 1).plus((long) ((range(ChronoField.ALIGNED_WEEK_OF_MONTH).checkValidIntValue(map.remove(ChronoField.ALIGNED_WEEK_OF_MONTH).longValue(), ChronoField.ALIGNED_WEEK_OF_MONTH) - 1) * 7), (TemporalUnit) ChronoUnit.DAYS).with(TemporalAdjusters.nextOrSame(DayOfWeek.m906of(range(ChronoField.DAY_OF_WEEK).checkValidIntValue(map.remove(ChronoField.DAY_OF_WEEK).longValue(), ChronoField.DAY_OF_WEEK))));
+        ChronoLocalDate with = date(checkValidIntValue, checkValidIntValue2, 1).plus((long) ((range(ChronoField.ALIGNED_WEEK_OF_MONTH).checkValidIntValue(map.remove(ChronoField.ALIGNED_WEEK_OF_MONTH).longValue(), ChronoField.ALIGNED_WEEK_OF_MONTH) - 1) * 7), (TemporalUnit) ChronoUnit.DAYS).with(TemporalAdjusters.nextOrSame(DayOfWeek.m904of(range(ChronoField.DAY_OF_WEEK).checkValidIntValue(map.remove(ChronoField.DAY_OF_WEEK).longValue(), ChronoField.DAY_OF_WEEK))));
         if (resolverStyle != ResolverStyle.STRICT || with.get(ChronoField.MONTH_OF_YEAR) == checkValidIntValue2) {
             return with;
         }
@@ -316,7 +316,7 @@ public abstract class AbstractChronology implements Chronology {
         if (resolverStyle == ResolverStyle.LENIENT) {
             return resolveAligned(dateYearDay(checkValidIntValue, 1), 0, Math.subtractExact(map.remove(ChronoField.ALIGNED_WEEK_OF_YEAR).longValue(), 1), Math.subtractExact(map.remove(ChronoField.DAY_OF_WEEK).longValue(), 1));
         }
-        ChronoLocalDate with = dateYearDay(checkValidIntValue, 1).plus((long) ((range(ChronoField.ALIGNED_WEEK_OF_YEAR).checkValidIntValue(map.remove(ChronoField.ALIGNED_WEEK_OF_YEAR).longValue(), ChronoField.ALIGNED_WEEK_OF_YEAR) - 1) * 7), (TemporalUnit) ChronoUnit.DAYS).with(TemporalAdjusters.nextOrSame(DayOfWeek.m906of(range(ChronoField.DAY_OF_WEEK).checkValidIntValue(map.remove(ChronoField.DAY_OF_WEEK).longValue(), ChronoField.DAY_OF_WEEK))));
+        ChronoLocalDate with = dateYearDay(checkValidIntValue, 1).plus((long) ((range(ChronoField.ALIGNED_WEEK_OF_YEAR).checkValidIntValue(map.remove(ChronoField.ALIGNED_WEEK_OF_YEAR).longValue(), ChronoField.ALIGNED_WEEK_OF_YEAR) - 1) * 7), (TemporalUnit) ChronoUnit.DAYS).with(TemporalAdjusters.nextOrSame(DayOfWeek.m904of(range(ChronoField.DAY_OF_WEEK).checkValidIntValue(map.remove(ChronoField.DAY_OF_WEEK).longValue(), ChronoField.DAY_OF_WEEK))));
         if (resolverStyle != ResolverStyle.STRICT || with.get(ChronoField.YEAR) == checkValidIntValue) {
             return with;
         }
@@ -336,10 +336,10 @@ public abstract class AbstractChronology implements Chronology {
                 plus = plus.plus(Math.subtractExact(j3, 7) / 7, (TemporalUnit) ChronoUnit.WEEKS);
                 j4 = (j3 + 6) % 7;
             }
-            return plus.with(TemporalAdjusters.nextOrSame(DayOfWeek.m906of((int) j3)));
+            return plus.with(TemporalAdjusters.nextOrSame(DayOfWeek.m904of((int) j3)));
         }
         j3 = j4 + 1;
-        return plus.with(TemporalAdjusters.nextOrSame(DayOfWeek.m906of((int) j3)));
+        return plus.with(TemporalAdjusters.nextOrSame(DayOfWeek.m904of((int) j3)));
     }
 
     /* access modifiers changed from: package-private */
@@ -392,6 +392,6 @@ public abstract class AbstractChronology implements Chronology {
     }
 
     static Chronology readExternal(DataInput dataInput) throws IOException {
-        return Chronology.m941of(dataInput.readUTF());
+        return Chronology.m939of(dataInput.readUTF());
     }
 }

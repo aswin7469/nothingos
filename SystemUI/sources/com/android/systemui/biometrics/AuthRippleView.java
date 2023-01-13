@@ -17,13 +17,15 @@ import com.android.internal.graphics.ColorUtils;
 import com.android.systemui.animation.Interpolators;
 import com.android.systemui.statusbar.charging.DwellRippleShader;
 import com.android.systemui.statusbar.charging.RippleShader;
+import com.nothing.systemui.NTDependencyEx;
+import com.nothing.systemui.biometrics.AuthRippleControllerEx;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import kotlin.Metadata;
 import kotlin.comparisons.ComparisonsKt;
 import kotlin.jvm.internal.Intrinsics;
 
-@Metadata(mo64986d1 = {"\u0000z\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\t\n\u0000\n\u0002\u0010\u000b\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\u0010\u0007\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0010\b\n\u0002\b\u0007\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u000f\n\u0002\u0018\u0002\n\u0002\b\u0002\u0018\u00002\u00020\u0001B\u0019\u0012\b\u0010\u0002\u001a\u0004\u0018\u00010\u0003\u0012\b\u0010\u0004\u001a\u0004\u0018\u00010\u0005¢\u0006\u0002\u0010\u0006J\u0006\u0010-\u001a\u00020.J\u0012\u0010/\u001a\u00020.2\b\u00100\u001a\u0004\u0018\u000101H\u0014J\u0006\u00102\u001a\u00020.J\u0006\u00103\u001a\u00020.J\u0006\u00104\u001a\u00020.J\u000e\u00105\u001a\u00020.2\u0006\u00106\u001a\u00020\bJ\u0016\u00107\u001a\u00020.2\u0006\u00108\u001a\u00020\u000e2\u0006\u00109\u001a\u00020\u0017J\u000e\u0010:\u001a\u00020.2\u0006\u0010;\u001a\u00020 J\u000e\u0010<\u001a\u00020.2\u0006\u00108\u001a\u00020\u000eJ\u000e\u0010=\u001a\u00020.2\u0006\u0010>\u001a\u00020\nJ\u0010\u0010?\u001a\u00020.2\b\u0010@\u001a\u0004\u0018\u00010AJ\u000e\u0010B\u001a\u00020.2\u0006\u0010>\u001a\u00020\nR\u000e\u0010\u0007\u001a\u00020\bX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\t\u001a\u00020\nX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u000b\u001a\u00020\nX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\f\u001a\u00020\bXD¢\u0006\u0002\n\u0000R\u001e\u0010\u000f\u001a\u00020\u000e2\u0006\u0010\r\u001a\u00020\u000e@BX\u000e¢\u0006\b\n\u0000\"\u0004\b\u0010\u0010\u0011R\u000e\u0010\u0012\u001a\u00020\u0013X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0014\u001a\u00020\bXD¢\u0006\u0002\n\u0000R\u0010\u0010\u0015\u001a\u0004\u0018\u00010\u0016X\u000e¢\u0006\u0002\n\u0000R\u001e\u0010\u0018\u001a\u00020\u00172\u0006\u0010\r\u001a\u00020\u0017@BX\u000e¢\u0006\b\n\u0000\"\u0004\b\u0019\u0010\u001aR\u000e\u0010\u001b\u001a\u00020\u001cX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u001d\u001a\u00020\bXD¢\u0006\u0002\n\u0000R\u0010\u0010\u001e\u001a\u0004\u0018\u00010\u0016X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u001f\u001a\u00020 X\u000e¢\u0006\u0002\n\u0000R\u001e\u0010!\u001a\u00020\u000e2\u0006\u0010\r\u001a\u00020\u000e@BX\u000e¢\u0006\b\n\u0000\"\u0004\b\"\u0010\u0011R\u001e\u0010#\u001a\u00020\u00172\u0006\u0010\r\u001a\u00020\u0017@BX\u000e¢\u0006\b\n\u0000\"\u0004\b$\u0010\u001aR\u000e\u0010%\u001a\u00020\bXD¢\u0006\u0002\n\u0000R\u0010\u0010&\u001a\u0004\u0018\u00010\u0016X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010'\u001a\u00020(X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010)\u001a\u00020\u0013X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010*\u001a\u00020+X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010,\u001a\u00020\nX\u000e¢\u0006\u0002\n\u0000¨\u0006C"}, mo64987d2 = {"Lcom/android/systemui/biometrics/AuthRippleView;", "Landroid/view/View;", "context", "Landroid/content/Context;", "attrs", "Landroid/util/AttributeSet;", "(Landroid/content/Context;Landroid/util/AttributeSet;)V", "alphaInDuration", "", "drawDwell", "", "drawRipple", "dwellExpandDuration", "value", "Landroid/graphics/PointF;", "dwellOrigin", "setDwellOrigin", "(Landroid/graphics/PointF;)V", "dwellPaint", "Landroid/graphics/Paint;", "dwellPulseDuration", "dwellPulseOutAnimator", "Landroid/animation/Animator;", "", "dwellRadius", "setDwellRadius", "(F)V", "dwellShader", "Lcom/android/systemui/statusbar/charging/DwellRippleShader;", "fadeDuration", "fadeDwellAnimator", "lockScreenColorVal", "", "origin", "setOrigin", "radius", "setRadius", "retractDuration", "retractDwellAnimator", "retractInterpolator", "Landroid/view/animation/PathInterpolator;", "ripplePaint", "rippleShader", "Lcom/android/systemui/statusbar/charging/RippleShader;", "unlockedRippleInProgress", "fadeDwellRipple", "", "onDraw", "canvas", "Landroid/graphics/Canvas;", "resetDwellAlpha", "resetRippleAlpha", "retractDwellRipple", "setAlphaInDuration", "duration", "setFingerprintSensorLocation", "location", "sensorRadius", "setLockScreenColor", "color", "setSensorLocation", "startDwellRipple", "isDozing", "startUnlockedRipple", "onAnimationEnd", "Ljava/lang/Runnable;", "updateDwellRippleColor", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000z\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\t\n\u0000\n\u0002\u0010\u000b\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\u0010\u0007\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0010\b\n\u0002\b\u0007\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u000f\n\u0002\u0018\u0002\n\u0002\b\u0002\u0018\u00002\u00020\u0001B\u0019\u0012\b\u0010\u0002\u001a\u0004\u0018\u00010\u0003\u0012\b\u0010\u0004\u001a\u0004\u0018\u00010\u0005¢\u0006\u0002\u0010\u0006J\u0006\u0010-\u001a\u00020.J\u0012\u0010/\u001a\u00020.2\b\u00100\u001a\u0004\u0018\u000101H\u0014J\u0006\u00102\u001a\u00020.J\u0006\u00103\u001a\u00020.J\u0006\u00104\u001a\u00020.J\u000e\u00105\u001a\u00020.2\u0006\u00106\u001a\u00020\bJ\u0016\u00107\u001a\u00020.2\u0006\u00108\u001a\u00020\u000e2\u0006\u00109\u001a\u00020\u0017J\u000e\u0010:\u001a\u00020.2\u0006\u0010;\u001a\u00020 J\u000e\u0010<\u001a\u00020.2\u0006\u00108\u001a\u00020\u000eJ\u000e\u0010=\u001a\u00020.2\u0006\u0010>\u001a\u00020\nJ\u0010\u0010?\u001a\u00020.2\b\u0010@\u001a\u0004\u0018\u00010AJ\u000e\u0010B\u001a\u00020.2\u0006\u0010>\u001a\u00020\nR\u000e\u0010\u0007\u001a\u00020\bX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\t\u001a\u00020\nX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u000b\u001a\u00020\nX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\f\u001a\u00020\bXD¢\u0006\u0002\n\u0000R\u001e\u0010\u000f\u001a\u00020\u000e2\u0006\u0010\r\u001a\u00020\u000e@BX\u000e¢\u0006\b\n\u0000\"\u0004\b\u0010\u0010\u0011R\u000e\u0010\u0012\u001a\u00020\u0013X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0014\u001a\u00020\bXD¢\u0006\u0002\n\u0000R\u0010\u0010\u0015\u001a\u0004\u0018\u00010\u0016X\u000e¢\u0006\u0002\n\u0000R\u001e\u0010\u0018\u001a\u00020\u00172\u0006\u0010\r\u001a\u00020\u0017@BX\u000e¢\u0006\b\n\u0000\"\u0004\b\u0019\u0010\u001aR\u000e\u0010\u001b\u001a\u00020\u001cX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u001d\u001a\u00020\bXD¢\u0006\u0002\n\u0000R\u0010\u0010\u001e\u001a\u0004\u0018\u00010\u0016X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u001f\u001a\u00020 X\u000e¢\u0006\u0002\n\u0000R\u001e\u0010!\u001a\u00020\u000e2\u0006\u0010\r\u001a\u00020\u000e@BX\u000e¢\u0006\b\n\u0000\"\u0004\b\"\u0010\u0011R\u001e\u0010#\u001a\u00020\u00172\u0006\u0010\r\u001a\u00020\u0017@BX\u000e¢\u0006\b\n\u0000\"\u0004\b$\u0010\u001aR\u000e\u0010%\u001a\u00020\bXD¢\u0006\u0002\n\u0000R\u0010\u0010&\u001a\u0004\u0018\u00010\u0016X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010'\u001a\u00020(X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010)\u001a\u00020\u0013X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010*\u001a\u00020+X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010,\u001a\u00020\nX\u000e¢\u0006\u0002\n\u0000¨\u0006C"}, mo65043d2 = {"Lcom/android/systemui/biometrics/AuthRippleView;", "Landroid/view/View;", "context", "Landroid/content/Context;", "attrs", "Landroid/util/AttributeSet;", "(Landroid/content/Context;Landroid/util/AttributeSet;)V", "alphaInDuration", "", "drawDwell", "", "drawRipple", "dwellExpandDuration", "value", "Landroid/graphics/PointF;", "dwellOrigin", "setDwellOrigin", "(Landroid/graphics/PointF;)V", "dwellPaint", "Landroid/graphics/Paint;", "dwellPulseDuration", "dwellPulseOutAnimator", "Landroid/animation/Animator;", "", "dwellRadius", "setDwellRadius", "(F)V", "dwellShader", "Lcom/android/systemui/statusbar/charging/DwellRippleShader;", "fadeDuration", "fadeDwellAnimator", "lockScreenColorVal", "", "origin", "setOrigin", "radius", "setRadius", "retractDuration", "retractDwellAnimator", "retractInterpolator", "Landroid/view/animation/PathInterpolator;", "ripplePaint", "rippleShader", "Lcom/android/systemui/statusbar/charging/RippleShader;", "unlockedRippleInProgress", "fadeDwellRipple", "", "onDraw", "canvas", "Landroid/graphics/Canvas;", "resetDwellAlpha", "resetRippleAlpha", "retractDwellRipple", "setAlphaInDuration", "duration", "setFingerprintSensorLocation", "location", "sensorRadius", "setLockScreenColor", "color", "setSensorLocation", "startDwellRipple", "isDozing", "startUnlockedRipple", "onAnimationEnd", "Ljava/lang/Runnable;", "updateDwellRippleColor", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* compiled from: AuthRippleView.kt */
 public final class AuthRippleView extends View {
     public Map<Integer, View> _$_findViewCache = new LinkedHashMap();
@@ -168,7 +170,7 @@ public final class AuthRippleView extends View {
 
     /* access modifiers changed from: private */
     /* renamed from: retractDwellRipple$lambda-1$lambda-0  reason: not valid java name */
-    public static final void m2566retractDwellRipple$lambda1$lambda0(AuthRippleView authRippleView, ValueAnimator valueAnimator) {
+    public static final void m2572retractDwellRipple$lambda1$lambda0(AuthRippleView authRippleView, ValueAnimator valueAnimator) {
         Intrinsics.checkNotNullParameter(authRippleView, "this$0");
         long currentPlayTime = valueAnimator.getCurrentPlayTime();
         DwellRippleShader dwellRippleShader = authRippleView.dwellShader;
@@ -184,7 +186,7 @@ public final class AuthRippleView extends View {
 
     /* access modifiers changed from: private */
     /* renamed from: retractDwellRipple$lambda-3$lambda-2  reason: not valid java name */
-    public static final void m2567retractDwellRipple$lambda3$lambda2(AuthRippleView authRippleView, ValueAnimator valueAnimator) {
+    public static final void m2573retractDwellRipple$lambda3$lambda2(AuthRippleView authRippleView, ValueAnimator valueAnimator) {
         Intrinsics.checkNotNullParameter(authRippleView, "this$0");
         DwellRippleShader dwellRippleShader = authRippleView.dwellShader;
         int color = dwellRippleShader.getColor();
@@ -219,7 +221,7 @@ public final class AuthRippleView extends View {
 
     /* access modifiers changed from: private */
     /* renamed from: fadeDwellRipple$lambda-6$lambda-5  reason: not valid java name */
-    public static final void m2565fadeDwellRipple$lambda6$lambda5(AuthRippleView authRippleView, ValueAnimator valueAnimator) {
+    public static final void m2571fadeDwellRipple$lambda6$lambda5(AuthRippleView authRippleView, ValueAnimator valueAnimator) {
         Intrinsics.checkNotNullParameter(authRippleView, "this$0");
         DwellRippleShader dwellRippleShader = authRippleView.dwellShader;
         int color = dwellRippleShader.getColor();
@@ -256,7 +258,7 @@ public final class AuthRippleView extends View {
 
     /* access modifiers changed from: private */
     /* renamed from: startDwellRipple$lambda-8$lambda-7  reason: not valid java name */
-    public static final void m2569startDwellRipple$lambda8$lambda7(AuthRippleView authRippleView, ValueAnimator valueAnimator) {
+    public static final void m2575startDwellRipple$lambda8$lambda7(AuthRippleView authRippleView, ValueAnimator valueAnimator) {
         Intrinsics.checkNotNullParameter(authRippleView, "this$0");
         long currentPlayTime = valueAnimator.getCurrentPlayTime();
         DwellRippleShader dwellRippleShader = authRippleView.dwellShader;
@@ -272,7 +274,7 @@ public final class AuthRippleView extends View {
 
     /* access modifiers changed from: private */
     /* renamed from: startDwellRipple$lambda-10$lambda-9  reason: not valid java name */
-    public static final void m2568startDwellRipple$lambda10$lambda9(AuthRippleView authRippleView, ValueAnimator valueAnimator) {
+    public static final void m2574startDwellRipple$lambda10$lambda9(AuthRippleView authRippleView, ValueAnimator valueAnimator) {
         Intrinsics.checkNotNullParameter(authRippleView, "this$0");
         long currentPlayTime = valueAnimator.getCurrentPlayTime();
         DwellRippleShader dwellRippleShader = authRippleView.dwellShader;
@@ -290,10 +292,14 @@ public final class AuthRippleView extends View {
         if (!this.unlockedRippleInProgress) {
             ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
             ofFloat.setInterpolator(Interpolators.LINEAR_OUT_SLOW_IN);
-            ofFloat.setDuration(AuthRippleController.RIPPLE_ANIMATION_DURATION);
+            long j = 0;
+            ofFloat.setDuration(((AuthRippleControllerEx) NTDependencyEx.get(AuthRippleControllerEx.class)).isDeviceLandscape() ? 0 : AuthRippleController.RIPPLE_ANIMATION_DURATION);
             ofFloat.addUpdateListener(new AuthRippleView$$ExternalSyntheticLambda4(this));
             ValueAnimator ofInt = ValueAnimator.ofInt(new int[]{0, 255});
-            ofInt.setDuration(this.alphaInDuration);
+            if (!((AuthRippleControllerEx) NTDependencyEx.get(AuthRippleControllerEx.class)).isDeviceLandscape()) {
+                j = this.alphaInDuration;
+            }
+            ofInt.setDuration(j);
             ofInt.addUpdateListener(new AuthRippleView$$ExternalSyntheticLambda5(this));
             AnimatorSet animatorSet = new AnimatorSet();
             animatorSet.playTogether(new Animator[]{ofFloat, ofInt});
@@ -304,7 +310,7 @@ public final class AuthRippleView extends View {
 
     /* access modifiers changed from: private */
     /* renamed from: startUnlockedRipple$lambda-13$lambda-12  reason: not valid java name */
-    public static final void m2570startUnlockedRipple$lambda13$lambda12(AuthRippleView authRippleView, ValueAnimator valueAnimator) {
+    public static final void m2576startUnlockedRipple$lambda13$lambda12(AuthRippleView authRippleView, ValueAnimator valueAnimator) {
         Intrinsics.checkNotNullParameter(authRippleView, "this$0");
         long currentPlayTime = valueAnimator.getCurrentPlayTime();
         RippleShader rippleShader2 = authRippleView.rippleShader;
@@ -320,7 +326,7 @@ public final class AuthRippleView extends View {
 
     /* access modifiers changed from: private */
     /* renamed from: startUnlockedRipple$lambda-15$lambda-14  reason: not valid java name */
-    public static final void m2571startUnlockedRipple$lambda15$lambda14(AuthRippleView authRippleView, ValueAnimator valueAnimator) {
+    public static final void m2577startUnlockedRipple$lambda15$lambda14(AuthRippleView authRippleView, ValueAnimator valueAnimator) {
         Intrinsics.checkNotNullParameter(authRippleView, "this$0");
         RippleShader rippleShader2 = authRippleView.rippleShader;
         int color = rippleShader2.getColor();

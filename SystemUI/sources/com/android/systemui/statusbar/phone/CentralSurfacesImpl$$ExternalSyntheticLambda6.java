@@ -11,6 +11,6 @@ public final /* synthetic */ class CentralSurfacesImpl$$ExternalSyntheticLambda6
     }
 
     public final void requestTopUi(boolean z, String str) {
-        this.f$0.mo43902xae4f4776(z, str);
+        this.f$0.mo43911xae4f4776(z, str);
     }
 }

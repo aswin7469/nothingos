@@ -112,7 +112,7 @@ public class StatusBarRemoteInputCallback implements NotificationRemoteInputMana
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onWorkChallengeChanged$2$com-android-systemui-statusbar-phone-StatusBarRemoteInputCallback */
-    public /* synthetic */ void mo45338xbc60c05b() {
+    public /* synthetic */ void mo45350xbc60c05b() {
         View view = this.mPendingWorkRemoteInputView;
         if (view != null) {
             ViewParent parent = view.getParent();
@@ -134,7 +134,7 @@ public class StatusBarRemoteInputCallback implements NotificationRemoteInputMana
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onWorkChallengeChanged$1$com-android-systemui-statusbar-phone-StatusBarRemoteInputCallback */
-    public /* synthetic */ void mo45337xe09f449a(NotificationStackScrollLayout notificationStackScrollLayout, ExpandableNotificationRow expandableNotificationRow) {
+    public /* synthetic */ void mo45349xe09f449a(NotificationStackScrollLayout notificationStackScrollLayout, ExpandableNotificationRow expandableNotificationRow) {
         StatusBarRemoteInputCallback$$ExternalSyntheticLambda0 statusBarRemoteInputCallback$$ExternalSyntheticLambda0 = new StatusBarRemoteInputCallback$$ExternalSyntheticLambda0(this, notificationStackScrollLayout);
         if (notificationStackScrollLayout.scrollTo(expandableNotificationRow)) {
             notificationStackScrollLayout.setFinishScrollingCallback(statusBarRemoteInputCallback$$ExternalSyntheticLambda0);
@@ -145,7 +145,7 @@ public class StatusBarRemoteInputCallback implements NotificationRemoteInputMana
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onWorkChallengeChanged$0$com-android-systemui-statusbar-phone-StatusBarRemoteInputCallback */
-    public /* synthetic */ void mo45336x4ddc8d9(NotificationStackScrollLayout notificationStackScrollLayout) {
+    public /* synthetic */ void mo45348x4ddc8d9(NotificationStackScrollLayout notificationStackScrollLayout) {
         this.mPendingWorkRemoteInputView.callOnClick();
         this.mPendingWorkRemoteInputView = null;
         notificationStackScrollLayout.setFinishScrollingCallback((Runnable) null);
@@ -204,7 +204,7 @@ public class StatusBarRemoteInputCallback implements NotificationRemoteInputMana
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$handleRemoteViewClick$3$com-android-systemui-statusbar-phone-StatusBarRemoteInputCallback */
-    public /* synthetic */ boolean mo45335xedfc7ef6(PendingIntent pendingIntent, NotificationRemoteInputManager.ClickHandler clickHandler) {
+    public /* synthetic */ boolean mo45347xedfc7ef6(PendingIntent pendingIntent, NotificationRemoteInputManager.ClickHandler clickHandler) {
         this.mActionClickLogger.logKeyguardGone(pendingIntent);
         try {
             ActivityManager.getService().resumeAppSwitches();

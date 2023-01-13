@@ -15,7 +15,7 @@ import android.view.View;
 import android.view.ViewOverlay;
 import android.view.ViewTreeObserver;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 
 public class DraggableConstraintLayout extends ConstraintLayout implements ViewTreeObserver.OnComputeInternalInsetsListener {
     private static final float VELOCITY_DP_PER_MS = 1.0f;
@@ -86,8 +86,8 @@ public class DraggableConstraintLayout extends ConstraintLayout implements ViewT
 
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
-        this.mActionsContainer = findViewById(C1893R.C1897id.actions_container);
-        this.mActionsContainerBackground = findViewById(C1893R.C1897id.actions_container_background);
+        this.mActionsContainer = findViewById(C1894R.C1898id.actions_container);
+        this.mActionsContainerBackground = findViewById(C1894R.C1898id.actions_container_background);
     }
 
     public boolean onInterceptTouchEvent(MotionEvent motionEvent) {
@@ -271,27 +271,27 @@ public class DraggableConstraintLayout extends ConstraintLayout implements ViewT
             }
             float f2 = (float) i;
             float abs = Math.abs(f2 - translationX);
-            ofFloat.addUpdateListener(new C2435xa3d759b9(this, translationX, f2));
+            ofFloat.addUpdateListener(new C2441xa3d759b9(this, translationX, f2));
             ofFloat.setDuration((long) (abs / Math.abs(min)));
             return ofFloat;
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$createSwipeDismissAnimation$0$com-android-systemui-screenshot-DraggableConstraintLayout$SwipeDismissHandler */
-        public /* synthetic */ void mo37322x80635606(float f, float f2, ValueAnimator valueAnimator) {
+        public /* synthetic */ void mo37323x80635606(float f, float f2, ValueAnimator valueAnimator) {
             this.mView.setTranslationX(MathUtils.lerp(f, f2, valueAnimator.getAnimatedFraction()));
             this.mView.setAlpha(1.0f - valueAnimator.getAnimatedFraction());
         }
 
         private ValueAnimator createSwipeReturnAnimation() {
             ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
-            ofFloat.addUpdateListener(new C2436xa3d759ba(this, this.mView.getTranslationX(), 0.0f));
+            ofFloat.addUpdateListener(new C2442xa3d759ba(this, this.mView.getTranslationX(), 0.0f));
             return ofFloat;
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$createSwipeReturnAnimation$1$com-android-systemui-screenshot-DraggableConstraintLayout$SwipeDismissHandler */
-        public /* synthetic */ void mo37323xb69fa77f(float f, float f2, ValueAnimator valueAnimator) {
+        public /* synthetic */ void mo37324xb69fa77f(float f, float f2, ValueAnimator valueAnimator) {
             this.mView.setTranslationX(MathUtils.lerp(f, f2, valueAnimator.getAnimatedFraction()));
         }
     }

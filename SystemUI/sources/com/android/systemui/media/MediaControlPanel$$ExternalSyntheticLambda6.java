@@ -13,6 +13,6 @@ public final /* synthetic */ class MediaControlPanel$$ExternalSyntheticLambda6 i
     }
 
     public final void run() {
-        this.f$0.mo33664x371ef810(this.f$1);
+        this.f$0.mo33668x371ef810(this.f$1);
     }
 }

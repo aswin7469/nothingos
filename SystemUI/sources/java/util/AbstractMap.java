@@ -124,27 +124,27 @@ public abstract class AbstractMap<K, V> implements Map<K, V> {
         if (set != null) {
             return set;
         }
-        C43691 r0 = new AbstractSet<K>() {
+        C43811 r0 = new AbstractSet<K>() {
             public Iterator<K> iterator() {
                 return new Iterator<K>() {
 
                     /* renamed from: i */
-                    private Iterator<Map.Entry<K, V>> f587i;
+                    private Iterator<Map.Entry<K, V>> f585i;
 
                     {
-                        this.f587i = AbstractMap.this.entrySet().iterator();
+                        this.f585i = AbstractMap.this.entrySet().iterator();
                     }
 
                     public boolean hasNext() {
-                        return this.f587i.hasNext();
+                        return this.f585i.hasNext();
                     }
 
                     public K next() {
-                        return this.f587i.next().getKey();
+                        return this.f585i.next().getKey();
                     }
 
                     public void remove() {
-                        this.f587i.remove();
+                        this.f585i.remove();
                     }
                 };
             }
@@ -174,27 +174,27 @@ public abstract class AbstractMap<K, V> implements Map<K, V> {
         if (collection != null) {
             return collection;
         }
-        C43712 r0 = new AbstractCollection<V>() {
+        C43832 r0 = new AbstractCollection<V>() {
             public Iterator<V> iterator() {
                 return new Iterator<V>() {
 
                     /* renamed from: i */
-                    private Iterator<Map.Entry<K, V>> f588i;
+                    private Iterator<Map.Entry<K, V>> f586i;
 
                     {
-                        this.f588i = AbstractMap.this.entrySet().iterator();
+                        this.f586i = AbstractMap.this.entrySet().iterator();
                     }
 
                     public boolean hasNext() {
-                        return this.f588i.hasNext();
+                        return this.f586i.hasNext();
                     }
 
                     public V next() {
-                        return this.f588i.next().getValue();
+                        return this.f586i.next().getValue();
                     }
 
                     public void remove() {
-                        this.f588i.remove();
+                        this.f586i.remove();
                     }
                 };
             }
@@ -293,7 +293,7 @@ public abstract class AbstractMap<K, V> implements Map<K, V> {
 
     /* access modifiers changed from: private */
     /* renamed from: eq */
-    public static boolean m1713eq(Object obj, Object obj2) {
+    public static boolean m1719eq(Object obj, Object obj2) {
         if (obj == null) {
             return obj2 == null;
         }
@@ -334,7 +334,7 @@ public abstract class AbstractMap<K, V> implements Map<K, V> {
                 return false;
             }
             Map.Entry entry = (Map.Entry) obj;
-            if (!AbstractMap.m1713eq(this.key, entry.getKey()) || !AbstractMap.m1713eq(this.value, entry.getValue())) {
+            if (!AbstractMap.m1719eq(this.key, entry.getKey()) || !AbstractMap.m1719eq(this.value, entry.getValue())) {
                 return false;
             }
             return true;
@@ -388,7 +388,7 @@ public abstract class AbstractMap<K, V> implements Map<K, V> {
                 return false;
             }
             Map.Entry entry = (Map.Entry) obj;
-            if (!AbstractMap.m1713eq(this.key, entry.getKey()) || !AbstractMap.m1713eq(this.value, entry.getValue())) {
+            if (!AbstractMap.m1719eq(this.key, entry.getKey()) || !AbstractMap.m1719eq(this.value, entry.getValue())) {
                 return false;
             }
             return true;

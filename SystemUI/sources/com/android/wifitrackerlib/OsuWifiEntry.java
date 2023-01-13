@@ -91,7 +91,7 @@ class OsuWifiEntry extends WifiEntry {
             boolean r0 = r1.hasAdminRestrictions()     // Catch:{ all -> 0x003c }
             if (r0 == 0) goto L_0x0011
             android.content.Context r2 = r1.mContext     // Catch:{ all -> 0x003c }
-            int r0 = com.android.wifitrackerlib.C3341R.string.wifitrackerlib_admin_restricted_network     // Catch:{ all -> 0x003c }
+            int r0 = com.android.wifitrackerlib.C3351R.string.wifitrackerlib_admin_restricted_network     // Catch:{ all -> 0x003c }
             java.lang.String r2 = r2.getString(r0)     // Catch:{ all -> 0x003c }
             monitor-exit(r1)
             return r2
@@ -105,19 +105,19 @@ class OsuWifiEntry extends WifiEntry {
             if (r0 == 0) goto L_0x0032
             if (r2 == 0) goto L_0x0028
             android.content.Context r2 = r1.mContext     // Catch:{ all -> 0x003c }
-            int r0 = com.android.wifitrackerlib.C3341R.string.wifitrackerlib_wifi_passpoint_expired     // Catch:{ all -> 0x003c }
+            int r0 = com.android.wifitrackerlib.C3351R.string.wifitrackerlib_wifi_passpoint_expired     // Catch:{ all -> 0x003c }
             java.lang.String r2 = r2.getString(r0)     // Catch:{ all -> 0x003c }
             goto L_0x0030
         L_0x0028:
             android.content.Context r2 = r1.mContext     // Catch:{ all -> 0x003c }
-            int r0 = com.android.wifitrackerlib.C3341R.string.wifitrackerlib_tap_to_renew_subscription_and_connect     // Catch:{ all -> 0x003c }
+            int r0 = com.android.wifitrackerlib.C3351R.string.wifitrackerlib_tap_to_renew_subscription_and_connect     // Catch:{ all -> 0x003c }
             java.lang.String r2 = r2.getString(r0)     // Catch:{ all -> 0x003c }
         L_0x0030:
             monitor-exit(r1)
             return r2
         L_0x0032:
             android.content.Context r2 = r1.mContext     // Catch:{ all -> 0x003c }
-            int r0 = com.android.wifitrackerlib.C3341R.string.wifitrackerlib_tap_to_sign_up     // Catch:{ all -> 0x003c }
+            int r0 = com.android.wifitrackerlib.C3351R.string.wifitrackerlib_tap_to_sign_up     // Catch:{ all -> 0x003c }
             java.lang.String r2 = r2.getString(r0)     // Catch:{ all -> 0x003c }
             monitor-exit(r1)
             return r2
@@ -230,12 +230,12 @@ class OsuWifiEntry extends WifiEntry {
 
         public void onProvisioningFailure(int i) {
             synchronized (OsuWifiEntry.this) {
-                if (TextUtils.equals(OsuWifiEntry.this.mOsuStatusString, OsuWifiEntry.this.mContext.getString(C3341R.string.wifitrackerlib_osu_completing_sign_up))) {
+                if (TextUtils.equals(OsuWifiEntry.this.mOsuStatusString, OsuWifiEntry.this.mContext.getString(C3351R.string.wifitrackerlib_osu_completing_sign_up))) {
                     OsuWifiEntry osuWifiEntry = OsuWifiEntry.this;
-                    String unused = osuWifiEntry.mOsuStatusString = osuWifiEntry.mContext.getString(C3341R.string.wifitrackerlib_osu_sign_up_failed);
+                    String unused = osuWifiEntry.mOsuStatusString = osuWifiEntry.mContext.getString(C3351R.string.wifitrackerlib_osu_sign_up_failed);
                 } else {
                     OsuWifiEntry osuWifiEntry2 = OsuWifiEntry.this;
-                    String unused2 = osuWifiEntry2.mOsuStatusString = osuWifiEntry2.mContext.getString(C3341R.string.wifitrackerlib_osu_connect_failed);
+                    String unused2 = osuWifiEntry2.mOsuStatusString = osuWifiEntry2.mContext.getString(C3351R.string.wifitrackerlib_osu_connect_failed);
                 }
             }
             WifiEntry.ConnectCallback connectCallback = OsuWifiEntry.this.mConnectCallback;
@@ -256,13 +256,13 @@ class OsuWifiEntry extends WifiEntry {
                 case 5:
                 case 6:
                 case 7:
-                    str = String.format(OsuWifiEntry.this.mContext.getString(C3341R.string.wifitrackerlib_osu_opening_provider), OsuWifiEntry.this.getTitle());
+                    str = String.format(OsuWifiEntry.this.mContext.getString(C3351R.string.wifitrackerlib_osu_opening_provider), OsuWifiEntry.this.getTitle());
                     break;
                 case 8:
                 case 9:
                 case 10:
                 case 11:
-                    str = OsuWifiEntry.this.mContext.getString(C3341R.string.wifitrackerlib_osu_completing_sign_up);
+                    str = OsuWifiEntry.this.mContext.getString(C3351R.string.wifitrackerlib_osu_completing_sign_up);
                     break;
                 default:
                     str = null;
@@ -283,7 +283,7 @@ class OsuWifiEntry extends WifiEntry {
             ScanResult scanResult;
             synchronized (OsuWifiEntry.this) {
                 OsuWifiEntry osuWifiEntry = OsuWifiEntry.this;
-                String unused = osuWifiEntry.mOsuStatusString = osuWifiEntry.mContext.getString(C3341R.string.wifitrackerlib_osu_sign_up_complete);
+                String unused = osuWifiEntry.mOsuStatusString = osuWifiEntry.mContext.getString(C3351R.string.wifitrackerlib_osu_sign_up_complete);
             }
             OsuWifiEntry.this.notifyOnUpdated();
             PasspointConfiguration passpointConfiguration = OsuWifiEntry.this.mWifiManager.getMatchingPasspointConfigsForOsuProviders(Collections.singleton(OsuWifiEntry.this.mOsuProvider)).get(OsuWifiEntry.this.mOsuProvider);

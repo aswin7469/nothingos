@@ -14,10 +14,10 @@ public class BufferedReader extends Reader {
     private static int defaultExpectedLineLength = 80;
 
     /* renamed from: cb */
-    private char[] f510cb;
+    private char[] f508cb;
 
     /* renamed from: in */
-    private Reader f511in;
+    private Reader f509in;
     private int markedChar;
     private boolean markedSkipLF;
     private int nChars;
@@ -36,8 +36,8 @@ public class BufferedReader extends Reader {
         this.skipLF = false;
         this.markedSkipLF = false;
         if (i > 0) {
-            this.f511in = reader;
-            this.f510cb = new char[i];
+            this.f509in = reader;
+            this.f508cb = new char[i];
             this.nChars = 0;
             this.nextChar = 0;
             return;
@@ -50,7 +50,7 @@ public class BufferedReader extends Reader {
     }
 
     private void ensureOpen() throws IOException {
-        if (this.f511in == null) {
+        if (this.f509in == null) {
             throw new IOException("Stream closed");
         }
     }
@@ -66,7 +66,7 @@ public class BufferedReader extends Reader {
                 this.markedChar = -2;
                 this.readAheadLimit = 0;
             } else {
-                char[] cArr = this.f510cb;
+                char[] cArr = this.f508cb;
                 if (i4 <= cArr.length) {
                     System.arraycopy((Object) cArr, i, (Object) cArr, 0, i3);
                     this.markedChar = 0;
@@ -77,7 +77,7 @@ public class BufferedReader extends Reader {
                     }
                     char[] cArr2 = new char[i4];
                     System.arraycopy((Object) cArr, i, (Object) cArr2, 0, i3);
-                    this.f510cb = cArr2;
+                    this.f508cb = cArr2;
                     this.markedChar = 0;
                 }
                 this.nChars = i3;
@@ -86,8 +86,8 @@ public class BufferedReader extends Reader {
             }
         }
         do {
-            Reader reader = this.f511in;
-            char[] cArr3 = this.f510cb;
+            Reader reader = this.f509in;
+            char[] cArr3 = this.f508cb;
             read = reader.read(cArr3, i2, cArr3.length - i2);
         } while (read == 0);
         if (read > 0) {
@@ -110,14 +110,14 @@ public class BufferedReader extends Reader {
                     break;
                 }
                 this.skipLF = false;
-                char[] cArr = this.f510cb;
+                char[] cArr = this.f508cb;
                 int i = this.nextChar;
                 if (cArr[i] != 10) {
                     break;
                 }
                 this.nextChar = i + 1;
             }
-            char[] cArr2 = this.f510cb;
+            char[] cArr2 = this.f508cb;
             int i2 = this.nextChar;
             this.nextChar = i2 + 1;
             char c = cArr2[i2];
@@ -127,8 +127,8 @@ public class BufferedReader extends Reader {
 
     private int read1(char[] cArr, int i, int i2) throws IOException {
         if (this.nextChar >= this.nChars) {
-            if (i2 >= this.f510cb.length && this.markedChar <= -1 && !this.skipLF) {
-                return this.f511in.read(cArr, i, i2);
+            if (i2 >= this.f508cb.length && this.markedChar <= -1 && !this.skipLF) {
+                return this.f509in.read(cArr, i, i2);
             }
             fill();
         }
@@ -139,7 +139,7 @@ public class BufferedReader extends Reader {
         }
         if (this.skipLF) {
             this.skipLF = false;
-            if (this.f510cb[i3] == 10) {
+            if (this.f508cb[i3] == 10) {
                 int i5 = i3 + 1;
                 this.nextChar = i5;
                 if (i5 >= i4) {
@@ -151,7 +151,7 @@ public class BufferedReader extends Reader {
             }
         }
         int min = Math.min(i2, this.nChars - this.nextChar);
-        System.arraycopy((Object) this.f510cb, this.nextChar, (Object) cArr, i, min);
+        System.arraycopy((Object) this.f508cb, this.nextChar, (Object) cArr, i, min);
         this.nextChar += min;
         return min;
     }
@@ -185,7 +185,7 @@ public class BufferedReader extends Reader {
             return r1
         L_0x0021:
             if (r1 >= r7) goto L_0x0038
-            java.io.Reader r2 = r4.f511in     // Catch:{ all -> 0x0040 }
+            java.io.Reader r2 = r4.f509in     // Catch:{ all -> 0x0040 }
             boolean r2 = r2.ready()     // Catch:{ all -> 0x0040 }
             if (r2 == 0) goto L_0x0038
             int r2 = r6 + r1
@@ -266,7 +266,7 @@ public class BufferedReader extends Reader {
         L_0x0033:
             r6 = 10
             if (r10 == 0) goto L_0x0041
-            char[] r10 = r9.f510cb     // Catch:{ all -> 0x0092 }
+            char[] r10 = r9.f508cb     // Catch:{ all -> 0x0092 }
             char r10 = r10[r5]     // Catch:{ all -> 0x0092 }
             if (r10 != r6) goto L_0x0041
             int r5 = r5 + 1
@@ -279,7 +279,7 @@ public class BufferedReader extends Reader {
             int r7 = r9.nChars     // Catch:{ all -> 0x0092 }
             r8 = 13
             if (r10 >= r7) goto L_0x005a
-            char[] r5 = r9.f510cb     // Catch:{ all -> 0x0092 }
+            char[] r5 = r9.f508cb     // Catch:{ all -> 0x0092 }
             char r5 = r5[r10]     // Catch:{ all -> 0x0092 }
             if (r5 == r6) goto L_0x0058
             if (r5 != r8) goto L_0x0055
@@ -298,12 +298,12 @@ public class BufferedReader extends Reader {
             if (r6 == 0) goto L_0x0081
             if (r4 != 0) goto L_0x006c
             java.lang.String r1 = new java.lang.String     // Catch:{ all -> 0x0092 }
-            char[] r3 = r9.f510cb     // Catch:{ all -> 0x0092 }
+            char[] r3 = r9.f508cb     // Catch:{ all -> 0x0092 }
             int r10 = r10 - r7
             r1.<init>((char[]) r3, (int) r7, (int) r10)     // Catch:{ all -> 0x0092 }
             goto L_0x0076
         L_0x006c:
-            char[] r1 = r9.f510cb     // Catch:{ all -> 0x0092 }
+            char[] r1 = r9.f508cb     // Catch:{ all -> 0x0092 }
             int r10 = r10 - r7
             r4.append((char[]) r1, (int) r7, (int) r10)     // Catch:{ all -> 0x0092 }
             java.lang.String r1 = r4.toString()     // Catch:{ all -> 0x0092 }
@@ -322,7 +322,7 @@ public class BufferedReader extends Reader {
             int r5 = defaultExpectedLineLength     // Catch:{ all -> 0x0092 }
             r4.<init>((int) r5)     // Catch:{ all -> 0x0092 }
         L_0x008a:
-            char[] r5 = r9.f510cb     // Catch:{ all -> 0x0092 }
+            char[] r5 = r9.f508cb     // Catch:{ all -> 0x0092 }
             int r10 = r10 - r7
             r4.append((char[]) r5, (int) r7, (int) r10)     // Catch:{ all -> 0x0092 }
             r10 = r1
@@ -360,7 +360,7 @@ public class BufferedReader extends Reader {
                     }
                     if (this.skipLF) {
                         this.skipLF = false;
-                        if (this.f510cb[i] == 10) {
+                        if (this.f508cb[i] == 10) {
                             this.nextChar = i + 1;
                         }
                     }
@@ -387,18 +387,18 @@ public class BufferedReader extends Reader {
             ensureOpen();
             z = false;
             if (this.skipLF) {
-                if (this.nextChar >= this.nChars && this.f511in.ready()) {
+                if (this.nextChar >= this.nChars && this.f509in.ready()) {
                     fill();
                 }
                 int i = this.nextChar;
                 if (i < this.nChars) {
-                    if (this.f510cb[i] == 10) {
+                    if (this.f508cb[i] == 10) {
                         this.nextChar = i + 1;
                     }
                     this.skipLF = false;
                 }
             }
-            if (this.nextChar < this.nChars || this.f511in.ready()) {
+            if (this.nextChar < this.nChars || this.f509in.ready()) {
                 z = true;
             }
         }
@@ -432,13 +432,13 @@ public class BufferedReader extends Reader {
 
     public void close() throws IOException {
         synchronized (this.lock) {
-            Reader reader = this.f511in;
+            Reader reader = this.f509in;
             if (reader != null) {
                 try {
                     reader.close();
                 } finally {
-                    this.f511in = null;
-                    this.f510cb = null;
+                    this.f509in = null;
+                    this.f508cb = null;
                 }
             }
         }

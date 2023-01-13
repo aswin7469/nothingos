@@ -1138,7 +1138,7 @@ public final class HttpUrl {
 
         private static String domainToAscii(String str) {
             try {
-                String lowerCase = IDN.toASCII(str).toLowerCase(Locale.f700US);
+                String lowerCase = IDN.toASCII(str).toLowerCase(Locale.f698US);
                 if (!lowerCase.isEmpty() && !containsInvalidHostnameAsciiCodes(lowerCase)) {
                     return lowerCase;
                 }

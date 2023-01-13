@@ -73,7 +73,7 @@ class LinuxDosFileAttributeView extends UnixFileAttributeViews.Basic implements 
         try {
             final UnixFileAttributes unixFileAttributes = UnixFileAttributes.get(openForAttributeAccess);
             final int dosAttribute = getDosAttribute(openForAttributeAccess);
-            C47851 r3 = new DosFileAttributes() {
+            C47971 r3 = new DosFileAttributes() {
                 public FileTime lastModifiedTime() {
                     return unixFileAttributes.lastModifiedTime();
                 }

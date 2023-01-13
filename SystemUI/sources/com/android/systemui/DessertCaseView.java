@@ -77,13 +77,13 @@ public class DessertCaseView extends FrameLayout {
     }
 
     static {
-        int[] iArr = {C1893R.C1895drawable.dessert_kitkat, C1893R.C1895drawable.dessert_android};
+        int[] iArr = {C1894R.C1896drawable.dessert_kitkat, C1894R.C1896drawable.dessert_android};
         PASTRIES = iArr;
-        int[] iArr2 = {C1893R.C1895drawable.dessert_cupcake, C1893R.C1895drawable.dessert_donut, C1893R.C1895drawable.dessert_eclair, C1893R.C1895drawable.dessert_froyo, C1893R.C1895drawable.dessert_gingerbread, C1893R.C1895drawable.dessert_honeycomb, C1893R.C1895drawable.dessert_ics, C1893R.C1895drawable.dessert_jellybean};
+        int[] iArr2 = {C1894R.C1896drawable.dessert_cupcake, C1894R.C1896drawable.dessert_donut, C1894R.C1896drawable.dessert_eclair, C1894R.C1896drawable.dessert_froyo, C1894R.C1896drawable.dessert_gingerbread, C1894R.C1896drawable.dessert_honeycomb, C1894R.C1896drawable.dessert_ics, C1894R.C1896drawable.dessert_jellybean};
         RARE_PASTRIES = iArr2;
-        int[] iArr3 = {C1893R.C1895drawable.dessert_petitfour, C1893R.C1895drawable.dessert_donutburger, C1893R.C1895drawable.dessert_flan, C1893R.C1895drawable.dessert_keylimepie};
+        int[] iArr3 = {C1894R.C1896drawable.dessert_petitfour, C1894R.C1896drawable.dessert_donutburger, C1894R.C1896drawable.dessert_flan, C1894R.C1896drawable.dessert_keylimepie};
         XRARE_PASTRIES = iArr3;
-        int[] iArr4 = {C1893R.C1895drawable.dessert_zombiegingerbread, C1893R.C1895drawable.dessert_dandroid, C1893R.C1895drawable.dessert_jandycane};
+        int[] iArr4 = {C1894R.C1896drawable.dessert_zombiegingerbread, C1894R.C1896drawable.dessert_dandroid, C1894R.C1896drawable.dessert_jandycane};
         XXRARE_PASTRIES = iArr4;
         NUM_PASTRIES = iArr.length + iArr2.length + iArr3.length + iArr4.length;
     }
@@ -114,7 +114,7 @@ public class DessertCaseView extends FrameLayout {
         this.tmpSet = new HashSet<>();
         Resources resources = getResources();
         this.mStarted = false;
-        this.mCellSize = resources.getDimensionPixelSize(C1893R.dimen.dessert_case_cell_size);
+        this.mCellSize = resources.getDimensionPixelSize(C1894R.dimen.dessert_case_cell_size);
         BitmapFactory.Options options = new BitmapFactory.Options();
         if (this.mCellSize < 512) {
             options.inSampleSize = 2;

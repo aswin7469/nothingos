@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import com.android.settingslib.media.MediaDevice;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.media.dialog.MediaOutputBaseAdapter;
 import java.util.List;
 
@@ -66,13 +66,13 @@ public class MediaOutputGroupAdapter extends MediaOutputBaseAdapter {
         public void onBind(MediaDevice mediaDevice, boolean z, boolean z2, int i) {
             super.onBind(mediaDevice, z, z2, i);
             this.mCheckBox.setVisibility(0);
-            this.mCheckBox.setOnCheckedChangeListener(new C2229x1869e5b0(this, mediaDevice));
+            this.mCheckBox.setOnCheckedChangeListener(new C2232x1869e5b0(this, mediaDevice));
             boolean z3 = this.mSeekBar.getVisibility() == 8;
             setTwoLineLayout(mediaDevice, false, true, false, false);
             initSeekbar(mediaDevice, z3);
             List<MediaDevice> selectedMediaDevice = MediaOutputGroupAdapter.this.mController.getSelectedMediaDevice();
             if (isDeviceIncluded(MediaOutputGroupAdapter.this.mController.getSelectableMediaDevice(), mediaDevice)) {
-                this.mCheckBox.setButtonDrawable(C1893R.C1895drawable.ic_check_box);
+                this.mCheckBox.setButtonDrawable(C1894R.C1896drawable.ic_check_box);
                 this.mCheckBox.setChecked(false);
                 this.mCheckBox.setEnabled(true);
             } else if (!isDeviceIncluded(selectedMediaDevice, mediaDevice)) {
@@ -83,7 +83,7 @@ public class MediaOutputGroupAdapter extends MediaOutputBaseAdapter {
                     this.mCheckBox.setEnabled(false);
                     return;
                 }
-                this.mCheckBox.setButtonDrawable(C1893R.C1895drawable.ic_check_box);
+                this.mCheckBox.setButtonDrawable(C1894R.C1896drawable.ic_check_box);
                 this.mCheckBox.setChecked(true);
                 this.mCheckBox.setEnabled(true);
             }
@@ -91,14 +91,14 @@ public class MediaOutputGroupAdapter extends MediaOutputBaseAdapter {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onBind$0$com-android-systemui-media-dialog-MediaOutputGroupAdapter$GroupViewHolder */
-        public /* synthetic */ void mo34463x27986ca6(MediaDevice mediaDevice, CompoundButton compoundButton, boolean z) {
+        public /* synthetic */ void mo34467x27986ca6(MediaDevice mediaDevice, CompoundButton compoundButton, boolean z) {
             onCheckBoxClicked(z, mediaDevice);
         }
 
         /* access modifiers changed from: package-private */
         public void onBind(int i, boolean z, boolean z2) {
             if (i == 2) {
-                setTwoLineLayout(MediaOutputGroupAdapter.this.mContext.getText(C1893R.string.media_output_dialog_group), true, true, false, false);
+                setTwoLineLayout(MediaOutputGroupAdapter.this.mContext.getText(C1894R.string.media_output_dialog_group), true, true, false, false);
                 this.mTitleIcon.setImageDrawable(getSpeakerDrawable());
                 this.mCheckBox.setVisibility(8);
                 initSessionSeekbar();
@@ -114,7 +114,7 @@ public class MediaOutputGroupAdapter extends MediaOutputBaseAdapter {
         }
 
         private Drawable getDisabledCheckboxDrawable() {
-            Drawable mutate = MediaOutputGroupAdapter.this.mContext.getDrawable(C1893R.C1895drawable.ic_check_box_blue_24dp).mutate();
+            Drawable mutate = MediaOutputGroupAdapter.this.mContext.getDrawable(C1894R.C1896drawable.ic_check_box_blue_24dp).mutate();
             Canvas canvas = new Canvas(Bitmap.createBitmap(mutate.getIntrinsicWidth(), mutate.getIntrinsicHeight(), Bitmap.Config.ARGB_8888));
             TypedValue typedValue = new TypedValue();
             MediaOutputGroupAdapter.this.mContext.getTheme().resolveAttribute(16842803, typedValue, true);

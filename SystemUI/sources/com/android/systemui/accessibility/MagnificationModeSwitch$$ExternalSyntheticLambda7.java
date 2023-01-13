@@ -9,6 +9,6 @@ public final /* synthetic */ class MagnificationModeSwitch$$ExternalSyntheticLam
     }
 
     public final void run() {
-        this.f$0.mo29911xc1717db5();
+        this.f$0.mo29921xc1717db5();
     }
 }

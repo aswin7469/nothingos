@@ -9,6 +9,6 @@ public final /* synthetic */ class NotificationShadeWindowControllerImpl$$Extern
     }
 
     public final void run() {
-        this.f$0.mo44746x55fd2eea();
+        this.f$0.mo44761x55fd2eea();
     }
 }

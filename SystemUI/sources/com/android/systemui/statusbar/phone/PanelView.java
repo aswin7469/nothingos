@@ -72,7 +72,7 @@ public abstract class PanelView extends FrameLayout {
     }
 
     public void setAlpha(float f) {
-        NTLogUtil.m1680d(TAG, "setAlpha stacks: " + Debug.getCallers(6));
+        NTLogUtil.m1686d(TAG, "setAlpha stacks: alpha: " + f + ", cb: " + Debug.getCallers(6));
         super.setAlpha(f);
     }
 }

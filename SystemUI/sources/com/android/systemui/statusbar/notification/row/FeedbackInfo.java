@@ -20,7 +20,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.android.internal.statusbar.IStatusBarService;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin;
 import com.android.systemui.statusbar.notification.AssistantFeedbackController;
@@ -111,29 +111,29 @@ public class FeedbackInfo extends LinearLayout implements NotificationGuts.GutsC
         } catch (PackageManager.NameNotFoundException unused) {
             drawable = this.mPm.getDefaultActivityIcon();
         }
-        ((ImageView) findViewById(C1893R.C1897id.pkg_icon)).setImageDrawable(drawable);
-        ((TextView) findViewById(C1893R.C1897id.pkg_name)).setText(this.mAppName);
+        ((ImageView) findViewById(C1894R.C1898id.pkg_icon)).setImageDrawable(drawable);
+        ((TextView) findViewById(C1894R.C1898id.pkg_name)).setText(this.mAppName);
     }
 
     public void onInitializeAccessibilityEvent(AccessibilityEvent accessibilityEvent) {
         super.onInitializeAccessibilityEvent(accessibilityEvent);
         if (this.mGutsContainer != null && accessibilityEvent.getEventType() == 32) {
             if (this.mGutsContainer.isExposed()) {
-                accessibilityEvent.getText().add(this.mContext.getString(C1893R.string.notification_channel_controls_opened_accessibility, new Object[]{this.mAppName}));
+                accessibilityEvent.getText().add(this.mContext.getString(C1894R.string.notification_channel_controls_opened_accessibility, new Object[]{this.mAppName}));
                 return;
             }
-            accessibilityEvent.getText().add(this.mContext.getString(C1893R.string.notification_channel_controls_closed_accessibility, new Object[]{this.mAppName}));
+            accessibilityEvent.getText().add(this.mContext.getString(C1894R.string.notification_channel_controls_closed_accessibility, new Object[]{this.mAppName}));
         }
     }
 
     private void bindPrompt() {
-        TextView textView = (TextView) findViewById(C1893R.C1897id.yes);
-        TextView textView2 = (TextView) findViewById(C1893R.C1897id.f256no);
+        TextView textView = (TextView) findViewById(C1894R.C1898id.yes);
+        TextView textView2 = (TextView) findViewById(C1894R.C1898id.f256no);
         textView.setVisibility(0);
         textView2.setVisibility(0);
         textView.setOnClickListener(new FeedbackInfo$$ExternalSyntheticLambda0(this));
         textView2.setOnClickListener(new FeedbackInfo$$ExternalSyntheticLambda1(this));
-        ((TextView) findViewById(C1893R.C1897id.prompt)).setText(Html.fromHtml(getPrompt()));
+        ((TextView) findViewById(C1894R.C1898id.prompt)).setText(Html.fromHtml(getPrompt()));
     }
 
     private String getPrompt() {
@@ -143,16 +143,16 @@ public class FeedbackInfo extends LinearLayout implements NotificationGuts.GutsC
             sb.append(String.format("[DEBUG]: oldImportance=%d, newImportance=%d, ranking=%f\n\n", Integer.valueOf(this.mRanking.getChannel().getImportance()), Integer.valueOf(this.mRanking.getImportance()), Float.valueOf(this.mRanking.getRankingScore())));
         }
         if (feedbackStatus == 1) {
-            sb.append(this.mContext.getText(C1893R.string.feedback_alerted));
+            sb.append(this.mContext.getText(C1894R.string.feedback_alerted));
         } else if (feedbackStatus == 2) {
-            sb.append(this.mContext.getText(C1893R.string.feedback_silenced));
+            sb.append(this.mContext.getText(C1894R.string.feedback_silenced));
         } else if (feedbackStatus == 3) {
-            sb.append(this.mContext.getText(C1893R.string.feedback_promoted));
+            sb.append(this.mContext.getText(C1894R.string.feedback_promoted));
         } else if (feedbackStatus == 4) {
-            sb.append(this.mContext.getText(C1893R.string.feedback_demoted));
+            sb.append(this.mContext.getText(C1894R.string.feedback_demoted));
         }
         sb.append(WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER);
-        sb.append(this.mContext.getText(C1893R.string.feedback_prompt));
+        sb.append(this.mContext.getText(C1894R.string.feedback_prompt));
         return sb.toString();
     }
 

@@ -12,6 +12,6 @@ public final /* synthetic */ class FooterActionsView$$ExternalSyntheticLambda0 i
     }
 
     public final void run() {
-        FooterActionsView.m2900updateEverything$lambda0(this.f$0, this.f$1);
+        FooterActionsView.m2905updateEverything$lambda0(this.f$0, this.f$1);
     }
 }

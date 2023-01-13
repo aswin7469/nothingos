@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Objects;
 
 final class ChronoPeriodImpl implements ChronoPeriod, Serializable {
-    private static final List<TemporalUnit> SUPPORTED_UNITS = List.m1725of(ChronoUnit.YEARS, ChronoUnit.MONTHS, ChronoUnit.DAYS);
+    private static final List<TemporalUnit> SUPPORTED_UNITS = List.m1731of(ChronoUnit.YEARS, ChronoUnit.MONTHS, ChronoUnit.DAYS);
     private static final long serialVersionUID = 57387258289L;
     private final Chronology chrono;
     final int days;
@@ -231,6 +231,6 @@ final class ChronoPeriodImpl implements ChronoPeriod, Serializable {
     }
 
     static ChronoPeriodImpl readExternal(DataInput dataInput) throws IOException {
-        return new ChronoPeriodImpl(Chronology.m941of(dataInput.readUTF()), dataInput.readInt(), dataInput.readInt(), dataInput.readInt());
+        return new ChronoPeriodImpl(Chronology.m939of(dataInput.readUTF()), dataInput.readInt(), dataInput.readInt(), dataInput.readInt());
     }
 }

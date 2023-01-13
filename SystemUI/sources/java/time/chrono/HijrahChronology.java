@@ -78,7 +78,7 @@ public final class HijrahChronology extends AbstractChronology implements Serial
     }
 
     public HijrahDate date(int i, int i2, int i3) {
-        return HijrahDate.m943of(this, i, i2, i3);
+        return HijrahDate.m941of(this, i, i2, i3);
     }
 
     public HijrahDate dateYearDay(Era era, int i, int i2) {
@@ -86,7 +86,7 @@ public final class HijrahChronology extends AbstractChronology implements Serial
     }
 
     public HijrahDate dateYearDay(int i, int i2) {
-        HijrahDate of = HijrahDate.m943of(this, i, 1, 1);
+        HijrahDate of = HijrahDate.m941of(this, i, 1, 1);
         if (i2 <= of.lengthOfYear()) {
             return of.plusDays((long) (i2 - 1));
         }
@@ -151,7 +151,7 @@ public final class HijrahChronology extends AbstractChronology implements Serial
     }
 
     public List<Era> eras() {
-        return List.m1733of((E[]) HijrahEra.values());
+        return List.m1739of((E[]) HijrahEra.values());
     }
 
     public ValueRange range(ChronoField chronoField) {
@@ -159,25 +159,25 @@ public final class HijrahChronology extends AbstractChronology implements Serial
         if (!(chronoField instanceof ChronoField)) {
             return chronoField.range();
         }
-        switch (C28671.$SwitchMap$java$time$temporal$ChronoField[chronoField.ordinal()]) {
+        switch (C28731.$SwitchMap$java$time$temporal$ChronoField[chronoField.ordinal()]) {
             case 1:
-                return ValueRange.m957of(1, 1, (long) getMinimumMonthLength(), (long) getMaximumMonthLength());
+                return ValueRange.m955of(1, 1, (long) getMinimumMonthLength(), (long) getMaximumMonthLength());
             case 2:
-                return ValueRange.m955of(1, (long) getMaximumDayOfYear());
+                return ValueRange.m953of(1, (long) getMaximumDayOfYear());
             case 3:
-                return ValueRange.m955of(1, 5);
+                return ValueRange.m953of(1, 5);
             case 4:
             case 5:
-                return ValueRange.m955of((long) getMinimumYear(), (long) getMaximumYear());
+                return ValueRange.m953of((long) getMinimumYear(), (long) getMaximumYear());
             case 6:
-                return ValueRange.m955of(1, 1);
+                return ValueRange.m953of(1, 1);
             default:
                 return chronoField.range();
         }
     }
 
     /* renamed from: java.time.chrono.HijrahChronology$1 */
-    static /* synthetic */ class C28671 {
+    static /* synthetic */ class C28731 {
         static final /* synthetic */ int[] $SwitchMap$java$time$temporal$ChronoField;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(14:0|1|2|3|4|5|6|7|8|9|10|11|12|14) */
@@ -230,7 +230,7 @@ public final class HijrahChronology extends AbstractChronology implements Serial
             L_0x0049:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: java.time.chrono.HijrahChronology.C28671.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: java.time.chrono.HijrahChronology.C28731.<clinit>():void");
         }
     }
 
@@ -490,7 +490,7 @@ public final class HijrahChronology extends AbstractChronology implements Serial
             r10 = r9[r12]     // Catch:{ Exception -> 0x0179 }
             r11 = r9[r11]     // Catch:{ Exception -> 0x0179 }
             r3 = r9[r3]     // Catch:{ Exception -> 0x0179 }
-            java.time.LocalDate r3 = java.time.LocalDate.m908of((int) r10, (int) r11, (int) r3)     // Catch:{ Exception -> 0x0179 }
+            java.time.LocalDate r3 = java.time.LocalDate.m906of((int) r10, (int) r11, (int) r3)     // Catch:{ Exception -> 0x0179 }
             long r9 = r3.toEpochDay()     // Catch:{ Exception -> 0x0179 }
             int r9 = (int) r9     // Catch:{ Exception -> 0x0179 }
             goto L_0x0020

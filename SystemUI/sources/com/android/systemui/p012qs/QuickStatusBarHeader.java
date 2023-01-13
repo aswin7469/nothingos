@@ -19,7 +19,7 @@ import android.widget.Space;
 import androidx.constraintlayout.motion.widget.Key;
 import com.android.internal.policy.SystemBarUtils;
 import com.android.settingslib.Utils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.battery.BatteryMeterView;
 import com.android.systemui.p012qs.TouchAnimator;
 import com.android.systemui.statusbar.phone.StatusBarContentInsetsProvider;
@@ -69,7 +69,7 @@ public class QuickStatusBarHeader extends FrameLayout {
     private View mRightLayout;
     private int mRoundedCornerPadding = 0;
     /* access modifiers changed from: private */
-    public List<String> mRssiIgnoredSlots = List.m1722of();
+    public List<String> mRssiIgnoredSlots = List.m1728of();
     /* access modifiers changed from: private */
     public boolean mShowClockIconsSeparator;
     private View mStatusIconsView;
@@ -104,23 +104,23 @@ public class QuickStatusBarHeader extends FrameLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mHeaderQsPanel = (QuickQSPanel) findViewById(C1893R.C1897id.quick_qs_panel);
-        this.mDatePrivacyView = findViewById(C1893R.C1897id.quick_status_bar_date_privacy);
-        this.mStatusIconsView = findViewById(C1893R.C1897id.quick_qs_status_icons);
-        this.mQSCarriers = findViewById(C1893R.C1897id.carrier_group);
-        this.mContainer = findViewById(C1893R.C1897id.qs_container);
-        this.mIconContainer = (StatusIconContainer) findViewById(C1893R.C1897id.statusIcons);
-        this.mPrivacyChip = findViewById(C1893R.C1897id.privacy_chip);
-        this.mDateView = findViewById(C1893R.C1897id.date);
-        this.mClockDateView = (VariableDateView) findViewById(C1893R.C1897id.date_clock);
-        this.mClockIconsSeparator = findViewById(C1893R.C1897id.separator);
-        this.mRightLayout = findViewById(C1893R.C1897id.rightLayout);
-        this.mDateContainer = findViewById(C1893R.C1897id.date_container);
-        this.mPrivacyContainer = findViewById(C1893R.C1897id.privacy_container);
-        this.mClockContainer = (ViewGroup) findViewById(C1893R.C1897id.clock_container);
-        this.mClockView = (Clock) findViewById(C1893R.C1897id.clock);
-        this.mDatePrivacySeparator = (Space) findViewById(C1893R.C1897id.space);
-        this.mBatteryRemainingIcon = (BatteryMeterView) findViewById(C1893R.C1897id.batteryRemainingIcon);
+        this.mHeaderQsPanel = (QuickQSPanel) findViewById(C1894R.C1898id.quick_qs_panel);
+        this.mDatePrivacyView = findViewById(C1894R.C1898id.quick_status_bar_date_privacy);
+        this.mStatusIconsView = findViewById(C1894R.C1898id.quick_qs_status_icons);
+        this.mQSCarriers = findViewById(C1894R.C1898id.carrier_group);
+        this.mContainer = findViewById(C1894R.C1898id.qs_container);
+        this.mIconContainer = (StatusIconContainer) findViewById(C1894R.C1898id.statusIcons);
+        this.mPrivacyChip = findViewById(C1894R.C1898id.privacy_chip);
+        this.mDateView = findViewById(C1894R.C1898id.date);
+        this.mClockDateView = (VariableDateView) findViewById(C1894R.C1898id.date_clock);
+        this.mClockIconsSeparator = findViewById(C1894R.C1898id.separator);
+        this.mRightLayout = findViewById(C1894R.C1898id.rightLayout);
+        this.mDateContainer = findViewById(C1894R.C1898id.date_container);
+        this.mPrivacyContainer = findViewById(C1894R.C1898id.privacy_container);
+        this.mClockContainer = (ViewGroup) findViewById(C1894R.C1898id.clock_container);
+        this.mClockView = (Clock) findViewById(C1894R.C1898id.clock);
+        this.mDatePrivacySeparator = (Space) findViewById(C1894R.C1898id.space);
+        this.mBatteryRemainingIcon = (BatteryMeterView) findViewById(C1894R.C1898id.batteryRemainingIcon);
         this.mEx.init(this.mContext, this);
         updateResources();
         setDatePrivacyContainersWidth(this.mContext.getResources().getConfiguration().orientation == 2);
@@ -192,8 +192,8 @@ public class QuickStatusBarHeader extends FrameLayout {
         if (!shouldUseLargeScreenShadeHeader && !this.mUseCombinedQSHeader) {
             boolean z = this.mQsDisabled;
         }
-        this.mConfigShowBatteryEstimate = resources.getBoolean(C1893R.bool.config_showBatteryEstimateQSBH);
-        this.mRoundedCornerPadding = resources.getDimensionPixelSize(C1893R.dimen.rounded_corner_content_padding);
+        this.mConfigShowBatteryEstimate = resources.getBoolean(C1894R.bool.config_showBatteryEstimateQSBH);
+        this.mRoundedCornerPadding = resources.getDimensionPixelSize(C1894R.dimen.rounded_corner_content_padding);
         int quickQsOffsetHeight = SystemBarUtils.getQuickQsOffsetHeight(this.mContext);
         this.mDatePrivacyView.getLayoutParams().height = Math.max(quickQsOffsetHeight, this.mDatePrivacyView.getMinimumHeight());
         View view = this.mDatePrivacyView;
@@ -223,7 +223,7 @@ public class QuickStatusBarHeader extends FrameLayout {
         }
         ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) this.mHeaderQsPanel.getLayoutParams();
         if (shouldUseLargeScreenShadeHeader || !this.mUseCombinedQSHeader) {
-            quickQsOffsetHeight = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.qqs_layout_margin_top);
+            quickQsOffsetHeight = this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.qqs_layout_margin_top);
         }
         marginLayoutParams.topMargin = quickQsOffsetHeight;
         this.mHeaderQsPanel.setLayoutParams(marginLayoutParams);
@@ -232,15 +232,15 @@ public class QuickStatusBarHeader extends FrameLayout {
         updateAnimators();
         this.mEx.updatePortQSStatusBarVisibility(this.mContext);
         this.mEx.updatePullDownArrowVisibility(this.mContext, this.mExpanded);
-        int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.qs_status_bar_height);
+        int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.qs_status_bar_height);
         View view3 = this.mContainer;
         view3.setPadding(view3.getPaddingLeft(), dimensionPixelSize, this.mContainer.getPaddingRight(), this.mContainer.getPaddingBottom());
         updateClockDatePadding();
     }
 
     private void updateClockDatePadding() {
-        int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.status_bar_left_clock_starting_padding);
-        int dimensionPixelSize2 = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.status_bar_left_clock_end_padding);
+        int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.status_bar_left_clock_starting_padding);
+        int dimensionPixelSize2 = this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.status_bar_left_clock_end_padding);
         Clock clock = this.mClockView;
         clock.setPaddingRelative(dimensionPixelSize, clock.getPaddingTop(), dimensionPixelSize2, this.mClockView.getPaddingBottom());
         ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) this.mClockDateView.getLayoutParams();
@@ -448,7 +448,7 @@ public class QuickStatusBarHeader extends FrameLayout {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateEverything$0$com-android-systemui-qs-QuickStatusBarHeader */
-    public /* synthetic */ void mo36337xebd8adeb() {
+    public /* synthetic */ void mo36341xebd8adeb() {
         setClickable(!this.mExpanded);
     }
 

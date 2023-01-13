@@ -13,6 +13,6 @@ public final /* synthetic */ class AppPair$$ExternalSyntheticLambda6 implements 
     }
 
     public final void runWithTransaction(SurfaceControl.Transaction transaction) {
-        this.f$0.m3402lambda$onTaskAppeared$2$comandroidwmshellapppairsAppPair(transaction);
+        this.f$0.m3406lambda$onTaskAppeared$2$comandroidwmshellapppairsAppPair(transaction);
     }
 }

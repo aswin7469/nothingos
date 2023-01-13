@@ -34,7 +34,7 @@ public class SetupWizardLayout extends TemplateLayout {
 
     public SetupWizardLayout(Context context) {
         super(context, 0, 0);
-        init((AttributeSet) null, C3953R.attr.sudLayoutTheme);
+        init((AttributeSet) null, C3963R.attr.sudLayoutTheme);
     }
 
     public SetupWizardLayout(Context context, int i) {
@@ -43,12 +43,12 @@ public class SetupWizardLayout extends TemplateLayout {
 
     public SetupWizardLayout(Context context, int i, int i2) {
         super(context, i, i2);
-        init((AttributeSet) null, C3953R.attr.sudLayoutTheme);
+        init((AttributeSet) null, C3963R.attr.sudLayoutTheme);
     }
 
     public SetupWizardLayout(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        init(attributeSet, C3953R.attr.sudLayoutTheme);
+        init(attributeSet, C3963R.attr.sudLayoutTheme);
     }
 
     public SetupWizardLayout(Context context, AttributeSet attributeSet, int i) {
@@ -69,35 +69,35 @@ public class SetupWizardLayout extends TemplateLayout {
             if (scrollView != null) {
                 requireScrollMixin.setScrollHandlingDelegate(new ScrollViewScrollHandlingDelegate(requireScrollMixin, scrollView));
             }
-            TypedArray obtainStyledAttributes = getContext().obtainStyledAttributes(attributeSet, C3953R.styleable.SudSetupWizardLayout, i, 0);
-            Drawable drawable = obtainStyledAttributes.getDrawable(C3953R.styleable.SudSetupWizardLayout_sudBackground);
+            TypedArray obtainStyledAttributes = getContext().obtainStyledAttributes(attributeSet, C3963R.styleable.SudSetupWizardLayout, i, 0);
+            Drawable drawable = obtainStyledAttributes.getDrawable(C3963R.styleable.SudSetupWizardLayout_sudBackground);
             if (drawable != null) {
                 setLayoutBackground(drawable);
             } else {
-                Drawable drawable2 = obtainStyledAttributes.getDrawable(C3953R.styleable.SudSetupWizardLayout_sudBackgroundTile);
+                Drawable drawable2 = obtainStyledAttributes.getDrawable(C3963R.styleable.SudSetupWizardLayout_sudBackgroundTile);
                 if (drawable2 != null) {
                     setBackgroundTile(drawable2);
                 }
             }
-            Drawable drawable3 = obtainStyledAttributes.getDrawable(C3953R.styleable.SudSetupWizardLayout_sudIllustration);
+            Drawable drawable3 = obtainStyledAttributes.getDrawable(C3963R.styleable.SudSetupWizardLayout_sudIllustration);
             if (drawable3 != null) {
                 setIllustration(drawable3);
             } else {
-                Drawable drawable4 = obtainStyledAttributes.getDrawable(C3953R.styleable.SudSetupWizardLayout_sudIllustrationImage);
-                Drawable drawable5 = obtainStyledAttributes.getDrawable(C3953R.styleable.SudSetupWizardLayout_sudIllustrationHorizontalTile);
+                Drawable drawable4 = obtainStyledAttributes.getDrawable(C3963R.styleable.SudSetupWizardLayout_sudIllustrationImage);
+                Drawable drawable5 = obtainStyledAttributes.getDrawable(C3963R.styleable.SudSetupWizardLayout_sudIllustrationHorizontalTile);
                 if (!(drawable4 == null || drawable5 == null)) {
                     setIllustration(drawable4, drawable5);
                 }
             }
-            int dimensionPixelSize = obtainStyledAttributes.getDimensionPixelSize(C3953R.styleable.SudSetupWizardLayout_sudDecorPaddingTop, -1);
+            int dimensionPixelSize = obtainStyledAttributes.getDimensionPixelSize(C3963R.styleable.SudSetupWizardLayout_sudDecorPaddingTop, -1);
             if (dimensionPixelSize == -1) {
-                dimensionPixelSize = getResources().getDimensionPixelSize(C3953R.dimen.sud_decor_padding_top);
+                dimensionPixelSize = getResources().getDimensionPixelSize(C3963R.dimen.sud_decor_padding_top);
             }
             setDecorPaddingTop(dimensionPixelSize);
-            float f = obtainStyledAttributes.getFloat(C3953R.styleable.SudSetupWizardLayout_sudIllustrationAspectRatio, -1.0f);
+            float f = obtainStyledAttributes.getFloat(C3963R.styleable.SudSetupWizardLayout_sudIllustrationAspectRatio, -1.0f);
             if (f == -1.0f) {
                 TypedValue typedValue = new TypedValue();
-                getResources().getValue(C3953R.dimen.sud_illustration_aspect_ratio, typedValue, true);
+                getResources().getValue(C3963R.dimen.sud_illustration_aspect_ratio, typedValue, true);
                 f = typedValue.getFloat();
             }
             setIllustrationAspectRatio(f);
@@ -127,15 +127,15 @@ public class SetupWizardLayout extends TemplateLayout {
     /* access modifiers changed from: protected */
     public View onInflateTemplate(LayoutInflater layoutInflater, int i) {
         if (i == 0) {
-            i = C3953R.layout.sud_template;
+            i = C3963R.layout.sud_template;
         }
-        return inflateTemplate(layoutInflater, C3953R.style.SudThemeMaterial_Light, i);
+        return inflateTemplate(layoutInflater, C3963R.style.SudThemeMaterial_Light, i);
     }
 
     /* access modifiers changed from: protected */
     public ViewGroup findContainer(int i) {
         if (i == 0) {
-            i = C3953R.C3956id.sud_layout_content;
+            i = C3963R.C3966id.sud_layout_content;
         }
         return super.findContainer(i);
     }
@@ -145,7 +145,7 @@ public class SetupWizardLayout extends TemplateLayout {
     }
 
     public ScrollView getScrollView() {
-        View findManagedViewById = findManagedViewById(C3953R.C3956id.sud_bottom_scroll_view);
+        View findManagedViewById = findManagedViewById(C3963R.C3966id.sud_bottom_scroll_view);
         if (findManagedViewById instanceof ScrollView) {
             return (ScrollView) findManagedViewById;
         }
@@ -179,42 +179,42 @@ public class SetupWizardLayout extends TemplateLayout {
     }
 
     public void setIllustration(Drawable drawable) {
-        View findManagedViewById = findManagedViewById(C3953R.C3956id.sud_layout_decor);
+        View findManagedViewById = findManagedViewById(C3963R.C3966id.sud_layout_decor);
         if (findManagedViewById instanceof Illustration) {
             ((Illustration) findManagedViewById).setIllustration(drawable);
         }
     }
 
     public void setIllustration(int i, int i2) {
-        View findManagedViewById = findManagedViewById(C3953R.C3956id.sud_layout_decor);
+        View findManagedViewById = findManagedViewById(C3963R.C3966id.sud_layout_decor);
         if (findManagedViewById instanceof Illustration) {
             ((Illustration) findManagedViewById).setIllustration(getIllustration(i, i2));
         }
     }
 
     private void setIllustration(Drawable drawable, Drawable drawable2) {
-        View findManagedViewById = findManagedViewById(C3953R.C3956id.sud_layout_decor);
+        View findManagedViewById = findManagedViewById(C3963R.C3966id.sud_layout_decor);
         if (findManagedViewById instanceof Illustration) {
             ((Illustration) findManagedViewById).setIllustration(getIllustration(drawable, drawable2));
         }
     }
 
     public void setIllustrationAspectRatio(float f) {
-        View findManagedViewById = findManagedViewById(C3953R.C3956id.sud_layout_decor);
+        View findManagedViewById = findManagedViewById(C3963R.C3966id.sud_layout_decor);
         if (findManagedViewById instanceof Illustration) {
             ((Illustration) findManagedViewById).setAspectRatio(f);
         }
     }
 
     public void setDecorPaddingTop(int i) {
-        View findManagedViewById = findManagedViewById(C3953R.C3956id.sud_layout_decor);
+        View findManagedViewById = findManagedViewById(C3963R.C3966id.sud_layout_decor);
         if (findManagedViewById != null) {
             findManagedViewById.setPadding(findManagedViewById.getPaddingLeft(), i, findManagedViewById.getPaddingRight(), findManagedViewById.getPaddingBottom());
         }
     }
 
     public void setLayoutBackground(Drawable drawable) {
-        View findManagedViewById = findManagedViewById(C3953R.C3956id.sud_layout_decor);
+        View findManagedViewById = findManagedViewById(C3963R.C3966id.sud_layout_decor);
         if (findManagedViewById != null) {
             findManagedViewById.setBackgroundDrawable(drawable);
         }
@@ -237,7 +237,7 @@ public class SetupWizardLayout extends TemplateLayout {
     }
 
     private Drawable getIllustration(Drawable drawable, Drawable drawable2) {
-        if (getContext().getResources().getBoolean(C3953R.bool.sudUseTabletLayout)) {
+        if (getContext().getResources().getBoolean(C3963R.bool.sudUseTabletLayout)) {
             if (drawable2 instanceof BitmapDrawable) {
                 BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable2;
                 bitmapDrawable.setTileModeX(Shader.TileMode.REPEAT);

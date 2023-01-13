@@ -189,7 +189,7 @@ public class QrCamera extends Handler {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$doInBackground$0$com-android-settingslib-qrcode-QrCamera$DecodingTask */
-        public /* synthetic */ void mo29111x41d99441(Semaphore semaphore, byte[] bArr, Camera camera) {
+        public /* synthetic */ void mo29116x41d99441(Semaphore semaphore, byte[] bArr, Camera camera) {
             this.mImage = QrCamera.this.getFrameImage(bArr);
             semaphore.release();
         }

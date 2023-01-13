@@ -7,6 +7,6 @@ import java.util.function.Supplier;
 /* compiled from: D8$$SyntheticClass */
 public final /* synthetic */ class ControlViewHolder$Companion$$ExternalSyntheticLambda8 implements Supplier {
     public final Object get() {
-        return ControlViewHolder.Companion.m2699findBehaviorClass$lambda8();
+        return ControlViewHolder.Companion.m2704findBehaviorClass$lambda8();
     }
 }

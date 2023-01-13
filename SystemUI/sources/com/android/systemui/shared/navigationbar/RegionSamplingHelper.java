@@ -171,7 +171,7 @@ public class RegionSamplingHelper implements View.OnAttachStateChangeListener, V
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateSamplingListener$0$com-android-systemui-shared-navigationbar-RegionSamplingHelper */
-    public /* synthetic */ void mo37830x26531156(SurfaceControl surfaceControl) {
+    public /* synthetic */ void mo37831x26531156(SurfaceControl surfaceControl) {
         if (surfaceControl == null || surfaceControl.isValid()) {
             this.mCompositionSamplingListener.register(this.mSamplingListener, 0, surfaceControl, this.mSamplingRequestBounds);
         }
@@ -198,7 +198,7 @@ public class RegionSamplingHelper implements View.OnAttachStateChangeListener, V
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$unregisterSamplingListener$1$com-android-systemui-shared-navigationbar-RegionSamplingHelper */
-    public /* synthetic */ void mo37829x9531fca2(SurfaceControl surfaceControl) {
+    public /* synthetic */ void mo37830x9531fca2(SurfaceControl surfaceControl) {
         this.mCompositionSamplingListener.unregister(this.mSamplingListener);
         if (surfaceControl != null && surfaceControl.isValid()) {
             surfaceControl.release();

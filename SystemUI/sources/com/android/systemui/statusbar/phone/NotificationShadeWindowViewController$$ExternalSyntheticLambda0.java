@@ -11,6 +11,6 @@ public final /* synthetic */ class NotificationShadeWindowViewController$$Extern
     }
 
     public final void onTuningChanged(String str, String str2) {
-        this.f$0.mo44836xbef39658(str, str2);
+        this.f$0.mo44851xbef39658(str, str2);
     }
 }

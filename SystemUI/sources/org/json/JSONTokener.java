@@ -3,7 +3,7 @@ package org.json;
 public class JSONTokener {
 
     /* renamed from: in */
-    private final String f858in;
+    private final String f856in;
     private int pos;
 
     public static int dehexchar(char c) {
@@ -24,7 +24,7 @@ public class JSONTokener {
         if (str != null && str.startsWith("﻿")) {
             str = str.substring(1);
         }
-        this.f858in = str;
+        this.f856in = str;
     }
 
     public Object nextValue() throws JSONException {
@@ -46,22 +46,22 @@ public class JSONTokener {
     }
 
     private int nextCleanInternal() throws JSONException {
-        while (this.pos < this.f858in.length()) {
-            String str = this.f858in;
+        while (this.pos < this.f856in.length()) {
+            String str = this.f856in;
             int i = this.pos;
             this.pos = i + 1;
             char charAt = str.charAt(i);
             if (!(charAt == 9 || charAt == 10 || charAt == 13 || charAt == ' ')) {
                 if (charAt == '#') {
                     skipToEndOfLine();
-                } else if (charAt != '/' || this.pos == this.f858in.length()) {
+                } else if (charAt != '/' || this.pos == this.f856in.length()) {
                     return charAt;
                 } else {
-                    char charAt2 = this.f858in.charAt(this.pos);
+                    char charAt2 = this.f856in.charAt(this.pos);
                     if (charAt2 == '*') {
                         int i2 = this.pos + 1;
                         this.pos = i2;
-                        int indexOf = this.f858in.indexOf("*/", i2);
+                        int indexOf = this.f856in.indexOf("*/", i2);
                         if (indexOf != -1) {
                             this.pos = indexOf + 2;
                         } else {
@@ -80,8 +80,8 @@ public class JSONTokener {
     }
 
     private void skipToEndOfLine() {
-        while (this.pos < this.f858in.length()) {
-            char charAt = this.f858in.charAt(this.pos);
+        while (this.pos < this.f856in.length()) {
+            char charAt = this.f856in.charAt(this.pos);
             if (charAt == 13 || charAt == 10) {
                 this.pos++;
                 return;
@@ -93,23 +93,23 @@ public class JSONTokener {
     public String nextString(char c) throws JSONException {
         int i = this.pos;
         StringBuilder sb = null;
-        while (this.pos < this.f858in.length()) {
-            String str = this.f858in;
+        while (this.pos < this.f856in.length()) {
+            String str = this.f856in;
             int i2 = this.pos;
             this.pos = i2 + 1;
             char charAt = str.charAt(i2);
             if (charAt == c) {
                 if (sb == null) {
-                    return new String(this.f858in.substring(i, this.pos - 1));
+                    return new String(this.f856in.substring(i, this.pos - 1));
                 }
-                sb.append((CharSequence) this.f858in, i, this.pos - 1);
+                sb.append((CharSequence) this.f856in, i, this.pos - 1);
                 return sb.toString();
             } else if (charAt == '\\') {
-                if (this.pos != this.f858in.length()) {
+                if (this.pos != this.f856in.length()) {
                     if (sb == null) {
                         sb = new StringBuilder();
                     }
-                    sb.append((CharSequence) this.f858in, i, this.pos - 1);
+                    sb.append((CharSequence) this.f856in, i, this.pos - 1);
                     sb.append(readEscapeCharacter());
                     i = this.pos;
                 } else {
@@ -121,7 +121,7 @@ public class JSONTokener {
     }
 
     private char readEscapeCharacter() throws JSONException {
-        String str = this.f858in;
+        String str = this.f856in;
         int i = this.pos;
         this.pos = i + 1;
         char charAt = str.charAt(i);
@@ -143,8 +143,8 @@ public class JSONTokener {
         if (charAt != 'u') {
             return charAt;
         }
-        if (this.pos + 4 <= this.f858in.length()) {
-            String str2 = this.f858in;
+        if (this.pos + 4 <= this.f856in.length()) {
+            String str2 = this.f856in;
             int i2 = this.pos;
             String substring = str2.substring(i2, i2 + 4);
             this.pos += 4;
@@ -250,14 +250,14 @@ public class JSONTokener {
 
     private String nextToInternal(String str) {
         int i = this.pos;
-        while (this.pos < this.f858in.length()) {
-            char charAt = this.f858in.charAt(this.pos);
+        while (this.pos < this.f856in.length()) {
+            char charAt = this.f856in.charAt(this.pos);
             if (charAt == 13 || charAt == 10 || str.indexOf((int) charAt) != -1) {
-                return this.f858in.substring(i, this.pos);
+                return this.f856in.substring(i, this.pos);
             }
             this.pos++;
         }
-        return this.f858in.substring(i);
+        return this.f856in.substring(i);
     }
 
     private JSONObject readObject() throws JSONException {
@@ -274,7 +274,7 @@ public class JSONTokener {
             if (nextValue instanceof String) {
                 int nextCleanInternal2 = nextCleanInternal();
                 if (nextCleanInternal2 == 58 || nextCleanInternal2 == 61) {
-                    if (this.pos < this.f858in.length() && this.f858in.charAt(this.pos) == '>') {
+                    if (this.pos < this.f856in.length() && this.f856in.charAt(this.pos) == '>') {
                         this.pos++;
                     }
                     jSONObject.put((String) nextValue, nextValue());
@@ -332,18 +332,18 @@ public class JSONTokener {
     }
 
     public String toString() {
-        return " at character " + this.pos + " of " + this.f858in;
+        return " at character " + this.pos + " of " + this.f856in;
     }
 
     public boolean more() {
-        return this.pos < this.f858in.length();
+        return this.pos < this.f856in.length();
     }
 
     public char next() {
-        if (this.pos >= this.f858in.length()) {
+        if (this.pos >= this.f856in.length()) {
             return 0;
         }
-        String str = this.f858in;
+        String str = this.f856in;
         int i = this.pos;
         this.pos = i + 1;
         return str.charAt(i);
@@ -366,8 +366,8 @@ public class JSONTokener {
     }
 
     public String next(int i) throws JSONException {
-        if (this.pos + i <= this.f858in.length()) {
-            String str = this.f858in;
+        if (this.pos + i <= this.f856in.length()) {
+            String str = this.f856in;
             int i2 = this.pos;
             String substring = str.substring(i2, i2 + i);
             this.pos += i;
@@ -388,12 +388,12 @@ public class JSONTokener {
     }
 
     public void skipPast(String str) {
-        int indexOf = this.f858in.indexOf(str, this.pos);
-        this.pos = indexOf == -1 ? this.f858in.length() : str.length() + indexOf;
+        int indexOf = this.f856in.indexOf(str, this.pos);
+        this.pos = indexOf == -1 ? this.f856in.length() : str.length() + indexOf;
     }
 
     public char skipTo(char c) {
-        int indexOf = this.f858in.indexOf((int) c, this.pos);
+        int indexOf = this.f856in.indexOf((int) c, this.pos);
         if (indexOf == -1) {
             return 0;
         }

@@ -13,11 +13,11 @@ public class MeteredStream extends FilterInputStream {
     protected long markedCount = 0;
 
     /* renamed from: pi */
-    protected ProgressSource f868pi;
+    protected ProgressSource f866pi;
 
     public MeteredStream(InputStream inputStream, ProgressSource progressSource, long j) {
         super(inputStream);
-        this.f868pi = progressSource;
+        this.f866pi = progressSource;
         this.expected = j;
         if (progressSource != null) {
             progressSource.updateProgress(0, j);
@@ -31,7 +31,7 @@ public class MeteredStream extends FilterInputStream {
             if (j2 - this.markedCount > ((long) this.markLimit)) {
                 this.markLimit = -1;
             }
-            ProgressSource progressSource = this.f868pi;
+            ProgressSource progressSource = this.f866pi;
             if (progressSource != null) {
                 progressSource.updateProgress(j2, this.expected);
             }
@@ -68,7 +68,7 @@ public class MeteredStream extends FilterInputStream {
             monitor-exit(r3)
             return r1
         L_0x0008:
-            java.io.InputStream r0 = r3.f521in     // Catch:{ all -> 0x001c }
+            java.io.InputStream r0 = r3.f519in     // Catch:{ all -> 0x001c }
             int r0 = r0.read()     // Catch:{ all -> 0x001c }
             if (r0 == r1) goto L_0x0016
             r1 = 1
@@ -92,7 +92,7 @@ public class MeteredStream extends FilterInputStream {
         if (this.closed) {
             return -1;
         }
-        int read = this.f521in.read(bArr, i, i2);
+        int read = this.f519in.read(bArr, i, i2);
         justRead((long) read);
         return read;
     }
@@ -106,24 +106,24 @@ public class MeteredStream extends FilterInputStream {
         if (j > j2 - j3) {
             j = j2 - j3;
         }
-        long skip = this.f521in.skip(j);
+        long skip = this.f519in.skip(j);
         justRead(skip);
         return skip;
     }
 
     public synchronized void close() throws IOException {
         if (!this.closed) {
-            ProgressSource progressSource = this.f868pi;
+            ProgressSource progressSource = this.f866pi;
             if (progressSource != null) {
                 progressSource.finishTracking();
             }
             this.closed = true;
-            this.f521in.close();
+            this.f519in.close();
         }
     }
 
     public synchronized int available() throws IOException {
-        return this.closed ? 0 : this.f521in.available();
+        return this.closed ? 0 : this.f519in.available();
     }
 
     public synchronized void mark(int i) {
@@ -156,7 +156,7 @@ public class MeteredStream extends FilterInputStream {
     public void finalize() throws Throwable {
         try {
             close();
-            ProgressSource progressSource = this.f868pi;
+            ProgressSource progressSource = this.f866pi;
             if (progressSource != null) {
                 progressSource.close();
             }

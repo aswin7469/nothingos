@@ -708,9 +708,15 @@
     <string name="force_rtl_layout_all_locales_summary">Force screen layout direction to RTL for all locales</string>
     <string name="forced_resizable_secondary_display">App may not work on a secondary display.</string>
     <string name="game_status">Playing</string>
+    <string name="gamemode_description">Game Mode will determine if you\'re in a game and will automatically turn on for you</string>
+    <string name="gamemode_gamedashboard_title">Game dashboard</string>
+    <string name="gamemode_notification_content">Tap to go to Settings</string>
+    <string name="gamemode_notification_title">Game Mode is currently on</string>
     <string name="global_action_lock_message">Unlock your phone for more options</string>
     <string name="global_action_screenshot">Screenshot</string>
     <string name="global_action_smart_lock_disabled">Smart Lock disabled</string>
+    <string name="gm_guide_status_on">ON</string>
+    <string name="gm_notification_title">Game Mode</string>
     <string name="go_to_web">Go to browser</string>
     <string name="got_it">Got it</string>
     <string name="guest_exit_guest">Remove guest</string>

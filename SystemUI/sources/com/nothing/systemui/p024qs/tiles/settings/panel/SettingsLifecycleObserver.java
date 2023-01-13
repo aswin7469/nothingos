@@ -11,31 +11,31 @@ public class SettingsLifecycleObserver implements LifecycleObserver {
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     public void onCreate() {
-        NTLogUtil.m1681e(TAG, "SettingsLifecycleObserver onCreate");
+        NTLogUtil.m1687e(TAG, "SettingsLifecycleObserver onCreate");
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     public void onStart() {
-        NTLogUtil.m1681e(TAG, "SettingsLifecycleObserver onStart");
+        NTLogUtil.m1687e(TAG, "SettingsLifecycleObserver onStart");
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     public void onResume() {
-        NTLogUtil.m1681e(TAG, "SettingsLifecycleObserver onResume");
+        NTLogUtil.m1687e(TAG, "SettingsLifecycleObserver onResume");
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
     public void onPause() {
-        NTLogUtil.m1681e(TAG, "SettingsLifecycleObserver onPause");
+        NTLogUtil.m1687e(TAG, "SettingsLifecycleObserver onPause");
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     public void onStop() {
-        NTLogUtil.m1681e(TAG, "SettingsLifecycleObserver onStop");
+        NTLogUtil.m1687e(TAG, "SettingsLifecycleObserver onStop");
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     public void onDestroy() {
-        NTLogUtil.m1681e(TAG, "SettingsLifecycleObserver onDestroy");
+        NTLogUtil.m1687e(TAG, "SettingsLifecycleObserver onDestroy");
     }
 }

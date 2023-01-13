@@ -708,9 +708,15 @@
     <string name="force_rtl_layout_all_locales_summary">אילוץ של כיוון פריסת מסך מימין לשמאל עבור כל השפות בכל המקומות</string>
     <string name="forced_resizable_secondary_display">ייתכן שהאפליקציה לא תפעל במסך משני.</string>
     <string name="game_status">במשחק פעיל</string>
+    <string name="gamemode_description">מצב משחק קובע אם אתה במשחק ויפעיל אותו אוטומטית עבורך</string>
+    <string name="gamemode_gamedashboard_title">לוח פיקוד משחק</string>
+    <string name="gamemode_notification_content">הקש כדי לעבור לדף \"הגדרות\"</string>
+    <string name="gamemode_notification_title">מצב משחק פעיל</string>
     <string name="global_action_lock_message">לאפשרויות נוספות, יש לבטל את נעילת הטלפון</string>
     <string name="global_action_screenshot">צילום מסך</string>
     <string name="global_action_smart_lock_disabled">‏השבתת את Smart Lock</string>
+    <string name="gm_guide_status_on">פעיל</string>
+    <string name="gm_notification_title">מצב משחק</string>
     <string name="go_to_web">מעבר אל הדפדפן</string>
     <string name="got_it">הבנתי</string>
     <string name="guest_exit_guest">הסרת אורח</string>

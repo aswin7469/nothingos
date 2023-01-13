@@ -10,6 +10,6 @@ public final /* synthetic */ class QSFgsManagerFooter$$ExternalSyntheticLambda0 
     }
 
     public final void run() {
-        this.f$0.mo36051xc39012a0();
+        this.f$0.mo36055xc39012a0();
     }
 }

@@ -16,6 +16,6 @@ public final /* synthetic */ class UdfpsController$UdfpsOverlayController$$Exter
     }
 
     public final Object invoke(Object obj, Object obj2, Object obj3) {
-        return this.f$0.mo30845xa8febada(this.f$1, (View) obj, (MotionEvent) obj2, (Boolean) obj3);
+        return this.f$0.mo30855xa8febada(this.f$1, (View) obj, (MotionEvent) obj2, (Boolean) obj3);
     }
 }

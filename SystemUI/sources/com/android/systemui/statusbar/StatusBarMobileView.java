@@ -15,7 +15,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import com.android.settingslib.graph.SignalDrawable;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.DualToneHandler;
 import com.android.systemui.navigationbar.NavigationBarInflaterView;
 import com.android.systemui.plugins.DarkIconDispatcher;
@@ -60,7 +60,7 @@ public class StatusBarMobileView extends FrameLayout implements DarkIconDispatch
     }
 
     public static StatusBarMobileView fromContext(Context context, String str, boolean z) {
-        StatusBarMobileView statusBarMobileView = (StatusBarMobileView) LayoutInflater.from(context).inflate(C1893R.layout.status_bar_mobile_signal_group, (ViewGroup) null);
+        StatusBarMobileView statusBarMobileView = (StatusBarMobileView) LayoutInflater.from(context).inflate(C1894R.layout.status_bar_mobile_signal_group, (ViewGroup) null);
         statusBarMobileView.setSlot(str);
         statusBarMobileView.init(z);
         statusBarMobileView.setVisibleState(0);
@@ -97,19 +97,19 @@ public class StatusBarMobileView extends FrameLayout implements DarkIconDispatch
         this.mIsRtl = isLayoutRtl();
         this.mProviderModel = z;
         this.mDualToneHandler = new DualToneHandler(getContext());
-        this.mMobileGroup = (LinearLayout) findViewById(C1893R.C1897id.mobile_group);
-        this.mMobile = (ImageView) findViewById(C1893R.C1897id.mobile_signal);
-        this.mMobileType = (ImageView) findViewById(C1893R.C1897id.mobile_type);
+        this.mMobileGroup = (LinearLayout) findViewById(C1894R.C1898id.mobile_group);
+        this.mMobile = (ImageView) findViewById(C1894R.C1898id.mobile_signal);
+        this.mMobileType = (ImageView) findViewById(C1894R.C1898id.mobile_type);
         if (this.mProviderModel) {
-            this.mMobileRoaming = (ImageView) findViewById(C1893R.C1897id.mobile_roaming_large);
+            this.mMobileRoaming = (ImageView) findViewById(C1894R.C1898id.mobile_roaming_large);
         } else {
-            this.mMobileRoaming = (ImageView) findViewById(C1893R.C1897id.mobile_roaming);
+            this.mMobileRoaming = (ImageView) findViewById(C1894R.C1898id.mobile_roaming);
         }
-        this.mMobileRoamingSpace = findViewById(C1893R.C1897id.mobile_roaming_space);
-        this.mIn = (ImageView) findViewById(C1893R.C1897id.mobile_in);
-        this.mOut = (ImageView) findViewById(C1893R.C1897id.mobile_out);
-        this.mInoutContainer = findViewById(C1893R.C1897id.inout_container);
-        this.mVolte = (ImageView) findViewById(C1893R.C1897id.mobile_volte);
+        this.mMobileRoamingSpace = findViewById(C1894R.C1898id.mobile_roaming_space);
+        this.mIn = (ImageView) findViewById(C1894R.C1898id.mobile_in);
+        this.mOut = (ImageView) findViewById(C1894R.C1898id.mobile_out);
+        this.mInoutContainer = findViewById(C1894R.C1898id.inout_container);
+        this.mVolte = (ImageView) findViewById(C1894R.C1898id.mobile_volte);
         SignalDrawable signalDrawable = new SignalDrawable(getContext());
         this.mMobileDrawable = signalDrawable;
         this.mMobile.setImageDrawable(signalDrawable);
@@ -120,7 +120,7 @@ public class StatusBarMobileView extends FrameLayout implements DarkIconDispatch
         StatusBarIconView statusBarIconView = new StatusBarIconView(this.mContext, this.mSlot, (StatusBarNotification) null);
         this.mDotView = statusBarIconView;
         statusBarIconView.setVisibleState(1);
-        int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.status_bar_icon_size);
+        int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.status_bar_icon_size);
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(dimensionPixelSize, dimensionPixelSize);
         layoutParams.gravity = 8388627;
         addView(this.mDotView, layoutParams);

@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
 import android.widget.LinearLayout;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.people.widget.PeopleSpaceWidgetManager;
 import com.android.systemui.people.widget.PeopleTileKey;
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ public class PeopleSpaceActivity extends Activity {
     private PeopleSpaceWidgetManager mPeopleSpaceWidgetManager;
     private ViewOutlineProvider mViewOutlineProvider = new ViewOutlineProvider() {
         public void getOutline(View view, Outline outline) {
-            outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), PeopleSpaceActivity.this.mContext.getResources().getDimension(C1893R.dimen.people_space_widget_radius));
+            outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), PeopleSpaceActivity.this.mContext.getResources().getDimension(C1894R.dimen.people_space_widget_radius));
         }
     };
 
@@ -55,12 +55,12 @@ public class PeopleSpaceActivity extends Activity {
             Log.e(TAG, "Couldn't retrieve conversations", e);
         }
         if (!arrayList2.isEmpty() || !arrayList.isEmpty()) {
-            setContentView(C1893R.layout.people_space_activity);
-            setTileViews(C1893R.C1897id.priority, C1893R.C1897id.priority_tiles, arrayList);
-            setTileViews(C1893R.C1897id.recent, C1893R.C1897id.recent_tiles, arrayList2);
+            setContentView(C1894R.layout.people_space_activity);
+            setTileViews(C1894R.C1898id.priority, C1894R.C1898id.priority_tiles, arrayList);
+            setTileViews(C1894R.C1898id.recent, C1894R.C1898id.recent_tiles, arrayList2);
             return;
         }
-        setContentView(C1893R.layout.people_space_activity_no_conversations);
+        setContentView(C1894R.layout.people_space_activity_no_conversations);
         ((GradientDrawable) ((LinearLayout) findViewById(16908288)).getBackground()).setColor(this.mContext.getTheme().obtainStyledAttributes(new int[]{17956909}).getColor(0, -1));
     }
 
@@ -86,7 +86,7 @@ public class PeopleSpaceActivity extends Activity {
                 peopleSpaceTileView.setName(peopleSpaceTile.getUserName().toString());
             }
             Context context = this.mContext;
-            peopleSpaceTileView.setPersonIcon(PeopleTileViewHelper.getPersonIconBitmap(context, peopleSpaceTile, PeopleTileViewHelper.getSizeInDp(context, C1893R.dimen.avatar_size_for_medium, context.getResources().getDisplayMetrics().density)));
+            peopleSpaceTileView.setPersonIcon(PeopleTileViewHelper.getPersonIconBitmap(context, peopleSpaceTile, PeopleTileViewHelper.getSizeInDp(context, C1894R.dimen.avatar_size_for_medium, context.getResources().getDisplayMetrics().density)));
             peopleSpaceTileView.setOnClickListener(new PeopleSpaceActivity$$ExternalSyntheticLambda0(this, peopleSpaceTile, new PeopleTileKey(peopleSpaceTile)));
         } catch (Exception e) {
             Log.e(TAG, "Couldn't retrieve shortcut information", e);
@@ -95,7 +95,7 @@ public class PeopleSpaceActivity extends Activity {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setTileView$0$com-android-systemui-people-PeopleSpaceActivity */
-    public /* synthetic */ void mo35123xf6054568(PeopleSpaceTile peopleSpaceTile, PeopleTileKey peopleTileKey, View view) {
+    public /* synthetic */ void mo35127xf6054568(PeopleSpaceTile peopleSpaceTile, PeopleTileKey peopleTileKey, View view) {
         storeWidgetConfiguration(peopleSpaceTile, peopleTileKey);
     }
 

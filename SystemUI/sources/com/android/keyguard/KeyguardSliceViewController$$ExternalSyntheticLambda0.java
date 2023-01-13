@@ -11,6 +11,6 @@ public final /* synthetic */ class KeyguardSliceViewController$$ExternalSyntheti
     }
 
     public final void onTuningChanged(String str, String str2) {
-        this.f$0.m2291lambda$new$0$comandroidkeyguardKeyguardSliceViewController(str, str2);
+        this.f$0.m2297lambda$new$0$comandroidkeyguardKeyguardSliceViewController(str, str2);
     }
 }

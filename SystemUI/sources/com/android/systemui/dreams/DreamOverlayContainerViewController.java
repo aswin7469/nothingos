@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
 import com.android.keyguard.BouncerPanelExpansionCalculator;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.animation.Interpolators;
 import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.doze.util.BurnInHelperKt;
@@ -74,7 +74,7 @@ public class DreamOverlayContainerViewController extends ViewController<DreamOve
         this.mStatusBarKeyguardViewManager = statusBarKeyguardViewManager;
         this.mBlurUtils = blurUtils;
         this.mComplicationHostViewController = complicationHostViewController;
-        this.mDreamOverlayMaxTranslationY = resources.getDimensionPixelSize(C1893R.dimen.dream_overlay_y_offset);
+        this.mDreamOverlayMaxTranslationY = resources.getDimensionPixelSize(C1894R.dimen.dream_overlay_y_offset);
         viewGroup.addView(complicationHostViewController.getView(), new ViewGroup.LayoutParams(-1, -1));
         this.mHandler = handler;
         this.mMaxBurnInOffset = i;

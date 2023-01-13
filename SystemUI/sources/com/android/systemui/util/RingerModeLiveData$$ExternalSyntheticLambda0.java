@@ -9,6 +9,6 @@ public final /* synthetic */ class RingerModeLiveData$$ExternalSyntheticLambda0 
     }
 
     public final void run() {
-        RingerModeLiveData.m3302onActive$lambda0(this.f$0);
+        RingerModeLiveData.m3307onActive$lambda0(this.f$0);
     }
 }

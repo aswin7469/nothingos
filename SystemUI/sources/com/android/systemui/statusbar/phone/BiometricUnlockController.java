@@ -16,7 +16,7 @@ import com.android.internal.util.LatencyTracker;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardUpdateMonitorCallback;
 import com.android.keyguard.KeyguardViewController;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dumpable;
 import com.android.systemui.biometrics.AuthController;
 import com.android.systemui.dagger.SysUISingleton;
@@ -32,8 +32,6 @@ import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.NotificationMediaManager;
 import com.android.systemui.statusbar.NotificationShadeWindowController;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
-import com.nothing.systemui.NTDependencyEx;
-import com.nothing.systemui.statusbar.phone.CentralSurfacesImplEx;
 import com.nothing.systemui.util.NTLogUtil;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -159,10 +157,10 @@ public class BiometricUnlockController extends KeyguardUpdateMonitorCallback imp
             BiometricUiEvent biometricUiEvent7;
             BiometricUiEvent biometricUiEvent8;
             BiometricUiEvent biometricUiEvent9;
-            ERROR_EVENT_BY_SOURCE_TYPE = Map.m1737of(BiometricSourceType.FINGERPRINT, biometricUiEvent3, BiometricSourceType.FACE, biometricUiEvent6, BiometricSourceType.IRIS, biometricUiEvent9);
+            ERROR_EVENT_BY_SOURCE_TYPE = Map.m1743of(BiometricSourceType.FINGERPRINT, biometricUiEvent3, BiometricSourceType.FACE, biometricUiEvent6, BiometricSourceType.IRIS, biometricUiEvent9);
             BiometricUiEvent biometricUiEvent10 = biometricUiEvent8;
-            SUCCESS_EVENT_BY_SOURCE_TYPE = Map.m1737of(BiometricSourceType.FINGERPRINT, biometricUiEvent, BiometricSourceType.FACE, biometricUiEvent4, BiometricSourceType.IRIS, biometricUiEvent7);
-            FAILURE_EVENT_BY_SOURCE_TYPE = Map.m1737of(BiometricSourceType.FINGERPRINT, biometricUiEvent2, BiometricSourceType.FACE, biometricUiEvent5, BiometricSourceType.IRIS, biometricUiEvent10);
+            SUCCESS_EVENT_BY_SOURCE_TYPE = Map.m1743of(BiometricSourceType.FINGERPRINT, biometricUiEvent, BiometricSourceType.FACE, biometricUiEvent4, BiometricSourceType.IRIS, biometricUiEvent7);
+            FAILURE_EVENT_BY_SOURCE_TYPE = Map.m1743of(BiometricSourceType.FINGERPRINT, biometricUiEvent2, BiometricSourceType.FACE, biometricUiEvent5, BiometricSourceType.IRIS, biometricUiEvent10);
         }
 
         private BiometricUiEvent(int i) {
@@ -177,7 +175,7 @@ public class BiometricUnlockController extends KeyguardUpdateMonitorCallback imp
     @Inject
     public BiometricUnlockController(DozeScrimController dozeScrimController, KeyguardViewMediator keyguardViewMediator, ScrimController scrimController, ShadeController shadeController, NotificationShadeWindowController notificationShadeWindowController, KeyguardStateController keyguardStateController, Handler handler, KeyguardUpdateMonitor keyguardUpdateMonitor, @Main Resources resources, KeyguardBypassController keyguardBypassController, DozeParameters dozeParameters, MetricsLogger metricsLogger, DumpManager dumpManager, PowerManager powerManager, NotificationMediaManager notificationMediaManager, WakefulnessLifecycle wakefulnessLifecycle, ScreenLifecycle screenLifecycle, AuthController authController, StatusBarStateController statusBarStateController, KeyguardUnlockAnimationController keyguardUnlockAnimationController, SessionTracker sessionTracker, LatencyTracker latencyTracker, ScreenOffAnimationController screenOffAnimationController) {
         KeyguardBypassController keyguardBypassController2 = keyguardBypassController;
-        C29094 r3 = new WakefulnessLifecycle.Observer() {
+        C29154 r3 = new WakefulnessLifecycle.Observer() {
             public void onFinishedWakingUp() {
                 if (BiometricUnlockController.this.mPendingShowBouncer) {
                     BiometricUnlockController.this.showBouncer();
@@ -201,12 +199,12 @@ public class BiometricUnlockController extends KeyguardUpdateMonitorCallback imp
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onFinishedGoingToSleep$0$com-android-systemui-statusbar-phone-BiometricUnlockController$4 */
-            public /* synthetic */ void mo43709x7234ee5(PendingAuthenticated pendingAuthenticated) {
+            public /* synthetic */ void mo43717x7234ee5(PendingAuthenticated pendingAuthenticated) {
                 BiometricUnlockController.this.onBiometricAuthenticated(pendingAuthenticated.userId, pendingAuthenticated.biometricSourceType, pendingAuthenticated.isStrongBiometric);
             }
         };
         this.mWakefulnessObserver = r3;
-        C29105 r4 = new ScreenLifecycle.Observer() {
+        C29165 r4 = new ScreenLifecycle.Observer() {
             public void onScreenTurnedOn() {
                 boolean unused = BiometricUnlockController.this.mHasScreenTurnedOnSinceAuthenticating = true;
             }
@@ -228,7 +226,7 @@ public class BiometricUnlockController extends KeyguardUpdateMonitorCallback imp
         this.mKeyguardStateController = keyguardStateController;
         this.mHandler = handler;
         Resources resources2 = resources;
-        this.mConsecutiveFpFailureThreshold = resources.getInteger(C1893R.integer.fp_consecutive_failure_time_ms);
+        this.mConsecutiveFpFailureThreshold = resources.getInteger(C1894R.integer.fp_consecutive_failure_time_ms);
         this.mKeyguardBypassController = keyguardBypassController2;
         keyguardBypassController2.setUnlockController(this);
         this.mMetricsLogger = metricsLogger;
@@ -305,7 +303,7 @@ public class BiometricUnlockController extends KeyguardUpdateMonitorCallback imp
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onBiometricAuthenticated$0$com-android-systemui-statusbar-phone-BiometricUnlockController */
-    public /* synthetic */ void mo43700xa5f887f2(BiometricUiEvent biometricUiEvent) {
+    public /* synthetic */ void mo43708xa5f887f2(BiometricUiEvent biometricUiEvent) {
         UI_EVENT_LOGGER.log(biometricUiEvent, getSessionId());
     }
 
@@ -317,11 +315,8 @@ public class BiometricUnlockController extends KeyguardUpdateMonitorCallback imp
         Log.v(TAG, "startWakeAndUnlock(" + i + NavigationBarInflaterView.KEY_CODE_END);
         boolean isDeviceInteractive = this.mUpdateMonitor.isDeviceInteractive();
         this.mMode = i;
-        if (i == 1) {
-            ((CentralSurfacesImplEx) NTDependencyEx.get(CentralSurfacesImplEx.class)).setNotificationPanelViewAlpha(0.0f);
-        }
         this.mHasScreenTurnedOnSinceAuthenticating = false;
-        if (this.mMode == 2 && pulsingOrAod()) {
+        if (i == 2 && pulsingOrAod()) {
             this.mNotificationShadeWindowController.setForceDozeBrightness(true);
         }
         this.mDozeParameters.getAlwaysOn();
@@ -386,7 +381,7 @@ public class BiometricUnlockController extends KeyguardUpdateMonitorCallback imp
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startWakeAndUnlock$1$com-android-systemui-statusbar-phone-BiometricUnlockController */
-    public /* synthetic */ void mo43702x883d0792(boolean z) {
+    public /* synthetic */ void mo43710x883d0792(boolean z) {
         if (!z) {
             Log.i(TAG, "bio wakelock: Authenticated, waking up...");
             this.mPowerManager.wakeUp(SystemClock.uptimeMillis(), 4, "android.policy:BIOMETRIC");
@@ -543,7 +538,7 @@ public class BiometricUnlockController extends KeyguardUpdateMonitorCallback imp
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onBiometricAuthFailed$2$com-android-systemui-statusbar-phone-BiometricUnlockController */
-    public /* synthetic */ void mo43699xf000d62(BiometricUiEvent biometricUiEvent) {
+    public /* synthetic */ void mo43707xf000d62(BiometricUiEvent biometricUiEvent) {
         UI_EVENT_LOGGER.log(biometricUiEvent, getSessionId());
     }
 
@@ -560,7 +555,7 @@ public class BiometricUnlockController extends KeyguardUpdateMonitorCallback imp
             if (i != 5) {
                 showBouncer();
             }
-            NTLogUtil.m1682i(TAG, "onBiometricError isInteractive=" + this.mPowerManager.isInteractive() + " errString:" + str + " msgId:" + i);
+            NTLogUtil.m1688i(TAG, "onBiometricError isInteractive=" + this.mPowerManager.isInteractive() + " errString:" + str + " msgId:" + i);
             if (!this.mPowerManager.isInteractive()) {
                 this.mHandler.postDelayed(new Runnable() {
                     public void run() {
@@ -573,7 +568,7 @@ public class BiometricUnlockController extends KeyguardUpdateMonitorCallback imp
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onBiometricError$3$com-android-systemui-statusbar-phone-BiometricUnlockController */
-    public /* synthetic */ void mo43701x436e94d6(BiometricUiEvent biometricUiEvent) {
+    public /* synthetic */ void mo43709x436e94d6(BiometricUiEvent biometricUiEvent) {
         UI_EVENT_LOGGER.log(biometricUiEvent, getSessionId());
     }
 
@@ -672,7 +667,7 @@ public class BiometricUnlockController extends KeyguardUpdateMonitorCallback imp
     }
 
     /* renamed from: com.android.systemui.statusbar.phone.BiometricUnlockController$6 */
-    static /* synthetic */ class C29116 {
+    static /* synthetic */ class C29176 {
         static final /* synthetic */ int[] $SwitchMap$android$hardware$biometrics$BiometricSourceType;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(6:0|1|2|3|4|(3:5|6|8)) */
@@ -704,12 +699,12 @@ public class BiometricUnlockController extends KeyguardUpdateMonitorCallback imp
             L_0x0028:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.BiometricUnlockController.C29116.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.BiometricUnlockController.C29176.<clinit>():void");
         }
     }
 
     private int toSubtype(BiometricSourceType biometricSourceType) {
-        int i = C29116.$SwitchMap$android$hardware$biometrics$BiometricSourceType[biometricSourceType.ordinal()];
+        int i = C29176.$SwitchMap$android$hardware$biometrics$BiometricSourceType[biometricSourceType.ordinal()];
         if (i == 1) {
             return 0;
         }

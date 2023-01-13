@@ -18,7 +18,7 @@ public class WifiP2pUpnpServiceRequest extends WifiP2pServiceRequest {
     public static WifiP2pUpnpServiceRequest newInstance(String str) {
         if (str != null) {
             StringBuffer stringBuffer = new StringBuffer();
-            stringBuffer.append(String.format(Locale.f700US, "%02x", 16));
+            stringBuffer.append(String.format(Locale.f698US, "%02x", 16));
             stringBuffer.append(WifiP2pServiceInfo.bin2HexStr(str.getBytes()));
             return new WifiP2pUpnpServiceRequest(stringBuffer.toString());
         }

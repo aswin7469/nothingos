@@ -14,6 +14,6 @@ public final /* synthetic */ class ScreenRecordTile$$ExternalSyntheticLambda0 im
     }
 
     public final void run() {
-        this.f$0.mo36915x9dce93d3(this.f$1);
+        this.f$0.mo36913x9dce93d3(this.f$1);
     }
 }

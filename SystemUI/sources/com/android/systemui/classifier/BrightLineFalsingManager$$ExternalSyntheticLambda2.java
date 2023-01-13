@@ -15,6 +15,6 @@ public final /* synthetic */ class BrightLineFalsingManager$$ExternalSyntheticLa
     }
 
     public final Object apply(Object obj) {
-        return this.f$0.mo31147xf12d76dc(this.f$1, this.f$2, (FalsingClassifier) obj);
+        return this.f$0.mo31158xf12d76dc(this.f$1, this.f$2, (FalsingClassifier) obj);
     }
 }

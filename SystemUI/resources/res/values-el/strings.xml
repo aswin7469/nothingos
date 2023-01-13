@@ -708,9 +708,15 @@
     <string name="force_rtl_layout_all_locales_summary">Επιβολή διάταξης οθόν. RTL για όλες τις τοπ. ρυθμ.</string>
     <string name="forced_resizable_secondary_display">Η εφαρμογή ίσως να μην λειτουργήσει σε δευτερεύουσα οθόνη.</string>
     <string name="game_status">Παίζει τώρα</string>
+    <string name="gamemode_description">Η Λειτουργία Παιχνιδιού θα καθορίσει αν βρίσκεστε σε παιχνίδι και θα ενεργοποιηθεί αυτόματα για εσάς</string>
+    <string name="gamemode_gamedashboard_title">Πίνακας εργαλείων παιχνιδιού</string>
+    <string name="gamemode_notification_content">Πατήστε για να μεταβείτε στις Ρυθμίσεις</string>
+    <string name="gamemode_notification_title">Η Λειτουργία Παιχνιδιού είναι τώρα ενεργή</string>
     <string name="global_action_lock_message">Ξεκλειδώστε το τηλέφωνό σας για περισσότερες επιλογές</string>
     <string name="global_action_screenshot">Στιγμιότυπο οθόνης</string>
     <string name="global_action_smart_lock_disabled">Το Smart Lock έχει απενεργοποιηθεί</string>
+    <string name="gm_guide_status_on">ΕΝΕΡΓΗ</string>
+    <string name="gm_notification_title">Λειτουργία παιχνιδιού</string>
     <string name="go_to_web">Μετάβ. σε πρόγ. περ.</string>
     <string name="got_it">Το κατάλαβα</string>
     <string name="guest_exit_guest">Κατάργηση επισκέπτη</string>

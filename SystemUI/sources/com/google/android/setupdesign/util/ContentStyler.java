@@ -8,7 +8,7 @@ import android.widget.TextView;
 import androidx.core.view.GravityCompat;
 import com.google.android.setupcompat.partnerconfig.PartnerConfig;
 import com.google.android.setupcompat.partnerconfig.PartnerConfigHelper;
-import com.google.android.setupdesign.C3953R;
+import com.google.android.setupdesign.C3963R;
 import com.google.android.setupdesign.util.TextViewPartnerStyler;
 import java.util.Locale;
 
@@ -79,7 +79,7 @@ public final class ContentStyler {
     }
 
     public static float getPartnerContentMarginStart(Context context) {
-        float dimension = context.getResources().getDimension(C3953R.dimen.sud_layout_margin_sides);
+        float dimension = context.getResources().getDimension(C3963R.dimen.sud_layout_margin_sides);
         return PartnerConfigHelper.get(context).isPartnerConfigAvailable(PartnerConfig.CONFIG_LAYOUT_MARGIN_START) ? PartnerConfigHelper.get(context).getDimension(context, PartnerConfig.CONFIG_LAYOUT_MARGIN_START, dimension) : dimension;
     }
 

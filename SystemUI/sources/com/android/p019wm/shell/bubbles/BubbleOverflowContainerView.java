@@ -17,7 +17,7 @@ import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.android.internal.util.ContrastColorUtil;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.bubbles.BubbleData;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +63,7 @@ public class BubbleOverflowContainerView extends LinearLayout {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-wm-shell-bubbles-BubbleOverflowContainerView */
-    public /* synthetic */ boolean mo48607xc5c0d93d(View view, int i, KeyEvent keyEvent) {
+    public /* synthetic */ boolean mo48616xc5c0d93d(View view, int i, KeyEvent keyEvent) {
         if (keyEvent.getAction() != 1 || keyEvent.getKeyCode() != 4) {
             return false;
         }
@@ -152,11 +152,11 @@ public class BubbleOverflowContainerView extends LinearLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mRecyclerView = (RecyclerView) findViewById(C3343R.C3346id.bubble_overflow_recycler);
-        this.mEmptyState = (LinearLayout) findViewById(C3343R.C3346id.bubble_overflow_empty_state);
-        this.mEmptyStateTitle = (TextView) findViewById(C3343R.C3346id.bubble_overflow_empty_title);
-        this.mEmptyStateSubtitle = (TextView) findViewById(C3343R.C3346id.bubble_overflow_empty_subtitle);
-        this.mEmptyStateImage = (ImageView) findViewById(C3343R.C3346id.bubble_overflow_empty_state_image);
+        this.mRecyclerView = (RecyclerView) findViewById(C3353R.C3356id.bubble_overflow_recycler);
+        this.mEmptyState = (LinearLayout) findViewById(C3353R.C3356id.bubble_overflow_empty_state);
+        this.mEmptyStateTitle = (TextView) findViewById(C3353R.C3356id.bubble_overflow_empty_title);
+        this.mEmptyStateSubtitle = (TextView) findViewById(C3353R.C3356id.bubble_overflow_empty_subtitle);
+        this.mEmptyStateImage = (ImageView) findViewById(C3353R.C3356id.bubble_overflow_empty_state_image);
     }
 
     /* access modifiers changed from: protected */
@@ -181,7 +181,7 @@ public class BubbleOverflowContainerView extends LinearLayout {
 
     /* access modifiers changed from: package-private */
     public void updateOverflow() {
-        this.mRecyclerView.setLayoutManager(new OverflowGridLayoutManager(getContext(), getResources().getInteger(C3343R.integer.bubbles_overflow_columns)));
+        this.mRecyclerView.setLayoutManager(new OverflowGridLayoutManager(getContext(), getResources().getInteger(C3353R.integer.bubbles_overflow_columns)));
         if (this.mRecyclerView.getItemDecorationCount() == 0) {
             this.mRecyclerView.addItemDecoration(new OverflowItemDecoration());
         }
@@ -217,24 +217,24 @@ public class BubbleOverflowContainerView extends LinearLayout {
         int i;
         Resources resources = getResources();
         boolean z = (resources.getConfiguration().uiMode & 48) == 32;
-        this.mHorizontalMargin = resources.getDimensionPixelSize(C3343R.dimen.bubble_overflow_item_padding_horizontal);
-        this.mVerticalMargin = resources.getDimensionPixelSize(C3343R.dimen.bubble_overflow_item_padding_vertical);
+        this.mHorizontalMargin = resources.getDimensionPixelSize(C3353R.dimen.bubble_overflow_item_padding_horizontal);
+        this.mVerticalMargin = resources.getDimensionPixelSize(C3353R.dimen.bubble_overflow_item_padding_vertical);
         RecyclerView recyclerView = this.mRecyclerView;
         if (recyclerView != null) {
             recyclerView.invalidateItemDecorations();
         }
         ImageView imageView = this.mEmptyStateImage;
         if (z) {
-            drawable = resources.getDrawable(C3343R.C3345drawable.bubble_ic_empty_overflow_dark);
+            drawable = resources.getDrawable(C3353R.C3355drawable.bubble_ic_empty_overflow_dark);
         } else {
-            drawable = resources.getDrawable(C3343R.C3345drawable.bubble_ic_empty_overflow_light);
+            drawable = resources.getDrawable(C3353R.C3355drawable.bubble_ic_empty_overflow_light);
         }
         imageView.setImageDrawable(drawable);
-        View findViewById = findViewById(C3343R.C3346id.bubble_overflow_container);
+        View findViewById = findViewById(C3353R.C3356id.bubble_overflow_container);
         if (z) {
-            i = resources.getColor(C3343R.C3344color.bubbles_dark);
+            i = resources.getColor(C3353R.C3354color.bubbles_dark);
         } else {
-            i = resources.getColor(C3343R.C3344color.bubbles_light);
+            i = resources.getColor(C3353R.C3354color.bubbles_light);
         }
         findViewById.setBackgroundColor(i);
         TypedArray obtainStyledAttributes = getContext().obtainStyledAttributes(new int[]{16844002, 16842808});

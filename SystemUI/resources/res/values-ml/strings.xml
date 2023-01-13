@@ -708,9 +708,15 @@
     <string name="force_rtl_layout_all_locales_summary">എല്ലാ ഭാഷകൾക്കുമായി സ്‌ക്രീൻ ലേഔട്ട് ഡയറക്ഷൻ RTL-ലേക്ക് നിർബന്ധമാക്കുക</string>
     <string name="forced_resizable_secondary_display">രണ്ടാം ഡിസ്‌പ്ലേയിൽ ആപ്പ് പ്രവർത്തിച്ചേക്കില്ല.</string>
     <string name="game_status">കളിക്കുന്നു</string>
+    <string name="gamemode_description">നിങ്ങൾ ഒരു ഗെയിമിലാണോ എന്ന് ഗെയിം മോഡ് നിർണ്ണയിക്കുകയും നിങ്ങൾക്കായി സ്വയമേവ ഓണാക്കുകയും ചെയ്യും</string>
+    <string name="gamemode_gamedashboard_title">ഗെയിം ഡാഷ്‌ബോർഡ്</string>
+    <string name="gamemode_notification_content">ക്രമീകരണത്തിലേക്ക് പോകാൻ ടാപ്പ് ചെയ്യുക</string>
+    <string name="gamemode_notification_title">ഗെയിം മോഡ് നിലവിൽ ഓണാണ്</string>
     <string name="global_action_lock_message">കൂടുതൽ ഓപ്ഷനുകൾക്ക് നിങ്ങളുടെ ഫോൺ അൺലോക്ക് ചെയ്യുക</string>
     <string name="global_action_screenshot">സ്ക്രീൻഷോട്ട്</string>
     <string name="global_action_smart_lock_disabled">Smart Lock പ്രവർത്തനരഹിതമാക്കി</string>
+    <string name="gm_guide_status_on">ഓൺ</string>
+    <string name="gm_notification_title">ഗെയിം മോഡ്</string>
     <string name="go_to_web">ബ്രൗസറിലേക്ക് പോവുക</string>
     <string name="got_it">മനസ്സിലായി</string>
     <string name="guest_exit_guest">അതിഥിയെ നീക്കം ചെയ്യുക</string>

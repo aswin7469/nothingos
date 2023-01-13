@@ -55,7 +55,7 @@ public class HideComplicationTouchHandler implements DreamTouchHandler {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onSessionStart$1$com-android-systemui-dreams-touch-HideComplicationTouchHandler */
-    public /* synthetic */ void mo32655x8bd2f205(DreamTouchHandler.TouchSession touchSession, InputEvent inputEvent) {
+    public /* synthetic */ void mo32666x8bd2f205(DreamTouchHandler.TouchSession touchSession, InputEvent inputEvent) {
         if (inputEvent instanceof MotionEvent) {
             MotionEvent motionEvent = (MotionEvent) inputEvent;
             if (motionEvent.getAction() == 0) {
@@ -73,7 +73,7 @@ public class HideComplicationTouchHandler implements DreamTouchHandler {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onSessionStart$0$com-android-systemui-dreams-touch-HideComplicationTouchHandler */
-    public /* synthetic */ void mo32654xd71ee26(ListenableFuture listenableFuture, DreamTouchHandler.TouchSession touchSession) {
+    public /* synthetic */ void mo32665xd71ee26(ListenableFuture listenableFuture, DreamTouchHandler.TouchSession touchSession) {
         try {
             if (!((Boolean) listenableFuture.get()).booleanValue()) {
                 this.mHandler.removeCallbacks(this.mRestoreComplications);

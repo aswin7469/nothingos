@@ -47,18 +47,18 @@ public final class ZonedDateTime implements Temporal, ChronoZonedDateTime<LocalD
     }
 
     /* renamed from: of */
-    public static ZonedDateTime m937of(LocalDate localDate, LocalTime localTime, ZoneId zoneId) {
-        return m938of(LocalDateTime.m916of(localDate, localTime), zoneId);
+    public static ZonedDateTime m935of(LocalDate localDate, LocalTime localTime, ZoneId zoneId) {
+        return m936of(LocalDateTime.m914of(localDate, localTime), zoneId);
     }
 
     /* renamed from: of */
-    public static ZonedDateTime m938of(LocalDateTime localDateTime, ZoneId zoneId) {
+    public static ZonedDateTime m936of(LocalDateTime localDateTime, ZoneId zoneId) {
         return ofLocal(localDateTime, zoneId, (ZoneOffset) null);
     }
 
     /* renamed from: of */
-    public static ZonedDateTime m936of(int i, int i2, int i3, int i4, int i5, int i6, int i7, ZoneId zoneId) {
-        return ofLocal(LocalDateTime.m912of(i, i2, i3, i4, i5, i6, i7), zoneId, (ZoneOffset) null);
+    public static ZonedDateTime m934of(int i, int i2, int i3, int i4, int i5, int i6, int i7, ZoneId zoneId) {
+        return ofLocal(LocalDateTime.m910of(i, i2, i3, i4, i5, i6, i7), zoneId, (ZoneOffset) null);
     }
 
     public static ZonedDateTime ofLocal(LocalDateTime localDateTime, ZoneId zoneId, ZoneOffset zoneOffset) {
@@ -136,7 +136,7 @@ public final class ZonedDateTime implements Temporal, ChronoZonedDateTime<LocalD
             if (temporalAccessor.isSupported(ChronoField.INSTANT_SECONDS)) {
                 return create(temporalAccessor.getLong(ChronoField.INSTANT_SECONDS), temporalAccessor.get(ChronoField.NANO_OF_SECOND), from);
             }
-            return m937of(LocalDate.from(temporalAccessor), LocalTime.from(temporalAccessor), from);
+            return m935of(LocalDate.from(temporalAccessor), LocalTime.from(temporalAccessor), from);
         } catch (DateTimeException e) {
             throw new DateTimeException("Unable to obtain ZonedDateTime from TemporalAccessor: " + temporalAccessor + " of type " + temporalAccessor.getClass().getName(), e);
         }
@@ -188,7 +188,7 @@ public final class ZonedDateTime implements Temporal, ChronoZonedDateTime<LocalD
     }
 
     /* renamed from: java.time.ZonedDateTime$1 */
-    static /* synthetic */ class C28611 {
+    static /* synthetic */ class C28671 {
         static final /* synthetic */ int[] $SwitchMap$java$time$temporal$ChronoField;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(6:0|1|2|3|4|6) */
@@ -216,7 +216,7 @@ public final class ZonedDateTime implements Temporal, ChronoZonedDateTime<LocalD
             L_0x001d:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: java.time.ZonedDateTime.C28611.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: java.time.ZonedDateTime.C28671.<clinit>():void");
         }
     }
 
@@ -224,7 +224,7 @@ public final class ZonedDateTime implements Temporal, ChronoZonedDateTime<LocalD
         if (!(temporalField instanceof ChronoField)) {
             return super.get(temporalField);
         }
-        int i = C28611.$SwitchMap$java$time$temporal$ChronoField[((ChronoField) temporalField).ordinal()];
+        int i = C28671.$SwitchMap$java$time$temporal$ChronoField[((ChronoField) temporalField).ordinal()];
         if (i == 1) {
             throw new UnsupportedTemporalTypeException("Invalid field 'InstantSeconds' for get() method, use getLong() instead");
         } else if (i != 2) {
@@ -238,7 +238,7 @@ public final class ZonedDateTime implements Temporal, ChronoZonedDateTime<LocalD
         if (!(temporalField instanceof ChronoField)) {
             return temporalField.getFrom(this);
         }
-        int i = C28611.$SwitchMap$java$time$temporal$ChronoField[((ChronoField) temporalField).ordinal()];
+        int i = C28671.$SwitchMap$java$time$temporal$ChronoField[((ChronoField) temporalField).ordinal()];
         if (i == 1) {
             return toEpochSecond();
         }
@@ -351,10 +351,10 @@ public final class ZonedDateTime implements Temporal, ChronoZonedDateTime<LocalD
 
     public ZonedDateTime with(TemporalAdjuster temporalAdjuster) {
         if (temporalAdjuster instanceof LocalDate) {
-            return resolveLocal(LocalDateTime.m916of((LocalDate) temporalAdjuster, this.dateTime.toLocalTime()));
+            return resolveLocal(LocalDateTime.m914of((LocalDate) temporalAdjuster, this.dateTime.toLocalTime()));
         }
         if (temporalAdjuster instanceof LocalTime) {
-            return resolveLocal(LocalDateTime.m916of(this.dateTime.toLocalDate(), (LocalTime) temporalAdjuster));
+            return resolveLocal(LocalDateTime.m914of(this.dateTime.toLocalDate(), (LocalTime) temporalAdjuster));
         }
         if (temporalAdjuster instanceof LocalDateTime) {
             return resolveLocal((LocalDateTime) temporalAdjuster);
@@ -377,7 +377,7 @@ public final class ZonedDateTime implements Temporal, ChronoZonedDateTime<LocalD
             return (ZonedDateTime) temporalField.adjustInto(this, j);
         }
         ChronoField chronoField = (ChronoField) temporalField;
-        int i = C28611.$SwitchMap$java$time$temporal$ChronoField[chronoField.ordinal()];
+        int i = C28671.$SwitchMap$java$time$temporal$ChronoField[chronoField.ordinal()];
         if (i == 1) {
             return create(j, getNano(), this.zone);
         }
@@ -605,7 +605,7 @@ public final class ZonedDateTime implements Temporal, ChronoZonedDateTime<LocalD
     }
 
     public OffsetDateTime toOffsetDateTime() {
-        return OffsetDateTime.m925of(this.dateTime, this.offset);
+        return OffsetDateTime.m923of(this.dateTime, this.offset);
     }
 
     public boolean equals(Object obj) {

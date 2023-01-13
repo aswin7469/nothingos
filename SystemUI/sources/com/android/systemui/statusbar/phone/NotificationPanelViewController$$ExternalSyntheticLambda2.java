@@ -11,6 +11,6 @@ public final /* synthetic */ class NotificationPanelViewController$$ExternalSynt
     }
 
     public final void onNavigationModeChanged(int i) {
-        this.f$0.mo44617xd55fd880(i);
+        this.f$0.mo44632xd55fd880(i);
     }
 }

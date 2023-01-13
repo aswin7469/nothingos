@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.view.ViewOverlay;
 import android.widget.ImageView;
 import com.android.settingslib.Utils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import java.util.ArrayList;
 
 /* renamed from: com.android.systemui.qs.PageIndicator */
@@ -55,7 +55,7 @@ public class PageIndicator extends ViewGroup {
     }
 
     private int getTransition(boolean z, boolean z2, boolean z3) {
-        return z3 ? z ? z2 ? C1893R.C1895drawable.major_b_a_animation : C1893R.C1895drawable.major_b_c_animation : z2 ? C1893R.C1895drawable.major_a_b_animation : C1893R.C1895drawable.major_c_b_animation : z ? z2 ? C1893R.C1895drawable.minor_b_c_animation : C1893R.C1895drawable.minor_b_a_animation : z2 ? C1893R.C1895drawable.minor_c_b_animation : C1893R.C1895drawable.minor_a_b_animation;
+        return z3 ? z ? z2 ? C1894R.C1896drawable.major_b_a_animation : C1894R.C1896drawable.major_b_c_animation : z2 ? C1894R.C1896drawable.major_a_b_animation : C1894R.C1896drawable.major_c_b_animation : z ? z2 ? C1894R.C1896drawable.minor_b_c_animation : C1894R.C1896drawable.minor_b_a_animation : z2 ? C1894R.C1896drawable.minor_c_b_animation : C1894R.C1896drawable.minor_a_b_animation;
     }
 
     public /* bridge */ /* synthetic */ ViewOverlay getOverlay() {
@@ -72,9 +72,9 @@ public class PageIndicator extends ViewGroup {
         }
         obtainStyledAttributes.recycle();
         Resources resources = context.getResources();
-        this.mPageIndicatorWidth = resources.getDimensionPixelSize(C1893R.dimen.qs_page_indicator_width);
-        this.mPageIndicatorHeight = resources.getDimensionPixelSize(C1893R.dimen.qs_page_indicator_height);
-        this.mPageDotWidth = resources.getDimensionPixelSize(C1893R.dimen.qs_page_indicator_dot_width);
+        this.mPageIndicatorWidth = resources.getDimensionPixelSize(C1894R.dimen.qs_page_indicator_width);
+        this.mPageIndicatorHeight = resources.getDimensionPixelSize(C1894R.dimen.qs_page_indicator_height);
+        this.mPageDotWidth = resources.getDimensionPixelSize(C1894R.dimen.qs_page_indicator_dot_width);
     }
 
     public void setNumPages(int i) {
@@ -88,7 +88,7 @@ public class PageIndicator extends ViewGroup {
             }
             while (i > getChildCount()) {
                 ImageView imageView = new ImageView(this.mContext);
-                imageView.setImageResource(C1893R.C1895drawable.minor_a_b);
+                imageView.setImageResource(C1894R.C1896drawable.minor_a_b);
                 imageView.setImageTintList(this.mTint);
                 addView(imageView, new ViewGroup.LayoutParams(this.mPageIndicatorWidth, this.mPageIndicatorHeight));
             }
@@ -117,7 +117,7 @@ public class PageIndicator extends ViewGroup {
     public void setLocation(float f) {
         int i = (int) f;
         int i2 = 0;
-        setContentDescription(getContext().getString(C1893R.string.accessibility_quick_settings_page, new Object[]{Integer.valueOf(i + 1), Integer.valueOf(getChildCount())}));
+        setContentDescription(getContext().getString(C1894R.string.accessibility_quick_settings_page, new Object[]{Integer.valueOf(i + 1), Integer.valueOf(getChildCount())}));
         int i3 = i << 1;
         if (f != ((float) i)) {
             i2 = 1;
@@ -153,7 +153,7 @@ public class PageIndicator extends ViewGroup {
         while (i2 < childCount) {
             ImageView imageView = (ImageView) getChildAt(i2);
             imageView.setTranslationX(0.0f);
-            imageView.setImageResource(C1893R.C1895drawable.major_a_b);
+            imageView.setImageResource(C1894R.C1896drawable.major_a_b);
             imageView.setAlpha(getAlpha(i2 == i));
             i2++;
         }

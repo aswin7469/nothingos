@@ -6,7 +6,7 @@ import android.os.Looper;
 import android.view.View;
 import android.widget.Switch;
 import com.android.internal.logging.MetricsLogger;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.qualifiers.Background;
 import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.p012qs.QSHost;
@@ -22,7 +22,7 @@ import javax.inject.Named;
 
 /* renamed from: com.android.systemui.qs.tiles.ReduceBrightColorsTile */
 public class ReduceBrightColorsTile extends QSTileImpl<QSTile.BooleanState> implements ReduceBrightColorsController.Listener {
-    private final QSTile.Icon mIcon = QSTileImpl.ResourceIcon.get(C1893R.C1895drawable.ic_reduce_bright_colors);
+    private final QSTile.Icon mIcon = QSTileImpl.ResourceIcon.get(C1894R.C1896drawable.ic_reduce_bright_colors);
     private final boolean mIsAvailable;
     private boolean mIsListening;
     private final ReduceBrightColorsController mReduceBrightColorsController;

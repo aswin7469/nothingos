@@ -26,7 +26,7 @@ public class ZipOutputStream extends DeflaterOutputStream implements ZipConstant
     private Vector<XEntry> xentries;
 
     /* renamed from: zc */
-    private final ZipCoder f812zc;
+    private final ZipCoder f810zc;
 
     private static class XEntry {
         final ZipEntry entry;
@@ -69,7 +69,7 @@ public class ZipOutputStream extends DeflaterOutputStream implements ZipConstant
         this.method = 8;
         this.closed = false;
         if (charset != null) {
-            this.f812zc = ZipCoder.get(charset);
+            this.f810zc = ZipCoder.get(charset);
             this.usesDefaultDeflater = true;
             return;
         }
@@ -78,7 +78,7 @@ public class ZipOutputStream extends DeflaterOutputStream implements ZipConstant
 
     public void setComment(String str) {
         if (str != null) {
-            byte[] bytes = this.f812zc.getBytes(str);
+            byte[] bytes = this.f810zc.getBytes(str);
             this.comment = bytes;
             if (bytes.length > 65535) {
                 throw new IllegalArgumentException("ZIP file comment too long.");
@@ -128,7 +128,7 @@ public class ZipOutputStream extends DeflaterOutputStream implements ZipConstant
             zipEntry.flag = 8;
         }
         if (this.names.add(zipEntry.name)) {
-            if (this.f812zc.isUTF8()) {
+            if (this.f810zc.isUTF8()) {
                 zipEntry.flag |= 2048;
             }
             XEntry xEntry = new XEntry(zipEntry, this.written);
@@ -269,7 +269,7 @@ public class ZipOutputStream extends DeflaterOutputStream implements ZipConstant
                 writeInt(zipEntry.size);
             }
         }
-        byte[] bytes = this.f812zc.getBytes(zipEntry.name);
+        byte[] bytes = this.f810zc.getBytes(zipEntry.name);
         writeShort(bytes.length);
         if (zipEntry.mtime != null) {
             i2 = 4;
@@ -387,7 +387,7 @@ public class ZipOutputStream extends DeflaterOutputStream implements ZipConstant
         writeInt(zipEntry.crc);
         writeInt(j3);
         writeInt(j4);
-        byte[] bytes = this.f812zc.getBytes(zipEntry.name);
+        byte[] bytes = this.f810zc.getBytes(zipEntry.name);
         writeShort(bytes.length);
         int extraLen = getExtraLen(zipEntry.extra);
         if (z2) {
@@ -410,7 +410,7 @@ public class ZipOutputStream extends DeflaterOutputStream implements ZipConstant
         }
         writeShort(extraLen);
         if (zipEntry.comment != null) {
-            bArr = this.f812zc.getBytes(zipEntry.comment);
+            bArr = this.f810zc.getBytes(zipEntry.comment);
             writeShort(Math.min(bArr.length, 65535));
         } else {
             writeShort(0);

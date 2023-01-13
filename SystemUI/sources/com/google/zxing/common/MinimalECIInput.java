@@ -183,7 +183,7 @@ public class MinimalECIInput implements ECIInput {
                 if (inputEdge3.isFNC1()) {
                     arrayList.add(0, 1000);
                 } else {
-                    byte[] encode = eCIEncoderSet.encode(inputEdge3.f465c, inputEdge3.encoderIndex);
+                    byte[] encode = eCIEncoderSet.encode(inputEdge3.f464c, inputEdge3.encoderIndex);
                     for (int length2 = encode.length - 1; length2 >= 0; length2--) {
                         arrayList.add(0, Integer.valueOf((int) encode[length2] & 255));
                     }
@@ -206,7 +206,7 @@ public class MinimalECIInput implements ECIInput {
         /* access modifiers changed from: private */
 
         /* renamed from: c */
-        public final char f465c;
+        public final char f464c;
         /* access modifiers changed from: private */
         public final int cachedTotalSize;
         /* access modifiers changed from: private */
@@ -218,7 +218,7 @@ public class MinimalECIInput implements ECIInput {
             int i3;
             int i4;
             char c2 = c == i2 ? 1000 : c;
-            this.f465c = c2;
+            this.f464c = c2;
             this.encoderIndex = i;
             this.previous = inputEdge;
             if (c2 == 1000) {
@@ -237,7 +237,7 @@ public class MinimalECIInput implements ECIInput {
 
         /* access modifiers changed from: package-private */
         public boolean isFNC1() {
-            return this.f465c == 1000;
+            return this.f464c == 1000;
         }
     }
 }

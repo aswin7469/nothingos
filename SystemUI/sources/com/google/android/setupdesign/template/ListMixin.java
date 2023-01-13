@@ -13,7 +13,7 @@ import com.google.android.setupcompat.internal.TemplateLayout;
 import com.google.android.setupcompat.partnerconfig.PartnerConfig;
 import com.google.android.setupcompat.partnerconfig.PartnerConfigHelper;
 import com.google.android.setupcompat.template.Mixin;
-import com.google.android.setupdesign.C3953R;
+import com.google.android.setupdesign.C3963R;
 import com.google.android.setupdesign.items.ItemAdapter;
 import com.google.android.setupdesign.items.ItemGroup;
 import com.google.android.setupdesign.items.ItemInflater;
@@ -31,18 +31,18 @@ public class ListMixin implements Mixin {
     public ListMixin(TemplateLayout templateLayout2, AttributeSet attributeSet, int i) {
         this.templateLayout = templateLayout2;
         Context context = templateLayout2.getContext();
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C3953R.styleable.SudListMixin, i, 0);
-        int resourceId = obtainStyledAttributes.getResourceId(C3953R.styleable.SudListMixin_android_entries, 0);
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C3963R.styleable.SudListMixin, i, 0);
+        int resourceId = obtainStyledAttributes.getResourceId(C3963R.styleable.SudListMixin_android_entries, 0);
         if (resourceId != 0) {
             setAdapter(new ItemAdapter((ItemGroup) new ItemInflater(context).inflate(resourceId)));
         }
-        if (isDividerShown(context, obtainStyledAttributes.getBoolean(C3953R.styleable.SudListMixin_sudDividerShown, true))) {
-            int dimensionPixelSize = obtainStyledAttributes.getDimensionPixelSize(C3953R.styleable.SudListMixin_sudDividerInset, -1);
+        if (isDividerShown(context, obtainStyledAttributes.getBoolean(C3963R.styleable.SudListMixin_sudDividerShown, true))) {
+            int dimensionPixelSize = obtainStyledAttributes.getDimensionPixelSize(C3963R.styleable.SudListMixin_sudDividerInset, -1);
             if (dimensionPixelSize != -1) {
                 setDividerInset(dimensionPixelSize);
             } else {
-                int dimensionPixelSize2 = obtainStyledAttributes.getDimensionPixelSize(C3953R.styleable.SudListMixin_sudDividerInsetStart, 0);
-                int dimensionPixelSize3 = obtainStyledAttributes.getDimensionPixelSize(C3953R.styleable.SudListMixin_sudDividerInsetEnd, 0);
+                int dimensionPixelSize2 = obtainStyledAttributes.getDimensionPixelSize(C3963R.styleable.SudListMixin_sudDividerInsetStart, 0);
+                int dimensionPixelSize3 = obtainStyledAttributes.getDimensionPixelSize(C3963R.styleable.SudListMixin_sudDividerInsetEnd, 0);
                 if (PartnerStyleHelper.shouldApplyPartnerResource((View) templateLayout2)) {
                     dimensionPixelSize2 = PartnerConfigHelper.get(context).isPartnerConfigAvailable(PartnerConfig.CONFIG_LAYOUT_MARGIN_START) ? (int) PartnerConfigHelper.get(context).getDimension(context, PartnerConfig.CONFIG_LAYOUT_MARGIN_START) : dimensionPixelSize2;
                     if (PartnerConfigHelper.get(context).isPartnerConfigAvailable(PartnerConfig.CONFIG_LAYOUT_MARGIN_END)) {

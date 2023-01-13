@@ -708,9 +708,15 @@
     <string name="force_rtl_layout_all_locales_summary">Wymuszaj układ ekranu od prawej do lewej dla wszystkich języków</string>
     <string name="forced_resizable_secondary_display">Aplikacja może nie działać na dodatkowym ekranie.</string>
     <string name="game_status">Odtwarzam</string>
+    <string name="gamemode_description">Tryb grania wykryje uruchomienie gry i włączy się automatycznie</string>
+    <string name="gamemode_gamedashboard_title">Pulpit gier</string>
+    <string name="gamemode_notification_content">Dotknij, aby przejść do ustawień</string>
+    <string name="gamemode_notification_title">Tryb grania jest obecnie włączony</string>
     <string name="global_action_lock_message">Odblokuj telefon, by wyświetlić więcej opcji</string>
     <string name="global_action_screenshot">Zrzut ekranu</string>
     <string name="global_action_smart_lock_disabled">Wyłączono Smart Lock</string>
+    <string name="gm_guide_status_on">WŁ.</string>
+    <string name="gm_notification_title">Tryb grania</string>
     <string name="go_to_web">Otwórz przeglądarkę</string>
     <string name="got_it">Rozumiem</string>
     <string name="guest_exit_guest">Usuń gościa</string>

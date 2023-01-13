@@ -17,13 +17,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import com.android.launcher3.icons.IconNormalizer;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.bubbles.BadgedImageView;
 import kotlin.Metadata;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 
-@Metadata(mo64986d1 = {"\u0000\\\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u000b\n\u0000\n\u0002\u0010\u0002\n\u0002\b\b\n\u0002\u0010\u000e\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0002\b\n\u0018\u0000 .2\u00020\u0001:\u0001.B\u0015\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005¢\u0006\u0002\u0010\u0006J\u0006\u0010\u0016\u001a\u00020\u0017J\b\u0010\u0018\u001a\u0004\u0018\u00010\u000eJ\n\u0010\u0019\u001a\u0004\u0018\u00010\bH\u0016J\b\u0010\u001a\u001a\u00020\bH\u0016J\b\u0010\u001b\u001a\u00020\nH\u0016J\n\u0010\u001c\u001a\u0004\u0018\u00010\fH\u0016J\n\u0010\u001d\u001a\u0004\u0018\u00010\u000eH\u0016J\n\u0010\u001e\u001a\u0004\u0018\u00010\u0012H\u0016J\b\u0010\u001f\u001a\u00020 H\u0016J\n\u0010!\u001a\u0004\u0018\u00010\bH\u0016J\b\u0010\"\u001a\u00020\nH\u0016J\u000e\u0010#\u001a\u00020\u00172\u0006\u0010$\u001a\u00020%J\u000e\u0010&\u001a\u00020\u00172\u0006\u0010'\u001a\u00020\u0015J\u0010\u0010(\u001a\u00020\u00172\u0006\u0010)\u001a\u00020\u0015H\u0016J\u000e\u0010*\u001a\u00020\u00172\u0006\u0010)\u001a\u00020\nJ\b\u0010\u0014\u001a\u00020\u0015H\u0016J\u0006\u0010+\u001a\u00020\u0017J\b\u0010,\u001a\u00020\u0017H\u0002J\u0006\u0010-\u001a\u00020\u0017R\u000e\u0010\u0007\u001a\u00020\bX.¢\u0006\u0002\n\u0000R\u000e\u0010\u0002\u001a\u00020\u0003X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\t\u001a\u00020\nX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u000b\u001a\u00020\fX.¢\u0006\u0002\n\u0000R\u0010\u0010\r\u001a\u0004\u0018\u00010\u000eX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u000f\u001a\u00020\u0010X\u0004¢\u0006\u0002\n\u0000R\u0010\u0010\u0011\u001a\u0004\u0018\u00010\u0012X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0013\u001a\u00020\nX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0004\u001a\u00020\u0005X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0014\u001a\u00020\u0015X\u000e¢\u0006\u0002\n\u0000¨\u0006/"}, mo64987d2 = {"Lcom/android/wm/shell/bubbles/BubbleOverflow;", "Lcom/android/wm/shell/bubbles/BubbleViewProvider;", "context", "Landroid/content/Context;", "positioner", "Lcom/android/wm/shell/bubbles/BubblePositioner;", "(Landroid/content/Context;Lcom/android/wm/shell/bubbles/BubblePositioner;)V", "bitmap", "Landroid/graphics/Bitmap;", "dotColor", "", "dotPath", "Landroid/graphics/Path;", "expandedView", "Lcom/android/wm/shell/bubbles/BubbleExpandedView;", "inflater", "Landroid/view/LayoutInflater;", "overflowBtn", "Lcom/android/wm/shell/bubbles/BadgedImageView;", "overflowIconInset", "showDot", "", "cleanUpExpandedState", "", "createExpandedView", "getAppBadge", "getBubbleIcon", "getDotColor", "getDotPath", "getExpandedView", "getIconView", "getKey", "", "getRawAppBadge", "getTaskId", "initialize", "controller", "Lcom/android/wm/shell/bubbles/BubbleController;", "setShowDot", "show", "setTaskViewVisibility", "visible", "setVisible", "update", "updateBtnTheme", "updateResources", "Companion", "WMShell_release"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000\\\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u000b\n\u0000\n\u0002\u0010\u0002\n\u0002\b\b\n\u0002\u0010\u000e\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0002\b\n\u0018\u0000 .2\u00020\u0001:\u0001.B\u0015\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005¢\u0006\u0002\u0010\u0006J\u0006\u0010\u0016\u001a\u00020\u0017J\b\u0010\u0018\u001a\u0004\u0018\u00010\u000eJ\n\u0010\u0019\u001a\u0004\u0018\u00010\bH\u0016J\b\u0010\u001a\u001a\u00020\bH\u0016J\b\u0010\u001b\u001a\u00020\nH\u0016J\n\u0010\u001c\u001a\u0004\u0018\u00010\fH\u0016J\n\u0010\u001d\u001a\u0004\u0018\u00010\u000eH\u0016J\n\u0010\u001e\u001a\u0004\u0018\u00010\u0012H\u0016J\b\u0010\u001f\u001a\u00020 H\u0016J\n\u0010!\u001a\u0004\u0018\u00010\bH\u0016J\b\u0010\"\u001a\u00020\nH\u0016J\u000e\u0010#\u001a\u00020\u00172\u0006\u0010$\u001a\u00020%J\u000e\u0010&\u001a\u00020\u00172\u0006\u0010'\u001a\u00020\u0015J\u0010\u0010(\u001a\u00020\u00172\u0006\u0010)\u001a\u00020\u0015H\u0016J\u000e\u0010*\u001a\u00020\u00172\u0006\u0010)\u001a\u00020\nJ\b\u0010\u0014\u001a\u00020\u0015H\u0016J\u0006\u0010+\u001a\u00020\u0017J\b\u0010,\u001a\u00020\u0017H\u0002J\u0006\u0010-\u001a\u00020\u0017R\u000e\u0010\u0007\u001a\u00020\bX.¢\u0006\u0002\n\u0000R\u000e\u0010\u0002\u001a\u00020\u0003X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\t\u001a\u00020\nX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u000b\u001a\u00020\fX.¢\u0006\u0002\n\u0000R\u0010\u0010\r\u001a\u0004\u0018\u00010\u000eX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u000f\u001a\u00020\u0010X\u0004¢\u0006\u0002\n\u0000R\u0010\u0010\u0011\u001a\u0004\u0018\u00010\u0012X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0013\u001a\u00020\nX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0004\u001a\u00020\u0005X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0014\u001a\u00020\u0015X\u000e¢\u0006\u0002\n\u0000¨\u0006/"}, mo65043d2 = {"Lcom/android/wm/shell/bubbles/BubbleOverflow;", "Lcom/android/wm/shell/bubbles/BubbleViewProvider;", "context", "Landroid/content/Context;", "positioner", "Lcom/android/wm/shell/bubbles/BubblePositioner;", "(Landroid/content/Context;Lcom/android/wm/shell/bubbles/BubblePositioner;)V", "bitmap", "Landroid/graphics/Bitmap;", "dotColor", "", "dotPath", "Landroid/graphics/Path;", "expandedView", "Lcom/android/wm/shell/bubbles/BubbleExpandedView;", "inflater", "Landroid/view/LayoutInflater;", "overflowBtn", "Lcom/android/wm/shell/bubbles/BadgedImageView;", "overflowIconInset", "showDot", "", "cleanUpExpandedState", "", "createExpandedView", "getAppBadge", "getBubbleIcon", "getDotColor", "getDotPath", "getExpandedView", "getIconView", "getKey", "", "getRawAppBadge", "getTaskId", "initialize", "controller", "Lcom/android/wm/shell/bubbles/BubbleController;", "setShowDot", "show", "setTaskViewVisibility", "visible", "setVisible", "update", "updateBtnTheme", "updateResources", "Companion", "WMShell_release"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* renamed from: com.android.wm.shell.bubbles.BubbleOverflow */
 /* compiled from: BubbleOverflow.kt */
 public final class BubbleOverflow implements BubbleViewProvider {
@@ -91,13 +91,13 @@ public final class BubbleOverflow implements BubbleViewProvider {
         }
         BadgedImageView iconView = getIconView();
         if (iconView != null) {
-            iconView.setIconImageResource(C3343R.C3345drawable.bubble_ic_overflow_button);
+            iconView.setIconImageResource(C3353R.C3355drawable.bubble_ic_overflow_button);
         }
         updateBtnTheme();
     }
 
     public final void updateResources() {
-        this.overflowIconInset = this.context.getResources().getDimensionPixelSize(C3343R.dimen.bubble_overflow_icon_inset);
+        this.overflowIconInset = this.context.getResources().getDimensionPixelSize(C3353R.dimen.bubble_overflow_icon_inset);
         BadgedImageView badgedImageView = this.overflowBtn;
         if (badgedImageView != null) {
             badgedImageView.setLayoutParams(new FrameLayout.LayoutParams(this.positioner.getBubbleSize(), this.positioner.getBubbleSize()));
@@ -168,7 +168,7 @@ public final class BubbleOverflow implements BubbleViewProvider {
     }
 
     public final BubbleExpandedView createExpandedView() {
-        View inflate = this.inflater.inflate(C3343R.layout.bubble_expanded_view, (ViewGroup) null, false);
+        View inflate = this.inflater.inflate(C3353R.layout.bubble_expanded_view, (ViewGroup) null, false);
         if (inflate != null) {
             BubbleExpandedView bubbleExpandedView = (BubbleExpandedView) inflate;
             this.expandedView = bubbleExpandedView;
@@ -213,7 +213,7 @@ public final class BubbleOverflow implements BubbleViewProvider {
 
     public BadgedImageView getIconView() {
         if (this.overflowBtn == null) {
-            View inflate = this.inflater.inflate(C3343R.layout.bubble_overflow_button, (ViewGroup) null, false);
+            View inflate = this.inflater.inflate(C3353R.layout.bubble_overflow_button, (ViewGroup) null, false);
             if (inflate != null) {
                 BadgedImageView badgedImageView = (BadgedImageView) inflate;
                 this.overflowBtn = badgedImageView;
@@ -222,7 +222,7 @@ public final class BubbleOverflow implements BubbleViewProvider {
                 }
                 BadgedImageView badgedImageView2 = this.overflowBtn;
                 if (badgedImageView2 != null) {
-                    badgedImageView2.setContentDescription(this.context.getResources().getString(C3343R.string.bubble_overflow_button_content_description));
+                    badgedImageView2.setContentDescription(this.context.getResources().getString(C3353R.string.bubble_overflow_button_content_description));
                 }
                 int bubbleSize = this.positioner.getBubbleSize();
                 BadgedImageView badgedImageView3 = this.overflowBtn;
@@ -246,7 +246,7 @@ public final class BubbleOverflow implements BubbleViewProvider {
         return bubbleExpandedView.getTaskId();
     }
 
-    @Metadata(mo64986d1 = {"\u0000\u0012\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\u000e\n\u0000\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u000e\u0010\u0003\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000¨\u0006\u0005"}, mo64987d2 = {"Lcom/android/wm/shell/bubbles/BubbleOverflow$Companion;", "", "()V", "KEY", "", "WMShell_release"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u0000\u0012\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\u000e\n\u0000\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u000e\u0010\u0003\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000¨\u0006\u0005"}, mo65043d2 = {"Lcom/android/wm/shell/bubbles/BubbleOverflow$Companion;", "", "()V", "KEY", "", "WMShell_release"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* renamed from: com.android.wm.shell.bubbles.BubbleOverflow$Companion */
     /* compiled from: BubbleOverflow.kt */
     public static final class Companion {

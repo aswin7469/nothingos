@@ -10,6 +10,6 @@ public final /* synthetic */ class BubbleStackView$$ExternalSyntheticLambda12 im
     }
 
     public final void run() {
-        this.f$0.m3423lambda$new$4$comandroidwmshellbubblesBubbleStackView();
+        this.f$0.m3427lambda$new$4$comandroidwmshellbubblesBubbleStackView();
     }
 }

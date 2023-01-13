@@ -149,7 +149,7 @@ public final class TypeAdapters {
                 r0 = 0
                 return r0
             */
-            throw new UnsupportedOperationException("Method not decompiled: com.google.gson.internal.bind.TypeAdapters.C404730.create(com.google.gson.Gson, com.google.gson.reflect.TypeToken):com.google.gson.TypeAdapter");
+            throw new UnsupportedOperationException("Method not decompiled: com.google.gson.internal.bind.TypeAdapters.C405730.create(com.google.gson.Gson, com.google.gson.reflect.TypeToken):com.google.gson.TypeAdapter");
         }
     };
     public static final TypeAdapter<Number> FLOAT = new TypeAdapter<Number>() {
@@ -266,7 +266,7 @@ public final class TypeAdapters {
                 L_0x000e:
                     com.google.gson.stream.JsonToken r3 = com.google.gson.stream.JsonToken.END_ARRAY
                     if (r0 == r3) goto L_0x0071
-                    int[] r3 = com.google.gson.internal.bind.TypeAdapters.C405436.$SwitchMap$com$google$gson$stream$JsonToken
+                    int[] r3 = com.google.gson.internal.bind.TypeAdapters.C406436.$SwitchMap$com$google$gson$stream$JsonToken
                     int r4 = r0.ordinal()
                     r3 = r3[r4]
                     r4 = 1
@@ -317,7 +317,7 @@ public final class TypeAdapters {
                     r7.endArray()
                     return r6
                 */
-                throw new UnsupportedOperationException("Method not decompiled: com.google.gson.internal.bind.TypeAdapters.C40342.read(com.google.gson.stream.JsonReader):java.util.BitSet");
+                throw new UnsupportedOperationException("Method not decompiled: com.google.gson.internal.bind.TypeAdapters.C40442.read(com.google.gson.stream.JsonReader):java.util.BitSet");
             }
 
             public void write(JsonWriter jsonWriter, BitSet bitSet) throws IOException {
@@ -331,7 +331,7 @@ public final class TypeAdapters {
         }.nullSafe();
         BIT_SET = nullSafe2;
         BIT_SET_FACTORY = newFactory(BitSet.class, nullSafe2);
-        C40463 r0 = new TypeAdapter<Boolean>() {
+        C40563 r0 = new TypeAdapter<Boolean>() {
             public Boolean read(JsonReader jsonReader) throws IOException {
                 JsonToken peek = jsonReader.peek();
                 if (peek == JsonToken.NULL) {
@@ -350,7 +350,7 @@ public final class TypeAdapters {
         };
         BOOLEAN = r0;
         BOOLEAN_FACTORY = newFactory(Boolean.TYPE, Boolean.class, r0);
-        C40565 r02 = new TypeAdapter<Number>() {
+        C40665 r02 = new TypeAdapter<Number>() {
             public Number read(JsonReader jsonReader) throws IOException {
                 if (jsonReader.peek() == JsonToken.NULL) {
                     jsonReader.nextNull();
@@ -369,7 +369,7 @@ public final class TypeAdapters {
         };
         BYTE = r02;
         BYTE_FACTORY = newFactory(Byte.TYPE, Byte.class, r02);
-        C40576 r03 = new TypeAdapter<Number>() {
+        C40676 r03 = new TypeAdapter<Number>() {
             public Number read(JsonReader jsonReader) throws IOException {
                 if (jsonReader.peek() == JsonToken.NULL) {
                     jsonReader.nextNull();
@@ -388,7 +388,7 @@ public final class TypeAdapters {
         };
         SHORT = r03;
         SHORT_FACTORY = newFactory(Short.TYPE, Short.class, r03);
-        C40587 r04 = new TypeAdapter<Number>() {
+        C40687 r04 = new TypeAdapter<Number>() {
             public Number read(JsonReader jsonReader) throws IOException {
                 if (jsonReader.peek() == JsonToken.NULL) {
                     jsonReader.nextNull();
@@ -464,10 +464,10 @@ public final class TypeAdapters {
         }.nullSafe();
         ATOMIC_INTEGER_ARRAY = nullSafe5;
         ATOMIC_INTEGER_ARRAY_FACTORY = newFactory(AtomicIntegerArray.class, nullSafe5);
-        C402814 r05 = new TypeAdapter<Number>() {
+        C403814 r05 = new TypeAdapter<Number>() {
             public Number read(JsonReader jsonReader) throws IOException {
                 JsonToken peek = jsonReader.peek();
-                int i = C405436.$SwitchMap$com$google$gson$stream$JsonToken[peek.ordinal()];
+                int i = C406436.$SwitchMap$com$google$gson$stream$JsonToken[peek.ordinal()];
                 if (i == 1 || i == 3) {
                     return new LazilyParsedNumber(jsonReader.nextString());
                 }
@@ -484,7 +484,7 @@ public final class TypeAdapters {
         };
         NUMBER = r05;
         NUMBER_FACTORY = newFactory(Number.class, r05);
-        C402915 r06 = new TypeAdapter<Character>() {
+        C403915 r06 = new TypeAdapter<Character>() {
             public Character read(JsonReader jsonReader) throws IOException {
                 if (jsonReader.peek() == JsonToken.NULL) {
                     jsonReader.nextNull();
@@ -503,7 +503,7 @@ public final class TypeAdapters {
         };
         CHARACTER = r06;
         CHARACTER_FACTORY = newFactory(Character.TYPE, Character.class, r06);
-        C403016 r07 = new TypeAdapter<String>() {
+        C404016 r07 = new TypeAdapter<String>() {
             public String read(JsonReader jsonReader) throws IOException {
                 JsonToken peek = jsonReader.peek();
                 if (peek == JsonToken.NULL) {
@@ -522,7 +522,7 @@ public final class TypeAdapters {
         };
         STRING = r07;
         STRING_FACTORY = newFactory(String.class, r07);
-        C403319 r08 = new TypeAdapter<StringBuilder>() {
+        C404319 r08 = new TypeAdapter<StringBuilder>() {
             public StringBuilder read(JsonReader jsonReader) throws IOException {
                 if (jsonReader.peek() != JsonToken.NULL) {
                     return new StringBuilder(jsonReader.nextString());
@@ -537,7 +537,7 @@ public final class TypeAdapters {
         };
         STRING_BUILDER = r08;
         STRING_BUILDER_FACTORY = newFactory(StringBuilder.class, r08);
-        C403520 r09 = new TypeAdapter<StringBuffer>() {
+        C404520 r09 = new TypeAdapter<StringBuffer>() {
             public StringBuffer read(JsonReader jsonReader) throws IOException {
                 if (jsonReader.peek() != JsonToken.NULL) {
                     return new StringBuffer(jsonReader.nextString());
@@ -552,7 +552,7 @@ public final class TypeAdapters {
         };
         STRING_BUFFER = r09;
         STRING_BUFFER_FACTORY = newFactory(StringBuffer.class, r09);
-        C403621 r010 = new TypeAdapter<URL>() {
+        C404621 r010 = new TypeAdapter<URL>() {
             public URL read(JsonReader jsonReader) throws IOException {
                 if (jsonReader.peek() == JsonToken.NULL) {
                     jsonReader.nextNull();
@@ -571,7 +571,7 @@ public final class TypeAdapters {
         };
         URL = r010;
         URL_FACTORY = newFactory(URL.class, r010);
-        C403722 r011 = new TypeAdapter<URI>() {
+        C404722 r011 = new TypeAdapter<URI>() {
             public URI read(JsonReader jsonReader) throws IOException {
                 if (jsonReader.peek() == JsonToken.NULL) {
                     jsonReader.nextNull();
@@ -594,7 +594,7 @@ public final class TypeAdapters {
         };
         URI = r011;
         URI_FACTORY = newFactory(URI.class, r011);
-        C403823 r012 = new TypeAdapter<InetAddress>() {
+        C404823 r012 = new TypeAdapter<InetAddress>() {
             public InetAddress read(JsonReader jsonReader) throws IOException {
                 if (jsonReader.peek() != JsonToken.NULL) {
                     return InetAddress.getByName(jsonReader.nextString());
@@ -609,7 +609,7 @@ public final class TypeAdapters {
         };
         INET_ADDRESS = r012;
         INET_ADDRESS_FACTORY = newTypeHierarchyFactory(InetAddress.class, r012);
-        C403924 r013 = new TypeAdapter<UUID>() {
+        C404924 r013 = new TypeAdapter<UUID>() {
             public UUID read(JsonReader jsonReader) throws IOException {
                 if (jsonReader.peek() != JsonToken.NULL) {
                     return UUID.fromString(jsonReader.nextString());
@@ -635,7 +635,7 @@ public final class TypeAdapters {
         }.nullSafe();
         CURRENCY = nullSafe6;
         CURRENCY_FACTORY = newFactory(Currency.class, nullSafe6);
-        C404327 r014 = new TypeAdapter<Calendar>() {
+        C405327 r014 = new TypeAdapter<Calendar>() {
             private static final String DAY_OF_MONTH = "dayOfMonth";
             private static final String HOUR_OF_DAY = "hourOfDay";
             private static final String MINUTE = "minute";
@@ -699,7 +699,7 @@ public final class TypeAdapters {
         };
         CALENDAR = r014;
         CALENDAR_FACTORY = newFactoryForMultipleTypes(Calendar.class, GregorianCalendar.class, r014);
-        C404428 r015 = new TypeAdapter<Locale>() {
+        C405428 r015 = new TypeAdapter<Locale>() {
             public Locale read(JsonReader jsonReader) throws IOException {
                 String str = null;
                 if (jsonReader.peek() == JsonToken.NULL) {
@@ -727,9 +727,9 @@ public final class TypeAdapters {
         };
         LOCALE = r015;
         LOCALE_FACTORY = newFactory(Locale.class, r015);
-        C404529 r016 = new TypeAdapter<JsonElement>() {
+        C405529 r016 = new TypeAdapter<JsonElement>() {
             public JsonElement read(JsonReader jsonReader) throws IOException {
-                switch (C405436.$SwitchMap$com$google$gson$stream$JsonToken[jsonReader.peek().ordinal()]) {
+                switch (C406436.$SwitchMap$com$google$gson$stream$JsonToken[jsonReader.peek().ordinal()]) {
                     case 1:
                         return new JsonPrimitive((Number) new LazilyParsedNumber(jsonReader.nextString()));
                     case 2:
@@ -796,7 +796,7 @@ public final class TypeAdapters {
     }
 
     /* renamed from: com.google.gson.internal.bind.TypeAdapters$36 */
-    static /* synthetic */ class C405436 {
+    static /* synthetic */ class C406436 {
         static final /* synthetic */ int[] $SwitchMap$com$google$gson$stream$JsonToken;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(20:0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|(3:19|20|22)) */
@@ -878,7 +878,7 @@ public final class TypeAdapters {
             L_0x0078:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: com.google.gson.internal.bind.TypeAdapters.C405436.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: com.google.gson.internal.bind.TypeAdapters.C406436.<clinit>():void");
         }
     }
 

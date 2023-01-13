@@ -94,7 +94,7 @@ public class ShellInitImpl {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$init$1$com-android-wm-shell-ShellInitImpl  reason: not valid java name */
-    public /* synthetic */ void m3375lambda$init$1$comandroidwmshellShellInitImpl(FreeformTaskListener freeformTaskListener) {
+    public /* synthetic */ void m3379lambda$init$1$comandroidwmshellShellInitImpl(FreeformTaskListener freeformTaskListener) {
         this.mShellTaskOrganizer.addListenerForType(freeformTaskListener, -5);
     }
 
@@ -114,7 +114,7 @@ public class ShellInitImpl {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$init$0$com-android-wm-shell-ShellInitImpl$InitImpl  reason: not valid java name */
-        public /* synthetic */ void m3376lambda$init$0$comandroidwmshellShellInitImpl$InitImpl() {
+        public /* synthetic */ void m3380lambda$init$0$comandroidwmshellShellInitImpl$InitImpl() {
             ShellInitImpl.this.init();
         }
     }

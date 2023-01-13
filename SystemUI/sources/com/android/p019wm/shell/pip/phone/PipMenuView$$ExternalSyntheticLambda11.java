@@ -10,6 +10,6 @@ public final /* synthetic */ class PipMenuView$$ExternalSyntheticLambda11 implem
     }
 
     public final void run() {
-        this.f$0.mo50395x37ac381c();
+        this.f$0.mo50404x37ac381c();
     }
 }

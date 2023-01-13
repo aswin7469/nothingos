@@ -13,6 +13,6 @@ public final /* synthetic */ class MediaSessionBasedFilter$$ExternalSyntheticLam
     }
 
     public final void run() {
-        MediaSessionBasedFilter.m2817_init_$lambda0(this.f$0, this.f$1);
+        MediaSessionBasedFilter.m2822_init_$lambda0(this.f$0, this.f$1);
     }
 }

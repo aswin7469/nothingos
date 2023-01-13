@@ -11,6 +11,6 @@ public final /* synthetic */ class NotificationInfo$$ExternalSyntheticLambda4 im
     }
 
     public final void onClick(View view) {
-        this.f$0.mo41629x6fb61c66(view);
+        this.f$0.mo41637x6fb61c66(view);
     }
 }

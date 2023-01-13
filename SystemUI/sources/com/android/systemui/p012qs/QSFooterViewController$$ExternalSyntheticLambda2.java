@@ -12,6 +12,6 @@ public final /* synthetic */ class QSFooterViewController$$ExternalSyntheticLamb
     }
 
     public final void onClick(View view) {
-        this.f$0.mo36079x2824839a(view);
+        this.f$0.mo36083x2824839a(view);
     }
 }

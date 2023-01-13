@@ -40,7 +40,7 @@ class UnixChannelFactory {
             Flags flags = new Flags();
             for (OpenOption openOption : set) {
                 if (openOption instanceof StandardOpenOption) {
-                    switch (C47901.$SwitchMap$java$nio$file$StandardOpenOption[((StandardOpenOption) openOption).ordinal()]) {
+                    switch (C48021.$SwitchMap$java$nio$file$StandardOpenOption[((StandardOpenOption) openOption).ordinal()]) {
                         case 1:
                             flags.read = true;
                             break;
@@ -85,7 +85,7 @@ class UnixChannelFactory {
     }
 
     /* renamed from: sun.nio.fs.UnixChannelFactory$1 */
-    static /* synthetic */ class C47901 {
+    static /* synthetic */ class C48021 {
         static final /* synthetic */ int[] $SwitchMap$java$nio$file$StandardOpenOption;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(20:0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|(3:19|20|22)) */
@@ -167,7 +167,7 @@ class UnixChannelFactory {
             L_0x0078:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: sun.nio.p035fs.UnixChannelFactory.C47901.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: sun.nio.p035fs.UnixChannelFactory.C48021.<clinit>():void");
         }
     }
 

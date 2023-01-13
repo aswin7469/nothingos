@@ -2,7 +2,7 @@ package com.android.systemui.statusbar;
 
 import android.graphics.Paint;
 import android.view.View;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.animation.Interpolators;
 
 public class CrossFadeHelper {
@@ -59,12 +59,12 @@ public class CrossFadeHelper {
 
     private static void updateLayerType(View view, float f) {
         if (!view.hasOverlappingRendering() || f <= 0.0f || f >= 1.0f) {
-            if (view.getLayerType() == 2 && view.getTag(C1893R.C1897id.cross_fade_layer_type_changed_tag) != null) {
+            if (view.getLayerType() == 2 && view.getTag(C1894R.C1898id.cross_fade_layer_type_changed_tag) != null) {
                 view.setLayerType(0, (Paint) null);
             }
         } else if (view.getLayerType() != 2) {
             view.setLayerType(2, (Paint) null);
-            view.setTag(C1893R.C1897id.cross_fade_layer_type_changed_tag, true);
+            view.setTag(C1894R.C1898id.cross_fade_layer_type_changed_tag, true);
         }
     }
 

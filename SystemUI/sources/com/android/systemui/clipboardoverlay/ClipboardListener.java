@@ -58,7 +58,7 @@ public class ClipboardListener extends CoreStartable implements ClipboardManager
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onPrimaryClipChanged$0$com-android-systemui-clipboardoverlay-ClipboardListener */
-    public /* synthetic */ void mo31290xc6b2a8dd() {
+    public /* synthetic */ void mo31301xc6b2a8dd() {
         this.mClipboardOverlayController = null;
     }
 

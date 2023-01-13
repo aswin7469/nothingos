@@ -33,7 +33,7 @@ public class Collections {
     private static final int SHUFFLE_THRESHOLD = 5;
 
     /* renamed from: r */
-    private static Random f641r;
+    private static Random f639r;
 
     private Collections() {
     }
@@ -193,10 +193,10 @@ public class Collections {
     }
 
     public static void shuffle(List<?> list) {
-        Random random = f641r;
+        Random random = f639r;
         if (random == null) {
             random = new Random();
-            f641r = random;
+            f639r = random;
         }
         shuffle(list, random);
     }
@@ -435,7 +435,7 @@ public class Collections {
                 int i3 = i2;
                 int i4 = 0;
                 while (i4 < size2) {
-                    if (!m1715eq(list2.get(i4), list.get(i3))) {
+                    if (!m1721eq(list2.get(i4), list.get(i3))) {
                         i2++;
                     } else {
                         i4++;
@@ -452,7 +452,7 @@ public class Collections {
             ListIterator<?> listIterator2 = list2.listIterator();
             int i6 = 0;
             while (i6 < size2) {
-                if (!m1715eq(listIterator2.next(), listIterator.next())) {
+                if (!m1721eq(listIterator2.next(), listIterator.next())) {
                     for (int i7 = 0; i7 < i6; i7++) {
                         listIterator.previous();
                     }
@@ -475,7 +475,7 @@ public class Collections {
                 int i2 = i;
                 int i3 = 0;
                 while (i3 < size2) {
-                    if (!m1715eq(list2.get(i3), list.get(i2))) {
+                    if (!m1721eq(list2.get(i3), list.get(i2))) {
                         i--;
                     } else {
                         i3++;
@@ -492,7 +492,7 @@ public class Collections {
                 ListIterator<?> listIterator2 = list2.listIterator();
                 int i4 = 0;
                 while (i4 < size2) {
-                    if (!m1715eq(listIterator2.next(), listIterator.next())) {
+                    if (!m1721eq(listIterator2.next(), listIterator.next())) {
                         if (i != 0) {
                             for (int i5 = 0; i5 <= i4 + 1; i5++) {
                                 listIterator.previous();
@@ -517,53 +517,53 @@ public class Collections {
         private static final long serialVersionUID = 1820017752578914078L;
 
         /* renamed from: c */
-        final Collection<? extends E> f663c;
+        final Collection<? extends E> f661c;
 
         UnmodifiableCollection(Collection<? extends E> collection) {
             collection.getClass();
-            this.f663c = collection;
+            this.f661c = collection;
         }
 
         public int size() {
-            return this.f663c.size();
+            return this.f661c.size();
         }
 
         public boolean isEmpty() {
-            return this.f663c.isEmpty();
+            return this.f661c.isEmpty();
         }
 
         public boolean contains(Object obj) {
-            return this.f663c.contains(obj);
+            return this.f661c.contains(obj);
         }
 
         public Object[] toArray() {
-            return this.f663c.toArray();
+            return this.f661c.toArray();
         }
 
         public <T> T[] toArray(T[] tArr) {
-            return this.f663c.toArray(tArr);
+            return this.f661c.toArray(tArr);
         }
 
         public String toString() {
-            return this.f663c.toString();
+            return this.f661c.toString();
         }
 
         public Iterator<E> iterator() {
             return new Iterator<E>() {
 
                 /* renamed from: i */
-                private final Iterator<? extends E> f664i;
+                private final Iterator<? extends E> f662i;
 
                 {
-                    this.f664i = UnmodifiableCollection.this.f663c.iterator();
+                    this.f662i = UnmodifiableCollection.this.f661c.iterator();
                 }
 
                 public boolean hasNext() {
-                    return this.f664i.hasNext();
+                    return this.f662i.hasNext();
                 }
 
                 public E next() {
-                    return this.f664i.next();
+                    return this.f662i.next();
                 }
 
                 public void remove() {
@@ -571,7 +571,7 @@ public class Collections {
                 }
 
                 public void forEachRemaining(Consumer<? super E> consumer) {
-                    this.f664i.forEachRemaining(consumer);
+                    this.f662i.forEachRemaining(consumer);
                 }
             };
         }
@@ -585,7 +585,7 @@ public class Collections {
         }
 
         public boolean containsAll(Collection<?> collection) {
-            return this.f663c.containsAll(collection);
+            return this.f661c.containsAll(collection);
         }
 
         public boolean addAll(Collection<? extends E> collection) {
@@ -605,7 +605,7 @@ public class Collections {
         }
 
         public void forEach(Consumer<? super E> consumer) {
-            this.f663c.forEach(consumer);
+            this.f661c.forEach(consumer);
         }
 
         public boolean removeIf(Predicate<? super E> predicate) {
@@ -613,15 +613,15 @@ public class Collections {
         }
 
         public Spliterator<E> spliterator() {
-            return this.f663c.spliterator();
+            return this.f661c.spliterator();
         }
 
         public Stream<E> stream() {
-            return this.f663c.stream();
+            return this.f661c.stream();
         }
 
         public Stream<E> parallelStream() {
-            return this.f663c.parallelStream();
+            return this.f661c.parallelStream();
         }
     }
 
@@ -637,11 +637,11 @@ public class Collections {
         }
 
         public boolean equals(Object obj) {
-            return obj == this || this.f663c.equals(obj);
+            return obj == this || this.f661c.equals(obj);
         }
 
         public int hashCode() {
-            return this.f663c.hashCode();
+            return this.f661c.hashCode();
         }
     }
 
@@ -653,35 +653,35 @@ public class Collections {
         private static final long serialVersionUID = -4929149591599911165L;
 
         /* renamed from: ss */
-        private final SortedSet<E> f673ss;
+        private final SortedSet<E> f671ss;
 
         UnmodifiableSortedSet(SortedSet<E> sortedSet) {
             super(sortedSet);
-            this.f673ss = sortedSet;
+            this.f671ss = sortedSet;
         }
 
         public Comparator<? super E> comparator() {
-            return this.f673ss.comparator();
+            return this.f671ss.comparator();
         }
 
         public SortedSet<E> subSet(E e, E e2) {
-            return new UnmodifiableSortedSet(this.f673ss.subSet(e, e2));
+            return new UnmodifiableSortedSet(this.f671ss.subSet(e, e2));
         }
 
         public SortedSet<E> headSet(E e) {
-            return new UnmodifiableSortedSet(this.f673ss.headSet(e));
+            return new UnmodifiableSortedSet(this.f671ss.headSet(e));
         }
 
         public SortedSet<E> tailSet(E e) {
-            return new UnmodifiableSortedSet(this.f673ss.tailSet(e));
+            return new UnmodifiableSortedSet(this.f671ss.tailSet(e));
         }
 
         public E first() {
-            return this.f673ss.first();
+            return this.f671ss.first();
         }
 
         public E last() {
-            return this.f673ss.last();
+            return this.f671ss.last();
         }
     }
 
@@ -695,7 +695,7 @@ public class Collections {
         private static final long serialVersionUID = -6027448201786391929L;
 
         /* renamed from: ns */
-        private final NavigableSet<E> f671ns;
+        private final NavigableSet<E> f669ns;
 
         private static class EmptyNavigableSet<E> extends UnmodifiableNavigableSet<E> implements Serializable {
             private static final long serialVersionUID = -6291252904449939134L;
@@ -711,23 +711,23 @@ public class Collections {
 
         UnmodifiableNavigableSet(NavigableSet<E> navigableSet) {
             super(navigableSet);
-            this.f671ns = navigableSet;
+            this.f669ns = navigableSet;
         }
 
         public E lower(E e) {
-            return this.f671ns.lower(e);
+            return this.f669ns.lower(e);
         }
 
         public E floor(E e) {
-            return this.f671ns.floor(e);
+            return this.f669ns.floor(e);
         }
 
         public E ceiling(E e) {
-            return this.f671ns.ceiling(e);
+            return this.f669ns.ceiling(e);
         }
 
         public E higher(E e) {
-            return this.f671ns.higher(e);
+            return this.f669ns.higher(e);
         }
 
         public E pollFirst() {
@@ -739,7 +739,7 @@ public class Collections {
         }
 
         public NavigableSet<E> descendingSet() {
-            return new UnmodifiableNavigableSet(this.f671ns.descendingSet());
+            return new UnmodifiableNavigableSet(this.f669ns.descendingSet());
         }
 
         public Iterator<E> descendingIterator() {
@@ -747,15 +747,15 @@ public class Collections {
         }
 
         public NavigableSet<E> subSet(E e, boolean z, E e2, boolean z2) {
-            return new UnmodifiableNavigableSet(this.f671ns.subSet(e, z, e2, z2));
+            return new UnmodifiableNavigableSet(this.f669ns.subSet(e, z, e2, z2));
         }
 
         public NavigableSet<E> headSet(E e, boolean z) {
-            return new UnmodifiableNavigableSet(this.f671ns.headSet(e, z));
+            return new UnmodifiableNavigableSet(this.f669ns.headSet(e, z));
         }
 
         public NavigableSet<E> tailSet(E e, boolean z) {
-            return new UnmodifiableNavigableSet(this.f671ns.tailSet(e, z));
+            return new UnmodifiableNavigableSet(this.f669ns.tailSet(e, z));
         }
     }
 
@@ -827,36 +827,36 @@ public class Collections {
             return new ListIterator<E>(i) {
 
                 /* renamed from: i */
-                private final ListIterator<? extends E> f665i;
+                private final ListIterator<? extends E> f663i;
                 final /* synthetic */ int val$index;
 
                 {
                     this.val$index = r2;
-                    this.f665i = UnmodifiableList.this.list.listIterator(r2);
+                    this.f663i = UnmodifiableList.this.list.listIterator(r2);
                 }
 
                 public boolean hasNext() {
-                    return this.f665i.hasNext();
+                    return this.f663i.hasNext();
                 }
 
                 public E next() {
-                    return this.f665i.next();
+                    return this.f663i.next();
                 }
 
                 public boolean hasPrevious() {
-                    return this.f665i.hasPrevious();
+                    return this.f663i.hasPrevious();
                 }
 
                 public E previous() {
-                    return this.f665i.previous();
+                    return this.f663i.previous();
                 }
 
                 public int nextIndex() {
-                    return this.f665i.nextIndex();
+                    return this.f663i.nextIndex();
                 }
 
                 public int previousIndex() {
-                    return this.f665i.previousIndex();
+                    return this.f663i.previousIndex();
                 }
 
                 public void remove() {
@@ -872,7 +872,7 @@ public class Collections {
                 }
 
                 public void forEachRemaining(Consumer<? super E> consumer) {
-                    this.f665i.forEachRemaining(consumer);
+                    this.f663i.forEachRemaining(consumer);
                 }
             };
         }
@@ -913,32 +913,32 @@ public class Collections {
         private transient Set<K> keySet;
 
         /* renamed from: m */
-        private final Map<? extends K, ? extends V> f666m;
+        private final Map<? extends K, ? extends V> f664m;
         private transient Collection<V> values;
 
         UnmodifiableMap(Map<? extends K, ? extends V> map) {
             map.getClass();
-            this.f666m = map;
+            this.f664m = map;
         }
 
         public int size() {
-            return this.f666m.size();
+            return this.f664m.size();
         }
 
         public boolean isEmpty() {
-            return this.f666m.isEmpty();
+            return this.f664m.isEmpty();
         }
 
         public boolean containsKey(Object obj) {
-            return this.f666m.containsKey(obj);
+            return this.f664m.containsKey(obj);
         }
 
         public boolean containsValue(Object obj) {
-            return this.f666m.containsValue(obj);
+            return this.f664m.containsValue(obj);
         }
 
         public V get(Object obj) {
-            return this.f666m.get(obj);
+            return this.f664m.get(obj);
         }
 
         public V put(K k, V v) {
@@ -959,43 +959,43 @@ public class Collections {
 
         public Set<K> keySet() {
             if (this.keySet == null) {
-                this.keySet = Collections.unmodifiableSet(this.f666m.keySet());
+                this.keySet = Collections.unmodifiableSet(this.f664m.keySet());
             }
             return this.keySet;
         }
 
         public Set<Map.Entry<K, V>> entrySet() {
             if (this.entrySet == null) {
-                this.entrySet = new UnmodifiableEntrySet(this.f666m.entrySet());
+                this.entrySet = new UnmodifiableEntrySet(this.f664m.entrySet());
             }
             return this.entrySet;
         }
 
         public Collection<V> values() {
             if (this.values == null) {
-                this.values = Collections.unmodifiableCollection(this.f666m.values());
+                this.values = Collections.unmodifiableCollection(this.f664m.values());
             }
             return this.values;
         }
 
         public boolean equals(Object obj) {
-            return obj == this || this.f666m.equals(obj);
+            return obj == this || this.f664m.equals(obj);
         }
 
         public int hashCode() {
-            return this.f666m.hashCode();
+            return this.f664m.hashCode();
         }
 
         public String toString() {
-            return this.f666m.toString();
+            return this.f664m.toString();
         }
 
         public V getOrDefault(Object obj, V v) {
-            return this.f666m.getOrDefault(obj, v);
+            return this.f664m.getOrDefault(obj, v);
         }
 
         public void forEach(BiConsumer<? super K, ? super V> biConsumer) {
-            this.f666m.forEach(biConsumer);
+            this.f664m.forEach(biConsumer);
         }
 
         public void replaceAll(BiFunction<? super K, ? super V, ? extends V> biFunction) {
@@ -1042,35 +1042,35 @@ public class Collections {
             }
 
             static <K, V> Consumer<Map.Entry<K, V>> entryConsumer(Consumer<? super Map.Entry<K, V>> consumer) {
-                return new C4383x2c563d70(consumer);
+                return new C4395x2c563d70(consumer);
             }
 
             public void forEach(Consumer<? super Map.Entry<K, V>> consumer) {
                 Objects.requireNonNull(consumer);
-                this.f663c.forEach(entryConsumer(consumer));
+                this.f661c.forEach(entryConsumer(consumer));
             }
 
             static final class UnmodifiableEntrySetSpliterator<K, V> implements Spliterator<Map.Entry<K, V>> {
 
                 /* renamed from: s */
-                final Spliterator<Map.Entry<K, V>> f669s;
+                final Spliterator<Map.Entry<K, V>> f667s;
 
                 UnmodifiableEntrySetSpliterator(Spliterator<Map.Entry<K, V>> spliterator) {
-                    this.f669s = spliterator;
+                    this.f667s = spliterator;
                 }
 
                 public boolean tryAdvance(Consumer<? super Map.Entry<K, V>> consumer) {
                     Objects.requireNonNull(consumer);
-                    return this.f669s.tryAdvance(UnmodifiableEntrySet.entryConsumer(consumer));
+                    return this.f667s.tryAdvance(UnmodifiableEntrySet.entryConsumer(consumer));
                 }
 
                 public void forEachRemaining(Consumer<? super Map.Entry<K, V>> consumer) {
                     Objects.requireNonNull(consumer);
-                    this.f669s.forEachRemaining(UnmodifiableEntrySet.entryConsumer(consumer));
+                    this.f667s.forEachRemaining(UnmodifiableEntrySet.entryConsumer(consumer));
                 }
 
                 public Spliterator<Map.Entry<K, V>> trySplit() {
-                    Spliterator<Map.Entry<K, V>> trySplit = this.f669s.trySplit();
+                    Spliterator<Map.Entry<K, V>> trySplit = this.f667s.trySplit();
                     if (trySplit == null) {
                         return null;
                     }
@@ -1078,28 +1078,28 @@ public class Collections {
                 }
 
                 public long estimateSize() {
-                    return this.f669s.estimateSize();
+                    return this.f667s.estimateSize();
                 }
 
                 public long getExactSizeIfKnown() {
-                    return this.f669s.getExactSizeIfKnown();
+                    return this.f667s.getExactSizeIfKnown();
                 }
 
                 public int characteristics() {
-                    return this.f669s.characteristics();
+                    return this.f667s.characteristics();
                 }
 
                 public boolean hasCharacteristics(int i) {
-                    return this.f669s.hasCharacteristics(i);
+                    return this.f667s.hasCharacteristics(i);
                 }
 
                 public Comparator<? super Map.Entry<K, V>> getComparator() {
-                    return this.f669s.getComparator();
+                    return this.f667s.getComparator();
                 }
             }
 
             public Spliterator<Map.Entry<K, V>> spliterator() {
-                return new UnmodifiableEntrySetSpliterator(this.f663c.spliterator());
+                return new UnmodifiableEntrySetSpliterator(this.f661c.spliterator());
             }
 
             public Stream<Map.Entry<K, V>> stream() {
@@ -1114,18 +1114,18 @@ public class Collections {
                 return new Iterator<Map.Entry<K, V>>() {
 
                     /* renamed from: i */
-                    private final Iterator<? extends Map.Entry<? extends K, ? extends V>> f667i;
+                    private final Iterator<? extends Map.Entry<? extends K, ? extends V>> f665i;
 
                     {
-                        this.f667i = UnmodifiableEntrySet.this.f663c.iterator();
+                        this.f665i = UnmodifiableEntrySet.this.f661c.iterator();
                     }
 
                     public boolean hasNext() {
-                        return this.f667i.hasNext();
+                        return this.f665i.hasNext();
                     }
 
                     public Map.Entry<K, V> next() {
-                        return new UnmodifiableEntry((Map.Entry) this.f667i.next());
+                        return new UnmodifiableEntry((Map.Entry) this.f665i.next());
                     }
 
                     public void remove() {
@@ -1135,7 +1135,7 @@ public class Collections {
             }
 
             public Object[] toArray() {
-                Object[] array = this.f663c.toArray();
+                Object[] array = this.f661c.toArray();
                 for (int i = 0; i < array.length; i++) {
                     array[i] = new UnmodifiableEntry((Map.Entry) array[i]);
                 }
@@ -1143,7 +1143,7 @@ public class Collections {
             }
 
             public <T> T[] toArray(T[] tArr) {
-                T[] array = this.f663c.toArray(tArr.length == 0 ? tArr : Arrays.copyOf(tArr, 0));
+                T[] array = this.f661c.toArray(tArr.length == 0 ? tArr : Arrays.copyOf(tArr, 0));
                 for (int i = 0; i < array.length; i++) {
                     array[i] = new UnmodifiableEntry((Map.Entry) array[i]);
                 }
@@ -1161,7 +1161,7 @@ public class Collections {
                 if (!(obj instanceof Map.Entry)) {
                     return false;
                 }
-                return this.f663c.contains(new UnmodifiableEntry((Map.Entry) obj));
+                return this.f661c.contains(new UnmodifiableEntry((Map.Entry) obj));
             }
 
             public boolean containsAll(Collection<?> collection) {
@@ -1181,7 +1181,7 @@ public class Collections {
                     return false;
                 }
                 Set set = (Set) obj;
-                if (set.size() != this.f663c.size()) {
+                if (set.size() != this.f661c.size()) {
                     return false;
                 }
                 return containsAll(set);
@@ -1190,18 +1190,18 @@ public class Collections {
             private static class UnmodifiableEntry<K, V> implements Map.Entry<K, V> {
 
                 /* renamed from: e */
-                private Map.Entry<? extends K, ? extends V> f668e;
+                private Map.Entry<? extends K, ? extends V> f666e;
 
                 UnmodifiableEntry(Map.Entry<? extends K, ? extends V> entry) {
-                    this.f668e = (Map.Entry) Objects.requireNonNull(entry);
+                    this.f666e = (Map.Entry) Objects.requireNonNull(entry);
                 }
 
                 public K getKey() {
-                    return this.f668e.getKey();
+                    return this.f666e.getKey();
                 }
 
                 public V getValue() {
-                    return this.f668e.getValue();
+                    return this.f666e.getValue();
                 }
 
                 public V setValue(V v) {
@@ -1209,7 +1209,7 @@ public class Collections {
                 }
 
                 public int hashCode() {
-                    return this.f668e.hashCode();
+                    return this.f666e.hashCode();
                 }
 
                 public boolean equals(Object obj) {
@@ -1220,14 +1220,14 @@ public class Collections {
                         return false;
                     }
                     Map.Entry entry = (Map.Entry) obj;
-                    if (!Collections.m1715eq(this.f668e.getKey(), entry.getKey()) || !Collections.m1715eq(this.f668e.getValue(), entry.getValue())) {
+                    if (!Collections.m1721eq(this.f666e.getKey(), entry.getKey()) || !Collections.m1721eq(this.f666e.getValue(), entry.getValue())) {
                         return false;
                     }
                     return true;
                 }
 
                 public String toString() {
-                    return this.f668e.toString();
+                    return this.f666e.toString();
                 }
             }
         }
@@ -1241,35 +1241,35 @@ public class Collections {
         private static final long serialVersionUID = -8806743815996713206L;
 
         /* renamed from: sm */
-        private final SortedMap<K, ? extends V> f672sm;
+        private final SortedMap<K, ? extends V> f670sm;
 
         UnmodifiableSortedMap(SortedMap<K, ? extends V> sortedMap) {
             super(sortedMap);
-            this.f672sm = sortedMap;
+            this.f670sm = sortedMap;
         }
 
         public Comparator<? super K> comparator() {
-            return this.f672sm.comparator();
+            return this.f670sm.comparator();
         }
 
         public SortedMap<K, V> subMap(K k, K k2) {
-            return new UnmodifiableSortedMap(this.f672sm.subMap(k, k2));
+            return new UnmodifiableSortedMap(this.f670sm.subMap(k, k2));
         }
 
         public SortedMap<K, V> headMap(K k) {
-            return new UnmodifiableSortedMap(this.f672sm.headMap(k));
+            return new UnmodifiableSortedMap(this.f670sm.headMap(k));
         }
 
         public SortedMap<K, V> tailMap(K k) {
-            return new UnmodifiableSortedMap(this.f672sm.tailMap(k));
+            return new UnmodifiableSortedMap(this.f670sm.tailMap(k));
         }
 
         public K firstKey() {
-            return this.f672sm.firstKey();
+            return this.f670sm.firstKey();
         }
 
         public K lastKey() {
-            return this.f672sm.lastKey();
+            return this.f670sm.lastKey();
         }
     }
 
@@ -1283,7 +1283,7 @@ public class Collections {
         private static final long serialVersionUID = -4858195264774772197L;
 
         /* renamed from: nm */
-        private final NavigableMap<K, ? extends V> f670nm;
+        private final NavigableMap<K, ? extends V> f668nm;
 
         private static class EmptyNavigableMap<K, V> extends UnmodifiableNavigableMap<K, V> implements Serializable {
             private static final long serialVersionUID = -2239321462712562324L;
@@ -1303,27 +1303,27 @@ public class Collections {
 
         UnmodifiableNavigableMap(NavigableMap<K, ? extends V> navigableMap) {
             super(navigableMap);
-            this.f670nm = navigableMap;
+            this.f668nm = navigableMap;
         }
 
         public K lowerKey(K k) {
-            return this.f670nm.lowerKey(k);
+            return this.f668nm.lowerKey(k);
         }
 
         public K floorKey(K k) {
-            return this.f670nm.floorKey(k);
+            return this.f668nm.floorKey(k);
         }
 
         public K ceilingKey(K k) {
-            return this.f670nm.ceilingKey(k);
+            return this.f668nm.ceilingKey(k);
         }
 
         public K higherKey(K k) {
-            return this.f670nm.higherKey(k);
+            return this.f668nm.higherKey(k);
         }
 
         public Map.Entry<K, V> lowerEntry(K k) {
-            Map.Entry<K, ? extends V> lowerEntry = this.f670nm.lowerEntry(k);
+            Map.Entry<K, ? extends V> lowerEntry = this.f668nm.lowerEntry(k);
             if (lowerEntry != null) {
                 return new UnmodifiableMap.UnmodifiableEntrySet.UnmodifiableEntry(lowerEntry);
             }
@@ -1331,7 +1331,7 @@ public class Collections {
         }
 
         public Map.Entry<K, V> floorEntry(K k) {
-            Map.Entry<K, ? extends V> floorEntry = this.f670nm.floorEntry(k);
+            Map.Entry<K, ? extends V> floorEntry = this.f668nm.floorEntry(k);
             if (floorEntry != null) {
                 return new UnmodifiableMap.UnmodifiableEntrySet.UnmodifiableEntry(floorEntry);
             }
@@ -1339,7 +1339,7 @@ public class Collections {
         }
 
         public Map.Entry<K, V> ceilingEntry(K k) {
-            Map.Entry<K, ? extends V> ceilingEntry = this.f670nm.ceilingEntry(k);
+            Map.Entry<K, ? extends V> ceilingEntry = this.f668nm.ceilingEntry(k);
             if (ceilingEntry != null) {
                 return new UnmodifiableMap.UnmodifiableEntrySet.UnmodifiableEntry(ceilingEntry);
             }
@@ -1347,7 +1347,7 @@ public class Collections {
         }
 
         public Map.Entry<K, V> higherEntry(K k) {
-            Map.Entry<K, ? extends V> higherEntry = this.f670nm.higherEntry(k);
+            Map.Entry<K, ? extends V> higherEntry = this.f668nm.higherEntry(k);
             if (higherEntry != null) {
                 return new UnmodifiableMap.UnmodifiableEntrySet.UnmodifiableEntry(higherEntry);
             }
@@ -1355,7 +1355,7 @@ public class Collections {
         }
 
         public Map.Entry<K, V> firstEntry() {
-            Map.Entry<K, ? extends V> firstEntry = this.f670nm.firstEntry();
+            Map.Entry<K, ? extends V> firstEntry = this.f668nm.firstEntry();
             if (firstEntry != null) {
                 return new UnmodifiableMap.UnmodifiableEntrySet.UnmodifiableEntry(firstEntry);
             }
@@ -1363,7 +1363,7 @@ public class Collections {
         }
 
         public Map.Entry<K, V> lastEntry() {
-            Map.Entry<K, ? extends V> lastEntry = this.f670nm.lastEntry();
+            Map.Entry<K, ? extends V> lastEntry = this.f668nm.lastEntry();
             if (lastEntry != null) {
                 return new UnmodifiableMap.UnmodifiableEntrySet.UnmodifiableEntry(lastEntry);
             }
@@ -1379,27 +1379,27 @@ public class Collections {
         }
 
         public NavigableMap<K, V> descendingMap() {
-            return Collections.unmodifiableNavigableMap(this.f670nm.descendingMap());
+            return Collections.unmodifiableNavigableMap(this.f668nm.descendingMap());
         }
 
         public NavigableSet<K> navigableKeySet() {
-            return Collections.unmodifiableNavigableSet(this.f670nm.navigableKeySet());
+            return Collections.unmodifiableNavigableSet(this.f668nm.navigableKeySet());
         }
 
         public NavigableSet<K> descendingKeySet() {
-            return Collections.unmodifiableNavigableSet(this.f670nm.descendingKeySet());
+            return Collections.unmodifiableNavigableSet(this.f668nm.descendingKeySet());
         }
 
         public NavigableMap<K, V> subMap(K k, boolean z, K k2, boolean z2) {
-            return Collections.unmodifiableNavigableMap(this.f670nm.subMap(k, z, k2, z2));
+            return Collections.unmodifiableNavigableMap(this.f668nm.subMap(k, z, k2, z2));
         }
 
         public NavigableMap<K, V> headMap(K k, boolean z) {
-            return Collections.unmodifiableNavigableMap(this.f670nm.headMap(k, z));
+            return Collections.unmodifiableNavigableMap(this.f668nm.headMap(k, z));
         }
 
         public NavigableMap<K, V> tailMap(K k, boolean z) {
-            return Collections.unmodifiableNavigableMap(this.f670nm.tailMap(k, z));
+            return Collections.unmodifiableNavigableMap(this.f668nm.tailMap(k, z));
         }
     }
 
@@ -1415,23 +1415,23 @@ public class Collections {
         private static final long serialVersionUID = 3053995032091335093L;
 
         /* renamed from: c */
-        final Collection<E> f657c;
+        final Collection<E> f655c;
         final Object mutex;
 
         SynchronizedCollection(Collection<E> collection) {
-            this.f657c = (Collection) Objects.requireNonNull(collection);
+            this.f655c = (Collection) Objects.requireNonNull(collection);
             this.mutex = this;
         }
 
         SynchronizedCollection(Collection<E> collection, Object obj) {
-            this.f657c = (Collection) Objects.requireNonNull(collection);
+            this.f655c = (Collection) Objects.requireNonNull(collection);
             this.mutex = Objects.requireNonNull(obj);
         }
 
         public int size() {
             int size;
             synchronized (this.mutex) {
-                size = this.f657c.size();
+                size = this.f655c.size();
             }
             return size;
         }
@@ -1439,7 +1439,7 @@ public class Collections {
         public boolean isEmpty() {
             boolean isEmpty;
             synchronized (this.mutex) {
-                isEmpty = this.f657c.isEmpty();
+                isEmpty = this.f655c.isEmpty();
             }
             return isEmpty;
         }
@@ -1447,7 +1447,7 @@ public class Collections {
         public boolean contains(Object obj) {
             boolean contains;
             synchronized (this.mutex) {
-                contains = this.f657c.contains(obj);
+                contains = this.f655c.contains(obj);
             }
             return contains;
         }
@@ -1455,7 +1455,7 @@ public class Collections {
         public Object[] toArray() {
             Object[] array;
             synchronized (this.mutex) {
-                array = this.f657c.toArray();
+                array = this.f655c.toArray();
             }
             return array;
         }
@@ -1463,19 +1463,19 @@ public class Collections {
         public <T> T[] toArray(T[] tArr) {
             T[] array;
             synchronized (this.mutex) {
-                array = this.f657c.toArray(tArr);
+                array = this.f655c.toArray(tArr);
             }
             return array;
         }
 
         public Iterator<E> iterator() {
-            return this.f657c.iterator();
+            return this.f655c.iterator();
         }
 
         public boolean add(E e) {
             boolean add;
             synchronized (this.mutex) {
-                add = this.f657c.add(e);
+                add = this.f655c.add(e);
             }
             return add;
         }
@@ -1483,7 +1483,7 @@ public class Collections {
         public boolean remove(Object obj) {
             boolean remove;
             synchronized (this.mutex) {
-                remove = this.f657c.remove(obj);
+                remove = this.f655c.remove(obj);
             }
             return remove;
         }
@@ -1491,7 +1491,7 @@ public class Collections {
         public boolean containsAll(Collection<?> collection) {
             boolean containsAll;
             synchronized (this.mutex) {
-                containsAll = this.f657c.containsAll(collection);
+                containsAll = this.f655c.containsAll(collection);
             }
             return containsAll;
         }
@@ -1499,7 +1499,7 @@ public class Collections {
         public boolean addAll(Collection<? extends E> collection) {
             boolean addAll;
             synchronized (this.mutex) {
-                addAll = this.f657c.addAll(collection);
+                addAll = this.f655c.addAll(collection);
             }
             return addAll;
         }
@@ -1507,7 +1507,7 @@ public class Collections {
         public boolean removeAll(Collection<?> collection) {
             boolean removeAll;
             synchronized (this.mutex) {
-                removeAll = this.f657c.removeAll(collection);
+                removeAll = this.f655c.removeAll(collection);
             }
             return removeAll;
         }
@@ -1515,49 +1515,49 @@ public class Collections {
         public boolean retainAll(Collection<?> collection) {
             boolean retainAll;
             synchronized (this.mutex) {
-                retainAll = this.f657c.retainAll(collection);
+                retainAll = this.f655c.retainAll(collection);
             }
             return retainAll;
         }
 
         public void clear() {
             synchronized (this.mutex) {
-                this.f657c.clear();
+                this.f655c.clear();
             }
         }
 
         public String toString() {
             String obj;
             synchronized (this.mutex) {
-                obj = this.f657c.toString();
+                obj = this.f655c.toString();
             }
             return obj;
         }
 
         public void forEach(Consumer<? super E> consumer) {
             synchronized (this.mutex) {
-                this.f657c.forEach(consumer);
+                this.f655c.forEach(consumer);
             }
         }
 
         public boolean removeIf(Predicate<? super E> predicate) {
             boolean removeIf;
             synchronized (this.mutex) {
-                removeIf = this.f657c.removeIf(predicate);
+                removeIf = this.f655c.removeIf(predicate);
             }
             return removeIf;
         }
 
         public Spliterator<E> spliterator() {
-            return this.f657c.spliterator();
+            return this.f655c.spliterator();
         }
 
         public Stream<E> stream() {
-            return this.f657c.stream();
+            return this.f655c.stream();
         }
 
         public Stream<E> parallelStream() {
-            return this.f657c.parallelStream();
+            return this.f655c.parallelStream();
         }
 
         private void writeObject(ObjectOutputStream objectOutputStream) throws IOException {
@@ -1592,7 +1592,7 @@ public class Collections {
                 return true;
             }
             synchronized (this.mutex) {
-                equals = this.f657c.equals(obj);
+                equals = this.f655c.equals(obj);
             }
             return equals;
         }
@@ -1600,7 +1600,7 @@ public class Collections {
         public int hashCode() {
             int hashCode;
             synchronized (this.mutex) {
-                hashCode = this.f657c.hashCode();
+                hashCode = this.f655c.hashCode();
             }
             return hashCode;
         }
@@ -1614,22 +1614,22 @@ public class Collections {
         private static final long serialVersionUID = 8695801310862127406L;
 
         /* renamed from: ss */
-        private final SortedSet<E> f662ss;
+        private final SortedSet<E> f660ss;
 
         SynchronizedSortedSet(SortedSet<E> sortedSet) {
             super(sortedSet);
-            this.f662ss = sortedSet;
+            this.f660ss = sortedSet;
         }
 
         SynchronizedSortedSet(SortedSet<E> sortedSet, Object obj) {
             super(sortedSet, obj);
-            this.f662ss = sortedSet;
+            this.f660ss = sortedSet;
         }
 
         public Comparator<? super E> comparator() {
             Comparator<? super E> comparator;
             synchronized (this.mutex) {
-                comparator = this.f662ss.comparator();
+                comparator = this.f660ss.comparator();
             }
             return comparator;
         }
@@ -1637,7 +1637,7 @@ public class Collections {
         public SortedSet<E> subSet(E e, E e2) {
             SynchronizedSortedSet synchronizedSortedSet;
             synchronized (this.mutex) {
-                synchronizedSortedSet = new SynchronizedSortedSet(this.f662ss.subSet(e, e2), this.mutex);
+                synchronizedSortedSet = new SynchronizedSortedSet(this.f660ss.subSet(e, e2), this.mutex);
             }
             return synchronizedSortedSet;
         }
@@ -1645,7 +1645,7 @@ public class Collections {
         public SortedSet<E> headSet(E e) {
             SynchronizedSortedSet synchronizedSortedSet;
             synchronized (this.mutex) {
-                synchronizedSortedSet = new SynchronizedSortedSet(this.f662ss.headSet(e), this.mutex);
+                synchronizedSortedSet = new SynchronizedSortedSet(this.f660ss.headSet(e), this.mutex);
             }
             return synchronizedSortedSet;
         }
@@ -1653,7 +1653,7 @@ public class Collections {
         public SortedSet<E> tailSet(E e) {
             SynchronizedSortedSet synchronizedSortedSet;
             synchronized (this.mutex) {
-                synchronizedSortedSet = new SynchronizedSortedSet(this.f662ss.tailSet(e), this.mutex);
+                synchronizedSortedSet = new SynchronizedSortedSet(this.f660ss.tailSet(e), this.mutex);
             }
             return synchronizedSortedSet;
         }
@@ -1661,7 +1661,7 @@ public class Collections {
         public E first() {
             E first;
             synchronized (this.mutex) {
-                first = this.f662ss.first();
+                first = this.f660ss.first();
             }
             return first;
         }
@@ -1669,7 +1669,7 @@ public class Collections {
         public E last() {
             E last;
             synchronized (this.mutex) {
-                last = this.f662ss.last();
+                last = this.f660ss.last();
             }
             return last;
         }
@@ -1683,22 +1683,22 @@ public class Collections {
         private static final long serialVersionUID = -5505529816273629798L;
 
         /* renamed from: ns */
-        private final NavigableSet<E> f660ns;
+        private final NavigableSet<E> f658ns;
 
         SynchronizedNavigableSet(NavigableSet<E> navigableSet) {
             super(navigableSet);
-            this.f660ns = navigableSet;
+            this.f658ns = navigableSet;
         }
 
         SynchronizedNavigableSet(NavigableSet<E> navigableSet, Object obj) {
             super(navigableSet, obj);
-            this.f660ns = navigableSet;
+            this.f658ns = navigableSet;
         }
 
         public E lower(E e) {
             E lower;
             synchronized (this.mutex) {
-                lower = this.f660ns.lower(e);
+                lower = this.f658ns.lower(e);
             }
             return lower;
         }
@@ -1706,7 +1706,7 @@ public class Collections {
         public E floor(E e) {
             E floor;
             synchronized (this.mutex) {
-                floor = this.f660ns.floor(e);
+                floor = this.f658ns.floor(e);
             }
             return floor;
         }
@@ -1714,7 +1714,7 @@ public class Collections {
         public E ceiling(E e) {
             E ceiling;
             synchronized (this.mutex) {
-                ceiling = this.f660ns.ceiling(e);
+                ceiling = this.f658ns.ceiling(e);
             }
             return ceiling;
         }
@@ -1722,7 +1722,7 @@ public class Collections {
         public E higher(E e) {
             E higher;
             synchronized (this.mutex) {
-                higher = this.f660ns.higher(e);
+                higher = this.f658ns.higher(e);
             }
             return higher;
         }
@@ -1730,7 +1730,7 @@ public class Collections {
         public E pollFirst() {
             E pollFirst;
             synchronized (this.mutex) {
-                pollFirst = this.f660ns.pollFirst();
+                pollFirst = this.f658ns.pollFirst();
             }
             return pollFirst;
         }
@@ -1738,7 +1738,7 @@ public class Collections {
         public E pollLast() {
             E pollLast;
             synchronized (this.mutex) {
-                pollLast = this.f660ns.pollLast();
+                pollLast = this.f658ns.pollLast();
             }
             return pollLast;
         }
@@ -1746,7 +1746,7 @@ public class Collections {
         public NavigableSet<E> descendingSet() {
             SynchronizedNavigableSet synchronizedNavigableSet;
             synchronized (this.mutex) {
-                synchronizedNavigableSet = new SynchronizedNavigableSet(this.f660ns.descendingSet(), this.mutex);
+                synchronizedNavigableSet = new SynchronizedNavigableSet(this.f658ns.descendingSet(), this.mutex);
             }
             return synchronizedNavigableSet;
         }
@@ -1762,7 +1762,7 @@ public class Collections {
         public NavigableSet<E> subSet(E e, E e2) {
             SynchronizedNavigableSet synchronizedNavigableSet;
             synchronized (this.mutex) {
-                synchronizedNavigableSet = new SynchronizedNavigableSet(this.f660ns.subSet(e, true, e2, false), this.mutex);
+                synchronizedNavigableSet = new SynchronizedNavigableSet(this.f658ns.subSet(e, true, e2, false), this.mutex);
             }
             return synchronizedNavigableSet;
         }
@@ -1770,7 +1770,7 @@ public class Collections {
         public NavigableSet<E> headSet(E e) {
             SynchronizedNavigableSet synchronizedNavigableSet;
             synchronized (this.mutex) {
-                synchronizedNavigableSet = new SynchronizedNavigableSet(this.f660ns.headSet(e, false), this.mutex);
+                synchronizedNavigableSet = new SynchronizedNavigableSet(this.f658ns.headSet(e, false), this.mutex);
             }
             return synchronizedNavigableSet;
         }
@@ -1778,7 +1778,7 @@ public class Collections {
         public NavigableSet<E> tailSet(E e) {
             SynchronizedNavigableSet synchronizedNavigableSet;
             synchronized (this.mutex) {
-                synchronizedNavigableSet = new SynchronizedNavigableSet(this.f660ns.tailSet(e, true), this.mutex);
+                synchronizedNavigableSet = new SynchronizedNavigableSet(this.f658ns.tailSet(e, true), this.mutex);
             }
             return synchronizedNavigableSet;
         }
@@ -1786,7 +1786,7 @@ public class Collections {
         public NavigableSet<E> subSet(E e, boolean z, E e2, boolean z2) {
             SynchronizedNavigableSet synchronizedNavigableSet;
             synchronized (this.mutex) {
-                synchronizedNavigableSet = new SynchronizedNavigableSet(this.f660ns.subSet(e, z, e2, z2), this.mutex);
+                synchronizedNavigableSet = new SynchronizedNavigableSet(this.f658ns.subSet(e, z, e2, z2), this.mutex);
             }
             return synchronizedNavigableSet;
         }
@@ -1794,7 +1794,7 @@ public class Collections {
         public NavigableSet<E> headSet(E e, boolean z) {
             SynchronizedNavigableSet synchronizedNavigableSet;
             synchronized (this.mutex) {
-                synchronizedNavigableSet = new SynchronizedNavigableSet(this.f660ns.headSet(e, z), this.mutex);
+                synchronizedNavigableSet = new SynchronizedNavigableSet(this.f658ns.headSet(e, z), this.mutex);
             }
             return synchronizedNavigableSet;
         }
@@ -1802,7 +1802,7 @@ public class Collections {
         public NavigableSet<E> tailSet(E e, boolean z) {
             SynchronizedNavigableSet synchronizedNavigableSet;
             synchronized (this.mutex) {
-                synchronizedNavigableSet = new SynchronizedNavigableSet(this.f660ns.tailSet(e, z), this.mutex);
+                synchronizedNavigableSet = new SynchronizedNavigableSet(this.f658ns.tailSet(e, z), this.mutex);
             }
             return synchronizedNavigableSet;
         }
@@ -1977,24 +1977,24 @@ public class Collections {
         private transient Set<K> keySet;
 
         /* renamed from: m */
-        private final Map<K, V> f658m;
+        private final Map<K, V> f656m;
         final Object mutex;
         private transient Collection<V> values;
 
         SynchronizedMap(Map<K, V> map) {
-            this.f658m = (Map) Objects.requireNonNull(map);
+            this.f656m = (Map) Objects.requireNonNull(map);
             this.mutex = this;
         }
 
         SynchronizedMap(Map<K, V> map, Object obj) {
-            this.f658m = map;
+            this.f656m = map;
             this.mutex = obj;
         }
 
         public int size() {
             int size;
             synchronized (this.mutex) {
-                size = this.f658m.size();
+                size = this.f656m.size();
             }
             return size;
         }
@@ -2002,7 +2002,7 @@ public class Collections {
         public boolean isEmpty() {
             boolean isEmpty;
             synchronized (this.mutex) {
-                isEmpty = this.f658m.isEmpty();
+                isEmpty = this.f656m.isEmpty();
             }
             return isEmpty;
         }
@@ -2010,7 +2010,7 @@ public class Collections {
         public boolean containsKey(Object obj) {
             boolean containsKey;
             synchronized (this.mutex) {
-                containsKey = this.f658m.containsKey(obj);
+                containsKey = this.f656m.containsKey(obj);
             }
             return containsKey;
         }
@@ -2018,7 +2018,7 @@ public class Collections {
         public boolean containsValue(Object obj) {
             boolean containsValue;
             synchronized (this.mutex) {
-                containsValue = this.f658m.containsValue(obj);
+                containsValue = this.f656m.containsValue(obj);
             }
             return containsValue;
         }
@@ -2026,7 +2026,7 @@ public class Collections {
         public V get(Object obj) {
             V v;
             synchronized (this.mutex) {
-                v = this.f658m.get(obj);
+                v = this.f656m.get(obj);
             }
             return v;
         }
@@ -2034,7 +2034,7 @@ public class Collections {
         public V put(K k, V v) {
             V put;
             synchronized (this.mutex) {
-                put = this.f658m.put(k, v);
+                put = this.f656m.put(k, v);
             }
             return put;
         }
@@ -2042,20 +2042,20 @@ public class Collections {
         public V remove(Object obj) {
             V remove;
             synchronized (this.mutex) {
-                remove = this.f658m.remove(obj);
+                remove = this.f656m.remove(obj);
             }
             return remove;
         }
 
         public void putAll(Map<? extends K, ? extends V> map) {
             synchronized (this.mutex) {
-                this.f658m.putAll(map);
+                this.f656m.putAll(map);
             }
         }
 
         public void clear() {
             synchronized (this.mutex) {
-                this.f658m.clear();
+                this.f656m.clear();
             }
         }
 
@@ -2063,7 +2063,7 @@ public class Collections {
             Set<K> set;
             synchronized (this.mutex) {
                 if (this.keySet == null) {
-                    this.keySet = new SynchronizedSet(this.f658m.keySet(), this.mutex);
+                    this.keySet = new SynchronizedSet(this.f656m.keySet(), this.mutex);
                 }
                 set = this.keySet;
             }
@@ -2074,7 +2074,7 @@ public class Collections {
             Set<Map.Entry<K, V>> set;
             synchronized (this.mutex) {
                 if (this.entrySet == null) {
-                    this.entrySet = new SynchronizedSet(this.f658m.entrySet(), this.mutex);
+                    this.entrySet = new SynchronizedSet(this.f656m.entrySet(), this.mutex);
                 }
                 set = this.entrySet;
             }
@@ -2085,7 +2085,7 @@ public class Collections {
             Collection<V> collection;
             synchronized (this.mutex) {
                 if (this.values == null) {
-                    this.values = new SynchronizedCollection(this.f658m.values(), this.mutex);
+                    this.values = new SynchronizedCollection(this.f656m.values(), this.mutex);
                 }
                 collection = this.values;
             }
@@ -2098,7 +2098,7 @@ public class Collections {
                 return true;
             }
             synchronized (this.mutex) {
-                equals = this.f658m.equals(obj);
+                equals = this.f656m.equals(obj);
             }
             return equals;
         }
@@ -2106,7 +2106,7 @@ public class Collections {
         public int hashCode() {
             int hashCode;
             synchronized (this.mutex) {
-                hashCode = this.f658m.hashCode();
+                hashCode = this.f656m.hashCode();
             }
             return hashCode;
         }
@@ -2114,7 +2114,7 @@ public class Collections {
         public String toString() {
             String obj;
             synchronized (this.mutex) {
-                obj = this.f658m.toString();
+                obj = this.f656m.toString();
             }
             return obj;
         }
@@ -2122,27 +2122,27 @@ public class Collections {
         public V getOrDefault(Object obj, V v) {
             V orDefault;
             synchronized (this.mutex) {
-                orDefault = this.f658m.getOrDefault(obj, v);
+                orDefault = this.f656m.getOrDefault(obj, v);
             }
             return orDefault;
         }
 
         public void forEach(BiConsumer<? super K, ? super V> biConsumer) {
             synchronized (this.mutex) {
-                this.f658m.forEach(biConsumer);
+                this.f656m.forEach(biConsumer);
             }
         }
 
         public void replaceAll(BiFunction<? super K, ? super V, ? extends V> biFunction) {
             synchronized (this.mutex) {
-                this.f658m.replaceAll(biFunction);
+                this.f656m.replaceAll(biFunction);
             }
         }
 
         public V putIfAbsent(K k, V v) {
             V putIfAbsent;
             synchronized (this.mutex) {
-                putIfAbsent = this.f658m.putIfAbsent(k, v);
+                putIfAbsent = this.f656m.putIfAbsent(k, v);
             }
             return putIfAbsent;
         }
@@ -2150,7 +2150,7 @@ public class Collections {
         public boolean remove(Object obj, Object obj2) {
             boolean remove;
             synchronized (this.mutex) {
-                remove = this.f658m.remove(obj, obj2);
+                remove = this.f656m.remove(obj, obj2);
             }
             return remove;
         }
@@ -2158,7 +2158,7 @@ public class Collections {
         public boolean replace(K k, V v, V v2) {
             boolean replace;
             synchronized (this.mutex) {
-                replace = this.f658m.replace(k, v, v2);
+                replace = this.f656m.replace(k, v, v2);
             }
             return replace;
         }
@@ -2166,7 +2166,7 @@ public class Collections {
         public V replace(K k, V v) {
             V replace;
             synchronized (this.mutex) {
-                replace = this.f658m.replace(k, v);
+                replace = this.f656m.replace(k, v);
             }
             return replace;
         }
@@ -2174,7 +2174,7 @@ public class Collections {
         public V computeIfAbsent(K k, Function<? super K, ? extends V> function) {
             V computeIfAbsent;
             synchronized (this.mutex) {
-                computeIfAbsent = this.f658m.computeIfAbsent(k, function);
+                computeIfAbsent = this.f656m.computeIfAbsent(k, function);
             }
             return computeIfAbsent;
         }
@@ -2182,7 +2182,7 @@ public class Collections {
         public V computeIfPresent(K k, BiFunction<? super K, ? super V, ? extends V> biFunction) {
             V computeIfPresent;
             synchronized (this.mutex) {
-                computeIfPresent = this.f658m.computeIfPresent(k, biFunction);
+                computeIfPresent = this.f656m.computeIfPresent(k, biFunction);
             }
             return computeIfPresent;
         }
@@ -2190,7 +2190,7 @@ public class Collections {
         public V compute(K k, BiFunction<? super K, ? super V, ? extends V> biFunction) {
             V compute;
             synchronized (this.mutex) {
-                compute = this.f658m.compute(k, biFunction);
+                compute = this.f656m.compute(k, biFunction);
             }
             return compute;
         }
@@ -2198,7 +2198,7 @@ public class Collections {
         public V merge(K k, V v, BiFunction<? super V, ? super V, ? extends V> biFunction) {
             V merge;
             synchronized (this.mutex) {
-                merge = this.f658m.merge(k, v, biFunction);
+                merge = this.f656m.merge(k, v, biFunction);
             }
             return merge;
         }
@@ -2218,22 +2218,22 @@ public class Collections {
         private static final long serialVersionUID = -8798146769416483793L;
 
         /* renamed from: sm */
-        private final SortedMap<K, V> f661sm;
+        private final SortedMap<K, V> f659sm;
 
         SynchronizedSortedMap(SortedMap<K, V> sortedMap) {
             super(sortedMap);
-            this.f661sm = sortedMap;
+            this.f659sm = sortedMap;
         }
 
         SynchronizedSortedMap(SortedMap<K, V> sortedMap, Object obj) {
             super(sortedMap, obj);
-            this.f661sm = sortedMap;
+            this.f659sm = sortedMap;
         }
 
         public Comparator<? super K> comparator() {
             Comparator<? super K> comparator;
             synchronized (this.mutex) {
-                comparator = this.f661sm.comparator();
+                comparator = this.f659sm.comparator();
             }
             return comparator;
         }
@@ -2241,7 +2241,7 @@ public class Collections {
         public SortedMap<K, V> subMap(K k, K k2) {
             SynchronizedSortedMap synchronizedSortedMap;
             synchronized (this.mutex) {
-                synchronizedSortedMap = new SynchronizedSortedMap(this.f661sm.subMap(k, k2), this.mutex);
+                synchronizedSortedMap = new SynchronizedSortedMap(this.f659sm.subMap(k, k2), this.mutex);
             }
             return synchronizedSortedMap;
         }
@@ -2249,7 +2249,7 @@ public class Collections {
         public SortedMap<K, V> headMap(K k) {
             SynchronizedSortedMap synchronizedSortedMap;
             synchronized (this.mutex) {
-                synchronizedSortedMap = new SynchronizedSortedMap(this.f661sm.headMap(k), this.mutex);
+                synchronizedSortedMap = new SynchronizedSortedMap(this.f659sm.headMap(k), this.mutex);
             }
             return synchronizedSortedMap;
         }
@@ -2257,7 +2257,7 @@ public class Collections {
         public SortedMap<K, V> tailMap(K k) {
             SynchronizedSortedMap synchronizedSortedMap;
             synchronized (this.mutex) {
-                synchronizedSortedMap = new SynchronizedSortedMap(this.f661sm.tailMap(k), this.mutex);
+                synchronizedSortedMap = new SynchronizedSortedMap(this.f659sm.tailMap(k), this.mutex);
             }
             return synchronizedSortedMap;
         }
@@ -2265,7 +2265,7 @@ public class Collections {
         public K firstKey() {
             K firstKey;
             synchronized (this.mutex) {
-                firstKey = this.f661sm.firstKey();
+                firstKey = this.f659sm.firstKey();
             }
             return firstKey;
         }
@@ -2273,7 +2273,7 @@ public class Collections {
         public K lastKey() {
             K lastKey;
             synchronized (this.mutex) {
-                lastKey = this.f661sm.lastKey();
+                lastKey = this.f659sm.lastKey();
             }
             return lastKey;
         }
@@ -2287,22 +2287,22 @@ public class Collections {
         private static final long serialVersionUID = 699392247599746807L;
 
         /* renamed from: nm */
-        private final NavigableMap<K, V> f659nm;
+        private final NavigableMap<K, V> f657nm;
 
         SynchronizedNavigableMap(NavigableMap<K, V> navigableMap) {
             super(navigableMap);
-            this.f659nm = navigableMap;
+            this.f657nm = navigableMap;
         }
 
         SynchronizedNavigableMap(NavigableMap<K, V> navigableMap, Object obj) {
             super(navigableMap, obj);
-            this.f659nm = navigableMap;
+            this.f657nm = navigableMap;
         }
 
         public Map.Entry<K, V> lowerEntry(K k) {
             Map.Entry<K, V> lowerEntry;
             synchronized (this.mutex) {
-                lowerEntry = this.f659nm.lowerEntry(k);
+                lowerEntry = this.f657nm.lowerEntry(k);
             }
             return lowerEntry;
         }
@@ -2310,7 +2310,7 @@ public class Collections {
         public K lowerKey(K k) {
             K lowerKey;
             synchronized (this.mutex) {
-                lowerKey = this.f659nm.lowerKey(k);
+                lowerKey = this.f657nm.lowerKey(k);
             }
             return lowerKey;
         }
@@ -2318,7 +2318,7 @@ public class Collections {
         public Map.Entry<K, V> floorEntry(K k) {
             Map.Entry<K, V> floorEntry;
             synchronized (this.mutex) {
-                floorEntry = this.f659nm.floorEntry(k);
+                floorEntry = this.f657nm.floorEntry(k);
             }
             return floorEntry;
         }
@@ -2326,7 +2326,7 @@ public class Collections {
         public K floorKey(K k) {
             K floorKey;
             synchronized (this.mutex) {
-                floorKey = this.f659nm.floorKey(k);
+                floorKey = this.f657nm.floorKey(k);
             }
             return floorKey;
         }
@@ -2334,7 +2334,7 @@ public class Collections {
         public Map.Entry<K, V> ceilingEntry(K k) {
             Map.Entry<K, V> ceilingEntry;
             synchronized (this.mutex) {
-                ceilingEntry = this.f659nm.ceilingEntry(k);
+                ceilingEntry = this.f657nm.ceilingEntry(k);
             }
             return ceilingEntry;
         }
@@ -2342,7 +2342,7 @@ public class Collections {
         public K ceilingKey(K k) {
             K ceilingKey;
             synchronized (this.mutex) {
-                ceilingKey = this.f659nm.ceilingKey(k);
+                ceilingKey = this.f657nm.ceilingKey(k);
             }
             return ceilingKey;
         }
@@ -2350,7 +2350,7 @@ public class Collections {
         public Map.Entry<K, V> higherEntry(K k) {
             Map.Entry<K, V> higherEntry;
             synchronized (this.mutex) {
-                higherEntry = this.f659nm.higherEntry(k);
+                higherEntry = this.f657nm.higherEntry(k);
             }
             return higherEntry;
         }
@@ -2358,7 +2358,7 @@ public class Collections {
         public K higherKey(K k) {
             K higherKey;
             synchronized (this.mutex) {
-                higherKey = this.f659nm.higherKey(k);
+                higherKey = this.f657nm.higherKey(k);
             }
             return higherKey;
         }
@@ -2366,7 +2366,7 @@ public class Collections {
         public Map.Entry<K, V> firstEntry() {
             Map.Entry<K, V> firstEntry;
             synchronized (this.mutex) {
-                firstEntry = this.f659nm.firstEntry();
+                firstEntry = this.f657nm.firstEntry();
             }
             return firstEntry;
         }
@@ -2374,7 +2374,7 @@ public class Collections {
         public Map.Entry<K, V> lastEntry() {
             Map.Entry<K, V> lastEntry;
             synchronized (this.mutex) {
-                lastEntry = this.f659nm.lastEntry();
+                lastEntry = this.f657nm.lastEntry();
             }
             return lastEntry;
         }
@@ -2382,7 +2382,7 @@ public class Collections {
         public Map.Entry<K, V> pollFirstEntry() {
             Map.Entry<K, V> pollFirstEntry;
             synchronized (this.mutex) {
-                pollFirstEntry = this.f659nm.pollFirstEntry();
+                pollFirstEntry = this.f657nm.pollFirstEntry();
             }
             return pollFirstEntry;
         }
@@ -2390,7 +2390,7 @@ public class Collections {
         public Map.Entry<K, V> pollLastEntry() {
             Map.Entry<K, V> pollLastEntry;
             synchronized (this.mutex) {
-                pollLastEntry = this.f659nm.pollLastEntry();
+                pollLastEntry = this.f657nm.pollLastEntry();
             }
             return pollLastEntry;
         }
@@ -2398,7 +2398,7 @@ public class Collections {
         public NavigableMap<K, V> descendingMap() {
             SynchronizedNavigableMap synchronizedNavigableMap;
             synchronized (this.mutex) {
-                synchronizedNavigableMap = new SynchronizedNavigableMap(this.f659nm.descendingMap(), this.mutex);
+                synchronizedNavigableMap = new SynchronizedNavigableMap(this.f657nm.descendingMap(), this.mutex);
             }
             return synchronizedNavigableMap;
         }
@@ -2410,7 +2410,7 @@ public class Collections {
         public NavigableSet<K> navigableKeySet() {
             SynchronizedNavigableSet synchronizedNavigableSet;
             synchronized (this.mutex) {
-                synchronizedNavigableSet = new SynchronizedNavigableSet(this.f659nm.navigableKeySet(), this.mutex);
+                synchronizedNavigableSet = new SynchronizedNavigableSet(this.f657nm.navigableKeySet(), this.mutex);
             }
             return synchronizedNavigableSet;
         }
@@ -2418,7 +2418,7 @@ public class Collections {
         public NavigableSet<K> descendingKeySet() {
             SynchronizedNavigableSet synchronizedNavigableSet;
             synchronized (this.mutex) {
-                synchronizedNavigableSet = new SynchronizedNavigableSet(this.f659nm.descendingKeySet(), this.mutex);
+                synchronizedNavigableSet = new SynchronizedNavigableSet(this.f657nm.descendingKeySet(), this.mutex);
             }
             return synchronizedNavigableSet;
         }
@@ -2426,7 +2426,7 @@ public class Collections {
         public SortedMap<K, V> subMap(K k, K k2) {
             SynchronizedNavigableMap synchronizedNavigableMap;
             synchronized (this.mutex) {
-                synchronizedNavigableMap = new SynchronizedNavigableMap(this.f659nm.subMap(k, true, k2, false), this.mutex);
+                synchronizedNavigableMap = new SynchronizedNavigableMap(this.f657nm.subMap(k, true, k2, false), this.mutex);
             }
             return synchronizedNavigableMap;
         }
@@ -2434,7 +2434,7 @@ public class Collections {
         public SortedMap<K, V> headMap(K k) {
             SynchronizedNavigableMap synchronizedNavigableMap;
             synchronized (this.mutex) {
-                synchronizedNavigableMap = new SynchronizedNavigableMap(this.f659nm.headMap(k, false), this.mutex);
+                synchronizedNavigableMap = new SynchronizedNavigableMap(this.f657nm.headMap(k, false), this.mutex);
             }
             return synchronizedNavigableMap;
         }
@@ -2442,7 +2442,7 @@ public class Collections {
         public SortedMap<K, V> tailMap(K k) {
             SynchronizedNavigableMap synchronizedNavigableMap;
             synchronized (this.mutex) {
-                synchronizedNavigableMap = new SynchronizedNavigableMap(this.f659nm.tailMap(k, true), this.mutex);
+                synchronizedNavigableMap = new SynchronizedNavigableMap(this.f657nm.tailMap(k, true), this.mutex);
             }
             return synchronizedNavigableMap;
         }
@@ -2450,7 +2450,7 @@ public class Collections {
         public NavigableMap<K, V> subMap(K k, boolean z, K k2, boolean z2) {
             SynchronizedNavigableMap synchronizedNavigableMap;
             synchronized (this.mutex) {
-                synchronizedNavigableMap = new SynchronizedNavigableMap(this.f659nm.subMap(k, z, k2, z2), this.mutex);
+                synchronizedNavigableMap = new SynchronizedNavigableMap(this.f657nm.subMap(k, z, k2, z2), this.mutex);
             }
             return synchronizedNavigableMap;
         }
@@ -2458,7 +2458,7 @@ public class Collections {
         public NavigableMap<K, V> headMap(K k, boolean z) {
             SynchronizedNavigableMap synchronizedNavigableMap;
             synchronized (this.mutex) {
-                synchronizedNavigableMap = new SynchronizedNavigableMap(this.f659nm.headMap(k, z), this.mutex);
+                synchronizedNavigableMap = new SynchronizedNavigableMap(this.f657nm.headMap(k, z), this.mutex);
             }
             return synchronizedNavigableMap;
         }
@@ -2466,7 +2466,7 @@ public class Collections {
         public NavigableMap<K, V> tailMap(K k, boolean z) {
             SynchronizedNavigableMap synchronizedNavigableMap;
             synchronized (this.mutex) {
-                synchronizedNavigableMap = new SynchronizedNavigableMap(this.f659nm.tailMap(k, z), this.mutex);
+                synchronizedNavigableMap = new SynchronizedNavigableMap(this.f657nm.tailMap(k, z), this.mutex);
             }
             return synchronizedNavigableMap;
         }
@@ -2484,7 +2484,7 @@ public class Collections {
         private static final long serialVersionUID = 1578914078182001775L;
 
         /* renamed from: c */
-        final Collection<E> f644c;
+        final Collection<E> f642c;
         final Class<E> type;
         private E[] zeroLengthElementArray;
 
@@ -2501,56 +2501,56 @@ public class Collections {
         }
 
         CheckedCollection(Collection<E> collection, Class<E> cls) {
-            this.f644c = (Collection) Objects.requireNonNull(collection, "c");
+            this.f642c = (Collection) Objects.requireNonNull(collection, "c");
             this.type = (Class) Objects.requireNonNull(cls, "type");
         }
 
         public int size() {
-            return this.f644c.size();
+            return this.f642c.size();
         }
 
         public boolean isEmpty() {
-            return this.f644c.isEmpty();
+            return this.f642c.isEmpty();
         }
 
         public boolean contains(Object obj) {
-            return this.f644c.contains(obj);
+            return this.f642c.contains(obj);
         }
 
         public Object[] toArray() {
-            return this.f644c.toArray();
+            return this.f642c.toArray();
         }
 
         public <T> T[] toArray(T[] tArr) {
-            return this.f644c.toArray(tArr);
+            return this.f642c.toArray(tArr);
         }
 
         public String toString() {
-            return this.f644c.toString();
+            return this.f642c.toString();
         }
 
         public boolean remove(Object obj) {
-            return this.f644c.remove(obj);
+            return this.f642c.remove(obj);
         }
 
         public void clear() {
-            this.f644c.clear();
+            this.f642c.clear();
         }
 
         public boolean containsAll(Collection<?> collection) {
-            return this.f644c.containsAll(collection);
+            return this.f642c.containsAll(collection);
         }
 
         public boolean removeAll(Collection<?> collection) {
-            return this.f644c.removeAll(collection);
+            return this.f642c.removeAll(collection);
         }
 
         public boolean retainAll(Collection<?> collection) {
-            return this.f644c.retainAll(collection);
+            return this.f642c.retainAll(collection);
         }
 
         public Iterator<E> iterator() {
-            final Iterator<E> it = this.f644c.iterator();
+            final Iterator<E> it = this.f642c.iterator();
             return new Iterator<E>() {
                 public boolean hasNext() {
                     return it.hasNext();
@@ -2567,7 +2567,7 @@ public class Collections {
         }
 
         public boolean add(E e) {
-            return this.f644c.add(typeCheck(e));
+            return this.f642c.add(typeCheck(e));
         }
 
         private E[] zeroLengthElementArray() {
@@ -2618,27 +2618,27 @@ public class Collections {
         }
 
         public boolean addAll(Collection<? extends E> collection) {
-            return this.f644c.addAll(checkedCopyOf(collection));
+            return this.f642c.addAll(checkedCopyOf(collection));
         }
 
         public void forEach(Consumer<? super E> consumer) {
-            this.f644c.forEach(consumer);
+            this.f642c.forEach(consumer);
         }
 
         public boolean removeIf(Predicate<? super E> predicate) {
-            return this.f644c.removeIf(predicate);
+            return this.f642c.removeIf(predicate);
         }
 
         public Spliterator<E> spliterator() {
-            return this.f644c.spliterator();
+            return this.f642c.spliterator();
         }
 
         public Stream<E> stream() {
-            return this.f644c.stream();
+            return this.f642c.stream();
         }
 
         public Stream<E> parallelStream() {
-            return this.f644c.parallelStream();
+            return this.f642c.parallelStream();
         }
     }
 
@@ -2660,11 +2660,11 @@ public class Collections {
         }
 
         public boolean equals(Object obj) {
-            return obj == this || this.f644c.equals(obj);
+            return obj == this || this.f642c.equals(obj);
         }
 
         public int hashCode() {
-            return this.f644c.hashCode();
+            return this.f642c.hashCode();
         }
 
         public E peek() {
@@ -2696,11 +2696,11 @@ public class Collections {
         }
 
         public boolean equals(Object obj) {
-            return obj == this || this.f644c.equals(obj);
+            return obj == this || this.f642c.equals(obj);
         }
 
         public int hashCode() {
-            return this.f644c.hashCode();
+            return this.f642c.hashCode();
         }
     }
 
@@ -2712,35 +2712,35 @@ public class Collections {
         private static final long serialVersionUID = 1599911165492914959L;
 
         /* renamed from: ss */
-        private final SortedSet<E> f651ss;
+        private final SortedSet<E> f649ss;
 
         CheckedSortedSet(SortedSet<E> sortedSet, Class<E> cls) {
             super(sortedSet, cls);
-            this.f651ss = sortedSet;
+            this.f649ss = sortedSet;
         }
 
         public Comparator<? super E> comparator() {
-            return this.f651ss.comparator();
+            return this.f649ss.comparator();
         }
 
         public E first() {
-            return this.f651ss.first();
+            return this.f649ss.first();
         }
 
         public E last() {
-            return this.f651ss.last();
+            return this.f649ss.last();
         }
 
         public SortedSet<E> subSet(E e, E e2) {
-            return Collections.checkedSortedSet(this.f651ss.subSet(e, e2), this.type);
+            return Collections.checkedSortedSet(this.f649ss.subSet(e, e2), this.type);
         }
 
         public SortedSet<E> headSet(E e) {
-            return Collections.checkedSortedSet(this.f651ss.headSet(e), this.type);
+            return Collections.checkedSortedSet(this.f649ss.headSet(e), this.type);
         }
 
         public SortedSet<E> tailSet(E e) {
-            return Collections.checkedSortedSet(this.f651ss.tailSet(e), this.type);
+            return Collections.checkedSortedSet(this.f649ss.tailSet(e), this.type);
         }
     }
 
@@ -2752,67 +2752,67 @@ public class Collections {
         private static final long serialVersionUID = -5429120189805438922L;
 
         /* renamed from: ns */
-        private final NavigableSet<E> f649ns;
+        private final NavigableSet<E> f647ns;
 
         CheckedNavigableSet(NavigableSet<E> navigableSet, Class<E> cls) {
             super(navigableSet, cls);
-            this.f649ns = navigableSet;
+            this.f647ns = navigableSet;
         }
 
         public E lower(E e) {
-            return this.f649ns.lower(e);
+            return this.f647ns.lower(e);
         }
 
         public E floor(E e) {
-            return this.f649ns.floor(e);
+            return this.f647ns.floor(e);
         }
 
         public E ceiling(E e) {
-            return this.f649ns.ceiling(e);
+            return this.f647ns.ceiling(e);
         }
 
         public E higher(E e) {
-            return this.f649ns.higher(e);
+            return this.f647ns.higher(e);
         }
 
         public E pollFirst() {
-            return this.f649ns.pollFirst();
+            return this.f647ns.pollFirst();
         }
 
         public E pollLast() {
-            return this.f649ns.pollLast();
+            return this.f647ns.pollLast();
         }
 
         public NavigableSet<E> descendingSet() {
-            return Collections.checkedNavigableSet(this.f649ns.descendingSet(), this.type);
+            return Collections.checkedNavigableSet(this.f647ns.descendingSet(), this.type);
         }
 
         public Iterator<E> descendingIterator() {
-            return Collections.checkedNavigableSet(this.f649ns.descendingSet(), this.type).iterator();
+            return Collections.checkedNavigableSet(this.f647ns.descendingSet(), this.type).iterator();
         }
 
         public NavigableSet<E> subSet(E e, E e2) {
-            return Collections.checkedNavigableSet(this.f649ns.subSet(e, true, e2, false), this.type);
+            return Collections.checkedNavigableSet(this.f647ns.subSet(e, true, e2, false), this.type);
         }
 
         public NavigableSet<E> headSet(E e) {
-            return Collections.checkedNavigableSet(this.f649ns.headSet(e, false), this.type);
+            return Collections.checkedNavigableSet(this.f647ns.headSet(e, false), this.type);
         }
 
         public NavigableSet<E> tailSet(E e) {
-            return Collections.checkedNavigableSet(this.f649ns.tailSet(e, true), this.type);
+            return Collections.checkedNavigableSet(this.f647ns.tailSet(e, true), this.type);
         }
 
         public NavigableSet<E> subSet(E e, boolean z, E e2, boolean z2) {
-            return Collections.checkedNavigableSet(this.f649ns.subSet(e, z, e2, z2), this.type);
+            return Collections.checkedNavigableSet(this.f647ns.subSet(e, z, e2, z2), this.type);
         }
 
         public NavigableSet<E> headSet(E e, boolean z) {
-            return Collections.checkedNavigableSet(this.f649ns.headSet(e, z), this.type);
+            return Collections.checkedNavigableSet(this.f647ns.headSet(e, z), this.type);
         }
 
         public NavigableSet<E> tailSet(E e, boolean z) {
-            return Collections.checkedNavigableSet(this.f649ns.tailSet(e, z), this.type);
+            return Collections.checkedNavigableSet(this.f647ns.tailSet(e, z), this.type);
         }
     }
 
@@ -2928,7 +2928,7 @@ public class Collections {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$replaceAll$0$java-util-Collections$CheckedList  reason: not valid java name */
-        public /* synthetic */ Object m3735lambda$replaceAll$0$javautilCollections$CheckedList(UnaryOperator unaryOperator, Object obj) {
+        public /* synthetic */ Object m3753lambda$replaceAll$0$javautilCollections$CheckedList(UnaryOperator unaryOperator, Object obj) {
             return typeCheck(unaryOperator.apply(obj));
         }
 
@@ -2959,7 +2959,7 @@ public class Collections {
         final Class<K> keyType;
 
         /* renamed from: m */
-        private final Map<K, V> f645m;
+        private final Map<K, V> f643m;
         final Class<V> valueType;
 
         private void typeCheck(Object obj, Object obj2) {
@@ -2977,7 +2977,7 @@ public class Collections {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$typeCheck$0$java-util-Collections$CheckedMap  reason: not valid java name */
-        public /* synthetic */ Object m3738lambda$typeCheck$0$javautilCollections$CheckedMap(BiFunction biFunction, Object obj, Object obj2) {
+        public /* synthetic */ Object m3756lambda$typeCheck$0$javautilCollections$CheckedMap(BiFunction biFunction, Object obj, Object obj2) {
             Object apply = biFunction.apply(obj, obj2);
             typeCheck(obj, apply);
             return apply;
@@ -2992,62 +2992,62 @@ public class Collections {
         }
 
         CheckedMap(Map<K, V> map, Class<K> cls, Class<V> cls2) {
-            this.f645m = (Map) Objects.requireNonNull(map);
+            this.f643m = (Map) Objects.requireNonNull(map);
             this.keyType = (Class) Objects.requireNonNull(cls);
             this.valueType = (Class) Objects.requireNonNull(cls2);
         }
 
         public int size() {
-            return this.f645m.size();
+            return this.f643m.size();
         }
 
         public boolean isEmpty() {
-            return this.f645m.isEmpty();
+            return this.f643m.isEmpty();
         }
 
         public boolean containsKey(Object obj) {
-            return this.f645m.containsKey(obj);
+            return this.f643m.containsKey(obj);
         }
 
         public boolean containsValue(Object obj) {
-            return this.f645m.containsValue(obj);
+            return this.f643m.containsValue(obj);
         }
 
         public V get(Object obj) {
-            return this.f645m.get(obj);
+            return this.f643m.get(obj);
         }
 
         public V remove(Object obj) {
-            return this.f645m.remove(obj);
+            return this.f643m.remove(obj);
         }
 
         public void clear() {
-            this.f645m.clear();
+            this.f643m.clear();
         }
 
         public Set<K> keySet() {
-            return this.f645m.keySet();
+            return this.f643m.keySet();
         }
 
         public Collection<V> values() {
-            return this.f645m.values();
+            return this.f643m.values();
         }
 
         public boolean equals(Object obj) {
-            return obj == this || this.f645m.equals(obj);
+            return obj == this || this.f643m.equals(obj);
         }
 
         public int hashCode() {
-            return this.f645m.hashCode();
+            return this.f643m.hashCode();
         }
 
         public String toString() {
-            return this.f645m.toString();
+            return this.f643m.toString();
         }
 
         public V put(K k, V v) {
             typeCheck(k, v);
-            return this.f645m.put(k, v);
+            return this.f643m.put(k, v);
         }
 
         public void putAll(Map<? extends K, ? extends V> map) {
@@ -3061,73 +3061,73 @@ public class Collections {
                 arrayList.add(new AbstractMap.SimpleImmutableEntry(key, value));
             }
             for (Map.Entry entry2 : arrayList) {
-                this.f645m.put(entry2.getKey(), entry2.getValue());
+                this.f643m.put(entry2.getKey(), entry2.getValue());
             }
         }
 
         public Set<Map.Entry<K, V>> entrySet() {
             if (this.entrySet == null) {
-                this.entrySet = new CheckedEntrySet(this.f645m.entrySet(), this.valueType);
+                this.entrySet = new CheckedEntrySet(this.f643m.entrySet(), this.valueType);
             }
             return this.entrySet;
         }
 
         public void forEach(BiConsumer<? super K, ? super V> biConsumer) {
-            this.f645m.forEach(biConsumer);
+            this.f643m.forEach(biConsumer);
         }
 
         public void replaceAll(BiFunction<? super K, ? super V, ? extends V> biFunction) {
-            this.f645m.replaceAll(typeCheck(biFunction));
+            this.f643m.replaceAll(typeCheck(biFunction));
         }
 
         public V putIfAbsent(K k, V v) {
             typeCheck(k, v);
-            return this.f645m.putIfAbsent(k, v);
+            return this.f643m.putIfAbsent(k, v);
         }
 
         public boolean remove(Object obj, Object obj2) {
-            return this.f645m.remove(obj, obj2);
+            return this.f643m.remove(obj, obj2);
         }
 
         public boolean replace(K k, V v, V v2) {
             typeCheck(k, v2);
-            return this.f645m.replace(k, v, v2);
+            return this.f643m.replace(k, v, v2);
         }
 
         public V replace(K k, V v) {
             typeCheck(k, v);
-            return this.f645m.replace(k, v);
+            return this.f643m.replace(k, v);
         }
 
         public V computeIfAbsent(K k, Function<? super K, ? extends V> function) {
             Objects.requireNonNull(function);
-            return this.f645m.computeIfAbsent(k, new Collections$CheckedMap$$ExternalSyntheticLambda1(this, function));
+            return this.f643m.computeIfAbsent(k, new Collections$CheckedMap$$ExternalSyntheticLambda1(this, function));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$computeIfAbsent$1$java-util-Collections$CheckedMap  reason: not valid java name */
-        public /* synthetic */ Object m3736lambda$computeIfAbsent$1$javautilCollections$CheckedMap(Function function, Object obj) {
+        public /* synthetic */ Object m3754lambda$computeIfAbsent$1$javautilCollections$CheckedMap(Function function, Object obj) {
             Object apply = function.apply(obj);
             typeCheck(obj, apply);
             return apply;
         }
 
         public V computeIfPresent(K k, BiFunction<? super K, ? super V, ? extends V> biFunction) {
-            return this.f645m.computeIfPresent(k, typeCheck(biFunction));
+            return this.f643m.computeIfPresent(k, typeCheck(biFunction));
         }
 
         public V compute(K k, BiFunction<? super K, ? super V, ? extends V> biFunction) {
-            return this.f645m.compute(k, typeCheck(biFunction));
+            return this.f643m.compute(k, typeCheck(biFunction));
         }
 
         public V merge(K k, V v, BiFunction<? super V, ? super V, ? extends V> biFunction) {
             Objects.requireNonNull(biFunction);
-            return this.f645m.merge(k, v, new Collections$CheckedMap$$ExternalSyntheticLambda0(this, biFunction));
+            return this.f643m.merge(k, v, new Collections$CheckedMap$$ExternalSyntheticLambda0(this, biFunction));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$merge$2$java-util-Collections$CheckedMap  reason: not valid java name */
-        public /* synthetic */ Object m3737lambda$merge$2$javautilCollections$CheckedMap(BiFunction biFunction, Object obj, Object obj2) {
+        public /* synthetic */ Object m3755lambda$merge$2$javautilCollections$CheckedMap(BiFunction biFunction, Object obj, Object obj2) {
             Object apply = biFunction.apply(obj, obj2);
             typeCheck((Object) null, apply);
             return apply;
@@ -3136,32 +3136,32 @@ public class Collections {
         static class CheckedEntrySet<K, V> implements Set<Map.Entry<K, V>> {
 
             /* renamed from: s */
-            private final Set<Map.Entry<K, V>> f646s;
+            private final Set<Map.Entry<K, V>> f644s;
             private final Class<V> valueType;
 
             CheckedEntrySet(Set<Map.Entry<K, V>> set, Class<V> cls) {
-                this.f646s = set;
+                this.f644s = set;
                 this.valueType = cls;
             }
 
             public int size() {
-                return this.f646s.size();
+                return this.f644s.size();
             }
 
             public boolean isEmpty() {
-                return this.f646s.isEmpty();
+                return this.f644s.isEmpty();
             }
 
             public String toString() {
-                return this.f646s.toString();
+                return this.f644s.toString();
             }
 
             public int hashCode() {
-                return this.f646s.hashCode();
+                return this.f644s.hashCode();
             }
 
             public void clear() {
-                this.f646s.clear();
+                this.f644s.clear();
             }
 
             public boolean add(Map.Entry<K, V> entry) {
@@ -3173,7 +3173,7 @@ public class Collections {
             }
 
             public Iterator<Map.Entry<K, V>> iterator() {
-                final Iterator<Map.Entry<K, V>> it = this.f646s.iterator();
+                final Iterator<Map.Entry<K, V>> it = this.f644s.iterator();
                 final Class<V> cls = this.valueType;
                 return new Iterator<Map.Entry<K, V>>() {
                     public boolean hasNext() {
@@ -3192,7 +3192,7 @@ public class Collections {
 
             public Object[] toArray() {
                 Object[] objArr;
-                Object[] array = this.f646s.toArray();
+                Object[] array = this.f644s.toArray();
                 if (CheckedEntry.class.isInstance(array.getClass().getComponentType())) {
                     objArr = array;
                 } else {
@@ -3205,7 +3205,7 @@ public class Collections {
             }
 
             public <T> T[] toArray(T[] tArr) {
-                T[] array = this.f646s.toArray(tArr.length == 0 ? tArr : Arrays.copyOf(tArr, 0));
+                T[] array = this.f644s.toArray(tArr.length == 0 ? tArr : Arrays.copyOf(tArr, 0));
                 for (int i = 0; i < array.length; i++) {
                     array[i] = checkedEntry((Map.Entry) array[i], this.valueType);
                 }
@@ -3224,7 +3224,7 @@ public class Collections {
                     return false;
                 }
                 Map.Entry entry = (Map.Entry) obj;
-                Set<Map.Entry<K, V>> set = this.f646s;
+                Set<Map.Entry<K, V>> set = this.f644s;
                 if (!(entry instanceof CheckedEntry)) {
                     entry = checkedEntry(entry, this.valueType);
                 }
@@ -3244,7 +3244,7 @@ public class Collections {
                 if (!(obj instanceof Map.Entry)) {
                     return false;
                 }
-                return this.f646s.remove(new AbstractMap.SimpleImmutableEntry((Map.Entry) obj));
+                return this.f644s.remove(new AbstractMap.SimpleImmutableEntry((Map.Entry) obj));
             }
 
             public boolean removeAll(Collection<?> collection) {
@@ -3276,7 +3276,7 @@ public class Collections {
                     return false;
                 }
                 Set set = (Set) obj;
-                if (set.size() != this.f646s.size() || !containsAll(set)) {
+                if (set.size() != this.f644s.size() || !containsAll(set)) {
                     return false;
                 }
                 return true;
@@ -3289,33 +3289,33 @@ public class Collections {
             private static class CheckedEntry<K, V, T> implements Map.Entry<K, V> {
 
                 /* renamed from: e */
-                private final Map.Entry<K, V> f647e;
+                private final Map.Entry<K, V> f645e;
                 private final Class<T> valueType;
 
                 CheckedEntry(Map.Entry<K, V> entry, Class<T> cls) {
-                    this.f647e = (Map.Entry) Objects.requireNonNull(entry);
+                    this.f645e = (Map.Entry) Objects.requireNonNull(entry);
                     this.valueType = (Class) Objects.requireNonNull(cls);
                 }
 
                 public K getKey() {
-                    return this.f647e.getKey();
+                    return this.f645e.getKey();
                 }
 
                 public V getValue() {
-                    return this.f647e.getValue();
+                    return this.f645e.getValue();
                 }
 
                 public int hashCode() {
-                    return this.f647e.hashCode();
+                    return this.f645e.hashCode();
                 }
 
                 public String toString() {
-                    return this.f647e.toString();
+                    return this.f645e.toString();
                 }
 
                 public V setValue(V v) {
                     if (v == null || this.valueType.isInstance(v)) {
-                        return this.f647e.setValue(v);
+                        return this.f645e.setValue(v);
                     }
                     throw new ClassCastException(badValueMsg(v));
                 }
@@ -3331,7 +3331,7 @@ public class Collections {
                     if (!(obj instanceof Map.Entry)) {
                         return false;
                     }
-                    return this.f647e.equals(new AbstractMap.SimpleImmutableEntry((Map.Entry) obj));
+                    return this.f645e.equals(new AbstractMap.SimpleImmutableEntry((Map.Entry) obj));
                 }
             }
         }
@@ -3345,35 +3345,35 @@ public class Collections {
         private static final long serialVersionUID = 1599671320688067438L;
 
         /* renamed from: sm */
-        private final SortedMap<K, V> f650sm;
+        private final SortedMap<K, V> f648sm;
 
         CheckedSortedMap(SortedMap<K, V> sortedMap, Class<K> cls, Class<V> cls2) {
             super(sortedMap, cls, cls2);
-            this.f650sm = sortedMap;
+            this.f648sm = sortedMap;
         }
 
         public Comparator<? super K> comparator() {
-            return this.f650sm.comparator();
+            return this.f648sm.comparator();
         }
 
         public K firstKey() {
-            return this.f650sm.firstKey();
+            return this.f648sm.firstKey();
         }
 
         public K lastKey() {
-            return this.f650sm.lastKey();
+            return this.f648sm.lastKey();
         }
 
         public SortedMap<K, V> subMap(K k, K k2) {
-            return Collections.checkedSortedMap(this.f650sm.subMap(k, k2), this.keyType, this.valueType);
+            return Collections.checkedSortedMap(this.f648sm.subMap(k, k2), this.keyType, this.valueType);
         }
 
         public SortedMap<K, V> headMap(K k) {
-            return Collections.checkedSortedMap(this.f650sm.headMap(k), this.keyType, this.valueType);
+            return Collections.checkedSortedMap(this.f648sm.headMap(k), this.keyType, this.valueType);
         }
 
         public SortedMap<K, V> tailMap(K k) {
-            return Collections.checkedSortedMap(this.f650sm.tailMap(k), this.keyType, this.valueType);
+            return Collections.checkedSortedMap(this.f648sm.tailMap(k), this.keyType, this.valueType);
         }
     }
 
@@ -3385,27 +3385,27 @@ public class Collections {
         private static final long serialVersionUID = -4852462692372534096L;
 
         /* renamed from: nm */
-        private final NavigableMap<K, V> f648nm;
+        private final NavigableMap<K, V> f646nm;
 
         CheckedNavigableMap(NavigableMap<K, V> navigableMap, Class<K> cls, Class<V> cls2) {
             super(navigableMap, cls, cls2);
-            this.f648nm = navigableMap;
+            this.f646nm = navigableMap;
         }
 
         public Comparator<? super K> comparator() {
-            return this.f648nm.comparator();
+            return this.f646nm.comparator();
         }
 
         public K firstKey() {
-            return this.f648nm.firstKey();
+            return this.f646nm.firstKey();
         }
 
         public K lastKey() {
-            return this.f648nm.lastKey();
+            return this.f646nm.lastKey();
         }
 
         public Map.Entry<K, V> lowerEntry(K k) {
-            Map.Entry<K, V> lowerEntry = this.f648nm.lowerEntry(k);
+            Map.Entry<K, V> lowerEntry = this.f646nm.lowerEntry(k);
             if (lowerEntry != null) {
                 return new CheckedMap.CheckedEntrySet.CheckedEntry(lowerEntry, this.valueType);
             }
@@ -3413,11 +3413,11 @@ public class Collections {
         }
 
         public K lowerKey(K k) {
-            return this.f648nm.lowerKey(k);
+            return this.f646nm.lowerKey(k);
         }
 
         public Map.Entry<K, V> floorEntry(K k) {
-            Map.Entry<K, V> floorEntry = this.f648nm.floorEntry(k);
+            Map.Entry<K, V> floorEntry = this.f646nm.floorEntry(k);
             if (floorEntry != null) {
                 return new CheckedMap.CheckedEntrySet.CheckedEntry(floorEntry, this.valueType);
             }
@@ -3425,11 +3425,11 @@ public class Collections {
         }
 
         public K floorKey(K k) {
-            return this.f648nm.floorKey(k);
+            return this.f646nm.floorKey(k);
         }
 
         public Map.Entry<K, V> ceilingEntry(K k) {
-            Map.Entry<K, V> ceilingEntry = this.f648nm.ceilingEntry(k);
+            Map.Entry<K, V> ceilingEntry = this.f646nm.ceilingEntry(k);
             if (ceilingEntry != null) {
                 return new CheckedMap.CheckedEntrySet.CheckedEntry(ceilingEntry, this.valueType);
             }
@@ -3437,11 +3437,11 @@ public class Collections {
         }
 
         public K ceilingKey(K k) {
-            return this.f648nm.ceilingKey(k);
+            return this.f646nm.ceilingKey(k);
         }
 
         public Map.Entry<K, V> higherEntry(K k) {
-            Map.Entry<K, V> higherEntry = this.f648nm.higherEntry(k);
+            Map.Entry<K, V> higherEntry = this.f646nm.higherEntry(k);
             if (higherEntry != null) {
                 return new CheckedMap.CheckedEntrySet.CheckedEntry(higherEntry, this.valueType);
             }
@@ -3449,11 +3449,11 @@ public class Collections {
         }
 
         public K higherKey(K k) {
-            return this.f648nm.higherKey(k);
+            return this.f646nm.higherKey(k);
         }
 
         public Map.Entry<K, V> firstEntry() {
-            Map.Entry<K, V> firstEntry = this.f648nm.firstEntry();
+            Map.Entry<K, V> firstEntry = this.f646nm.firstEntry();
             if (firstEntry != null) {
                 return new CheckedMap.CheckedEntrySet.CheckedEntry(firstEntry, this.valueType);
             }
@@ -3461,7 +3461,7 @@ public class Collections {
         }
 
         public Map.Entry<K, V> lastEntry() {
-            Map.Entry<K, V> lastEntry = this.f648nm.lastEntry();
+            Map.Entry<K, V> lastEntry = this.f646nm.lastEntry();
             if (lastEntry != null) {
                 return new CheckedMap.CheckedEntrySet.CheckedEntry(lastEntry, this.valueType);
             }
@@ -3469,7 +3469,7 @@ public class Collections {
         }
 
         public Map.Entry<K, V> pollFirstEntry() {
-            Map.Entry<K, V> pollFirstEntry = this.f648nm.pollFirstEntry();
+            Map.Entry<K, V> pollFirstEntry = this.f646nm.pollFirstEntry();
             if (pollFirstEntry == null) {
                 return null;
             }
@@ -3477,7 +3477,7 @@ public class Collections {
         }
 
         public Map.Entry<K, V> pollLastEntry() {
-            Map.Entry<K, V> pollLastEntry = this.f648nm.pollLastEntry();
+            Map.Entry<K, V> pollLastEntry = this.f646nm.pollLastEntry();
             if (pollLastEntry == null) {
                 return null;
             }
@@ -3485,7 +3485,7 @@ public class Collections {
         }
 
         public NavigableMap<K, V> descendingMap() {
-            return Collections.checkedNavigableMap(this.f648nm.descendingMap(), this.keyType, this.valueType);
+            return Collections.checkedNavigableMap(this.f646nm.descendingMap(), this.keyType, this.valueType);
         }
 
         public NavigableSet<K> keySet() {
@@ -3493,35 +3493,35 @@ public class Collections {
         }
 
         public NavigableSet<K> navigableKeySet() {
-            return Collections.checkedNavigableSet(this.f648nm.navigableKeySet(), this.keyType);
+            return Collections.checkedNavigableSet(this.f646nm.navigableKeySet(), this.keyType);
         }
 
         public NavigableSet<K> descendingKeySet() {
-            return Collections.checkedNavigableSet(this.f648nm.descendingKeySet(), this.keyType);
+            return Collections.checkedNavigableSet(this.f646nm.descendingKeySet(), this.keyType);
         }
 
         public NavigableMap<K, V> subMap(K k, K k2) {
-            return Collections.checkedNavigableMap(this.f648nm.subMap(k, true, k2, false), this.keyType, this.valueType);
+            return Collections.checkedNavigableMap(this.f646nm.subMap(k, true, k2, false), this.keyType, this.valueType);
         }
 
         public NavigableMap<K, V> headMap(K k) {
-            return Collections.checkedNavigableMap(this.f648nm.headMap(k, false), this.keyType, this.valueType);
+            return Collections.checkedNavigableMap(this.f646nm.headMap(k, false), this.keyType, this.valueType);
         }
 
         public NavigableMap<K, V> tailMap(K k) {
-            return Collections.checkedNavigableMap(this.f648nm.tailMap(k, true), this.keyType, this.valueType);
+            return Collections.checkedNavigableMap(this.f646nm.tailMap(k, true), this.keyType, this.valueType);
         }
 
         public NavigableMap<K, V> subMap(K k, boolean z, K k2, boolean z2) {
-            return Collections.checkedNavigableMap(this.f648nm.subMap(k, z, k2, z2), this.keyType, this.valueType);
+            return Collections.checkedNavigableMap(this.f646nm.subMap(k, z, k2, z2), this.keyType, this.valueType);
         }
 
         public NavigableMap<K, V> headMap(K k, boolean z) {
-            return Collections.checkedNavigableMap(this.f648nm.headMap(k, z), this.keyType, this.valueType);
+            return Collections.checkedNavigableMap(this.f646nm.headMap(k, z), this.keyType, this.valueType);
         }
 
         public NavigableMap<K, V> tailMap(K k, boolean z) {
-            return Collections.checkedNavigableMap(this.f648nm.tailMap(k, z), this.keyType, this.valueType);
+            return Collections.checkedNavigableMap(this.f646nm.tailMap(k, z), this.keyType, this.valueType);
         }
     }
 
@@ -3947,7 +3947,7 @@ public class Collections {
         }
 
         public boolean contains(Object obj) {
-            return Collections.m1715eq(obj, this.element);
+            return Collections.m1721eq(obj, this.element);
         }
 
         public void forEach(Consumer<? super E> consumer) {
@@ -3987,7 +3987,7 @@ public class Collections {
         }
 
         public boolean contains(Object obj) {
-            return Collections.m1715eq(obj, this.element);
+            return Collections.m1721eq(obj, this.element);
         }
 
         public E get(int i) {
@@ -4023,11 +4023,11 @@ public class Collections {
         private transient Set<Map.Entry<K, V>> entrySet;
 
         /* renamed from: k */
-        private final K f655k;
+        private final K f653k;
         private transient Set<K> keySet;
 
         /* renamed from: v */
-        private final V f656v;
+        private final V f654v;
         private transient Collection<V> values;
 
         public boolean isEmpty() {
@@ -4039,52 +4039,52 @@ public class Collections {
         }
 
         SingletonMap(K k, V v) {
-            this.f655k = k;
-            this.f656v = v;
+            this.f653k = k;
+            this.f654v = v;
         }
 
         public boolean containsKey(Object obj) {
-            return Collections.m1715eq(obj, this.f655k);
+            return Collections.m1721eq(obj, this.f653k);
         }
 
         public boolean containsValue(Object obj) {
-            return Collections.m1715eq(obj, this.f656v);
+            return Collections.m1721eq(obj, this.f654v);
         }
 
         public V get(Object obj) {
-            if (Collections.m1715eq(obj, this.f655k)) {
-                return this.f656v;
+            if (Collections.m1721eq(obj, this.f653k)) {
+                return this.f654v;
             }
             return null;
         }
 
         public Set<K> keySet() {
             if (this.keySet == null) {
-                this.keySet = Collections.singleton(this.f655k);
+                this.keySet = Collections.singleton(this.f653k);
             }
             return this.keySet;
         }
 
         public Set<Map.Entry<K, V>> entrySet() {
             if (this.entrySet == null) {
-                this.entrySet = Collections.singleton(new AbstractMap.SimpleImmutableEntry(this.f655k, this.f656v));
+                this.entrySet = Collections.singleton(new AbstractMap.SimpleImmutableEntry(this.f653k, this.f654v));
             }
             return this.entrySet;
         }
 
         public Collection<V> values() {
             if (this.values == null) {
-                this.values = Collections.singleton(this.f656v);
+                this.values = Collections.singleton(this.f654v);
             }
             return this.values;
         }
 
         public V getOrDefault(Object obj, V v) {
-            return Collections.m1715eq(obj, this.f655k) ? this.f656v : v;
+            return Collections.m1721eq(obj, this.f653k) ? this.f654v : v;
         }
 
         public void forEach(BiConsumer<? super K, ? super V> biConsumer) {
-            biConsumer.accept(this.f655k, this.f656v);
+            biConsumer.accept(this.f653k, this.f654v);
         }
 
         public void replaceAll(BiFunction<? super K, ? super V, ? extends V> biFunction) {
@@ -4137,23 +4137,23 @@ public class Collections {
         final E element;
 
         /* renamed from: n */
-        final int f652n;
+        final int f650n;
 
         static {
             Class<Collections> cls = Collections.class;
         }
 
         CopiesList(int i, E e) {
-            this.f652n = i;
+            this.f650n = i;
             this.element = e;
         }
 
         public int size() {
-            return this.f652n;
+            return this.f650n;
         }
 
         public boolean contains(Object obj) {
-            return this.f652n != 0 && Collections.m1715eq(obj, this.element);
+            return this.f650n != 0 && Collections.m1721eq(obj, this.element);
         }
 
         public int indexOf(Object obj) {
@@ -4162,20 +4162,20 @@ public class Collections {
 
         public int lastIndexOf(Object obj) {
             if (contains(obj)) {
-                return this.f652n - 1;
+                return this.f650n - 1;
             }
             return -1;
         }
 
         public E get(int i) {
-            if (i >= 0 && i < this.f652n) {
+            if (i >= 0 && i < this.f650n) {
                 return this.element;
             }
-            throw new IndexOutOfBoundsException("Index: " + i + ", Size: " + this.f652n);
+            throw new IndexOutOfBoundsException("Index: " + i + ", Size: " + this.f650n);
         }
 
         public Object[] toArray() {
-            int i = this.f652n;
+            int i = this.f650n;
             Object[] objArr = new Object[i];
             E e = this.element;
             if (e != null) {
@@ -4185,7 +4185,7 @@ public class Collections {
         }
 
         public <T> T[] toArray(T[] tArr) {
-            int i = this.f652n;
+            int i = this.f650n;
             if (tArr.length < i) {
                 tArr = (Object[]) Array.newInstance(tArr.getClass().getComponentType(), i);
                 E e = this.element;
@@ -4204,7 +4204,7 @@ public class Collections {
         public List<E> subList(int i, int i2) {
             if (i < 0) {
                 throw new IndexOutOfBoundsException("fromIndex = " + i);
-            } else if (i2 > this.f652n) {
+            } else if (i2 > this.f650n) {
                 throw new IndexOutOfBoundsException("toIndex = " + i2);
             } else if (i <= i2) {
                 return new CopiesList(i2 - i, this.element);
@@ -4215,22 +4215,22 @@ public class Collections {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$stream$0$java-util-Collections$CopiesList  reason: not valid java name */
-        public /* synthetic */ Object m3740lambda$stream$0$javautilCollections$CopiesList(int i) {
+        public /* synthetic */ Object m3758lambda$stream$0$javautilCollections$CopiesList(int i) {
             return this.element;
         }
 
         public Stream<E> stream() {
-            return IntStream.range(0, this.f652n).mapToObj(new Collections$CopiesList$$ExternalSyntheticLambda1(this));
+            return IntStream.range(0, this.f650n).mapToObj(new Collections$CopiesList$$ExternalSyntheticLambda1(this));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$parallelStream$1$java-util-Collections$CopiesList  reason: not valid java name */
-        public /* synthetic */ Object m3739lambda$parallelStream$1$javautilCollections$CopiesList(int i) {
+        public /* synthetic */ Object m3757lambda$parallelStream$1$javautilCollections$CopiesList(int i) {
             return this.element;
         }
 
         public Stream<E> parallelStream() {
-            return IntStream.range(0, this.f652n).parallel().mapToObj(new Collections$CopiesList$$ExternalSyntheticLambda0(this));
+            return IntStream.range(0, this.f650n).parallel().mapToObj(new Collections$CopiesList$$ExternalSyntheticLambda0(this));
         }
 
         public Spliterator<E> spliterator() {
@@ -4306,18 +4306,18 @@ public class Collections {
         return new Enumeration<T>() {
 
             /* renamed from: i */
-            private final Iterator<T> f642i;
+            private final Iterator<T> f640i;
 
             {
-                this.f642i = Collection.this.iterator();
+                this.f640i = Collection.this.iterator();
             }
 
             public boolean hasMoreElements() {
-                return this.f642i.hasNext();
+                return this.f640i.hasNext();
             }
 
             public T nextElement() {
-                return this.f642i.next();
+                return this.f640i.next();
             }
         };
     }
@@ -4331,7 +4331,7 @@ public class Collections {
     }
 
     /* renamed from: eq */
-    static boolean m1715eq(Object obj, Object obj2) {
+    static boolean m1721eq(Object obj, Object obj2) {
         if (obj == null) {
             return obj2 == null;
         }
@@ -4417,103 +4417,103 @@ public class Collections {
         private static final long serialVersionUID = 2454657854757543876L;
 
         /* renamed from: m */
-        private final Map<E, Boolean> f653m;
+        private final Map<E, Boolean> f651m;
 
         /* renamed from: s */
-        private transient Set<E> f654s;
+        private transient Set<E> f652s;
 
         SetFromMap(Map<E, Boolean> map) {
             if (map.isEmpty()) {
-                this.f653m = map;
-                this.f654s = map.keySet();
+                this.f651m = map;
+                this.f652s = map.keySet();
                 return;
             }
             throw new IllegalArgumentException("Map is non-empty");
         }
 
         public void clear() {
-            this.f653m.clear();
+            this.f651m.clear();
         }
 
         public int size() {
-            return this.f653m.size();
+            return this.f651m.size();
         }
 
         public boolean isEmpty() {
-            return this.f653m.isEmpty();
+            return this.f651m.isEmpty();
         }
 
         public boolean contains(Object obj) {
-            return this.f653m.containsKey(obj);
+            return this.f651m.containsKey(obj);
         }
 
         public boolean remove(Object obj) {
-            return this.f653m.remove(obj) != null;
+            return this.f651m.remove(obj) != null;
         }
 
         public boolean add(E e) {
-            return this.f653m.put(e, Boolean.TRUE) == null;
+            return this.f651m.put(e, Boolean.TRUE) == null;
         }
 
         public Iterator<E> iterator() {
-            return this.f654s.iterator();
+            return this.f652s.iterator();
         }
 
         public Object[] toArray() {
-            return this.f654s.toArray();
+            return this.f652s.toArray();
         }
 
         public <T> T[] toArray(T[] tArr) {
-            return this.f654s.toArray(tArr);
+            return this.f652s.toArray(tArr);
         }
 
         public String toString() {
-            return this.f654s.toString();
+            return this.f652s.toString();
         }
 
         public int hashCode() {
-            return this.f654s.hashCode();
+            return this.f652s.hashCode();
         }
 
         public boolean equals(Object obj) {
-            return obj == this || this.f654s.equals(obj);
+            return obj == this || this.f652s.equals(obj);
         }
 
         public boolean containsAll(Collection<?> collection) {
-            return this.f654s.containsAll(collection);
+            return this.f652s.containsAll(collection);
         }
 
         public boolean removeAll(Collection<?> collection) {
-            return this.f654s.removeAll(collection);
+            return this.f652s.removeAll(collection);
         }
 
         public boolean retainAll(Collection<?> collection) {
-            return this.f654s.retainAll(collection);
+            return this.f652s.retainAll(collection);
         }
 
         public void forEach(Consumer<? super E> consumer) {
-            this.f654s.forEach(consumer);
+            this.f652s.forEach(consumer);
         }
 
         public boolean removeIf(Predicate<? super E> predicate) {
-            return this.f654s.removeIf(predicate);
+            return this.f652s.removeIf(predicate);
         }
 
         public Spliterator<E> spliterator() {
-            return this.f654s.spliterator();
+            return this.f652s.spliterator();
         }
 
         public Stream<E> stream() {
-            return this.f654s.stream();
+            return this.f652s.stream();
         }
 
         public Stream<E> parallelStream() {
-            return this.f654s.parallelStream();
+            return this.f652s.parallelStream();
         }
 
         private void readObject(ObjectInputStream objectInputStream) throws IOException, ClassNotFoundException {
             objectInputStream.defaultReadObject();
-            this.f654s = this.f653m.keySet();
+            this.f652s = this.f651m.keySet();
         }
     }
 
@@ -4525,103 +4525,103 @@ public class Collections {
         private static final long serialVersionUID = 1802017725587941708L;
 
         /* renamed from: q */
-        private final Deque<E> f643q;
+        private final Deque<E> f641q;
 
         AsLIFOQueue(Deque<E> deque) {
-            this.f643q = deque;
+            this.f641q = deque;
         }
 
         public boolean add(E e) {
-            this.f643q.addFirst(e);
+            this.f641q.addFirst(e);
             return true;
         }
 
         public boolean offer(E e) {
-            return this.f643q.offerFirst(e);
+            return this.f641q.offerFirst(e);
         }
 
         public E poll() {
-            return this.f643q.pollFirst();
+            return this.f641q.pollFirst();
         }
 
         public E remove() {
-            return this.f643q.removeFirst();
+            return this.f641q.removeFirst();
         }
 
         public E peek() {
-            return this.f643q.peekFirst();
+            return this.f641q.peekFirst();
         }
 
         public E element() {
-            return this.f643q.getFirst();
+            return this.f641q.getFirst();
         }
 
         public void clear() {
-            this.f643q.clear();
+            this.f641q.clear();
         }
 
         public int size() {
-            return this.f643q.size();
+            return this.f641q.size();
         }
 
         public boolean isEmpty() {
-            return this.f643q.isEmpty();
+            return this.f641q.isEmpty();
         }
 
         public boolean contains(Object obj) {
-            return this.f643q.contains(obj);
+            return this.f641q.contains(obj);
         }
 
         public boolean remove(Object obj) {
-            return this.f643q.remove(obj);
+            return this.f641q.remove(obj);
         }
 
         public Iterator<E> iterator() {
-            return this.f643q.iterator();
+            return this.f641q.iterator();
         }
 
         public Object[] toArray() {
-            return this.f643q.toArray();
+            return this.f641q.toArray();
         }
 
         public <T> T[] toArray(T[] tArr) {
-            return this.f643q.toArray(tArr);
+            return this.f641q.toArray(tArr);
         }
 
         public String toString() {
-            return this.f643q.toString();
+            return this.f641q.toString();
         }
 
         public boolean containsAll(Collection<?> collection) {
-            return this.f643q.containsAll(collection);
+            return this.f641q.containsAll(collection);
         }
 
         public boolean removeAll(Collection<?> collection) {
-            return this.f643q.removeAll(collection);
+            return this.f641q.removeAll(collection);
         }
 
         public boolean retainAll(Collection<?> collection) {
-            return this.f643q.retainAll(collection);
+            return this.f641q.retainAll(collection);
         }
 
         public void forEach(Consumer<? super E> consumer) {
-            this.f643q.forEach(consumer);
+            this.f641q.forEach(consumer);
         }
 
         public boolean removeIf(Predicate<? super E> predicate) {
-            return this.f643q.removeIf(predicate);
+            return this.f641q.removeIf(predicate);
         }
 
         public Spliterator<E> spliterator() {
-            return this.f643q.spliterator();
+            return this.f641q.spliterator();
         }
 
         public Stream<E> stream() {
-            return this.f643q.stream();
+            return this.f641q.stream();
         }
 
         public Stream<E> parallelStream() {
-            return this.f643q.parallelStream();
+            return this.f641q.parallelStream();
         }
     }
 }

@@ -16,6 +16,6 @@ public final /* synthetic */ class StackAnimationController$$ExternalSyntheticLa
     }
 
     public final void onAnimationEnd(DynamicAnimation dynamicAnimation, boolean z, float f, float f2) {
-        this.f$0.mo48956xe9c3843c(this.f$1, this.f$2, dynamicAnimation, z, f, f2);
+        this.f$0.mo48965xe9c3843c(this.f$1, this.f$2, dynamicAnimation, z, f, f2);
     }
 }

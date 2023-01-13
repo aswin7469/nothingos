@@ -32,10 +32,10 @@ public class ComplicationTypesUpdater extends CoreStartable {
     }
 
     public void start() {
-        C20861 r0 = new ContentObserver((Handler) null) {
+        C20881 r0 = new ContentObserver((Handler) null) {
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onChange$0$com-android-systemui-dreams-complication-ComplicationTypesUpdater$1 */
-            public /* synthetic */ void mo32592xd450c781() {
+            public /* synthetic */ void mo32603xd450c781() {
                 ComplicationTypesUpdater.this.mDreamOverlayStateController.setAvailableComplicationTypes(ComplicationTypesUpdater.this.getAvailableComplicationTypes());
             }
 

@@ -15,6 +15,6 @@ public final /* synthetic */ class SplashscreenContentDrawer$$ExternalSyntheticL
     }
 
     public final int getAsInt() {
-        return this.f$0.mo51109x8eaa16c1(this.f$1);
+        return this.f$0.mo51120x8eaa16c1(this.f$1);
     }
 }

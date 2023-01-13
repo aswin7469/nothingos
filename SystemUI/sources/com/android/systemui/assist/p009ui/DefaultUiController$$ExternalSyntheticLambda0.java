@@ -14,6 +14,6 @@ public final /* synthetic */ class DefaultUiController$$ExternalSyntheticLambda0
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        this.f$0.mo30400x59df1844(this.f$1, valueAnimator);
+        this.f$0.mo30410x59df1844(this.f$1, valueAnimator);
     }
 }

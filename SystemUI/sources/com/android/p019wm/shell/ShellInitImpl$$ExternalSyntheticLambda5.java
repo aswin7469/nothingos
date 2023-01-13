@@ -13,6 +13,6 @@ public final /* synthetic */ class ShellInitImpl$$ExternalSyntheticLambda5 imple
     }
 
     public final void accept(Object obj) {
-        this.f$0.m3375lambda$init$1$comandroidwmshellShellInitImpl((FreeformTaskListener) obj);
+        this.f$0.m3379lambda$init$1$comandroidwmshellShellInitImpl((FreeformTaskListener) obj);
     }
 }

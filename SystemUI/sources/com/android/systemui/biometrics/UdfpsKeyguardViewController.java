@@ -2,11 +2,14 @@ package com.android.systemui.biometrics;
 
 import android.animation.ValueAnimator;
 import android.content.res.Configuration;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 import android.util.MathUtils;
 import android.view.MotionEvent;
 import com.android.keyguard.BouncerPanelExpansionCalculator;
 import com.android.keyguard.KeyguardUpdateMonitor;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.animation.ActivityLaunchAnimator;
 import com.android.systemui.animation.Interpolators;
 import com.android.systemui.dump.DumpManager;
@@ -22,6 +25,8 @@ import com.android.systemui.statusbar.phone.panelstate.PanelExpansionStateManage
 import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
 import com.android.systemui.util.time.SystemClock;
+import com.nothing.systemui.NTDependencyEx;
+import com.nothing.systemui.assist.AssistManagerEx;
 import com.nothing.systemui.util.NTLogUtil;
 import java.p026io.PrintWriter;
 
@@ -32,17 +37,17 @@ public class UdfpsKeyguardViewController extends UdfpsAnimationViewController<Ud
         public void onLaunchAnimationStart() {
             boolean unused = UdfpsKeyguardViewController.this.mIsLaunchingActivity = true;
             float unused2 = UdfpsKeyguardViewController.this.mActivityLaunchProgress = 0.0f;
-            UdfpsKeyguardViewController.this.updateAlpha();
+            UdfpsKeyguardViewController.this.updateAlpha("onLaunchAnimationStart");
         }
 
         public void onLaunchAnimationEnd() {
             boolean unused = UdfpsKeyguardViewController.this.mIsLaunchingActivity = false;
-            UdfpsKeyguardViewController.this.updateAlpha();
+            UdfpsKeyguardViewController.this.updateAlpha("onLaunchAnimationEnd");
         }
 
         public void onLaunchAnimationProgress(float f) {
             float unused = UdfpsKeyguardViewController.this.mActivityLaunchProgress = f;
-            UdfpsKeyguardViewController.this.updateAlpha();
+            UdfpsKeyguardViewController.this.updateAlpha("onLaunchAnimationProgress " + f);
         }
     };
     /* access modifiers changed from: private */
@@ -65,15 +70,22 @@ public class UdfpsKeyguardViewController extends UdfpsAnimationViewController<Ud
         }
 
         public void requestUdfps(boolean z, int i) {
+            if (UdfpsKeyguardViewController.this.mUdfpsRequested != z) {
+                NTLogUtil.m1686d(UdfpsKeyguardViewController.TAG, "requestUdfps request: " + z);
+            }
             boolean unused = UdfpsKeyguardViewController.this.mUdfpsRequested = z;
             ((UdfpsKeyguardView) UdfpsKeyguardViewController.this.mView).requestUdfps(z, i);
-            UdfpsKeyguardViewController.this.updateAlpha();
+            UdfpsKeyguardViewController.this.updateAlpha("requestUdfps");
             UdfpsKeyguardViewController.this.updatePauseAuth();
         }
 
         public void setQsExpansion(float f) {
+            float access$1000 = UdfpsKeyguardViewController.this.mQsExpansion;
             float unused = UdfpsKeyguardViewController.this.mQsExpansion = f;
-            UdfpsKeyguardViewController.this.updateAlpha();
+            if (UdfpsKeyguardViewController.this.mQsExpansion != access$1000 || !UdfpsKeyguardViewController.this.mSetQsExpansionTriggered) {
+                boolean unused2 = UdfpsKeyguardViewController.this.mSetQsExpansionTriggered = true;
+                UdfpsKeyguardViewController.this.updateAlpha("setQsExpansion " + UdfpsKeyguardViewController.this.mQsExpansion);
+            }
             UdfpsKeyguardViewController.this.updatePauseAuth();
         }
 
@@ -85,19 +97,33 @@ public class UdfpsKeyguardViewController extends UdfpsAnimationViewController<Ud
         }
 
         public void setBouncerExpansionChanged(float f) {
+            NTLogUtil.m1686d(UdfpsKeyguardViewController.TAG, "setBouncerExpansionChanged: " + f);
             float unused = UdfpsKeyguardViewController.this.mInputBouncerHiddenAmount = f;
-            UdfpsKeyguardViewController.this.updateAlpha();
+            UdfpsKeyguardViewController.this.updateAlpha("setBouncerExpansionChanged " + f);
             UdfpsKeyguardViewController.this.updatePauseAuth();
         }
 
         public void onBouncerVisibilityChanged() {
             UdfpsKeyguardViewController.this.updateGenericBouncerVisibility();
-            UdfpsKeyguardViewController.this.updateAlpha();
+            UdfpsKeyguardViewController.this.updateAlpha("onBouncerVisibilityChanged");
             UdfpsKeyguardViewController.this.updatePauseAuth();
         }
 
         public void dump(PrintWriter printWriter) {
             printWriter.println(UdfpsKeyguardViewController.this.getTag());
+        }
+    };
+    AssistManagerEx.Callback mAssistCallback = new AssistManagerEx.Callback() {
+        public void onVoiceSessionWindowVisibilityChanged(final boolean z) {
+            UdfpsKeyguardViewController.this.mHandler.post(new Runnable() {
+                public void run() {
+                    if (UdfpsKeyguardViewController.this.mVoiceSessionWindowVisible != z) {
+                        NTLogUtil.m1686d(UdfpsKeyguardViewController.TAG, "onVoiceSessionWindowVisibilityChanged: " + z);
+                        boolean unused = UdfpsKeyguardViewController.this.mVoiceSessionWindowVisible = z;
+                        UdfpsKeyguardViewController.this.updatePauseAuth();
+                    }
+                }
+            });
         }
     };
     private final ConfigurationController mConfigurationController;
@@ -117,6 +143,8 @@ public class UdfpsKeyguardViewController extends UdfpsAnimationViewController<Ud
         }
     };
     private boolean mFaceDetectRunning;
+    /* access modifiers changed from: private */
+    public Handler mHandler = new Handler(Looper.getMainLooper());
     /* access modifiers changed from: private */
     public float mInputBouncerHiddenAmount;
     private boolean mIsGenericBouncerShowing;
@@ -141,20 +169,25 @@ public class UdfpsKeyguardViewController extends UdfpsAnimationViewController<Ud
     public boolean mLaunchTransitionFadingAway;
     private final LockscreenShadeTransitionController mLockScreenShadeTransitionController;
     /* access modifiers changed from: private */
+    public boolean mOnPanelExpansionChangedTriggered = false;
+    /* access modifiers changed from: private */
     public float mPanelExpansionFraction;
     private final PanelExpansionListener mPanelExpansionListener = new PanelExpansionListener() {
         public void onPanelExpansionChanged(PanelExpansionChangeEvent panelExpansionChangeEvent) {
             float fraction = panelExpansionChangeEvent.getFraction();
+            float access$2100 = UdfpsKeyguardViewController.this.mPanelExpansionFraction;
             UdfpsKeyguardViewController udfpsKeyguardViewController = UdfpsKeyguardViewController.this;
-            if (udfpsKeyguardViewController.mKeyguardViewManager.isBouncerInTransit()) {
-                fraction = BouncerPanelExpansionCalculator.aboutToShowBouncerProgress(fraction);
+            float unused = udfpsKeyguardViewController.mPanelExpansionFraction = udfpsKeyguardViewController.mKeyguardViewManager.isBouncerInTransit() ? BouncerPanelExpansionCalculator.aboutToShowBouncerProgress(fraction) : fraction;
+            if (UdfpsKeyguardViewController.this.mPanelExpansionFraction != access$2100 || !UdfpsKeyguardViewController.this.mOnPanelExpansionChangedTriggered) {
+                boolean unused2 = UdfpsKeyguardViewController.this.mOnPanelExpansionChangedTriggered = true;
+                UdfpsKeyguardViewController.this.updateAlpha("onPanelExpansionChanged " + fraction);
             }
-            float unused = udfpsKeyguardViewController.mPanelExpansionFraction = fraction;
-            UdfpsKeyguardViewController.this.updateAlpha();
         }
     };
     /* access modifiers changed from: private */
     public float mQsExpansion;
+    /* access modifiers changed from: private */
+    public boolean mSetQsExpansionTriggered = false;
     /* access modifiers changed from: private */
     public boolean mShowingUdfpsBouncer;
     private final StatusBarStateController.StateListener mStateListener = new StatusBarStateController.StateListener() {
@@ -173,8 +206,9 @@ public class UdfpsKeyguardViewController extends UdfpsAnimationViewController<Ud
         }
 
         public void onStateChanged(int i) {
+            NTLogUtil.m1686d(UdfpsKeyguardViewController.TAG, "onStateChanged mStatusBarState: " + i);
             int unused = UdfpsKeyguardViewController.this.mStatusBarState = i;
-            UdfpsKeyguardViewController.this.updateAlpha();
+            UdfpsKeyguardViewController.this.updateAlpha("onStateChanged " + i);
             UdfpsKeyguardViewController.this.updatePauseAuth();
         }
     };
@@ -191,6 +225,8 @@ public class UdfpsKeyguardViewController extends UdfpsAnimationViewController<Ud
     public final UnlockedScreenOffAnimationController mUnlockedScreenOffAnimationController;
     /* access modifiers changed from: private */
     public final ValueAnimator mUnlockedScreenOffDozeAnimator;
+    /* access modifiers changed from: private */
+    public boolean mVoiceSessionWindowVisible = false;
 
     /* access modifiers changed from: protected */
     public String getTag() {
@@ -246,11 +282,13 @@ public class UdfpsKeyguardViewController extends UdfpsAnimationViewController<Ud
         getPanelExpansionStateManager().addExpansionListener(this.mPanelExpansionListener);
         updateScaleFactor();
         ((UdfpsKeyguardView) this.mView).updatePadding();
-        updateAlpha();
+        updateAlpha("onViewAttached");
         updatePauseAuth();
         this.mKeyguardViewManager.setAlternateAuthInterceptor(this.mAlternateAuthInterceptor);
         this.mLockScreenShadeTransitionController.setUdfpsKeyguardViewController(this);
         this.mActivityLaunchAnimator.addListener(this.mActivityLaunchAnimatorListener);
+        NTLogUtil.m1686d(TAG, "onViewAttached mStatusBarState: " + this.mStatusBarState + " mLastDozeAmount: " + this.mLastDozeAmount);
+        ((AssistManagerEx) NTDependencyEx.get(AssistManagerEx.class)).addCallback(this.mAssistCallback);
     }
 
     /* access modifiers changed from: protected */
@@ -267,6 +305,8 @@ public class UdfpsKeyguardViewController extends UdfpsAnimationViewController<Ud
             this.mLockScreenShadeTransitionController.setUdfpsKeyguardViewController((UdfpsKeyguardViewController) null);
         }
         this.mActivityLaunchAnimator.removeListener(this.mActivityLaunchAnimatorListener);
+        NTLogUtil.m1686d(TAG, "onViewDetached");
+        ((AssistManagerEx) NTDependencyEx.get(AssistManagerEx.class)).removeCallback(this.mAssistCallback);
     }
 
     public void dump(PrintWriter printWriter, String[] strArr) {
@@ -293,7 +333,8 @@ public class UdfpsKeyguardViewController extends UdfpsAnimationViewController<Ud
         }
         boolean shouldPauseAuth = shouldPauseAuth();
         this.mShowingUdfpsBouncer = z;
-        if (z) {
+        NTLogUtil.m1686d(TAG, "showUdfpsBouncer: " + this.mShowingUdfpsBouncer);
+        if (this.mShowingUdfpsBouncer) {
             this.mLastUdfpsBouncerShowTime = this.mSystemClock.uptimeMillis();
         }
         if (this.mShowingUdfpsBouncer) {
@@ -303,17 +344,20 @@ public class UdfpsKeyguardViewController extends UdfpsAnimationViewController<Ud
             if (this.mKeyguardViewManager.isOccluded()) {
                 this.mKeyguardUpdateMonitor.requestFaceAuthOnOccludingApp(true);
             }
-            ((UdfpsKeyguardView) this.mView).announceForAccessibility(((UdfpsKeyguardView) this.mView).getContext().getString(C1893R.string.accessibility_fingerprint_bouncer));
+            ((UdfpsKeyguardView) this.mView).announceForAccessibility(((UdfpsKeyguardView) this.mView).getContext().getString(C1894R.string.accessibility_fingerprint_bouncer));
         } else {
             this.mKeyguardUpdateMonitor.requestFaceAuthOnOccludingApp(false);
         }
         updateGenericBouncerVisibility();
-        updateAlpha();
+        updateAlpha("showUdfpsBouncer");
         updatePauseAuth();
         return true;
     }
 
     public boolean shouldPauseAuth() {
+        if (this.mVoiceSessionWindowVisible) {
+            return true;
+        }
         if (this.mShowingUdfpsBouncer) {
             return false;
         }
@@ -345,10 +389,10 @@ public class UdfpsKeyguardViewController extends UdfpsAnimationViewController<Ud
 
     public void setTransitionToFullShadeProgress(float f) {
         this.mTransitionToFullShadeProgress = f;
-        updateAlpha();
+        updateAlpha("setTransitionToFullShadeProgress " + this.mTransitionToFullShadeProgress);
     }
 
-    public void updateAlpha() {
+    public void updateAlpha(String str) {
         int i;
         float f = this.mUdfpsRequested ? this.mInputBouncerHiddenAmount : this.mPanelExpansionFraction;
         if (this.mShowingUdfpsBouncer) {
@@ -363,17 +407,19 @@ public class UdfpsKeyguardViewController extends UdfpsAnimationViewController<Ud
             }
             i = (int) (((float) interpolation) * ((UdfpsKeyguardView) this.mView).getDialogSuggestedAlpha());
         }
-        int unpausedAlpha = ((UdfpsKeyguardView) this.mView).getUnpausedAlpha();
-        ((UdfpsKeyguardView) this.mView).setUnpausedAlpha(i);
-        if (i != unpausedAlpha) {
+        if (i != ((UdfpsKeyguardView) this.mView).getUnpausedAlpha()) {
+            ((UdfpsKeyguardView) this.mView).setUnpausedAlpha(i);
             updatePauseAuth();
+            Log.d(TAG, "updateAlpha " + i + " reason: " + str + " mUdfpsRequested: " + this.mUdfpsRequested + " mInputBouncerHiddenAmount: " + this.mInputBouncerHiddenAmount + " mPanelExpansionFraction: " + this.mPanelExpansionFraction + " mShowingUdfpsBouncer: " + this.mShowingUdfpsBouncer + " mQsExpansion: " + this.mQsExpansion + " mTransitionToFullShadeProgress: " + this.mTransitionToFullShadeProgress + " mIsLaunchingActivity: " + this.mIsLaunchingActivity + " mActivityLaunchProgress: " + this.mActivityLaunchProgress + " getDialogSuggestedAlpha: " + ((UdfpsKeyguardView) this.mView).getDialogSuggestedAlpha());
         }
     }
 
     /* access modifiers changed from: private */
     public void updateGenericBouncerVisibility() {
         this.mIsGenericBouncerShowing = this.mKeyguardViewManager.isBouncerShowing();
-        if (this.mKeyguardViewManager.isShowingAlternateAuth() || !this.mKeyguardViewManager.bouncerIsOrWillBeShowing()) {
+        boolean isShowingAlternateAuth = this.mKeyguardViewManager.isShowingAlternateAuth();
+        NTLogUtil.m1686d(TAG, "updateGenericBouncerVisibility mIsGenericBouncerShowing: " + this.mIsGenericBouncerShowing + " altBouncerShowing: " + isShowingAlternateAuth + " bouncerIsOrWillBeShowing: " + this.mKeyguardViewManager.bouncerIsOrWillBeShowing());
+        if (isShowingAlternateAuth || !this.mKeyguardViewManager.bouncerIsOrWillBeShowing()) {
             this.mInputBouncerHiddenAmount = 1.0f;
         } else if (this.mIsGenericBouncerShowing) {
             this.mInputBouncerHiddenAmount = 0.0f;
@@ -407,10 +453,10 @@ public class UdfpsKeyguardViewController extends UdfpsAnimationViewController<Ud
     }
 
     public void showFingerprintIcon() {
-        NTLogUtil.m1680d("ltf", "showFingerprintIcon: mView = " + this.mView);
+        NTLogUtil.m1686d("ltf", "showFingerprintIcon: mView = " + this.mView);
         if (this.mView != null) {
             ((UdfpsKeyguardView) this.mView).setVisibility(0);
-            updateAlpha();
+            updateAlpha("showFingerprintIcon");
         }
     }
 }

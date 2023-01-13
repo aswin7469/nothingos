@@ -15,6 +15,6 @@ public final /* synthetic */ class ChallengeDialogs$$ExternalSyntheticLambda0 im
     }
 
     public final void onClick(DialogInterface dialogInterface, int i) {
-        ChallengeDialogs.m2664createConfirmationDialog$lambda8$lambda6(this.f$0, this.f$1, dialogInterface, i);
+        ChallengeDialogs.m2669createConfirmationDialog$lambda8$lambda6(this.f$0, this.f$1, dialogInterface, i);
     }
 }

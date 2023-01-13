@@ -17,7 +17,7 @@ import android.view.InsetsVisibilities;
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.view.AppearanceRegion;
 import com.android.keyguard.KeyguardUpdateMonitor;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.animation.ActivityLaunchAnimator;
 import com.android.systemui.assist.AssistManager;
 import com.android.systemui.camera.CameraIntents;
@@ -106,7 +106,7 @@ public class CentralSurfacesCommandQueueCallbacks implements CommandQueue.Callba
         this.mLightBarController = lightBarController;
         this.mDisableFlagsLogger = disableFlagsLogger;
         this.mDisplayId = i;
-        this.mVibrateOnOpening = resources.getBoolean(C1893R.bool.config_vibrateOnIconAnimation);
+        this.mVibrateOnOpening = resources.getBoolean(C1894R.bool.config_vibrateOnIconAnimation);
         this.mCameraLaunchGestureVibrationEffect = getCameraGestureVibrationEffect(optional2, resources);
     }
 
@@ -356,7 +356,7 @@ public class CentralSurfacesCommandQueueCallbacks implements CommandQueue.Callba
         if (optional.isPresent() && optional.get().hasAmplitudeControl()) {
             return VibrationEffect.createWaveform(CentralSurfaces.CAMERA_LAUNCH_GESTURE_VIBRATION_TIMINGS, CentralSurfaces.CAMERA_LAUNCH_GESTURE_VIBRATION_AMPLITUDES, -1);
         }
-        int[] intArray = resources.getIntArray(C1893R.array.config_cameraLaunchGestureVibePattern);
+        int[] intArray = resources.getIntArray(C1894R.array.config_cameraLaunchGestureVibePattern);
         long[] jArr = new long[intArray.length];
         for (int i = 0; i < intArray.length; i++) {
             jArr[i] = (long) intArray[i];

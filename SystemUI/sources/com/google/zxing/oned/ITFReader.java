@@ -17,15 +17,15 @@ public final class ITFReader extends OneDReader {
     private static final float MAX_INDIVIDUAL_VARIANCE = 0.5f;
 
     /* renamed from: N */
-    private static final int f482N = 1;
+    private static final int f481N = 1;
     private static final int[][] PATTERNS = {new int[]{1, 1, 2, 2, 1}, new int[]{2, 1, 1, 1, 2}, new int[]{1, 2, 1, 1, 2}, new int[]{2, 2, 1, 1, 1}, new int[]{1, 1, 2, 1, 2}, new int[]{2, 1, 2, 1, 1}, new int[]{1, 2, 2, 1, 1}, new int[]{1, 1, 1, 2, 2}, new int[]{2, 1, 1, 2, 1}, new int[]{1, 2, 1, 2, 1}, new int[]{1, 1, 3, 3, 1}, new int[]{3, 1, 1, 1, 3}, new int[]{1, 3, 1, 1, 3}, new int[]{3, 3, 1, 1, 1}, new int[]{1, 1, 3, 1, 3}, new int[]{3, 1, 3, 1, 1}, new int[]{1, 3, 3, 1, 1}, new int[]{1, 1, 1, 3, 3}, new int[]{3, 1, 1, 3, 1}, new int[]{1, 3, 1, 3, 1}};
     private static final int[] START_PATTERN = {1, 1, 1, 1};
 
     /* renamed from: W */
-    private static final int f483W = 3;
+    private static final int f482W = 3;
 
     /* renamed from: w */
-    private static final int f484w = 2;
+    private static final int f483w = 2;
     private int narrowLineWidth = -1;
 
     public Result decodeRow(int i, BitArray bitArray, Map<DecodeHintType, ?> map) throws FormatException, NotFoundException {

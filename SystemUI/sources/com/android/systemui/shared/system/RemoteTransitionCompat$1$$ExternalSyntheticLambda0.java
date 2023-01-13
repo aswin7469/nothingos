@@ -12,6 +12,6 @@ public final /* synthetic */ class RemoteTransitionCompat$1$$ExternalSyntheticLa
     }
 
     public final void run() {
-        RemoteTransitionCompat.C25141.lambda$mergeAnimation$2(this.f$0);
+        RemoteTransitionCompat.C25201.lambda$mergeAnimation$2(this.f$0);
     }
 }

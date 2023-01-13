@@ -17,7 +17,7 @@ class UnixDirectoryStream implements DirectoryStream<Path> {
     /* access modifiers changed from: private */
 
     /* renamed from: dp */
-    public final long f910dp;
+    public final long f908dp;
     /* access modifiers changed from: private */
     public final DirectoryStream.Filter<? super Path> filter;
     private final CloseGuard guard;
@@ -29,7 +29,7 @@ class UnixDirectoryStream implements DirectoryStream<Path> {
         CloseGuard closeGuard = CloseGuard.get();
         this.guard = closeGuard;
         this.dir = unixPath;
-        this.f910dp = j;
+        this.f908dp = j;
         this.filter = filter2;
         closeGuard.open("close");
     }
@@ -61,7 +61,7 @@ class UnixDirectoryStream implements DirectoryStream<Path> {
         }
         this.isClosed = true;
         try {
-            UnixNativeDispatcher.closedir(this.f910dp);
+            UnixNativeDispatcher.closedir(this.f908dp);
             this.guard.close();
             return true;
         } catch (UnixException e) {
@@ -126,7 +126,7 @@ class UnixDirectoryStream implements DirectoryStream<Path> {
             while (true) {
                 UnixDirectoryStream.this.readLock().lock();
                 try {
-                    byte[] readdir = UnixDirectoryStream.this.isOpen() ? UnixNativeDispatcher.readdir(UnixDirectoryStream.this.f910dp) : null;
+                    byte[] readdir = UnixDirectoryStream.this.isOpen() ? UnixNativeDispatcher.readdir(UnixDirectoryStream.this.f908dp) : null;
                     UnixDirectoryStream.this.readLock().unlock();
                     if (readdir == null) {
                         this.atEof = true;

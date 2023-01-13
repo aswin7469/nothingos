@@ -18,7 +18,7 @@ import android.view.WindowManagerGlobal;
 import android.window.WindowContainerTransaction;
 import com.android.internal.jank.InteractionJankMonitor;
 import com.android.internal.protolog.common.ProtoLog;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.WindowManagerShellWrapper;
 import com.android.p019wm.shell.common.DisplayChangeController;
 import com.android.p019wm.shell.common.DisplayController;
@@ -153,7 +153,7 @@ public class PipController implements PipTransitionController.PipTransitionCallb
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-wm-shell-pip-phone-PipController  reason: not valid java name */
-    public /* synthetic */ void m3462lambda$new$0$comandroidwmshellpipphonePipController(int i, int i2, int i3, WindowContainerTransaction windowContainerTransaction) {
+    public /* synthetic */ void m3466lambda$new$0$comandroidwmshellpipphonePipController(int i, int i2, int i3, WindowContainerTransaction windowContainerTransaction) {
         if (!this.mPipTransitionController.handleRotateDisplay(i2, i3, windowContainerTransaction)) {
             if (this.mPipBoundsState.getDisplayLayout().rotation() == i3) {
                 updateMovementBounds((Rect) null, false, false, false, windowContainerTransaction);
@@ -224,7 +224,7 @@ public class PipController implements PipTransitionController.PipTransitionCallb
             this.mOneHandedController = optional;
             this.mPipTransitionController = pipTransitionController;
             this.mTaskStackListener = taskStackListenerImpl;
-            this.mEnterAnimationDuration = this.mContext.getResources().getInteger(C3343R.integer.config_pipEnterAnimationDuration);
+            this.mEnterAnimationDuration = this.mContext.getResources().getInteger(C3353R.integer.config_pipEnterAnimationDuration);
             this.mPipParamsChangedForwarder = pipParamsChangedForwarder;
             this.mMainExecutor.execute(new PipController$$ExternalSyntheticLambda8(this));
             return;
@@ -306,20 +306,20 @@ public class PipController implements PipTransitionController.PipTransitionCallb
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$init$1$com-android-wm-shell-pip-phone-PipController  reason: not valid java name */
-    public /* synthetic */ void m3458lambda$init$1$comandroidwmshellpipphonePipController(int i) {
+    public /* synthetic */ void m3462lambda$init$1$comandroidwmshellpipphonePipController(int i) {
         this.mPipBoundsState.setDisplayId(i);
         onDisplayChanged(this.mDisplayController.getDisplayLayout(i), false);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$init$2$com-android-wm-shell-pip-phone-PipController  reason: not valid java name */
-    public /* synthetic */ void m3459lambda$init$2$comandroidwmshellpipphonePipController() {
+    public /* synthetic */ void m3463lambda$init$2$comandroidwmshellpipphonePipController() {
         updateMovementBounds((Rect) null, false, false, false, (WindowContainerTransaction) null);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$init$3$com-android-wm-shell-pip-phone-PipController  reason: not valid java name */
-    public /* synthetic */ void m3460lambda$init$3$comandroidwmshellpipphonePipController(Boolean bool, Integer num, Boolean bool2) {
+    public /* synthetic */ void m3464lambda$init$3$comandroidwmshellpipphonePipController(Boolean bool, Integer num, Boolean bool2) {
         this.mTouchHandler.onShelfVisibilityChanged(bool.booleanValue(), num.intValue());
         if (bool2.booleanValue()) {
             updateMovementBounds(this.mPipBoundsState.getBounds(), false, false, true, (WindowContainerTransaction) null);
@@ -328,7 +328,7 @@ public class PipController implements PipTransitionController.PipTransitionCallb
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$init$4$com-android-wm-shell-pip-phone-PipController  reason: not valid java name */
-    public /* synthetic */ void m3461lambda$init$4$comandroidwmshellpipphonePipController(OneHandedController oneHandedController) {
+    public /* synthetic */ void m3465lambda$init$4$comandroidwmshellpipphonePipController(OneHandedController oneHandedController) {
         oneHandedController.asOneHanded().registerTransitionCallback(new OneHandedTransitionCallback() {
             public void onStartFinished(Rect rect) {
                 PipController.this.mTouchHandler.setOhmOffset(rect.top);
@@ -388,7 +388,7 @@ public class PipController implements PipTransitionController.PipTransitionCallb
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onDisplayChanged$5$com-android-wm-shell-pip-phone-PipController */
-    public /* synthetic */ void mo50322xd33eb319(DisplayLayout displayLayout) {
+    public /* synthetic */ void mo50331xd33eb319(DisplayLayout displayLayout) {
         boolean z = Transitions.ENABLE_SHELL_TRANSITIONS && this.mPipBoundsState.getDisplayLayout().rotation() != displayLayout.rotation();
         this.mPipBoundsState.setDisplayLayout(displayLayout);
         WindowContainerTransaction windowContainerTransaction = z ? new WindowContainerTransaction() : null;
@@ -475,7 +475,7 @@ public class PipController implements PipTransitionController.PipTransitionCallb
     private void onPipResourceDimensionsChanged() {
         PipAnimationListener pipAnimationListener = this.mPinnedStackAnimationRecentsCallback;
         if (pipAnimationListener != null) {
-            pipAnimationListener.onPipResourceDimensionsChanged(this.mContext.getResources().getDimensionPixelSize(C3343R.dimen.pip_corner_radius), this.mContext.getResources().getDimensionPixelSize(C3343R.dimen.pip_shadow_radius));
+            pipAnimationListener.onPipResourceDimensionsChanged(this.mContext.getResources().getDimensionPixelSize(C3353R.dimen.pip_corner_radius), this.mContext.getResources().getDimensionPixelSize(C3353R.dimen.pip_shadow_radius));
         }
     }
 
@@ -609,7 +609,7 @@ public class PipController implements PipTransitionController.PipTransitionCallb
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$expandPip$0$com-android-wm-shell-pip-phone-PipController$PipImpl */
-        public /* synthetic */ void mo50334x425aedf() {
+        public /* synthetic */ void mo50343x425aedf() {
             PipController.this.expandPip();
         }
 
@@ -619,7 +619,7 @@ public class PipController implements PipTransitionController.PipTransitionCallb
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onConfigurationChanged$1$com-android-wm-shell-pip-phone-PipController$PipImpl */
-        public /* synthetic */ void mo50335xf3696164(Configuration configuration) {
+        public /* synthetic */ void mo50344xf3696164(Configuration configuration) {
             PipController.this.onConfigurationChanged(configuration);
         }
 
@@ -629,7 +629,7 @@ public class PipController implements PipTransitionController.PipTransitionCallb
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onDensityOrFontScaleChanged$2$com-android-wm-shell-pip-phone-PipController$PipImpl */
-        public /* synthetic */ void mo50336x1f706895() {
+        public /* synthetic */ void mo50345x1f706895() {
             PipController.this.onDensityOrFontScaleChanged();
         }
 
@@ -639,7 +639,7 @@ public class PipController implements PipTransitionController.PipTransitionCallb
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onOverlayChanged$3$com-android-wm-shell-pip-phone-PipController$PipImpl */
-        public /* synthetic */ void mo50338xd24b9f7c() {
+        public /* synthetic */ void mo50347xd24b9f7c() {
             PipController.this.onOverlayChanged();
         }
 
@@ -649,7 +649,7 @@ public class PipController implements PipTransitionController.PipTransitionCallb
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onSystemUiStateChanged$4$com-android-wm-shell-pip-phone-PipController$PipImpl */
-        public /* synthetic */ void mo50339x1c263b79(boolean z, int i) {
+        public /* synthetic */ void mo50348x1c263b79(boolean z, int i) {
             PipController.this.onSystemUiStateChanged(z, i);
         }
 
@@ -659,7 +659,7 @@ public class PipController implements PipTransitionController.PipTransitionCallb
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$registerSessionListenerForCurrentUser$5$com-android-wm-shell-pip-phone-PipController$PipImpl */
-        public /* synthetic */ void mo50340x4196c4f5() {
+        public /* synthetic */ void mo50349x4196c4f5() {
             PipController.this.registerSessionListenerForCurrentUser();
         }
 
@@ -669,7 +669,7 @@ public class PipController implements PipTransitionController.PipTransitionCallb
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$setShelfHeight$6$com-android-wm-shell-pip-phone-PipController$PipImpl */
-        public /* synthetic */ void mo50343x6df2dc6d(boolean z, int i) {
+        public /* synthetic */ void mo50352x6df2dc6d(boolean z, int i) {
             PipController.this.setShelfHeight(z, i);
         }
 
@@ -679,7 +679,7 @@ public class PipController implements PipTransitionController.PipTransitionCallb
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$setPinnedStackAnimationType$7$com-android-wm-shell-pip-phone-PipController$PipImpl */
-        public /* synthetic */ void mo50342xe8dfa785(int i) {
+        public /* synthetic */ void mo50351xe8dfa785(int i) {
             PipController.this.setPinnedStackAnimationType(i);
         }
 
@@ -689,7 +689,7 @@ public class PipController implements PipTransitionController.PipTransitionCallb
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$addPipExclusionBoundsChangeListener$8$com-android-wm-shell-pip-phone-PipController$PipImpl */
-        public /* synthetic */ void mo50332xba5c8fc3(Consumer consumer) {
+        public /* synthetic */ void mo50341xba5c8fc3(Consumer consumer) {
             PipController.this.mPipBoundsState.addPipExclusionBoundsChangeCallback(consumer);
         }
 
@@ -699,7 +699,7 @@ public class PipController implements PipTransitionController.PipTransitionCallb
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$removePipExclusionBoundsChangeListener$9$com-android-wm-shell-pip-phone-PipController$PipImpl */
-        public /* synthetic */ void mo50341x963ec405(Consumer consumer) {
+        public /* synthetic */ void mo50350x963ec405(Consumer consumer) {
             PipController.this.mPipBoundsState.removePipExclusionBoundsChangeCallback(consumer);
         }
 
@@ -709,7 +709,7 @@ public class PipController implements PipTransitionController.PipTransitionCallb
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$showPictureInPictureMenu$10$com-android-wm-shell-pip-phone-PipController$PipImpl */
-        public /* synthetic */ void mo50344xcdd901c() {
+        public /* synthetic */ void mo50353xcdd901c() {
             PipController.this.showPictureInPictureMenu();
         }
 
@@ -719,7 +719,7 @@ public class PipController implements PipTransitionController.PipTransitionCallb
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onKeyguardVisibilityChanged$11$com-android-wm-shell-pip-phone-PipController$PipImpl */
-        public /* synthetic */ void mo50337xb17848e7(boolean z, boolean z2) {
+        public /* synthetic */ void mo50346xb17848e7(boolean z, boolean z2) {
             PipController.this.onKeyguardVisibilityChanged(z, z2);
         }
 
@@ -737,7 +737,7 @@ public class PipController implements PipTransitionController.PipTransitionCallb
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$dump$13$com-android-wm-shell-pip-phone-PipController$PipImpl */
-        public /* synthetic */ void mo50333x51c76416(PrintWriter printWriter) {
+        public /* synthetic */ void mo50342x51c76416(PrintWriter printWriter) {
             PipController.this.dump(printWriter);
         }
     }
@@ -768,7 +768,7 @@ public class PipController implements PipTransitionController.PipTransitionCallb
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$new$0$com-android-wm-shell-pip-phone-PipController$IPipImpl */
-        public /* synthetic */ void mo50327xe4c4d869(PipController pipController) {
+        public /* synthetic */ void mo50336xe4c4d869(PipController pipController) {
             pipController.setPinnedStackAnimationListener(this.mPipAnimationListener);
         }
 
@@ -801,7 +801,7 @@ public class PipController implements PipTransitionController.PipTransitionCallb
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$setPinnedStackAnimationListener$5$com-android-wm-shell-pip-phone-PipController$IPipImpl */
-        public /* synthetic */ void mo50328x2f8ea6b8(IPipAnimationListener iPipAnimationListener, PipController pipController) {
+        public /* synthetic */ void mo50337x2f8ea6b8(IPipAnimationListener iPipAnimationListener, PipController pipController) {
             if (iPipAnimationListener != null) {
                 this.mListener.register(iPipAnimationListener);
             } else {

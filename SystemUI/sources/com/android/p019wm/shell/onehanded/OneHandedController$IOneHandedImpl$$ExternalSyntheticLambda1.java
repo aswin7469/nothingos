@@ -6,6 +6,6 @@ import java.util.function.Consumer;
 /* compiled from: D8$$SyntheticClass */
 public final /* synthetic */ class OneHandedController$IOneHandedImpl$$ExternalSyntheticLambda1 implements Consumer {
     public final void accept(Object obj) {
-        ((OneHandedController) obj).mo49860x88c4cccf();
+        ((OneHandedController) obj).mo49869x88c4cccf();
     }
 }

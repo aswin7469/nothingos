@@ -3,6 +3,7 @@ package com.nothing.systemui.statusbar.connectivity;
 import android.content.Context;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.telephony.ServiceState;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
@@ -65,51 +66,72 @@ public class MobileSignalControllerEx {
     }
 
     private void refreshVoiceOverCellularImsEnabled(MmTelFeature.MmTelCapabilities mmTelCapabilities, int i) {
-        boolean z = true;
-        boolean isImsCapabilityInCacheAvailable = isImsCapabilityInCacheAvailable(mmTelCapabilities, 1, 0, i);
-        boolean isImsCapabilityInCacheAvailable2 = isImsCapabilityInCacheAvailable(mmTelCapabilities, 1, 3, i);
-        boolean[] zArr = this.mIsVoiceOverCellularImsEnabled;
-        if (!isImsCapabilityInCacheAvailable && !isImsCapabilityInCacheAvailable2) {
-            z = false;
+        if (i < this.mIsVoiceOverCellularImsEnabled.length) {
+            boolean z = true;
+            boolean isImsCapabilityInCacheAvailable = isImsCapabilityInCacheAvailable(mmTelCapabilities, 1, 0, i);
+            boolean isImsCapabilityInCacheAvailable2 = isImsCapabilityInCacheAvailable(mmTelCapabilities, 1, 3, i);
+            boolean[] zArr = this.mIsVoiceOverCellularImsEnabled;
+            if (!isImsCapabilityInCacheAvailable && !isImsCapabilityInCacheAvailable2) {
+                z = false;
+            }
+            zArr[i] = z;
+            NTLogUtil.m1686d(this.mTag, "refreshVoiceOverCellularImsEnabled phoneId" + i + " isVoiceAndLte=" + isImsCapabilityInCacheAvailable + " isVoiceAndNr=" + isImsCapabilityInCacheAvailable2);
         }
-        zArr[i] = z;
-        Log.d(this.mTag, "refreshVoiceOverCellularImsEnabled isVoiceAndLte=" + isImsCapabilityInCacheAvailable + " isVoiceAndNr=" + isImsCapabilityInCacheAvailable2);
     }
 
     public void updateMmTelCapabilities(MmTelFeature.MmTelCapabilities mmTelCapabilities, int i) {
-        this.mMmTelCapabilities[i] = mmTelCapabilities;
-        refreshVoiceOverCellularImsEnabled(mmTelCapabilities, i);
-        refreshVowifiEnabled(this.mMmTelCapabilities[i], i);
+        MmTelFeature.MmTelCapabilities[] mmTelCapabilitiesArr = this.mMmTelCapabilities;
+        if (i < mmTelCapabilitiesArr.length) {
+            mmTelCapabilitiesArr[i] = mmTelCapabilities;
+            refreshVoiceOverCellularImsEnabled(mmTelCapabilities, i);
+            refreshVowifiEnabled(this.mMmTelCapabilities[i], i);
+        }
     }
 
     public void updateImsRegistrationTech(int i, int i2) {
-        this.mImsRegistrationTech[i2] = i;
-        refreshVoiceOverCellularImsEnabled(this.mMmTelCapabilities[i2], i2);
-        refreshVowifiEnabled(this.mMmTelCapabilities[i2], i2);
+        int[] iArr = this.mImsRegistrationTech;
+        if (i2 < iArr.length) {
+            iArr[i2] = i;
+            refreshVoiceOverCellularImsEnabled(this.mMmTelCapabilities[i2], i2);
+            refreshVowifiEnabled(this.mMmTelCapabilities[i2], i2);
+        }
     }
 
     private void refreshVowifiEnabled(MmTelFeature.MmTelCapabilities mmTelCapabilities, int i) {
-        boolean z = true;
-        boolean isImsCapabilityInCacheAvailable = isImsCapabilityInCacheAvailable(mmTelCapabilities, 1, 1, i);
-        boolean isImsCapabilityInCacheAvailable2 = isImsCapabilityInCacheAvailable(mmTelCapabilities, 1, 2, i);
-        boolean[] zArr = this.mIsVowifiEnabled;
-        if (!isImsCapabilityInCacheAvailable && !isImsCapabilityInCacheAvailable2) {
-            z = false;
+        if (i < this.mIsVowifiEnabled.length) {
+            boolean z = true;
+            boolean isImsCapabilityInCacheAvailable = isImsCapabilityInCacheAvailable(mmTelCapabilities, 1, 1, i);
+            boolean isImsCapabilityInCacheAvailable2 = isImsCapabilityInCacheAvailable(mmTelCapabilities, 1, 2, i);
+            boolean[] zArr = this.mIsVowifiEnabled;
+            if (!isImsCapabilityInCacheAvailable && !isImsCapabilityInCacheAvailable2) {
+                z = false;
+            }
+            zArr[i] = z;
+            Log.d(this.mTag, "refreshVowifiEnabled:" + i + " isVoiceAndIwlan=" + isImsCapabilityInCacheAvailable + " isVoiceAndCrossSim=" + isImsCapabilityInCacheAvailable2);
         }
-        zArr[i] = z;
-        Log.d(this.mTag, "refreshVowifiEnabled isVoiceAndIwlan=" + isImsCapabilityInCacheAvailable + " isVoiceAndCrossSim=" + isImsCapabilityInCacheAvailable2);
     }
 
     public boolean isVowifiEnabled(int i) {
-        return this.mIsVowifiEnabled[i];
+        boolean[] zArr = this.mIsVowifiEnabled;
+        if (i < zArr.length) {
+            return zArr[i];
+        }
+        return false;
     }
 
     public boolean isVoiceOverCellularImsEnabled(int i) {
-        return this.mIsVoiceOverCellularImsEnabled[i];
+        if (i < this.mIsVowifiEnabled.length) {
+            return this.mIsVoiceOverCellularImsEnabled[i];
+        }
+        return false;
     }
 
     private boolean isImsCapabilityInCacheAvailable(MmTelFeature.MmTelCapabilities mmTelCapabilities, int i, int i2, int i3) {
-        return this.mImsRegistrationTech[i3] == i2 && mmTelCapabilities != null && mmTelCapabilities.isCapable(i);
+        int[] iArr = this.mImsRegistrationTech;
+        if (i3 < iArr.length && iArr[i3] == i2 && mmTelCapabilities != null && mmTelCapabilities.isCapable(i)) {
+            return true;
+        }
+        return false;
     }
 
     public void saveExtraLastState() {
@@ -173,42 +195,49 @@ public class MobileSignalControllerEx {
     }
 
     public void logCurrentState(MobileState mobileState, SignalIcon.MobileIconGroup mobileIconGroup, MobileMappings.Config config, MobileDataIndicators mobileDataIndicators) {
-        NTLogUtil.m1682i(this.mTag, "notifyListeners mobileState=" + mobileState.toString() + " dataDisabled=" + mobileState.isDataDisabledOrNotDefault() + " Icons=" + mobileIconGroup + " icons.dataType=" + mobileIconGroup.dataType + " mConfig.alwaysShowDataRatIcon=" + config.alwaysShowDataRatIcon + " mobileDataIndicators=" + mobileDataIndicators);
+        NTLogUtil.m1688i(this.mTag, "notifyListeners mobileState=" + mobileState.toString() + " dataDisabled=" + mobileState.isDataDisabledOrNotDefault() + " Icons=" + mobileIconGroup + " icons.dataType=" + mobileIconGroup.dataType + " mConfig.alwaysShowDataRatIcon=" + config.alwaysShowDataRatIcon + " mobileDataIndicators=" + mobileDataIndicators);
     }
 
     public void addOnSubscriptionsChangedListener(SubscriptionManager.OnSubscriptionsChangedListener onSubscriptionsChangedListener) {
         if (this.mSubscriptionManager != null) {
-            NTLogUtil.m1682i(this.mTag, "addOnSubscriptionsChangedListener");
+            NTLogUtil.m1688i(this.mTag, "addOnSubscriptionsChangedListener");
             this.mSubscriptionManager.addOnSubscriptionsChangedListener(this.mContext.getMainExecutor(), onSubscriptionsChangedListener);
         }
     }
 
-    public void removeOnSubscriptionsChangedListener(SubscriptionManager.OnSubscriptionsChangedListener onSubscriptionsChangedListener) {
+    public void removeOnSubscriptionsChangedListener(MySubscriptionsChangedListener mySubscriptionsChangedListener) {
         if (this.mSubscriptionManager != null) {
-            NTLogUtil.m1682i(this.mTag, "removeOnSubscriptionsChangedListener");
-            this.mSubscriptionManager.removeOnSubscriptionsChangedListener(onSubscriptionsChangedListener);
+            NTLogUtil.m1688i(this.mTag, "removeOnSubscriptionsChangedListener");
+            mySubscriptionsChangedListener.removeRunnable();
+            this.mSubscriptionManager.removeOnSubscriptionsChangedListener(mySubscriptionsChangedListener);
         }
     }
 
     public static class MySubscriptionsChangedListener extends SubscriptionManager.OnSubscriptionsChangedListener {
         Context mContext;
+        Handler mHandler;
         Runnable mImsRegisterRunnable;
         int mPhonId;
         SubscriptionInfo mSubscriptionInfo;
 
-        public MySubscriptionsChangedListener(int i, SubscriptionInfo subscriptionInfo, Runnable runnable, Context context) {
+        public MySubscriptionsChangedListener(int i, SubscriptionInfo subscriptionInfo, Runnable runnable, Context context, Handler handler) {
             this.mPhonId = i;
             this.mSubscriptionInfo = subscriptionInfo;
             this.mImsRegisterRunnable = runnable;
             this.mContext = context;
+            this.mHandler = handler;
         }
 
         public void onSubscriptionsChanged() {
             boolean isSubIdChange = MobileSignalControllerEx.isSubIdChange(this.mPhonId, this.mSubscriptionInfo, this.mContext);
-            NTLogUtil.m1682i("MySubscriptionsChangedListener", "onSubscriptionsChanged=" + this.mPhonId + ":" + isSubIdChange);
+            NTLogUtil.m1688i("MySubscriptionsChangedListener", "onSubscriptionsChanged=" + this.mPhonId + ":" + isSubIdChange);
             if (isSubIdChange) {
-                this.mImsRegisterRunnable.run();
+                this.mHandler.postDelayed(this.mImsRegisterRunnable, 500);
             }
+        }
+
+        public void removeRunnable() {
+            this.mHandler.removeCallbacks(this.mImsRegisterRunnable);
         }
     }
 
@@ -219,13 +248,13 @@ public class MobileSignalControllerEx {
         if (phoneSubscriptionInfo != null) {
             i2 = phoneSubscriptionInfo.getSubscriptionId();
         }
-        NTLogUtil.m1682i(TAG, "isSubIdChange=" + subscriptionId + ":" + i2);
+        NTLogUtil.m1688i(TAG, "isSubIdChange=" + subscriptionId + ":" + i2);
         return i2 != subscriptionId;
     }
 
     public static SubscriptionInfo getPhoneSubscriptionInfo(int i, Context context) {
         SubscriptionInfo activeSubscriptionInfoForSimSlotIndex = SubscriptionManager.from(context).getActiveSubscriptionInfoForSimSlotIndex(i);
-        NTLogUtil.m1682i(TAG, "getPhoneSubscriptionInfo:" + activeSubscriptionInfoForSimSlotIndex);
+        NTLogUtil.m1688i(TAG, "getPhoneSubscriptionInfo:" + activeSubscriptionInfoForSimSlotIndex);
         return activeSubscriptionInfoForSimSlotIndex;
     }
 
@@ -238,7 +267,7 @@ public class MobileSignalControllerEx {
         }
         boolean isFiveGNr = isFiveGNr(serviceState);
         boolean isFiveGNrCA = isFiveGNrCA(fiveGServiceState);
-        NTLogUtil.m1682i(getTag(i), "updateTelephony show5G_plus:" + isFiveGNr + " show5G_plus_plus:" + isFiveGNrCA);
+        NTLogUtil.m1688i(getTag(i), "updateTelephony show5G_plus:" + isFiveGNr + " show5G_plus_plus:" + isFiveGNrCA);
         if (isFiveGNrCA) {
             return TelephonyIconsEx.NR_5G_PLUS_PLUS;
         }
@@ -266,7 +295,7 @@ public class MobileSignalControllerEx {
     private boolean isJIOSim(TelephonyManager telephonyManager, int i, SubscriptionInfo subscriptionInfo) {
         String mccMnc = getMccMnc(subscriptionInfo);
         int carrierIdFromSimMccMnc = telephonyManager.getCarrierIdFromSimMccMnc();
-        NTLogUtil.m1682i(getTag(i), "isJioSim cid:" + carrierIdFromSimMccMnc + "mccmnc:" + mccMnc);
+        NTLogUtil.m1688i(getTag(i), "isJioSim cid:" + carrierIdFromSimMccMnc + "mccmnc:" + mccMnc);
         return carrierIdFromSimMccMnc == CIDJIO;
     }
 

@@ -14,7 +14,7 @@ import android.view.View;
 import androidx.collection.ArrayMap;
 import com.android.internal.statusbar.StatusBarIcon;
 import com.android.settingslib.Utils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.statusbar.AlphaOptimizedFrameLayout;
 import com.android.systemui.statusbar.StatusBarIconView;
 import com.android.systemui.statusbar.notification.stack.AnimationFilter;
@@ -126,8 +126,8 @@ public class NotificationIconContainer extends AlphaOptimizedFrameLayout {
     }
 
     private void initDimens() {
-        this.mDotPadding = getResources().getDimensionPixelSize(C1893R.dimen.overflow_icon_dot_padding);
-        int dimensionPixelSize = getResources().getDimensionPixelSize(C1893R.dimen.overflow_dot_radius);
+        this.mDotPadding = getResources().getDimensionPixelSize(C1894R.dimen.overflow_icon_dot_padding);
+        int dimensionPixelSize = getResources().getDimensionPixelSize(C1894R.dimen.overflow_dot_radius);
         this.mStaticDotRadius = dimensionPixelSize;
         this.mStaticDotDiameter = dimensionPixelSize * 2;
         this.mThemedTextColorPrimary = Utils.getColorAttr(new ContextThemeWrapper(getContext(), 16974563), 16842806).getDefaultColor();
@@ -260,7 +260,7 @@ public class NotificationIconContainer extends AlphaOptimizedFrameLayout {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onViewRemoved$0$com-android-systemui-statusbar-phone-NotificationIconContainer */
-    public /* synthetic */ void mo44491x92d0804b(StatusBarIconView statusBarIconView) {
+    public /* synthetic */ void mo44506x92d0804b(StatusBarIconView statusBarIconView) {
         removeTransientView(statusBarIconView);
     }
 
@@ -567,7 +567,7 @@ public class NotificationIconContainer extends AlphaOptimizedFrameLayout {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$new$0$com-android-systemui-statusbar-phone-NotificationIconContainer$IconState */
-        public /* synthetic */ void mo44512xd869f11b(Property property) {
+        public /* synthetic */ void mo44527xd869f11b(Property property) {
             if (property == View.TRANSLATION_Y && this.iconAppearAmount == 0.0f && this.mView.getVisibility() == 0) {
                 this.mView.setVisibility(4);
             }

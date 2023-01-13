@@ -16,6 +16,6 @@ public final /* synthetic */ class InstantAppNotifier$$ExternalSyntheticLambda1 
     }
 
     public final void run() {
-        this.f$0.mo39684xfbaded69(this.f$1, this.f$2);
+        this.f$0.mo39686xfbaded69(this.f$1, this.f$2);
     }
 }

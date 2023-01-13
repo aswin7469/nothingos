@@ -46,17 +46,17 @@ public final class Logger {
     }
 
     /* renamed from: w */
-    public void mo55164w(String str) {
+    public void mo55175w(String str) {
         Log.w(TAG, this.prefix.concat(str));
     }
 
     /* renamed from: e */
-    public void mo55159e(String str) {
+    public void mo55170e(String str) {
         Log.e(TAG, this.prefix.concat(str));
     }
 
     /* renamed from: e */
-    public void mo55160e(String str, Throwable th) {
+    public void mo55171e(String str, Throwable th) {
         Log.e(TAG, this.prefix.concat(str), th);
     }
 }

@@ -12,6 +12,6 @@ public final /* synthetic */ class QSTileViewImpl$$ExternalSyntheticLambda1 impl
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        QSTileViewImpl.m2963singleAnimator$lambda1$lambda0(this.f$0, valueAnimator);
+        QSTileViewImpl.m2968singleAnimator$lambda1$lambda0(this.f$0, valueAnimator);
     }
 }

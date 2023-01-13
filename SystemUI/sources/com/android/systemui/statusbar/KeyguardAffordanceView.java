@@ -23,7 +23,7 @@ import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import androidx.core.view.ViewCompat;
 import com.android.p019wm.shell.animation.FlingAnimationUtils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.animation.Interpolators;
 
 public class KeyguardAffordanceView extends ImageView {
@@ -122,7 +122,7 @@ public class KeyguardAffordanceView extends ImageView {
         paint.setColor(-1);
         this.mNormalColor = obtainStyledAttributes.getColor(5, -1);
         this.mDarkIconColor = ViewCompat.MEASURED_STATE_MASK;
-        this.mMinBackgroundRadius = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.keyguard_affordance_min_background_radius);
+        this.mMinBackgroundRadius = this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.keyguard_affordance_min_background_radius);
         this.mColorInterpolator = new ArgbEvaluator();
         this.mFlingAnimationUtils = new FlingAnimationUtils(this.mContext.getResources().getDisplayMetrics(), 0.3f);
         obtainStyledAttributes.recycle();
@@ -463,7 +463,7 @@ public class KeyguardAffordanceView extends ImageView {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setImageAlpha$0$com-android-systemui-statusbar-KeyguardAffordanceView */
-    public /* synthetic */ void mo38551xe0befb6(Drawable drawable, ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo38552xe0befb6(Drawable drawable, ValueAnimator valueAnimator) {
         int intValue = ((Integer) valueAnimator.getAnimatedValue()).intValue();
         if (drawable != null) {
             drawable.mutate().setAlpha(intValue);

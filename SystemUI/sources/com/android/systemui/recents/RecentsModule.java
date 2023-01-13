@@ -1,7 +1,7 @@
 package com.android.systemui.recents;
 
 import android.content.Context;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.ContextComponentHelper;
 import dagger.Binds;
 import dagger.Module;
@@ -18,7 +18,7 @@ public abstract class RecentsModule {
 
     @Provides
     public static RecentsImplementation provideRecentsImpl(Context context, ContextComponentHelper contextComponentHelper) {
-        String string = context.getString(C1893R.string.config_recentsComponent);
+        String string = context.getString(C1894R.string.config_recentsComponent);
         if (string == null || string.length() == 0) {
             throw new RuntimeException("No recents component configured", (Throwable) null);
         }

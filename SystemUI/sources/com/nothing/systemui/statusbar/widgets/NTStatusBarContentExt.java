@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewOverlay;
 import android.widget.LinearLayout;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 
 public class NTStatusBarContentExt extends LinearLayout {
     private View mBattery;
@@ -53,8 +53,8 @@ public class NTStatusBarContentExt extends LinearLayout {
 
     public NTStatusBarContentExt(Context context, AttributeSet attributeSet, int i, int i2) {
         super(context, attributeSet, i, i2);
-        this.mDotPadding = getResources().getDimensionPixelSize(C1893R.dimen.overflow_icon_dot_padding);
-        int dimensionPixelSize = getResources().getDimensionPixelSize(C1893R.dimen.overflow_dot_radius);
+        this.mDotPadding = getResources().getDimensionPixelSize(C1894R.dimen.overflow_icon_dot_padding);
+        int dimensionPixelSize = getResources().getDimensionPixelSize(C1894R.dimen.overflow_dot_radius);
         this.mStaticDotRadius = dimensionPixelSize;
         this.mDotWidth = (dimensionPixelSize * 2) + this.mDotPadding;
     }
@@ -62,16 +62,16 @@ public class NTStatusBarContentExt extends LinearLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        View findViewById = findViewById(C1893R.C1897id.status_bar_left_side_container);
+        View findViewById = findViewById(C1894R.C1898id.status_bar_left_side_container);
         this.mLeft = findViewById;
-        this.mLeftMinContent = findViewById.findViewById(C1893R.C1897id.status_bar_left_side_min_content);
-        this.mHeadsUp = this.mLeft.findViewById(C1893R.C1897id.heads_up_status_bar_view);
-        this.mClock = this.mLeft.findViewById(C1893R.C1897id.clock);
-        this.mSpace = findViewById(C1893R.C1897id.cutout_space_view);
-        this.mCenterIcons = findViewById(C1893R.C1897id.centered_icon_area);
-        View findViewById2 = findViewById(C1893R.C1897id.system_icon_area);
+        this.mLeftMinContent = findViewById.findViewById(C1894R.C1898id.status_bar_left_side_min_content);
+        this.mHeadsUp = this.mLeft.findViewById(C1894R.C1898id.heads_up_status_bar_view);
+        this.mClock = this.mLeft.findViewById(C1894R.C1898id.clock);
+        this.mSpace = findViewById(C1894R.C1898id.cutout_space_view);
+        this.mCenterIcons = findViewById(C1894R.C1898id.centered_icon_area);
+        View findViewById2 = findViewById(C1894R.C1898id.system_icon_area);
         this.mRight = findViewById2;
-        this.mBattery = findViewById2.findViewById(C1893R.C1897id.battery);
+        this.mBattery = findViewById2.findViewById(C1894R.C1898id.battery);
     }
 
     /* access modifiers changed from: protected */

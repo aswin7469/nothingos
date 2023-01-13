@@ -48,12 +48,12 @@ public final class DatatypeConstants {
     public static final class Field {
 
         /* renamed from: id */
-        private final int f831id;
+        private final int f829id;
         private final String str;
 
         private Field(String str2, int i) {
             this.str = str2;
-            this.f831id = i;
+            this.f829id = i;
         }
 
         public String toString() {
@@ -61,7 +61,7 @@ public final class DatatypeConstants {
         }
 
         public int getId() {
-            return this.f831id;
+            return this.f829id;
         }
     }
 }

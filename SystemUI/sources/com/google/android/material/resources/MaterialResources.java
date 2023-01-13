@@ -5,7 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.util.TypedValue;
 import androidx.appcompat.content.res.AppCompatResources;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 
 public class MaterialResources {
     private static final float FONT_SCALE_1_3 = 1.3f;
@@ -96,9 +96,9 @@ public class MaterialResources {
         if (i == 0) {
             return i2;
         }
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(i, C3621R.styleable.TextAppearance);
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(i, C3631R.styleable.TextAppearance);
         TypedValue typedValue = new TypedValue();
-        boolean value = obtainStyledAttributes.getValue(C3621R.styleable.TextAppearance_android_textSize, typedValue);
+        boolean value = obtainStyledAttributes.getValue(C3631R.styleable.TextAppearance_android_textSize, typedValue);
         obtainStyledAttributes.recycle();
         if (!value) {
             return i2;

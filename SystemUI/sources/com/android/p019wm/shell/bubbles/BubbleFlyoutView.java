@@ -24,7 +24,7 @@ import android.view.ViewPropertyAnimator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.animation.Interpolators;
 import com.android.p019wm.shell.bubbles.Bubble;
 import com.android.p019wm.shell.common.TriangleShape;
@@ -98,18 +98,18 @@ public class BubbleFlyoutView extends FrameLayout {
         Paint paint = new Paint(3);
         this.mBgPaint = paint;
         this.mPositioner = bubblePositioner;
-        LayoutInflater.from(context).inflate(C3343R.layout.bubble_flyout, this, true);
-        ViewGroup viewGroup = (ViewGroup) findViewById(C3343R.C3346id.bubble_flyout_text_container);
+        LayoutInflater.from(context).inflate(C3353R.layout.bubble_flyout, this, true);
+        ViewGroup viewGroup = (ViewGroup) findViewById(C3353R.C3356id.bubble_flyout_text_container);
         this.mFlyoutTextContainer = viewGroup;
-        this.mSenderText = (TextView) findViewById(C3343R.C3346id.bubble_flyout_name);
-        this.mSenderAvatar = (ImageView) findViewById(C3343R.C3346id.bubble_flyout_avatar);
-        this.mMessageText = (TextView) viewGroup.findViewById(C3343R.C3346id.bubble_flyout_text);
+        this.mSenderText = (TextView) findViewById(C3353R.C3356id.bubble_flyout_name);
+        this.mSenderAvatar = (ImageView) findViewById(C3353R.C3356id.bubble_flyout_avatar);
+        this.mMessageText = (TextView) viewGroup.findViewById(C3353R.C3356id.bubble_flyout_text);
         Resources resources = getResources();
-        this.mFlyoutPadding = resources.getDimensionPixelSize(C3343R.dimen.bubble_flyout_padding_x);
-        this.mFlyoutSpaceFromBubble = resources.getDimensionPixelSize(C3343R.dimen.bubble_flyout_space_from_bubble);
+        this.mFlyoutPadding = resources.getDimensionPixelSize(C3353R.dimen.bubble_flyout_padding_x);
+        this.mFlyoutSpaceFromBubble = resources.getDimensionPixelSize(C3353R.dimen.bubble_flyout_space_from_bubble);
         this.mPointerSize = 0;
-        this.mBubbleElevation = resources.getDimensionPixelSize(C3343R.dimen.bubble_elevation);
-        int dimensionPixelSize = resources.getDimensionPixelSize(C3343R.dimen.bubble_flyout_elevation);
+        this.mBubbleElevation = resources.getDimensionPixelSize(C3353R.dimen.bubble_elevation);
+        int dimensionPixelSize = resources.getDimensionPixelSize(C3353R.dimen.bubble_flyout_elevation);
         this.mFlyoutElevation = dimensionPixelSize;
         TypedArray obtainStyledAttributes = this.mContext.obtainStyledAttributes(new int[]{17956909, 16844145});
         int color = obtainStyledAttributes.getColor(0, -1);
@@ -160,14 +160,14 @@ public class BubbleFlyoutView extends FrameLayout {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$animateUpdate$2$com-android-wm-shell-bubbles-BubbleFlyoutView */
-    public /* synthetic */ void mo48575xf07c2bb3(Bubble.FlyoutMessage flyoutMessage, PointF pointF, boolean z) {
+    public /* synthetic */ void mo48584xf07c2bb3(Bubble.FlyoutMessage flyoutMessage, PointF pointF, boolean z) {
         updateFlyoutMessage(flyoutMessage);
         post(new BubbleFlyoutView$$ExternalSyntheticLambda1(this, pointF, z));
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$animateUpdate$1$com-android-wm-shell-bubbles-BubbleFlyoutView */
-    public /* synthetic */ void mo48574x7b020572(PointF pointF, boolean z) {
+    public /* synthetic */ void mo48583x7b020572(PointF pointF, boolean z) {
         fade(true, pointF, z, new BubbleFlyoutView$$ExternalSyntheticLambda3());
     }
 
@@ -273,7 +273,7 @@ public class BubbleFlyoutView extends FrameLayout {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setupFlyoutStartingAsDot$3$com-android-wm-shell-bubbles-BubbleFlyoutView */
-    public /* synthetic */ void mo48576x220c48a3(PointF pointF, boolean z, Runnable runnable) {
+    public /* synthetic */ void mo48585x220c48a3(PointF pointF, boolean z, Runnable runnable) {
         float height = pointF.y + (((float) (this.mBubbleSize - this.mFlyoutTextContainer.getHeight())) / 2.0f);
         this.mFlyoutY = height;
         setTranslationY(height);

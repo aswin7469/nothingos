@@ -12,6 +12,6 @@ public final /* synthetic */ class ScanResultUpdater$$ExternalSyntheticLambda0 i
     }
 
     public final boolean test(Object obj) {
-        return this.f$0.mo47844xaae8eb8b((Map.Entry) obj);
+        return this.f$0.mo47853xaae8eb8b((Map.Entry) obj);
     }
 }

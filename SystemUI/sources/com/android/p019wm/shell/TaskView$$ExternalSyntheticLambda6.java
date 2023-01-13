@@ -15,6 +15,6 @@ public final /* synthetic */ class TaskView$$ExternalSyntheticLambda6 implements
     }
 
     public final void runWithTransaction(SurfaceControl.Transaction transaction) {
-        this.f$0.m3392lambda$updateTaskVisibility$6$comandroidwmshellTaskView(this.f$1, transaction);
+        this.f$0.m3396lambda$updateTaskVisibility$6$comandroidwmshellTaskView(this.f$1, transaction);
     }
 }

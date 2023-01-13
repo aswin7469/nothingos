@@ -13,6 +13,6 @@ public final /* synthetic */ class ControlsFavoritingActivity$$ExternalSynthetic
     }
 
     public final void run() {
-        ControlsFavoritingActivity.m2644loadControls$lambda9$lambda7$lambda6(this.f$0, this.f$1, this.f$2);
+        ControlsFavoritingActivity.m2649loadControls$lambda9$lambda7$lambda6(this.f$0, this.f$1, this.f$2);
     }
 }

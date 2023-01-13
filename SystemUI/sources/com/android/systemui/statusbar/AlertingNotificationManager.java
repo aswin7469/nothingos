@@ -191,7 +191,7 @@ public abstract class AlertingNotificationManager implements NotificationLifetim
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$setEntry$0$com-android-systemui-statusbar-AlertingNotificationManager$AlertEntry */
-        public /* synthetic */ void mo38311xbf8c1f(NotificationEntry notificationEntry) {
+        public /* synthetic */ void mo38312xbf8c1f(NotificationEntry notificationEntry) {
             AlertingNotificationManager.this.removeAlertEntry(notificationEntry.getKey());
         }
 
@@ -219,7 +219,7 @@ public abstract class AlertingNotificationManager implements NotificationLifetim
                 NotificationPanelViewController notificationPanelViewController = ((CentralSurfacesImplEx) NTDependencyEx.get(CentralSurfacesImplEx.class)).getNotificationPanelViewController();
                 MediaDataManager mediaDataManager = (MediaDataManager) NTDependencyEx.get(MediaDataManager.class);
                 if (!notificationPanelViewController.isFullyExpanded() || !mediaDataManager.hasActiveMedia() || ((StatusBarStateController) Dependency.get(StatusBarStateController.class)).isDozing()) {
-                    NTLogUtil.m1680d(AlertingNotificationManager.TAG, "removeAlertRunnable delay = " + max);
+                    NTLogUtil.m1686d(AlertingNotificationManager.TAG, "removeAlertRunnable delay = " + max);
                     AlertingNotificationManager.this.mHandler.postDelayed(this.mRemoveAlertRunnable, max);
                     return;
                 }
@@ -229,8 +229,8 @@ public abstract class AlertingNotificationManager implements NotificationLifetim
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$updateEntry$1$com-android-systemui-statusbar-AlertingNotificationManager$AlertEntry */
-        public /* synthetic */ void mo38312x6e19aebf() {
-            NTLogUtil.m1680d(AlertingNotificationManager.TAG, "removeAlertRunnable immediately");
+        public /* synthetic */ void mo38313x6e19aebf() {
+            NTLogUtil.m1686d(AlertingNotificationManager.TAG, "removeAlertRunnable immediately");
             this.mRemoveAlertRunnable = null;
             NotificationEntry notificationEntry = this.mEntry;
             if (notificationEntry != null && notificationEntry.getKey() != null) {

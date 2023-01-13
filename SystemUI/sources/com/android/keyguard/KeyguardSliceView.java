@@ -28,7 +28,7 @@ import androidx.slice.core.SliceQuery;
 import androidx.slice.widget.RowContent;
 import androidx.slice.widget.SliceContent;
 import com.android.internal.graphics.ColorUtils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.animation.Interpolators;
 import com.android.systemui.keyguard.KeyguardSliceProvider;
 import com.android.systemui.navigationbar.NavigationBarInflaterView;
@@ -99,11 +99,11 @@ public class KeyguardSliceView extends LinearLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mTitle = (TextView) findViewById(C1893R.C1897id.title);
-        this.mRow = (Row) findViewById(C1893R.C1897id.row);
-        this.mTextColor = this.mContext.getResources().getColor(C1893R.C1894color.nt_default_text_color);
-        this.mIconSize = (int) this.mContext.getResources().getDimension(C1893R.dimen.widget_icon_size);
-        this.mIconSizeWithHeader = (int) this.mContext.getResources().getDimension(C1893R.dimen.header_icon_size);
+        this.mTitle = (TextView) findViewById(C1894R.C1898id.title);
+        this.mRow = (Row) findViewById(C1894R.C1898id.row);
+        this.mTextColor = this.mContext.getResources().getColor(C1894R.C1895color.nt_default_text_color);
+        this.mIconSize = (int) this.mContext.getResources().getDimension(C1894R.dimen.widget_icon_size);
+        this.mIconSizeWithHeader = (int) this.mContext.getResources().getDimension(C1894R.dimen.header_icon_size);
         this.mTitle.setBreakStrategy(2);
     }
 
@@ -165,26 +165,26 @@ public class KeyguardSliceView extends LinearLayout {
             RowContent rowContent2 = (RowContent) list.get(i4);
             SliceItem sliceItem = rowContent2.getSliceItem();
             Uri uri = sliceItem.getSlice().getUri();
-            NTLogUtil.m1682i(TAG, "itemTag=" + uri);
+            NTLogUtil.m1688i(TAG, "itemTag=" + uri);
             if (uri.toString().equals(KeyguardSliceProvider.KEYGUARD_CALENDAR_URI)) {
-                NTLogUtil.m1682i(TAG, "add calendar item");
+                NTLogUtil.m1688i(TAG, "add calendar item");
                 if (this.mRow.findViewWithTag(uri) == null) {
-                    View inflate = LayoutInflater.from(this.mRow.getContext()).inflate(C1893R.layout.nt_keyguard_calendar, viewGroup);
+                    View inflate = LayoutInflater.from(this.mRow.getContext()).inflate(C1894R.layout.nt_keyguard_calendar, viewGroup);
                     this.mCalendarLayout = inflate;
                     inflate.setTag(uri);
-                    NTLogUtil.m1682i(TAG, "calendar viewIndex=0, itemTag=" + uri);
+                    NTLogUtil.m1688i(TAG, "calendar viewIndex=0, itemTag=" + uri);
                 }
                 updateCalendarInfo();
                 i2 = size;
                 z2 = true;
             } else if (uri.toString().equals(KeyguardSliceProvider.KEYGUARD_WEATHER_URI)) {
-                NTLogUtil.m1682i(TAG, "add weather item");
+                NTLogUtil.m1688i(TAG, "add weather item");
                 int i5 = i4 - (this.mHasHeader ? 1 : 0);
                 if (this.mRow.findViewWithTag(uri) == null) {
-                    View inflate2 = LayoutInflater.from(this.mRow.getContext()).inflate(C1893R.layout.nt_keyguard_weather, viewGroup);
+                    View inflate2 = LayoutInflater.from(this.mRow.getContext()).inflate(C1894R.layout.nt_keyguard_weather, viewGroup);
                     this.mWeatherLayout = inflate2;
                     inflate2.setTag(uri);
-                    NTLogUtil.m1682i(TAG, "weather viewIndex=" + i5 + ", itemTag=" + uri);
+                    NTLogUtil.m1688i(TAG, "weather viewIndex=" + i5 + ", itemTag=" + uri);
                     this.mRow.addView(this.mWeatherLayout, i5);
                 }
                 updateWeatherInfo();
@@ -192,15 +192,15 @@ public class KeyguardSliceView extends LinearLayout {
                 z = true;
             } else {
                 KeyguardSliceTextView keyguardSliceTextView = (KeyguardSliceTextView) this.mRow.findViewWithTag(uri);
-                NTLogUtil.m1682i(TAG, "add item " + uri);
+                NTLogUtil.m1688i(TAG, "add item " + uri);
                 if (keyguardSliceTextView == null) {
                     keyguardSliceTextView = new KeyguardSliceTextView(this.mContext);
                     keyguardSliceTextView.setTextColor(textColor);
                     keyguardSliceTextView.setTag(uri);
                     i2 = size;
-                    keyguardSliceTextView.setShadowLayer(5.0f, 0.0f, 5.0f, this.mRow.getResources().getColor(C1893R.C1894color.nt_keyguard_glance_text_shadow_color, (Resources.Theme) null));
+                    keyguardSliceTextView.setShadowLayer(5.0f, 0.0f, 5.0f, this.mRow.getResources().getColor(C1894R.C1895color.nt_keyguard_glance_text_shadow_color, (Resources.Theme) null));
                     int i6 = i4 - (this.mHasHeader ? 1 : 0);
-                    NTLogUtil.m1682i(TAG, "item viewIndex " + i6 + ", itemTag=" + uri);
+                    NTLogUtil.m1688i(TAG, "item viewIndex " + i6 + ", itemTag=" + uri);
                     this.mRow.addView(keyguardSliceTextView, i6);
                 } else {
                     i2 = size;
@@ -236,7 +236,7 @@ public class KeyguardSliceView extends LinearLayout {
             i4++;
             size = i2;
         }
-        NTLogUtil.m1682i(TAG, "hasWeather= " + z + ",hasCalendar= " + z2);
+        NTLogUtil.m1688i(TAG, "hasWeather= " + z + ",hasCalendar= " + z2);
         if (!z2 || this.mCalendarLayout == null) {
             i = 0;
         } else {
@@ -249,20 +249,20 @@ public class KeyguardSliceView extends LinearLayout {
             View childAt = this.mRow.getChildAt(i8);
             if (childAt == this.mWeatherLayout) {
                 if (!z) {
-                    NTLogUtil.m1682i(TAG, "remove mWeatherLayout " + i8);
+                    NTLogUtil.m1688i(TAG, "remove mWeatherLayout " + i8);
                     this.mRow.removeView(childAt);
                 } else {
                     i8++;
                 }
             } else if (childAt == this.mCalendarLayout) {
                 if (!z2) {
-                    NTLogUtil.m1682i(TAG, "remove mCalendarLayout " + i8);
+                    NTLogUtil.m1688i(TAG, "remove mCalendarLayout " + i8);
                     this.mRow.removeView(childAt);
                 } else {
                     i8++;
                 }
             } else if (!hashMap.containsKey(childAt)) {
-                NTLogUtil.m1682i(TAG, "remove child " + i8);
+                NTLogUtil.m1688i(TAG, "remove child " + i8);
                 this.mRow.removeView(childAt);
             } else {
                 i8++;
@@ -313,8 +313,8 @@ public class KeyguardSliceView extends LinearLayout {
 
     /* access modifiers changed from: package-private */
     public void onDensityOrFontScaleChanged() {
-        this.mIconSize = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.widget_icon_size);
-        this.mIconSizeWithHeader = (int) this.mContext.getResources().getDimension(C1893R.dimen.header_icon_size);
+        this.mIconSize = this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.widget_icon_size);
+        this.mIconSizeWithHeader = (int) this.mContext.getResources().getDimension(C1894R.dimen.header_icon_size);
         for (int i = 0; i < this.mRow.getChildCount(); i++) {
             View childAt = this.mRow.getChildAt(i);
             if (childAt instanceof KeyguardSliceTextView) {
@@ -507,7 +507,7 @@ public class KeyguardSliceView extends LinearLayout {
             if (!WeatherUtils.isNdotFontSupport()) {
                 setTypeface(Typeface.DEFAULT);
             } else {
-                setTypeface(getResources().getFont(C1893R.C1896font.ndot55));
+                setTypeface(getResources().getFont(C1894R.C1897font.ndot55));
             }
             super.setText(charSequence, bufferType);
             updatePadding();
@@ -515,9 +515,9 @@ public class KeyguardSliceView extends LinearLayout {
 
         private void updatePadding() {
             TextUtils.isEmpty(getText());
-            int dimension = ((int) getContext().getResources().getDimension(C1893R.dimen.widget_horizontal_padding)) / 2;
+            int dimension = ((int) getContext().getResources().getDimension(C1894R.dimen.widget_horizontal_padding)) / 2;
             setPadding(0, 5, 0, 0);
-            setCompoundDrawablePadding((int) this.mContext.getResources().getDimension(C1893R.dimen.widget_icon_padding));
+            setCompoundDrawablePadding((int) this.mContext.getResources().getDimension(C1894R.dimen.widget_icon_padding));
         }
 
         public void setTextColor(int i) {
@@ -553,18 +553,18 @@ public class KeyguardSliceView extends LinearLayout {
             }
             sb.append("° ");
             sb.append(weatherData.getPhrase());
-            NTLogUtil.m1682i(TAG, "updateWeatherInfo2: lastTime=" + weatherData.getLastUpdateTime() + ", iconType=" + weatherData.getIconType() + ", weather=" + sb + ",isCelsiusUnitOn=" + isKeyguardCelsiusUnitOn);
-            TextView textView = (TextView) this.mWeatherLayout.findViewById(C1893R.C1897id.nt_keyguard_temp_and_phrase_text);
+            NTLogUtil.m1688i(TAG, "updateWeatherInfo2: lastTime=" + weatherData.getLastUpdateTime() + ", iconType=" + weatherData.getIconType() + ", weather=" + sb + ",isCelsiusUnitOn=" + isKeyguardCelsiusUnitOn);
+            TextView textView = (TextView) this.mWeatherLayout.findViewById(C1894R.C1898id.nt_keyguard_temp_and_phrase_text);
             if (!WeatherUtils.isNdotFontSupport()) {
                 textView.setTypeface(Typeface.DEFAULT);
                 textView.setIncludeFontPadding(false);
             } else {
-                textView.setTypeface(getResources().getFont(C1893R.C1896font.ndot55));
+                textView.setTypeface(getResources().getFont(C1894R.C1897font.ndot55));
                 textView.setIncludeFontPadding(true);
             }
             textView.setText(sb);
-            NTLogUtil.m1682i(TAG, "getIconType=" + weatherData.getIconType());
-            ((ImageView) this.mWeatherLayout.findViewById(C1893R.C1897id.weather_iv)).setImageResource(weatherData.getWeatherIcon(weatherData.getIconType()));
+            NTLogUtil.m1688i(TAG, "getIconType=" + weatherData.getIconType());
+            ((ImageView) this.mWeatherLayout.findViewById(C1894R.C1898id.weather_iv)).setImageResource(weatherData.getWeatherIcon(weatherData.getIconType()));
         }
     }
 
@@ -572,16 +572,16 @@ public class KeyguardSliceView extends LinearLayout {
         CalendarSimpleData calendarEventData;
         CalendarManager calendarManager = (CalendarManager) NTDependencyEx.get(CalendarManager.class);
         if (this.mCalendarLayout != null && calendarManager != null && (calendarEventData = calendarManager.getCalendarEventData()) != null) {
-            TextView textView = (TextView) this.mCalendarLayout.findViewById(C1893R.C1897id.calendar_title);
-            TextView textView2 = (TextView) this.mCalendarLayout.findViewById(C1893R.C1897id.calendar_event_status);
-            TextView textView3 = (TextView) this.mCalendarLayout.findViewById(C1893R.C1897id.calendar_location);
-            TextView textView4 = (TextView) this.mCalendarLayout.findViewById(C1893R.C1897id.calendar_time);
+            TextView textView = (TextView) this.mCalendarLayout.findViewById(C1894R.C1898id.calendar_title);
+            TextView textView2 = (TextView) this.mCalendarLayout.findViewById(C1894R.C1898id.calendar_event_status);
+            TextView textView3 = (TextView) this.mCalendarLayout.findViewById(C1894R.C1898id.calendar_location);
+            TextView textView4 = (TextView) this.mCalendarLayout.findViewById(C1894R.C1898id.calendar_time);
             textView.setText(calendarEventData.getTitle());
             textView3.setText(calendarEventData.getLocation());
             textView3.setVisibility(TextUtils.isEmpty(calendarEventData.getLocation()) ? 8 : 0);
             textView4.setText(calendarManager.getCalenderWidgetTime(calendarEventData));
             textView2.setText(String.format(" %s", calendarManager.getCalendarDescription(calendarEventData)));
-            NTLogUtil.m1680d(TAG, "title=" + textView.getText() + " status=" + textView2.getText() + " location=" + textView3.getText() + " time=" + textView4.getText());
+            NTLogUtil.m1686d(TAG, "title=" + textView.getText() + " status=" + textView2.getText() + " location=" + textView3.getText() + " time=" + textView4.getText());
         }
     }
 

@@ -9,6 +9,6 @@ public final /* synthetic */ class NavigationBarControllerEx$$ExternalSyntheticL
     }
 
     public final void run() {
-        this.f$0.mo57489x378af467();
+        this.f$0.mo57510x378af467();
     }
 }

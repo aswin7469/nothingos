@@ -96,7 +96,7 @@ public class ClassPathURLStreamHandler extends Handler {
                 if (inputStream != null) {
                     return inputStream;
                 }
-                C46981 r0 = new FilterInputStream(ClassPathURLStreamHandler.this.jarFile.getInputStream(this.jarEntry)) {
+                C47101 r0 = new FilterInputStream(ClassPathURLStreamHandler.this.jarFile.getInputStream(this.jarEntry)) {
                     public void close() throws IOException {
                         super.close();
                         if (ClassPathURLConnection.this.connectionJarFile != null && !ClassPathURLConnection.this.useCachedJarFile) {

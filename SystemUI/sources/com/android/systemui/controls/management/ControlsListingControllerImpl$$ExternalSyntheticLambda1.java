@@ -13,6 +13,6 @@ public final /* synthetic */ class ControlsListingControllerImpl$$ExternalSynthe
     }
 
     public final void run() {
-        ControlsListingControllerImpl.m2653removeCallback$lambda6(this.f$0, this.f$1);
+        ControlsListingControllerImpl.m2658removeCallback$lambda6(this.f$0, this.f$1);
     }
 }

@@ -18,7 +18,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.LinearLayout;
 import com.android.internal.logging.UiEventLogger;
 import com.android.internal.widget.RemeasuringLinearLayout;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.p012qs.PagedTileLayout;
 import com.android.systemui.p012qs.QSPanelControllerBase;
 import com.android.systemui.plugins.p011qs.QSTile;
@@ -26,8 +26,6 @@ import com.android.systemui.plugins.p011qs.QSTileView;
 import com.android.systemui.settings.brightness.BrightnessSliderController;
 import com.android.systemui.tuner.TunerService;
 import com.android.systemui.util.Utils;
-import com.nothing.systemui.NTDependencyEx;
-import com.nothing.systemui.p024qs.QSFragmentEx;
 import com.nothing.systemui.p024qs.QSPanelEx;
 import java.util.ArrayList;
 import java.util.List;
@@ -149,8 +147,8 @@ public class QSPanel extends LinearLayout implements TunerService.Tunable {
     public QSPanel(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         this.mUsingMediaPlayer = Utils.useQsMediaPlayer(context);
-        this.mMediaTotalBottomMargin = getResources().getDimensionPixelSize(C1893R.dimen.quick_settings_bottom_margin_media);
-        this.mMediaTopMargin = getResources().getDimensionPixelSize(C1893R.dimen.qs_tile_margin_vertical);
+        this.mMediaTotalBottomMargin = getResources().getDimensionPixelSize(C1894R.dimen.quick_settings_bottom_margin_media);
+        this.mMediaTopMargin = getResources().getDimensionPixelSize(C1894R.dimen.qs_tile_margin_vertical);
         this.mContext = context;
         setOrientation(1);
         this.mMovableContentStartIndex = getChildCount();
@@ -171,7 +169,7 @@ public class QSPanel extends LinearLayout implements TunerService.Tunable {
             setHorizontalContentContainerClipping();
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(0, -2, 1.0f);
             layoutParams.setMarginStart(0);
-            layoutParams.setMarginEnd((int) this.mContext.getResources().getDimension(C1893R.dimen.qs_media_padding));
+            layoutParams.setMarginEnd((int) this.mContext.getResources().getDimension(C1894R.dimen.qs_media_padding));
             layoutParams.gravity = 16;
             this.mHorizontalLinearLayout.addView(this.mHorizontalContentContainer, layoutParams);
             addView(this.mHorizontalLinearLayout, new LinearLayout.LayoutParams(-1, 0, 1.0f));
@@ -191,7 +189,7 @@ public class QSPanel extends LinearLayout implements TunerService.Tunable {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setHorizontalContentContainerClipping$0$com-android-systemui-qs-QSPanel */
-    public /* synthetic */ void mo36144xbee49df2(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
+    public /* synthetic */ void mo36148xbee49df2(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
         int i9 = i3 - i;
         if (i9 != i7 - i5 || i4 - i2 != i8 - i6) {
             this.mClippingRect.right = i9;
@@ -216,15 +214,15 @@ public class QSPanel extends LinearLayout implements TunerService.Tunable {
         View view = this.mBrightnessView;
         if (view != null) {
             ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
-            marginLayoutParams.topMargin = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.qs_brightness_margin_top);
-            marginLayoutParams.bottomMargin = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.qs_brightness_margin_bottom);
+            marginLayoutParams.topMargin = this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.qs_brightness_margin_top);
+            marginLayoutParams.bottomMargin = this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.qs_brightness_margin_bottom);
             this.mBrightnessView.setLayoutParams(marginLayoutParams);
         }
     }
 
     public QSTileLayout getOrCreateTileLayout() {
         if (this.mTileLayout == null) {
-            QSTileLayout qSTileLayout = (QSTileLayout) LayoutInflater.from(this.mContext).inflate(C1893R.layout.qs_paged_tile_layout, this, false);
+            QSTileLayout qSTileLayout = (QSTileLayout) LayoutInflater.from(this.mContext).inflate(C1894R.layout.qs_paged_tile_layout, this, false);
             this.mTileLayout = qSTileLayout;
             qSTileLayout.setSquishinessFraction(this.mSquishinessFraction);
         }
@@ -344,7 +342,7 @@ public class QSPanel extends LinearLayout implements TunerService.Tunable {
     /* access modifiers changed from: protected */
     public void updatePadding() {
         Resources resources = this.mContext.getResources();
-        setPaddingRelative(getPaddingStart(), resources.getDimensionPixelSize(C1893R.dimen.qs_panel_padding_top), getPaddingEnd(), resources.getDimensionPixelSize(C1893R.dimen.qs_panel_padding_bottom));
+        setPaddingRelative(getPaddingStart(), resources.getDimensionPixelSize(C1894R.dimen.qs_panel_padding_top), getPaddingEnd(), resources.getDimensionPixelSize(C1894R.dimen.qs_panel_padding_bottom));
     }
 
     /* access modifiers changed from: package-private */
@@ -366,7 +364,7 @@ public class QSPanel extends LinearLayout implements TunerService.Tunable {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mFooter = findViewById(C1893R.C1897id.qs_footer);
+        this.mFooter = findViewById(C1894R.C1898id.qs_footer);
     }
 
     private void updateHorizontalLinearLayoutMargins() {
@@ -483,7 +481,7 @@ public class QSPanel extends LinearLayout implements TunerService.Tunable {
 
     /* access modifiers changed from: package-private */
     public void addTile(final QSPanelControllerBase.TileRecord tileRecord) {
-        C23371 r0 = new QSTile.Callback() {
+        C23401 r0 = new QSTile.Callback() {
             public void onStateChanged(QSTile.State state) {
                 QSPanel.this.drawTile(tileRecord, state);
                 if (QSPanel.this.mEx != null) {
@@ -494,9 +492,7 @@ public class QSPanel extends LinearLayout implements TunerService.Tunable {
         tileRecord.tile.addCallback(r0);
         tileRecord.callback = r0;
         tileRecord.tileView.init(tileRecord.tile);
-        if (!((QSFragmentEx) NTDependencyEx.get(QSFragmentEx.class)).isSignalPageChanged()) {
-            tileRecord.tile.refreshState();
-        }
+        tileRecord.tile.refreshState();
         QSPanelEx qSPanelEx = this.mEx;
         if (qSPanelEx != null) {
             qSPanelEx.addTile(tileRecord, this.mTileLayout);
@@ -604,10 +600,10 @@ public class QSPanel extends LinearLayout implements TunerService.Tunable {
     }
 
     /* renamed from: com.android.systemui.qs.QSPanel$H */
-    private class C2338H extends Handler {
+    private class C2341H extends Handler {
         private static final int ANNOUNCE_FOR_ACCESSIBILITY = 1;
 
-        private C2338H() {
+        private C2341H() {
         }
 
         public void handleMessage(Message message) {

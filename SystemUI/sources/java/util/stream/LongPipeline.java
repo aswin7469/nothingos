@@ -223,7 +223,7 @@ public abstract class LongPipeline<E_IN> extends AbstractPipeline<E_IN, Long, Lo
 
                     /* access modifiers changed from: package-private */
                     /* renamed from: lambda$accept$0$java-util-stream-LongPipeline$6$1  reason: not valid java name */
-                    public /* synthetic */ void m3873lambda$accept$0$javautilstreamLongPipeline$6$1(long j) {
+                    public /* synthetic */ void m3891lambda$accept$0$javautilstreamLongPipeline$6$1(long j) {
                         this.downstream.accept(j);
                     }
                 };
@@ -324,7 +324,7 @@ public abstract class LongPipeline<E_IN> extends AbstractPipeline<E_IN, Long, Lo
         long[] jArr = (long[]) collect(new LongPipeline$$ExternalSyntheticLambda9(), new LongPipeline$$ExternalSyntheticLambda10(), new LongPipeline$$ExternalSyntheticLambda11());
         long j = jArr[0];
         if (j > 0) {
-            return OptionalDouble.m1747of(((double) jArr[1]) / ((double) j));
+            return OptionalDouble.m1753of(((double) jArr[1]) / ((double) j));
         }
         return OptionalDouble.empty();
     }

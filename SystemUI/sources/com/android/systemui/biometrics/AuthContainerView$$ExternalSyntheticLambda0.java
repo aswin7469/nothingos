@@ -12,6 +12,6 @@ public final /* synthetic */ class AuthContainerView$$ExternalSyntheticLambda0 i
     }
 
     public final boolean onKey(View view, int i, KeyEvent keyEvent) {
-        return this.f$0.m2556lambda$new$0$comandroidsystemuibiometricsAuthContainerView(view, i, keyEvent);
+        return this.f$0.m2562lambda$new$0$comandroidsystemuibiometricsAuthContainerView(view, i, keyEvent);
     }
 }

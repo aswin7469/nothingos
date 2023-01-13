@@ -10,6 +10,6 @@ public final /* synthetic */ class ControlActionCoordinatorImpl$$ExternalSynthet
     }
 
     public final void run() {
-        ControlActionCoordinatorImpl.m2674bouncerOrRun$lambda2(this.f$0);
+        ControlActionCoordinatorImpl.m2679bouncerOrRun$lambda2(this.f$0);
     }
 }

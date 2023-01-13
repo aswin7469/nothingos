@@ -9,7 +9,7 @@ import android.widget.TextView;
 import com.android.internal.widget.MessagingImageMessage;
 import com.android.internal.widget.MessagingPropertyAnimator;
 import com.android.internal.widget.ViewClippingUtil;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.animation.Interpolators;
 import com.android.systemui.statusbar.CrossFadeHelper;
 import com.android.systemui.statusbar.TransformableView;
@@ -37,10 +37,10 @@ public class TransformState {
             }
         }
     };
-    private static final int TRANSFORMATION_START_SCLALE_X = 2131429074;
-    private static final int TRANSFORMATION_START_SCLALE_Y = 2131429075;
-    private static final int TRANSFORMATION_START_X = 2131429076;
-    private static final int TRANSFORMATION_START_Y = 2131429077;
+    private static final int TRANSFORMATION_START_SCLALE_X = 2131429091;
+    private static final int TRANSFORMATION_START_SCLALE_Y = 2131429092;
+    private static final int TRANSFORMATION_START_X = 2131429093;
+    private static final int TRANSFORMATION_START_Y = 2131429094;
     public static final int TRANSFORM_ALL = 17;
     public static final int TRANSFORM_X = 1;
     public static final int TRANSFORM_Y = 16;
@@ -62,7 +62,7 @@ public class TransformState {
     public void initFrom(View view, TransformInfo transformInfo) {
         this.mTransformedView = view;
         this.mTransformInfo = transformInfo;
-        this.mAlignEnd = Boolean.TRUE.equals(view.getTag(C1893R.C1897id.align_transform_end_tag));
+        this.mAlignEnd = Boolean.TRUE.equals(view.getTag(C1894R.C1898id.align_transform_end_tag));
     }
 
     public void transformViewFrom(TransformState transformState, float f) {
@@ -572,7 +572,7 @@ public class TransformState {
     }
 
     public float getTransformationStartX() {
-        Object tag = this.mTransformedView.getTag(C1893R.C1897id.transformation_start_x_tag);
+        Object tag = this.mTransformedView.getTag(C1894R.C1898id.transformation_start_x_tag);
         if (tag == null) {
             return -1.0f;
         }
@@ -580,7 +580,7 @@ public class TransformState {
     }
 
     public float getTransformationStartY() {
-        Object tag = this.mTransformedView.getTag(C1893R.C1897id.transformation_start_y_tag);
+        Object tag = this.mTransformedView.getTag(C1894R.C1898id.transformation_start_y_tag);
         if (tag == null) {
             return -1.0f;
         }
@@ -588,7 +588,7 @@ public class TransformState {
     }
 
     public float getTransformationStartScaleX() {
-        Object tag = this.mTransformedView.getTag(C1893R.C1897id.transformation_start_scale_x_tag);
+        Object tag = this.mTransformedView.getTag(C1894R.C1898id.transformation_start_scale_x_tag);
         if (tag == null) {
             return -1.0f;
         }
@@ -596,7 +596,7 @@ public class TransformState {
     }
 
     public float getTransformationStartScaleY() {
-        Object tag = this.mTransformedView.getTag(C1893R.C1897id.transformation_start_scale_y_tag);
+        Object tag = this.mTransformedView.getTag(C1894R.C1898id.transformation_start_scale_y_tag);
         if (tag == null) {
             return -1.0f;
         }
@@ -604,19 +604,19 @@ public class TransformState {
     }
 
     public void setTransformationStartX(float f) {
-        this.mTransformedView.setTag(C1893R.C1897id.transformation_start_x_tag, Float.valueOf(f));
+        this.mTransformedView.setTag(C1894R.C1898id.transformation_start_x_tag, Float.valueOf(f));
     }
 
     public void setTransformationStartY(float f) {
-        this.mTransformedView.setTag(C1893R.C1897id.transformation_start_y_tag, Float.valueOf(f));
+        this.mTransformedView.setTag(C1894R.C1898id.transformation_start_y_tag, Float.valueOf(f));
     }
 
     private void setTransformationStartScaleX(float f) {
-        this.mTransformedView.setTag(C1893R.C1897id.transformation_start_scale_x_tag, Float.valueOf(f));
+        this.mTransformedView.setTag(C1894R.C1898id.transformation_start_scale_x_tag, Float.valueOf(f));
     }
 
     private void setTransformationStartScaleY(float f) {
-        this.mTransformedView.setTag(C1893R.C1897id.transformation_start_scale_y_tag, Float.valueOf(f));
+        this.mTransformedView.setTag(C1894R.C1898id.transformation_start_scale_y_tag, Float.valueOf(f));
     }
 
     /* access modifiers changed from: protected */
@@ -658,10 +658,10 @@ public class TransformState {
     public void abortTransformation() {
         View view = this.mTransformedView;
         Float valueOf = Float.valueOf(-1.0f);
-        view.setTag(C1893R.C1897id.transformation_start_x_tag, valueOf);
-        this.mTransformedView.setTag(C1893R.C1897id.transformation_start_y_tag, valueOf);
-        this.mTransformedView.setTag(C1893R.C1897id.transformation_start_scale_x_tag, valueOf);
-        this.mTransformedView.setTag(C1893R.C1897id.transformation_start_scale_y_tag, valueOf);
+        view.setTag(C1894R.C1898id.transformation_start_x_tag, valueOf);
+        this.mTransformedView.setTag(C1894R.C1898id.transformation_start_y_tag, valueOf);
+        this.mTransformedView.setTag(C1894R.C1898id.transformation_start_scale_x_tag, valueOf);
+        this.mTransformedView.setTag(C1894R.C1898id.transformation_start_scale_y_tag, valueOf);
     }
 
     public static TransformState obtain() {

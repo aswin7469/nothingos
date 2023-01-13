@@ -93,7 +93,7 @@ public class ThemeOverlayApplier implements Dumpable {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$applyCurrentUserOverlays$7$com-android-systemui-theme-ThemeOverlayApplier */
-    public /* synthetic */ void mo46306x3960bd9b(Map map, FabricatedOverlay[] fabricatedOverlayArr, int i, Set set) {
+    public /* synthetic */ void mo46318x3960bd9b(Map map, FabricatedOverlay[] fabricatedOverlayArr, int i, Set set) {
         HashSet hashSet = new HashSet(THEME_CATEGORIES);
         ArrayList arrayList = new ArrayList();
         ((Set) hashSet.stream().map(new ThemeOverlayApplier$$ExternalSyntheticLambda0(this)).collect(Collectors.toSet())).forEach(new ThemeOverlayApplier$$ExternalSyntheticLambda1(this, arrayList));
@@ -125,19 +125,19 @@ public class ThemeOverlayApplier implements Dumpable {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$applyCurrentUserOverlays$0$com-android-systemui-theme-ThemeOverlayApplier */
-    public /* synthetic */ String mo46303xa4d65082(String str) {
+    public /* synthetic */ String mo46315xa4d65082(String str) {
         return this.mCategoryToTargetPackage.get(str);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$applyCurrentUserOverlays$1$com-android-systemui-theme-ThemeOverlayApplier */
-    public /* synthetic */ void mo46304xdea0f261(List list, String str) {
+    public /* synthetic */ void mo46316xdea0f261(List list, String str) {
         list.addAll(this.mOverlayManager.getOverlayInfosForTarget(str, UserHandle.SYSTEM));
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$applyCurrentUserOverlays$2$com-android-systemui-theme-ThemeOverlayApplier */
-    public /* synthetic */ boolean mo46305x186b9440(OverlayInfo overlayInfo) {
+    public /* synthetic */ boolean mo46317x186b9440(OverlayInfo overlayInfo) {
         return this.mTargetPackageToCategories.get(overlayInfo.targetPackageName).contains(overlayInfo.category);
     }
 

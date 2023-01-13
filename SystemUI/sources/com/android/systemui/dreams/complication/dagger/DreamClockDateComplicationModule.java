@@ -4,7 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.android.internal.util.Preconditions;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dreams.complication.ComplicationLayoutParams;
 import dagger.Module;
 import dagger.Provides;
@@ -19,7 +19,7 @@ public interface DreamClockDateComplicationModule {
     @Provides
     @Named("clock_date_complication_view")
     static View provideComplicationView(LayoutInflater layoutInflater) {
-        return (View) Preconditions.checkNotNull(layoutInflater.inflate(C1893R.layout.dream_overlay_complication_clock_date, (ViewGroup) null, false), "R.layout.dream_overlay_complication_clock_date did not properly inflated");
+        return (View) Preconditions.checkNotNull(layoutInflater.inflate(C1894R.layout.dream_overlay_complication_clock_date, (ViewGroup) null, false), "R.layout.dream_overlay_complication_clock_date did not properly inflated");
     }
 
     @Provides

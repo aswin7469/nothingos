@@ -47,12 +47,14 @@ public class DozeScrimController implements StatusBarStateController.StateListen
     };
     /* access modifiers changed from: private */
     public int mPulseReason;
+    /* access modifiers changed from: private */
+    public boolean mRequestPulsing;
     private final ScrimController.Callback mScrimCallback = new ScrimController.Callback() {
         public void onDisplayBlanked() {
             if (DozeScrimController.DEBUG) {
-                Log.d(DozeScrimController.TAG, "Pulse in, mDozing=" + DozeScrimController.this.mDozing + " mPulseReason=" + DozeLog.reasonToString(DozeScrimController.this.mPulseReason));
+                Log.d(DozeScrimController.TAG, "Pulse in, mDozing=" + DozeScrimController.this.mDozing + " mPulseReason=" + DozeLog.reasonToString(DozeScrimController.this.mPulseReason) + ", requestPulsing=" + DozeScrimController.this.mRequestPulsing);
             }
-            if (DozeScrimController.this.mDozing) {
+            if (DozeScrimController.this.mDozing && DozeScrimController.this.mRequestPulsing) {
                 DozeScrimController.this.pulseStarted();
             }
         }
@@ -95,21 +97,29 @@ public class DozeScrimController implements StatusBarStateController.StateListen
     }
 
     public void pulse(DozeHost.PulseCallback pulseCallback, int i) {
-        if (pulseCallback == null) {
-            throw new IllegalArgumentException("callback must not be null");
-        } else if (!this.mDozing || this.mPulseCallback != null) {
-            if (DEBUG) {
-                Log.d(TAG, "Pulse suppressed. Dozing: " + this.mDozeParameters + " had callback? " + (this.mPulseCallback != null));
-            }
-            pulseCallback.onPulseFinished();
-            if (!this.mDozing) {
-                this.mDozeLog.tracePulseDropped("device isn't dozing");
+        if (pulseCallback != null) {
+            boolean z = true;
+            if (!this.mDozing || this.mPulseCallback != null) {
+                if (DEBUG) {
+                    StringBuilder append = new StringBuilder("Pulse suppressed. Dozing: ").append((Object) this.mDozeParameters).append(" had callback? ");
+                    if (this.mPulseCallback == null) {
+                        z = false;
+                    }
+                    Log.d(TAG, append.append(z).toString());
+                }
+                pulseCallback.onPulseFinished();
+                if (!this.mDozing) {
+                    this.mDozeLog.tracePulseDropped("device isn't dozing");
+                } else {
+                    this.mDozeLog.tracePulseDropped("already has pulse callback mPulseCallback=" + this.mPulseCallback);
+                }
             } else {
-                this.mDozeLog.tracePulseDropped("already has pulse callback mPulseCallback=" + this.mPulseCallback);
+                this.mRequestPulsing = true;
+                this.mPulseCallback = pulseCallback;
+                this.mPulseReason = i;
             }
         } else {
-            this.mPulseCallback = pulseCallback;
-            this.mPulseReason = i;
+            throw new IllegalArgumentException("callback must not be null");
         }
     }
 
@@ -159,6 +169,7 @@ public class DozeScrimController implements StatusBarStateController.StateListen
 
     /* access modifiers changed from: private */
     public void pulseFinished() {
+        this.mRequestPulsing = false;
         this.mDozeLog.tracePulseFinish();
         DozeHost.PulseCallback pulseCallback = this.mPulseCallback;
         if (pulseCallback != null) {

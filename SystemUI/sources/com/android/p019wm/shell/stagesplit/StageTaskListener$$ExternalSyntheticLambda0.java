@@ -13,6 +13,6 @@ public final /* synthetic */ class StageTaskListener$$ExternalSyntheticLambda0 i
     }
 
     public final void runWithTransaction(SurfaceControl.Transaction transaction) {
-        this.f$0.mo51065xfb5ec274(transaction);
+        this.f$0.mo51076xfb5ec274(transaction);
     }
 }

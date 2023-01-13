@@ -13,7 +13,7 @@ import kotlin.Metadata;
 import kotlin.jvm.internal.Intrinsics;
 
 @SysUISingleton
-@Metadata(mo64986d1 = {"\u0000L\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\b\n\u0000\n\u0002\u0010\u0007\n\u0000\n\u0002\u0010\u000b\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010!\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0010\u0002\n\u0002\b\u0007\b\u0007\u0018\u00002\u00020\u0001B\u000f\b\u0007\u0012\u0006\u0010\u0002\u001a\u00020\u0003¢\u0006\u0002\u0010\u0004J\u0010\u0010\u0017\u001a\u00020\u00182\u0006\u0010\u0019\u001a\u00020\u0010H\u0016J\b\u0010\u001a\u001a\u00020\nH\u0016J\b\u0010\u001b\u001a\u00020\u0018H\u0016J\u0010\u0010\u001c\u001a\u00020\u00182\u0006\u0010\u001d\u001a\u00020\fH\u0016J\u0010\u0010\u001e\u001a\u00020\u00182\u0006\u0010\u0019\u001a\u00020\u0010H\u0016R\u000e\u0010\u0002\u001a\u00020\u0003X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0005\u001a\u00020\u0006X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0007\u001a\u00020\bX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\t\u001a\u00020\nX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u000b\u001a\u00020\fX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\r\u001a\u00020\u0006X\u000e¢\u0006\u0002\n\u0000R\u0014\u0010\u000e\u001a\b\u0012\u0004\u0012\u00020\u00100\u000fX\u0004¢\u0006\u0002\n\u0000R\u0010\u0010\u0011\u001a\u0004\u0018\u00010\u0012X\u000e¢\u0006\u0002\n\u0000R\u0010\u0010\u0013\u001a\u0004\u0018\u00010\u0014X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0015\u001a\u00020\u0006X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0016\u001a\u00020\u0006X\u000e¢\u0006\u0002\n\u0000¨\u0006\u001f"}, mo64987d2 = {"Lcom/android/systemui/statusbar/phone/ConfigurationControllerImpl;", "Lcom/android/systemui/statusbar/policy/ConfigurationController;", "context", "Landroid/content/Context;", "(Landroid/content/Context;)V", "density", "", "fontScale", "", "inCarMode", "", "lastConfig", "Landroid/content/res/Configuration;", "layoutDirection", "listeners", "", "Lcom/android/systemui/statusbar/policy/ConfigurationController$ConfigurationListener;", "localeList", "Landroid/os/LocaleList;", "maxBounds", "Landroid/graphics/Rect;", "smallestScreenWidth", "uiMode", "addCallback", "", "listener", "isLayoutRtl", "notifyThemeChanged", "onConfigurationChanged", "newConfig", "removeCallback", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000R\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\b\n\u0000\n\u0002\u0010\u0007\n\u0000\n\u0002\u0010\u000b\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010!\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b\b\b\u0007\u0018\u00002\u00020\u0001B\u000f\b\u0007\u0012\u0006\u0010\u0002\u001a\u00020\u0003¢\u0006\u0002\u0010\u0004J\u0010\u0010\u001a\u001a\u00020\u001b2\u0006\u0010\u001c\u001a\u00020\u0010H\u0016J\b\u0010\u001d\u001a\u00020\u0006H\u0016J\b\u0010\u001e\u001a\u00020\nH\u0016J\b\u0010\u001f\u001a\u00020\u001bH\u0016J\u0010\u0010 \u001a\u00020\u001b2\u0006\u0010!\u001a\u00020\fH\u0016J\u0010\u0010\"\u001a\u00020\u001b2\u0006\u0010\u001c\u001a\u00020\u0010H\u0016R\u000e\u0010\u0002\u001a\u00020\u0003X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0005\u001a\u00020\u0006X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0007\u001a\u00020\bX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\t\u001a\u00020\nX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u000b\u001a\u00020\fX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\r\u001a\u00020\u0006X\u000e¢\u0006\u0002\n\u0000R\u0014\u0010\u000e\u001a\b\u0012\u0004\u0012\u00020\u00100\u000fX\u0004¢\u0006\u0002\n\u0000R\u0010\u0010\u0011\u001a\u0004\u0018\u00010\u0012X\u000e¢\u0006\u0002\n\u0000R\u0010\u0010\u0013\u001a\u0004\u0018\u00010\u0014X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0015\u001a\u00020\u0006X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0016\u001a\u00020\u0006X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0017\u001a\u00020\u0006X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0018\u001a\u00020\u0019X\u0004¢\u0006\u0002\n\u0000¨\u0006#"}, mo65043d2 = {"Lcom/android/systemui/statusbar/phone/ConfigurationControllerImpl;", "Lcom/android/systemui/statusbar/policy/ConfigurationController;", "context", "Landroid/content/Context;", "(Landroid/content/Context;)V", "density", "", "fontScale", "", "inCarMode", "", "lastConfig", "Landroid/content/res/Configuration;", "layoutDirection", "listeners", "", "Lcom/android/systemui/statusbar/policy/ConfigurationController$ConfigurationListener;", "localeList", "Landroid/os/LocaleList;", "maxBounds", "Landroid/graphics/Rect;", "orientation", "smallestScreenWidth", "uiMode", "uiModeDelayRunnable", "Ljava/lang/Runnable;", "addCallback", "", "listener", "getOrientation", "isLayoutRtl", "notifyThemeChanged", "onConfigurationChanged", "newConfig", "removeCallback", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* compiled from: ConfigurationControllerImpl.kt */
 public final class ConfigurationControllerImpl implements ConfigurationController {
     private final Context context;
@@ -25,8 +25,10 @@ public final class ConfigurationControllerImpl implements ConfigurationControlle
     private final List<ConfigurationController.ConfigurationListener> listeners = new ArrayList();
     private LocaleList localeList;
     private Rect maxBounds;
+    private int orientation;
     private int smallestScreenWidth;
     private int uiMode;
+    private final Runnable uiModeDelayRunnable = new ConfigurationControllerImpl$$ExternalSyntheticLambda0(this);
 
     @Inject
     public ConfigurationControllerImpl(Context context2) {
@@ -40,6 +42,18 @@ public final class ConfigurationControllerImpl implements ConfigurationControlle
         this.uiMode = configuration.uiMode & 48;
         this.localeList = configuration.getLocales();
         this.layoutDirection = configuration.getLayoutDirection();
+        this.orientation = configuration.orientation;
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: uiModeDelayRunnable$lambda-2  reason: not valid java name */
+    public static final void m3181uiModeDelayRunnable$lambda2(ConfigurationControllerImpl configurationControllerImpl) {
+        Intrinsics.checkNotNullParameter(configurationControllerImpl, "this$0");
+        for (ConfigurationController.ConfigurationListener configurationListener : configurationControllerImpl.listeners) {
+            if (configurationControllerImpl.listeners.contains(configurationListener)) {
+                configurationListener.onUiModeChangedDelayCheck();
+            }
+        }
     }
 
     public void notifyThemeChanged() {
@@ -50,24 +64,25 @@ public final class ConfigurationControllerImpl implements ConfigurationControlle
         }
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:19:0x0052, code lost:
-        if (r4 == false) goto L_0x0074;
+    /* JADX WARNING: Code restructure failed: missing block: B:20:0x0056, code lost:
+        if (r4 == false) goto L_0x0078;
      */
-    /* JADX WARNING: Removed duplicated region for block: B:110:? A[ORIG_RETURN, RETURN, SYNTHETIC] */
-    /* JADX WARNING: Removed duplicated region for block: B:29:0x007a  */
-    /* JADX WARNING: Removed duplicated region for block: B:37:0x00a6  */
-    /* JADX WARNING: Removed duplicated region for block: B:45:0x00d0  */
-    /* JADX WARNING: Removed duplicated region for block: B:52:0x00f0  */
-    /* JADX WARNING: Removed duplicated region for block: B:60:0x0125  */
-    /* JADX WARNING: Removed duplicated region for block: B:72:0x0159  */
+    /* JADX WARNING: Removed duplicated region for block: B:125:? A[ORIG_RETURN, RETURN, SYNTHETIC] */
+    /* JADX WARNING: Removed duplicated region for block: B:30:0x007e  */
+    /* JADX WARNING: Removed duplicated region for block: B:38:0x00aa  */
+    /* JADX WARNING: Removed duplicated region for block: B:46:0x00d4  */
+    /* JADX WARNING: Removed duplicated region for block: B:53:0x00f4  */
+    /* JADX WARNING: Removed duplicated region for block: B:62:0x0141  */
+    /* JADX WARNING: Removed duplicated region for block: B:74:0x016e  */
+    /* JADX WARNING: Removed duplicated region for block: B:82:0x0199  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void onConfigurationChanged(android.content.res.Configuration r11) {
+    public void onConfigurationChanged(android.content.res.Configuration r12) {
         /*
-            r10 = this;
+            r11 = this;
             java.lang.String r0 = "newConfig"
-            kotlin.jvm.internal.Intrinsics.checkNotNullParameter(r11, r0)
+            kotlin.jvm.internal.Intrinsics.checkNotNullParameter(r12, r0)
             java.util.ArrayList r0 = new java.util.ArrayList
-            java.util.List<com.android.systemui.statusbar.policy.ConfigurationController$ConfigurationListener> r1 = r10.listeners
+            java.util.List<com.android.systemui.statusbar.policy.ConfigurationController$ConfigurationListener> r1 = r11.listeners
             java.util.Collection r1 = (java.util.Collection) r1
             r0.<init>(r1)
             java.util.Collection r0 = (java.util.Collection) r0
@@ -75,169 +90,197 @@ public final class ConfigurationControllerImpl implements ConfigurationControlle
             java.util.Iterator r1 = r0.iterator()
         L_0x0016:
             boolean r2 = r1.hasNext()
-            if (r2 == 0) goto L_0x002e
+            if (r2 == 0) goto L_0x0030
             java.lang.Object r2 = r1.next()
             com.android.systemui.statusbar.policy.ConfigurationController$ConfigurationListener r2 = (com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener) r2
-            java.util.List<com.android.systemui.statusbar.policy.ConfigurationController$ConfigurationListener> r3 = r10.listeners
+            java.util.List<com.android.systemui.statusbar.policy.ConfigurationController$ConfigurationListener> r3 = r11.listeners
             boolean r3 = r3.contains(r2)
             if (r3 == 0) goto L_0x0016
-            r2.onConfigChanged(r11)
+            if (r2 == 0) goto L_0x0016
+            r2.onConfigChanged(r12)
             goto L_0x0016
-        L_0x002e:
-            float r1 = r11.fontScale
-            int r2 = r11.densityDpi
-            int r3 = r11.uiMode
+        L_0x0030:
+            float r1 = r12.fontScale
+            int r2 = r12.densityDpi
+            int r3 = r12.uiMode
             r3 = r3 & 48
-            int r4 = r10.uiMode
+            int r4 = r11.uiMode
             r5 = 0
             r6 = 1
-            if (r3 == r4) goto L_0x003e
+            if (r3 == r4) goto L_0x0040
             r4 = r6
-            goto L_0x003f
-        L_0x003e:
+            goto L_0x0041
+        L_0x0040:
             r4 = r5
-        L_0x003f:
-            int r7 = r10.density
-            if (r2 != r7) goto L_0x0054
-            float r7 = r10.fontScale
-            int r7 = (r1 > r7 ? 1 : (r1 == r7 ? 0 : -1))
-            if (r7 != 0) goto L_0x004b
-            r7 = r6
-            goto L_0x004c
-        L_0x004b:
-            r7 = r5
-        L_0x004c:
-            if (r7 == 0) goto L_0x0054
-            boolean r7 = r10.inCarMode
-            if (r7 == 0) goto L_0x0074
-            if (r4 == 0) goto L_0x0074
-        L_0x0054:
-            java.util.Iterator r7 = r0.iterator()
+        L_0x0041:
+            int r7 = r12.orientation
+            int r8 = r11.density
+            if (r2 != r8) goto L_0x0058
+            float r8 = r11.fontScale
+            int r8 = (r1 > r8 ? 1 : (r1 == r8 ? 0 : -1))
+            if (r8 != 0) goto L_0x004f
+            r8 = r6
+            goto L_0x0050
+        L_0x004f:
+            r8 = r5
+        L_0x0050:
+            if (r8 == 0) goto L_0x0058
+            boolean r8 = r11.inCarMode
+            if (r8 == 0) goto L_0x0078
+            if (r4 == 0) goto L_0x0078
         L_0x0058:
-            boolean r8 = r7.hasNext()
-            if (r8 == 0) goto L_0x0070
-            java.lang.Object r8 = r7.next()
-            com.android.systemui.statusbar.policy.ConfigurationController$ConfigurationListener r8 = (com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener) r8
-            java.util.List<com.android.systemui.statusbar.policy.ConfigurationController$ConfigurationListener> r9 = r10.listeners
-            boolean r9 = r9.contains(r8)
-            if (r9 == 0) goto L_0x0058
-            r8.onDensityOrFontScaleChanged()
-            goto L_0x0058
-        L_0x0070:
-            r10.density = r2
-            r10.fontScale = r1
+            java.util.Iterator r8 = r0.iterator()
+        L_0x005c:
+            boolean r9 = r8.hasNext()
+            if (r9 == 0) goto L_0x0074
+            java.lang.Object r9 = r8.next()
+            com.android.systemui.statusbar.policy.ConfigurationController$ConfigurationListener r9 = (com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener) r9
+            java.util.List<com.android.systemui.statusbar.policy.ConfigurationController$ConfigurationListener> r10 = r11.listeners
+            boolean r10 = r10.contains(r9)
+            if (r10 == 0) goto L_0x005c
+            r9.onDensityOrFontScaleChanged()
+            goto L_0x005c
         L_0x0074:
-            int r1 = r11.smallestScreenWidthDp
-            int r2 = r10.smallestScreenWidth
-            if (r1 == r2) goto L_0x0098
-            r10.smallestScreenWidth = r1
+            r11.density = r2
+            r11.fontScale = r1
+        L_0x0078:
+            int r1 = r12.smallestScreenWidthDp
+            int r2 = r11.smallestScreenWidth
+            if (r1 == r2) goto L_0x009c
+            r11.smallestScreenWidth = r1
             java.util.Iterator r1 = r0.iterator()
-        L_0x0080:
+        L_0x0084:
             boolean r2 = r1.hasNext()
-            if (r2 == 0) goto L_0x0098
+            if (r2 == 0) goto L_0x009c
             java.lang.Object r2 = r1.next()
             com.android.systemui.statusbar.policy.ConfigurationController$ConfigurationListener r2 = (com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener) r2
-            java.util.List<com.android.systemui.statusbar.policy.ConfigurationController$ConfigurationListener> r7 = r10.listeners
-            boolean r7 = r7.contains(r2)
-            if (r7 == 0) goto L_0x0080
+            java.util.List<com.android.systemui.statusbar.policy.ConfigurationController$ConfigurationListener> r8 = r11.listeners
+            boolean r8 = r8.contains(r2)
+            if (r8 == 0) goto L_0x0084
             r2.onSmallestScreenWidthChanged()
-            goto L_0x0080
-        L_0x0098:
-            android.app.WindowConfiguration r1 = r11.windowConfiguration
+            goto L_0x0084
+        L_0x009c:
+            android.app.WindowConfiguration r1 = r12.windowConfiguration
             android.graphics.Rect r1 = r1.getMaxBounds()
-            android.graphics.Rect r2 = r10.maxBounds
+            android.graphics.Rect r2 = r11.maxBounds
             boolean r2 = kotlin.jvm.internal.Intrinsics.areEqual((java.lang.Object) r1, (java.lang.Object) r2)
-            if (r2 != 0) goto L_0x00c4
-            r10.maxBounds = r1
+            if (r2 != 0) goto L_0x00c8
+            r11.maxBounds = r1
             java.util.Iterator r1 = r0.iterator()
-        L_0x00ac:
+        L_0x00b0:
             boolean r2 = r1.hasNext()
-            if (r2 == 0) goto L_0x00c4
+            if (r2 == 0) goto L_0x00c8
             java.lang.Object r2 = r1.next()
             com.android.systemui.statusbar.policy.ConfigurationController$ConfigurationListener r2 = (com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener) r2
-            java.util.List<com.android.systemui.statusbar.policy.ConfigurationController$ConfigurationListener> r7 = r10.listeners
-            boolean r7 = r7.contains(r2)
-            if (r7 == 0) goto L_0x00ac
+            java.util.List<com.android.systemui.statusbar.policy.ConfigurationController$ConfigurationListener> r8 = r11.listeners
+            boolean r8 = r8.contains(r2)
+            if (r8 == 0) goto L_0x00b0
             r2.onMaxBoundsChanged()
-            goto L_0x00ac
-        L_0x00c4:
-            android.os.LocaleList r1 = r11.getLocales()
-            android.os.LocaleList r2 = r10.localeList
+            goto L_0x00b0
+        L_0x00c8:
+            android.os.LocaleList r1 = r12.getLocales()
+            android.os.LocaleList r2 = r11.localeList
             boolean r2 = kotlin.jvm.internal.Intrinsics.areEqual((java.lang.Object) r1, (java.lang.Object) r2)
-            if (r2 != 0) goto L_0x00ee
-            r10.localeList = r1
+            if (r2 != 0) goto L_0x00f2
+            r11.localeList = r1
             java.util.Iterator r1 = r0.iterator()
-        L_0x00d6:
+        L_0x00da:
             boolean r2 = r1.hasNext()
-            if (r2 == 0) goto L_0x00ee
+            if (r2 == 0) goto L_0x00f2
             java.lang.Object r2 = r1.next()
             com.android.systemui.statusbar.policy.ConfigurationController$ConfigurationListener r2 = (com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener) r2
-            java.util.List<com.android.systemui.statusbar.policy.ConfigurationController$ConfigurationListener> r7 = r10.listeners
-            boolean r7 = r7.contains(r2)
-            if (r7 == 0) goto L_0x00d6
+            java.util.List<com.android.systemui.statusbar.policy.ConfigurationController$ConfigurationListener> r8 = r11.listeners
+            boolean r8 = r8.contains(r2)
+            if (r8 == 0) goto L_0x00da
             r2.onLocaleListChanged()
-            goto L_0x00d6
-        L_0x00ee:
-            if (r4 == 0) goto L_0x011d
-            android.content.Context r1 = r10.context
+            goto L_0x00da
+        L_0x00f2:
+            if (r4 == 0) goto L_0x0139
+            android.content.Context r1 = r11.context
             android.content.res.Resources$Theme r1 = r1.getTheme()
-            android.content.Context r2 = r10.context
+            android.content.Context r2 = r11.context
             int r2 = r2.getThemeResId()
             r1.applyStyle(r2, r6)
-            r10.uiMode = r3
+            r11.uiMode = r3
             java.util.Iterator r1 = r0.iterator()
-        L_0x0105:
+        L_0x0109:
             boolean r2 = r1.hasNext()
-            if (r2 == 0) goto L_0x011d
+            if (r2 == 0) goto L_0x0121
             java.lang.Object r2 = r1.next()
             com.android.systemui.statusbar.policy.ConfigurationController$ConfigurationListener r2 = (com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener) r2
-            java.util.List<com.android.systemui.statusbar.policy.ConfigurationController$ConfigurationListener> r3 = r10.listeners
+            java.util.List<com.android.systemui.statusbar.policy.ConfigurationController$ConfigurationListener> r3 = r11.listeners
             boolean r3 = r3.contains(r2)
-            if (r3 == 0) goto L_0x0105
+            if (r3 == 0) goto L_0x0109
             r2.onUiModeChanged()
-            goto L_0x0105
-        L_0x011d:
-            int r1 = r10.layoutDirection
-            int r2 = r11.getLayoutDirection()
-            if (r1 == r2) goto L_0x014e
-            int r1 = r11.getLayoutDirection()
-            r10.layoutDirection = r1
+            goto L_0x0109
+        L_0x0121:
+            android.content.Context r1 = r11.context
+            android.os.Handler r1 = r1.getMainThreadHandler()
+            java.lang.Runnable r2 = r11.uiModeDelayRunnable
+            r1.removeCallbacks(r2)
+            android.content.Context r1 = r11.context
+            android.os.Handler r1 = r1.getMainThreadHandler()
+            java.lang.Runnable r2 = r11.uiModeDelayRunnable
+            r3 = 5000(0x1388, double:2.4703E-320)
+            r1.postDelayed(r2, r3)
+        L_0x0139:
+            int r1 = r11.layoutDirection
+            int r2 = r12.getLayoutDirection()
+            if (r1 == r2) goto L_0x016a
+            int r1 = r12.getLayoutDirection()
+            r11.layoutDirection = r1
             java.util.Iterator r1 = r0.iterator()
-        L_0x012f:
+        L_0x014b:
             boolean r2 = r1.hasNext()
-            if (r2 == 0) goto L_0x014e
+            if (r2 == 0) goto L_0x016a
             java.lang.Object r2 = r1.next()
             com.android.systemui.statusbar.policy.ConfigurationController$ConfigurationListener r2 = (com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener) r2
-            java.util.List<com.android.systemui.statusbar.policy.ConfigurationController$ConfigurationListener> r3 = r10.listeners
+            java.util.List<com.android.systemui.statusbar.policy.ConfigurationController$ConfigurationListener> r3 = r11.listeners
             boolean r3 = r3.contains(r2)
-            if (r3 == 0) goto L_0x012f
-            int r3 = r10.layoutDirection
-            if (r3 != r6) goto L_0x0149
+            if (r3 == 0) goto L_0x014b
+            int r3 = r11.layoutDirection
+            if (r3 != r6) goto L_0x0165
             r3 = r6
-            goto L_0x014a
-        L_0x0149:
+            goto L_0x0166
+        L_0x0165:
             r3 = r5
-        L_0x014a:
+        L_0x0166:
             r2.onLayoutDirectionChanged(r3)
-            goto L_0x012f
-        L_0x014e:
-            android.content.res.Configuration r1 = r10.lastConfig
-            int r11 = r1.updateFrom(r11)
+            goto L_0x014b
+        L_0x016a:
+            int r1 = r11.orientation
+            if (r7 == r1) goto L_0x018e
+            r11.orientation = r7
+            java.util.Iterator r1 = r0.iterator()
+        L_0x0174:
+            boolean r2 = r1.hasNext()
+            if (r2 == 0) goto L_0x018e
+            java.lang.Object r2 = r1.next()
+            com.android.systemui.statusbar.policy.ConfigurationController$ConfigurationListener r2 = (com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener) r2
+            java.util.List<com.android.systemui.statusbar.policy.ConfigurationController$ConfigurationListener> r3 = r11.listeners
+            boolean r3 = r3.contains(r2)
+            if (r3 == 0) goto L_0x0174
+            int r3 = r11.orientation
+            r2.onOrientationChanged(r3)
+            goto L_0x0174
+        L_0x018e:
+            android.content.res.Configuration r1 = r11.lastConfig
+            int r12 = r1.updateFrom(r12)
             r1 = -2147483648(0xffffffff80000000, float:-0.0)
-            r11 = r11 & r1
-            if (r11 == 0) goto L_0x0175
-            java.util.Iterator r11 = r0.iterator()
-        L_0x015d:
-            boolean r0 = r11.hasNext()
-            if (r0 == 0) goto L_0x0175
-            java.lang.Object r0 = r11.next()
+            r12 = r12 & r1
+            if (r12 == 0) goto L_0x01b5
+            java.util.Iterator r12 = r0.iterator()
+        L_0x019d:
+            boolean r0 = r12.hasNext()
+            if (r0 == 0) goto L_0x01b5
+            java.lang.Object r0 = r12.next()
             com.android.systemui.statusbar.policy.ConfigurationController$ConfigurationListener r0 = (com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener) r0
-            java.util.List<com.android.systemui.statusbar.policy.ConfigurationController$ConfigurationListener> r1 = r10.listeners
+            java.util.List<com.android.systemui.statusbar.policy.ConfigurationController$ConfigurationListener> r1 = r11.listeners
             boolean r1 = r1.contains(r0)
-            if (r1 == 0) goto L_0x015d
+            if (r1 == 0) goto L_0x019d
             r0.onThemeChanged()
-            goto L_0x015d
-        L_0x0175:
+            goto L_0x019d
+        L_0x01b5:
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.ConfigurationControllerImpl.onConfigurationChanged(android.content.res.Configuration):void");
@@ -256,5 +299,9 @@ public final class ConfigurationControllerImpl implements ConfigurationControlle
 
     public boolean isLayoutRtl() {
         return this.layoutDirection == 1;
+    }
+
+    public int getOrientation() {
+        return this.orientation;
     }
 }

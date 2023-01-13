@@ -11,6 +11,6 @@ public final /* synthetic */ class WindowMagnificationConnectionImpl$$ExternalSy
     }
 
     public final void run() {
-        this.f$0.mo29980xe5094b0(this.f$1);
+        this.f$0.mo29990xe5094b0(this.f$1);
     }
 }

@@ -78,7 +78,7 @@ public class VolumeDialogComponent implements VolumeComponent, TunerService.Tuna
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$1$com-android-systemui-volume-VolumeDialogComponent  reason: not valid java name */
-    public /* synthetic */ void m3310lambda$new$1$comandroidsystemuivolumeVolumeDialogComponent(VolumeDialog volumeDialog) {
+    public /* synthetic */ void m3315lambda$new$1$comandroidsystemuivolumeVolumeDialogComponent(VolumeDialog volumeDialog) {
         VolumeDialog volumeDialog2 = this.mDialog;
         if (volumeDialog2 != null) {
             volumeDialog2.destroy();

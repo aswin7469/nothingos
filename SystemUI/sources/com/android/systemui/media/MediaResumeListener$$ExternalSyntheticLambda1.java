@@ -13,6 +13,6 @@ public final /* synthetic */ class MediaResumeListener$$ExternalSyntheticLambda1
     }
 
     public final void run() {
-        MediaResumeListener.m2812getResumeAction$lambda7(this.f$0, this.f$1);
+        MediaResumeListener.m2817getResumeAction$lambda7(this.f$0, this.f$1);
     }
 }

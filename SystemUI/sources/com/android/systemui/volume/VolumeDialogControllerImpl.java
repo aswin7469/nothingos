@@ -32,13 +32,14 @@ import android.service.notification.Condition;
 import android.service.notification.ZenModeConfig;
 import android.util.ArrayMap;
 import android.util.Log;
+import android.util.PrintWriterPrinter;
 import android.util.Slog;
 import android.view.accessibility.AccessibilityManager;
 import android.view.accessibility.CaptioningManager;
 import androidx.lifecycle.Observer;
 import androidx.mediarouter.media.SystemMediaRouteProvider;
 import com.android.settingslib.volume.MediaSessions;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dumpable;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.dagger.SysUISingleton;
@@ -69,7 +70,7 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
     private final AudioManager mAudio;
     private final IAudioService mAudioService;
     protected final BroadcastDispatcher mBroadcastDispatcher;
-    protected C3273C mCallbacks = new C3273C();
+    protected C3283C mCallbacks = new C3283C();
     private final CaptioningManager mCaptioningManager;
     /* access modifiers changed from: private */
     public final Context mContext;
@@ -97,12 +98,12 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
     public final VolumeDialogController.State mState = new VolumeDialogController.State();
     private UserActivityListener mUserActivityListener;
     private final VibratorHelper mVibrator;
-    protected final C3286VC mVolumeController;
+    protected final C3296VC mVolumeController;
     private VolumePolicy mVolumePolicy;
     private final WakefulnessLifecycle.Observer mWakefullnessLifecycleObserver;
     private final WakefulnessLifecycle mWakefulnessLifecycle;
     /* access modifiers changed from: private */
-    public final C3287W mWorker;
+    public final C3297W mWorker;
     private final Looper mWorkerLooper;
 
     public interface UserActivityListener {
@@ -120,17 +121,17 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
     static {
         ArrayMap<Integer, Integer> arrayMap = new ArrayMap<>();
         STREAMS = arrayMap;
-        arrayMap.put(4, Integer.valueOf((int) C1893R.string.stream_alarm));
-        arrayMap.put(6, Integer.valueOf((int) C1893R.string.stream_bluetooth_sco));
-        arrayMap.put(8, Integer.valueOf((int) C1893R.string.stream_dtmf));
-        arrayMap.put(3, Integer.valueOf((int) C1893R.string.stream_music));
-        arrayMap.put(10, Integer.valueOf((int) C1893R.string.stream_accessibility));
-        arrayMap.put(5, Integer.valueOf((int) C1893R.string.stream_notification));
-        arrayMap.put(2, Integer.valueOf((int) C1893R.string.stream_ring));
-        arrayMap.put(1, Integer.valueOf((int) C1893R.string.stream_system));
-        arrayMap.put(7, Integer.valueOf((int) C1893R.string.stream_system_enforced));
-        arrayMap.put(9, Integer.valueOf((int) C1893R.string.stream_tts));
-        arrayMap.put(0, Integer.valueOf((int) C1893R.string.stream_voice_call));
+        arrayMap.put(4, Integer.valueOf((int) C1894R.string.stream_alarm));
+        arrayMap.put(6, Integer.valueOf((int) C1894R.string.stream_bluetooth_sco));
+        arrayMap.put(8, Integer.valueOf((int) C1894R.string.stream_dtmf));
+        arrayMap.put(3, Integer.valueOf((int) C1894R.string.stream_music));
+        arrayMap.put(10, Integer.valueOf((int) C1894R.string.stream_accessibility));
+        arrayMap.put(5, Integer.valueOf((int) C1894R.string.stream_notification));
+        arrayMap.put(2, Integer.valueOf((int) C1894R.string.stream_ring));
+        arrayMap.put(1, Integer.valueOf((int) C1894R.string.stream_system));
+        arrayMap.put(7, Integer.valueOf((int) C1894R.string.stream_system_enforced));
+        arrayMap.put(9, Integer.valueOf((int) C1894R.string.stream_tts));
+        arrayMap.put(0, Integer.valueOf((int) C1894R.string.stream_voice_call));
     }
 
     @Inject
@@ -138,9 +139,9 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
         WakefulnessLifecycle wakefulnessLifecycle2 = wakefulnessLifecycle;
         Receiver receiver = new Receiver();
         this.mReceiver = receiver;
-        C3286VC vc = new C3286VC();
+        C3296VC vc = new C3296VC();
         this.mVolumeController = vc;
-        C32721 r3 = new WakefulnessLifecycle.Observer() {
+        C32821 r3 = new WakefulnessLifecycle.Observer() {
             public void onStartedWakingUp() {
                 boolean unused = VolumeDialogControllerImpl.this.mDeviceInteractive = true;
             }
@@ -158,7 +159,7 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
         ThreadFactory threadFactory2 = threadFactory;
         Looper buildLooperOnNewThread = threadFactory.buildLooperOnNewThread("VolumeDialogControllerImpl");
         this.mWorkerLooper = buildLooperOnNewThread;
-        C3287W w = new C3287W(buildLooperOnNewThread);
+        C3297W w = new C3297W(buildLooperOnNewThread);
         this.mWorker = w;
         this.mRouter2Manager = MediaRouter2Manager.getInstance(applicationContext);
         MediaSessionsCallbacks mediaSessionsCallbacks = new MediaSessionsCallbacks(applicationContext);
@@ -264,6 +265,8 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
         printWriter.println(this.mShowA11yStream);
         printWriter.println();
         this.mMediaSessions.dump(printWriter);
+        printWriter.println("Looper state:");
+        this.mWorker.getLooper().dump(new PrintWriterPrinter(printWriter), TAG + "  ");
     }
 
     public void addCallback(VolumeDialogController.Callbacks callbacks, Handler handler) {
@@ -439,13 +442,13 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
         }
         this.mState.activeStream = i;
         Events.writeEvent(2, Integer.valueOf(i));
-        if (C3265D.BUG) {
+        if (C3275D.BUG) {
             Log.d(TAG, "updateActiveStreamW " + i);
         }
         if (i >= 100) {
             i = -1;
         }
-        if (C3265D.BUG) {
+        if (C3275D.BUG) {
             Log.d(TAG, "forceVolumeControlStream " + i);
         }
         this.mAudio.forceVolumeControlStream(i);
@@ -489,7 +492,7 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
             return false;
         }
         streamStateW.routedToBluetooth = z;
-        if (!C3265D.BUG) {
+        if (!C3275D.BUG) {
             return true;
         }
         Log.d(TAG, "updateStreamRoutedToBluetoothW stream=" + i + " routedToBluetooth=" + z);
@@ -622,7 +625,7 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
 
     /* access modifiers changed from: private */
     public void onSetStreamVolumeW(int i, int i2) {
-        if (C3265D.BUG) {
+        if (C3275D.BUG) {
             Log.d(TAG, "onSetStreamVolume " + i + " level=" + i2);
         }
         if (i >= 100) {
@@ -646,7 +649,7 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
 
     /* access modifiers changed from: private */
     public void onSetZenModeW(int i) {
-        if (C3265D.BUG) {
+        if (C3275D.BUG) {
             Log.d(TAG, "onSetZenModeW " + i);
         }
         this.mNoMan.setZenMode(i, (Uri) null, TAG);
@@ -658,49 +661,49 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
     }
 
     public void showDndTile() {
-        if (C3265D.BUG) {
+        if (C3275D.BUG) {
             Log.d(TAG, "showDndTile");
         }
         DndTile.setVisible(this.mContext, true);
     }
 
     /* renamed from: com.android.systemui.volume.VolumeDialogControllerImpl$VC */
-    private final class C3286VC extends IVolumeController.Stub {
+    private final class C3296VC extends IVolumeController.Stub {
         private final String TAG;
 
-        private C3286VC() {
+        private C3296VC() {
             this.TAG = VolumeDialogControllerImpl.TAG + ".VC";
         }
 
         public void displaySafeVolumeWarning(int i) throws RemoteException {
-            if (C3265D.BUG) {
+            if (C3275D.BUG) {
                 Log.d(this.TAG, "displaySafeVolumeWarning " + Util.audioManagerFlagsToString(i));
             }
             VolumeDialogControllerImpl.this.mWorker.obtainMessage(14, i, 0).sendToTarget();
         }
 
         public void volumeChanged(int i, int i2) throws RemoteException {
-            if (C3265D.BUG) {
+            if (C3275D.BUG) {
                 Log.d(this.TAG, "volumeChanged " + AudioSystem.streamToString(i) + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + Util.audioManagerFlagsToString(i2));
             }
             VolumeDialogControllerImpl.this.mWorker.obtainMessage(1, i, i2).sendToTarget();
         }
 
         public void masterMuteChanged(int i) throws RemoteException {
-            if (C3265D.BUG) {
+            if (C3275D.BUG) {
                 Log.d(this.TAG, "masterMuteChanged");
             }
         }
 
         public void setLayoutDirection(int i) throws RemoteException {
-            if (C3265D.BUG) {
+            if (C3275D.BUG) {
                 Log.d(this.TAG, "setLayoutDirection");
             }
             VolumeDialogControllerImpl.this.mWorker.obtainMessage(8, i, 0).sendToTarget();
         }
 
         public void dismiss() throws RemoteException {
-            if (C3265D.BUG) {
+            if (C3275D.BUG) {
                 Log.d(this.TAG, "dismiss requested");
             }
             VolumeDialogControllerImpl.this.mWorker.obtainMessage(2, 2, 0).sendToTarget();
@@ -708,7 +711,7 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
         }
 
         public void setA11yMode(int i) {
-            if (C3265D.BUG) {
+            if (C3275D.BUG) {
                 Log.d(this.TAG, "setA11yMode to " + i);
             }
             if (i == 0) {
@@ -723,7 +726,7 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
     }
 
     /* renamed from: com.android.systemui.volume.VolumeDialogControllerImpl$W */
-    private final class C3287W extends Handler {
+    private final class C3297W extends Handler {
         private static final int ACCESSIBILITY_MODE_CHANGED = 15;
         private static final int CONFIGURATION_CHANGED = 9;
         private static final int DISMISS_REQUESTED = 2;
@@ -741,7 +744,7 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
         private static final int USER_ACTIVITY = 13;
         private static final int VOLUME_CHANGED = 1;
 
-        C3287W(Looper looper) {
+        C3297W(Looper looper) {
             super(looper);
         }
 
@@ -817,10 +820,10 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
     }
 
     /* renamed from: com.android.systemui.volume.VolumeDialogControllerImpl$C */
-    static class C3273C implements VolumeDialogController.Callbacks {
+    static class C3283C implements VolumeDialogController.Callbacks {
         private final Map<VolumeDialogController.Callbacks, Handler> mCallbackMap = new ConcurrentHashMap();
 
-        C3273C() {
+        C3283C() {
         }
 
         public void add(VolumeDialogController.Callbacks callbacks, Handler handler) {
@@ -956,17 +959,17 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
         public final RingerModeLiveData mRingerModeInternal;
         private final Observer<Integer> mRingerModeInternalObserver = new Observer<Integer>() {
             public void onChanged(Integer num) {
-                VolumeDialogControllerImpl.this.mWorker.post(new C3289xb7ffa954(this, num));
+                VolumeDialogControllerImpl.this.mWorker.post(new C3299xb7ffa954(this, num));
             }
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onChanged$0$com-android-systemui-volume-VolumeDialogControllerImpl$RingerModeObservers$2 */
-            public /* synthetic */ void mo47314x4d970d98(Integer num) {
+            public /* synthetic */ void mo47326x4d970d98(Integer num) {
                 int intValue = num.intValue();
                 if (RingerModeObservers.this.mRingerModeInternal.getInitialSticky()) {
                     VolumeDialogControllerImpl.this.mState.ringerModeInternal = intValue;
                 }
-                if (C3265D.BUG) {
+                if (C3275D.BUG) {
                     Log.d(VolumeDialogControllerImpl.TAG, "onChange internal_ringer_mode rm=" + Util.ringerModeToString(intValue));
                 }
                 if (VolumeDialogControllerImpl.this.updateRingerModeInternalW(intValue)) {
@@ -976,17 +979,17 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
         };
         private final Observer<Integer> mRingerModeObserver = new Observer<Integer>() {
             public void onChanged(Integer num) {
-                VolumeDialogControllerImpl.this.mWorker.post(new C3288x7eae9893(this, num));
+                VolumeDialogControllerImpl.this.mWorker.post(new C3298x7eae9893(this, num));
             }
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onChanged$0$com-android-systemui-volume-VolumeDialogControllerImpl$RingerModeObservers$1 */
-            public /* synthetic */ void mo47312x4d970d97(Integer num) {
+            public /* synthetic */ void mo47324x4d970d97(Integer num) {
                 int intValue = num.intValue();
                 if (RingerModeObservers.this.mRingerMode.getInitialSticky()) {
                     VolumeDialogControllerImpl.this.mState.ringerModeExternal = intValue;
                 }
-                if (C3265D.BUG) {
+                if (C3275D.BUG) {
                     Log.d(VolumeDialogControllerImpl.TAG, "onChange ringer_mode rm=" + Util.ringerModeToString(intValue));
                 }
                 if (VolumeDialogControllerImpl.this.updateRingerModeExternalW(intValue)) {
@@ -1074,7 +1077,7 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
                 int intExtra = intent.getIntExtra(SystemMediaRouteProvider.LegacyImpl.VolumeChangeReceiver.EXTRA_VOLUME_STREAM_TYPE, -1);
                 int intExtra2 = intent.getIntExtra(SystemMediaRouteProvider.LegacyImpl.VolumeChangeReceiver.EXTRA_VOLUME_STREAM_VALUE, -1);
                 int intExtra3 = intent.getIntExtra("android.media.EXTRA_PREV_VOLUME_STREAM_VALUE", -1);
-                if (C3265D.BUG) {
+                if (C3275D.BUG) {
                     Log.d(VolumeDialogControllerImpl.TAG, "onReceive VOLUME_CHANGED_ACTION stream=" + intExtra + " level=" + intExtra2 + " oldLevel=" + intExtra3);
                 }
                 z = VolumeDialogControllerImpl.this.updateStreamLevelW(intExtra, intExtra2);
@@ -1082,36 +1085,36 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
                 int intExtra4 = intent.getIntExtra(SystemMediaRouteProvider.LegacyImpl.VolumeChangeReceiver.EXTRA_VOLUME_STREAM_TYPE, -1);
                 int intExtra5 = intent.getIntExtra("android.media.EXTRA_VOLUME_STREAM_DEVICES", -1);
                 int intExtra6 = intent.getIntExtra("android.media.EXTRA_PREV_VOLUME_STREAM_DEVICES", -1);
-                if (C3265D.BUG) {
+                if (C3275D.BUG) {
                     Log.d(VolumeDialogControllerImpl.TAG, "onReceive STREAM_DEVICES_CHANGED_ACTION stream=" + intExtra4 + " devices=" + intExtra5 + " oldDevices=" + intExtra6);
                 }
                 z = VolumeDialogControllerImpl.this.onVolumeChangedW(intExtra4, 0) | VolumeDialogControllerImpl.this.checkRoutedToBluetoothW(intExtra4);
             } else if (action.equals("android.media.STREAM_MUTE_CHANGED_ACTION")) {
                 int intExtra7 = intent.getIntExtra(SystemMediaRouteProvider.LegacyImpl.VolumeChangeReceiver.EXTRA_VOLUME_STREAM_TYPE, -1);
                 boolean booleanExtra = intent.getBooleanExtra("android.media.EXTRA_STREAM_VOLUME_MUTED", false);
-                if (C3265D.BUG) {
+                if (C3275D.BUG) {
                     Log.d(VolumeDialogControllerImpl.TAG, "onReceive STREAM_MUTE_CHANGED_ACTION stream=" + intExtra7 + " muted=" + booleanExtra);
                 }
                 z = VolumeDialogControllerImpl.this.updateStreamMuteW(intExtra7, booleanExtra);
             } else if (action.equals("android.os.action.ACTION_EFFECTS_SUPPRESSOR_CHANGED")) {
-                if (C3265D.BUG) {
+                if (C3275D.BUG) {
                     Log.d(VolumeDialogControllerImpl.TAG, "onReceive ACTION_EFFECTS_SUPPRESSOR_CHANGED");
                 }
                 VolumeDialogControllerImpl volumeDialogControllerImpl = VolumeDialogControllerImpl.this;
                 z = volumeDialogControllerImpl.updateEffectsSuppressorW(volumeDialogControllerImpl.mNoMan.getEffectsSuppressor());
             } else {
                 if (action.equals("android.intent.action.CONFIGURATION_CHANGED")) {
-                    if (C3265D.BUG) {
+                    if (C3275D.BUG) {
                         Log.d(VolumeDialogControllerImpl.TAG, "onReceive ACTION_CONFIGURATION_CHANGED");
                     }
                     VolumeDialogControllerImpl.this.mCallbacks.onConfigurationChanged();
                 } else if (action.equals("android.intent.action.SCREEN_OFF")) {
-                    if (C3265D.BUG) {
+                    if (C3275D.BUG) {
                         Log.d(VolumeDialogControllerImpl.TAG, "onReceive ACTION_SCREEN_OFF");
                     }
                     VolumeDialogControllerImpl.this.mCallbacks.onScreenOff();
                 } else if (action.equals("android.intent.action.CLOSE_SYSTEM_DIALOGS")) {
-                    if (C3265D.BUG) {
+                    if (C3275D.BUG) {
                         Log.d(VolumeDialogControllerImpl.TAG, "onReceive ACTION_CLOSE_SYSTEM_DIALOGS");
                     }
                     VolumeDialogControllerImpl.this.dismiss();

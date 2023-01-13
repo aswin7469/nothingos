@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.view.ViewOverlay;
 import android.widget.GridLayout;
 import androidx.core.graphics.ColorUtils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.statusbar.CrossFadeHelper;
 import java.p026io.PrintWriter;
 import java.util.Set;
@@ -56,14 +56,14 @@ public class KeyguardStatusView extends GridLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mStatusViewContainer = (ViewGroup) findViewById(C1893R.C1897id.status_view_container);
-        this.mClockView = (KeyguardClockSwitch) findViewById(C1893R.C1897id.keyguard_clock_container);
+        this.mStatusViewContainer = (ViewGroup) findViewById(C1894R.C1898id.status_view_container);
+        this.mClockView = (KeyguardClockSwitch) findViewById(C1894R.C1898id.keyguard_clock_container);
         if (KeyguardClockAccessibilityDelegate.isNeeded(this.mContext)) {
             this.mClockView.setAccessibilityDelegate(new KeyguardClockAccessibilityDelegate(this.mContext));
         }
-        this.mKeyguardSlice = (KeyguardSliceView) findViewById(C1893R.C1897id.keyguard_slice_view);
+        this.mKeyguardSlice = (KeyguardSliceView) findViewById(C1894R.C1898id.keyguard_slice_view);
         this.mTextColor = this.mClockView.getCurrentTextColor();
-        this.mMediaHostContainer = findViewById(C1893R.C1897id.status_view_media_container);
+        this.mMediaHostContainer = findViewById(C1894R.C1898id.status_view_media_container);
         updateDark();
     }
 
@@ -85,7 +85,7 @@ public class KeyguardStatusView extends GridLayout {
     }
 
     public void setChildrenTranslationYExcludingMediaView(float f) {
-        setChildrenTranslationYExcluding(f, Set.m1751of(this.mMediaHostContainer));
+        setChildrenTranslationYExcluding(f, Set.m1757of(this.mMediaHostContainer));
     }
 
     private void setChildrenTranslationYExcluding(float f, Set<View> set) {

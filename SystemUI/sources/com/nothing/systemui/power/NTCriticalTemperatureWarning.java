@@ -14,7 +14,7 @@ import android.util.Log;
 import android.view.View;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardUpdateMonitorCallback;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dependency;
 import com.android.systemui.power.TemperatureController;
 import com.android.systemui.util.EmergencyDialerConstants;
@@ -24,7 +24,7 @@ import java.util.Map;
 import kotlin.Metadata;
 import kotlin.jvm.internal.Intrinsics;
 
-@Metadata(mo64986d1 = {"\u0000P\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u000e\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0010\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0004\b\u0016\u0018\u00002\u00020\u0001B\u0007\b\u0007¢\u0006\u0002\u0010\u0002J\b\u0010\u0019\u001a\u00020\u001aH\u0016J\u0012\u0010\u001b\u001a\u00020\u001a2\b\u0010\u001c\u001a\u0004\u0018\u00010\u001dH\u0014J\b\u0010\u001e\u001a\u00020\u001aH\u0014J\u0006\u0010\u001f\u001a\u00020\u001aJ\u0006\u0010 \u001a\u00020\u001aR\u000e\u0010\u0003\u001a\u00020\u0004XD¢\u0006\u0002\n\u0000R\u0010\u0010\u0005\u001a\u0004\u0018\u00010\u0006X\u000e¢\u0006\u0002\n\u0000R\u0010\u0010\u0007\u001a\u0004\u0018\u00010\bX\u000e¢\u0006\u0002\n\u0000R\u0010\u0010\t\u001a\u0004\u0018\u00010\nX\u000e¢\u0006\u0002\n\u0000R\u001a\u0010\u000b\u001a\u00020\fX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\r\u0010\u000e\"\u0004\b\u000f\u0010\u0010R\u0010\u0010\u0011\u001a\u0004\u0018\u00010\u0012X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0013\u001a\u00020\u0014X\u000e¢\u0006\u0002\n\u0000R\u0011\u0010\u0015\u001a\u00020\u0016¢\u0006\b\n\u0000\u001a\u0004\b\u0017\u0010\u0018¨\u0006!"}, mo64987d2 = {"Lcom/nothing/systemui/power/NTCriticalTemperatureWarning;", "Landroid/app/Activity;", "()V", "TAG", "", "mController", "Lcom/android/systemui/power/TemperatureController;", "mPowerMan", "Landroid/os/PowerManager;", "mShutdownDialog", "Landroid/app/AlertDialog;", "mShutdownTimeCallback", "Lcom/android/systemui/power/TemperatureController$ShutdownTimeCallback;", "getMShutdownTimeCallback", "()Lcom/android/systemui/power/TemperatureController$ShutdownTimeCallback;", "setMShutdownTimeCallback", "(Lcom/android/systemui/power/TemperatureController$ShutdownTimeCallback;)V", "mTelecomManager", "Landroid/telecom/TelecomManager;", "mTemperatureType", "", "mUpdateCallback", "Lcom/android/keyguard/KeyguardUpdateMonitorCallback;", "getMUpdateCallback", "()Lcom/android/keyguard/KeyguardUpdateMonitorCallback;", "onBackPressed", "", "onCreate", "savedInstanceState", "Landroid/os/Bundle;", "onDestroy", "showShutdownDialog", "takeEmergencyCallAction", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000P\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u000e\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0010\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0004\b\u0016\u0018\u00002\u00020\u0001B\u0007\b\u0007¢\u0006\u0002\u0010\u0002J\b\u0010\u0019\u001a\u00020\u001aH\u0016J\u0012\u0010\u001b\u001a\u00020\u001a2\b\u0010\u001c\u001a\u0004\u0018\u00010\u001dH\u0014J\b\u0010\u001e\u001a\u00020\u001aH\u0014J\u0006\u0010\u001f\u001a\u00020\u001aJ\u0006\u0010 \u001a\u00020\u001aR\u000e\u0010\u0003\u001a\u00020\u0004XD¢\u0006\u0002\n\u0000R\u0010\u0010\u0005\u001a\u0004\u0018\u00010\u0006X\u000e¢\u0006\u0002\n\u0000R\u0010\u0010\u0007\u001a\u0004\u0018\u00010\bX\u000e¢\u0006\u0002\n\u0000R\u0010\u0010\t\u001a\u0004\u0018\u00010\nX\u000e¢\u0006\u0002\n\u0000R\u001a\u0010\u000b\u001a\u00020\fX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\r\u0010\u000e\"\u0004\b\u000f\u0010\u0010R\u0010\u0010\u0011\u001a\u0004\u0018\u00010\u0012X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0013\u001a\u00020\u0014X\u000e¢\u0006\u0002\n\u0000R\u0011\u0010\u0015\u001a\u00020\u0016¢\u0006\b\n\u0000\u001a\u0004\b\u0017\u0010\u0018¨\u0006!"}, mo65043d2 = {"Lcom/nothing/systemui/power/NTCriticalTemperatureWarning;", "Landroid/app/Activity;", "()V", "TAG", "", "mController", "Lcom/android/systemui/power/TemperatureController;", "mPowerMan", "Landroid/os/PowerManager;", "mShutdownDialog", "Landroid/app/AlertDialog;", "mShutdownTimeCallback", "Lcom/android/systemui/power/TemperatureController$ShutdownTimeCallback;", "getMShutdownTimeCallback", "()Lcom/android/systemui/power/TemperatureController$ShutdownTimeCallback;", "setMShutdownTimeCallback", "(Lcom/android/systemui/power/TemperatureController$ShutdownTimeCallback;)V", "mTelecomManager", "Landroid/telecom/TelecomManager;", "mTemperatureType", "", "mUpdateCallback", "Lcom/android/keyguard/KeyguardUpdateMonitorCallback;", "getMUpdateCallback", "()Lcom/android/keyguard/KeyguardUpdateMonitorCallback;", "onBackPressed", "", "onCreate", "savedInstanceState", "Landroid/os/Bundle;", "onDestroy", "showShutdownDialog", "takeEmergencyCallAction", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* compiled from: NTCriticalTemperatureWarning.kt */
 public class NTCriticalTemperatureWarning extends Activity {
     /* access modifiers changed from: private */
@@ -43,7 +43,7 @@ public class NTCriticalTemperatureWarning extends Activity {
 
     /* access modifiers changed from: private */
     /* renamed from: showShutdownDialog$lambda-1  reason: not valid java name */
-    public static final void m3506showShutdownDialog$lambda1(DialogInterface dialogInterface, int i) {
+    public static final void m3510showShutdownDialog$lambda1(DialogInterface dialogInterface, int i) {
     }
 
     public void _$_clearFindViewByIdCache() {
@@ -85,14 +85,14 @@ public class NTCriticalTemperatureWarning extends Activity {
         getWindow().getAttributes().setFitInsetsTypes(0);
         getWindow().setNavigationBarContrastEnforced(false);
         getWindow().setNavigationBarColor(0);
-        setContentView(C1893R.layout.critical_temperature_warning_view);
+        setContentView(C1894R.layout.critical_temperature_warning_view);
         Object systemService = getSystemService("power");
         if (systemService != null) {
             this.mPowerMan = (PowerManager) systemService;
             Object systemService2 = getSystemService("telecom");
             if (systemService2 != null) {
                 this.mTelecomManager = (TelecomManager) systemService2;
-                findViewById(C1893R.C1897id.emergency_call).setOnClickListener(new NTCriticalTemperatureWarning$$ExternalSyntheticLambda0(this));
+                findViewById(C1894R.C1898id.emergency_call).setOnClickListener(new NTCriticalTemperatureWarning$$ExternalSyntheticLambda0(this));
                 Log.d(this.TAG, "onCreate: ");
                 ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).registerCallback(this.mUpdateCallback);
                 TemperatureController temperatureController = this.mController;
@@ -109,7 +109,7 @@ public class NTCriticalTemperatureWarning extends Activity {
 
     /* access modifiers changed from: private */
     /* renamed from: onCreate$lambda-0  reason: not valid java name */
-    public static final void m3505onCreate$lambda0(NTCriticalTemperatureWarning nTCriticalTemperatureWarning, View view) {
+    public static final void m3509onCreate$lambda0(NTCriticalTemperatureWarning nTCriticalTemperatureWarning, View view) {
         Intrinsics.checkNotNullParameter(nTCriticalTemperatureWarning, "this$0");
         nTCriticalTemperatureWarning.takeEmergencyCallAction();
     }
@@ -143,7 +143,7 @@ public class NTCriticalTemperatureWarning extends Activity {
     }
 
     public final void showShutdownDialog() {
-        this.mShutdownDialog = new AlertDialog.Builder(this).setTitle(C1893R.string.shutdown_temperature_warning_title).setMessage(getResources().getString(C1893R.string.shutdown_temperature_warning_content, new Object[]{30L})).setCancelable(false).setPositiveButton(C1893R.string.temperature_turn_off_now, new NTCriticalTemperatureWarning$$ExternalSyntheticLambda1()).show();
+        this.mShutdownDialog = new AlertDialog.Builder(this).setTitle(C1894R.string.shutdown_temperature_warning_title).setMessage(getResources().getString(C1894R.string.shutdown_temperature_warning_content, new Object[]{30L})).setCancelable(false).setPositiveButton(C1894R.string.temperature_turn_off_now, new NTCriticalTemperatureWarning$$ExternalSyntheticLambda1()).show();
     }
 
     /* access modifiers changed from: protected */

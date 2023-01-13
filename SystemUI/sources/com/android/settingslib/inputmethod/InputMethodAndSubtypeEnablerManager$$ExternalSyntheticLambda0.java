@@ -12,6 +12,6 @@ public final /* synthetic */ class InputMethodAndSubtypeEnablerManager$$External
     }
 
     public final int compare(Object obj, Object obj2) {
-        return this.f$0.mo28796x42551b22((Preference) obj, (Preference) obj2);
+        return this.f$0.mo28801x42551b22((Preference) obj, (Preference) obj2);
     }
 }

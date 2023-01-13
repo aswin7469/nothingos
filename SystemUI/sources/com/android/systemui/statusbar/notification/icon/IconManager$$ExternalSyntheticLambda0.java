@@ -11,6 +11,6 @@ public final /* synthetic */ class IconManager$$ExternalSyntheticLambda0 impleme
     }
 
     public final void onSensitivityChanged(NotificationEntry notificationEntry) {
-        IconManager.m3119sensitivityListener$lambda0(this.f$0, notificationEntry);
+        IconManager.m3123sensitivityListener$lambda0(this.f$0, notificationEntry);
     }
 }

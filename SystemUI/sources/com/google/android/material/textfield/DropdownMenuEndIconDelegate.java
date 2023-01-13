@@ -20,7 +20,7 @@ import android.widget.Spinner;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.accessibility.AccessibilityManagerCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.animation.AnimationUtils;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.internal.TextWatcherAdapter;
@@ -169,9 +169,9 @@ class DropdownMenuEndIconDelegate extends EndIconDelegate {
     /* access modifiers changed from: package-private */
     public void initialize() {
         int i;
-        float dimensionPixelOffset = (float) this.context.getResources().getDimensionPixelOffset(C3621R.dimen.mtrl_shape_corner_size_small_component);
-        float dimensionPixelOffset2 = (float) this.context.getResources().getDimensionPixelOffset(C3621R.dimen.mtrl_exposed_dropdown_menu_popup_elevation);
-        int dimensionPixelOffset3 = this.context.getResources().getDimensionPixelOffset(C3621R.dimen.mtrl_exposed_dropdown_menu_popup_vertical_padding);
+        float dimensionPixelOffset = (float) this.context.getResources().getDimensionPixelOffset(C3631R.dimen.mtrl_shape_corner_size_small_component);
+        float dimensionPixelOffset2 = (float) this.context.getResources().getDimensionPixelOffset(C3631R.dimen.mtrl_exposed_dropdown_menu_popup_elevation);
+        int dimensionPixelOffset3 = this.context.getResources().getDimensionPixelOffset(C3631R.dimen.mtrl_exposed_dropdown_menu_popup_vertical_padding);
         MaterialShapeDrawable popUpMaterialShapeDrawable = getPopUpMaterialShapeDrawable(dimensionPixelOffset, dimensionPixelOffset, dimensionPixelOffset2, dimensionPixelOffset3);
         MaterialShapeDrawable popUpMaterialShapeDrawable2 = getPopUpMaterialShapeDrawable(0.0f, dimensionPixelOffset, dimensionPixelOffset2, dimensionPixelOffset3);
         this.outlinedPopupBackground = popUpMaterialShapeDrawable;
@@ -180,12 +180,12 @@ class DropdownMenuEndIconDelegate extends EndIconDelegate {
         stateListDrawable.addState(new int[]{16842922}, popUpMaterialShapeDrawable);
         this.filledPopupBackground.addState(new int[0], popUpMaterialShapeDrawable2);
         if (this.customEndIcon == 0) {
-            i = IS_LOLLIPOP ? C3621R.C3623drawable.mtrl_dropdown_arrow : C3621R.C3623drawable.mtrl_ic_arrow_drop_down;
+            i = IS_LOLLIPOP ? C3631R.C3633drawable.mtrl_dropdown_arrow : C3631R.C3633drawable.mtrl_ic_arrow_drop_down;
         } else {
             i = this.customEndIcon;
         }
         this.textInputLayout.setEndIconDrawable(i);
-        this.textInputLayout.setEndIconContentDescription(this.textInputLayout.getResources().getText(C3621R.string.exposed_dropdown_menu_content_description));
+        this.textInputLayout.setEndIconContentDescription(this.textInputLayout.getResources().getText(C3631R.string.exposed_dropdown_menu_content_description));
         this.textInputLayout.setEndIconOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 DropdownMenuEndIconDelegate.this.showHideDropdown((AutoCompleteTextView) DropdownMenuEndIconDelegate.this.textInputLayout.getEditText());
@@ -248,7 +248,7 @@ class DropdownMenuEndIconDelegate extends EndIconDelegate {
         if (!isEditable(autoCompleteTextView)) {
             int boxBackgroundMode = this.textInputLayout.getBoxBackgroundMode();
             MaterialShapeDrawable boxBackground = this.textInputLayout.getBoxBackground();
-            int color = MaterialColors.getColor(autoCompleteTextView, C3621R.attr.colorControlHighlight);
+            int color = MaterialColors.getColor(autoCompleteTextView, C3631R.attr.colorControlHighlight);
             int[][] iArr = {new int[]{16842919}, new int[0]};
             if (boxBackgroundMode == 2) {
                 addRippleEffectOnOutlinedLayout(autoCompleteTextView, color, iArr, boxBackground);
@@ -260,7 +260,7 @@ class DropdownMenuEndIconDelegate extends EndIconDelegate {
 
     private void addRippleEffectOnOutlinedLayout(AutoCompleteTextView autoCompleteTextView, int i, int[][] iArr, MaterialShapeDrawable materialShapeDrawable) {
         LayerDrawable layerDrawable;
-        int color = MaterialColors.getColor(autoCompleteTextView, C3621R.attr.colorSurface);
+        int color = MaterialColors.getColor(autoCompleteTextView, C3631R.attr.colorSurface);
         MaterialShapeDrawable materialShapeDrawable2 = new MaterialShapeDrawable(materialShapeDrawable.getShapeAppearanceModel());
         int layer = MaterialColors.layer(i, color, 0.1f);
         materialShapeDrawable2.setFillColor(new ColorStateList(iArr, new int[]{layer, 0}));

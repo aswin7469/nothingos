@@ -12,7 +12,7 @@ import android.service.quickaccesswallet.WalletCard;
 import android.util.Log;
 import android.view.View;
 import com.android.internal.logging.MetricsLogger;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.animation.ActivityLaunchAnimator;
 import com.android.systemui.dagger.qualifiers.Background;
 import com.android.systemui.dagger.qualifiers.Main;
@@ -39,7 +39,7 @@ public class QuickAccessWalletTile extends QSTileImpl<QSTile.State> {
     /* access modifiers changed from: private */
     public boolean mIsWalletUpdating = true;
     private final KeyguardStateController mKeyguardStateController;
-    private final CharSequence mLabel = this.mContext.getString(C1893R.string.wallet_title);
+    private final CharSequence mLabel = this.mContext.getString(C1894R.string.wallet_title);
     private final PackageManager mPackageManager;
     private final SecureSettings mSecureSettings;
     /* access modifiers changed from: private */
@@ -94,7 +94,7 @@ public class QuickAccessWalletTile extends QSTileImpl<QSTile.State> {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$handleClick$0$com-android-systemui-qs-tiles-QuickAccessWalletTile */
-    public /* synthetic */ void mo36906xdf3da830(ActivityLaunchAnimator.Controller controller) {
+    public /* synthetic */ void mo36904xdf3da830(ActivityLaunchAnimator.Controller controller) {
         this.mController.startQuickAccessUiIntent(this.mActivityStarter, controller, this.mSelectedCard != null);
     }
 
@@ -103,13 +103,13 @@ public class QuickAccessWalletTile extends QSTileImpl<QSTile.State> {
         QSTile.Icon icon;
         CharSequence serviceLabel = this.mController.getWalletClient().getServiceLabel();
         if (serviceLabel == null) {
-            serviceLabel = this.mLabel;
+            serviceLabel = this.mContext.getString(C1894R.string.wallet_title);
         }
         state.label = serviceLabel;
         state.contentDescription = state.label;
         Drawable tileIcon = this.mController.getWalletClient().getTileIcon();
         if (tileIcon == null) {
-            icon = QSTileImpl.ResourceIcon.get(C1893R.C1895drawable.ic_wallet_lockscreen);
+            icon = QSTileImpl.ResourceIcon.get(C1894R.C1896drawable.ic_wallet_lockscreen);
         } else {
             icon = new QSTileImpl.DrawableIcon(tileIcon);
         }
@@ -131,7 +131,7 @@ public class QuickAccessWalletTile extends QSTileImpl<QSTile.State> {
             state.sideViewCustomDrawable = this.mCardViewDrawable;
         } else {
             state.state = 1;
-            state.secondaryLabel = this.mContext.getString(this.mIsWalletUpdating ? C1893R.string.wallet_secondary_label_updating : C1893R.string.wallet_secondary_label_no_card);
+            state.secondaryLabel = this.mContext.getString(this.mIsWalletUpdating ? C1894R.string.wallet_secondary_label_updating : C1894R.string.wallet_secondary_label_no_card);
             state.sideViewCustomDrawable = null;
         }
         state.stateDescription = state.secondaryLabel;
@@ -143,7 +143,7 @@ public class QuickAccessWalletTile extends QSTileImpl<QSTile.State> {
 
     public CharSequence getTileLabel() {
         CharSequence serviceLabel = this.mController.getWalletClient().getServiceLabel();
-        return serviceLabel == null ? this.mLabel : serviceLabel;
+        return serviceLabel == null ? this.mContext.getString(C1894R.string.wallet_title) : serviceLabel;
     }
 
     /* access modifiers changed from: protected */

@@ -92,7 +92,7 @@ public class NotificationListener extends NotificationListenerWithPlugins {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onListenerConnected$0$com-android-systemui-statusbar-NotificationListener */
-    public /* synthetic */ void mo38717x8f830a0c(StatusBarNotification[] statusBarNotificationArr, NotificationListenerService.RankingMap rankingMap) {
+    public /* synthetic */ void mo38718x8f830a0c(StatusBarNotification[] statusBarNotificationArr, NotificationListenerService.RankingMap rankingMap) {
         ArrayList arrayList = new ArrayList();
         for (StatusBarNotification key : statusBarNotificationArr) {
             arrayList.add(getRankingOrTemporaryStandIn(rankingMap, key.getKey()));
@@ -116,7 +116,7 @@ public class NotificationListener extends NotificationListenerWithPlugins {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onNotificationPosted$1$com-android-systemui-statusbar-NotificationListener */
-    public /* synthetic */ void mo38719x35d3369a(StatusBarNotification statusBarNotification, NotificationListenerService.RankingMap rankingMap) {
+    public /* synthetic */ void mo38720x35d3369a(StatusBarNotification statusBarNotification, NotificationListenerService.RankingMap rankingMap) {
         RemoteInputController.processForRemoteInput(statusBarNotification.getNotification(), this.mContext);
         for (NotificationHandler onNotificationPosted : this.mNotificationHandlers) {
             onNotificationPosted.onNotificationPosted(statusBarNotification, rankingMap);
@@ -131,7 +131,7 @@ public class NotificationListener extends NotificationListenerWithPlugins {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onNotificationRemoved$2$com-android-systemui-statusbar-NotificationListener */
-    public /* synthetic */ void mo38720xd969ac4e(StatusBarNotification statusBarNotification, NotificationListenerService.RankingMap rankingMap, int i) {
+    public /* synthetic */ void mo38721xd969ac4e(StatusBarNotification statusBarNotification, NotificationListenerService.RankingMap rankingMap, int i) {
         for (NotificationHandler onNotificationRemoved : this.mNotificationHandlers) {
             onNotificationRemoved.onNotificationRemoved(statusBarNotification, rankingMap, i);
         }
@@ -177,7 +177,7 @@ public class NotificationListener extends NotificationListenerWithPlugins {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onNotificationChannelModified$3$com-android-systemui-statusbar-NotificationListener */
-    public /* synthetic */ void mo38718x112fac5b(String str, UserHandle userHandle, NotificationChannel notificationChannel, int i) {
+    public /* synthetic */ void mo38719x112fac5b(String str, UserHandle userHandle, NotificationChannel notificationChannel, int i) {
         for (NotificationHandler onNotificationChannelModified : this.mNotificationHandlers) {
             onNotificationChannelModified.onNotificationChannelModified(str, userHandle, notificationChannel, i);
         }

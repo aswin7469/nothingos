@@ -26,7 +26,7 @@ import android.widget.Space;
 import android.widget.TextView;
 import androidx.constraintlayout.motion.widget.Key;
 import com.android.launcher3.icons.cache.BaseIconCache;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.controls.ControlsMetricsLogger;
 import com.android.systemui.controls.CustomIconCache;
 import com.android.systemui.controls.controller.ControlInfo;
@@ -68,7 +68,7 @@ import kotlin.jvm.internal.Ref;
 import kotlin.ranges.RangesKt;
 
 @SysUISingleton
-@Metadata(mo64986d1 = {"\u0000þ\u0001\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0010 \n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0006\n\u0002\u0010%\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0004\n\u0002\u0010\u000b\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0006\n\u0002\u0010\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0007\n\u0002\u0018\u0002\n\u0002\b\b\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u000e\n\u0000\n\u0002\u0010\b\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u000b\n\u0002\u0018\u0002\n\u0002\b\u0005\b\u0007\u0018\u0000 y2\u00020\u0001:\u0001yBy\b\u0007\u0012\f\u0010\u0002\u001a\b\u0012\u0004\u0012\u00020\u00040\u0003\u0012\u0006\u0010\u0005\u001a\u00020\u0006\u0012\b\b\u0001\u0010\u0007\u001a\u00020\b\u0012\b\b\u0001\u0010\t\u001a\u00020\b\u0012\f\u0010\n\u001a\b\u0012\u0004\u0012\u00020\u000b0\u0003\u0012\b\b\u0001\u0010\f\u001a\u00020\r\u0012\u0006\u0010\u000e\u001a\u00020\u000f\u0012\u0006\u0010\u0010\u001a\u00020\u0011\u0012\u0006\u0010\u0012\u001a\u00020\u0013\u0012\u0006\u0010\u0014\u001a\u00020\u0015\u0012\u0006\u0010\u0016\u001a\u00020\u0017\u0012\u0006\u0010\u0018\u001a\u00020\u0019¢\u0006\u0002\u0010\u001aJ\u0010\u0010I\u001a\u00020J2\u0006\u0010K\u001a\u000202H\u0016J\"\u0010L\u001a\u0002062\u0018\u0010M\u001a\u0014\u0012\n\u0012\b\u0012\u0004\u0012\u0002040\u001d\u0012\u0004\u0012\u00020J0NH\u0002J\u001e\u0010O\u001a\u00020J2\f\u0010P\u001a\b\u0012\u0004\u0012\u0002040\u001d2\u0006\u0010Q\u001a\u000204H\u0002J\u0010\u0010R\u001a\u00020J2\u0006\u0010Q\u001a\u000204H\u0002J\b\u0010S\u001a\u00020JH\u0002J\u0018\u0010T\u001a\u00020?2\u0006\u0010U\u001a\u00020V2\u0006\u0010W\u001a\u00020?H\u0002J \u0010X\u001a\u0004\u0018\u0001042\u0006\u0010Y\u001a\u00020\u001e2\f\u0010P\u001a\b\u0012\u0004\u0012\u0002040\u001dH\u0002J\u0016\u0010Z\u001a\u00020\u001e2\f\u0010[\u001a\b\u0012\u0004\u0012\u00020\u001e0\u001dH\u0016J\b\u0010\\\u001a\u00020JH\u0016J \u0010]\u001a\u00020J2\u0006\u0010^\u001a\u00020_2\u0006\u0010`\u001a\u00020a2\u0006\u0010b\u001a\u00020cH\u0016J\u001e\u0010d\u001a\u00020J2\u0006\u0010^\u001a\u00020_2\f\u0010e\u001a\b\u0012\u0004\u0012\u00020f0\u001dH\u0016J\u0018\u0010g\u001a\u00020J2\u0006\u0010h\u001a\u00020i2\u0006\u0010Y\u001a\u00020\u001eH\u0002J\u0010\u0010j\u001a\u00020J2\u0006\u0010>\u001a\u00020?H\u0002J \u0010k\u001a\u00020J2\u0006\u0010>\u001a\u00020?2\u0006\u0010:\u001a\u00020;2\u0006\u0010\u001b\u001a\u00020\u0006H\u0016J\u0016\u0010l\u001a\u00020J2\f\u0010P\u001a\b\u0012\u0004\u0012\u0002040\u001dH\u0002J\u0016\u0010m\u001a\u00020J2\f\u0010P\u001a\b\u0012\u0004\u0012\u0002040\u001dH\u0002J\u0016\u0010n\u001a\u00020J2\f\u0010P\u001a\b\u0012\u0004\u0012\u0002040\u001dH\u0002J\u0010\u0010o\u001a\u00020J2\u0006\u0010h\u001a\u00020iH\u0002J\u0010\u0010p\u001a\u00020J2\u0006\u0010Y\u001a\u00020\u001eH\u0002J\u0010\u0010q\u001a\u00020J2\u0006\u0010Y\u001a\u00020\u001eH\u0002J\b\u0010r\u001a\u00020JH\u0002J\u001c\u0010s\u001a\u00020J2\u0006\u0010Y\u001a\u00020\u001e2\n\u0010t\u001a\u0006\u0012\u0002\b\u00030uH\u0002J\u0010\u0010v\u001a\u00020J2\u0006\u0010w\u001a\u000204H\u0002J\u0010\u0010x\u001a\u00020J2\u0006\u0010Y\u001a\u00020\u001eH\u0002R\u000e\u0010\u001b\u001a\u00020\u0006X.¢\u0006\u0002\n\u0000R\u000e\u0010\u0010\u001a\u00020\u0011X\u0004¢\u0006\u0002\n\u0000R\u0014\u0010\u001c\u001a\b\u0012\u0004\u0012\u00020\u001e0\u001dX.¢\u0006\u0002\n\u0000R\u0011\u0010\t\u001a\u00020\b¢\u0006\b\n\u0000\u001a\u0004\b\u001f\u0010 R\u0016\u0010!\u001a\n #*\u0004\u0018\u00010\"0\"X\u0004¢\u0006\u0002\n\u0000R\u0011\u0010\u0005\u001a\u00020\u0006¢\u0006\b\n\u0000\u001a\u0004\b$\u0010%R\u0011\u0010\u000e\u001a\u00020\u000f¢\u0006\b\n\u0000\u001a\u0004\b&\u0010'R\u001a\u0010(\u001a\u000e\u0012\u0004\u0012\u00020*\u0012\u0004\u0012\u00020+0)X\u0004¢\u0006\u0002\n\u0000R\u001a\u0010,\u001a\u000e\u0012\u0004\u0012\u00020*\u0012\u0004\u0012\u00020-0)X\u0004¢\u0006\u0002\n\u0000R\u0017\u0010\u0002\u001a\b\u0012\u0004\u0012\u00020\u00040\u0003¢\u0006\b\n\u0000\u001a\u0004\b.\u0010/R\u0017\u0010\n\u001a\b\u0012\u0004\u0012\u00020\u000b0\u0003¢\u0006\b\n\u0000\u001a\u0004\b0\u0010/R\u000e\u0010\u0016\u001a\u00020\u0017X\u0004¢\u0006\u0002\n\u0000R\u000e\u00101\u001a\u000202X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0014\u001a\u00020\u0015X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0018\u001a\u00020\u0019X\u0004¢\u0006\u0002\n\u0000R\u0014\u00103\u001a\b\u0012\u0004\u0012\u0002040\u001dX.¢\u0006\u0002\n\u0000R\u000e\u00105\u001a\u000206X.¢\u0006\u0002\n\u0000R\u001e\u00107\u001a\u0012\u0012\u0004\u0012\u00020408j\b\u0012\u0004\u0012\u000204`9X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010:\u001a\u00020;X.¢\u0006\u0002\n\u0000R\u0014\u0010<\u001a\b\u0012\u0004\u0012\u0002020=X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010>\u001a\u00020?X.¢\u0006\u0002\n\u0000R\u0010\u0010@\u001a\u0004\u0018\u00010AX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010B\u001a\u00020CX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010D\u001a\u000202X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010E\u001a\u00020\u001eX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0012\u001a\u00020\u0013X\u0004¢\u0006\u0002\n\u0000R\u0011\u0010\f\u001a\u00020\r¢\u0006\b\n\u0000\u001a\u0004\bF\u0010GR\u0011\u0010\u0007\u001a\u00020\b¢\u0006\b\n\u0000\u001a\u0004\bH\u0010 ¨\u0006z"}, mo64987d2 = {"Lcom/android/systemui/controls/ui/ControlsUiControllerImpl;", "Lcom/android/systemui/controls/ui/ControlsUiController;", "controlsController", "Ldagger/Lazy;", "Lcom/android/systemui/controls/controller/ControlsController;", "context", "Landroid/content/Context;", "uiExecutor", "Lcom/android/systemui/util/concurrency/DelayableExecutor;", "bgExecutor", "controlsListingController", "Lcom/android/systemui/controls/management/ControlsListingController;", "sharedPreferences", "Landroid/content/SharedPreferences;", "controlActionCoordinator", "Lcom/android/systemui/controls/ui/ControlActionCoordinator;", "activityStarter", "Lcom/android/systemui/plugins/ActivityStarter;", "shadeController", "Lcom/android/systemui/statusbar/phone/ShadeController;", "iconCache", "Lcom/android/systemui/controls/CustomIconCache;", "controlsMetricsLogger", "Lcom/android/systemui/controls/ControlsMetricsLogger;", "keyguardStateController", "Lcom/android/systemui/statusbar/policy/KeyguardStateController;", "(Ldagger/Lazy;Landroid/content/Context;Lcom/android/systemui/util/concurrency/DelayableExecutor;Lcom/android/systemui/util/concurrency/DelayableExecutor;Ldagger/Lazy;Landroid/content/SharedPreferences;Lcom/android/systemui/controls/ui/ControlActionCoordinator;Lcom/android/systemui/plugins/ActivityStarter;Lcom/android/systemui/statusbar/phone/ShadeController;Lcom/android/systemui/controls/CustomIconCache;Lcom/android/systemui/controls/ControlsMetricsLogger;Lcom/android/systemui/statusbar/policy/KeyguardStateController;)V", "activityContext", "allStructures", "", "Lcom/android/systemui/controls/controller/StructureInfo;", "getBgExecutor", "()Lcom/android/systemui/util/concurrency/DelayableExecutor;", "collator", "Ljava/text/Collator;", "kotlin.jvm.PlatformType", "getContext", "()Landroid/content/Context;", "getControlActionCoordinator", "()Lcom/android/systemui/controls/ui/ControlActionCoordinator;", "controlViewsById", "", "Lcom/android/systemui/controls/ui/ControlKey;", "Lcom/android/systemui/controls/ui/ControlViewHolder;", "controlsById", "Lcom/android/systemui/controls/ui/ControlWithState;", "getControlsController", "()Ldagger/Lazy;", "getControlsListingController", "hidden", "", "lastItems", "Lcom/android/systemui/controls/ui/SelectionItem;", "listingCallback", "Lcom/android/systemui/controls/management/ControlsListingController$ControlsListingCallback;", "localeComparator", "Ljava/util/Comparator;", "Lkotlin/Comparator;", "onDismiss", "Ljava/lang/Runnable;", "onSeedingComplete", "Ljava/util/function/Consumer;", "parent", "Landroid/view/ViewGroup;", "popup", "Landroid/widget/ListPopupWindow;", "popupThemedContext", "Landroid/view/ContextThemeWrapper;", "retainCache", "selectedStructure", "getSharedPreferences", "()Landroid/content/SharedPreferences;", "getUiExecutor", "closeDialogs", "", "immediately", "createCallback", "onResult", "Lkotlin/Function1;", "createDropDown", "items", "selected", "createListView", "createMenu", "createRow", "inflater", "Landroid/view/LayoutInflater;", "listView", "findSelectionItem", "si", "getPreferredStructure", "structures", "hide", "onActionResponse", "componentName", "Landroid/content/ComponentName;", "controlId", "", "response", "", "onRefreshState", "controls", "Landroid/service/controls/Control;", "putIntentExtras", "intent", "Landroid/content/Intent;", "reload", "show", "showControlsView", "showInitialSetupView", "showSeedingView", "startActivity", "startEditingActivity", "startFavoritingActivity", "startProviderSelectorActivity", "startTargetedActivity", "klazz", "Ljava/lang/Class;", "switchAppOrStructure", "item", "updatePreferences", "Companion", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000þ\u0001\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0010 \n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0006\n\u0002\u0010%\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0004\n\u0002\u0010\u000b\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0006\n\u0002\u0010\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0007\n\u0002\u0018\u0002\n\u0002\b\b\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u000e\n\u0000\n\u0002\u0010\b\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u000b\n\u0002\u0018\u0002\n\u0002\b\u0005\b\u0007\u0018\u0000 y2\u00020\u0001:\u0001yBy\b\u0007\u0012\f\u0010\u0002\u001a\b\u0012\u0004\u0012\u00020\u00040\u0003\u0012\u0006\u0010\u0005\u001a\u00020\u0006\u0012\b\b\u0001\u0010\u0007\u001a\u00020\b\u0012\b\b\u0001\u0010\t\u001a\u00020\b\u0012\f\u0010\n\u001a\b\u0012\u0004\u0012\u00020\u000b0\u0003\u0012\b\b\u0001\u0010\f\u001a\u00020\r\u0012\u0006\u0010\u000e\u001a\u00020\u000f\u0012\u0006\u0010\u0010\u001a\u00020\u0011\u0012\u0006\u0010\u0012\u001a\u00020\u0013\u0012\u0006\u0010\u0014\u001a\u00020\u0015\u0012\u0006\u0010\u0016\u001a\u00020\u0017\u0012\u0006\u0010\u0018\u001a\u00020\u0019¢\u0006\u0002\u0010\u001aJ\u0010\u0010I\u001a\u00020J2\u0006\u0010K\u001a\u000202H\u0016J\"\u0010L\u001a\u0002062\u0018\u0010M\u001a\u0014\u0012\n\u0012\b\u0012\u0004\u0012\u0002040\u001d\u0012\u0004\u0012\u00020J0NH\u0002J\u001e\u0010O\u001a\u00020J2\f\u0010P\u001a\b\u0012\u0004\u0012\u0002040\u001d2\u0006\u0010Q\u001a\u000204H\u0002J\u0010\u0010R\u001a\u00020J2\u0006\u0010Q\u001a\u000204H\u0002J\b\u0010S\u001a\u00020JH\u0002J\u0018\u0010T\u001a\u00020?2\u0006\u0010U\u001a\u00020V2\u0006\u0010W\u001a\u00020?H\u0002J \u0010X\u001a\u0004\u0018\u0001042\u0006\u0010Y\u001a\u00020\u001e2\f\u0010P\u001a\b\u0012\u0004\u0012\u0002040\u001dH\u0002J\u0016\u0010Z\u001a\u00020\u001e2\f\u0010[\u001a\b\u0012\u0004\u0012\u00020\u001e0\u001dH\u0016J\b\u0010\\\u001a\u00020JH\u0016J \u0010]\u001a\u00020J2\u0006\u0010^\u001a\u00020_2\u0006\u0010`\u001a\u00020a2\u0006\u0010b\u001a\u00020cH\u0016J\u001e\u0010d\u001a\u00020J2\u0006\u0010^\u001a\u00020_2\f\u0010e\u001a\b\u0012\u0004\u0012\u00020f0\u001dH\u0016J\u0018\u0010g\u001a\u00020J2\u0006\u0010h\u001a\u00020i2\u0006\u0010Y\u001a\u00020\u001eH\u0002J\u0010\u0010j\u001a\u00020J2\u0006\u0010>\u001a\u00020?H\u0002J \u0010k\u001a\u00020J2\u0006\u0010>\u001a\u00020?2\u0006\u0010:\u001a\u00020;2\u0006\u0010\u001b\u001a\u00020\u0006H\u0016J\u0016\u0010l\u001a\u00020J2\f\u0010P\u001a\b\u0012\u0004\u0012\u0002040\u001dH\u0002J\u0016\u0010m\u001a\u00020J2\f\u0010P\u001a\b\u0012\u0004\u0012\u0002040\u001dH\u0002J\u0016\u0010n\u001a\u00020J2\f\u0010P\u001a\b\u0012\u0004\u0012\u0002040\u001dH\u0002J\u0010\u0010o\u001a\u00020J2\u0006\u0010h\u001a\u00020iH\u0002J\u0010\u0010p\u001a\u00020J2\u0006\u0010Y\u001a\u00020\u001eH\u0002J\u0010\u0010q\u001a\u00020J2\u0006\u0010Y\u001a\u00020\u001eH\u0002J\b\u0010r\u001a\u00020JH\u0002J\u001c\u0010s\u001a\u00020J2\u0006\u0010Y\u001a\u00020\u001e2\n\u0010t\u001a\u0006\u0012\u0002\b\u00030uH\u0002J\u0010\u0010v\u001a\u00020J2\u0006\u0010w\u001a\u000204H\u0002J\u0010\u0010x\u001a\u00020J2\u0006\u0010Y\u001a\u00020\u001eH\u0002R\u000e\u0010\u001b\u001a\u00020\u0006X.¢\u0006\u0002\n\u0000R\u000e\u0010\u0010\u001a\u00020\u0011X\u0004¢\u0006\u0002\n\u0000R\u0014\u0010\u001c\u001a\b\u0012\u0004\u0012\u00020\u001e0\u001dX.¢\u0006\u0002\n\u0000R\u0011\u0010\t\u001a\u00020\b¢\u0006\b\n\u0000\u001a\u0004\b\u001f\u0010 R\u0016\u0010!\u001a\n #*\u0004\u0018\u00010\"0\"X\u0004¢\u0006\u0002\n\u0000R\u0011\u0010\u0005\u001a\u00020\u0006¢\u0006\b\n\u0000\u001a\u0004\b$\u0010%R\u0011\u0010\u000e\u001a\u00020\u000f¢\u0006\b\n\u0000\u001a\u0004\b&\u0010'R\u001a\u0010(\u001a\u000e\u0012\u0004\u0012\u00020*\u0012\u0004\u0012\u00020+0)X\u0004¢\u0006\u0002\n\u0000R\u001a\u0010,\u001a\u000e\u0012\u0004\u0012\u00020*\u0012\u0004\u0012\u00020-0)X\u0004¢\u0006\u0002\n\u0000R\u0017\u0010\u0002\u001a\b\u0012\u0004\u0012\u00020\u00040\u0003¢\u0006\b\n\u0000\u001a\u0004\b.\u0010/R\u0017\u0010\n\u001a\b\u0012\u0004\u0012\u00020\u000b0\u0003¢\u0006\b\n\u0000\u001a\u0004\b0\u0010/R\u000e\u0010\u0016\u001a\u00020\u0017X\u0004¢\u0006\u0002\n\u0000R\u000e\u00101\u001a\u000202X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0014\u001a\u00020\u0015X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0018\u001a\u00020\u0019X\u0004¢\u0006\u0002\n\u0000R\u0014\u00103\u001a\b\u0012\u0004\u0012\u0002040\u001dX.¢\u0006\u0002\n\u0000R\u000e\u00105\u001a\u000206X.¢\u0006\u0002\n\u0000R\u001e\u00107\u001a\u0012\u0012\u0004\u0012\u00020408j\b\u0012\u0004\u0012\u000204`9X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010:\u001a\u00020;X.¢\u0006\u0002\n\u0000R\u0014\u0010<\u001a\b\u0012\u0004\u0012\u0002020=X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010>\u001a\u00020?X.¢\u0006\u0002\n\u0000R\u0010\u0010@\u001a\u0004\u0018\u00010AX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010B\u001a\u00020CX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010D\u001a\u000202X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010E\u001a\u00020\u001eX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0012\u001a\u00020\u0013X\u0004¢\u0006\u0002\n\u0000R\u0011\u0010\f\u001a\u00020\r¢\u0006\b\n\u0000\u001a\u0004\bF\u0010GR\u0011\u0010\u0007\u001a\u00020\b¢\u0006\b\n\u0000\u001a\u0004\bH\u0010 ¨\u0006z"}, mo65043d2 = {"Lcom/android/systemui/controls/ui/ControlsUiControllerImpl;", "Lcom/android/systemui/controls/ui/ControlsUiController;", "controlsController", "Ldagger/Lazy;", "Lcom/android/systemui/controls/controller/ControlsController;", "context", "Landroid/content/Context;", "uiExecutor", "Lcom/android/systemui/util/concurrency/DelayableExecutor;", "bgExecutor", "controlsListingController", "Lcom/android/systemui/controls/management/ControlsListingController;", "sharedPreferences", "Landroid/content/SharedPreferences;", "controlActionCoordinator", "Lcom/android/systemui/controls/ui/ControlActionCoordinator;", "activityStarter", "Lcom/android/systemui/plugins/ActivityStarter;", "shadeController", "Lcom/android/systemui/statusbar/phone/ShadeController;", "iconCache", "Lcom/android/systemui/controls/CustomIconCache;", "controlsMetricsLogger", "Lcom/android/systemui/controls/ControlsMetricsLogger;", "keyguardStateController", "Lcom/android/systemui/statusbar/policy/KeyguardStateController;", "(Ldagger/Lazy;Landroid/content/Context;Lcom/android/systemui/util/concurrency/DelayableExecutor;Lcom/android/systemui/util/concurrency/DelayableExecutor;Ldagger/Lazy;Landroid/content/SharedPreferences;Lcom/android/systemui/controls/ui/ControlActionCoordinator;Lcom/android/systemui/plugins/ActivityStarter;Lcom/android/systemui/statusbar/phone/ShadeController;Lcom/android/systemui/controls/CustomIconCache;Lcom/android/systemui/controls/ControlsMetricsLogger;Lcom/android/systemui/statusbar/policy/KeyguardStateController;)V", "activityContext", "allStructures", "", "Lcom/android/systemui/controls/controller/StructureInfo;", "getBgExecutor", "()Lcom/android/systemui/util/concurrency/DelayableExecutor;", "collator", "Ljava/text/Collator;", "kotlin.jvm.PlatformType", "getContext", "()Landroid/content/Context;", "getControlActionCoordinator", "()Lcom/android/systemui/controls/ui/ControlActionCoordinator;", "controlViewsById", "", "Lcom/android/systemui/controls/ui/ControlKey;", "Lcom/android/systemui/controls/ui/ControlViewHolder;", "controlsById", "Lcom/android/systemui/controls/ui/ControlWithState;", "getControlsController", "()Ldagger/Lazy;", "getControlsListingController", "hidden", "", "lastItems", "Lcom/android/systemui/controls/ui/SelectionItem;", "listingCallback", "Lcom/android/systemui/controls/management/ControlsListingController$ControlsListingCallback;", "localeComparator", "Ljava/util/Comparator;", "Lkotlin/Comparator;", "onDismiss", "Ljava/lang/Runnable;", "onSeedingComplete", "Ljava/util/function/Consumer;", "parent", "Landroid/view/ViewGroup;", "popup", "Landroid/widget/ListPopupWindow;", "popupThemedContext", "Landroid/view/ContextThemeWrapper;", "retainCache", "selectedStructure", "getSharedPreferences", "()Landroid/content/SharedPreferences;", "getUiExecutor", "closeDialogs", "", "immediately", "createCallback", "onResult", "Lkotlin/Function1;", "createDropDown", "items", "selected", "createListView", "createMenu", "createRow", "inflater", "Landroid/view/LayoutInflater;", "listView", "findSelectionItem", "si", "getPreferredStructure", "structures", "hide", "onActionResponse", "componentName", "Landroid/content/ComponentName;", "controlId", "", "response", "", "onRefreshState", "controls", "Landroid/service/controls/Control;", "putIntentExtras", "intent", "Landroid/content/Intent;", "reload", "show", "showControlsView", "showInitialSetupView", "showSeedingView", "startActivity", "startEditingActivity", "startFavoritingActivity", "startProviderSelectorActivity", "startTargetedActivity", "klazz", "Ljava/lang/Class;", "switchAppOrStructure", "item", "updatePreferences", "Companion", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* renamed from: com.android.systemui.controls.ui.ControlsUiControllerImpl */
 /* compiled from: ControlsUiControllerImpl.kt */
 public final class ControlsUiControllerImpl implements ControlsUiController {
@@ -141,7 +141,7 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
         this.iconCache = customIconCache;
         this.controlsMetricsLogger = controlsMetricsLogger2;
         this.keyguardStateController = keyguardStateController2;
-        this.popupThemedContext = new ContextThemeWrapper(context2, C1893R.style.Control_ListPopupWindow);
+        this.popupThemedContext = new ContextThemeWrapper(context2, C1894R.style.Control_ListPopupWindow);
         Collator instance = Collator.getInstance(context2.getResources().getConfiguration().getLocales().get(0));
         this.collator = instance;
         Intrinsics.checkNotNullExpressionValue(instance, "collator");
@@ -177,7 +177,7 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
         return this.controlActionCoordinator;
     }
 
-    @Metadata(mo64986d1 = {"\u0000&\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\t\n\u0000\n\u0002\u0010\u000e\n\u0002\b\u0002\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u000e\u0010\u0003\u001a\u00020\u0004X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0005\u001a\u00020\u0006X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0007\u001a\u00020\bXT¢\u0006\u0002\n\u0000R\u000e\u0010\t\u001a\u00020\nXT¢\u0006\u0002\n\u0000R\u000e\u0010\u000b\u001a\u00020\nXT¢\u0006\u0002\n\u0000¨\u0006\f"}, mo64987d2 = {"Lcom/android/systemui/controls/ui/ControlsUiControllerImpl$Companion;", "", "()V", "EMPTY_COMPONENT", "Landroid/content/ComponentName;", "EMPTY_STRUCTURE", "Lcom/android/systemui/controls/controller/StructureInfo;", "FADE_IN_MILLIS", "", "PREF_COMPONENT", "", "PREF_STRUCTURE", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u0000&\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\t\n\u0000\n\u0002\u0010\u000e\n\u0002\b\u0002\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u000e\u0010\u0003\u001a\u00020\u0004X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0005\u001a\u00020\u0006X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0007\u001a\u00020\bXT¢\u0006\u0002\n\u0000R\u000e\u0010\t\u001a\u00020\nXT¢\u0006\u0002\n\u0000R\u000e\u0010\u000b\u001a\u00020\nXT¢\u0006\u0002\n\u0000¨\u0006\f"}, mo65043d2 = {"Lcom/android/systemui/controls/ui/ControlsUiControllerImpl$Companion;", "", "()V", "EMPTY_COMPONENT", "Landroid/content/ComponentName;", "EMPTY_STRUCTURE", "Lcom/android/systemui/controls/controller/StructureInfo;", "FADE_IN_MILLIS", "", "PREF_COMPONENT", "", "PREF_STRUCTURE", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* renamed from: com.android.systemui.controls.ui.ControlsUiControllerImpl$Companion */
     /* compiled from: ControlsUiControllerImpl.kt */
     public static final class Companion {
@@ -197,7 +197,7 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
 
     /* access modifiers changed from: private */
     /* renamed from: onSeedingComplete$lambda-2  reason: not valid java name */
-    public static final void m2708onSeedingComplete$lambda2(ControlsUiControllerImpl controlsUiControllerImpl, Boolean bool) {
+    public static final void m2713onSeedingComplete$lambda2(ControlsUiControllerImpl controlsUiControllerImpl, Boolean bool) {
         Object obj;
         Intrinsics.checkNotNullParameter(controlsUiControllerImpl, "this$0");
         Intrinsics.checkNotNullExpressionValue(bool, "accepted");
@@ -321,14 +321,14 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
             Intrinsics.throwUninitializedPropertyAccessException("parent");
             viewGroup = null;
         }
-        from.inflate(C1893R.layout.controls_no_favorites, viewGroup, true);
+        from.inflate(C1894R.layout.controls_no_favorites, viewGroup, true);
         ViewGroup viewGroup3 = this.parent;
         if (viewGroup3 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("parent");
         } else {
             viewGroup2 = viewGroup3;
         }
-        ((TextView) viewGroup2.requireViewById(C1893R.C1897id.controls_subtitle)).setText(this.context.getResources().getString(C1893R.string.controls_seeding_in_progress));
+        ((TextView) viewGroup2.requireViewById(C1894R.C1898id.controls_subtitle)).setText(this.context.getResources().getString(C1894R.string.controls_seeding_in_progress));
     }
 
     /* access modifiers changed from: private */
@@ -436,15 +436,15 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
     }
 
     private final void createMenu() {
-        String[] strArr = {this.context.getResources().getString(C1893R.string.controls_menu_add), this.context.getResources().getString(C1893R.string.controls_menu_edit)};
+        String[] strArr = {this.context.getResources().getString(C1894R.string.controls_menu_add), this.context.getResources().getString(C1894R.string.controls_menu_edit)};
         Ref.ObjectRef objectRef = new Ref.ObjectRef();
-        objectRef.element = new ArrayAdapter(this.context, C1893R.layout.controls_more_item, strArr);
+        objectRef.element = new ArrayAdapter(this.context, C1894R.layout.controls_more_item, strArr);
         ViewGroup viewGroup = this.parent;
         if (viewGroup == null) {
             Intrinsics.throwUninitializedPropertyAccessException("parent");
             viewGroup = null;
         }
-        ImageView imageView = (ImageView) viewGroup.requireViewById(C1893R.C1897id.controls_more);
+        ImageView imageView = (ImageView) viewGroup.requireViewById(C1894R.C1898id.controls_more);
         imageView.setOnClickListener(new ControlsUiControllerImpl$createMenu$1(this, imageView, objectRef));
     }
 
@@ -453,7 +453,7 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
             RenderInfo.Companion.registerComponentIcon(selectionItem2.getComponentName(), selectionItem2.getIcon());
         }
         Ref.ObjectRef objectRef = new Ref.ObjectRef();
-        T itemAdapter = new ItemAdapter(this.context, C1893R.layout.controls_spinner_item);
+        T itemAdapter = new ItemAdapter(this.context, C1894R.layout.controls_spinner_item);
         itemAdapter.addAll(list);
         objectRef.element = itemAdapter;
         ViewGroup viewGroup = this.parent;
@@ -462,11 +462,11 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
             Intrinsics.throwUninitializedPropertyAccessException("parent");
             viewGroup = null;
         }
-        TextView textView = (TextView) viewGroup.requireViewById(C1893R.C1897id.app_or_structure_spinner);
+        TextView textView = (TextView) viewGroup.requireViewById(C1894R.C1898id.app_or_structure_spinner);
         textView.setText(selectionItem.getTitle());
         Drawable background = textView.getBackground();
         if (background != null) {
-            ((LayerDrawable) background).getDrawable(0).setTint(textView.getContext().getResources().getColor(C1893R.C1894color.control_spinner_dropdown, (Resources.Theme) null));
+            ((LayerDrawable) background).getDrawable(0).setTint(textView.getContext().getResources().getColor(C1894R.C1895color.control_spinner_dropdown, (Resources.Theme) null));
             if (list.size() == 1) {
                 textView.setBackground((Drawable) null);
                 return;
@@ -477,7 +477,7 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
             } else {
                 viewGroup2 = viewGroup3;
             }
-            ViewGroup viewGroup4 = (ViewGroup) viewGroup2.requireViewById(C1893R.C1897id.controls_header);
+            ViewGroup viewGroup4 = (ViewGroup) viewGroup2.requireViewById(C1894R.C1898id.controls_header);
             viewGroup4.setOnClickListener(new ControlsUiControllerImpl$createDropDown$2(this, viewGroup4, objectRef));
             return;
         }
@@ -493,13 +493,13 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
             viewGroup = null;
         }
         int i = 1;
-        from.inflate(C1893R.layout.controls_with_favorites, viewGroup, true);
+        from.inflate(C1894R.layout.controls_with_favorites, viewGroup, true);
         ViewGroup viewGroup3 = this.parent;
         if (viewGroup3 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("parent");
             viewGroup3 = null;
         }
-        ImageView imageView = (ImageView) viewGroup3.requireViewById(C1893R.C1897id.controls_close);
+        ImageView imageView = (ImageView) viewGroup3.requireViewById(C1894R.C1898id.controls_close);
         imageView.setOnClickListener(new ControlsUiControllerImpl$$ExternalSyntheticLambda0(this));
         boolean z = false;
         imageView.setVisibility(0);
@@ -518,7 +518,7 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
         } else {
             viewGroup2 = viewGroup4;
         }
-        View requireViewById = viewGroup2.requireViewById(C1893R.C1897id.global_actions_controls_list);
+        View requireViewById = viewGroup2.requireViewById(C1894R.C1898id.global_actions_controls_list);
         if (requireViewById != null) {
             ViewGroup viewGroup5 = (ViewGroup) requireViewById;
             Intrinsics.checkNotNullExpressionValue(from, "inflater");
@@ -530,7 +530,7 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
                     if (createRow.getChildCount() == findMaxColumns) {
                         createRow = createRow(from, viewGroup5);
                     }
-                    View inflate = from.inflate(C1893R.layout.controls_base_item, createRow, z);
+                    View inflate = from.inflate(C1894R.layout.controls_base_item, createRow, z);
                     if (inflate != null) {
                         ViewGroup viewGroup6 = (ViewGroup) inflate;
                         createRow.addView(viewGroup6);
@@ -555,7 +555,7 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
                 i = 1;
             }
             int size = this.selectedStructure.getControls().size() % findMaxColumns;
-            int dimensionPixelSize = this.context.getResources().getDimensionPixelSize(C1893R.dimen.control_spacing);
+            int dimensionPixelSize = this.context.getResources().getDimensionPixelSize(C1894R.dimen.control_spacing);
             for (int i2 = size == 0 ? 0 : findMaxColumns - size; i2 > 0; i2--) {
                 LinearLayout.LayoutParams layoutParams2 = new LinearLayout.LayoutParams(0, 0, 1.0f);
                 layoutParams2.setMarginStart(dimensionPixelSize);
@@ -568,7 +568,7 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
 
     /* access modifiers changed from: private */
     /* renamed from: createListView$lambda-12$lambda-11  reason: not valid java name */
-    public static final void m2705createListView$lambda12$lambda11(ControlsUiControllerImpl controlsUiControllerImpl, View view) {
+    public static final void m2710createListView$lambda12$lambda11(ControlsUiControllerImpl controlsUiControllerImpl, View view) {
         Intrinsics.checkNotNullParameter(controlsUiControllerImpl, "this$0");
         Intrinsics.checkNotNullParameter(view, "<anonymous parameter 0>");
         Runnable runnable = controlsUiControllerImpl.onDismiss;
@@ -765,7 +765,7 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
 
     /* access modifiers changed from: private */
     /* renamed from: onRefreshState$lambda-23$lambda-22$lambda-21$lambda-20  reason: not valid java name */
-    public static final void m2707onRefreshState$lambda23$lambda22$lambda21$lambda20(ControlViewHolder controlViewHolder, ControlWithState controlWithState, boolean z) {
+    public static final void m2712onRefreshState$lambda23$lambda22$lambda21$lambda20(ControlViewHolder controlViewHolder, ControlWithState controlWithState, boolean z) {
         Intrinsics.checkNotNullParameter(controlViewHolder, "$it");
         Intrinsics.checkNotNullParameter(controlWithState, "$cws");
         controlViewHolder.bindData(controlWithState, z);
@@ -779,7 +779,7 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
 
     /* access modifiers changed from: private */
     /* renamed from: onActionResponse$lambda-24  reason: not valid java name */
-    public static final void m2706onActionResponse$lambda24(ControlsUiControllerImpl controlsUiControllerImpl, ControlKey controlKey, int i) {
+    public static final void m2711onActionResponse$lambda24(ControlsUiControllerImpl controlsUiControllerImpl, ControlKey controlKey, int i) {
         Intrinsics.checkNotNullParameter(controlsUiControllerImpl, "this$0");
         Intrinsics.checkNotNullParameter(controlKey, "$key");
         ControlViewHolder controlViewHolder = controlsUiControllerImpl.controlViewsById.get(controlKey);
@@ -789,7 +789,7 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
     }
 
     private final ViewGroup createRow(LayoutInflater layoutInflater, ViewGroup viewGroup) {
-        View inflate = layoutInflater.inflate(C1893R.layout.controls_row, viewGroup, false);
+        View inflate = layoutInflater.inflate(C1894R.layout.controls_row, viewGroup, false);
         if (inflate != null) {
             ViewGroup viewGroup2 = (ViewGroup) inflate;
             viewGroup.addView(viewGroup2);

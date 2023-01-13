@@ -7,7 +7,7 @@ import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.view.ViewOverlay;
 import androidx.cardview.widget.CardView;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 
 /* renamed from: com.android.systemui.wallet.ui.WalletCardView */
 public class WalletCardView extends CardView {
@@ -34,8 +34,8 @@ public class WalletCardView extends CardView {
         super(context, attributeSet);
         Paint paint = new Paint();
         this.mBorderPaint = paint;
-        paint.setColor(context.getColor(C1893R.C1894color.wallet_card_border));
-        paint.setStrokeWidth(context.getResources().getDimension(C1893R.dimen.wallet_card_border_width));
+        paint.setColor(context.getColor(C1894R.C1895color.wallet_card_border));
+        paint.setStrokeWidth(context.getResources().getDimension(C1894R.dimen.wallet_card_border_width));
         paint.setStyle(Paint.Style.STROKE);
         paint.setAntiAlias(true);
     }

@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.view.ViewOverlay;
 import android.view.WindowInsets;
 import android.widget.RelativeLayout;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dependency;
 import com.android.systemui.battery.BatteryMeterView;
 import com.android.systemui.flags.FeatureFlags;
@@ -82,12 +82,12 @@ public class NTQSStatusBar extends RelativeLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mPrivacyChip = (OngoingPrivacyChip) findViewById(C1893R.C1897id.privacy_chip);
-        StatusIconContainer statusIconContainer = (StatusIconContainer) findViewById(C1893R.C1897id.qs_statusIcons);
+        this.mPrivacyChip = (OngoingPrivacyChip) findViewById(C1894R.C1898id.privacy_chip);
+        StatusIconContainer statusIconContainer = (StatusIconContainer) findViewById(C1894R.C1898id.qs_statusIcons);
         this.mIconContainer = statusIconContainer;
         statusIconContainer.setMaxIconsToDisplay(7);
         this.mFeatureFlags = (FeatureFlags) Dependency.get(FeatureFlags.class);
-        BatteryMeterView batteryMeterView = (BatteryMeterView) findViewById(C1893R.C1897id.qs_batteryRemainingIcon);
+        BatteryMeterView batteryMeterView = (BatteryMeterView) findViewById(C1894R.C1898id.qs_batteryRemainingIcon);
         this.mBatteryRemainingIcon = batteryMeterView;
         batteryMeterView.setPercentShowMode(3);
         updateResources();
@@ -111,7 +111,7 @@ public class NTQSStatusBar extends RelativeLayout {
 
     private void updateResources() {
         updateSafePadding();
-        this.mConfigShowBatteryEstimate = getResources().getBoolean(C1893R.bool.config_showBatteryEstimateQSBH);
+        this.mConfigShowBatteryEstimate = getResources().getBoolean(C1894R.bool.config_showBatteryEstimateQSBH);
         updateBatteryMode();
         this.mBatteryRemainingIcon.updateColors(-1, -1, -1);
     }
@@ -130,11 +130,11 @@ public class NTQSStatusBar extends RelativeLayout {
     }
 
     private void updateSafePadding() {
-        int dimensionPixelOffset = getResources().getDimensionPixelOffset(C1893R.dimen.qs_status_bar_margin_left_right);
-        int dimensionPixelSize = getResources().getDimensionPixelSize(C1893R.dimen.rounded_corner_content_padding);
+        int dimensionPixelOffset = getResources().getDimensionPixelOffset(C1894R.dimen.qs_status_bar_margin_left_right);
+        int dimensionPixelSize = getResources().getDimensionPixelSize(C1894R.dimen.rounded_corner_content_padding);
         Pair<Integer, Integer> statusBarContentInsetsForRotation = ((StatusBarContentInsetsProvider) Dependency.get(StatusBarContentInsetsProvider.class)).getStatusBarContentInsetsForRotation(RotationUtils.getExactRotation(getContext()));
-        int dimensionPixelSize2 = getResources().getDimensionPixelSize(C1893R.dimen.qs_content_horizontal_padding);
-        NTLogUtil.m1680d(TAG, "safePadding: first = " + statusBarContentInsetsForRotation.first + ", second = " + statusBarContentInsetsForRotation.second + " | roundedCornerPadding = " + dimensionPixelSize + " | horizontalPadding" + dimensionPixelSize2);
+        int dimensionPixelSize2 = getResources().getDimensionPixelSize(C1894R.dimen.qs_content_horizontal_padding);
+        NTLogUtil.m1686d(TAG, "safePadding: first = " + statusBarContentInsetsForRotation.first + ", second = " + statusBarContentInsetsForRotation.second + " | roundedCornerPadding = " + dimensionPixelSize + " | horizontalPadding" + dimensionPixelSize2);
         int max = ((Integer) statusBarContentInsetsForRotation.first).intValue() > 0 ? Math.max(Math.max(((Integer) statusBarContentInsetsForRotation.first).intValue(), dimensionPixelSize) - dimensionPixelSize2, 0) : dimensionPixelOffset;
         if (((Integer) statusBarContentInsetsForRotation.second).intValue() > 0) {
             dimensionPixelOffset = Math.max(Math.max(((Integer) statusBarContentInsetsForRotation.second).intValue(), dimensionPixelSize) - dimensionPixelSize2, 0);

@@ -39,7 +39,7 @@ final class PageTransformerAdapter extends ViewPager2.OnPageChangeCallback {
                     this.mPageTransformer.transformPage(childAt, ((float) (this.mLayoutManager.getPosition(childAt) - i)) + f2);
                     i3++;
                 } else {
-                    throw new IllegalStateException(String.format(Locale.f700US, "LayoutManager returned a null child at pos %d/%d while transforming pages", Integer.valueOf(i3), Integer.valueOf(this.mLayoutManager.getChildCount())));
+                    throw new IllegalStateException(String.format(Locale.f698US, "LayoutManager returned a null child at pos %d/%d while transforming pages", Integer.valueOf(i3), Integer.valueOf(this.mLayoutManager.getChildCount())));
                 }
             }
         }

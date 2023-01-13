@@ -5,22 +5,22 @@ import android.transition.TransitionValues;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.core.view.GravityCompat;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 public final class MaterialSharedAxis extends MaterialVisibility<VisibilityAnimatorProvider> {
-    private static final int DEFAULT_THEMED_DURATION_ATTR = C3621R.attr.motionDurationLong1;
-    private static final int DEFAULT_THEMED_EASING_ATTR = C3621R.attr.motionEasingStandard;
+    private static final int DEFAULT_THEMED_DURATION_ATTR = C3631R.attr.motionDurationLong1;
+    private static final int DEFAULT_THEMED_EASING_ATTR = C3631R.attr.motionEasingStandard;
 
     /* renamed from: X */
-    public static final int f453X = 0;
+    public static final int f452X = 0;
 
     /* renamed from: Y */
-    public static final int f454Y = 1;
+    public static final int f453Y = 1;
 
     /* renamed from: Z */
-    public static final int f455Z = 2;
+    public static final int f454Z = 2;
     private final int axis;
     private final boolean forward;
 

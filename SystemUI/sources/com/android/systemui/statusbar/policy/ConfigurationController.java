@@ -20,6 +20,9 @@ public interface ConfigurationController extends CallbackController<Configuratio
         void onMaxBoundsChanged() {
         }
 
+        void onOrientationChanged(int i) {
+        }
+
         void onSmallestScreenWidthChanged() {
         }
 
@@ -28,7 +31,12 @@ public interface ConfigurationController extends CallbackController<Configuratio
 
         void onUiModeChanged() {
         }
+
+        void onUiModeChangedDelayCheck() {
+        }
     }
+
+    int getOrientation();
 
     boolean isLayoutRtl();
 

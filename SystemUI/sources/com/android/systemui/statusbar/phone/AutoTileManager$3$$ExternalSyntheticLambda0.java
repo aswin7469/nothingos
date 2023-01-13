@@ -4,13 +4,13 @@ import com.android.systemui.statusbar.phone.AutoTileManager;
 
 /* compiled from: D8$$SyntheticClass */
 public final /* synthetic */ class AutoTileManager$3$$ExternalSyntheticLambda0 implements Runnable {
-    public final /* synthetic */ AutoTileManager.C29003 f$0;
+    public final /* synthetic */ AutoTileManager.C29063 f$0;
 
-    public /* synthetic */ AutoTileManager$3$$ExternalSyntheticLambda0(AutoTileManager.C29003 r1) {
+    public /* synthetic */ AutoTileManager$3$$ExternalSyntheticLambda0(AutoTileManager.C29063 r1) {
         this.f$0 = r1;
     }
 
     public final void run() {
-        this.f$0.mo43661x67d7d0cb();
+        this.f$0.mo43669x67d7d0cb();
     }
 }

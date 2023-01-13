@@ -9,7 +9,7 @@ import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
 import com.android.internal.widget.LockscreenCredential;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.animation.Interpolators;
 import java.util.ArrayList;
 
@@ -22,7 +22,7 @@ public abstract class KeyguardPinBasedInputView extends KeyguardAbsKeyInputView 
     /* access modifiers changed from: protected */
     public int getPromptReasonStringRes(int i) {
         if (i != 0) {
-            return i != 1 ? i != 3 ? i != 4 ? C1893R.string.kg_prompt_reason_timeout_pin : C1893R.string.kg_prompt_reason_user_request : C1893R.string.kg_prompt_reason_device_admin : C1893R.string.kg_prompt_reason_restart_pin;
+            return i != 1 ? i != 3 ? i != 4 ? C1894R.string.kg_prompt_reason_timeout_pin : C1894R.string.kg_prompt_reason_user_request : C1894R.string.kg_prompt_reason_device_admin : C1894R.string.kg_prompt_reason_restart_pin;
         }
         return 0;
     }
@@ -102,20 +102,20 @@ public abstract class KeyguardPinBasedInputView extends KeyguardAbsKeyInputView 
         PasswordTextView passwordTextView = (PasswordTextView) findViewById(getPasswordTextViewId());
         this.mPasswordEntry = passwordTextView;
         passwordTextView.setSelected(true);
-        this.mOkButton = (NumPadButton) findViewById(C1893R.C1897id.key_enter);
-        NumPadButton numPadButton = (NumPadButton) findViewById(C1893R.C1897id.delete_button);
+        this.mOkButton = (NumPadButton) findViewById(C1894R.C1898id.key_enter);
+        NumPadButton numPadButton = (NumPadButton) findViewById(C1894R.C1898id.delete_button);
         this.mDeleteButton = numPadButton;
         numPadButton.setVisibility(0);
-        this.mButtons[0] = (NumPadKey) findViewById(C1893R.C1897id.key0);
-        this.mButtons[1] = (NumPadKey) findViewById(C1893R.C1897id.key1);
-        this.mButtons[2] = (NumPadKey) findViewById(C1893R.C1897id.key2);
-        this.mButtons[3] = (NumPadKey) findViewById(C1893R.C1897id.key3);
-        this.mButtons[4] = (NumPadKey) findViewById(C1893R.C1897id.key4);
-        this.mButtons[5] = (NumPadKey) findViewById(C1893R.C1897id.key5);
-        this.mButtons[6] = (NumPadKey) findViewById(C1893R.C1897id.key6);
-        this.mButtons[7] = (NumPadKey) findViewById(C1893R.C1897id.key7);
-        this.mButtons[8] = (NumPadKey) findViewById(C1893R.C1897id.key8);
-        this.mButtons[9] = (NumPadKey) findViewById(C1893R.C1897id.key9);
+        this.mButtons[0] = (NumPadKey) findViewById(C1894R.C1898id.key0);
+        this.mButtons[1] = (NumPadKey) findViewById(C1894R.C1898id.key1);
+        this.mButtons[2] = (NumPadKey) findViewById(C1894R.C1898id.key2);
+        this.mButtons[3] = (NumPadKey) findViewById(C1894R.C1898id.key3);
+        this.mButtons[4] = (NumPadKey) findViewById(C1894R.C1898id.key4);
+        this.mButtons[5] = (NumPadKey) findViewById(C1894R.C1898id.key5);
+        this.mButtons[6] = (NumPadKey) findViewById(C1894R.C1898id.key6);
+        this.mButtons[7] = (NumPadKey) findViewById(C1894R.C1898id.key7);
+        this.mButtons[8] = (NumPadKey) findViewById(C1894R.C1898id.key8);
+        this.mButtons[9] = (NumPadKey) findViewById(C1894R.C1898id.key9);
         this.mPasswordEntry.requestFocus();
         super.onFinishInflate();
         reloadColors();

@@ -651,7 +651,7 @@ public class AVA implements DerEncoder {
                 throw new IllegalArgumentException("DER Value conversion");
             }
         }
-        return Normalizer.normalize(sb.toString().toUpperCase(Locale.f700US).toLowerCase(Locale.f700US), Normalizer.Form.NFKD);
+        return Normalizer.normalize(sb.toString().toUpperCase(Locale.f698US).toLowerCase(Locale.f698US), Normalizer.Form.NFKD);
     }
 
     private static boolean isDerString(DerValue derValue, boolean z) {

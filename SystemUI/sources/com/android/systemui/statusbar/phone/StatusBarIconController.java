@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import com.android.internal.statusbar.StatusBarIcon;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dependency;
 import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.demomode.DemoModeCommandReceiver;
@@ -64,7 +64,7 @@ public interface StatusBarIconController {
         String[] strArr;
         ArraySet<String> arraySet = new ArraySet<>();
         if (str == null) {
-            strArr = context.getResources().getStringArray(C1893R.array.config_statusBarIconsToExclude);
+            strArr = context.getResources().getStringArray(C1894R.array.config_statusBarIconsToExclude);
         } else {
             strArr = str.split(NavigationBarInflaterView.BUTTON_SEPARATOR);
         }
@@ -78,7 +78,7 @@ public interface StatusBarIconController {
 
     public static class DarkIconManager extends IconManager {
         private final DarkIconDispatcher mDarkIconDispatcher = ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class));
-        private int mIconHPadding = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.status_bar_icon_padding);
+        private int mIconHPadding = this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.status_bar_icon_padding);
 
         public DarkIconManager(LinearLayout linearLayout, FeatureFlags featureFlags) {
             super(linearLayout, featureFlags);

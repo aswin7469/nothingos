@@ -145,7 +145,7 @@ public class BrightnessController implements ToggleSlider.Listener, MirroredBrig
                 if (brightnessInfo != null) {
                     float unused = BrightnessController.this.mBrightnessMax = brightnessInfo.brightnessMaximum;
                     float unused2 = BrightnessController.this.mBrightnessMin = brightnessInfo.brightnessMinimum;
-                    NTLogUtil.m1682i(BrightnessController.TAG, "NT slider updateSlider max: " + BrightnessController.this.mBrightnessMax + ", min: " + BrightnessController.this.mBrightnessMin + ",  brightness: " + brightnessInfo.brightness);
+                    NTLogUtil.m1688i(BrightnessController.TAG, "NT slider updateSlider max: " + BrightnessController.this.mBrightnessMax + ", min: " + BrightnessController.this.mBrightnessMin + ",  brightness: " + brightnessInfo.brightness);
                     BrightnessController.this.mHandler.obtainMessage(1, Float.floatToIntBits(brightnessInfo.brightness), access$1200 ? 1 : 0).sendToTarget();
                 }
             }
@@ -200,7 +200,7 @@ public class BrightnessController implements ToggleSlider.Listener, MirroredBrig
     }
 
     public BrightnessController(Context context, ToggleSlider toggleSlider, BroadcastDispatcher broadcastDispatcher, @Background Handler handler) {
-        C24747 r0 = new Handler() {
+        C24807 r0 = new Handler() {
             public void handleMessage(Message message) {
                 boolean z = true;
                 boolean unused = BrightnessController.this.mExternalChange = true;
@@ -281,10 +281,10 @@ public class BrightnessController implements ToggleSlider.Listener, MirroredBrig
             }
             if (!NtFeaturesUtils.isSupport(new int[]{2})) {
                 f3 = MathUtils.min(BrightnessUtils.convertGammaToLinearFloat(i, f2, f), f);
-                NTLogUtil.m1680d(TAG, "NTF_BRIGHTNESS_LEVELCUST not enable. AOSP slider onChanged value: " + i + ",  brightness: " + f3);
+                NTLogUtil.m1686d(TAG, "NTF_BRIGHTNESS_LEVELCUST not enable. AOSP slider onChanged value: " + i + ",  brightness: " + f3);
             } else {
                 f3 = MathUtils.map(0.0f, 65535.0f, f2, f, ((BrightnessControllerEx) NTDependencyEx.get(BrightnessControllerEx.class)).convertToNTSliderValForManual(i));
-                NTLogUtil.m1680d(TAG, "NT slider onChanged value: " + i + ",  brightness: " + f3);
+                NTLogUtil.m1686d(TAG, "NT slider onChanged value: " + i + ",  brightness: " + f3);
             }
             if (z2) {
                 MetricsLogger.action(this.mContext, i2, BrightnessSynchronizer.brightnessFloatToInt(f3));
@@ -371,7 +371,7 @@ public class BrightnessController implements ToggleSlider.Listener, MirroredBrig
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$animateSliderTo$0$com-android-systemui-settings-brightness-BrightnessController */
-    public /* synthetic */ void mo37729x9ea265e7(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo37730x9ea265e7(ValueAnimator valueAnimator) {
         this.mExternalChange = true;
         this.mControl.setValue(((Integer) valueAnimator.getAnimatedValue()).intValue());
         this.mExternalChange = false;

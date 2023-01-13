@@ -14,7 +14,7 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import com.android.internal.colorextraction.ColorExtractor;
 import com.android.keyguard.dagger.KeyguardStatusViewScope;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.animation.Interpolators;
 import com.android.systemui.plugins.ClockPlugin;
 import com.nothing.systemui.keyguard.NTKeyguardClockView;
@@ -75,12 +75,12 @@ public class KeyguardClockSwitch extends RelativeLayout {
     }
 
     public void onDensityOrFontScaleChanged() {
-        this.mLargeClockView.setTextSize(0, (float) this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.large_clock_text_size));
-        this.mClockView.setTextSize(0, (float) this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.clock_text_size));
-        this.mNothingClockView.setTextSize(0, (float) this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.nt_clock_text_size));
-        this.mNothingClockViewLarge.setTextSize(0, (float) this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.nt_clock_text_size));
-        this.mClockSwitchYAmount = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.keyguard_clock_switch_y_shift);
-        this.mKeyguardClockViewLargeMarginTop = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.nt_keyguard_clock_large_top_margin);
+        this.mLargeClockView.setTextSize(0, (float) this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.large_clock_text_size));
+        this.mClockView.setTextSize(0, (float) this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.clock_text_size));
+        this.mNothingClockView.setTextSize(0, (float) this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.nt_clock_text_size));
+        this.mNothingClockViewLarge.setTextSize(0, (float) this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.nt_clock_text_size));
+        this.mClockSwitchYAmount = this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.keyguard_clock_switch_y_shift);
+        this.mKeyguardClockViewLargeMarginTop = this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.nt_keyguard_clock_large_top_margin);
     }
 
     public boolean hasCustomClock() {
@@ -90,13 +90,13 @@ public class KeyguardClockSwitch extends RelativeLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mClockFrame = (FrameLayout) findViewById(C1893R.C1897id.nothing_lockscreen_clock_view);
-        this.mClockView = (AnimatableClockView) findViewById(C1893R.C1897id.animatable_clock_view);
-        this.mLargeClockFrame = (FrameLayout) findViewById(C1893R.C1897id.nothing_lockscreen_clock_view_large);
-        this.mLargeClockView = (AnimatableClockView) findViewById(C1893R.C1897id.animatable_clock_view_large);
-        this.mStatusArea = findViewById(C1893R.C1897id.keyguard_status_area);
-        this.mNothingClockView = (NTKeyguardClockView) findViewById(C1893R.C1897id.nothing_keyguard_clock_view);
-        this.mNothingClockViewLarge = (NTKeyguardClockViewLarge) findViewById(C1893R.C1897id.nothing_keyguard_clock_view_large);
+        this.mClockFrame = (FrameLayout) findViewById(C1894R.C1898id.nothing_lockscreen_clock_view);
+        this.mClockView = (AnimatableClockView) findViewById(C1894R.C1898id.animatable_clock_view);
+        this.mLargeClockFrame = (FrameLayout) findViewById(C1894R.C1898id.nothing_lockscreen_clock_view_large);
+        this.mLargeClockView = (AnimatableClockView) findViewById(C1894R.C1898id.animatable_clock_view_large);
+        this.mStatusArea = findViewById(C1894R.C1898id.keyguard_status_area);
+        this.mNothingClockView = (NTKeyguardClockView) findViewById(C1894R.C1898id.nothing_keyguard_clock_view);
+        this.mNothingClockViewLarge = (NTKeyguardClockViewLarge) findViewById(C1894R.C1898id.nothing_keyguard_clock_view_large);
         onDensityOrFontScaleChanged();
     }
 
@@ -230,7 +230,7 @@ public class KeyguardClockSwitch extends RelativeLayout {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onLayout$0$com-android-keyguard-KeyguardClockSwitch  reason: not valid java name */
-    public /* synthetic */ void m2282lambda$onLayout$0$comandroidkeyguardKeyguardClockSwitch() {
+    public /* synthetic */ void m2288lambda$onLayout$0$comandroidkeyguardKeyguardClockSwitch() {
         updateClockViews(this.mDisplayedClockSize.intValue() == 0, true);
     }
 

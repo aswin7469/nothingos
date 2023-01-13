@@ -9,6 +9,6 @@ public final /* synthetic */ class UserSwitcherController$$ExternalSyntheticLamb
     }
 
     public final void run() {
-        this.f$0.mo46159xf6e16dc7();
+        this.f$0.mo46171xf6e16dc7();
     }
 }

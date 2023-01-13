@@ -37,7 +37,7 @@ public enum Month implements TemporalAccessor, TemporalAdjuster {
     }
 
     /* renamed from: of */
-    public static Month m920of(int i) {
+    public static Month m918of(int i) {
         if (i >= 1 && i <= 12) {
             return ENUMS[i - 1];
         }
@@ -52,7 +52,7 @@ public enum Month implements TemporalAccessor, TemporalAdjuster {
             if (!IsoChronology.INSTANCE.equals(Chronology.from(temporalAccessor))) {
                 temporalAccessor = LocalDate.from(temporalAccessor);
             }
-            return m920of(temporalAccessor.get(ChronoField.MONTH_OF_YEAR));
+            return m918of(temporalAccessor.get(ChronoField.MONTH_OF_YEAR));
         } catch (DateTimeException e) {
             throw new DateTimeException("Unable to obtain Month from TemporalAccessor: " + temporalAccessor + " of type " + temporalAccessor.getClass().getName(), e);
         }
@@ -112,7 +112,7 @@ public enum Month implements TemporalAccessor, TemporalAdjuster {
     }
 
     /* renamed from: java.time.Month$1 */
-    static /* synthetic */ class C28541 {
+    static /* synthetic */ class C28601 {
         static final /* synthetic */ int[] $SwitchMap$java$time$Month = null;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(26:0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|26) */
@@ -210,17 +210,17 @@ public enum Month implements TemporalAccessor, TemporalAdjuster {
             L_0x0090:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: java.time.Month.C28541.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: java.time.Month.C28601.<clinit>():void");
         }
     }
 
     public int length(boolean z) {
-        int i = C28541.$SwitchMap$java$time$Month[ordinal()];
+        int i = C28601.$SwitchMap$java$time$Month[ordinal()];
         return i != 1 ? (i == 2 || i == 3 || i == 4 || i == 5) ? 30 : 31 : z ? 29 : 28;
     }
 
     public int minLength() {
-        int i = C28541.$SwitchMap$java$time$Month[ordinal()];
+        int i = C28601.$SwitchMap$java$time$Month[ordinal()];
         if (i != 1) {
             return (i == 2 || i == 3 || i == 4 || i == 5) ? 30 : 31;
         }
@@ -228,7 +228,7 @@ public enum Month implements TemporalAccessor, TemporalAdjuster {
     }
 
     public int maxLength() {
-        int i = C28541.$SwitchMap$java$time$Month[ordinal()];
+        int i = C28601.$SwitchMap$java$time$Month[ordinal()];
         if (i != 1) {
             return (i == 2 || i == 3 || i == 4 || i == 5) ? 30 : 31;
         }
@@ -236,7 +236,7 @@ public enum Month implements TemporalAccessor, TemporalAdjuster {
     }
 
     public int firstDayOfYear(boolean z) {
-        switch (C28541.$SwitchMap$java$time$Month[ordinal()]) {
+        switch (C28601.$SwitchMap$java$time$Month[ordinal()]) {
             case 1:
                 return 32;
             case 2:

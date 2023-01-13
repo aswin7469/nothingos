@@ -25,7 +25,7 @@ class UnixAsynchronousSocketChannelImpl extends AsynchronousSocketChannelImpl im
     private static final boolean disableSynchronousRead;
 
     /* renamed from: nd */
-    private static final NativeDispatcher f899nd = new SocketDispatcher();
+    private static final NativeDispatcher f897nd = new SocketDispatcher();
     private Object connectAttachment;
     private PendingFuture<Void, Object> connectFuture;
     private CompletionHandler<Void, Object> connectHandler;
@@ -149,7 +149,7 @@ class UnixAsynchronousSocketChannelImpl extends AsynchronousSocketChannelImpl im
                     monitor-exit(r0)     // Catch:{ all -> 0x0042 }
                     throw r5
                 */
-                throw new UnsupportedOperationException("Method not decompiled: sun.nio.p033ch.UnixAsynchronousSocketChannelImpl.C47741.run():void");
+                throw new UnsupportedOperationException("Method not decompiled: sun.nio.p033ch.UnixAsynchronousSocketChannelImpl.C47861.run():void");
             }
         };
         this.writeTimeoutTask = new Runnable() {
@@ -214,18 +214,18 @@ class UnixAsynchronousSocketChannelImpl extends AsynchronousSocketChannelImpl im
                     monitor-exit(r0)     // Catch:{ all -> 0x0042 }
                     throw r5
                 */
-                throw new UnsupportedOperationException("Method not decompiled: sun.nio.p033ch.UnixAsynchronousSocketChannelImpl.C47752.run():void");
+                throw new UnsupportedOperationException("Method not decompiled: sun.nio.p033ch.UnixAsynchronousSocketChannelImpl.C47872.run():void");
             }
         };
         try {
-            IOUtil.configureBlocking(this.f874fd, false);
+            IOUtil.configureBlocking(this.f872fd, false);
             this.port = port2;
-            int fdVal2 = IOUtil.fdVal(this.f874fd);
+            int fdVal2 = IOUtil.fdVal(this.f872fd);
             this.fdVal = fdVal2;
             port2.register(fdVal2, this);
             closeGuard.open("close");
         } catch (IOException e) {
-            f899nd.close(this.f874fd);
+            f897nd.close(this.f872fd);
             throw e;
         }
     }
@@ -277,7 +277,7 @@ class UnixAsynchronousSocketChannelImpl extends AsynchronousSocketChannelImpl im
                     monitor-exit(r0)     // Catch:{ all -> 0x0042 }
                     throw r5
                 */
-                throw new UnsupportedOperationException("Method not decompiled: sun.nio.p033ch.UnixAsynchronousSocketChannelImpl.C47741.run():void");
+                throw new UnsupportedOperationException("Method not decompiled: sun.nio.p033ch.UnixAsynchronousSocketChannelImpl.C47861.run():void");
             }
         };
         this.writeTimeoutTask = new Runnable() {
@@ -323,7 +323,7 @@ class UnixAsynchronousSocketChannelImpl extends AsynchronousSocketChannelImpl im
                     monitor-exit(r0)     // Catch:{ all -> 0x0042 }
                     throw r5
                 */
-                throw new UnsupportedOperationException("Method not decompiled: sun.nio.p033ch.UnixAsynchronousSocketChannelImpl.C47752.run():void");
+                throw new UnsupportedOperationException("Method not decompiled: sun.nio.p033ch.UnixAsynchronousSocketChannelImpl.C47872.run():void");
             }
         };
         int fdVal2 = IOUtil.fdVal(fd);
@@ -420,7 +420,7 @@ class UnixAsynchronousSocketChannelImpl extends AsynchronousSocketChannelImpl im
     public void implClose() throws IOException {
         this.guard.close();
         this.port.unregister(this.fdVal);
-        f899nd.close(this.f874fd);
+        f897nd.close(this.f872fd);
         finish(false, true, true);
     }
 
@@ -452,7 +452,7 @@ class UnixAsynchronousSocketChannelImpl extends AsynchronousSocketChannelImpl im
     private void setConnected() throws IOException {
         synchronized (this.stateLock) {
             this.state = 2;
-            this.localAddress = Net.localAddress(this.f874fd);
+            this.localAddress = Net.localAddress(this.f872fd);
             this.remoteAddress = (InetSocketAddress) this.pendingRemote;
         }
     }
@@ -518,9 +518,9 @@ class UnixAsynchronousSocketChannelImpl extends AsynchronousSocketChannelImpl im
         try {
             begin();
             if (z) {
-                NetHooks.beforeTcpConnect(this.f874fd, checkAddress.getAddress(), checkAddress.getPort());
+                NetHooks.beforeTcpConnect(this.f872fd, checkAddress.getAddress(), checkAddress.getPort());
             }
-            if (Net.connect(this.f874fd, checkAddress.getAddress(), checkAddress.getPort()) == -2) {
+            if (Net.connect(this.f872fd, checkAddress.getAddress(), checkAddress.getPort()) == -2) {
                 PendingFuture<Void, Object> pendingFuture = null;
                 synchronized (this.updateLock) {
                     if (completionHandler == null) {
@@ -623,16 +623,16 @@ class UnixAsynchronousSocketChannelImpl extends AsynchronousSocketChannelImpl im
             r7 = 0
             r13.begin()     // Catch:{ all -> 0x0051 }
             if (r2 == 0) goto L_0x001e
-            java.io.FileDescriptor r8 = r13.f874fd     // Catch:{ all -> 0x0051 }
+            java.io.FileDescriptor r8 = r13.f872fd     // Catch:{ all -> 0x0051 }
             java.nio.ByteBuffer[] r9 = r13.readBuffers     // Catch:{ all -> 0x0051 }
-            sun.nio.ch.NativeDispatcher r10 = f899nd     // Catch:{ all -> 0x0051 }
+            sun.nio.ch.NativeDispatcher r10 = f897nd     // Catch:{ all -> 0x0051 }
             long r8 = sun.nio.p033ch.IOUtil.read(r8, r9, r10)     // Catch:{ all -> 0x0051 }
             int r0 = (int) r8     // Catch:{ all -> 0x0051 }
             goto L_0x002b
         L_0x001e:
-            java.io.FileDescriptor r8 = r13.f874fd     // Catch:{ all -> 0x0051 }
+            java.io.FileDescriptor r8 = r13.f872fd     // Catch:{ all -> 0x0051 }
             java.nio.ByteBuffer r9 = r13.readBuffer     // Catch:{ all -> 0x0051 }
-            sun.nio.ch.NativeDispatcher r10 = f899nd     // Catch:{ all -> 0x0051 }
+            sun.nio.ch.NativeDispatcher r10 = f897nd     // Catch:{ all -> 0x0051 }
             r11 = -1
             int r8 = sun.nio.p033ch.IOUtil.read(r8, r9, r11, r10)     // Catch:{ all -> 0x0051 }
             r0 = r8
@@ -831,8 +831,8 @@ class UnixAsynchronousSocketChannelImpl extends AsynchronousSocketChannelImpl im
             r19.begin()     // Catch:{ all -> 0x00d8 }
             if (r11 == 0) goto L_0x006c
             if (r2 == 0) goto L_0x0051
-            java.io.FileDescriptor r0 = r1.f874fd     // Catch:{ all -> 0x004c }
-            sun.nio.ch.NativeDispatcher r12 = f899nd     // Catch:{ all -> 0x004c }
+            java.io.FileDescriptor r0 = r1.f872fd     // Catch:{ all -> 0x004c }
+            sun.nio.ch.NativeDispatcher r12 = f897nd     // Catch:{ all -> 0x004c }
             r16 = r11
             long r11 = sun.nio.p033ch.IOUtil.read(r0, r4, r12)     // Catch:{ all -> 0x00c9 }
             int r13 = (int) r11
@@ -843,8 +843,8 @@ class UnixAsynchronousSocketChannelImpl extends AsynchronousSocketChannelImpl im
             goto L_0x00ca
         L_0x0051:
             r16 = r11
-            java.io.FileDescriptor r0 = r1.f874fd     // Catch:{ all -> 0x0068 }
-            sun.nio.ch.NativeDispatcher r11 = f899nd     // Catch:{ all -> 0x0068 }
+            java.io.FileDescriptor r0 = r1.f872fd     // Catch:{ all -> 0x0068 }
+            sun.nio.ch.NativeDispatcher r11 = f897nd     // Catch:{ all -> 0x0068 }
             r17 = r13
             r12 = -1
             int r0 = sun.nio.p033ch.IOUtil.read(r0, r3, r12, r11)     // Catch:{ all -> 0x0061 }
@@ -1045,16 +1045,16 @@ class UnixAsynchronousSocketChannelImpl extends AsynchronousSocketChannelImpl im
             r7 = 0
             r13.begin()     // Catch:{ all -> 0x0051 }
             if (r2 == 0) goto L_0x001e
-            java.io.FileDescriptor r8 = r13.f874fd     // Catch:{ all -> 0x0051 }
+            java.io.FileDescriptor r8 = r13.f872fd     // Catch:{ all -> 0x0051 }
             java.nio.ByteBuffer[] r9 = r13.writeBuffers     // Catch:{ all -> 0x0051 }
-            sun.nio.ch.NativeDispatcher r10 = f899nd     // Catch:{ all -> 0x0051 }
+            sun.nio.ch.NativeDispatcher r10 = f897nd     // Catch:{ all -> 0x0051 }
             long r8 = sun.nio.p033ch.IOUtil.write(r8, r9, r10)     // Catch:{ all -> 0x0051 }
             int r0 = (int) r8     // Catch:{ all -> 0x0051 }
             goto L_0x002b
         L_0x001e:
-            java.io.FileDescriptor r8 = r13.f874fd     // Catch:{ all -> 0x0051 }
+            java.io.FileDescriptor r8 = r13.f872fd     // Catch:{ all -> 0x0051 }
             java.nio.ByteBuffer r9 = r13.writeBuffer     // Catch:{ all -> 0x0051 }
-            sun.nio.ch.NativeDispatcher r10 = f899nd     // Catch:{ all -> 0x0051 }
+            sun.nio.ch.NativeDispatcher r10 = f897nd     // Catch:{ all -> 0x0051 }
             r11 = -1
             int r8 = sun.nio.p033ch.IOUtil.write(r8, r9, r11, r10)     // Catch:{ all -> 0x0051 }
             r0 = r8
@@ -1188,8 +1188,8 @@ class UnixAsynchronousSocketChannelImpl extends AsynchronousSocketChannelImpl im
             r19.begin()     // Catch:{ all -> 0x00d8 }
             if (r11 == 0) goto L_0x006a
             if (r2 == 0) goto L_0x004f
-            java.io.FileDescriptor r0 = r1.f874fd     // Catch:{ all -> 0x0046 }
-            sun.nio.ch.NativeDispatcher r15 = f899nd     // Catch:{ all -> 0x0046 }
+            java.io.FileDescriptor r0 = r1.f872fd     // Catch:{ all -> 0x0046 }
+            sun.nio.ch.NativeDispatcher r15 = f897nd     // Catch:{ all -> 0x0046 }
             r16 = r11
             r17 = r12
             long r11 = sun.nio.p033ch.IOUtil.write(r0, r4, r15)     // Catch:{ all -> 0x0041 }
@@ -1210,8 +1210,8 @@ class UnixAsynchronousSocketChannelImpl extends AsynchronousSocketChannelImpl im
         L_0x004f:
             r16 = r11
             r17 = r12
-            java.io.FileDescriptor r0 = r1.f874fd     // Catch:{ all -> 0x0062 }
-            sun.nio.ch.NativeDispatcher r11 = f899nd     // Catch:{ all -> 0x0062 }
+            java.io.FileDescriptor r0 = r1.f872fd     // Catch:{ all -> 0x0062 }
+            sun.nio.ch.NativeDispatcher r11 = f897nd     // Catch:{ all -> 0x0062 }
             r15 = r13
             r12 = -1
             int r0 = sun.nio.p033ch.IOUtil.write(r0, r3, r12, r11)     // Catch:{ all -> 0x0060 }

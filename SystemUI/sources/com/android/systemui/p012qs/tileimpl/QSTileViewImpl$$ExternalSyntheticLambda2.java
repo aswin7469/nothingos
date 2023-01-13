@@ -15,6 +15,6 @@ public final /* synthetic */ class QSTileViewImpl$$ExternalSyntheticLambda2 impl
     }
 
     public final void onClick(View view) {
-        QSTileViewImpl.m2960init$lambda6(this.f$0, this.f$1, view);
+        QSTileViewImpl.m2965init$lambda6(this.f$0, this.f$1, view);
     }
 }

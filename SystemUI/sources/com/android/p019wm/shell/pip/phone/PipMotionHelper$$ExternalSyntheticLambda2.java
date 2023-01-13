@@ -12,6 +12,6 @@ public final /* synthetic */ class PipMotionHelper$$ExternalSyntheticLambda2 imp
     }
 
     public final Object get() {
-        return this.f$0.m3469lambda$new$0$comandroidwmshellpipphonePipMotionHelper();
+        return this.f$0.m3473lambda$new$0$comandroidwmshellpipphonePipMotionHelper();
     }
 }

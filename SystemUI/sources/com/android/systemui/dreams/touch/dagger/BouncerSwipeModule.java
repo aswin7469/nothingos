@@ -3,7 +3,7 @@ package com.android.systemui.dreams.touch.dagger;
 import android.content.res.Resources;
 import android.util.TypedValue;
 import com.android.p019wm.shell.animation.FlingAnimationUtils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.dreams.touch.BouncerSwipeTouchHandler;
 import com.android.systemui.dreams.touch.DreamTouchHandler;
@@ -41,7 +41,7 @@ public class BouncerSwipeModule {
     @Named("swipe_to_bouncer_start_region")
     public static float providesSwipeToBouncerStartRegion(@Main Resources resources) {
         TypedValue typedValue = new TypedValue();
-        resources.getValue(C1893R.dimen.dream_overlay_bouncer_start_region_screen_percentage, typedValue, true);
+        resources.getValue(C1894R.dimen.dream_overlay_bouncer_start_region_screen_percentage, typedValue, true);
         return typedValue.getFloat();
     }
 

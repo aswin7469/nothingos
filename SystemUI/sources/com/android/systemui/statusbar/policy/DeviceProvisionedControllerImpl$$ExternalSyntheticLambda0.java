@@ -14,6 +14,6 @@ public final /* synthetic */ class DeviceProvisionedControllerImpl$$ExternalSynt
     }
 
     public final void run() {
-        DeviceProvisionedControllerImpl.m3237dispatchChange$lambda7(this.f$0, this.f$1);
+        DeviceProvisionedControllerImpl.m3242dispatchChange$lambda7(this.f$0, this.f$1);
     }
 }

@@ -8,7 +8,7 @@ import android.view.ViewOverlay;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Switch;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 
 /* renamed from: com.nothing.systemui.qs.CameraModeView */
 public class CameraModeView extends LinearLayout {
@@ -56,7 +56,7 @@ public class CameraModeView extends LinearLayout {
     }
 
     private void init() {
-        this.mSwitch = (Switch) findViewById(C1893R.C1897id.camera_mode_check);
+        this.mSwitch = (Switch) findViewById(C1894R.C1898id.camera_mode_check);
         this.mSwitch.setChecked(SystemProperties.getBoolean(CAMERA_MODE, false));
         this.mSwitch.setOnCheckedChangeListener(new CameraModeView$$ExternalSyntheticLambda0());
     }

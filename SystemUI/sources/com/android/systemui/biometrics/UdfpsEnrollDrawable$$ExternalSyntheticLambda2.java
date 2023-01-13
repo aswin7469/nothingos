@@ -11,6 +11,6 @@ public final /* synthetic */ class UdfpsEnrollDrawable$$ExternalSyntheticLambda2
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        this.f$0.mo30895x38a925a3(valueAnimator);
+        this.f$0.mo30905x38a925a3(valueAnimator);
     }
 }

@@ -6,4 +6,5 @@
     <integer name="config_pipStashDuration">5000</integer>
     <integer name="privacy_chip_animation_millis">300</integer>
     <integer name="recents_svelte_level">3</integer>
+    <integer name="volume_dialog_gravity">21</integer>
 </resources>

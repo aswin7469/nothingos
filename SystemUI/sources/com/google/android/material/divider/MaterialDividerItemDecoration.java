@@ -12,12 +12,12 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.internal.ThemeEnforcement;
 import com.google.android.material.resources.MaterialResources;
 
 public class MaterialDividerItemDecoration extends RecyclerView.ItemDecoration {
-    private static final int DEF_STYLE_RES = C3621R.style.Widget_MaterialComponents_MaterialDivider;
+    private static final int DEF_STYLE_RES = C3631R.style.Widget_MaterialComponents_MaterialDivider;
     public static final int HORIZONTAL = 0;
     public static final int VERTICAL = 1;
     private int color;
@@ -34,17 +34,17 @@ public class MaterialDividerItemDecoration extends RecyclerView.ItemDecoration {
     }
 
     public MaterialDividerItemDecoration(Context context, AttributeSet attributeSet, int i) {
-        this(context, attributeSet, C3621R.attr.materialDividerStyle, i);
+        this(context, attributeSet, C3631R.attr.materialDividerStyle, i);
     }
 
     public MaterialDividerItemDecoration(Context context, AttributeSet attributeSet, int i, int i2) {
         this.tempRect = new Rect();
-        TypedArray obtainStyledAttributes = ThemeEnforcement.obtainStyledAttributes(context, attributeSet, C3621R.styleable.MaterialDivider, i, DEF_STYLE_RES, new int[0]);
-        this.color = MaterialResources.getColorStateList(context, obtainStyledAttributes, C3621R.styleable.MaterialDivider_dividerColor).getDefaultColor();
-        this.thickness = obtainStyledAttributes.getDimensionPixelSize(C3621R.styleable.MaterialDivider_dividerThickness, context.getResources().getDimensionPixelSize(C3621R.dimen.material_divider_thickness));
-        this.insetStart = obtainStyledAttributes.getDimensionPixelOffset(C3621R.styleable.MaterialDivider_dividerInsetStart, 0);
-        this.insetEnd = obtainStyledAttributes.getDimensionPixelOffset(C3621R.styleable.MaterialDivider_dividerInsetEnd, 0);
-        this.lastItemDecorated = obtainStyledAttributes.getBoolean(C3621R.styleable.MaterialDivider_lastItemDecorated, true);
+        TypedArray obtainStyledAttributes = ThemeEnforcement.obtainStyledAttributes(context, attributeSet, C3631R.styleable.MaterialDivider, i, DEF_STYLE_RES, new int[0]);
+        this.color = MaterialResources.getColorStateList(context, obtainStyledAttributes, C3631R.styleable.MaterialDivider_dividerColor).getDefaultColor();
+        this.thickness = obtainStyledAttributes.getDimensionPixelSize(C3631R.styleable.MaterialDivider_dividerThickness, context.getResources().getDimensionPixelSize(C3631R.dimen.material_divider_thickness));
+        this.insetStart = obtainStyledAttributes.getDimensionPixelOffset(C3631R.styleable.MaterialDivider_dividerInsetStart, 0);
+        this.insetEnd = obtainStyledAttributes.getDimensionPixelOffset(C3631R.styleable.MaterialDivider_dividerInsetEnd, 0);
+        this.lastItemDecorated = obtainStyledAttributes.getBoolean(C3631R.styleable.MaterialDivider_lastItemDecorated, true);
         obtainStyledAttributes.recycle();
         this.dividerDrawable = new ShapeDrawable();
         setDividerColor(this.color);

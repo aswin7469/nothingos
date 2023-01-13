@@ -17,6 +17,6 @@ public final /* synthetic */ class BubblesManager$$ExternalSyntheticLambda1 impl
     }
 
     public final void accept(int i) {
-        this.f$0.mo47516x200aa1f8(this.f$1, this.f$2, i);
+        this.f$0.mo47525x200aa1f8(this.f$1, this.f$2, i);
     }
 }

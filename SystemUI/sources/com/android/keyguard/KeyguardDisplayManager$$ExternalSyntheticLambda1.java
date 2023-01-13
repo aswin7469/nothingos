@@ -9,6 +9,6 @@ public final /* synthetic */ class KeyguardDisplayManager$$ExternalSyntheticLamb
     }
 
     public final void run() {
-        this.f$0.m2285lambda$new$0$comandroidkeyguardKeyguardDisplayManager();
+        this.f$0.m2291lambda$new$0$comandroidkeyguardKeyguardDisplayManager();
     }
 }

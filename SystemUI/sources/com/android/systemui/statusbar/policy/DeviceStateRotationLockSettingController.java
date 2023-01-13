@@ -33,10 +33,10 @@ public final class DeviceStateRotationLockSettingController implements Listenabl
 
     public void setListening(boolean z) {
         if (z) {
-            C3146x3b31e417 deviceStateRotationLockSettingController$$ExternalSyntheticLambda0 = new C3146x3b31e417(this);
+            C3156x3b31e417 deviceStateRotationLockSettingController$$ExternalSyntheticLambda0 = new C3156x3b31e417(this);
             this.mDeviceStateCallback = deviceStateRotationLockSettingController$$ExternalSyntheticLambda0;
             this.mDeviceStateManager.registerCallback(this.mMainExecutor, deviceStateRotationLockSettingController$$ExternalSyntheticLambda0);
-            C3147x3b31e418 deviceStateRotationLockSettingController$$ExternalSyntheticLambda1 = new C3147x3b31e418(this);
+            C3157x3b31e418 deviceStateRotationLockSettingController$$ExternalSyntheticLambda1 = new C3157x3b31e418(this);
             this.mDeviceStateRotationLockSettingsListener = deviceStateRotationLockSettingController$$ExternalSyntheticLambda1;
             this.mDeviceStateRotationLockSettingsManager.registerListener(deviceStateRotationLockSettingController$$ExternalSyntheticLambda1);
             return;
@@ -53,7 +53,7 @@ public final class DeviceStateRotationLockSettingController implements Listenabl
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setListening$0$com-android-systemui-statusbar-policy-DeviceStateRotationLockSettingController */
-    public /* synthetic */ void mo45702x88130dd9() {
+    public /* synthetic */ void mo45714x88130dd9() {
         readPersistedSetting(this.mDeviceState);
     }
 

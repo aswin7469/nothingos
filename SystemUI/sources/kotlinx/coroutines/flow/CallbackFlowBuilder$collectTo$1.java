@@ -6,8 +6,8 @@ import kotlin.coroutines.jvm.internal.ContinuationImpl;
 import kotlin.coroutines.jvm.internal.DebugMetadata;
 import kotlinx.coroutines.channels.ProducerScope;
 
-@Metadata(mo64988k = 3, mo64989mv = {1, 5, 1}, mo64991xi = 48)
-@DebugMetadata(mo65240c = "kotlinx.coroutines.flow.CallbackFlowBuilder", mo65241f = "Builders.kt", mo65242i = {0}, mo65243l = {355}, mo65244m = "collectTo", mo65245n = {"scope"}, mo65246s = {"L$0"})
+@Metadata(mo65044k = 3, mo65045mv = {1, 5, 1}, mo65047xi = 48)
+@DebugMetadata(mo65296c = "kotlinx.coroutines.flow.CallbackFlowBuilder", mo65297f = "Builders.kt", mo65298i = {0}, mo65299l = {355}, mo65300m = "collectTo", mo65301n = {"scope"}, mo65302s = {"L$0"})
 /* compiled from: Builders.kt */
 final class CallbackFlowBuilder$collectTo$1 extends ContinuationImpl {
     Object L$0;

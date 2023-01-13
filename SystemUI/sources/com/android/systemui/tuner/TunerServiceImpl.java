@@ -17,7 +17,7 @@ import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.util.ArraySet;
 import com.android.internal.util.ArrayUtils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.DejankUtils;
 import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.dagger.qualifiers.Main;
@@ -73,7 +73,7 @@ public class TunerServiceImpl extends TunerService {
             }
         }
         this.mCurrentUser = this.mUserTracker.getUserId();
-        C32231 r2 = new UserTracker.Callback() {
+        C32331 r2 = new UserTracker.Callback() {
             public void onUserChanged(int i, Context context) {
                 int unused = TunerServiceImpl.this.mCurrentUser = i;
                 TunerServiceImpl.this.reloadAll();
@@ -151,7 +151,7 @@ public class TunerServiceImpl extends TunerService {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$addTunable$1$com-android-systemui-tuner-TunerServiceImpl  reason: not valid java name */
-    public /* synthetic */ String m3261lambda$addTunable$1$comandroidsystemuitunerTunerServiceImpl(String str) {
+    public /* synthetic */ String m3266lambda$addTunable$1$comandroidsystemuitunerTunerServiceImpl(String str) {
         return Settings.Secure.getStringForUser(this.mContentResolver, str, this.mCurrentUser);
     }
 
@@ -197,11 +197,11 @@ public class TunerServiceImpl extends TunerService {
     }
 
     public void clearAll() {
-        mo46472xc2e3231(this.mCurrentUser);
+        mo46484xc2e3231(this.mCurrentUser);
     }
 
     /* renamed from: clearAllFromUser */
-    public void mo46472xc2e3231(int i) {
+    public void mo46484xc2e3231(int i) {
         this.mDemoModeController.requestFinishDemoMode();
         this.mDemoModeController.requestSetDemoModeAllowed(false);
         for (String next : this.mTunableLookup.keySet()) {
@@ -222,16 +222,16 @@ public class TunerServiceImpl extends TunerService {
     public void showResetRequest(Runnable runnable) {
         SystemUIDialog systemUIDialog = new SystemUIDialog(this.mContext);
         systemUIDialog.setShowForAllUsers(true);
-        systemUIDialog.setMessage(C1893R.string.remove_from_settings_prompt);
+        systemUIDialog.setMessage(C1894R.string.remove_from_settings_prompt);
         DialogInterface.OnClickListener onClickListener = null;
-        systemUIDialog.setButton(-2, this.mContext.getString(C1893R.string.cancel), (DialogInterface.OnClickListener) null);
-        systemUIDialog.setButton(-1, this.mContext.getString(C1893R.string.qs_customize_remove), new TunerServiceImpl$$ExternalSyntheticLambda1(this, runnable));
+        systemUIDialog.setButton(-2, this.mContext.getString(C1894R.string.cancel), (DialogInterface.OnClickListener) null);
+        systemUIDialog.setButton(-1, this.mContext.getString(C1894R.string.qs_customize_remove), new TunerServiceImpl$$ExternalSyntheticLambda1(this, runnable));
         systemUIDialog.show();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$showResetRequest$2$com-android-systemui-tuner-TunerServiceImpl */
-    public /* synthetic */ void mo46471xaead92(Runnable runnable, DialogInterface dialogInterface, int i) {
+    public /* synthetic */ void mo46483xaead92(Runnable runnable, DialogInterface dialogInterface, int i) {
         this.mContext.sendBroadcast(new Intent(TunerService.ACTION_CLEAR));
         setTunerEnabled(false);
         Settings.Secure.putInt(this.mContext.getContentResolver(), TunerFragment.SETTING_SEEN_TUNER_WARNING, 0);

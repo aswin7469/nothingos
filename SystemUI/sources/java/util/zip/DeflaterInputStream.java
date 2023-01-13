@@ -19,7 +19,7 @@ public class DeflaterInputStream extends FilterInputStream {
     }
 
     private void ensureOpen() throws IOException {
-        if (this.f521in == null) {
+        if (this.f519in == null) {
             throw new IOException("Stream closed");
         }
     }
@@ -51,14 +51,14 @@ public class DeflaterInputStream extends FilterInputStream {
     }
 
     public void close() throws IOException {
-        if (this.f521in != null) {
+        if (this.f519in != null) {
             try {
                 if (this.usesDefaultDeflater) {
                     this.def.end();
                 }
-                this.f521in.close();
+                this.f519in.close();
             } finally {
-                this.f521in = null;
+                this.f519in = null;
             }
         }
     }
@@ -82,7 +82,7 @@ public class DeflaterInputStream extends FilterInputStream {
             int i3 = 0;
             while (i2 > 0 && !this.def.finished()) {
                 if (this.def.needsInput()) {
-                    InputStream inputStream = this.f521in;
+                    InputStream inputStream = this.f519in;
                     byte[] bArr2 = this.buf;
                     int read = inputStream.read(bArr2, 0, bArr2.length);
                     if (read < 0) {

@@ -97,7 +97,7 @@ public class TaskbarDelegate implements CommandQueue.Callbacks, OverviewProxySer
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-navigationbar-TaskbarDelegate  reason: not valid java name */
-    public /* synthetic */ void m2855lambda$new$0$comandroidsystemuinavigationbarTaskbarDelegate(Boolean bool) {
+    public /* synthetic */ void m2860lambda$new$0$comandroidsystemuinavigationbarTaskbarDelegate(Boolean bool) {
         if (bool.booleanValue()) {
             this.mAutoHideController.touchAutoHide();
         }

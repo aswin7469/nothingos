@@ -9,6 +9,6 @@ public final /* synthetic */ class PhoneStatusBarPolicy$$ExternalSyntheticLambda
     }
 
     public final void run() {
-        this.f$0.mo44965x6ce51b45();
+        this.f$0.mo44980x6ce51b45();
     }
 }

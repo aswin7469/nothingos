@@ -106,10 +106,10 @@ public class PeopleBackupHelper extends SharedPreferencesBackupHelper {
     }
 
     /* renamed from: backupKey */
-    public void mo35157x49d8378(Map.Entry<String, ?> entry, SharedPreferences.Editor editor, List<String> list) {
+    public void mo35161x49d8378(Map.Entry<String, ?> entry, SharedPreferences.Editor editor, List<String> list) {
         String key = entry.getKey();
         if (!TextUtils.isEmpty(key)) {
-            int i = C22931.f325xd18c5f3a[getEntryType(entry).ordinal()];
+            int i = C22961.f324xd18c5f3a[getEntryType(entry).ordinal()];
             if (i == 1) {
                 backupWidgetIdKey(key, String.valueOf((Object) entry.getValue()), editor, list);
             } else if (i == 2) {
@@ -123,10 +123,10 @@ public class PeopleBackupHelper extends SharedPreferencesBackupHelper {
     }
 
     /* renamed from: com.android.systemui.people.widget.PeopleBackupHelper$1 */
-    static /* synthetic */ class C22931 {
+    static /* synthetic */ class C22961 {
 
         /* renamed from: $SwitchMap$com$android$systemui$people$widget$PeopleBackupHelper$SharedFileEntryType */
-        static final /* synthetic */ int[] f325xd18c5f3a;
+        static final /* synthetic */ int[] f324xd18c5f3a;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(8:0|1|2|3|4|5|6|(3:7|8|10)) */
         /* JADX WARNING: Failed to process nested try/catch */
@@ -138,25 +138,25 @@ public class PeopleBackupHelper extends SharedPreferencesBackupHelper {
                 com.android.systemui.people.widget.PeopleBackupHelper$SharedFileEntryType[] r0 = com.android.systemui.people.widget.PeopleBackupHelper.SharedFileEntryType.values()
                 int r0 = r0.length
                 int[] r0 = new int[r0]
-                f325xd18c5f3a = r0
+                f324xd18c5f3a = r0
                 com.android.systemui.people.widget.PeopleBackupHelper$SharedFileEntryType r1 = com.android.systemui.people.widget.PeopleBackupHelper.SharedFileEntryType.WIDGET_ID     // Catch:{ NoSuchFieldError -> 0x0012 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
                 r2 = 1
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0012 }
             L_0x0012:
-                int[] r0 = f325xd18c5f3a     // Catch:{ NoSuchFieldError -> 0x001d }
+                int[] r0 = f324xd18c5f3a     // Catch:{ NoSuchFieldError -> 0x001d }
                 com.android.systemui.people.widget.PeopleBackupHelper$SharedFileEntryType r1 = com.android.systemui.people.widget.PeopleBackupHelper.SharedFileEntryType.PEOPLE_TILE_KEY     // Catch:{ NoSuchFieldError -> 0x001d }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
                 r2 = 2
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x001d }
             L_0x001d:
-                int[] r0 = f325xd18c5f3a     // Catch:{ NoSuchFieldError -> 0x0028 }
+                int[] r0 = f324xd18c5f3a     // Catch:{ NoSuchFieldError -> 0x0028 }
                 com.android.systemui.people.widget.PeopleBackupHelper$SharedFileEntryType r1 = com.android.systemui.people.widget.PeopleBackupHelper.SharedFileEntryType.CONTACT_URI     // Catch:{ NoSuchFieldError -> 0x0028 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0028 }
                 r2 = 3
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0028 }
             L_0x0028:
-                int[] r0 = f325xd18c5f3a     // Catch:{ NoSuchFieldError -> 0x0033 }
+                int[] r0 = f324xd18c5f3a     // Catch:{ NoSuchFieldError -> 0x0033 }
                 com.android.systemui.people.widget.PeopleBackupHelper$SharedFileEntryType r1 = com.android.systemui.people.widget.PeopleBackupHelper.SharedFileEntryType.UNKNOWN     // Catch:{ NoSuchFieldError -> 0x0033 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0033 }
                 r2 = 4
@@ -164,7 +164,7 @@ public class PeopleBackupHelper extends SharedPreferencesBackupHelper {
             L_0x0033:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.people.widget.PeopleBackupHelper.C22931.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.people.widget.PeopleBackupHelper.C22961.<clinit>():void");
         }
     }
 
@@ -173,7 +173,7 @@ public class PeopleBackupHelper extends SharedPreferencesBackupHelper {
         String key = entry.getKey();
         SharedFileEntryType entryType = getEntryType(entry);
         int i = sharedPreferences.getInt(ADD_USER_ID_TO_URI + key, -1);
-        int i2 = C22931.f325xd18c5f3a[entryType.ordinal()];
+        int i2 = C22961.f324xd18c5f3a[entryType.ordinal()];
         if (i2 == 1) {
             restoreWidgetIdKey(key, String.valueOf((Object) entry.getValue()), editor, i);
             return true;

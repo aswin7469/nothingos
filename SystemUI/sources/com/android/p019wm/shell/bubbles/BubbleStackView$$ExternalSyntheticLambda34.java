@@ -12,6 +12,6 @@ public final /* synthetic */ class BubbleStackView$$ExternalSyntheticLambda34 im
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        this.f$0.m3428lambda$new$9$comandroidwmshellbubblesBubbleStackView(valueAnimator);
+        this.f$0.m3432lambda$new$9$comandroidwmshellbubblesBubbleStackView(valueAnimator);
     }
 }

@@ -22,6 +22,6 @@ public final /* synthetic */ class DnsResolver$$ExternalSyntheticLambda9 impleme
     }
 
     public final void onCancel() {
-        this.f$0.m1877lambda$query$6$androidnetDnsResolver(this.f$1, this.f$2, this.f$3, this.f$4, this.f$5);
+        this.f$0.m1883lambda$query$6$androidnetDnsResolver(this.f$1, this.f$2, this.f$3, this.f$4, this.f$5);
     }
 }

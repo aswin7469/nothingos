@@ -21,7 +21,7 @@ import android.view.accessibility.AccessibilityManager;
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.logging.UiEventLogger;
 import com.android.settingslib.notification.ConversationIconFactory;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dependency;
 import com.android.systemui.Dumpable;
 import com.android.systemui.dagger.qualifiers.Background;
@@ -224,7 +224,7 @@ public class NotificationGutsManager implements Dumpable, NotificationLifetimeEx
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$bindGuts$0$com-android-systemui-statusbar-notification-row-NotificationGutsManager */
-    public /* synthetic */ void mo41600x8a83fb1b(ExpandableNotificationRow expandableNotificationRow, NotificationEntry notificationEntry, NotificationGuts notificationGuts) {
+    public /* synthetic */ void mo41608x8a83fb1b(ExpandableNotificationRow expandableNotificationRow, NotificationEntry notificationEntry, NotificationGuts notificationGuts) {
         expandableNotificationRow.onGutsClosed();
         if (!notificationGuts.willBeRemoved() && !expandableNotificationRow.isRemoved()) {
             this.mListContainer.onHeightChanged(expandableNotificationRow, !this.mPresenter.isPresenterFullyCollapsed());
@@ -258,7 +258,7 @@ public class NotificationGutsManager implements Dumpable, NotificationLifetimeEx
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$initializeSnoozeView$1$com-android-systemui-statusbar-notification-row-NotificationGutsManager */
-    public /* synthetic */ void mo41607x6f8ac8ed(ExpandableNotificationRow expandableNotificationRow, NotificationGuts notificationGuts) {
+    public /* synthetic */ void mo41615x6f8ac8ed(ExpandableNotificationRow expandableNotificationRow, NotificationGuts notificationGuts) {
         this.mListContainer.onHeightChanged(expandableNotificationRow, expandableNotificationRow.isShown());
     }
 
@@ -290,7 +290,7 @@ public class NotificationGutsManager implements Dumpable, NotificationLifetimeEx
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$initializeNotificationInfo$2$com-android-systemui-statusbar-notification-row-NotificationGutsManager */
-    public /* synthetic */ void mo41604x9d3f6b3c(NotificationGuts notificationGuts, StatusBarNotification statusBarNotification, ExpandableNotificationRow expandableNotificationRow, View view, Intent intent) {
+    public /* synthetic */ void mo41612x9d3f6b3c(NotificationGuts notificationGuts, StatusBarNotification statusBarNotification, ExpandableNotificationRow expandableNotificationRow, View view, Intent intent) {
         this.mMetricsLogger.action(206);
         notificationGuts.resetFalsingCheck();
         this.mNotificationActivityStarter.startNotificationGutsIntent(intent, statusBarNotification.getUid(), expandableNotificationRow);
@@ -298,7 +298,7 @@ public class NotificationGutsManager implements Dumpable, NotificationLifetimeEx
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$initializeNotificationInfo$3$com-android-systemui-statusbar-notification-row-NotificationGutsManager */
-    public /* synthetic */ void mo41605x644b523d(NotificationGuts notificationGuts, StatusBarNotification statusBarNotification, String str, ExpandableNotificationRow expandableNotificationRow, View view, NotificationChannel notificationChannel, int i) {
+    public /* synthetic */ void mo41613x644b523d(NotificationGuts notificationGuts, StatusBarNotification statusBarNotification, String str, ExpandableNotificationRow expandableNotificationRow, View view, NotificationChannel notificationChannel, int i) {
         this.mMetricsLogger.action(205);
         notificationGuts.resetFalsingCheck();
         this.mOnSettingsClickListener.onSettingsClick(statusBarNotification.getKey());
@@ -323,7 +323,7 @@ public class NotificationGutsManager implements Dumpable, NotificationLifetimeEx
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$initializePartialConversationNotificationInfo$4$com-android-systemui-statusbar-notification-row-NotificationGutsManager */
-    public /* synthetic */ void mo41606x9b984b08(NotificationGuts notificationGuts, StatusBarNotification statusBarNotification, String str, ExpandableNotificationRow expandableNotificationRow, View view, NotificationChannel notificationChannel, int i) {
+    public /* synthetic */ void mo41614x9b984b08(NotificationGuts notificationGuts, StatusBarNotification statusBarNotification, String str, ExpandableNotificationRow expandableNotificationRow, View view, NotificationChannel notificationChannel, int i) {
         this.mMetricsLogger.action(205);
         notificationGuts.resetFalsingCheck();
         this.mOnSettingsClickListener.onSettingsClick(statusBarNotification.getKey());
@@ -350,13 +350,13 @@ public class NotificationGutsManager implements Dumpable, NotificationLifetimeEx
         ConversationIconFactory conversationIconFactory = r7;
         Context context = this.mContext;
         PackageManager packageManager = packageManagerForUser;
-        ConversationIconFactory conversationIconFactory2 = new ConversationIconFactory(context, this.mLauncherApps, packageManager, IconDrawableFactory.newInstance(context, false), this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.notification_guts_conversation_icon_size));
+        ConversationIconFactory conversationIconFactory2 = new ConversationIconFactory(context, this.mLauncherApps, packageManager, IconDrawableFactory.newInstance(context, false), this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.notification_guts_conversation_icon_size));
         notificationConversationInfo.bindNotification(notificationConversationInfo.getSelectedAction(), this.mShortcutManager, packageManager, this.mPeopleSpaceWidgetManager, this.mNotificationManager, this.mOnUserInteractionCallback, packageName, entry.getChannel(), entry, entry.getBubbleMetadata(), notificationGutsManager$$ExternalSyntheticLambda5, conversationIconFactory, this.mContextTracker.getUserContext(), this.mDeviceProvisionedController.isDeviceProvisioned(), this.mMainHandler, this.mBgHandler, notificationGutsManager$$ExternalSyntheticLambda4, this.mBubblesManagerOptional, this.mShadeController);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$initializeConversationNotificationInfo$5$com-android-systemui-statusbar-notification-row-NotificationGutsManager */
-    public /* synthetic */ void mo41601x211757a2(NotificationGuts notificationGuts, StatusBarNotification statusBarNotification, ExpandableNotificationRow expandableNotificationRow, View view, Intent intent) {
+    public /* synthetic */ void mo41609x211757a2(NotificationGuts notificationGuts, StatusBarNotification statusBarNotification, ExpandableNotificationRow expandableNotificationRow, View view, Intent intent) {
         this.mMetricsLogger.action(206);
         notificationGuts.resetFalsingCheck();
         this.mNotificationActivityStarter.startNotificationGutsIntent(intent, statusBarNotification.getUid(), expandableNotificationRow);
@@ -364,13 +364,13 @@ public class NotificationGutsManager implements Dumpable, NotificationLifetimeEx
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$initializeConversationNotificationInfo$6$com-android-systemui-statusbar-notification-row-NotificationGutsManager */
-    public /* synthetic */ void mo41602xe8233ea3(StatusBarNotification statusBarNotification, ExpandableNotificationRow expandableNotificationRow) {
+    public /* synthetic */ void mo41610xe8233ea3(StatusBarNotification statusBarNotification, ExpandableNotificationRow expandableNotificationRow) {
         startConversationSettingsActivity(statusBarNotification.getUid(), expandableNotificationRow);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$initializeConversationNotificationInfo$7$com-android-systemui-statusbar-notification-row-NotificationGutsManager */
-    public /* synthetic */ void mo41603xaf2f25a4(NotificationGuts notificationGuts, StatusBarNotification statusBarNotification, String str, ExpandableNotificationRow expandableNotificationRow, View view, NotificationChannel notificationChannel, int i) {
+    public /* synthetic */ void mo41611xaf2f25a4(NotificationGuts notificationGuts, StatusBarNotification statusBarNotification, String str, ExpandableNotificationRow expandableNotificationRow, View view, NotificationChannel notificationChannel, int i) {
         this.mMetricsLogger.action(205);
         notificationGuts.resetFalsingCheck();
         this.mOnSettingsClickListener.onSettingsClick(statusBarNotification.getKey());
@@ -412,18 +412,18 @@ public class NotificationGutsManager implements Dumpable, NotificationLifetimeEx
                 return true;
             }
         }
-        return mo41608xbf413270(view, i, i2, menuItem);
+        return mo41616xbf413270(view, i, i2, menuItem);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$openGuts$9$com-android-systemui-statusbar-notification-row-NotificationGutsManager */
-    public /* synthetic */ void mo41609x864d1971(View view, int i, int i2, NotificationMenuRowPlugin.MenuItem menuItem) {
+    public /* synthetic */ void mo41617x864d1971(View view, int i, int i2, NotificationMenuRowPlugin.MenuItem menuItem) {
         this.mMainHandler.post(new NotificationGutsManager$$ExternalSyntheticLambda1(this, view, i, i2, menuItem));
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: openGutsInternal */
-    public boolean mo41608xbf413270(View view, int i, int i2, NotificationMenuRowPlugin.MenuItem menuItem) {
+    public boolean mo41616xbf413270(View view, int i, int i2, NotificationMenuRowPlugin.MenuItem menuItem) {
         if (!(view instanceof ExpandableNotificationRow)) {
             return false;
         }
@@ -448,7 +448,7 @@ public class NotificationGutsManager implements Dumpable, NotificationLifetimeEx
         final int i3 = i;
         final int i4 = i2;
         final NotificationMenuRowPlugin.MenuItem menuItem2 = menuItem;
-        C27651 r0 = new Runnable() {
+        C27711 r0 = new Runnable() {
             public void run() {
                 if (expandableNotificationRow.getWindowToken() == null) {
                     Log.e(NotificationGutsManager.TAG, "Trying to show notification guts in post(), but not attached to window");

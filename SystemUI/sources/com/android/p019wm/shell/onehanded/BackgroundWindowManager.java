@@ -17,7 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.WindowlessWindowManager;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.common.DisplayLayout;
 import com.android.p019wm.shell.onehanded.OneHandedSurfaceTransactionHelper;
 import java.p026io.PrintWriter;
@@ -77,7 +77,7 @@ public final class BackgroundWindowManager extends WindowlessWindowManager {
         }
         Context context = this.mContext;
         this.mViewHost = new SurfaceControlViewHost(context, context.getDisplay(), this);
-        this.mBackgroundView = LayoutInflater.from(this.mContext).inflate(C3343R.layout.background_panel, (ViewGroup) null);
+        this.mBackgroundView = LayoutInflater.from(this.mContext).inflate(C3353R.layout.background_panel, (ViewGroup) null);
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(this.mDisplayBounds.width(), this.mDisplayBounds.height(), 0, 537133096, -3);
         layoutParams.token = new Binder();
         layoutParams.setTitle("background-panel");
@@ -132,7 +132,7 @@ public final class BackgroundWindowManager extends WindowlessWindowManager {
     }
 
     private int getThemeColor() {
-        return new ContextThemeWrapper(this.mContext, 16974563).getColor(C3343R.C3344color.one_handed_tutorial_background_color);
+        return new ContextThemeWrapper(this.mContext, 16974563).getColor(C3353R.C3354color.one_handed_tutorial_background_color);
     }
 
     /* access modifiers changed from: package-private */

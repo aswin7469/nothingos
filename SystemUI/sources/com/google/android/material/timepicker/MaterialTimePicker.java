@@ -20,7 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.DialogFragment;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.resources.MaterialAttributes;
 import com.google.android.material.shape.MaterialShapeDrawable;
@@ -121,11 +121,11 @@ public final class MaterialTimePicker extends DialogFragment implements TimePick
     public final Dialog onCreateDialog(Bundle bundle) {
         Dialog dialog = new Dialog(requireContext(), getThemeResId());
         Context context = dialog.getContext();
-        int resolveOrThrow = MaterialAttributes.resolveOrThrow(context, C3621R.attr.colorSurface, MaterialTimePicker.class.getCanonicalName());
-        MaterialShapeDrawable materialShapeDrawable = new MaterialShapeDrawable(context, (AttributeSet) null, C3621R.attr.materialTimePickerStyle, C3621R.style.Widget_MaterialComponents_TimePicker);
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes((AttributeSet) null, C3621R.styleable.MaterialTimePicker, C3621R.attr.materialTimePickerStyle, C3621R.style.Widget_MaterialComponents_TimePicker);
-        this.clockIcon = obtainStyledAttributes.getResourceId(C3621R.styleable.MaterialTimePicker_clockIcon, 0);
-        this.keyboardIcon = obtainStyledAttributes.getResourceId(C3621R.styleable.MaterialTimePicker_keyboardIcon, 0);
+        int resolveOrThrow = MaterialAttributes.resolveOrThrow(context, C3631R.attr.colorSurface, MaterialTimePicker.class.getCanonicalName());
+        MaterialShapeDrawable materialShapeDrawable = new MaterialShapeDrawable(context, (AttributeSet) null, C3631R.attr.materialTimePickerStyle, C3631R.style.Widget_MaterialComponents_TimePicker);
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes((AttributeSet) null, C3631R.styleable.MaterialTimePicker, C3631R.attr.materialTimePickerStyle, C3631R.style.Widget_MaterialComponents_TimePicker);
+        this.clockIcon = obtainStyledAttributes.getResourceId(C3631R.styleable.MaterialTimePicker_clockIcon, 0);
+        this.keyboardIcon = obtainStyledAttributes.getResourceId(C3631R.styleable.MaterialTimePicker_keyboardIcon, 0);
         obtainStyledAttributes.recycle();
         materialShapeDrawable.initializeElevationOverlay(context);
         materialShapeDrawable.setFillColor(ColorStateList.valueOf(resolveOrThrow));
@@ -177,13 +177,13 @@ public final class MaterialTimePicker extends DialogFragment implements TimePick
     }
 
     public final View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
-        ViewGroup viewGroup2 = (ViewGroup) layoutInflater.inflate(C3621R.layout.material_timepicker_dialog, viewGroup);
-        TimePickerView timePickerView2 = (TimePickerView) viewGroup2.findViewById(C3621R.C3624id.material_timepicker_view);
+        ViewGroup viewGroup2 = (ViewGroup) layoutInflater.inflate(C3631R.layout.material_timepicker_dialog, viewGroup);
+        TimePickerView timePickerView2 = (TimePickerView) viewGroup2.findViewById(C3631R.C3634id.material_timepicker_view);
         this.timePickerView = timePickerView2;
         timePickerView2.setOnDoubleTapListener(this);
-        this.textInputStub = (ViewStub) viewGroup2.findViewById(C3621R.C3624id.material_textinput_timepicker);
-        this.modeButton = (MaterialButton) viewGroup2.findViewById(C3621R.C3624id.material_timepicker_mode_button);
-        TextView textView = (TextView) viewGroup2.findViewById(C3621R.C3624id.header_title);
+        this.textInputStub = (ViewStub) viewGroup2.findViewById(C3631R.C3634id.material_textinput_timepicker);
+        this.modeButton = (MaterialButton) viewGroup2.findViewById(C3631R.C3634id.material_timepicker_mode_button);
+        TextView textView = (TextView) viewGroup2.findViewById(C3631R.C3634id.header_title);
         int i = this.titleResId;
         if (i != 0) {
             textView.setText(i);
@@ -191,7 +191,7 @@ public final class MaterialTimePicker extends DialogFragment implements TimePick
             textView.setText(this.titleText);
         }
         updateInputMode(this.modeButton);
-        Button button = (Button) viewGroup2.findViewById(C3621R.C3624id.material_timepicker_ok_button);
+        Button button = (Button) viewGroup2.findViewById(C3631R.C3634id.material_timepicker_ok_button);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 for (View.OnClickListener onClick : MaterialTimePicker.this.positiveButtonListeners) {
@@ -206,7 +206,7 @@ public final class MaterialTimePicker extends DialogFragment implements TimePick
         } else if (!TextUtils.isEmpty(this.positiveButtonText)) {
             button.setText(this.positiveButtonText);
         }
-        Button button2 = (Button) viewGroup2.findViewById(C3621R.C3624id.material_timepicker_cancel_button);
+        Button button2 = (Button) viewGroup2.findViewById(C3631R.C3634id.material_timepicker_cancel_button);
         this.cancelButton = button2;
         button2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -314,10 +314,10 @@ public final class MaterialTimePicker extends DialogFragment implements TimePick
 
     private Pair<Integer, Integer> dataForMode(int i) {
         if (i == 0) {
-            return new Pair<>(Integer.valueOf(this.keyboardIcon), Integer.valueOf(C3621R.string.material_timepicker_text_input_mode_description));
+            return new Pair<>(Integer.valueOf(this.keyboardIcon), Integer.valueOf(C3631R.string.material_timepicker_text_input_mode_description));
         }
         if (i == 1) {
-            return new Pair<>(Integer.valueOf(this.clockIcon), Integer.valueOf(C3621R.string.material_timepicker_clock_mode_description));
+            return new Pair<>(Integer.valueOf(this.clockIcon), Integer.valueOf(C3631R.string.material_timepicker_clock_mode_description));
         }
         throw new IllegalArgumentException("no icon for mode: " + i);
     }
@@ -385,7 +385,7 @@ public final class MaterialTimePicker extends DialogFragment implements TimePick
         if (i != 0) {
             return i;
         }
-        TypedValue resolve = MaterialAttributes.resolve(requireContext(), C3621R.attr.materialTimePickerTheme);
+        TypedValue resolve = MaterialAttributes.resolve(requireContext(), C3631R.attr.materialTimePickerTheme);
         if (resolve == null) {
             return 0;
         }

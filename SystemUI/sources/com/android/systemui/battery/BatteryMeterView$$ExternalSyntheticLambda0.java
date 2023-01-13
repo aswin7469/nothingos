@@ -11,6 +11,6 @@ public final /* synthetic */ class BatteryMeterView$$ExternalSyntheticLambda0 im
     }
 
     public final void onBatteryRemainingEstimateRetrieved(String str) {
-        this.f$0.mo30446x299cb55(str);
+        this.f$0.mo30456x299cb55(str);
     }
 }

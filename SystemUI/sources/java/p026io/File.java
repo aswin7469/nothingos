@@ -18,7 +18,7 @@ public class File implements Serializable, Comparable<File> {
     private static final Unsafe UNSAFE;
 
     /* renamed from: fs */
-    private static final FileSystem f517fs;
+    private static final FileSystem f515fs;
     public static final String pathSeparator;
     public static final char pathSeparatorChar;
     public static final String separator;
@@ -38,7 +38,7 @@ public class File implements Serializable, Comparable<File> {
     static {
         Class<File> cls = File.class;
         FileSystem fileSystem = DefaultFileSystem.getFileSystem();
-        f517fs = fileSystem;
+        f515fs = fileSystem;
         char separator2 = fileSystem.getSeparator();
         separatorChar = separator2;
         separator = "" + separator2;
@@ -83,13 +83,13 @@ public class File implements Serializable, Comparable<File> {
     }
 
     private File(String str, File file) {
-        this.path = f517fs.resolve(file.path, str);
+        this.path = f515fs.resolve(file.path, str);
         this.prefixLength = file.prefixLength;
     }
 
     public File(String str) {
         str.getClass();
-        FileSystem fileSystem = f517fs;
+        FileSystem fileSystem = f515fs;
         String normalize = fileSystem.normalize(str);
         this.path = normalize;
         this.prefixLength = fileSystem.prefixLength(normalize);
@@ -98,26 +98,26 @@ public class File implements Serializable, Comparable<File> {
     public File(String str, String str2) {
         str2.getClass();
         if (str == null || str.isEmpty()) {
-            this.path = f517fs.normalize(str2);
+            this.path = f515fs.normalize(str2);
         } else {
-            FileSystem fileSystem = f517fs;
+            FileSystem fileSystem = f515fs;
             this.path = fileSystem.resolve(fileSystem.normalize(str), fileSystem.normalize(str2));
         }
-        this.prefixLength = f517fs.prefixLength(this.path);
+        this.prefixLength = f515fs.prefixLength(this.path);
     }
 
     public File(File file, String str) {
         str.getClass();
         if (file == null) {
-            this.path = f517fs.normalize(str);
+            this.path = f515fs.normalize(str);
         } else if (file.path.equals("")) {
-            FileSystem fileSystem = f517fs;
+            FileSystem fileSystem = f515fs;
             this.path = fileSystem.resolve(fileSystem.getDefaultParent(), fileSystem.normalize(str));
         } else {
-            FileSystem fileSystem2 = f517fs;
+            FileSystem fileSystem2 = f515fs;
             this.path = fileSystem2.resolve(file.path, fileSystem2.normalize(str));
         }
-        this.prefixLength = f517fs.prefixLength(this.path);
+        this.prefixLength = f515fs.prefixLength(this.path);
     }
 
     public File(URI uri) {
@@ -134,7 +134,7 @@ public class File implements Serializable, Comparable<File> {
             } else if (uri.getQuery() == null) {
                 String path2 = uri.getPath();
                 if (!path2.equals("")) {
-                    FileSystem fileSystem = f517fs;
+                    FileSystem fileSystem = f515fs;
                     String fromURIPath = fileSystem.fromURIPath(path2);
                     char c = separatorChar;
                     String normalize = fileSystem.normalize(c != '/' ? fromURIPath.replace('/', c) : fromURIPath);
@@ -186,21 +186,21 @@ public class File implements Serializable, Comparable<File> {
     }
 
     public boolean isAbsolute() {
-        return f517fs.isAbsolute(this);
+        return f515fs.isAbsolute(this);
     }
 
     public String getAbsolutePath() {
-        return f517fs.resolve(this);
+        return f515fs.resolve(this);
     }
 
     public File getAbsoluteFile() {
         String absolutePath = getAbsolutePath();
-        return new File(absolutePath, f517fs.prefixLength(absolutePath));
+        return new File(absolutePath, f515fs.prefixLength(absolutePath));
     }
 
     public String getCanonicalPath() throws IOException {
         if (!isInvalid()) {
-            FileSystem fileSystem = f517fs;
+            FileSystem fileSystem = f515fs;
             return fileSystem.canonicalize(fileSystem.resolve(this));
         }
         throw new IOException("Invalid file path");
@@ -208,7 +208,7 @@ public class File implements Serializable, Comparable<File> {
 
     public File getCanonicalFile() throws IOException {
         String canonicalPath = getCanonicalPath();
-        return new File(canonicalPath, f517fs.prefixLength(canonicalPath));
+        return new File(canonicalPath, f515fs.prefixLength(canonicalPath));
     }
 
     private static String slashify(String str, boolean z) {
@@ -254,7 +254,7 @@ public class File implements Serializable, Comparable<File> {
         if (isInvalid()) {
             return false;
         }
-        return f517fs.checkAccess(this, 4);
+        return f515fs.checkAccess(this, 4);
     }
 
     public boolean canWrite() {
@@ -265,7 +265,7 @@ public class File implements Serializable, Comparable<File> {
         if (isInvalid()) {
             return false;
         }
-        return f517fs.checkAccess(this, 2);
+        return f515fs.checkAccess(this, 2);
     }
 
     public boolean exists() {
@@ -276,7 +276,7 @@ public class File implements Serializable, Comparable<File> {
         if (isInvalid()) {
             return false;
         }
-        return f517fs.checkAccess(this, 8);
+        return f515fs.checkAccess(this, 8);
     }
 
     public boolean isDirectory() {
@@ -284,7 +284,7 @@ public class File implements Serializable, Comparable<File> {
         if (securityManager != null) {
             securityManager.checkRead(this.path);
         }
-        if (!isInvalid() && (f517fs.getBooleanAttributes(this) & 4) != 0) {
+        if (!isInvalid() && (f515fs.getBooleanAttributes(this) & 4) != 0) {
             return true;
         }
         return false;
@@ -295,7 +295,7 @@ public class File implements Serializable, Comparable<File> {
         if (securityManager != null) {
             securityManager.checkRead(this.path);
         }
-        if (!isInvalid() && (f517fs.getBooleanAttributes(this) & 2) != 0) {
+        if (!isInvalid() && (f515fs.getBooleanAttributes(this) & 2) != 0) {
             return true;
         }
         return false;
@@ -306,7 +306,7 @@ public class File implements Serializable, Comparable<File> {
         if (securityManager != null) {
             securityManager.checkRead(this.path);
         }
-        if (!isInvalid() && (f517fs.getBooleanAttributes(this) & 8) != 0) {
+        if (!isInvalid() && (f515fs.getBooleanAttributes(this) & 8) != 0) {
             return true;
         }
         return false;
@@ -320,7 +320,7 @@ public class File implements Serializable, Comparable<File> {
         if (isInvalid()) {
             return 0;
         }
-        return f517fs.getLastModifiedTime(this);
+        return f515fs.getLastModifiedTime(this);
     }
 
     public long length() {
@@ -331,7 +331,7 @@ public class File implements Serializable, Comparable<File> {
         if (isInvalid()) {
             return 0;
         }
-        return f517fs.getLength(this);
+        return f515fs.getLength(this);
     }
 
     public boolean createNewFile() throws IOException {
@@ -340,7 +340,7 @@ public class File implements Serializable, Comparable<File> {
             securityManager.checkWrite(this.path);
         }
         if (!isInvalid()) {
-            return f517fs.createFileExclusively(this.path);
+            return f515fs.createFileExclusively(this.path);
         }
         throw new IOException("Invalid file path");
     }
@@ -353,7 +353,7 @@ public class File implements Serializable, Comparable<File> {
         if (isInvalid()) {
             return false;
         }
-        return f517fs.delete(this);
+        return f515fs.delete(this);
     }
 
     public void deleteOnExit() {
@@ -374,7 +374,7 @@ public class File implements Serializable, Comparable<File> {
         if (isInvalid()) {
             return null;
         }
-        return f517fs.list(this);
+        return f515fs.list(this);
     }
 
     public String[] list(FilenameFilter filenameFilter) {
@@ -441,7 +441,7 @@ public class File implements Serializable, Comparable<File> {
         if (isInvalid()) {
             return false;
         }
-        return f517fs.createDirectory(this);
+        return f515fs.createDirectory(this);
     }
 
     public boolean mkdirs() {
@@ -476,7 +476,7 @@ public class File implements Serializable, Comparable<File> {
         if (isInvalid() || file.isInvalid()) {
             return false;
         }
-        return f517fs.rename(this, file);
+        return f515fs.rename(this, file);
     }
 
     public boolean setLastModified(long j) {
@@ -488,7 +488,7 @@ public class File implements Serializable, Comparable<File> {
             if (isInvalid()) {
                 return false;
             }
-            return f517fs.setLastModifiedTime(this, j);
+            return f515fs.setLastModifiedTime(this, j);
         }
         throw new IllegalArgumentException("Negative time");
     }
@@ -501,7 +501,7 @@ public class File implements Serializable, Comparable<File> {
         if (isInvalid()) {
             return false;
         }
-        return f517fs.setReadOnly(this);
+        return f515fs.setReadOnly(this);
     }
 
     public boolean setWritable(boolean z, boolean z2) {
@@ -512,7 +512,7 @@ public class File implements Serializable, Comparable<File> {
         if (isInvalid()) {
             return false;
         }
-        return f517fs.setPermission(this, 2, z, z2);
+        return f515fs.setPermission(this, 2, z, z2);
     }
 
     public boolean setWritable(boolean z) {
@@ -527,7 +527,7 @@ public class File implements Serializable, Comparable<File> {
         if (isInvalid()) {
             return false;
         }
-        return f517fs.setPermission(this, 4, z, z2);
+        return f515fs.setPermission(this, 4, z, z2);
     }
 
     public boolean setReadable(boolean z) {
@@ -542,7 +542,7 @@ public class File implements Serializable, Comparable<File> {
         if (isInvalid()) {
             return false;
         }
-        return f517fs.setPermission(this, 1, z, z2);
+        return f515fs.setPermission(this, 1, z, z2);
     }
 
     public boolean setExecutable(boolean z) {
@@ -557,11 +557,11 @@ public class File implements Serializable, Comparable<File> {
         if (isInvalid()) {
             return false;
         }
-        return f517fs.checkAccess(this, 1);
+        return f515fs.checkAccess(this, 1);
     }
 
     public static File[] listRoots() {
-        return f517fs.listRoots();
+        return f515fs.listRoots();
     }
 
     public long getTotalSpace() {
@@ -573,7 +573,7 @@ public class File implements Serializable, Comparable<File> {
         if (isInvalid()) {
             return 0;
         }
-        return f517fs.getSpace(this, 0);
+        return f515fs.getSpace(this, 0);
     }
 
     public long getFreeSpace() {
@@ -585,7 +585,7 @@ public class File implements Serializable, Comparable<File> {
         if (isInvalid()) {
             return 0;
         }
-        return f517fs.getSpace(this, 1);
+        return f515fs.getSpace(this, 1);
     }
 
     public long getUsableSpace() {
@@ -597,7 +597,7 @@ public class File implements Serializable, Comparable<File> {
         if (isInvalid()) {
             return 0;
         }
-        return f517fs.getSpace(this, 2);
+        return f515fs.getSpace(this, 2);
     }
 
     /* renamed from: java.io.File$TempDirectory */
@@ -637,7 +637,7 @@ public class File implements Serializable, Comparable<File> {
             }
             do {
                 generateFile = TempDirectory.generateFile(str, str2, file);
-                fileSystem = f517fs;
+                fileSystem = f515fs;
             } while ((fileSystem.getBooleanAttributes(generateFile) & 1) != 0);
             if (fileSystem.createFileExclusively(generateFile.getPath())) {
                 return generateFile;
@@ -652,7 +652,7 @@ public class File implements Serializable, Comparable<File> {
     }
 
     public int compareTo(File file) {
-        return f517fs.compare(this, file);
+        return f515fs.compare(this, file);
     }
 
     public boolean equals(Object obj) {
@@ -663,7 +663,7 @@ public class File implements Serializable, Comparable<File> {
     }
 
     public int hashCode() {
-        return f517fs.hashCode(this);
+        return f515fs.hashCode(this);
     }
 
     public String toString() {
@@ -682,7 +682,7 @@ public class File implements Serializable, Comparable<File> {
         if (readChar != c) {
             str = str.replace(readChar, c);
         }
-        FileSystem fileSystem = f517fs;
+        FileSystem fileSystem = f515fs;
         String normalize = fileSystem.normalize(str);
         Unsafe unsafe = UNSAFE;
         unsafe.putObject(this, PATH_OFFSET, normalize);

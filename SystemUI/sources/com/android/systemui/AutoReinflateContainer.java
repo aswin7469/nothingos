@@ -35,7 +35,7 @@ public class AutoReinflateContainer extends FrameLayout implements Configuration
 
     public AutoReinflateContainer(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C1893R.styleable.AutoReinflateContainer);
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C1894R.styleable.AutoReinflateContainer);
         if (obtainStyledAttributes.hasValue(0)) {
             this.mLayout = obtainStyledAttributes.getResourceId(0, 0);
             obtainStyledAttributes.recycle();

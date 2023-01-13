@@ -692,7 +692,7 @@ public final class InternalLocaleBuilder {
     static final class CaseInsensitiveChar {
 
         /* renamed from: ch */
-        private final char f939ch;
+        private final char f937ch;
         private final char lowerCh;
 
         private CaseInsensitiveChar(String str) {
@@ -700,12 +700,12 @@ public final class InternalLocaleBuilder {
         }
 
         CaseInsensitiveChar(char c) {
-            this.f939ch = c;
+            this.f937ch = c;
             this.lowerCh = LocaleUtils.toLower(c);
         }
 
         public char value() {
-            return this.f939ch;
+            return this.f937ch;
         }
 
         public int hashCode() {

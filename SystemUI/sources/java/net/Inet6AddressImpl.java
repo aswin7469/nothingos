@@ -41,7 +41,7 @@ class Inet6AddressImpl implements InetAddressImpl {
                 structAddrinfo.ai_flags = OsConstants.AI_ADDRCONFIG;
                 structAddrinfo.ai_family = OsConstants.AF_UNSPEC;
                 structAddrinfo.ai_socktype = OsConstants.SOCK_STREAM;
-                InetAddress[] android_getaddrinfo = Libcore.f857os.android_getaddrinfo(str, structAddrinfo, i);
+                InetAddress[] android_getaddrinfo = Libcore.f855os.android_getaddrinfo(str, structAddrinfo, i);
                 for (InetAddress inetAddress : android_getaddrinfo) {
                     inetAddress.holder().hostName = str;
                     inetAddress.holder().originalHostName = str;
@@ -50,7 +50,7 @@ class Inet6AddressImpl implements InetAddressImpl {
                 return android_getaddrinfo;
             } catch (GaiException e) {
                 if (!(e.getCause() instanceof ErrnoException) || !((i2 = ((ErrnoException) e.getCause()).errno) == OsConstants.EACCES || i2 == OsConstants.EPERM)) {
-                    String str2 = "Unable to resolve host \"" + str + "\": " + Libcore.f857os.gai_strerror(e.error);
+                    String str2 = "Unable to resolve host \"" + str + "\": " + Libcore.f855os.gai_strerror(e.error);
                     addressCache.putUnknownHost(str, i, str2);
                     throw e.rethrowAsUnknownHostException(str2);
                 }
@@ -125,7 +125,7 @@ class Inet6AddressImpl implements InetAddressImpl {
         if (r2 != null) goto L_0x00d0;
      */
     /* JADX WARNING: Code restructure failed: missing block: B:55:?, code lost:
-        libcore.p030io.Libcore.f857os.close(r2);
+        libcore.p030io.Libcore.f855os.close(r2);
      */
     /* JADX WARNING: Code restructure failed: missing block: B:62:0x00df, code lost:
         if (r2 != null) goto L_0x00d0;
@@ -252,7 +252,7 @@ class Inet6AddressImpl implements InetAddressImpl {
             r3 = r20
             if (r1 > r3) goto L_0x00c6
             if (r2 == 0) goto L_0x00c3
-            libcore.io.Os r0 = libcore.p030io.Libcore.f857os     // Catch:{ ErrnoException -> 0x00c3 }
+            libcore.io.Os r0 = libcore.p030io.Libcore.f855os     // Catch:{ ErrnoException -> 0x00c3 }
             r0.close(r2)     // Catch:{ ErrnoException -> 0x00c3 }
         L_0x00c3:
             return r18
@@ -267,14 +267,14 @@ class Inet6AddressImpl implements InetAddressImpl {
             r2 = r15
             if (r2 == 0) goto L_0x00e2
         L_0x00d0:
-            libcore.io.Os r0 = libcore.p030io.Libcore.f857os     // Catch:{ ErrnoException -> 0x00e2 }
+            libcore.io.Os r0 = libcore.p030io.Libcore.f855os     // Catch:{ ErrnoException -> 0x00e2 }
             r0.close(r2)     // Catch:{ ErrnoException -> 0x00e2 }
             goto L_0x00e2
         L_0x00d6:
             r0 = move-exception
         L_0x00d7:
             if (r2 == 0) goto L_0x00de
-            libcore.io.Os r1 = libcore.p030io.Libcore.f857os     // Catch:{ ErrnoException -> 0x00de }
+            libcore.io.Os r1 = libcore.p030io.Libcore.f855os     // Catch:{ ErrnoException -> 0x00de }
             r1.close(r2)     // Catch:{ ErrnoException -> 0x00de }
         L_0x00de:
             throw r0
@@ -314,7 +314,7 @@ class Inet6AddressImpl implements InetAddressImpl {
     private String getHostByAddr0(byte[] bArr) throws UnknownHostException {
         InetAddress byAddress = InetAddress.getByAddress(bArr);
         try {
-            return Libcore.f857os.getnameinfo(byAddress, OsConstants.NI_NAMEREQD);
+            return Libcore.f855os.getnameinfo(byAddress, OsConstants.NI_NAMEREQD);
         } catch (GaiException e) {
             UnknownHostException unknownHostException = new UnknownHostException(byAddress.toString());
             unknownHostException.initCause(e);

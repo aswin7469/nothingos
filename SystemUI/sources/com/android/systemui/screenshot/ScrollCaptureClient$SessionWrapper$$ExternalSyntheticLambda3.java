@@ -11,6 +11,6 @@ public final /* synthetic */ class ScrollCaptureClient$SessionWrapper$$ExternalS
     }
 
     public final void run() {
-        this.f$0.mo37584xd9936b77();
+        this.f$0.mo37585xd9936b77();
     }
 }

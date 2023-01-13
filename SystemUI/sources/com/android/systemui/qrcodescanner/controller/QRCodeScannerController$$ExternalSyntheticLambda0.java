@@ -12,6 +12,6 @@ public final /* synthetic */ class QRCodeScannerController$$ExternalSyntheticLam
     }
 
     public final void accept(Object obj, Object obj2) {
-        this.f$0.mo35806xd44db0d8((Integer) obj, (ContentObserver) obj2);
+        this.f$0.mo35810xd44db0d8((Integer) obj, (ContentObserver) obj2);
     }
 }

@@ -16,7 +16,7 @@ import com.android.settingslib.bluetooth.CachedBluetoothDevice;
 import com.android.settingslib.bluetooth.LocalBluetoothManager;
 import com.android.settingslib.bluetooth.LocalBluetoothProfile;
 import com.android.settingslib.utils.ThreadUtils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dependency;
 import com.nothing.p023os.device.DeviceConstant;
 import com.nothing.systemui.NTDependencyEx;
@@ -105,14 +105,14 @@ public class BluetoothItem implements SettingItemContent, BluetoothCallback {
         LocalBluetoothManager localBluetoothManager = (LocalBluetoothManager) Dependency.get(LocalBluetoothManager.class);
         this.mLocalManager = localBluetoothManager;
         if (localBluetoothManager == null) {
-            NTLogUtil.m1680d(TAG, "Bluetooth is not supported on this device");
+            NTLogUtil.m1686d(TAG, "Bluetooth is not supported on this device");
             return;
         }
         BluetoothAdapter defaultAdapter = BluetoothAdapter.getDefaultAdapter();
         this.mBluetoothAdapter = defaultAdapter;
         this.mBluetoothLeScanner = defaultAdapter.getBluetoothLeScanner();
         this.mShowDevicesWithoutNames = SystemProperties.getBoolean("persist.bluetooth.showdeviceswithoutnames", false);
-        this.mSettingsIcon = this.mContext.getDrawable(C1893R.C1895drawable.ic_settings_24dp);
+        this.mSettingsIcon = this.mContext.getDrawable(C1894R.C1896drawable.ic_settings_24dp);
     }
 
     public List<SettingItemData> getDates() {
@@ -129,7 +129,7 @@ public class BluetoothItem implements SettingItemContent, BluetoothCallback {
 
     public void onStart() {
         if (this.mLocalManager != null) {
-            NTLogUtil.m1680d(TAG, "onStart");
+            NTLogUtil.m1686d(TAG, "onStart");
             ThreadUtils.postOnMainThreadDelayed(new BluetoothItem$$ExternalSyntheticLambda0(this), 100);
             updateBluetooth();
         }
@@ -137,18 +137,18 @@ public class BluetoothItem implements SettingItemContent, BluetoothCallback {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onStart$0$com-nothing-systemui-qs-tiles-settings-panel-BluetoothItem */
-    public /* synthetic */ void mo57820x8bd88055() {
+    public /* synthetic */ void mo57856x8bd88055() {
         this.mLocalManager.setForegroundActivity(this.mContext);
         this.mLocalManager.getEventManager().registerCallback(this);
     }
 
     public void onPause() {
-        NTLogUtil.m1680d(TAG, "onPause");
+        NTLogUtil.m1686d(TAG, "onPause");
     }
 
     public void onStop() {
         if (this.mLocalManager != null) {
-            NTLogUtil.m1680d(TAG, "onStop");
+            NTLogUtil.m1686d(TAG, "onStop");
             if (this.mBluetoothTileEx.getAncCallback() != null) {
                 this.mBluetoothTileEx.getAncCallback().onDestroy();
             }
@@ -163,13 +163,13 @@ public class BluetoothItem implements SettingItemContent, BluetoothCallback {
     }
 
     public void onBluetoothStateChanged(int i) {
-        NTLogUtil.m1680d(TAG, "onBluetoothStateChanged: state " + i);
+        NTLogUtil.m1686d(TAG, "onBluetoothStateChanged: state " + i);
         updateContent(i);
         this.mDialog.updateWindowSize(false);
     }
 
     public void onScanningStateChanged(boolean z) {
-        NTLogUtil.m1680d(TAG, "onScanningStateChanged: started " + z);
+        NTLogUtil.m1686d(TAG, "onScanningStateChanged: started " + z);
         if (!z && this.mScanEnabled) {
             startScanning();
         }
@@ -187,7 +187,7 @@ public class BluetoothItem implements SettingItemContent, BluetoothCallback {
 
     public void onDeviceBondStateChanged(CachedBluetoothDevice cachedBluetoothDevice, int i) {
         String address = cachedBluetoothDevice.getAddress();
-        NTLogUtil.m1680d(TAG, "onDeviceBondStateChanged: state " + i + " cachedDevice " + address + ", mState:" + this.mBondState);
+        NTLogUtil.m1686d(TAG, "onDeviceBondStateChanged: state " + i + " cachedDevice " + address + ", mState:" + this.mBondState);
         if (this.mBondState != i || !TextUtils.equals(address, this.mBondAddr)) {
             collapsePanel(3000);
             updateDevice(cachedBluetoothDevice);
@@ -198,7 +198,7 @@ public class BluetoothItem implements SettingItemContent, BluetoothCallback {
 
     public void onConnectionStateChanged(CachedBluetoothDevice cachedBluetoothDevice, int i) {
         String address = cachedBluetoothDevice.getAddress();
-        NTLogUtil.m1680d(TAG, "onDeviceBondStateChanged: state " + i + " cachedDevice " + address + ", mState:" + this.mConnectState);
+        NTLogUtil.m1686d(TAG, "onDeviceBondStateChanged: state " + i + " cachedDevice " + address + ", mState:" + this.mConnectState);
         if (this.mConnectState != i || !TextUtils.equals(address, this.mConnectAddr)) {
             updateDevice(cachedBluetoothDevice);
             this.mConnectState = i;
@@ -208,7 +208,7 @@ public class BluetoothItem implements SettingItemContent, BluetoothCallback {
 
     public void onProfileConnectionStateChanged(CachedBluetoothDevice cachedBluetoothDevice, int i, int i2) {
         String address = cachedBluetoothDevice.getAddress();
-        NTLogUtil.m1680d(TAG, "onProfileConnectionStateChanged: state " + i + " cachedDevice " + address + ", mState:" + this.mProfileState);
+        NTLogUtil.m1686d(TAG, "onProfileConnectionStateChanged: state " + i + " cachedDevice " + address + ", mState:" + this.mProfileState);
         if (this.mProfileState != i || !TextUtils.equals(address, this.mProfileAddr)) {
             updateDevice(cachedBluetoothDevice);
             this.mProfileState = i;
@@ -221,7 +221,7 @@ public class BluetoothItem implements SettingItemContent, BluetoothCallback {
 
     /* access modifiers changed from: package-private */
     public void enableScanning() {
-        NTLogUtil.m1680d(TAG, "enableScanning: mScanEnabled " + this.mScanEnabled);
+        NTLogUtil.m1686d(TAG, "enableScanning: mScanEnabled " + this.mScanEnabled);
         if (!this.mScanEnabled) {
             startScanning();
             this.mScanEnabled = true;
@@ -230,7 +230,7 @@ public class BluetoothItem implements SettingItemContent, BluetoothCallback {
 
     /* access modifiers changed from: package-private */
     public void disableScanning() {
-        NTLogUtil.m1680d(TAG, "disableScanning: mScanEnabled " + this.mScanEnabled);
+        NTLogUtil.m1686d(TAG, "disableScanning: mScanEnabled " + this.mScanEnabled);
         if (this.mScanEnabled) {
             this.mLocalManager.getCachedDeviceManager().clearNonBondedDevices();
             stopScanning();
@@ -240,7 +240,7 @@ public class BluetoothItem implements SettingItemContent, BluetoothCallback {
 
     /* access modifiers changed from: package-private */
     public void startScanning() {
-        NTLogUtil.m1680d(TAG, "startScanning: mBluetoothAdapter.isDiscovering() " + this.mBluetoothAdapter.isDiscovering());
+        NTLogUtil.m1686d(TAG, "startScanning: mBluetoothAdapter.isDiscovering() " + this.mBluetoothAdapter.isDiscovering());
         if (!this.mBluetoothAdapter.isDiscovering()) {
             this.mBluetoothAdapter.startDiscovery();
         }
@@ -249,7 +249,7 @@ public class BluetoothItem implements SettingItemContent, BluetoothCallback {
 
     /* access modifiers changed from: package-private */
     public void stopScanning() {
-        NTLogUtil.m1680d(TAG, "stopScanning: mBluetoothAdapter.isDiscovering() " + this.mBluetoothAdapter.isDiscovering());
+        NTLogUtil.m1686d(TAG, "stopScanning: mBluetoothAdapter.isDiscovering() " + this.mBluetoothAdapter.isDiscovering());
         if (this.mBluetoothAdapter.isDiscovering()) {
             this.mBluetoothAdapter.cancelDiscovery();
         }
@@ -257,7 +257,7 @@ public class BluetoothItem implements SettingItemContent, BluetoothCallback {
 
     /* access modifiers changed from: package-private */
     public void updateBluetooth() {
-        NTLogUtil.m1680d(TAG, "updateBluetooth: mBluetoothAdapter.isEnabled() " + this.mBluetoothAdapter.isEnabled());
+        NTLogUtil.m1686d(TAG, "updateBluetooth: mBluetoothAdapter.isEnabled() " + this.mBluetoothAdapter.isEnabled());
         if (this.mBluetoothAdapter.isEnabled()) {
             updateContent(this.mBluetoothAdapter.getState());
             return;
@@ -286,7 +286,7 @@ public class BluetoothItem implements SettingItemContent, BluetoothCallback {
         ArrayList arrayList = new ArrayList(this.mLocalManager.getCachedDeviceManager().getCachedDevicesCopy());
         this.mCachedDevices = arrayList;
         arrayList.sort(this.btComparator);
-        NTLogUtil.m1680d(TAG, "initDevicesData: size " + this.mCachedDevices.size());
+        NTLogUtil.m1686d(TAG, "initDevicesData: size " + this.mCachedDevices.size());
         for (int i = 0; i < this.mCachedDevices.size(); i++) {
             dealWithDevice(this.mCachedDevices.get(i));
         }
@@ -299,13 +299,13 @@ public class BluetoothItem implements SettingItemContent, BluetoothCallback {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$collapsePanel$1$com-nothing-systemui-qs-tiles-settings-panel-BluetoothItem */
-    public /* synthetic */ void mo57819x85f471e0() {
+    public /* synthetic */ void mo57855x85f471e0() {
         this.mDialog.dismissDialog();
         this.mQSHostEx.collapsePanel();
     }
 
     private void clearDevicesDataAndUpdate(boolean z) {
-        NTLogUtil.m1680d(TAG, "clearDevicesDataAndUpdate: " + z);
+        NTLogUtil.m1686d(TAG, "clearDevicesDataAndUpdate: " + z);
         this.mDevicesData.clear();
         this.mDevicesMap.clear();
         if (z) {
@@ -339,6 +339,7 @@ public class BluetoothItem implements SettingItemContent, BluetoothCallback {
         settingItemData.cachedDevice = cachedBluetoothDevice;
         settingItemData.isNothingEarDevice = this.mBluetoothTileEx.isNothingEarDevice(settingItemData.macAddress);
         settingItemData.supportAnc = this.mBluetoothTileEx.isSupportAnc(settingItemData.macAddress);
+        settingItemData.supportAirpods = this.mBluetoothTileEx.isSupportAirpods(settingItemData.macAddress);
         if (cachedBluetoothDevice.getBondState() != 12) {
             settingItemData.actionDrawable = null;
             settingItemData.contentClickListener = new View.OnClickListener() {
@@ -351,9 +352,9 @@ public class BluetoothItem implements SettingItemContent, BluetoothCallback {
             return;
         }
         settingItemData.actionDrawable = this.mSettingsIcon;
-        C41974 r0 = new View.OnClickListener() {
+        C42094 r0 = new View.OnClickListener() {
             public void onClick(View view) {
-                NTLogUtil.m1680d(BluetoothItem.TAG, "DEVICE_DETAIL");
+                NTLogUtil.m1686d(BluetoothItem.TAG, "DEVICE_DETAIL");
                 Intent intent = new Intent(BluetoothTileEx.DEVICE_DETAIL);
                 intent.putExtra(DeviceConstant.KEY_MAC_ADDRESS, cachedBluetoothDevice.getDevice().getAddress());
                 BluetoothItem.this.mDialog.startActivity(intent, view);
@@ -392,7 +393,7 @@ public class BluetoothItem implements SettingItemContent, BluetoothCallback {
 
     private SettingItemData getHeaderItem(boolean z) {
         SettingItemData settingItemData = new SettingItemData();
-        settingItemData.title = this.mContext.getString(C1893R.string.quick_settings_bluetooth_label);
+        settingItemData.title = this.mContext.getString(C1894R.string.quick_settings_bluetooth_label);
         settingItemData.hasToggle = true;
         settingItemData.canForward = true;
         settingItemData.isChecked = z;
@@ -421,14 +422,14 @@ public class BluetoothItem implements SettingItemContent, BluetoothCallback {
     private String getSubtitle(CachedBluetoothDevice cachedBluetoothDevice) {
         if (cachedBluetoothDevice.getBondState() == 12) {
             if (cachedBluetoothDevice.isConnected()) {
-                return this.mContext.getString(C1893R.string.quick_settings_connected);
+                return this.mContext.getString(C1894R.string.quick_settings_connected);
             }
             if (isConnecting(cachedBluetoothDevice)) {
-                return this.mContext.getString(C1893R.string.quick_settings_connecting);
+                return this.mContext.getString(C1894R.string.quick_settings_connecting);
             }
             return null;
         } else if (cachedBluetoothDevice.getBondState() == 11) {
-            return this.mContext.getString(C1893R.string.bluetooth_pairing);
+            return this.mContext.getString(C1894R.string.bluetooth_pairing);
         } else {
             return null;
         }

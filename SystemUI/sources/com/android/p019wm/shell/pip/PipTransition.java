@@ -16,7 +16,7 @@ import android.window.WindowContainerToken;
 import android.window.WindowContainerTransaction;
 import android.window.WindowContainerTransactionCallback;
 import com.android.internal.protolog.common.ProtoLog;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.ShellTaskOrganizer;
 import com.android.p019wm.shell.pip.PipAnimationController;
 import com.android.p019wm.shell.protolog.ShellProtoLogGroup;
@@ -50,7 +50,7 @@ public class PipTransition extends PipTransitionController {
         super(pipBoundsState, pipMenuController, pipBoundsAlgorithm, pipAnimationController, transitions, shellTaskOrganizer);
         this.mContext = context;
         this.mPipTransitionState = pipTransitionState;
-        this.mEnterExitAnimationDuration = context.getResources().getInteger(C3343R.integer.config_pipResizeAnimationDuration);
+        this.mEnterExitAnimationDuration = context.getResources().getInteger(C3353R.integer.config_pipResizeAnimationDuration);
         this.mSurfaceTransactionHelper = pipSurfaceTransactionHelper;
         this.mSplitScreenOptional = optional;
     }
@@ -330,7 +330,7 @@ public class PipTransition extends PipTransitionController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startExitAnimation$0$com-android-wm-shell-pip-PipTransition */
-    public /* synthetic */ void mo50245x5c78a783(TaskInfo taskInfo, Transitions.TransitionFinishCallback transitionFinishCallback, WindowContainerTransaction windowContainerTransaction, WindowContainerTransactionCallback windowContainerTransactionCallback) {
+    public /* synthetic */ void mo50254x5c78a783(TaskInfo taskInfo, Transitions.TransitionFinishCallback transitionFinishCallback, WindowContainerTransaction windowContainerTransaction, WindowContainerTransactionCallback windowContainerTransactionCallback) {
         this.mPipOrganizer.onExitPipFinished(taskInfo);
         transitionFinishCallback.onTransitionFinished(windowContainerTransaction, windowContainerTransactionCallback);
     }

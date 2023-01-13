@@ -16,6 +16,6 @@ public final /* synthetic */ class IconProvider$$ExternalSyntheticLambda0 implem
     }
 
     public final Object get() {
-        return this.f$0.m2317lambda$getIcon$1$comandroidlauncher3iconsIconProvider(this.f$1, this.f$2);
+        return this.f$0.m2323lambda$getIcon$1$comandroidlauncher3iconsIconProvider(this.f$1, this.f$2);
     }
 }

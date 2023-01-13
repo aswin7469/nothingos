@@ -13,6 +13,6 @@ public final /* synthetic */ class AlarmTile$$ExternalSyntheticLambda0 implement
     }
 
     public final void onNextAlarmChanged(AlarmManager.AlarmClockInfo alarmClockInfo) {
-        AlarmTile.m2967callback$lambda0(this.f$0, alarmClockInfo);
+        AlarmTile.m2972callback$lambda0(this.f$0, alarmClockInfo);
     }
 }

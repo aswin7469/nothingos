@@ -12,6 +12,6 @@ public final /* synthetic */ class DividerView$$ExternalSyntheticLambda0 impleme
     }
 
     public final void run() {
-        this.f$0.mo49621x2cd07b0d(this.f$1);
+        this.f$0.mo49630x2cd07b0d(this.f$1);
     }
 }

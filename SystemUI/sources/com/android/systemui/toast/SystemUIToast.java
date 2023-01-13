@@ -15,7 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.plugins.ToastPlugin;
 
 public class SystemUIToast implements ToastPlugin.Toast {
@@ -119,9 +119,9 @@ public class SystemUIToast implements ToastPlugin.Toast {
             return this.mPluginToast.getView();
         }
         ApplicationInfo applicationInfo = null;
-        View inflate = this.mLayoutInflater.inflate(C1893R.layout.text_toast, (ViewGroup) null);
-        TextView textView = (TextView) inflate.findViewById(C1893R.C1897id.text);
-        ImageView imageView = (ImageView) inflate.findViewById(C1893R.C1897id.icon);
+        View inflate = this.mLayoutInflater.inflate(C1894R.layout.text_toast, (ViewGroup) null);
+        TextView textView = (TextView) inflate.findViewById(C1894R.C1898id.text);
+        ImageView imageView = (ImageView) inflate.findViewById(C1894R.C1898id.icon);
         textView.setText(this.mText);
         try {
             applicationInfo = this.mContext.getPackageManager().getApplicationInfoAsUser(this.mPackageName, 0, this.mUserId);
@@ -146,7 +146,7 @@ public class SystemUIToast implements ToastPlugin.Toast {
             }
         } else {
             textView.setMaxLines(Integer.MAX_VALUE);
-            inflate.findViewById(C1893R.C1897id.icon).setVisibility(8);
+            inflate.findViewById(C1894R.C1898id.icon).setVisibility(8);
         }
         return inflate;
     }

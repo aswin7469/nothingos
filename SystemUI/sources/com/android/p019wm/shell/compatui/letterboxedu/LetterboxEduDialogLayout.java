@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewOverlay;
 import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 
 /* renamed from: com.android.wm.shell.compatui.letterboxedu.LetterboxEduDialogLayout */
 class LetterboxEduDialogLayout extends ConstraintLayout {
@@ -58,7 +58,7 @@ class LetterboxEduDialogLayout extends ConstraintLayout {
     public void setDismissOnClickListener(Runnable runnable) {
         View.OnClickListener onClickListener = null;
         LetterboxEduDialogLayout$$ExternalSyntheticLambda0 letterboxEduDialogLayout$$ExternalSyntheticLambda0 = runnable == null ? null : new LetterboxEduDialogLayout$$ExternalSyntheticLambda0(runnable);
-        findViewById(C3343R.C3346id.letterbox_education_dialog_dismiss_button).setOnClickListener(letterboxEduDialogLayout$$ExternalSyntheticLambda0);
+        findViewById(C3353R.C3356id.letterbox_education_dialog_dismiss_button).setOnClickListener(letterboxEduDialogLayout$$ExternalSyntheticLambda0);
         setOnClickListener(letterboxEduDialogLayout$$ExternalSyntheticLambda0);
         View view = this.mDialogContainer;
         if (runnable != null) {
@@ -117,7 +117,7 @@ class LetterboxEduDialogLayout extends ConstraintLayout {
                 com.android.wm.shell.compatui.letterboxedu.LetterboxEduDialogLayout$$ExternalSyntheticLambda0 r1 = new com.android.wm.shell.compatui.letterboxedu.LetterboxEduDialogLayout$$ExternalSyntheticLambda0
                 r1.<init>(r4)
             L_0x000a:
-                int r2 = com.android.p019wm.shell.C3343R.C3346id.letterbox_education_dialog_dismiss_button
+                int r2 = com.android.p019wm.shell.C3353R.C3356id.letterbox_education_dialog_dismiss_button
                 android.view.View r2 = r3.findViewById(r2)
                 r2.setOnClickListener(r1)
                 r3.setOnClickListener(r1)
@@ -137,8 +137,8 @@ class LetterboxEduDialogLayout extends ConstraintLayout {
         /* access modifiers changed from: protected */
         public void onFinishInflate() {
             super.onFinishInflate();
-            this.mDialogContainer = findViewById(C3343R.C3346id.letterbox_education_dialog_container);
-            this.mDialogTitle = (TextView) findViewById(C3343R.C3346id.letterbox_education_dialog_title);
+            this.mDialogContainer = findViewById(C3353R.C3356id.letterbox_education_dialog_container);
+            this.mDialogTitle = (TextView) findViewById(C3353R.C3356id.letterbox_education_dialog_title);
             Drawable mutate = getBackground().mutate();
             this.mBackgroundDim = mutate;
             mutate.setAlpha(0);

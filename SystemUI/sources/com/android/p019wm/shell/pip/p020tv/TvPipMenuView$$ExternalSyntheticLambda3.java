@@ -10,6 +10,6 @@ public final /* synthetic */ class TvPipMenuView$$ExternalSyntheticLambda3 imple
     }
 
     public final void run() {
-        this.f$0.m3483lambda$hideEduText$2$comandroidwmshellpiptvTvPipMenuView();
+        this.f$0.m3487lambda$hideEduText$2$comandroidwmshellpiptvTvPipMenuView();
     }
 }

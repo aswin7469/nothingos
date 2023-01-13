@@ -224,7 +224,7 @@ public class Network implements Parcelable {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$openConnection$0$android-net-Network  reason: not valid java name */
-    public /* synthetic */ List m1885lambda$openConnection$0$androidnetNetwork(String str) throws UnknownHostException {
+    public /* synthetic */ List m1891lambda$openConnection$0$androidnetNetwork(String str) throws UnknownHostException {
         return Arrays.asList(getAllByName(str));
     }
 

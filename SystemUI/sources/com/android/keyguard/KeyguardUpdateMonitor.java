@@ -15,6 +15,7 @@ import android.content.pm.IPackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.pm.UserInfo;
 import android.database.ContentObserver;
+import android.graphics.PointF;
 import android.hardware.SensorPrivacyManager;
 import android.hardware.biometrics.BiometricManager;
 import android.hardware.biometrics.BiometricSourceType;
@@ -48,6 +49,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
 import android.util.SparseBooleanArray;
+import android.view.DisplayInfo;
 import com.android.internal.jank.InteractionJankMonitor;
 import com.android.internal.util.LatencyTracker;
 import com.android.internal.widget.LockPatternUtils;
@@ -55,7 +57,7 @@ import com.android.keyguard.ActiveUnlockConfig;
 import com.android.settingslib.WirelessUtils;
 import com.android.settingslib.fuelgauge.BatteryStatus;
 import com.android.settingslib.media.MediaOutputConstants;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.DejankUtils;
 import com.android.systemui.Dependency;
 import com.android.systemui.Dumpable;
@@ -319,7 +321,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-keyguard-KeyguardUpdateMonitor  reason: not valid java name */
-    public /* synthetic */ void m2292lambda$new$0$comandroidkeyguardKeyguardUpdateMonitor() {
+    public /* synthetic */ void m2298lambda$new$0$comandroidkeyguardKeyguardUpdateMonitor() {
         Log.e(TAG, "Fp cancellation not received, transitioning to STOPPED");
         this.mFingerprintRunningState = 0;
         updateFingerprintListeningState(1);
@@ -327,7 +329,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$1$com-android-keyguard-KeyguardUpdateMonitor  reason: not valid java name */
-    public /* synthetic */ void m2293lambda$new$1$comandroidkeyguardKeyguardUpdateMonitor() {
+    public /* synthetic */ void m2299lambda$new$1$comandroidkeyguardKeyguardUpdateMonitor() {
         Log.e(TAG, "Face cancellation not received, transitioning to STOPPED");
         this.mFaceRunningState = 0;
         updateFaceListeningState(1);
@@ -710,7 +712,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$handleFingerprintLockoutReset$2$com-android-keyguard-KeyguardUpdateMonitor */
-    public /* synthetic */ void mo26252xc5658f79() {
+    public /* synthetic */ void mo26253xc5658f79() {
         updateFingerprintListeningState(2);
     }
 
@@ -769,7 +771,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
                 keyguardUpdateMonitorCallback.onBiometricAuthFailed(BiometricSourceType.FACE);
             }
         }
-        handleFaceHelp(-2, this.mContext.getString(C1893R.string.kg_face_not_recognized));
+        handleFaceHelp(-2, this.mContext.getString(C1894R.string.kg_face_not_recognized));
     }
 
     /* access modifiers changed from: private */
@@ -862,7 +864,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
             z = false;
         }
         if (z2 && isSensorPrivacyEnabled) {
-            str = this.mContext.getString(C1893R.string.kg_face_sensor_privacy_enabled);
+            str = this.mContext.getString(C1894R.string.kg_face_sensor_privacy_enabled);
         }
         for (int i3 = 0; i3 < this.mCallbacks.size(); i3++) {
             KeyguardUpdateMonitorCallback keyguardUpdateMonitorCallback = (KeyguardUpdateMonitorCallback) this.mCallbacks.get(i3).get();
@@ -893,7 +895,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$handleFaceLockoutReset$3$com-android-keyguard-KeyguardUpdateMonitor */
-    public /* synthetic */ void mo26251x62e5c695() {
+    public /* synthetic */ void mo26252x62e5c695() {
         updateFaceListeningState(2);
     }
 
@@ -959,7 +961,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$isFaceDisabled$4$com-android-keyguard-KeyguardUpdateMonitor */
-    public /* synthetic */ Boolean mo26253xccc6a402(DevicePolicyManager devicePolicyManager, int i) {
+    public /* synthetic */ Boolean mo26254xccc6a402(DevicePolicyManager devicePolicyManager, int i) {
         return Boolean.valueOf(!(devicePolicyManager == null || (devicePolicyManager.getKeyguardDisabledFeatures((ComponentName) null, i) & 128) == 0) || isSimPinSecure());
     }
 
@@ -1184,13 +1186,13 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$5$com-android-keyguard-KeyguardUpdateMonitor  reason: not valid java name */
-    public /* synthetic */ void m2294lambda$new$5$comandroidkeyguardKeyguardUpdateMonitor(int i, int i2, boolean z) {
+    public /* synthetic */ void m2300lambda$new$5$comandroidkeyguardKeyguardUpdateMonitor(int i, int i2, boolean z) {
         handleFingerprintAuthenticated(i2, z);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$6$com-android-keyguard-KeyguardUpdateMonitor  reason: not valid java name */
-    public /* synthetic */ void m2295lambda$new$6$comandroidkeyguardKeyguardUpdateMonitor(int i, int i2, boolean z) {
+    public /* synthetic */ void m2301lambda$new$6$comandroidkeyguardKeyguardUpdateMonitor(int i, int i2, boolean z) {
         handleFaceAuthenticated(i2, z);
     }
 
@@ -1432,7 +1434,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onChanged$0$com-android-keyguard-KeyguardUpdateMonitor$2  reason: not valid java name */
-            public /* synthetic */ void m2297lambda$onChanged$0$comandroidkeyguardKeyguardUpdateMonitor$2(int i, boolean z) {
+            public /* synthetic */ void m2303lambda$onChanged$0$comandroidkeyguardKeyguardUpdateMonitor$2(int i, boolean z) {
                 KeyguardUpdateMonitor.this.mBiometricEnabledForUser.put(i, z);
                 KeyguardUpdateMonitor.this.updateBiometricListeningState(2);
             }
@@ -1571,7 +1573,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
 
             public void onAuthenticationHelp(int i, CharSequence charSequence) {
                 Trace.beginSection("KeyguardUpdateMonitor#onAuthenticationHelp");
-                NTLogUtil.m1680d(KeyguardUpdateMonitor.TAG, "onAuthenticationHelp " + i + " msg " + charSequence);
+                NTLogUtil.m1686d(KeyguardUpdateMonitor.TAG, "onAuthenticationHelp " + i + " msg " + charSequence);
                 if (i != 1001 && i != 1002 && i != 1003) {
                     KeyguardUpdateMonitor.this.handleFingerprintHelp(i, charSequence.toString());
                     Trace.endSection();
@@ -1872,7 +1874,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
         this.mAuthController.addCallback(new AuthController.Callback() {
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onAllAuthenticatorsRegistered$0$com-android-keyguard-KeyguardUpdateMonitor$15 */
-            public /* synthetic */ void mo26320x7e44b89() {
+            public /* synthetic */ void mo26321x7e44b89() {
                 KeyguardUpdateMonitor.this.updateBiometricListeningState(2);
             }
 
@@ -1882,7 +1884,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onEnrollmentsChanged$1$com-android-keyguard-KeyguardUpdateMonitor$15 */
-            public /* synthetic */ void mo26321x878f1f44() {
+            public /* synthetic */ void mo26322x878f1f44() {
                 KeyguardUpdateMonitor.this.updateBiometricListeningState(2);
             }
 
@@ -1939,7 +1941,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$7$com-android-keyguard-KeyguardUpdateMonitor  reason: not valid java name */
-    public /* synthetic */ void m2296lambda$new$7$comandroidkeyguardKeyguardUpdateMonitor() {
+    public /* synthetic */ void m2302lambda$new$7$comandroidkeyguardKeyguardUpdateMonitor() {
         Intent registerReceiver;
         int defaultSubscriptionId = SubscriptionManager.getDefaultSubscriptionId();
         ServiceState serviceStateForSubscriber = ((TelephonyManager) this.mContext.getSystemService(TelephonyManager.class)).getServiceStateForSubscriber(defaultSubscriptionId);
@@ -1956,7 +1958,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateFaceEnrolled$8$com-android-keyguard-KeyguardUpdateMonitor */
-    public /* synthetic */ Boolean mo26260xb00e8296(int i) {
+    public /* synthetic */ Boolean mo26261xb00e8296(int i) {
         FaceManager faceManager = this.mFaceManager;
         return Boolean.valueOf(faceManager != null && faceManager.isHardwareDetected() && this.mFaceManager.hasEnrolledTemplates(i) && this.mBiometricEnabledForUser.get(i));
     }
@@ -3159,7 +3161,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setSwitchingUser$10$com-android-keyguard-KeyguardUpdateMonitor */
-    public /* synthetic */ void mo26259xaf4caa43() {
+    public /* synthetic */ void mo26260xaf4caa43() {
         updateBiometricListeningState(2);
     }
 
@@ -3448,7 +3450,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
     /* JADX WARNING: Removed duplicated region for block: B:43:0x02e0  */
     /* JADX WARNING: Removed duplicated region for block: B:48:0x02f9  */
     /* JADX WARNING: Removed duplicated region for block: B:49:0x02fb  */
-    /* JADX WARNING: Removed duplicated region for block: B:53:0x03ec  */
+    /* JADX WARNING: Removed duplicated region for block: B:53:0x0401  */
     /* JADX WARNING: Removed duplicated region for block: B:58:? A[RETURN, SYNTHETIC] */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public void dump(java.p026io.PrintWriter r18, java.lang.String[] r19) {
@@ -3815,11 +3817,19 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
         L_0x03e3:
             com.android.keyguard.KeyguardListenQueue r2 = r0.mListenModels
             r2.print(r1)
+            java.lang.String r2 = "Looper state:"
+            r1.println((java.lang.String) r2)
+            android.os.Handler r2 = r0.mHandler
+            android.os.Looper r2 = r2.getLooper()
+            android.util.PrintWriterPrinter r3 = new android.util.PrintWriterPrinter
+            r3.<init>(r1)
+            java.lang.String r4 = "KeyguardUpdateMonitor  "
+            r2.dump(r3, r4)
             boolean r0 = r0.mIsAutomotive
-            if (r0 == 0) goto L_0x03f1
+            if (r0 == 0) goto L_0x0406
             java.lang.String r0 = "  Running on Automotive build"
             r1.println((java.lang.String) r0)
-        L_0x03f1:
+        L_0x0406:
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.KeyguardUpdateMonitor.dump(java.io.PrintWriter, java.lang.String[]):void");
@@ -3860,12 +3870,14 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
         boolean z2 = this.mStatusBarStateController.getState() == 2;
         boolean z3 = this.mKeyguardIsVisible && this.mDeviceInteractive && !this.mGoingToSleep && !z2;
         boolean userNeedsStrongAuth = userNeedsStrongAuth();
+        BiometricAuthenticated biometricAuthenticated = this.mUserFingerprintAuthenticated.get(getCurrentUser());
+        boolean z4 = biometricAuthenticated != null && biometricAuthenticated.mAuthenticated;
         if (DEBUG) {
             StringBuilder append = new StringBuilder("mKeyguardIsVisible ").append(this.mKeyguardIsVisible).append(" mBouncerIsOrWillBeShowing:").append(this.mBouncerIsOrWillBeShowing).append(" mBouncerFullyShown = ").append(this.mBouncerFullyShown).append(" awakeKeyguard = ").append(z3).append("  satisfiedCondition:").append(z).append(" isEnableFaceRecognition:").append(isFaceRecognitionEnable).append("  mSwitchingUser:").append(this.mSwitchingUser).append("  isSimPinSecure:").append(isSimPinSecure()).append("  isFaceRecognitionSucceeded = ").append(isFaceRecognitionSucceeded()).append("  isUserUnlocked = ");
             UserManager userManager = this.mUserManager;
-            Log.d(TAG, append.append(userManager != null ? userManager.isUserUnlocked() : false).append("  statusBarShadeLocked = ").append(z2).append("  mPanelDown = ").append(this.mPanelDown).append(" userNeedsStrongAuth = ").append(userNeedsStrongAuth).toString());
+            Log.d(TAG, append.append(userManager != null ? userManager.isUserUnlocked() : false).append("  statusBarShadeLocked = ").append(z2).append("  mPanelDown = ").append(this.mPanelDown).append(" userNeedsStrongAuth = ").append(userNeedsStrongAuth).append(" fingerprintUnlocked = ").append(z4).append(", mKeyguardGoingAway=").append(this.mKeyguardGoingAway).toString());
         }
-        if (!z || !z3 || this.mBouncerFullyShown || this.mBouncerIsOrWillBeShowing || !this.mUserManager.isUserUnlocked() || this.mSwitchingUser || isSimPinSecure() || isFaceRecognitionSucceeded() || this.mPanelDown || userNeedsStrongAuth) {
+        if (!z || !z3 || this.mBouncerFullyShown || this.mBouncerIsOrWillBeShowing || !this.mUserManager.isUserUnlocked() || this.mSwitchingUser || isSimPinSecure() || isFaceRecognitionSucceeded() || this.mPanelDown || userNeedsStrongAuth || z4 || this.mKeyguardGoingAway) {
             return false;
         }
         return true;
@@ -3921,5 +3933,16 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
 
     public Context getContext() {
         return this.mContext;
+    }
+
+    public int calculateUdfpsCenterMarginBottom() {
+        PointF udfpsLocation = this.mAuthController.getUdfpsLocation();
+        if (udfpsLocation == null || this.mContext == null) {
+            return 0;
+        }
+        DisplayInfo displayInfo = new DisplayInfo();
+        this.mContext.getDisplay().getDisplayInfo(displayInfo);
+        Log.d(TAG, "logicalHeight " + displayInfo.logicalHeight + " y " + udfpsLocation.y);
+        return (int) (((float) displayInfo.logicalHeight) - udfpsLocation.y);
     }
 }

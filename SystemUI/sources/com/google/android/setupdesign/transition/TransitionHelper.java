@@ -15,7 +15,7 @@ import com.google.android.material.transition.platform.MaterialSharedAxis;
 import com.google.android.setupcompat.partnerconfig.PartnerConfig;
 import com.google.android.setupcompat.partnerconfig.PartnerConfigHelper;
 import com.google.android.setupcompat.util.BuildCompatUtils;
-import com.google.android.setupdesign.C3953R;
+import com.google.android.setupdesign.C3963R;
 import com.google.android.setupdesign.util.ThemeHelper;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -58,15 +58,15 @@ public class TransitionHelper {
 
     public static void applyForwardTransition(Activity activity, int i) {
         if (i == 2) {
-            activity.overridePendingTransition(C3953R.anim.sud_slide_next_in, C3953R.anim.sud_slide_next_out);
+            activity.overridePendingTransition(C3963R.anim.sud_slide_next_in, C3963R.anim.sud_slide_next_out);
         } else if (i == 3) {
-            activity.overridePendingTransition(17432576, C3953R.anim.sud_stay);
+            activity.overridePendingTransition(17432576, C3963R.anim.sud_stay);
         } else if (i == 1) {
             TypedArray obtainStyledAttributes = activity.obtainStyledAttributes(16973825, new int[]{16842936, 16842937});
             activity.overridePendingTransition(obtainStyledAttributes.getResourceId(0, 0), obtainStyledAttributes.getResourceId(1, 0));
             obtainStyledAttributes.recycle();
         } else if (i == 4) {
-            activity.overridePendingTransition(C3953R.anim.sud_pre_p_activity_open_enter, C3953R.anim.sud_pre_p_activity_open_exit);
+            activity.overridePendingTransition(C3963R.anim.sud_pre_p_activity_open_enter, C3963R.anim.sud_pre_p_activity_open_exit);
         } else if (i == -1) {
             activity.overridePendingTransition(0, 0);
         } else if (i == 5 && getConfigTransitionType(activity) == 1) {
@@ -96,15 +96,15 @@ public class TransitionHelper {
 
     public static void applyBackwardTransition(Activity activity, int i) {
         if (i == 2) {
-            activity.overridePendingTransition(C3953R.anim.sud_slide_back_in, C3953R.anim.sud_slide_back_out);
+            activity.overridePendingTransition(C3963R.anim.sud_slide_back_in, C3963R.anim.sud_slide_back_out);
         } else if (i == 3) {
-            activity.overridePendingTransition(C3953R.anim.sud_stay, 17432577);
+            activity.overridePendingTransition(C3963R.anim.sud_stay, 17432577);
         } else if (i == 1) {
             TypedArray obtainStyledAttributes = activity.obtainStyledAttributes(16973825, new int[]{16842938, 16842939});
             activity.overridePendingTransition(obtainStyledAttributes.getResourceId(0, 0), obtainStyledAttributes.getResourceId(1, 0));
             obtainStyledAttributes.recycle();
         } else if (i == 4) {
-            activity.overridePendingTransition(C3953R.anim.sud_pre_p_activity_close_enter, C3953R.anim.sud_pre_p_activity_close_exit);
+            activity.overridePendingTransition(C3963R.anim.sud_pre_p_activity_close_enter, C3963R.anim.sud_pre_p_activity_close_exit);
         } else if (i == -1) {
             activity.overridePendingTransition(0, 0);
         } else if (i == 5 && getConfigTransitionType(activity) == 1) {

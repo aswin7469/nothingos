@@ -13,6 +13,6 @@ public final /* synthetic */ class MediaControlPanel$$ExternalSyntheticLambda2 i
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo33670xfbd618f1(this.f$1, (Integer) obj);
+        this.f$0.mo33674xfbd618f1(this.f$1, (Integer) obj);
     }
 }

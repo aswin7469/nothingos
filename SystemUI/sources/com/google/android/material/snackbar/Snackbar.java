@@ -16,12 +16,12 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 
 public class Snackbar extends BaseTransientBottomBar<Snackbar> {
-    private static final int[] SNACKBAR_BUTTON_STYLE_ATTR = {C3621R.attr.snackbarButtonStyle};
-    private static final int[] SNACKBAR_CONTENT_STYLE_ATTRS = {C3621R.attr.snackbarButtonStyle, C3621R.attr.snackbarTextViewStyle};
+    private static final int[] SNACKBAR_BUTTON_STYLE_ATTR = {C3631R.attr.snackbarButtonStyle};
+    private static final int[] SNACKBAR_CONTENT_STYLE_ATTRS = {C3631R.attr.snackbarButtonStyle, C3631R.attr.snackbarTextViewStyle};
     private final AccessibilityManager accessibilityManager;
     private BaseTransientBottomBar.BaseCallback<Snackbar> callback;
     private boolean hasAction;
@@ -74,9 +74,9 @@ public class Snackbar extends BaseTransientBottomBar<Snackbar> {
             }
             LayoutInflater from = LayoutInflater.from(context);
             if (hasSnackbarContentStyleAttrs(context)) {
-                i2 = C3621R.layout.mtrl_layout_snackbar_include;
+                i2 = C3631R.layout.mtrl_layout_snackbar_include;
             } else {
-                i2 = C3621R.layout.design_layout_snackbar_include;
+                i2 = C3631R.layout.design_layout_snackbar_include;
             }
             SnackbarContentLayout snackbarContentLayout = (SnackbarContentLayout) from.inflate(i2, findSuitableParent, false);
             Snackbar snackbar = new Snackbar(context, findSuitableParent, snackbarContentLayout, snackbarContentLayout);

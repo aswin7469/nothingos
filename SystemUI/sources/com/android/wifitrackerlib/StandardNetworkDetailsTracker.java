@@ -133,7 +133,7 @@ public class StandardNetworkDetailsTracker extends NetworkDetailsTracker {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$cacheNewScanResults$0$com-android-wifitrackerlib-StandardNetworkDetailsTracker */
-    public /* synthetic */ boolean mo47846x8334db20(ScanResult scanResult) {
+    public /* synthetic */ boolean mo47855x8334db20(ScanResult scanResult) {
         return new StandardWifiEntry.ScanResultKey(scanResult).equals(this.mKey.getScanResultKey());
     }
 

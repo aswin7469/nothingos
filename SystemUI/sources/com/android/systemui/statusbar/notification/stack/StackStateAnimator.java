@@ -5,7 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.util.Property;
 import android.view.View;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.animation.Interpolators;
 import com.android.systemui.statusbar.NotificationShelf;
 import com.android.systemui.statusbar.notification.row.ExpandableView;
@@ -69,8 +69,8 @@ public class StackStateAnimator {
 
     public StackStateAnimator(NotificationStackScrollLayout notificationStackScrollLayout) {
         this.mHostLayout = notificationStackScrollLayout;
-        this.mGoToFullShadeAppearingTranslation = notificationStackScrollLayout.getContext().getResources().getDimensionPixelSize(C1893R.dimen.go_to_full_shade_appearing_translation);
-        this.mPulsingAppearingTranslation = notificationStackScrollLayout.getContext().getResources().getDimensionPixelSize(C1893R.dimen.pulsing_notification_appear_translation);
+        this.mGoToFullShadeAppearingTranslation = notificationStackScrollLayout.getContext().getResources().getDimensionPixelSize(C1894R.dimen.go_to_full_shade_appearing_translation);
+        this.mPulsingAppearingTranslation = notificationStackScrollLayout.getContext().getResources().getDimensionPixelSize(C1894R.dimen.pulsing_notification_appear_translation);
         this.mAnimationProperties = new AnimationProperties() {
             public AnimationFilter getAnimationFilter() {
                 return StackStateAnimator.this.mAnimationFilter;
@@ -528,20 +528,20 @@ public class StackStateAnimator {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$processAnimationEvents$0$com-android-systemui-statusbar-notification-stack-StackStateAnimator */
-    public /* synthetic */ void mo42623x5b6566b8(String str, ExpandableView expandableView) {
+    public /* synthetic */ void mo42631x5b6566b8(String str, ExpandableView expandableView) {
         this.mLogger.disappearAnimationEnded(str);
         expandableView.removeFromTransientContainer();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$processAnimationEvents$1$com-android-systemui-statusbar-notification-stack-StackStateAnimator */
-    public /* synthetic */ void mo42624x9445c757(String str) {
+    public /* synthetic */ void mo42632x9445c757(String str) {
         this.mLogger.appearAnimationEnded(str);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$processAnimationEvents$2$com-android-systemui-statusbar-notification-stack-StackStateAnimator */
-    public /* synthetic */ void mo42625xcd2627f6(String str, Runnable runnable) {
+    public /* synthetic */ void mo42633xcd2627f6(String str, Runnable runnable) {
         this.mLogger.disappearAnimationEnded(str);
         if (runnable != null) {
             runnable.run();

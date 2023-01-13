@@ -5,15 +5,15 @@ import android.animation.TimeInterpolator;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.transition.TransitionValues;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.animation.AnimationUtils;
 
 public final class MaterialFade extends MaterialVisibility<FadeProvider> {
     private static final float DEFAULT_FADE_END_THRESHOLD_ENTER = 0.3f;
     private static final float DEFAULT_START_SCALE = 0.8f;
-    private static final int DEFAULT_THEMED_EASING_ATTR = C3621R.attr.motionEasingLinear;
-    private static final int DEFAULT_THEMED_INCOMING_DURATION_ATTR = C3621R.attr.motionDurationShort2;
-    private static final int DEFAULT_THEMED_OUTGOING_DURATION_ATTR = C3621R.attr.motionDurationShort1;
+    private static final int DEFAULT_THEMED_EASING_ATTR = C3631R.attr.motionEasingLinear;
+    private static final int DEFAULT_THEMED_INCOMING_DURATION_ATTR = C3631R.attr.motionDurationShort2;
+    private static final int DEFAULT_THEMED_OUTGOING_DURATION_ATTR = C3631R.attr.motionDurationShort1;
 
     public /* bridge */ /* synthetic */ void addAdditionalAnimatorProvider(VisibilityAnimatorProvider visibilityAnimatorProvider) {
         super.addAdditionalAnimatorProvider(visibilityAnimatorProvider);

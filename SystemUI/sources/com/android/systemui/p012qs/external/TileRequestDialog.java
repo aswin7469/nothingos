@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.android.launcher3.icons.cache.BaseIconCache;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.p012qs.tileimpl.QSIconViewImpl;
 import com.android.systemui.p012qs.tileimpl.QSTileImpl;
 import com.android.systemui.p012qs.tileimpl.QSTileViewImpl;
@@ -19,12 +19,12 @@ import kotlin.Metadata;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 
-@Metadata(mo64986d1 = {"\u0000&\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0003\u0018\u0000 \u000b2\u00020\u0001:\u0002\u000b\fB\r\u0012\u0006\u0010\u0002\u001a\u00020\u0003¢\u0006\u0002\u0010\u0004J\u0010\u0010\u0005\u001a\u00020\u00062\u0006\u0010\u0007\u001a\u00020\bH\u0002J\u000e\u0010\t\u001a\u00020\n2\u0006\u0010\u0007\u001a\u00020\b¨\u0006\r"}, mo64987d2 = {"Lcom/android/systemui/qs/external/TileRequestDialog;", "Lcom/android/systemui/statusbar/phone/SystemUIDialog;", "context", "Landroid/content/Context;", "(Landroid/content/Context;)V", "createTileView", "Lcom/android/systemui/plugins/qs/QSTileView;", "tileData", "Lcom/android/systemui/qs/external/TileRequestDialog$TileData;", "setTileData", "", "Companion", "TileData", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000&\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0003\u0018\u0000 \u000b2\u00020\u0001:\u0002\u000b\fB\r\u0012\u0006\u0010\u0002\u001a\u00020\u0003¢\u0006\u0002\u0010\u0004J\u0010\u0010\u0005\u001a\u00020\u00062\u0006\u0010\u0007\u001a\u00020\bH\u0002J\u000e\u0010\t\u001a\u00020\n2\u0006\u0010\u0007\u001a\u00020\b¨\u0006\r"}, mo65043d2 = {"Lcom/android/systemui/qs/external/TileRequestDialog;", "Lcom/android/systemui/statusbar/phone/SystemUIDialog;", "context", "Landroid/content/Context;", "(Landroid/content/Context;)V", "createTileView", "Lcom/android/systemui/plugins/qs/QSTileView;", "tileData", "Lcom/android/systemui/qs/external/TileRequestDialog$TileData;", "setTileData", "", "Companion", "TileData", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* renamed from: com.android.systemui.qs.external.TileRequestDialog */
 /* compiled from: TileRequestDialog.kt */
 public final class TileRequestDialog extends SystemUIDialog {
     /* access modifiers changed from: private */
-    public static final int CONTENT_ID = C1893R.C1897id.content;
+    public static final int CONTENT_ID = C1894R.C1898id.content;
     public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
@@ -33,7 +33,7 @@ public final class TileRequestDialog extends SystemUIDialog {
         Intrinsics.checkNotNullParameter(context, "context");
     }
 
-    @Metadata(mo64986d1 = {"\u0000\u0014\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\b\n\u0002\b\u0003\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u0014\u0010\u0003\u001a\u00020\u0004XD¢\u0006\b\n\u0000\u001a\u0004\b\u0005\u0010\u0006¨\u0006\u0007"}, mo64987d2 = {"Lcom/android/systemui/qs/external/TileRequestDialog$Companion;", "", "()V", "CONTENT_ID", "", "getCONTENT_ID$SystemUI_nothingRelease", "()I", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u0000\u0014\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\b\n\u0002\b\u0003\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u0014\u0010\u0003\u001a\u00020\u0004XD¢\u0006\b\n\u0000\u001a\u0004\b\u0005\u0010\u0006¨\u0006\u0007"}, mo65043d2 = {"Lcom/android/systemui/qs/external/TileRequestDialog$Companion;", "", "()V", "CONTENT_ID", "", "getCONTENT_ID$SystemUI_nothingRelease", "()I", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* renamed from: com.android.systemui.qs.external.TileRequestDialog$Companion */
     /* compiled from: TileRequestDialog.kt */
     public static final class Companion {
@@ -51,12 +51,12 @@ public final class TileRequestDialog extends SystemUIDialog {
 
     public final void setTileData(TileData tileData) {
         Intrinsics.checkNotNullParameter(tileData, "tileData");
-        View inflate = LayoutInflater.from(getContext()).inflate(C1893R.layout.tile_service_request_dialog, (ViewGroup) null);
+        View inflate = LayoutInflater.from(getContext()).inflate(C1894R.layout.tile_service_request_dialog, (ViewGroup) null);
         if (inflate != null) {
             ViewGroup viewGroup = (ViewGroup) inflate;
-            TextView textView = (TextView) viewGroup.requireViewById(C1893R.C1897id.text);
-            textView.setText(textView.getContext().getString(C1893R.string.qs_tile_request_dialog_text, new Object[]{tileData.getAppName()}));
-            viewGroup.addView(createTileView(tileData), viewGroup.getContext().getResources().getDimensionPixelSize(C1893R.dimen.qs_tile_service_request_tile_width), viewGroup.getContext().getResources().getDimensionPixelSize(C1893R.dimen.qs_quick_tile_size));
+            TextView textView = (TextView) viewGroup.requireViewById(C1894R.C1898id.text);
+            textView.setText(textView.getContext().getString(C1894R.string.qs_tile_request_dialog_text, new Object[]{tileData.getAppName()}));
+            viewGroup.addView(createTileView(tileData), viewGroup.getContext().getResources().getDimensionPixelSize(C1894R.dimen.qs_tile_service_request_tile_width), viewGroup.getContext().getResources().getDimensionPixelSize(C1894R.dimen.qs_quick_tile_size));
             viewGroup.setSelected(true);
             setView(viewGroup, 0, 0, 0, 0);
             return;
@@ -75,7 +75,7 @@ public final class TileRequestDialog extends SystemUIDialog {
         booleanState.handlesLongClick = false;
         Icon icon2 = tileData.getIcon();
         if (icon2 == null || (loadDrawable = icon2.loadDrawable(getContext())) == null) {
-            icon = QSTileImpl.ResourceIcon.get(C1893R.C1895drawable.f953android);
+            icon = QSTileImpl.ResourceIcon.get(C1894R.C1896drawable.f951android);
         } else {
             Intrinsics.checkNotNullExpressionValue(loadDrawable, "loadDrawable(context)");
             icon = new QSTileImpl.DrawableIcon(loadDrawable);
@@ -88,14 +88,14 @@ public final class TileRequestDialog extends SystemUIDialog {
 
     /* access modifiers changed from: private */
     /* renamed from: createTileView$lambda-4  reason: not valid java name */
-    public static final void m2947createTileView$lambda4(QSTileViewImpl qSTileViewImpl) {
+    public static final void m2952createTileView$lambda4(QSTileViewImpl qSTileViewImpl) {
         Intrinsics.checkNotNullParameter(qSTileViewImpl, "$tile");
         qSTileViewImpl.setStateDescription("");
         qSTileViewImpl.setClickable(false);
         qSTileViewImpl.setSelected(true);
     }
 
-    @Metadata(mo64986d1 = {"\u0000.\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\r\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u000b\n\u0002\u0010\u000b\n\u0002\b\u0002\n\u0002\u0010\b\n\u0000\n\u0002\u0010\u000e\n\u0000\b\b\u0018\u00002\u00020\u0001B\u001f\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0003\u0012\b\u0010\u0005\u001a\u0004\u0018\u00010\u0006¢\u0006\u0002\u0010\u0007J\t\u0010\r\u001a\u00020\u0003HÆ\u0003J\t\u0010\u000e\u001a\u00020\u0003HÆ\u0003J\u000b\u0010\u000f\u001a\u0004\u0018\u00010\u0006HÆ\u0003J)\u0010\u0010\u001a\u00020\u00002\b\b\u0002\u0010\u0002\u001a\u00020\u00032\b\b\u0002\u0010\u0004\u001a\u00020\u00032\n\b\u0002\u0010\u0005\u001a\u0004\u0018\u00010\u0006HÆ\u0001J\u0013\u0010\u0011\u001a\u00020\u00122\b\u0010\u0013\u001a\u0004\u0018\u00010\u0001HÖ\u0003J\t\u0010\u0014\u001a\u00020\u0015HÖ\u0001J\t\u0010\u0016\u001a\u00020\u0017HÖ\u0001R\u0011\u0010\u0002\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\b\u0010\tR\u0013\u0010\u0005\u001a\u0004\u0018\u00010\u0006¢\u0006\b\n\u0000\u001a\u0004\b\n\u0010\u000bR\u0011\u0010\u0004\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\f\u0010\t¨\u0006\u0018"}, mo64987d2 = {"Lcom/android/systemui/qs/external/TileRequestDialog$TileData;", "", "appName", "", "label", "icon", "Landroid/graphics/drawable/Icon;", "(Ljava/lang/CharSequence;Ljava/lang/CharSequence;Landroid/graphics/drawable/Icon;)V", "getAppName", "()Ljava/lang/CharSequence;", "getIcon", "()Landroid/graphics/drawable/Icon;", "getLabel", "component1", "component2", "component3", "copy", "equals", "", "other", "hashCode", "", "toString", "", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u0000.\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\r\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u000b\n\u0002\u0010\u000b\n\u0002\b\u0002\n\u0002\u0010\b\n\u0000\n\u0002\u0010\u000e\n\u0000\b\b\u0018\u00002\u00020\u0001B\u001f\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0003\u0012\b\u0010\u0005\u001a\u0004\u0018\u00010\u0006¢\u0006\u0002\u0010\u0007J\t\u0010\r\u001a\u00020\u0003HÆ\u0003J\t\u0010\u000e\u001a\u00020\u0003HÆ\u0003J\u000b\u0010\u000f\u001a\u0004\u0018\u00010\u0006HÆ\u0003J)\u0010\u0010\u001a\u00020\u00002\b\b\u0002\u0010\u0002\u001a\u00020\u00032\b\b\u0002\u0010\u0004\u001a\u00020\u00032\n\b\u0002\u0010\u0005\u001a\u0004\u0018\u00010\u0006HÆ\u0001J\u0013\u0010\u0011\u001a\u00020\u00122\b\u0010\u0013\u001a\u0004\u0018\u00010\u0001HÖ\u0003J\t\u0010\u0014\u001a\u00020\u0015HÖ\u0001J\t\u0010\u0016\u001a\u00020\u0017HÖ\u0001R\u0011\u0010\u0002\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\b\u0010\tR\u0013\u0010\u0005\u001a\u0004\u0018\u00010\u0006¢\u0006\b\n\u0000\u001a\u0004\b\n\u0010\u000bR\u0011\u0010\u0004\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\f\u0010\t¨\u0006\u0018"}, mo65043d2 = {"Lcom/android/systemui/qs/external/TileRequestDialog$TileData;", "", "appName", "", "label", "icon", "Landroid/graphics/drawable/Icon;", "(Ljava/lang/CharSequence;Ljava/lang/CharSequence;Landroid/graphics/drawable/Icon;)V", "getAppName", "()Ljava/lang/CharSequence;", "getIcon", "()Landroid/graphics/drawable/Icon;", "getLabel", "component1", "component2", "component3", "copy", "equals", "", "other", "hashCode", "", "toString", "", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* renamed from: com.android.systemui.qs.external.TileRequestDialog$TileData */
     /* compiled from: TileRequestDialog.kt */
     public static final class TileData {

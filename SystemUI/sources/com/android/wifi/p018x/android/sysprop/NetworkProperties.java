@@ -15,7 +15,7 @@ public final class NetworkProperties {
     }
 
     private static Boolean tryParseBoolean(String str) {
-        String lowerCase = str.toLowerCase(Locale.f700US);
+        String lowerCase = str.toLowerCase(Locale.f698US);
         lowerCase.hashCode();
         char c = 65535;
         switch (lowerCase.hashCode()) {
@@ -105,7 +105,7 @@ public final class NetworkProperties {
 
     private static <T extends Enum<T>> T tryParseEnum(Class<T> cls, String str) {
         try {
-            return Enum.valueOf(cls, str.toUpperCase(Locale.f700US));
+            return Enum.valueOf(cls, str.toUpperCase(Locale.f698US));
         } catch (IllegalArgumentException unused) {
             return null;
         }

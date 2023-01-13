@@ -13,16 +13,16 @@ import java.util.Objects;
 public class ChannelInputStream extends InputStream {
 
     /* renamed from: b1 */
-    private byte[] f875b1 = null;
+    private byte[] f873b1 = null;
 
     /* renamed from: bb */
-    private ByteBuffer f876bb = null;
+    private ByteBuffer f874bb = null;
 
     /* renamed from: bs */
-    private byte[] f877bs = null;
+    private byte[] f875bs = null;
 
     /* renamed from: ch */
-    protected final ReadableByteChannel f878ch;
+    protected final ReadableByteChannel f876ch;
 
     public static int read(ReadableByteChannel readableByteChannel, ByteBuffer byteBuffer, boolean z) throws IOException {
         int read;
@@ -48,17 +48,17 @@ public class ChannelInputStream extends InputStream {
     }
 
     public ChannelInputStream(ReadableByteChannel readableByteChannel) {
-        this.f878ch = readableByteChannel;
+        this.f876ch = readableByteChannel;
     }
 
     public synchronized int read() throws IOException {
-        if (this.f875b1 == null) {
-            this.f875b1 = new byte[1];
+        if (this.f873b1 == null) {
+            this.f873b1 = new byte[1];
         }
-        if (read(this.f875b1) != 1) {
+        if (read(this.f873b1) != 1) {
             return -1;
         }
-        return this.f875b1[0] & 255;
+        return this.f873b1[0] & 255;
     }
 
     public synchronized int read(byte[] bArr, int i, int i2) throws IOException {
@@ -67,25 +67,25 @@ public class ChannelInputStream extends InputStream {
         if (i2 == 0) {
             return 0;
         }
-        if (this.f877bs == bArr) {
-            byteBuffer = this.f876bb;
+        if (this.f875bs == bArr) {
+            byteBuffer = this.f874bb;
         } else {
             byteBuffer = ByteBuffer.wrap(bArr);
         }
         byteBuffer.limit(Math.min(i2 + i, byteBuffer.capacity()));
         byteBuffer.position(i);
-        this.f876bb = byteBuffer;
-        this.f877bs = bArr;
+        this.f874bb = byteBuffer;
+        this.f875bs = bArr;
         return read(byteBuffer);
     }
 
     /* access modifiers changed from: protected */
     public int read(ByteBuffer byteBuffer) throws IOException {
-        return read(this.f878ch, byteBuffer, true);
+        return read(this.f876ch, byteBuffer, true);
     }
 
     public int available() throws IOException {
-        ReadableByteChannel readableByteChannel = this.f878ch;
+        ReadableByteChannel readableByteChannel = this.f876ch;
         if (!(readableByteChannel instanceof SeekableByteChannel)) {
             return 0;
         }
@@ -99,7 +99,7 @@ public class ChannelInputStream extends InputStream {
 
     public synchronized long skip(long j) throws IOException {
         long j2;
-        ReadableByteChannel readableByteChannel = this.f878ch;
+        ReadableByteChannel readableByteChannel = this.f876ch;
         if (readableByteChannel instanceof SeekableByteChannel) {
             SeekableByteChannel seekableByteChannel = (SeekableByteChannel) readableByteChannel;
             long position = seekableByteChannel.position();
@@ -119,6 +119,6 @@ public class ChannelInputStream extends InputStream {
     }
 
     public void close() throws IOException {
-        this.f878ch.close();
+        this.f876ch.close();
     }
 }

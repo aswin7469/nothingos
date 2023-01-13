@@ -24,7 +24,7 @@ public final class GaiException extends RuntimeException {
         if (gaiName == null) {
             gaiName = "GAI_ error " + this.error;
         }
-        return this.functionName + " failed: " + gaiName + " (" + Libcore.f857os.gai_strerror(this.error) + NavigationBarInflaterView.KEY_CODE_END;
+        return this.functionName + " failed: " + gaiName + " (" + Libcore.f855os.gai_strerror(this.error) + NavigationBarInflaterView.KEY_CODE_END;
     }
 
     public UnknownHostException rethrowAsUnknownHostException(String str) throws UnknownHostException {

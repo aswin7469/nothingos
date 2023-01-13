@@ -11,6 +11,6 @@ public final /* synthetic */ class CropView$$ExternalSyntheticLambda1 implements
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        this.f$0.mo37288x765de9b9(valueAnimator);
+        this.f$0.mo37289x765de9b9(valueAnimator);
     }
 }

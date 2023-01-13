@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.IndentingPrintWriter;
 import android.view.View;
 import android.widget.RelativeLayout;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.p012qs.QuickStatusBarHeader;
 
 /* renamed from: com.nothing.systemui.qs.QuickStatusBarHeaderEx */
@@ -18,8 +18,8 @@ public class QuickStatusBarHeaderEx {
     }
 
     public void init(Context context, QuickStatusBarHeader quickStatusBarHeader) {
-        this.mQSStatusBarLayout = (RelativeLayout) quickStatusBarHeader.findViewById(C1893R.C1897id.qs_status_bar_layout);
-        this.mPullDownArrow = quickStatusBarHeader.findViewById(C1893R.C1897id.arrow_down);
+        this.mQSStatusBarLayout = (RelativeLayout) quickStatusBarHeader.findViewById(C1894R.C1898id.qs_status_bar_layout);
+        this.mPullDownArrow = quickStatusBarHeader.findViewById(C1894R.C1898id.arrow_down);
     }
 
     public void updateMediaVisibility(Context context, boolean z, boolean z2) {
@@ -30,12 +30,12 @@ public class QuickStatusBarHeaderEx {
     public void updatePullDownArrowVisibility(Context context, boolean z) {
         View view = this.mPullDownArrow;
         if (view != null) {
-            view.setVisibility((this.mMediaVisible || !context.getResources().getBoolean(C1893R.bool.config_use_split_notification_shade) || z) ? 8 : 0);
+            view.setVisibility((this.mMediaVisible || !context.getResources().getBoolean(C1894R.bool.config_use_split_notification_shade) || z) ? 8 : 0);
         }
     }
 
     public void updatePortQSStatusBarVisibility(Context context) {
-        this.mQSStatusBarLayout.setVisibility(context.getResources().getBoolean(C1893R.bool.config_use_split_notification_shade) ? 8 : 0);
+        this.mQSStatusBarLayout.setVisibility(context.getResources().getBoolean(C1894R.bool.config_use_split_notification_shade) ? 8 : 0);
     }
 
     public void setScrollY(int i) {

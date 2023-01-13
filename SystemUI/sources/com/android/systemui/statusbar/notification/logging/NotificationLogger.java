@@ -244,7 +244,7 @@ public class NotificationLogger implements StatusBarStateController.StateListene
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$logNotificationVisibilityChanges$0$com-android-systemui-statusbar-notification-logging-NotificationLogger */
-    public /* synthetic */ void mo40793xde1be78(NotificationVisibility[] notificationVisibilityArr, NotificationVisibility[] notificationVisibilityArr2) {
+    public /* synthetic */ void mo40796xde1be78(NotificationVisibility[] notificationVisibilityArr, NotificationVisibility[] notificationVisibilityArr2) {
         try {
             this.mBarService.onNotificationVisibilityChanged(notificationVisibilityArr, notificationVisibilityArr2);
         } catch (RemoteException unused) {
@@ -430,14 +430,14 @@ public class NotificationLogger implements StatusBarStateController.StateListene
                 }
                 if (bool == null || state.mIsExpanded != bool) {
                     this.mLoggedExpansionState.put(str, state.mIsExpanded);
-                    this.mUiBgExecutor.execute(new C2729x56ec96fa(this, str, new State(state)));
+                    this.mUiBgExecutor.execute(new C2735x56ec96fa(this, str, new State(state)));
                 }
             }
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$maybeNotifyOnNotificationExpansionChanged$0$com-android-systemui-statusbar-notification-logging-NotificationLogger$ExpansionStateLogger */
-        public /* synthetic */ void mo40801xe665ec22(String str, State state) {
+        public /* synthetic */ void mo40804xe665ec22(String str, State state) {
             try {
                 this.mBarService.onNotificationExpansionChanged(str, state.mIsUserAction.booleanValue(), state.mIsExpanded.booleanValue(), state.mLocation.ordinal());
             } catch (RemoteException e) {

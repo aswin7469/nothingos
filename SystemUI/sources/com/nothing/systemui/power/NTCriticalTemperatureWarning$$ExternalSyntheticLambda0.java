@@ -11,6 +11,6 @@ public final /* synthetic */ class NTCriticalTemperatureWarning$$ExternalSynthet
     }
 
     public final void onClick(View view) {
-        NTCriticalTemperatureWarning.m3505onCreate$lambda0(this.f$0, view);
+        NTCriticalTemperatureWarning.m3509onCreate$lambda0(this.f$0, view);
     }
 }

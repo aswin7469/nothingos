@@ -9,7 +9,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewOutlineProvider;
 import androidx.constraintlayout.motion.widget.Key;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.internal.ThemeEnforcement;
 
 class ViewUtilsLollipop {
@@ -35,10 +35,10 @@ class ViewUtilsLollipop {
     }
 
     static void setDefaultAppBarLayoutStateListAnimator(View view, float f) {
-        int integer = view.getResources().getInteger(C3621R.integer.app_bar_elevation_anim_duration);
+        int integer = view.getResources().getInteger(C3631R.integer.app_bar_elevation_anim_duration);
         StateListAnimator stateListAnimator = new StateListAnimator();
         long j = (long) integer;
-        stateListAnimator.addState(new int[]{16842910, C3621R.attr.state_liftable, -C3621R.attr.state_lifted}, ObjectAnimator.ofFloat(view, Key.ELEVATION, new float[]{0.0f}).setDuration(j));
+        stateListAnimator.addState(new int[]{16842910, C3631R.attr.state_liftable, -C3631R.attr.state_lifted}, ObjectAnimator.ofFloat(view, Key.ELEVATION, new float[]{0.0f}).setDuration(j));
         stateListAnimator.addState(new int[]{16842910}, ObjectAnimator.ofFloat(view, Key.ELEVATION, new float[]{f}).setDuration(j));
         stateListAnimator.addState(new int[0], ObjectAnimator.ofFloat(view, Key.ELEVATION, new float[]{0.0f}).setDuration(0));
         view.setStateListAnimator(stateListAnimator);

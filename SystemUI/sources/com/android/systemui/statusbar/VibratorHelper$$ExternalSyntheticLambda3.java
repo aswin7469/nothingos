@@ -13,6 +13,6 @@ public final /* synthetic */ class VibratorHelper$$ExternalSyntheticLambda3 impl
     }
 
     public final void run() {
-        this.f$0.m3046lambda$vibrate$3$comandroidsystemuistatusbarVibratorHelper(this.f$1);
+        this.f$0.m3050lambda$vibrate$3$comandroidsystemuistatusbarVibratorHelper(this.f$1);
     }
 }

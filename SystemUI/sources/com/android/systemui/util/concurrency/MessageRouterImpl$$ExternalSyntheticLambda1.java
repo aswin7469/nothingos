@@ -11,6 +11,6 @@ public final /* synthetic */ class MessageRouterImpl$$ExternalSyntheticLambda1 i
     }
 
     public final void run() {
-        this.f$0.mo46943x34689254(this.f$1);
+        this.f$0.mo46955x34689254(this.f$1);
     }
 }

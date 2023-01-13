@@ -10,6 +10,6 @@ public final /* synthetic */ class KidsModeTaskOrganizer$$ExternalSyntheticLambd
     }
 
     public final void run() {
-        this.f$0.mo49593xd6c5359c();
+        this.f$0.mo49602xd6c5359c();
     }
 }

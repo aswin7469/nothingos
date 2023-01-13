@@ -11,6 +11,6 @@ public final /* synthetic */ class PowerNotificationWarnings$$ExternalSyntheticL
     }
 
     public final void onActivityStarted(int i) {
-        this.f$0.mo35561xc95d372d(i);
+        this.f$0.mo35565xc95d372d(i);
     }
 }

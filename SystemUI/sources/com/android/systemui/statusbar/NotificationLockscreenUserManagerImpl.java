@@ -249,7 +249,7 @@ public class NotificationLockscreenUserManagerImpl implements Dumpable, Notifica
             L_0x013f:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.NotificationLockscreenUserManagerImpl.C25642.onReceive(android.content.Context, android.content.Intent):void");
+            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.NotificationLockscreenUserManagerImpl.C25702.onReceive(android.content.Context, android.content.Intent):void");
         }
     };
     private final BroadcastDispatcher mBroadcastDispatcher;
@@ -595,7 +595,7 @@ public class NotificationLockscreenUserManagerImpl implements Dumpable, Notifica
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateCurrentProfilesCache$0$com-android-systemui-statusbar-NotificationLockscreenUserManagerImpl */
-    public /* synthetic */ void mo38761x1ee04e87() {
+    public /* synthetic */ void mo38762x1ee04e87() {
         for (NotificationLockscreenUserManager.UserChangedListener onCurrentProfilesChanged : this.mListeners) {
             onCurrentProfilesChanged.onCurrentProfilesChanged(this.mCurrentProfiles);
         }
@@ -657,7 +657,7 @@ public class NotificationLockscreenUserManagerImpl implements Dumpable, Notifica
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updatePublicMode$1$com-android-systemui-statusbar-NotificationLockscreenUserManagerImpl */
-    public /* synthetic */ Boolean mo38762x300b5c19(int i) {
+    public /* synthetic */ Boolean mo38763x300b5c19(int i) {
         return Boolean.valueOf(this.mLockPatternUtils.isSeparateProfileChallengeEnabled(i));
     }
 

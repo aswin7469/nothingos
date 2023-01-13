@@ -21,6 +21,6 @@ public final /* synthetic */ class DefaultTransitionHandler$$ExternalSyntheticLa
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo51232xd4c5f5d9(this.f$1, this.f$2, this.f$3, (SurfaceControl.Transaction) obj);
+        this.f$0.mo51243xd4c5f5d9(this.f$1, this.f$2, this.f$3, (SurfaceControl.Transaction) obj);
     }
 }

@@ -9,6 +9,6 @@ public final /* synthetic */ class WifiEntry$$ExternalSyntheticLambda2 implement
     }
 
     public final void run() {
-        this.f$0.mo47877x6620d799();
+        this.f$0.mo47886x6620d799();
     }
 }

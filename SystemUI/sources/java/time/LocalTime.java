@@ -82,7 +82,7 @@ public final class LocalTime implements Temporal, TemporalAdjuster, Comparable<L
     }
 
     /* renamed from: of */
-    public static LocalTime m917of(int i, int i2) {
+    public static LocalTime m915of(int i, int i2) {
         ChronoField.HOUR_OF_DAY.checkValidValue((long) i);
         if (i2 == 0) {
             return HOURS[i];
@@ -92,7 +92,7 @@ public final class LocalTime implements Temporal, TemporalAdjuster, Comparable<L
     }
 
     /* renamed from: of */
-    public static LocalTime m918of(int i, int i2, int i3) {
+    public static LocalTime m916of(int i, int i2, int i3) {
         ChronoField.HOUR_OF_DAY.checkValidValue((long) i);
         if ((i2 | i3) == 0) {
             return HOURS[i];
@@ -103,7 +103,7 @@ public final class LocalTime implements Temporal, TemporalAdjuster, Comparable<L
     }
 
     /* renamed from: of */
-    public static LocalTime m919of(int i, int i2, int i3, int i4) {
+    public static LocalTime m917of(int i, int i2, int i3, int i4) {
         ChronoField.HOUR_OF_DAY.checkValidValue((long) i);
         ChronoField.MINUTE_OF_HOUR.checkValidValue((long) i2);
         ChronoField.SECOND_OF_MINUTE.checkValidValue((long) i3);
@@ -206,7 +206,7 @@ public final class LocalTime implements Temporal, TemporalAdjuster, Comparable<L
     }
 
     private int get0(TemporalField temporalField) {
-        switch (C28531.$SwitchMap$java$time$temporal$ChronoField[((ChronoField) temporalField).ordinal()]) {
+        switch (C28591.$SwitchMap$java$time$temporal$ChronoField[((ChronoField) temporalField).ordinal()]) {
             case 1:
                 return this.nano;
             case 2:
@@ -279,7 +279,7 @@ public final class LocalTime implements Temporal, TemporalAdjuster, Comparable<L
         }
         ChronoField chronoField = (ChronoField) temporalField;
         chronoField.checkValidValue(j);
-        switch (C28531.$SwitchMap$java$time$temporal$ChronoField[chronoField.ordinal()]) {
+        switch (C28591.$SwitchMap$java$time$temporal$ChronoField[chronoField.ordinal()]) {
             case 1:
                 return withNano((int) j);
             case 2:
@@ -373,7 +373,7 @@ public final class LocalTime implements Temporal, TemporalAdjuster, Comparable<L
     }
 
     /* renamed from: java.time.LocalTime$1 */
-    static /* synthetic */ class C28531 {
+    static /* synthetic */ class C28591 {
         static final /* synthetic */ int[] $SwitchMap$java$time$temporal$ChronoField;
         static final /* synthetic */ int[] $SwitchMap$java$time$temporal$ChronoUnit;
 
@@ -531,7 +531,7 @@ public final class LocalTime implements Temporal, TemporalAdjuster, Comparable<L
             L_0x0101:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: java.time.LocalTime.C28531.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: java.time.LocalTime.C28591.<clinit>():void");
         }
     }
 
@@ -539,7 +539,7 @@ public final class LocalTime implements Temporal, TemporalAdjuster, Comparable<L
         if (!(temporalUnit instanceof ChronoUnit)) {
             return (LocalTime) temporalUnit.addTo(this, j);
         }
-        switch (C28531.$SwitchMap$java$time$temporal$ChronoUnit[((ChronoUnit) temporalUnit).ordinal()]) {
+        switch (C28591.$SwitchMap$java$time$temporal$ChronoUnit[((ChronoUnit) temporalUnit).ordinal()]) {
             case 1:
                 return plusNanos(j);
             case 2:
@@ -659,7 +659,7 @@ public final class LocalTime implements Temporal, TemporalAdjuster, Comparable<L
             return temporalUnit.between(this, from);
         }
         long nanoOfDay = from.toNanoOfDay() - toNanoOfDay();
-        switch (C28531.$SwitchMap$java$time$temporal$ChronoUnit[((ChronoUnit) temporalUnit).ordinal()]) {
+        switch (C28591.$SwitchMap$java$time$temporal$ChronoUnit[((ChronoUnit) temporalUnit).ordinal()]) {
             case 1:
                 return nanoOfDay;
             case 2:
@@ -685,11 +685,11 @@ public final class LocalTime implements Temporal, TemporalAdjuster, Comparable<L
     }
 
     public LocalDateTime atDate(LocalDate localDate) {
-        return LocalDateTime.m916of(localDate, this);
+        return LocalDateTime.m914of(localDate, this);
     }
 
     public OffsetTime atOffset(ZoneOffset zoneOffset) {
-        return OffsetTime.m927of(this, zoneOffset);
+        return OffsetTime.m925of(this, zoneOffset);
     }
 
     public int toSecondOfDay() {
@@ -833,6 +833,6 @@ public final class LocalTime implements Temporal, TemporalAdjuster, Comparable<L
                 i3 = b;
             }
         }
-        return m919of(readByte, i3, i, i2);
+        return m917of(readByte, i3, i, i2);
     }
 }

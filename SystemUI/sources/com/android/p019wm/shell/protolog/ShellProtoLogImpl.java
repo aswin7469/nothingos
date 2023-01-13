@@ -22,27 +22,27 @@ public class ShellProtoLogImpl extends BaseProtoLogImpl {
     }
 
     /* renamed from: d */
-    public static void m1540d(IProtoLogGroup iProtoLogGroup, int i, int i2, String str, Object... objArr) {
+    public static void m1537d(IProtoLogGroup iProtoLogGroup, int i, int i2, String str, Object... objArr) {
         getSingleInstance().log(BaseProtoLogImpl.LogLevel.DEBUG, iProtoLogGroup, i, i2, str, objArr);
     }
 
     /* renamed from: v */
-    public static void m1543v(IProtoLogGroup iProtoLogGroup, int i, int i2, String str, Object... objArr) {
+    public static void m1540v(IProtoLogGroup iProtoLogGroup, int i, int i2, String str, Object... objArr) {
         getSingleInstance().log(BaseProtoLogImpl.LogLevel.VERBOSE, iProtoLogGroup, i, i2, str, objArr);
     }
 
     /* renamed from: i */
-    public static void m1542i(IProtoLogGroup iProtoLogGroup, int i, int i2, String str, Object... objArr) {
+    public static void m1539i(IProtoLogGroup iProtoLogGroup, int i, int i2, String str, Object... objArr) {
         getSingleInstance().log(BaseProtoLogImpl.LogLevel.INFO, iProtoLogGroup, i, i2, str, objArr);
     }
 
     /* renamed from: w */
-    public static void m1544w(IProtoLogGroup iProtoLogGroup, int i, int i2, String str, Object... objArr) {
+    public static void m1541w(IProtoLogGroup iProtoLogGroup, int i, int i2, String str, Object... objArr) {
         getSingleInstance().log(BaseProtoLogImpl.LogLevel.WARN, iProtoLogGroup, i, i2, str, objArr);
     }
 
     /* renamed from: e */
-    public static void m1541e(IProtoLogGroup iProtoLogGroup, int i, int i2, String str, Object... objArr) {
+    public static void m1538e(IProtoLogGroup iProtoLogGroup, int i, int i2, String str, Object... objArr) {
         getSingleInstance().log(BaseProtoLogImpl.LogLevel.ERROR, iProtoLogGroup, i, i2, str, objArr);
     }
 

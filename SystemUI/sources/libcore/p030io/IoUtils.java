@@ -32,7 +32,7 @@ public final class IoUtils {
         int int$ = release$.getInt$();
         long ownerId$ = release$.getOwnerId$();
         if (!(int$ == -1 || ownerId$ == 0)) {
-            Libcore.f857os.android_fdsan_exchange_owner_tag(release$, ownerId$, 0);
+            Libcore.f855os.android_fdsan_exchange_owner_tag(release$, ownerId$, 0);
         }
         return int$;
     }
@@ -76,7 +76,7 @@ public final class IoUtils {
         if (ownerId$ == 0) {
             long generateFdOwnerId = generateFdOwnerId(obj);
             fileDescriptor.setOwnerId$(generateFdOwnerId);
-            Libcore.f857os.android_fdsan_exchange_owner_tag(fileDescriptor, ownerId$, generateFdOwnerId);
+            Libcore.f855os.android_fdsan_exchange_owner_tag(fileDescriptor, ownerId$, generateFdOwnerId);
             return;
         }
         throw new IllegalStateException("Attempted to take ownership of already-owned FileDescriptor");
@@ -123,13 +123,13 @@ public final class IoUtils {
     public static void setBlocking(FileDescriptor fileDescriptor, boolean z) throws IOException {
         int i;
         try {
-            int fcntlVoid = Libcore.f857os.fcntlVoid(fileDescriptor, OsConstants.F_GETFL);
+            int fcntlVoid = Libcore.f855os.fcntlVoid(fileDescriptor, OsConstants.F_GETFL);
             if (!z) {
                 i = OsConstants.O_NONBLOCK | fcntlVoid;
             } else {
                 i = (~OsConstants.O_NONBLOCK) & fcntlVoid;
             }
-            Libcore.f857os.fcntlInt(fileDescriptor, OsConstants.F_SETFL, i);
+            Libcore.f855os.fcntlInt(fileDescriptor, OsConstants.F_SETFL, i);
         } catch (ErrnoException e) {
             throw e.rethrowAsIOException();
         }
@@ -159,7 +159,7 @@ public final class IoUtils {
 
     public static boolean canOpenReadOnly(String str) {
         try {
-            Libcore.f857os.close(Libcore.f857os.open(str, OsConstants.O_RDONLY, 0));
+            Libcore.f855os.close(Libcore.f855os.open(str, OsConstants.O_RDONLY, 0));
             return true;
         } catch (ErrnoException unused) {
             return false;
@@ -177,21 +177,21 @@ public final class IoUtils {
         private int count;
 
         /* renamed from: fd */
-        private FileDescriptor f856fd;
+        private FileDescriptor f854fd;
         private boolean unknownLength;
 
         public FileReader(String str) throws IOException {
             try {
-                this.f856fd = IoBridge.open(str, OsConstants.O_RDONLY);
+                this.f854fd = IoBridge.open(str, OsConstants.O_RDONLY);
                 try {
-                    int i = (int) Libcore.f857os.fstat(this.f856fd).st_size;
+                    int i = (int) Libcore.f855os.fstat(this.f854fd).st_size;
                     if (i == 0) {
                         this.unknownLength = true;
                         i = 8192;
                     }
                     this.bytes = new byte[i];
                 } catch (ErrnoException e) {
-                    IoUtils.closeQuietly(this.f856fd);
+                    IoUtils.closeQuietly(this.f854fd);
                     throw e.rethrowAsIOException();
                 }
             } catch (FileNotFoundException e2) {
@@ -203,8 +203,8 @@ public final class IoUtils {
             int length = this.bytes.length;
             while (true) {
                 try {
-                    C4699Os os = Libcore.f857os;
-                    FileDescriptor fileDescriptor = this.f856fd;
+                    C4711Os os = Libcore.f855os;
+                    FileDescriptor fileDescriptor = this.f854fd;
                     byte[] bArr = this.bytes;
                     int i = this.count;
                     int read = os.read(fileDescriptor, bArr, i, length - i);
@@ -226,11 +226,11 @@ public final class IoUtils {
                 } catch (ErrnoException e) {
                     throw e.rethrowAsIOException();
                 } catch (Throwable th) {
-                    IoUtils.closeQuietly(this.f856fd);
+                    IoUtils.closeQuietly(this.f854fd);
                     throw th;
                 }
             }
-            IoUtils.closeQuietly(this.f856fd);
+            IoUtils.closeQuietly(this.f854fd);
             return this;
         }
 

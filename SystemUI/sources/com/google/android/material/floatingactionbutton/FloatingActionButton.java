@@ -23,7 +23,7 @@ import androidx.core.util.Preconditions;
 import androidx.core.view.TintableBackgroundView;
 import androidx.core.view.ViewCompat;
 import androidx.core.widget.TintableImageSourceView;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.animation.MotionSpec;
 import com.google.android.material.animation.TransformationCallback;
 import com.google.android.material.appbar.AppBarLayout;
@@ -43,7 +43,7 @@ import java.util.List;
 
 public class FloatingActionButton extends VisibilityAwareImageButton implements TintableBackgroundView, TintableImageSourceView, ExpandableTransformationWidget, Shapeable, CoordinatorLayout.AttachedBehavior {
     private static final int AUTO_MINI_LARGEST_SCREEN_WIDTH = 470;
-    private static final int DEF_STYLE_RES = C3621R.style.Widget_Design_FloatingActionButton;
+    private static final int DEF_STYLE_RES = C3631R.style.Widget_Design_FloatingActionButton;
     private static final String EXPANDABLE_WIDGET_HELPER_KEY = "expandableWidgetHelper";
     private static final String LOG_TAG = "FloatingActionButton";
     public static final int NO_CUSTOM_SIZE = 0;
@@ -85,7 +85,7 @@ public class FloatingActionButton extends VisibilityAwareImageButton implements 
     }
 
     public FloatingActionButton(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, C3621R.attr.floatingActionButtonStyle);
+        this(context, attributeSet, C3631R.attr.floatingActionButtonStyle);
     }
 
     /* JADX WARNING: Illegal instructions before constructor call */
@@ -103,7 +103,7 @@ public class FloatingActionButton extends VisibilityAwareImageButton implements 
             r11.<init>()
             r10.touchArea = r11
             android.content.Context r11 = r10.getContext()
-            int[] r2 = com.google.android.material.C3621R.styleable.FloatingActionButton
+            int[] r2 = com.google.android.material.C3631R.styleable.FloatingActionButton
             r7 = 0
             int[] r5 = new int[r7]
             r0 = r11
@@ -111,53 +111,53 @@ public class FloatingActionButton extends VisibilityAwareImageButton implements 
             r3 = r13
             r4 = r6
             android.content.res.TypedArray r0 = com.google.android.material.internal.ThemeEnforcement.obtainStyledAttributes(r0, r1, r2, r3, r4, r5)
-            int r1 = com.google.android.material.C3621R.styleable.FloatingActionButton_backgroundTint
+            int r1 = com.google.android.material.C3631R.styleable.FloatingActionButton_backgroundTint
             android.content.res.ColorStateList r1 = com.google.android.material.resources.MaterialResources.getColorStateList((android.content.Context) r11, (android.content.res.TypedArray) r0, (int) r1)
             r10.backgroundTint = r1
-            int r1 = com.google.android.material.C3621R.styleable.FloatingActionButton_backgroundTintMode
+            int r1 = com.google.android.material.C3631R.styleable.FloatingActionButton_backgroundTintMode
             r2 = -1
             int r1 = r0.getInt(r1, r2)
             r3 = 0
             android.graphics.PorterDuff$Mode r1 = com.google.android.material.internal.ViewUtils.parseTintMode(r1, r3)
             r10.backgroundTintMode = r1
-            int r1 = com.google.android.material.C3621R.styleable.FloatingActionButton_rippleColor
+            int r1 = com.google.android.material.C3631R.styleable.FloatingActionButton_rippleColor
             android.content.res.ColorStateList r1 = com.google.android.material.resources.MaterialResources.getColorStateList((android.content.Context) r11, (android.content.res.TypedArray) r0, (int) r1)
             r10.rippleColor = r1
-            int r1 = com.google.android.material.C3621R.styleable.FloatingActionButton_fabSize
+            int r1 = com.google.android.material.C3631R.styleable.FloatingActionButton_fabSize
             int r1 = r0.getInt(r1, r2)
             r10.size = r1
-            int r1 = com.google.android.material.C3621R.styleable.FloatingActionButton_fabCustomSize
+            int r1 = com.google.android.material.C3631R.styleable.FloatingActionButton_fabCustomSize
             int r1 = r0.getDimensionPixelSize(r1, r7)
             r10.customSize = r1
-            int r1 = com.google.android.material.C3621R.styleable.FloatingActionButton_borderWidth
+            int r1 = com.google.android.material.C3631R.styleable.FloatingActionButton_borderWidth
             int r1 = r0.getDimensionPixelSize(r1, r7)
             r10.borderWidth = r1
-            int r1 = com.google.android.material.C3621R.styleable.FloatingActionButton_elevation
+            int r1 = com.google.android.material.C3631R.styleable.FloatingActionButton_elevation
             r2 = 0
             float r1 = r0.getDimension(r1, r2)
-            int r3 = com.google.android.material.C3621R.styleable.FloatingActionButton_hoveredFocusedTranslationZ
+            int r3 = com.google.android.material.C3631R.styleable.FloatingActionButton_hoveredFocusedTranslationZ
             float r3 = r0.getDimension(r3, r2)
-            int r4 = com.google.android.material.C3621R.styleable.FloatingActionButton_pressedTranslationZ
+            int r4 = com.google.android.material.C3631R.styleable.FloatingActionButton_pressedTranslationZ
             float r2 = r0.getDimension(r4, r2)
-            int r4 = com.google.android.material.C3621R.styleable.FloatingActionButton_useCompatPadding
+            int r4 = com.google.android.material.C3631R.styleable.FloatingActionButton_useCompatPadding
             boolean r4 = r0.getBoolean(r4, r7)
             r10.compatPadding = r4
             android.content.res.Resources r4 = r10.getResources()
-            int r5 = com.google.android.material.C3621R.dimen.mtrl_fab_min_touch_target
+            int r5 = com.google.android.material.C3631R.dimen.mtrl_fab_min_touch_target
             int r4 = r4.getDimensionPixelSize(r5)
-            int r5 = com.google.android.material.C3621R.styleable.FloatingActionButton_maxImageSize
+            int r5 = com.google.android.material.C3631R.styleable.FloatingActionButton_maxImageSize
             int r5 = r0.getDimensionPixelSize(r5, r7)
             r10.setMaxImageSize(r5)
-            int r5 = com.google.android.material.C3621R.styleable.FloatingActionButton_showMotionSpec
+            int r5 = com.google.android.material.C3631R.styleable.FloatingActionButton_showMotionSpec
             com.google.android.material.animation.MotionSpec r5 = com.google.android.material.animation.MotionSpec.createFromAttribute(r11, r0, r5)
-            int r8 = com.google.android.material.C3621R.styleable.FloatingActionButton_hideMotionSpec
+            int r8 = com.google.android.material.C3631R.styleable.FloatingActionButton_hideMotionSpec
             com.google.android.material.animation.MotionSpec r8 = com.google.android.material.animation.MotionSpec.createFromAttribute(r11, r0, r8)
             com.google.android.material.shape.CornerSize r9 = com.google.android.material.shape.ShapeAppearanceModel.PILL
             com.google.android.material.shape.ShapeAppearanceModel$Builder r11 = com.google.android.material.shape.ShapeAppearanceModel.builder((android.content.Context) r11, (android.util.AttributeSet) r12, (int) r13, (int) r6, (com.google.android.material.shape.CornerSize) r9)
             com.google.android.material.shape.ShapeAppearanceModel r11 = r11.build()
-            int r6 = com.google.android.material.C3621R.styleable.FloatingActionButton_ensureMinTouchTargetSize
+            int r6 = com.google.android.material.C3631R.styleable.FloatingActionButton_ensureMinTouchTargetSize
             boolean r6 = r0.getBoolean(r6, r7)
-            int r7 = com.google.android.material.C3621R.styleable.FloatingActionButton_android_enabled
+            int r7 = com.google.android.material.C3631R.styleable.FloatingActionButton_android_enabled
             r9 = 1
             boolean r7 = r0.getBoolean(r7, r9)
             r10.setEnabled(r7)
@@ -501,9 +501,9 @@ public class FloatingActionButton extends VisibilityAwareImageButton implements 
         Resources resources = getResources();
         if (i != -1) {
             if (i != 1) {
-                return resources.getDimensionPixelSize(C3621R.dimen.design_fab_size_normal);
+                return resources.getDimensionPixelSize(C3631R.dimen.design_fab_size_normal);
             }
-            return resources.getDimensionPixelSize(C3621R.dimen.design_fab_size_mini);
+            return resources.getDimensionPixelSize(C3631R.dimen.design_fab_size_mini);
         } else if (Math.max(resources.getConfiguration().screenWidthDp, resources.getConfiguration().screenHeightDp) < AUTO_MINI_LARGEST_SCREEN_WIDTH) {
             return getSizeDimension(1);
         } else {
@@ -653,8 +653,8 @@ public class FloatingActionButton extends VisibilityAwareImageButton implements 
 
         public BaseBehavior(Context context, AttributeSet attributeSet) {
             super(context, attributeSet);
-            TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C3621R.styleable.FloatingActionButton_Behavior_Layout);
-            this.autoHideEnabled = obtainStyledAttributes.getBoolean(C3621R.styleable.FloatingActionButton_Behavior_Layout_behavior_autoHide, true);
+            TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C3631R.styleable.FloatingActionButton_Behavior_Layout);
+            this.autoHideEnabled = obtainStyledAttributes.getBoolean(C3631R.styleable.FloatingActionButton_Behavior_Layout_behavior_autoHide, true);
             obtainStyledAttributes.recycle();
         }
 

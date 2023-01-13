@@ -10,6 +10,6 @@ public final /* synthetic */ class ManageEducationView$$ExternalSyntheticLambda4
     }
 
     public final void run() {
-        ManageEducationView.m3430hide$lambda4(this.f$0);
+        ManageEducationView.m3434hide$lambda4(this.f$0);
     }
 }

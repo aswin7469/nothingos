@@ -28,7 +28,7 @@ public class LiftWakeGestureController {
 
         public void onSensorChanged(SensorEvent sensorEvent) {
             synchronized (LiftWakeGestureController.this.mLock) {
-                NTLogUtil.m1680d(LiftWakeGestureController.TAG, "onSensorChanged: isNear = " + LiftWakeGestureController.this.mIsNear);
+                NTLogUtil.m1686d(LiftWakeGestureController.TAG, "onSensorChanged: isNear = " + LiftWakeGestureController.this.mIsNear);
                 if (!LiftWakeGestureController.this.mIsNear) {
                     LiftWakeGestureController.this.mHandler.post(LiftWakeGestureController.this.mLiftUpRunnable);
                 }
@@ -53,7 +53,7 @@ public class LiftWakeGestureController {
     };
     private ThresholdSensor.Listener mListener = new ThresholdSensor.Listener() {
         public void onThresholdCrossed(ThresholdSensorEvent thresholdSensorEvent) {
-            NTLogUtil.m1680d(LiftWakeGestureController.TAG, "onThresholdCrossed: event = " + thresholdSensorEvent + " mIsCancelLiftInAodNear =" + LiftWakeGestureController.this.mIsCancelLiftInAodNear);
+            NTLogUtil.m1686d(LiftWakeGestureController.TAG, "onThresholdCrossed: event = " + thresholdSensorEvent + " mIsCancelLiftInAodNear =" + LiftWakeGestureController.this.mIsCancelLiftInAodNear);
             boolean unused = LiftWakeGestureController.this.mIsNear = thresholdSensorEvent.getBelow();
             if (!LiftWakeGestureController.this.mIsNear && LiftWakeGestureController.this.mIsCancelLiftInAodNear) {
                 LiftWakeGestureController.this.requestLiftSensorTrigger();
@@ -71,7 +71,7 @@ public class LiftWakeGestureController {
 
         public void onSensorChanged(SensorEvent sensorEvent) {
             synchronized (LiftWakeGestureController.this.mLockForMotion) {
-                NTLogUtil.m1680d(LiftWakeGestureController.TAG, "onSensorChanged: isNear = " + LiftWakeGestureController.this.mIsNear + " event.value = " + sensorEvent.values[0]);
+                NTLogUtil.m1686d(LiftWakeGestureController.TAG, "onSensorChanged: isNear = " + LiftWakeGestureController.this.mIsNear + " event.value = " + sensorEvent.values[0]);
                 if (!LiftWakeGestureController.this.mIsNear && sensorEvent.values[0] == 1.0f) {
                     LiftWakeGestureController.this.mHandler.post(LiftWakeGestureController.this.mMotionRunnable);
                 }
@@ -81,7 +81,7 @@ public class LiftWakeGestureController {
     /* access modifiers changed from: private */
     public final Runnable mMotionRunnable = new Runnable() {
         public void run() {
-            NTLogUtil.m1680d(LiftWakeGestureController.TAG, "mMotionRunnable= callbacks: " + LiftWakeGestureController.this.mCallback);
+            NTLogUtil.m1686d(LiftWakeGestureController.TAG, "mMotionRunnable= callbacks: " + LiftWakeGestureController.this.mCallback);
             if (LiftWakeGestureController.this.mCallback != null) {
                 LiftWakeGestureController.this.mCallback.onMotion();
             }
@@ -130,12 +130,12 @@ public class LiftWakeGestureController {
     }
 
     public void requestWakeUpTrigger() {
-        NTLogUtil.m1680d(TAG, "requestWakeUpTrigger ");
+        NTLogUtil.m1686d(TAG, "requestWakeUpTrigger ");
         requestLiftSensorTrigger();
     }
 
     public void cancelWakeUpTrigger() {
-        NTLogUtil.m1680d(TAG, "cancelWakeUpTrigger: ");
+        NTLogUtil.m1686d(TAG, "cancelWakeUpTrigger: ");
         this.mIsCancelLiftInAodNear = false;
         cancelLiftSensorTrigger();
         if (!this.mMotionTriggerRequested && !this.mLiftTriggerRequested) {
@@ -148,13 +148,13 @@ public class LiftWakeGestureController {
             Sensor sensor = this.mMotionSensor;
             if (sensor != null && !this.mMotionTriggerRequested) {
                 this.mMotionTriggerRequested = true;
-                NTLogUtil.m1680d(TAG, "requestMotionTrigger: result = " + this.mSensorManager.registerListener(this.mMotionListener, sensor, 3, this.mHandler));
+                NTLogUtil.m1686d(TAG, "requestMotionTrigger: result = " + this.mSensorManager.registerListener(this.mMotionListener, sensor, 3, this.mHandler));
             }
         }
     }
 
     public void cancelMotionTrigger() {
-        NTLogUtil.m1680d(TAG, "cancelMotionTrigger: ");
+        NTLogUtil.m1686d(TAG, "cancelMotionTrigger: ");
         synchronized (this.mLockForMotion) {
             Sensor sensor = this.mMotionSensor;
             if (sensor != null && this.mMotionTriggerRequested) {
@@ -168,7 +168,7 @@ public class LiftWakeGestureController {
     }
 
     public void requestProximityTrigger() {
-        NTLogUtil.m1680d(TAG, "requestProximityTrigger: mProximitySensor = " + this.mProximitySensor);
+        NTLogUtil.m1686d(TAG, "requestProximityTrigger: mProximitySensor = " + this.mProximitySensor);
         synchronized (this.mLockForProximity) {
             ProximitySensor proximitySensor = this.mProximitySensor;
             if (proximitySensor != null) {
@@ -203,13 +203,13 @@ public class LiftWakeGestureController {
 
     private boolean shouldEnableLiftGestureLp() {
         boolean isLiftWakeEnable = ((AODController) NTDependencyEx.get(AODController.class)).isLiftWakeEnable();
-        NTLogUtil.m1680d(TAG, "shouldEnableLiftGestureLp: liftWakeEnable = " + isLiftWakeEnable);
+        NTLogUtil.m1686d(TAG, "shouldEnableLiftGestureLp: liftWakeEnable = " + isLiftWakeEnable);
         return isLiftWakeEnable && isLiftSensorSupported();
     }
 
     public void requestLiftSensorTrigger() {
         if (shouldEnableLiftGestureLp()) {
-            NTLogUtil.m1680d(TAG, "requestLiftSensorTrigger mLiftTriggerRequested=" + this.mLiftTriggerRequested);
+            NTLogUtil.m1686d(TAG, "requestLiftSensorTrigger mLiftTriggerRequested=" + this.mLiftTriggerRequested);
             this.mIsCancelLiftInAodNear = false;
             synchronized (this.mLock) {
                 Sensor sensor = this.mLiftSensor;
@@ -222,7 +222,7 @@ public class LiftWakeGestureController {
     }
 
     public void cancelLiftSensorTrigger() {
-        NTLogUtil.m1680d(TAG, "cancelLiftSensorTrigger mLiftTriggerRequested=" + this.mLiftTriggerRequested);
+        NTLogUtil.m1686d(TAG, "cancelLiftSensorTrigger mLiftTriggerRequested=" + this.mLiftTriggerRequested);
         synchronized (this.mLock) {
             Sensor sensor = this.mLiftSensor;
             if (sensor != null && this.mLiftTriggerRequested) {
@@ -233,7 +233,7 @@ public class LiftWakeGestureController {
     }
 
     public void mayCancelLiftSensorTrigger() {
-        NTLogUtil.m1680d(TAG, "mayCancelLiftSensorTrigger mIsNear=" + this.mIsNear + ", shouldShowAODView=" + ((AODController) NTDependencyEx.get(AODController.class)).shouldShowAODView());
+        NTLogUtil.m1686d(TAG, "mayCancelLiftSensorTrigger mIsNear=" + this.mIsNear + ", shouldShowAODView=" + ((AODController) NTDependencyEx.get(AODController.class)).shouldShowAODView());
         if (this.mIsNear && ((AODController) NTDependencyEx.get(AODController.class)).shouldShowAODView()) {
             cancelLiftSensorTrigger();
             this.mIsCancelLiftInAodNear = true;

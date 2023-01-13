@@ -15,6 +15,6 @@ public final /* synthetic */ class QSTileViewImpl$$ExternalSyntheticLambda3 impl
     }
 
     public final boolean onLongClick(View view) {
-        return QSTileViewImpl.m2961init$lambda7(this.f$0, this.f$1, view);
+        return QSTileViewImpl.m2966init$lambda7(this.f$0, this.f$1, view);
     }
 }

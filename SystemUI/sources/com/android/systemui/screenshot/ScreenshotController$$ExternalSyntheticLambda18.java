@@ -17,6 +17,6 @@ public final /* synthetic */ class ScreenshotController$$ExternalSyntheticLambda
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo37437x926e76e9(this.f$1, this.f$2, (Rect) obj);
+        this.f$0.mo37438x926e76e9(this.f$1, this.f$2, (Rect) obj);
     }
 }

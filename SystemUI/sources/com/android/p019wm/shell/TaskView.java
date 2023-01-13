@@ -113,7 +113,7 @@ public class TaskView extends SurfaceView implements SurfaceHolder.Callback, She
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startShortcutActivity$0$com-android-wm-shell-TaskView  reason: not valid java name */
-    public /* synthetic */ void m3387lambda$startShortcutActivity$0$comandroidwmshellTaskView(ShortcutInfo shortcutInfo, ActivityOptions activityOptions) {
+    public /* synthetic */ void m3391lambda$startShortcutActivity$0$comandroidwmshellTaskView(ShortcutInfo shortcutInfo, ActivityOptions activityOptions) {
         WindowContainerTransaction windowContainerTransaction = new WindowContainerTransaction();
         windowContainerTransaction.startShortcut(this.mContext.getPackageName(), shortcutInfo, activityOptions.toBundle());
         this.mTaskViewTransitions.startTaskView(windowContainerTransaction, this);
@@ -134,7 +134,7 @@ public class TaskView extends SurfaceView implements SurfaceHolder.Callback, She
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startActivity$1$com-android-wm-shell-TaskView  reason: not valid java name */
-    public /* synthetic */ void m3386lambda$startActivity$1$comandroidwmshellTaskView(PendingIntent pendingIntent, Intent intent, ActivityOptions activityOptions) {
+    public /* synthetic */ void m3390lambda$startActivity$1$comandroidwmshellTaskView(PendingIntent pendingIntent, Intent intent, ActivityOptions activityOptions) {
         WindowContainerTransaction windowContainerTransaction = new WindowContainerTransaction();
         windowContainerTransaction.sendPendingIntent(pendingIntent, intent, activityOptions.toBundle());
         this.mTaskViewTransitions.startTaskView(windowContainerTransaction, this);
@@ -151,7 +151,7 @@ public class TaskView extends SurfaceView implements SurfaceHolder.Callback, She
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$prepareActivityOptions$2$com-android-wm-shell-TaskView  reason: not valid java name */
-    public /* synthetic */ void m3383lambda$prepareActivityOptions$2$comandroidwmshellTaskView(Binder binder) {
+    public /* synthetic */ void m3387lambda$prepareActivityOptions$2$comandroidwmshellTaskView(Binder binder) {
         this.mTaskOrganizer.setPendingLaunchCookieListener(binder, this);
     }
 
@@ -215,14 +215,14 @@ public class TaskView extends SurfaceView implements SurfaceHolder.Callback, She
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$performRelease$3$com-android-wm-shell-TaskView  reason: not valid java name */
-    public /* synthetic */ void m3381lambda$performRelease$3$comandroidwmshellTaskView() {
+    public /* synthetic */ void m3385lambda$performRelease$3$comandroidwmshellTaskView() {
         this.mTaskOrganizer.removeListener(this);
         resetTaskInfo();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$performRelease$4$com-android-wm-shell-TaskView  reason: not valid java name */
-    public /* synthetic */ void m3382lambda$performRelease$4$comandroidwmshellTaskView() {
+    public /* synthetic */ void m3386lambda$performRelease$4$comandroidwmshellTaskView() {
         this.mListener.onReleased();
     }
 
@@ -243,13 +243,13 @@ public class TaskView extends SurfaceView implements SurfaceHolder.Callback, She
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateTaskVisibility$6$com-android-wm-shell-TaskView  reason: not valid java name */
-    public /* synthetic */ void m3392lambda$updateTaskVisibility$6$comandroidwmshellTaskView(int i, SurfaceControl.Transaction transaction) {
+    public /* synthetic */ void m3396lambda$updateTaskVisibility$6$comandroidwmshellTaskView(int i, SurfaceControl.Transaction transaction) {
         this.mListenerExecutor.execute(new TaskView$$ExternalSyntheticLambda9(this, i));
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateTaskVisibility$5$com-android-wm-shell-TaskView  reason: not valid java name */
-    public /* synthetic */ void m3391lambda$updateTaskVisibility$5$comandroidwmshellTaskView(int i) {
+    public /* synthetic */ void m3395lambda$updateTaskVisibility$5$comandroidwmshellTaskView(int i) {
         this.mListener.onTaskVisibilityChanged(i, this.mSurfaceCreated);
     }
 
@@ -276,13 +276,13 @@ public class TaskView extends SurfaceView implements SurfaceHolder.Callback, She
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onTaskAppeared$7$com-android-wm-shell-TaskView  reason: not valid java name */
-    public /* synthetic */ void m3378lambda$onTaskAppeared$7$comandroidwmshellTaskView(int i, SurfaceControl.Transaction transaction) {
+    public /* synthetic */ void m3382lambda$onTaskAppeared$7$comandroidwmshellTaskView(int i, SurfaceControl.Transaction transaction) {
         setResizeBackgroundColor(transaction, i);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onTaskAppeared$8$com-android-wm-shell-TaskView  reason: not valid java name */
-    public /* synthetic */ void m3379lambda$onTaskAppeared$8$comandroidwmshellTaskView(int i, ComponentName componentName) {
+    public /* synthetic */ void m3383lambda$onTaskAppeared$8$comandroidwmshellTaskView(int i, ComponentName componentName) {
         this.mListener.onTaskCreated(i, componentName);
     }
 
@@ -300,7 +300,7 @@ public class TaskView extends SurfaceView implements SurfaceHolder.Callback, She
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onTaskVanished$9$com-android-wm-shell-TaskView  reason: not valid java name */
-    public /* synthetic */ void m3380lambda$onTaskVanished$9$comandroidwmshellTaskView(int i) {
+    public /* synthetic */ void m3384lambda$onTaskVanished$9$comandroidwmshellTaskView(int i) {
         this.mListener.onTaskRemovalStarted(i);
     }
 
@@ -319,7 +319,7 @@ public class TaskView extends SurfaceView implements SurfaceHolder.Callback, She
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onBackPressedOnTaskRoot$10$com-android-wm-shell-TaskView  reason: not valid java name */
-    public /* synthetic */ void m3377lambda$onBackPressedOnTaskRoot$10$comandroidwmshellTaskView(int i) {
+    public /* synthetic */ void m3381lambda$onBackPressedOnTaskRoot$10$comandroidwmshellTaskView(int i) {
         this.mListener.onBackPressedOnTaskRoot(i);
     }
 
@@ -361,13 +361,13 @@ public class TaskView extends SurfaceView implements SurfaceHolder.Callback, She
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$surfaceCreated$11$com-android-wm-shell-TaskView  reason: not valid java name */
-    public /* synthetic */ void m3388lambda$surfaceCreated$11$comandroidwmshellTaskView() {
+    public /* synthetic */ void m3392lambda$surfaceCreated$11$comandroidwmshellTaskView() {
         this.mListener.onInitialized();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$surfaceCreated$12$com-android-wm-shell-TaskView  reason: not valid java name */
-    public /* synthetic */ void m3389lambda$surfaceCreated$12$comandroidwmshellTaskView() {
+    public /* synthetic */ void m3393lambda$surfaceCreated$12$comandroidwmshellTaskView() {
         if (this.mTaskToken != null) {
             if (isUsingShellTransitions()) {
                 this.mTaskViewTransitions.setTaskViewVisible(this, true);
@@ -391,7 +391,7 @@ public class TaskView extends SurfaceView implements SurfaceHolder.Callback, She
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$surfaceDestroyed$13$com-android-wm-shell-TaskView  reason: not valid java name */
-    public /* synthetic */ void m3390lambda$surfaceDestroyed$13$comandroidwmshellTaskView() {
+    public /* synthetic */ void m3394lambda$surfaceDestroyed$13$comandroidwmshellTaskView() {
         if (this.mTaskToken != null) {
             if (isUsingShellTransitions()) {
                 this.mTaskViewTransitions.setTaskViewVisible(this, false);
@@ -463,7 +463,7 @@ public class TaskView extends SurfaceView implements SurfaceHolder.Callback, She
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$prepareCloseAnimation$14$com-android-wm-shell-TaskView  reason: not valid java name */
-    public /* synthetic */ void m3384lambda$prepareCloseAnimation$14$comandroidwmshellTaskView(int i) {
+    public /* synthetic */ void m3388lambda$prepareCloseAnimation$14$comandroidwmshellTaskView(int i) {
         this.mListener.onTaskRemovalStarted(i);
     }
 
@@ -493,7 +493,7 @@ public class TaskView extends SurfaceView implements SurfaceHolder.Callback, She
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$prepareOpenAnimation$15$com-android-wm-shell-TaskView  reason: not valid java name */
-    public /* synthetic */ void m3385lambda$prepareOpenAnimation$15$comandroidwmshellTaskView(boolean z, int i, ComponentName componentName) {
+    public /* synthetic */ void m3389lambda$prepareOpenAnimation$15$comandroidwmshellTaskView(boolean z, int i, ComponentName componentName) {
         if (z) {
             this.mListener.onTaskCreated(i, componentName);
         }

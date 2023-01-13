@@ -708,9 +708,15 @@
     <string name="force_rtl_layout_all_locales_summary">எல்லா மொழிகளுக்கும் திரையின் தளவமைப்பு திசையை RTL க்கு மாற்றும்</string>
     <string name="forced_resizable_secondary_display">இரண்டாம்நிலைத் திரையில் ஆப்ஸ் வேலை செய்யாமல் போகக்கூடும்.</string>
     <string name="game_status">விளையாடுகிறீர்கள்</string>
+    <string name="gamemode_description">நீங்கள் விளையாட்டில் இருக்கிறீர்களா என்பதை விளையாட்டு பயன்முறை தீர்மானிக்கும், மேலும் உங்களுக்காக தானாகவே இயக்கப்படும்</string>
+    <string name="gamemode_gamedashboard_title">விளையாட்டு டேஷ்போர்டு</string>
+    <string name="gamemode_notification_content">அமைப்புகளுக்குச் செல்ல தட்டவும்</string>
+    <string name="gamemode_notification_title">விளையாட்டு பயன்முறை தற்போது இயக்கத்தில் உள்ளது</string>
     <string name="global_action_lock_message">மேலும் விருப்பங்களுக்கு மொபைலை அன்லாக் செய்யவும்</string>
     <string name="global_action_screenshot">ஸ்கிரீன்ஷாட்</string>
     <string name="global_action_smart_lock_disabled">Smart Lock முடக்கப்பட்டது</string>
+    <string name="gm_guide_status_on">ஆன்</string>
+    <string name="gm_notification_title">விளையாட்டு பயன்முறை</string>
     <string name="go_to_web">உலாவிக்குச் செல்</string>
     <string name="got_it">சரி</string>
     <string name="guest_exit_guest">கெஸ்ட்டை அகற்று</string>

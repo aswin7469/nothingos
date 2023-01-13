@@ -708,9 +708,15 @@
     <string name="force_rtl_layout_all_locales_summary">บังคับทิศทางการจัดวางหน้าจอเป็นขวาไปซ้ายสำหรับทุกภาษา</string>
     <string name="forced_resizable_secondary_display">แอปอาจไม่ทำงานในจอแสดงผลรอง</string>
     <string name="game_status">กำลังเล่น</string>
+    <string name="gamemode_description">โหมดเกมจะกำหนดว่าคุณอยู่ในเกมหรือไม่และจะเปิดโดยอัตโนมัติ</string>
+    <string name="gamemode_gamedashboard_title">แดชบอร์ดเกม</string>
+    <string name="gamemode_notification_content">แตะเพื่อไปที่การตั้งค่า</string>
+    <string name="gamemode_notification_title">เปิดโหมดเกมอยู่ในขณะนี้</string>
     <string name="global_action_lock_message">ปลดล็อกโทรศัพท์เพื่อดูตัวเลือกเพิ่มเติม</string>
     <string name="global_action_screenshot">ภาพหน้าจอ</string>
     <string name="global_action_smart_lock_disabled">ปิดใช้ Smart Lock แล้ว</string>
+    <string name="gm_guide_status_on">เปิด</string>
+    <string name="gm_notification_title">โหมดเกม</string>
     <string name="go_to_web">ไปที่เบราว์เซอร์</string>
     <string name="got_it">รับทราบ</string>
     <string name="guest_exit_guest">นำผู้ใช้ชั่วคราวออก</string>

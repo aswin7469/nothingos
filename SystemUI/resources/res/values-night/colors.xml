@@ -28,7 +28,7 @@
     <color name="nothing_bluetooth_denoise_selected">@android:color/dim_foreground_light</color>
     <color name="nothing_bluetooth_denoise_sound">@android:color/input_method_navigation_guard</color>
     <color name="nothing_bluetooth_denoise_sound_selected">@android:color/search_url_text_pressed</color>
-    <color name="nothing_bluetooth_panel_denoise_bg">#000000</color>
+    <color name="nothing_bluetooth_panel_denoise_bg">#303033</color>
     <color name="notif_pill_text">@color/material_dynamic_neutral95</color>
     <color name="notification_channel_dialog_separator">@color/GM2_grey_700</color>
     <color name="notification_divider_color">@android:color/holo_primary_dark</color>
@@ -51,6 +51,8 @@
     <color name="nt_biometric_title_color">@android:color/bright_foreground_dark_disabled</color>
     <color name="nt_color_highlight_material">#1af0f2f2</color>
     <color name="nt_fgs_dialog_bg_color">#1b1d1f</color>
+    <color name="nt_keyguard_button_background">@android:color/dim_foreground_light</color>
+    <color name="nt_keyguard_button_icon_color">@android:color/bright_foreground_dark_disabled</color>
     <color name="overlay_background_protection_start">#80000000</color>
     <color name="people_tile_background">@color/material_dynamic_secondary20</color>
     <color name="qs_user_switcher_avatar_background">#3c4043</color>

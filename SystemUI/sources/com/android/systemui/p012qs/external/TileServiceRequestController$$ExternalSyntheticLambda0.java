@@ -13,6 +13,6 @@ public final /* synthetic */ class TileServiceRequestController$$ExternalSynthet
     }
 
     public final void onClick(DialogInterface dialogInterface, int i) {
-        TileServiceRequestController.m2950createDialog$lambda2(this.f$0, dialogInterface, i);
+        TileServiceRequestController.m2955createDialog$lambda2(this.f$0, dialogInterface, i);
     }
 }

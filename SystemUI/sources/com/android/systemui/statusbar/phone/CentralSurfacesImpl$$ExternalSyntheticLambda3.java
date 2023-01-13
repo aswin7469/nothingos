@@ -11,6 +11,6 @@ public final /* synthetic */ class CentralSurfacesImpl$$ExternalSyntheticLambda3
     }
 
     public final void onMessage(int i) {
-        this.f$0.mo43896xc62c853e(i);
+        this.f$0.mo43905xc62c853e(i);
     }
 }

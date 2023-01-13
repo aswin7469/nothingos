@@ -340,7 +340,7 @@ public class Transitions implements RemoteCallable<Transitions> {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$attemptMergeTransition$1$com-android-wm-shell-transition-Transitions */
-    public /* synthetic */ void mo51283x97bba396(ActiveTransition activeTransition, WindowContainerTransaction windowContainerTransaction, WindowContainerTransactionCallback windowContainerTransactionCallback) {
+    public /* synthetic */ void mo51294x97bba396(ActiveTransition activeTransition, WindowContainerTransaction windowContainerTransaction, WindowContainerTransactionCallback windowContainerTransactionCallback) {
         onFinish(activeTransition.mToken, windowContainerTransaction, windowContainerTransactionCallback);
     }
 
@@ -351,7 +351,7 @@ public class Transitions implements RemoteCallable<Transitions> {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startAnimation$2$com-android-wm-shell-transition-Transitions */
-    public /* synthetic */ void mo51284xe84873b9(ActiveTransition activeTransition, WindowContainerTransaction windowContainerTransaction, WindowContainerTransactionCallback windowContainerTransactionCallback) {
+    public /* synthetic */ void mo51295xe84873b9(ActiveTransition activeTransition, WindowContainerTransaction windowContainerTransaction, WindowContainerTransactionCallback windowContainerTransactionCallback) {
         onFinish(activeTransition.mToken, windowContainerTransaction, windowContainerTransactionCallback);
     }
 
@@ -511,7 +511,7 @@ public class Transitions implements RemoteCallable<Transitions> {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onTransitionReady$0$com-android-wm-shell-transition-Transitions$TransitionPlayerImpl */
-        public /* synthetic */ void mo51300x7172b0d0(IBinder iBinder, TransitionInfo transitionInfo, SurfaceControl.Transaction transaction, SurfaceControl.Transaction transaction2) {
+        public /* synthetic */ void mo51311x7172b0d0(IBinder iBinder, TransitionInfo transitionInfo, SurfaceControl.Transaction transaction, SurfaceControl.Transaction transaction2) {
             Transitions.this.onTransitionReady(iBinder, transitionInfo, transaction, transaction2);
         }
 
@@ -521,7 +521,7 @@ public class Transitions implements RemoteCallable<Transitions> {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$requestStartTransition$1$com-android-wm-shell-transition-Transitions$TransitionPlayerImpl */
-        public /* synthetic */ void mo51301x5912739c(IBinder iBinder, TransitionRequestInfo transitionRequestInfo) {
+        public /* synthetic */ void mo51312x5912739c(IBinder iBinder, TransitionRequestInfo transitionRequestInfo) {
             Transitions.this.requestStartTransition(iBinder, transitionRequestInfo);
         }
 
@@ -554,7 +554,7 @@ public class Transitions implements RemoteCallable<Transitions> {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$registerRemote$0$com-android-wm-shell-transition-Transitions$ShellTransitionImpl */
-        public /* synthetic */ void mo51298x153a0b9f(TransitionFilter transitionFilter, RemoteTransition remoteTransition) {
+        public /* synthetic */ void mo51309x153a0b9f(TransitionFilter transitionFilter, RemoteTransition remoteTransition) {
             Transitions.this.mRemoteTransitionHandler.addFiltered(transitionFilter, remoteTransition);
         }
 
@@ -564,7 +564,7 @@ public class Transitions implements RemoteCallable<Transitions> {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$unregisterRemote$1$com-android-wm-shell-transition-Transitions$ShellTransitionImpl */
-        public /* synthetic */ void mo51299x95961cf9(RemoteTransition remoteTransition) {
+        public /* synthetic */ void mo51310x95961cf9(RemoteTransition remoteTransition) {
             Transitions.this.mRemoteTransitionHandler.removeFiltered(remoteTransition);
         }
     }
@@ -606,7 +606,7 @@ public class Transitions implements RemoteCallable<Transitions> {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onChange$0$com-android-wm-shell-transition-Transitions$SettingsObserver */
-        public /* synthetic */ void mo51296x7f68e1f9() {
+        public /* synthetic */ void mo51307x7f68e1f9() {
             Transitions transitions = Transitions.this;
             transitions.dispatchAnimScaleSetting(transitions.mTransitionAnimationScaleSetting);
         }

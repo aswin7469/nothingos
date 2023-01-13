@@ -17,6 +17,6 @@ public final /* synthetic */ class UdfpsController$UdfpsOverlayController$$Exter
     }
 
     public final void run() {
-        this.f$0.mo30841xcb946e3d(this.f$1, this.f$2, this.f$3);
+        this.f$0.mo30851xcb946e3d(this.f$1, this.f$2, this.f$3);
     }
 }

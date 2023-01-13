@@ -33,7 +33,7 @@ public class PriorityBlockingQueue<E> extends AbstractQueue<E> implements Blocki
     private final Condition notEmpty;
 
     /* renamed from: q */
-    private PriorityQueue<E> f759q;
+    private PriorityQueue<E> f757q;
     private transient Object[] queue;
     private transient int size;
 
@@ -563,11 +563,11 @@ public class PriorityBlockingQueue<E> extends AbstractQueue<E> implements Blocki
         this.lock.lock();
         try {
             PriorityQueue<E> priorityQueue = new PriorityQueue<>(Math.max(this.size, 1), this.comparator);
-            this.f759q = priorityQueue;
+            this.f757q = priorityQueue;
             priorityQueue.addAll(this);
             objectOutputStream.defaultWriteObject();
         } finally {
-            this.f759q = null;
+            this.f757q = null;
             this.lock.unlock();
         }
     }
@@ -575,13 +575,13 @@ public class PriorityBlockingQueue<E> extends AbstractQueue<E> implements Blocki
     private void readObject(ObjectInputStream objectInputStream) throws IOException, ClassNotFoundException {
         try {
             objectInputStream.defaultReadObject();
-            int size2 = this.f759q.size();
+            int size2 = this.f757q.size();
             SharedSecrets.getJavaObjectInputStreamAccess().checkArray(objectInputStream, Object[].class, size2);
             this.queue = new Object[Math.max(1, size2)];
-            this.comparator = this.f759q.comparator();
-            addAll(this.f759q);
+            this.comparator = this.f757q.comparator();
+            addAll(this.f757q);
         } finally {
-            this.f759q = null;
+            this.f757q = null;
         }
     }
 

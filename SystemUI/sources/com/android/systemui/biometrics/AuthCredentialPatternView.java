@@ -6,7 +6,7 @@ import com.android.internal.widget.LockPatternChecker;
 import com.android.internal.widget.LockPatternView;
 import com.android.internal.widget.LockscreenCredential;
 import com.android.internal.widget.VerifyCredentialResponse;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import java.util.List;
 
 public class AuthCredentialPatternView extends AuthCredentialView {
@@ -38,7 +38,7 @@ public class AuthCredentialPatternView extends AuthCredentialView {
             LockscreenCredential createPattern = LockscreenCredential.createPattern(list);
             try {
                 AuthCredentialPatternView authCredentialPatternView = AuthCredentialPatternView.this;
-                authCredentialPatternView.mPendingLockCheck = LockPatternChecker.verifyCredential(authCredentialPatternView.mLockPatternUtils, createPattern, AuthCredentialPatternView.this.mEffectiveUserId, 1, new C1970xce201d21(this));
+                authCredentialPatternView.mPendingLockCheck = LockPatternChecker.verifyCredential(authCredentialPatternView.mLockPatternUtils, createPattern, AuthCredentialPatternView.this.mEffectiveUserId, 1, new C1971xce201d21(this));
                 if (createPattern != null) {
                     createPattern.close();
                     return;
@@ -74,7 +74,7 @@ public class AuthCredentialPatternView extends AuthCredentialView {
     /* access modifiers changed from: protected */
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        LockPatternView findViewById = findViewById(C1893R.C1897id.lockPattern);
+        LockPatternView findViewById = findViewById(C1894R.C1898id.lockPattern);
         this.mLockPatternView = findViewById;
         findViewById.setOnPatternListener(new UnlockPatternListener());
         this.mLockPatternView.setInStealthMode(!this.mLockPatternUtils.isVisiblePatternEnabled(this.mUserId));

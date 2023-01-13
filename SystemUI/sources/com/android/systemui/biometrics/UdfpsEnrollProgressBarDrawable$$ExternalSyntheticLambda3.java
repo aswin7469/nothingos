@@ -11,6 +11,6 @@ public final /* synthetic */ class UdfpsEnrollProgressBarDrawable$$ExternalSynth
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        this.f$0.mo30925xf6eb18e8(valueAnimator);
+        this.f$0.mo30935xf6eb18e8(valueAnimator);
     }
 }

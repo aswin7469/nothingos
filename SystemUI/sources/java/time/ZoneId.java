@@ -44,15 +44,15 @@ public abstract class ZoneId implements Serializable {
     }
 
     /* renamed from: of */
-    public static ZoneId m933of(String str, Map<String, String> map) {
+    public static ZoneId m931of(String str, Map<String, String> map) {
         Objects.requireNonNull(str, "zoneId");
         Objects.requireNonNull(map, "aliasMap");
-        return m932of((String) Objects.requireNonNullElse(map.get(str), str));
+        return m930of((String) Objects.requireNonNullElse(map.get(str), str));
     }
 
     /* renamed from: of */
-    public static ZoneId m932of(String str) {
-        return m934of(str, true);
+    public static ZoneId m930of(String str) {
+        return m932of(str, true);
     }
 
     public static ZoneId ofOffset(String str, ZoneOffset zoneOffset) {
@@ -71,10 +71,10 @@ public abstract class ZoneId implements Serializable {
     }
 
     /* renamed from: of */
-    static ZoneId m934of(String str, boolean z) {
+    static ZoneId m932of(String str, boolean z) {
         Objects.requireNonNull(str, "zoneId");
         if (str.length() <= 1 || str.startsWith("+") || str.startsWith(LanguageTag.SEP)) {
-            return ZoneOffset.m935of(str);
+            return ZoneOffset.m933of(str);
         }
         if (str.startsWith("UTC") || str.startsWith("GMT")) {
             return ofWithPrefix(str, 3, z);
@@ -94,7 +94,7 @@ public abstract class ZoneId implements Serializable {
             return ZoneRegion.ofId(str, z);
         }
         try {
-            ZoneOffset of = ZoneOffset.m935of(str.substring(i));
+            ZoneOffset of = ZoneOffset.m933of(str.substring(i));
             if (of == ZoneOffset.UTC) {
                 return ofOffset(substring, of);
             }

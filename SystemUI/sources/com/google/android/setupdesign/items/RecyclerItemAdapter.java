@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.setupcompat.partnerconfig.PartnerConfig;
 import com.google.android.setupcompat.partnerconfig.PartnerConfigHelper;
-import com.google.android.setupdesign.C3953R;
+import com.google.android.setupdesign.C3963R;
 import com.google.android.setupdesign.items.ItemHierarchy;
 
 public class RecyclerItemAdapter extends RecyclerView.Adapter<ItemViewHolder> implements ItemHierarchy.Observer {
@@ -65,16 +65,16 @@ public class RecyclerItemAdapter extends RecyclerView.Adapter<ItemViewHolder> im
         View inflate = LayoutInflater.from(viewGroup.getContext()).inflate(i, viewGroup, false);
         final ItemViewHolder itemViewHolder = new ItemViewHolder(inflate);
         if (!TAG_NO_BACKGROUND.equals(inflate.getTag())) {
-            TypedArray obtainStyledAttributes = viewGroup.getContext().obtainStyledAttributes(C3953R.styleable.SudRecyclerItemAdapter);
-            Drawable drawable2 = obtainStyledAttributes.getDrawable(C3953R.styleable.SudRecyclerItemAdapter_android_selectableItemBackground);
+            TypedArray obtainStyledAttributes = viewGroup.getContext().obtainStyledAttributes(C3963R.styleable.SudRecyclerItemAdapter);
+            Drawable drawable2 = obtainStyledAttributes.getDrawable(C3963R.styleable.SudRecyclerItemAdapter_android_selectableItemBackground);
             if (drawable2 == null) {
-                drawable2 = obtainStyledAttributes.getDrawable(C3953R.styleable.SudRecyclerItemAdapter_selectableItemBackground);
+                drawable2 = obtainStyledAttributes.getDrawable(C3963R.styleable.SudRecyclerItemAdapter_selectableItemBackground);
                 drawable = null;
             } else {
                 drawable = inflate.getBackground();
                 if (drawable == null) {
                     if (!this.applyPartnerHeavyThemeResource || this.useFullDynamicColor) {
-                        drawable = obtainStyledAttributes.getDrawable(C3953R.styleable.SudRecyclerItemAdapter_android_colorBackground);
+                        drawable = obtainStyledAttributes.getDrawable(C3963R.styleable.SudRecyclerItemAdapter_android_colorBackground);
                     } else {
                         drawable = new ColorDrawable(PartnerConfigHelper.get(inflate.getContext()).getColor(inflate.getContext(), PartnerConfig.CONFIG_LAYOUT_BACKGROUND_COLOR));
                     }

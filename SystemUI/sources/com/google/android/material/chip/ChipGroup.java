@@ -8,13 +8,13 @@ import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityNodeInfo;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.internal.CheckableGroup;
 import com.google.android.material.internal.FlowLayout;
 import java.util.List;
 
 public class ChipGroup extends FlowLayout {
-    private static final int DEF_STYLE_RES = C3621R.style.Widget_MaterialComponents_ChipGroup;
+    private static final int DEF_STYLE_RES = C3631R.style.Widget_MaterialComponents_ChipGroup;
     /* access modifiers changed from: private */
     public final CheckableGroup<Chip> checkableGroup;
     private int chipSpacingHorizontal;
@@ -56,7 +56,7 @@ public class ChipGroup extends FlowLayout {
     }
 
     public ChipGroup(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, C3621R.attr.chipGroupStyle);
+        this(context, attributeSet, C3631R.attr.chipGroupStyle);
     }
 
     /* JADX WARNING: Illegal instructions before constructor call */
@@ -75,30 +75,30 @@ public class ChipGroup extends FlowLayout {
             r6.<init>()
             r8.passThroughListener = r6
             android.content.Context r0 = r8.getContext()
-            int[] r2 = com.google.android.material.C3621R.styleable.ChipGroup
+            int[] r2 = com.google.android.material.C3631R.styleable.ChipGroup
             r7 = 0
             int[] r5 = new int[r7]
             r1 = r10
             r3 = r11
             android.content.res.TypedArray r10 = com.google.android.material.internal.ThemeEnforcement.obtainStyledAttributes(r0, r1, r2, r3, r4, r5)
-            int r11 = com.google.android.material.C3621R.styleable.ChipGroup_chipSpacing
+            int r11 = com.google.android.material.C3631R.styleable.ChipGroup_chipSpacing
             int r11 = r10.getDimensionPixelOffset(r11, r7)
-            int r0 = com.google.android.material.C3621R.styleable.ChipGroup_chipSpacingHorizontal
+            int r0 = com.google.android.material.C3631R.styleable.ChipGroup_chipSpacingHorizontal
             int r0 = r10.getDimensionPixelOffset(r0, r11)
             r8.setChipSpacingHorizontal(r0)
-            int r0 = com.google.android.material.C3621R.styleable.ChipGroup_chipSpacingVertical
+            int r0 = com.google.android.material.C3631R.styleable.ChipGroup_chipSpacingVertical
             int r11 = r10.getDimensionPixelOffset(r0, r11)
             r8.setChipSpacingVertical(r11)
-            int r11 = com.google.android.material.C3621R.styleable.ChipGroup_singleLine
+            int r11 = com.google.android.material.C3631R.styleable.ChipGroup_singleLine
             boolean r11 = r10.getBoolean(r11, r7)
             r8.setSingleLine((boolean) r11)
-            int r11 = com.google.android.material.C3621R.styleable.ChipGroup_singleSelection
+            int r11 = com.google.android.material.C3631R.styleable.ChipGroup_singleSelection
             boolean r11 = r10.getBoolean(r11, r7)
             r8.setSingleSelection((boolean) r11)
-            int r11 = com.google.android.material.C3621R.styleable.ChipGroup_selectionRequired
+            int r11 = com.google.android.material.C3631R.styleable.ChipGroup_selectionRequired
             boolean r11 = r10.getBoolean(r11, r7)
             r8.setSelectionRequired(r11)
-            int r11 = com.google.android.material.C3621R.styleable.ChipGroup_checkedChip
+            int r11 = com.google.android.material.C3631R.styleable.ChipGroup_checkedChip
             r0 = -1
             int r11 = r10.getResourceId(r11, r0)
             r8.defaultCheckedId = r11

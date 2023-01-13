@@ -6,7 +6,7 @@ import android.content.res.TypedArray;
 import android.content.res.loader.ResourcesLoader;
 import android.view.ContextThemeWrapper;
 import androidx.core.content.ContextCompat;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,7 +39,7 @@ public class HarmonizedColors {
             return context;
         }
         Map<Integer, Integer> createHarmonizedColorReplacementMap = createHarmonizedColorReplacementMap(context, harmonizedColorsOptions);
-        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(context, harmonizedColorsOptions.getThemeOverlayResourceId(C3621R.style.ThemeOverlay_Material3_HarmonizedColors_Empty));
+        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(context, harmonizedColorsOptions.getThemeOverlayResourceId(C3631R.style.ThemeOverlay_Material3_HarmonizedColors_Empty));
         contextThemeWrapper.applyOverrideConfiguration(new Configuration());
         return addResourcesLoaderToContext(contextThemeWrapper, createHarmonizedColorReplacementMap) ? contextThemeWrapper : context;
     }

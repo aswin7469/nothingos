@@ -15,7 +15,7 @@ import com.android.systemui.p012qs.QSPanel;
 import com.android.systemui.p012qs.TouchAnimator;
 import com.android.systemui.p012qs.dagger.QSScope;
 import com.android.systemui.p012qs.tileimpl.HeightOverrideable;
-import com.android.systemui.plugins.p011qs.C2301QS;
+import com.android.systemui.plugins.p011qs.C2304QS;
 import com.android.systemui.plugins.p011qs.QSIconView;
 import com.android.systemui.plugins.p011qs.QSTile;
 import com.android.systemui.plugins.p011qs.QSTileView;
@@ -72,7 +72,7 @@ public class QSAnimator implements QSHost.Callback, PagedTileLayout.PageListener
     private TouchAnimator mQQSTranslationYAnimator;
     private final QSExpansionPathInterpolator mQSExpansionPathInterpolator;
     private TouchAnimator mQSTileLayoutTranslatorAnimator;
-    private final C2301QS mQs;
+    private final C2304QS mQs;
     private final QSPanelController mQsPanelController;
     private final QuickQSPanelController mQuickQSPanelController;
     /* access modifiers changed from: private */
@@ -88,7 +88,7 @@ public class QSAnimator implements QSHost.Callback, PagedTileLayout.PageListener
     private final Runnable mUpdateAnimators = new QSAnimator$$ExternalSyntheticLambda0(this);
 
     @Inject
-    public QSAnimator(C2301QS qs, QuickQSPanel quickQSPanel, QuickStatusBarHeader quickStatusBarHeader, QSPanelController qSPanelController, QuickQSPanelController quickQSPanelController, QSTileHost qSTileHost, @Main Executor executor, TunerService tunerService, QSExpansionPathInterpolator qSExpansionPathInterpolator) {
+    public QSAnimator(C2304QS qs, QuickQSPanel quickQSPanel, QuickStatusBarHeader quickStatusBarHeader, QSPanelController qSPanelController, QuickQSPanelController quickQSPanelController, QSTileHost qSTileHost, @Main Executor executor, TunerService tunerService, QSExpansionPathInterpolator qSExpansionPathInterpolator) {
         this.mQs = qs;
         this.mQuickQsPanel = quickQSPanel;
         this.mQsPanelController = qSPanelController;
@@ -817,7 +817,7 @@ public class QSAnimator implements QSHost.Callback, PagedTileLayout.PageListener
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-qs-QSAnimator  reason: not valid java name */
-    public /* synthetic */ void m2907lambda$new$0$comandroidsystemuiqsQSAnimator() {
+    public /* synthetic */ void m2912lambda$new$0$comandroidsystemuiqsQSAnimator() {
         updateAnimators();
         setCurrentPosition();
     }
@@ -836,7 +836,7 @@ public class QSAnimator implements QSHost.Callback, PagedTileLayout.PageListener
         public final List<View> mViews = new ArrayList();
 
         HeightExpansionAnimator(TouchAnimator.Listener listener, int i, int i2) {
-            C23261 r0 = new ValueAnimator.AnimatorUpdateListener() {
+            C23291 r0 = new ValueAnimator.AnimatorUpdateListener() {
                 float mLastT = -1.0f;
 
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {

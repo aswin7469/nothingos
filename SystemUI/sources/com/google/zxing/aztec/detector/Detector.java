@@ -347,33 +347,33 @@ public final class Detector {
     static final class Point {
 
         /* renamed from: x */
-        private final int f463x;
+        private final int f462x;
 
         /* renamed from: y */
-        private final int f464y;
+        private final int f463y;
 
         /* access modifiers changed from: package-private */
         public ResultPoint toResultPoint() {
-            return new ResultPoint((float) this.f463x, (float) this.f464y);
+            return new ResultPoint((float) this.f462x, (float) this.f463y);
         }
 
         Point(int i, int i2) {
-            this.f463x = i;
-            this.f464y = i2;
+            this.f462x = i;
+            this.f463y = i2;
         }
 
         /* access modifiers changed from: package-private */
         public int getX() {
-            return this.f463x;
+            return this.f462x;
         }
 
         /* access modifiers changed from: package-private */
         public int getY() {
-            return this.f464y;
+            return this.f463y;
         }
 
         public String toString() {
-            return "<" + this.f463x + ' ' + this.f464y + Typography.greater;
+            return "<" + this.f462x + ' ' + this.f463y + Typography.greater;
         }
     }
 }

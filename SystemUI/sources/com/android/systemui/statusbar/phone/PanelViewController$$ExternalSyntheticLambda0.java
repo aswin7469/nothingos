@@ -11,6 +11,6 @@ public final /* synthetic */ class PanelViewController$$ExternalSyntheticLambda0
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        this.f$0.mo44932x8909a8e1(valueAnimator);
+        this.f$0.mo44947x8909a8e1(valueAnimator);
     }
 }

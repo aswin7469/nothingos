@@ -12,6 +12,6 @@ public final /* synthetic */ class AuthCredentialPasswordView$$ExternalSynthetic
     }
 
     public final boolean onKey(View view, int i, KeyEvent keyEvent) {
-        return this.f$0.mo30639xb42b1a51(view, i, keyEvent);
+        return this.f$0.mo30650xb42b1a51(view, i, keyEvent);
     }
 }

@@ -10,9 +10,9 @@ import android.view.ViewOverlay;
 import android.view.WindowInsets;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.fragments.FragmentHostManager;
-import com.android.systemui.plugins.p011qs.C2301QS;
+import com.android.systemui.plugins.p011qs.C2304QS;
 import com.android.systemui.statusbar.notification.AboveShelfObserver;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -26,22 +26,22 @@ public class NotificationsQuickSettingsContainer extends ConstraintLayout implem
     private View mKeyguardStatusBar;
     private ArrayList<View> mLayoutDrawingOrder = new ArrayList<>();
     private View mQSContainer;
-    private Consumer<C2301QS> mQSFragmentAttachedListener = new NotificationsQuickSettingsContainer$$ExternalSyntheticLambda3();
+    private Consumer<C2304QS> mQSFragmentAttachedListener = new NotificationsQuickSettingsContainer$$ExternalSyntheticLambda3();
     private View mQSScrollView;
-    private C2301QS mQs;
+    private C2304QS mQs;
     private View mQsFrame;
     private View mStackScroller;
 
     static /* synthetic */ void lambda$new$0(WindowInsets windowInsets) {
     }
 
-    static /* synthetic */ void lambda$new$1(C2301QS qs) {
+    static /* synthetic */ void lambda$new$1(C2304QS qs) {
     }
 
     static /* synthetic */ void lambda$removeOnInsetsChangedListener$2(WindowInsets windowInsets) {
     }
 
-    static /* synthetic */ void lambda$removeQSFragmentAttachedListener$3(C2301QS qs) {
+    static /* synthetic */ void lambda$removeQSFragmentAttachedListener$3(C2304QS qs) {
     }
 
     public /* bridge */ /* synthetic */ ViewOverlay getOverlay() {
@@ -55,17 +55,17 @@ public class NotificationsQuickSettingsContainer extends ConstraintLayout implem
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mQsFrame = findViewById(C1893R.C1897id.qs_frame);
-        this.mStackScroller = findViewById(C1893R.C1897id.notification_stack_scroller);
-        this.mKeyguardStatusBar = findViewById(C1893R.C1897id.keyguard_header);
+        this.mQsFrame = findViewById(C1894R.C1898id.qs_frame);
+        this.mStackScroller = findViewById(C1894R.C1898id.notification_stack_scroller);
+        this.mKeyguardStatusBar = findViewById(C1894R.C1898id.keyguard_header);
     }
 
     public void onFragmentViewCreated(String str, Fragment fragment) {
-        C2301QS qs = (C2301QS) fragment;
+        C2304QS qs = (C2304QS) fragment;
         this.mQs = qs;
         this.mQSFragmentAttachedListener.accept(qs);
-        this.mQSScrollView = this.mQs.getView().findViewById(C1893R.C1897id.expanded_qs_scroll_view);
-        this.mQSContainer = this.mQs.getView().findViewById(C1893R.C1897id.quick_settings_container);
+        this.mQSScrollView = this.mQs.getView().findViewById(C1894R.C1898id.expanded_qs_scroll_view);
+        this.mQSContainer = this.mQs.getView().findViewById(C1894R.C1898id.quick_settings_container);
     }
 
     public void onHasViewsAboveShelfChanged(boolean z) {
@@ -106,9 +106,9 @@ public class NotificationsQuickSettingsContainer extends ConstraintLayout implem
         this.mInsetsChangedListener = new NotificationsQuickSettingsContainer$$ExternalSyntheticLambda0();
     }
 
-    public void setQSFragmentAttachedListener(Consumer<C2301QS> consumer) {
+    public void setQSFragmentAttachedListener(Consumer<C2304QS> consumer) {
         this.mQSFragmentAttachedListener = consumer;
-        C2301QS qs = this.mQs;
+        C2304QS qs = this.mQs;
         if (qs != null) {
             consumer.accept(qs);
         }
@@ -121,13 +121,13 @@ public class NotificationsQuickSettingsContainer extends ConstraintLayout implem
     /* access modifiers changed from: protected */
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        FragmentHostManager.get(this).addTagListener(C2301QS.TAG, this);
+        FragmentHostManager.get(this).addTagListener(C2304QS.TAG, this);
     }
 
     /* access modifiers changed from: protected */
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        FragmentHostManager.get(this).removeTagListener(C2301QS.TAG, this);
+        FragmentHostManager.get(this).removeTagListener(C2304QS.TAG, this);
     }
 
     public WindowInsets onApplyWindowInsets(WindowInsets windowInsets) {

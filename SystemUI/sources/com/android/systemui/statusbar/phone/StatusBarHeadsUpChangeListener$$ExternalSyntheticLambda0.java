@@ -9,6 +9,6 @@ public final /* synthetic */ class StatusBarHeadsUpChangeListener$$ExternalSynth
     }
 
     public final void run() {
-        this.f$0.mo45163x590764eb();
+        this.f$0.mo45175x590764eb();
     }
 }

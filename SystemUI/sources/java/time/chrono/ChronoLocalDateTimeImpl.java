@@ -38,7 +38,7 @@ final class ChronoLocalDateTimeImpl<D extends ChronoLocalDate> implements Chrono
     private final transient LocalTime time;
 
     /* renamed from: of */
-    static <R extends ChronoLocalDate> ChronoLocalDateTimeImpl<R> m940of(R r, LocalTime localTime) {
+    static <R extends ChronoLocalDate> ChronoLocalDateTimeImpl<R> m938of(R r, LocalTime localTime) {
         return new ChronoLocalDateTimeImpl<>(r, localTime);
     }
 
@@ -135,7 +135,7 @@ final class ChronoLocalDateTimeImpl<D extends ChronoLocalDate> implements Chrono
         if (!(temporalUnit instanceof ChronoUnit)) {
             return ensureValid(this.date.getChronology(), temporalUnit.addTo(this, j));
         }
-        switch (C28631.$SwitchMap$java$time$temporal$ChronoUnit[((ChronoUnit) temporalUnit).ordinal()]) {
+        switch (C28691.$SwitchMap$java$time$temporal$ChronoUnit[((ChronoUnit) temporalUnit).ordinal()]) {
             case 1:
                 return plusNanos(j);
             case 2:
@@ -156,7 +156,7 @@ final class ChronoLocalDateTimeImpl<D extends ChronoLocalDate> implements Chrono
     }
 
     /* renamed from: java.time.chrono.ChronoLocalDateTimeImpl$1 */
-    static /* synthetic */ class C28631 {
+    static /* synthetic */ class C28691 {
         static final /* synthetic */ int[] $SwitchMap$java$time$temporal$ChronoUnit;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(14:0|1|2|3|4|5|6|7|8|9|10|11|12|(3:13|14|16)) */
@@ -217,7 +217,7 @@ final class ChronoLocalDateTimeImpl<D extends ChronoLocalDate> implements Chrono
             L_0x0054:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: java.time.chrono.ChronoLocalDateTimeImpl.C28631.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: java.time.chrono.ChronoLocalDateTimeImpl.C28691.<clinit>():void");
         }
     }
 
@@ -268,7 +268,7 @@ final class ChronoLocalDateTimeImpl<D extends ChronoLocalDate> implements Chrono
             return temporalUnit.between(this, localDateTime);
         } else if (temporalUnit.isTimeBased()) {
             long j = localDateTime.getLong(ChronoField.EPOCH_DAY) - this.date.getLong(ChronoField.EPOCH_DAY);
-            switch (C28631.$SwitchMap$java$time$temporal$ChronoUnit[((ChronoUnit) temporalUnit).ordinal()]) {
+            switch (C28691.$SwitchMap$java$time$temporal$ChronoUnit[((ChronoUnit) temporalUnit).ordinal()]) {
                 case 1:
                     j = Math.multiplyExact(j, (long) NANOS_PER_DAY);
                     break;

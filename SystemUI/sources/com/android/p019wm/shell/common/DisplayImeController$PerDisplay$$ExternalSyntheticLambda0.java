@@ -21,6 +21,6 @@ public final /* synthetic */ class DisplayImeController$PerDisplay$$ExternalSynt
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        this.f$0.mo49056x97ad683d(this.f$1, this.f$2, this.f$3, this.f$4, valueAnimator);
+        this.f$0.mo49065x97ad683d(this.f$1, this.f$2, this.f$3, this.f$4, valueAnimator);
     }
 }

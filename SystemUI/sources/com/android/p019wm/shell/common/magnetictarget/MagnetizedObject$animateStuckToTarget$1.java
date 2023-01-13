@@ -8,7 +8,7 @@ import kotlin.jvm.functions.Function5;
 import kotlin.jvm.internal.FunctionReferenceImpl;
 import kotlin.jvm.internal.Intrinsics;
 
-@Metadata(mo64988k = 3, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65044k = 3, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* renamed from: com.android.wm.shell.common.magnetictarget.MagnetizedObject$animateStuckToTarget$1 */
 /* compiled from: MagnetizedObject.kt */
 /* synthetic */ class MagnetizedObject$animateStuckToTarget$1 extends FunctionReferenceImpl implements Function5<MagnetizedObject.MagneticTarget, Float, Float, Boolean, Function0<? extends Unit>, Unit> {

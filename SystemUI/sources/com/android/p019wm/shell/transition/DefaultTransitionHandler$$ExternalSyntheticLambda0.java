@@ -12,6 +12,6 @@ public final /* synthetic */ class DefaultTransitionHandler$$ExternalSyntheticLa
     }
 
     public final Object get() {
-        return this.f$0.mo51234x2eaae0b7();
+        return this.f$0.mo51245x2eaae0b7();
     }
 }

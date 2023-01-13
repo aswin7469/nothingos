@@ -36,7 +36,7 @@ public class BroadcastDialog extends AlertDialog {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onCreate$0$com-android-settingslib-bluetooth-BroadcastDialog */
-    public /* synthetic */ void mo28109x30e21355(View view) {
+    public /* synthetic */ void mo28114x30e21355(View view) {
         Log.d(TAG, "BroadcastDialog dismiss.");
         dismiss();
     }

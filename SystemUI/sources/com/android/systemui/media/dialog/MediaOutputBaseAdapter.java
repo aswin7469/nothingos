@@ -29,7 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.settingslib.Utils;
 import com.android.settingslib.media.MediaDevice;
 import com.android.settingslib.utils.ThreadUtils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import java.util.List;
 
 public abstract class MediaOutputBaseAdapter extends RecyclerView.Adapter<MediaDeviceBaseViewHolder> {
@@ -52,8 +52,8 @@ public abstract class MediaOutputBaseAdapter extends RecyclerView.Adapter<MediaD
     public MediaDeviceBaseViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         Context context = viewGroup.getContext();
         this.mContext = context;
-        this.mMargin = context.getResources().getDimensionPixelSize(C1893R.dimen.media_output_dialog_list_margin);
-        this.mHolderView = LayoutInflater.from(this.mContext).inflate(C1893R.layout.media_output_list_item, viewGroup, false);
+        this.mMargin = context.getResources().getDimensionPixelSize(C1894R.dimen.media_output_dialog_list_margin);
+        this.mHolderView = LayoutInflater.from(this.mContext).inflate(C1894R.layout.media_output_list_item, viewGroup, false);
         return null;
     }
 
@@ -133,18 +133,18 @@ public abstract class MediaOutputBaseAdapter extends RecyclerView.Adapter<MediaD
 
         MediaDeviceBaseViewHolder(View view) {
             super(view);
-            this.mContainerLayout = (LinearLayout) view.requireViewById(C1893R.C1897id.device_container);
-            this.mItemLayout = (FrameLayout) view.requireViewById(C1893R.C1897id.item_layout);
-            this.mTitleText = (TextView) view.requireViewById(C1893R.C1897id.title);
-            this.mSubTitleText = (TextView) view.requireViewById(C1893R.C1897id.subtitle);
-            this.mTwoLineLayout = (LinearLayout) view.requireViewById(C1893R.C1897id.two_line_layout);
-            this.mTwoLineTitleText = (TextView) view.requireViewById(C1893R.C1897id.two_line_title);
-            this.mTitleIcon = (ImageView) view.requireViewById(C1893R.C1897id.title_icon);
-            this.mProgressBar = (ProgressBar) view.requireViewById(C1893R.C1897id.volume_indeterminate_progress);
-            this.mSeekBar = (MediaOutputSeekbar) view.requireViewById(C1893R.C1897id.volume_seekbar);
-            this.mStatusIcon = (ImageView) view.requireViewById(C1893R.C1897id.media_output_item_status);
-            this.mCheckBox = (CheckBox) view.requireViewById(C1893R.C1897id.check_box);
-            this.mEndTouchArea = (LinearLayout) view.requireViewById(C1893R.C1897id.end_action_area);
+            this.mContainerLayout = (LinearLayout) view.requireViewById(C1894R.C1898id.device_container);
+            this.mItemLayout = (FrameLayout) view.requireViewById(C1894R.C1898id.item_layout);
+            this.mTitleText = (TextView) view.requireViewById(C1894R.C1898id.title);
+            this.mSubTitleText = (TextView) view.requireViewById(C1894R.C1898id.subtitle);
+            this.mTwoLineLayout = (LinearLayout) view.requireViewById(C1894R.C1898id.two_line_layout);
+            this.mTwoLineTitleText = (TextView) view.requireViewById(C1894R.C1898id.two_line_title);
+            this.mTitleIcon = (ImageView) view.requireViewById(C1894R.C1898id.title_icon);
+            this.mProgressBar = (ProgressBar) view.requireViewById(C1894R.C1898id.volume_indeterminate_progress);
+            this.mSeekBar = (MediaOutputSeekbar) view.requireViewById(C1894R.C1898id.volume_seekbar);
+            this.mStatusIcon = (ImageView) view.requireViewById(C1894R.C1898id.media_output_item_status);
+            this.mCheckBox = (CheckBox) view.requireViewById(C1894R.C1898id.check_box);
+            this.mEndTouchArea = (LinearLayout) view.requireViewById(C1894R.C1898id.end_action_area);
             initAnimator();
         }
 
@@ -168,9 +168,9 @@ public abstract class MediaOutputBaseAdapter extends RecyclerView.Adapter<MediaD
             boolean z5 = z2 || z3;
             if (!this.mCornerAnimator.isRunning()) {
                 if (z2) {
-                    drawable = MediaOutputBaseAdapter.this.mContext.getDrawable(C1893R.C1895drawable.media_output_item_background_active).mutate();
+                    drawable = MediaOutputBaseAdapter.this.mContext.getDrawable(C1894R.C1896drawable.media_output_item_background_active).mutate();
                 } else {
-                    drawable = MediaOutputBaseAdapter.this.mContext.getDrawable(C1893R.C1895drawable.media_output_item_background).mutate();
+                    drawable = MediaOutputBaseAdapter.this.mContext.getDrawable(C1894R.C1896drawable.media_output_item_background).mutate();
                 }
                 if (z5) {
                     i2 = MediaOutputBaseAdapter.this.mController.getColorConnectedItemBackground();
@@ -228,7 +228,7 @@ public abstract class MediaOutputBaseAdapter extends RecyclerView.Adapter<MediaD
             this.mStatusIcon.setVisibility(z5 ? 0 : 8);
             this.mSeekBar.setAlpha(1.0f);
             this.mSeekBar.setVisibility(z2 ? 0 : 8);
-            Drawable mutate = MediaOutputBaseAdapter.this.mContext.getDrawable(C1893R.C1895drawable.media_output_item_background).mutate();
+            Drawable mutate = MediaOutputBaseAdapter.this.mContext.getDrawable(C1894R.C1896drawable.media_output_item_background).mutate();
             mutate.setColorFilter(new PorterDuffColorFilter(MediaOutputBaseAdapter.this.mController.getColorItemBackground(), PorterDuff.Mode.SRC_IN));
             this.mItemLayout.setBackground(mutate);
             this.mProgressBar.setVisibility(z3 ? 0 : 8);
@@ -293,7 +293,7 @@ public abstract class MediaOutputBaseAdapter extends RecyclerView.Adapter<MediaD
         /* access modifiers changed from: package-private */
         public void initMutingExpectedDevice() {
             disableSeekBar();
-            Drawable mutate = MediaOutputBaseAdapter.this.mContext.getDrawable(C1893R.C1895drawable.media_output_item_background_active).mutate();
+            Drawable mutate = MediaOutputBaseAdapter.this.mContext.getDrawable(C1894R.C1896drawable.media_output_item_background_active).mutate();
             mutate.setColorFilter(new PorterDuffColorFilter(MediaOutputBaseAdapter.this.mController.getColorConnectedItemBackground(), PorterDuff.Mode.SRC_IN));
             this.mItemLayout.setBackground(mutate);
         }
@@ -325,7 +325,7 @@ public abstract class MediaOutputBaseAdapter extends RecyclerView.Adapter<MediaD
         }
 
         private void animateCornerAndVolume(int i, int i2) {
-            this.mCornerAnimator.addUpdateListener(new C2221x9ea0901((GradientDrawable) this.mItemLayout.getBackground(), (GradientDrawable) ((ClipDrawable) ((LayerDrawable) this.mSeekBar.getProgressDrawable()).findDrawableByLayerId(16908301)).getDrawable()));
+            this.mCornerAnimator.addUpdateListener(new C2224x9ea0901((GradientDrawable) this.mItemLayout.getBackground(), (GradientDrawable) ((ClipDrawable) ((LayerDrawable) this.mSeekBar.getProgressDrawable()).findDrawableByLayerId(16908301)).getDrawable()));
             this.mVolumeAnimator.setIntValues(new int[]{i, i2});
             this.mVolumeAnimator.start();
             this.mCornerAnimator.start();
@@ -349,7 +349,7 @@ public abstract class MediaOutputBaseAdapter extends RecyclerView.Adapter<MediaD
             this.mCornerAnimator.setInterpolator(new LinearInterpolator());
             ValueAnimator ofInt = ValueAnimator.ofInt(new int[0]);
             this.mVolumeAnimator = ofInt;
-            ofInt.addUpdateListener(new C2222x9ea0902(this));
+            ofInt.addUpdateListener(new C2225x9ea0902(this));
             this.mVolumeAnimator.setDuration(500);
             this.mVolumeAnimator.setInterpolator(new LinearInterpolator());
             this.mVolumeAnimator.addListener(new Animator.AnimatorListener() {
@@ -372,42 +372,42 @@ public abstract class MediaOutputBaseAdapter extends RecyclerView.Adapter<MediaD
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$initAnimator$1$com-android-systemui-media-dialog-MediaOutputBaseAdapter$MediaDeviceBaseViewHolder */
-        public /* synthetic */ void mo34276x16e44a30(ValueAnimator valueAnimator) {
+        public /* synthetic */ void mo34280x16e44a30(ValueAnimator valueAnimator) {
             this.mSeekBar.setProgress(((Integer) valueAnimator.getAnimatedValue()).intValue());
         }
 
         /* access modifiers changed from: package-private */
         public Drawable getSpeakerDrawable() {
-            Drawable mutate = MediaOutputBaseAdapter.this.mContext.getDrawable(C1893R.C1895drawable.ic_speaker_group_black_24dp).mutate();
-            mutate.setColorFilter(new PorterDuffColorFilter(Utils.getColorStateListDefaultColor(MediaOutputBaseAdapter.this.mContext, C1893R.C1894color.media_dialog_item_main_content), PorterDuff.Mode.SRC_IN));
+            Drawable mutate = MediaOutputBaseAdapter.this.mContext.getDrawable(C1894R.C1896drawable.ic_speaker_group_black_24dp).mutate();
+            mutate.setColorFilter(new PorterDuffColorFilter(Utils.getColorStateListDefaultColor(MediaOutputBaseAdapter.this.mContext, C1894R.C1895color.media_dialog_item_main_content), PorterDuff.Mode.SRC_IN));
             return mutate;
         }
 
         /* access modifiers changed from: protected */
         public void disableSeekBar() {
             this.mSeekBar.setEnabled(false);
-            this.mSeekBar.setOnTouchListener(new C2225x9ea0905());
+            this.mSeekBar.setOnTouchListener(new C2228x9ea0905());
         }
 
         private void enableSeekBar() {
             this.mSeekBar.setEnabled(true);
-            this.mSeekBar.setOnTouchListener(new C2224x9ea0904());
+            this.mSeekBar.setOnTouchListener(new C2227x9ea0904());
         }
 
         /* access modifiers changed from: protected */
         public void setUpDeviceIcon(MediaDevice mediaDevice) {
-            ThreadUtils.postOnBackgroundThread((Runnable) new C2223x9ea0903(this, mediaDevice));
+            ThreadUtils.postOnBackgroundThread((Runnable) new C2226x9ea0903(this, mediaDevice));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$setUpDeviceIcon$5$com-android-systemui-media-dialog-MediaOutputBaseAdapter$MediaDeviceBaseViewHolder */
-        public /* synthetic */ void mo34278xbe1224d1(MediaDevice mediaDevice) {
-            ThreadUtils.postOnMainThread(new C2220x9ea0900(this, mediaDevice, MediaOutputBaseAdapter.this.mController.getDeviceIconCompat(mediaDevice).toIcon(MediaOutputBaseAdapter.this.mContext)));
+        public /* synthetic */ void mo34282xbe1224d1(MediaDevice mediaDevice) {
+            ThreadUtils.postOnMainThread(new C2223x9ea0900(this, mediaDevice, MediaOutputBaseAdapter.this.mController.getDeviceIconCompat(mediaDevice).toIcon(MediaOutputBaseAdapter.this.mContext)));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$setUpDeviceIcon$4$com-android-systemui-media-dialog-MediaOutputBaseAdapter$MediaDeviceBaseViewHolder */
-        public /* synthetic */ void mo34277x7612c672(MediaDevice mediaDevice, Icon icon) {
+        public /* synthetic */ void mo34281x7612c672(MediaDevice mediaDevice, Icon icon) {
             if (TextUtils.equals(this.mDeviceId, mediaDevice.getId())) {
                 this.mTitleIcon.setImageIcon(icon);
             }

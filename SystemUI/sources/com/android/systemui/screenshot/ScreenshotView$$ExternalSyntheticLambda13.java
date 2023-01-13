@@ -11,6 +11,6 @@ public final /* synthetic */ class ScreenshotView$$ExternalSyntheticLambda13 imp
     }
 
     public final void onClick(View view) {
-        this.f$0.mo37497x361b222d(view);
+        this.f$0.mo37498x361b222d(view);
     }
 }

@@ -15,7 +15,7 @@ import com.android.internal.logging.MetricsLogger;
 import com.android.settingslib.graph.SignalDrawable;
 import com.android.settingslib.mobile.TelephonyIcons;
 import com.android.settingslib.net.DataUsageController;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.qualifiers.Background;
 import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.navigationbar.NavigationBarInflaterView;
@@ -91,12 +91,12 @@ public class InternetTile extends QSTileImpl<QSTile.SignalState> {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$handleClick$0$com-android-systemui-qs-tiles-InternetTile  reason: not valid java name */
-    public /* synthetic */ void m2978lambda$handleClick$0$comandroidsystemuiqstilesInternetTile(View view) {
+    public /* synthetic */ void m2982lambda$handleClick$0$comandroidsystemuiqstilesInternetTile(View view) {
         this.mInternetDialogFactory.create(true, this.mAccessPointController.canConfigMobileData(), this.mAccessPointController.canConfigWifi(), view);
     }
 
     public CharSequence getTileLabel() {
-        return this.mContext.getString(C1893R.string.quick_settings_internet_label);
+        return this.mContext.getString(C1894R.string.quick_settings_internet_label);
     }
 
     public boolean isAvailable() {
@@ -104,7 +104,7 @@ public class InternetTile extends QSTileImpl<QSTile.SignalState> {
     }
 
     private CharSequence getSecondaryLabel(boolean z, String str) {
-        return z ? this.mContext.getString(C1893R.string.quick_settings_wifi_secondary_label_transient) : str;
+        return z ? this.mContext.getString(C1894R.string.quick_settings_wifi_secondary_label_transient) : str;
     }
 
     private static String removeDoubleQuotes(String str) {
@@ -354,29 +354,29 @@ public class InternetTile extends QSTileImpl<QSTile.SignalState> {
         StringBuffer stringBuffer = new StringBuffer();
         StringBuffer stringBuffer2 = new StringBuffer();
         Resources resources = this.mContext.getResources();
-        signalState.label = resources.getString(C1893R.string.quick_settings_internet_label);
+        signalState.label = resources.getString(C1894R.string.quick_settings_internet_label);
         if (wifiCallbackInfo.mAirplaneModeEnabled) {
             if (!signalState.value) {
                 signalState.state = 1;
-                signalState.icon = QSTileImpl.ResourceIcon.get(C1893R.C1895drawable.ic_qs_no_internet_unavailable);
-                signalState.secondaryLabel = resources.getString(C1893R.string.status_bar_airplane);
+                signalState.icon = QSTileImpl.ResourceIcon.get(C1894R.C1896drawable.ic_qs_no_internet_unavailable);
+                signalState.secondaryLabel = resources.getString(C1894R.string.status_bar_airplane);
             } else if (!z) {
-                signalState.icon = QSTileImpl.ResourceIcon.get(C1893R.C1895drawable.ic_qs_no_internet_unavailable);
+                signalState.icon = QSTileImpl.ResourceIcon.get(C1894R.C1896drawable.ic_qs_no_internet_unavailable);
                 if (wifiCallbackInfo.mNoNetworksAvailable) {
-                    signalState.secondaryLabel = resources.getString(C1893R.string.quick_settings_networks_unavailable);
+                    signalState.secondaryLabel = resources.getString(C1894R.string.quick_settings_networks_unavailable);
                 } else {
-                    signalState.secondaryLabel = resources.getString(C1893R.string.quick_settings_networks_available);
+                    signalState.secondaryLabel = resources.getString(C1894R.string.quick_settings_networks_available);
                 }
             } else {
                 signalState.icon = QSTileImpl.ResourceIcon.get(wifiCallbackInfo.mWifiSignalIconId);
             }
         } else if (wifiCallbackInfo.mNoDefaultNetwork) {
             if (wifiCallbackInfo.mNoNetworksAvailable || !wifiCallbackInfo.mEnabled) {
-                signalState.icon = QSTileImpl.ResourceIcon.get(C1893R.C1895drawable.ic_qs_no_internet_unavailable);
-                signalState.secondaryLabel = resources.getString(C1893R.string.quick_settings_networks_unavailable);
+                signalState.icon = QSTileImpl.ResourceIcon.get(C1894R.C1896drawable.ic_qs_no_internet_unavailable);
+                signalState.secondaryLabel = resources.getString(C1894R.string.quick_settings_networks_unavailable);
             } else {
-                signalState.icon = QSTileImpl.ResourceIcon.get(C1893R.C1895drawable.ic_qs_no_internet_available);
-                signalState.secondaryLabel = resources.getString(C1893R.string.quick_settings_networks_available);
+                signalState.icon = QSTileImpl.ResourceIcon.get(C1894R.C1896drawable.ic_qs_no_internet_available);
+                signalState.secondaryLabel = resources.getString(C1894R.string.quick_settings_networks_available);
             }
         } else if (wifiCallbackInfo.mIsTransient) {
             signalState.icon = QSTileImpl.ResourceIcon.get(17302865);
@@ -391,7 +391,7 @@ public class InternetTile extends QSTileImpl<QSTile.SignalState> {
         } else {
             signalState.icon = QSTileImpl.ResourceIcon.get(17302913);
         }
-        stringBuffer.append(this.mContext.getString(C1893R.string.quick_settings_internet_label)).append(NavigationBarInflaterView.BUTTON_SEPARATOR);
+        stringBuffer.append(this.mContext.getString(C1894R.string.quick_settings_internet_label)).append(NavigationBarInflaterView.BUTTON_SEPARATOR);
         if (signalState.value && z) {
             stringBuffer2.append(wifiCallbackInfo.mWifiSignalContentDescription);
             stringBuffer.append(removeDoubleQuotes(wifiCallbackInfo.mSsid));
@@ -400,7 +400,7 @@ public class InternetTile extends QSTileImpl<QSTile.SignalState> {
         }
         signalState.stateDescription = stringBuffer2.toString();
         signalState.contentDescription = stringBuffer.toString();
-        signalState.dualLabelContentDescription = resources.getString(C1893R.string.accessibility_quick_settings_open_settings, new Object[]{getTileLabel()});
+        signalState.dualLabelContentDescription = resources.getString(C1894R.string.accessibility_quick_settings_open_settings, new Object[]{getTileLabel()});
         signalState.expandedAccessibilityClassName = Switch.class.getName();
         if (DEBUG) {
             Log.d(this.TAG, "handleUpdateWifiState: SignalState = " + signalState.toString());
@@ -413,7 +413,7 @@ public class InternetTile extends QSTileImpl<QSTile.SignalState> {
             Log.d(this.TAG, "handleUpdateCellularState: CellularCallbackInfo = " + cellularCallbackInfo.toString());
         }
         Resources resources = this.mContext.getResources();
-        signalState.label = resources.getString(C1893R.string.quick_settings_internet_label);
+        signalState.label = resources.getString(C1894R.string.quick_settings_internet_label);
         signalState.state = 2;
         boolean z = false;
         boolean z2 = this.mDataController.isMobileDataSupported() && this.mDataController.isMobileDataEnabled();
@@ -426,17 +426,17 @@ public class InternetTile extends QSTileImpl<QSTile.SignalState> {
         signalState.expandedAccessibilityClassName = Switch.class.getName();
         if (cellularCallbackInfo.mAirplaneModeEnabled && cellularCallbackInfo.mQsTypeIcon != TelephonyIcons.ICON_CWF) {
             signalState.state = 1;
-            signalState.icon = QSTileImpl.ResourceIcon.get(C1893R.C1895drawable.ic_qs_no_internet_unavailable);
-            signalState.secondaryLabel = resources.getString(C1893R.string.status_bar_airplane);
+            signalState.icon = QSTileImpl.ResourceIcon.get(C1894R.C1896drawable.ic_qs_no_internet_unavailable);
+            signalState.secondaryLabel = resources.getString(C1894R.string.status_bar_airplane);
         } else if (!cellularCallbackInfo.mNoDefaultNetwork) {
             signalState.icon = new SignalIcon(cellularCallbackInfo.mMobileSignalIconId);
             signalState.secondaryLabel = appendMobileDataType(cellularCallbackInfo.mDataSubscriptionName, getMobileDataContentName(cellularCallbackInfo));
         } else if (cellularCallbackInfo.mNoNetworksAvailable || !this.mSignalCallback.mWifiInfo.mEnabled) {
-            signalState.icon = QSTileImpl.ResourceIcon.get(C1893R.C1895drawable.ic_qs_no_internet_unavailable);
-            signalState.secondaryLabel = resources.getString(C1893R.string.quick_settings_networks_unavailable);
+            signalState.icon = QSTileImpl.ResourceIcon.get(C1894R.C1896drawable.ic_qs_no_internet_unavailable);
+            signalState.secondaryLabel = resources.getString(C1894R.string.quick_settings_networks_unavailable);
         } else {
-            signalState.icon = QSTileImpl.ResourceIcon.get(C1893R.C1895drawable.ic_qs_no_internet_available);
-            signalState.secondaryLabel = resources.getString(C1893R.string.quick_settings_networks_available);
+            signalState.icon = QSTileImpl.ResourceIcon.get(C1894R.C1896drawable.ic_qs_no_internet_available);
+            signalState.secondaryLabel = resources.getString(C1894R.string.quick_settings_networks_available);
         }
         signalState.contentDescription = signalState.label;
         if (signalState.state == 1) {
@@ -454,7 +454,7 @@ public class InternetTile extends QSTileImpl<QSTile.SignalState> {
         if (DEBUG) {
             Log.d(this.TAG, "handleUpdateEthernetState: EthernetCallbackInfo = " + ethernetCallbackInfo.toString());
         }
-        signalState.label = this.mContext.getResources().getString(C1893R.string.quick_settings_internet_label);
+        signalState.label = this.mContext.getResources().getString(C1894R.string.quick_settings_internet_label);
         signalState.state = 2;
         signalState.icon = QSTileImpl.ResourceIcon.get(ethernetCallbackInfo.mEthernetSignalIconId);
         signalState.secondaryLabel = ethernetCallbackInfo.mEthernetContentDescription;
@@ -476,22 +476,22 @@ public class InternetTile extends QSTileImpl<QSTile.SignalState> {
             }
             return Html.fromHtml(str, 0);
         } else {
-            return Html.fromHtml(this.mContext.getString(C1893R.string.mobile_carrier_text_format, new Object[]{charSequence, charSequence2}), 0);
+            return Html.fromHtml(this.mContext.getString(C1894R.string.mobile_carrier_text_format, new Object[]{charSequence, charSequence2}), 0);
         }
     }
 
     private CharSequence getMobileDataContentName(CellularCallbackInfo cellularCallbackInfo) {
         String str;
         if (cellularCallbackInfo.mRoaming && !TextUtils.isEmpty(cellularCallbackInfo.mDataContentDescription)) {
-            String string = this.mContext.getString(C1893R.string.data_connection_roaming);
+            String string = this.mContext.getString(C1894R.string.data_connection_roaming);
             if (cellularCallbackInfo.mDataContentDescription == null) {
                 str = "";
             } else {
                 str = cellularCallbackInfo.mDataContentDescription.toString();
             }
-            return this.mContext.getString(C1893R.string.mobile_data_text_format, new Object[]{string, str});
+            return this.mContext.getString(C1894R.string.mobile_data_text_format, new Object[]{string, str});
         } else if (cellularCallbackInfo.mRoaming) {
-            return this.mContext.getString(C1893R.string.data_connection_roaming);
+            return this.mContext.getString(C1894R.string.data_connection_roaming);
         } else {
             return cellularCallbackInfo.mDataContentDescription;
         }

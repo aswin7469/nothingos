@@ -11,6 +11,6 @@ public final /* synthetic */ class ControlsEditingActivity$$ExternalSyntheticLam
     }
 
     public final void onClick(View view) {
-        ControlsEditingActivity.m2638bindButtons$lambda6$lambda5(this.f$0, view);
+        ControlsEditingActivity.m2643bindButtons$lambda6$lambda5(this.f$0, view);
     }
 }

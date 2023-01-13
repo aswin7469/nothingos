@@ -9,6 +9,6 @@ public final /* synthetic */ class PrivacyDotViewController$$ExternalSyntheticLa
     }
 
     public final void run() {
-        PrivacyDotViewController.m3059initialize$lambda13(this.f$0);
+        PrivacyDotViewController.m3063initialize$lambda13(this.f$0);
     }
 }

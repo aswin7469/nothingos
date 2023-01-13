@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import androidx.core.app.NotificationCompat;
 import com.android.internal.statusbar.StatusBarIcon;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.demomode.DemoMode;
 import com.android.systemui.flags.FeatureFlags;
 import com.android.systemui.flags.Flags;
@@ -96,15 +96,15 @@ public class DemoStatusIcons extends StatusIconContainer implements DemoMode, Da
         String string = bundle.getString("volume");
         int i = 0;
         if (string != null) {
-            updateSlot("volume", (String) null, string.equals("vibrate") ? C1893R.C1895drawable.stat_sys_ringer_vibrate : 0);
+            updateSlot("volume", (String) null, string.equals("vibrate") ? C1894R.C1896drawable.stat_sys_ringer_vibrate : 0);
         }
         String string2 = bundle.getString("zen");
         if (string2 != null) {
-            updateSlot("zen", (String) null, string2.equals("dnd") ? C1893R.C1895drawable.stat_sys_dnd : 0);
+            updateSlot("zen", (String) null, string2.equals("dnd") ? C1894R.C1896drawable.stat_sys_dnd : 0);
         }
         String string3 = bundle.getString(SettingContentRegistry.BLUETOOTH_ITEM);
         if (string3 != null) {
-            updateSlot(SettingContentRegistry.BLUETOOTH_ITEM, (String) null, string3.equals(WifiManager.EXTRA_SUPPLICANT_CONNECTED) ? C1893R.C1895drawable.stat_sys_data_bluetooth_connected : 0);
+            updateSlot(SettingContentRegistry.BLUETOOTH_ITEM, (String) null, string3.equals(WifiManager.EXTRA_SUPPLICANT_CONNECTED) ? C1894R.C1896drawable.stat_sys_data_bluetooth_connected : 0);
         }
         String string4 = bundle.getString("location");
         if (string4 != null) {
@@ -112,11 +112,11 @@ public class DemoStatusIcons extends StatusIconContainer implements DemoMode, Da
         }
         String string5 = bundle.getString(NotificationCompat.CATEGORY_ALARM);
         if (string5 != null) {
-            updateSlot("alarm_clock", (String) null, string5.equals("show") ? C1893R.C1895drawable.stat_sys_alarm : 0);
+            updateSlot("alarm_clock", (String) null, string5.equals("show") ? C1894R.C1896drawable.stat_sys_alarm : 0);
         }
         String string6 = bundle.getString("tty");
         if (string6 != null) {
-            updateSlot("tty", (String) null, string6.equals("show") ? C1893R.C1895drawable.stat_sys_tty_mode : 0);
+            updateSlot("tty", (String) null, string6.equals("show") ? C1894R.C1896drawable.stat_sys_tty_mode : 0);
         }
         String string7 = bundle.getString("mute");
         if (string7 != null) {
@@ -128,12 +128,12 @@ public class DemoStatusIcons extends StatusIconContainer implements DemoMode, Da
         }
         String string9 = bundle.getString(AutoTileManager.CAST);
         if (string9 != null) {
-            updateSlot(AutoTileManager.CAST, (String) null, string9.equals("show") ? C1893R.C1895drawable.stat_sys_cast : 0);
+            updateSlot(AutoTileManager.CAST, (String) null, string9.equals("show") ? C1894R.C1896drawable.stat_sys_cast : 0);
         }
         String string10 = bundle.getString(AutoTileManager.HOTSPOT);
         if (string10 != null) {
             if (string10.equals("show")) {
-                i = C1893R.C1895drawable.stat_sys_hotspot;
+                i = C1894R.C1896drawable.stat_sys_hotspot;
             }
             updateSlot(AutoTileManager.HOTSPOT, (String) null, i);
         }

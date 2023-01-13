@@ -14,6 +14,6 @@ public final /* synthetic */ class ImageLoader$$ExternalSyntheticLambda0 impleme
     }
 
     public final Object attachCompleter(CallbackToFutureAdapter.Completer completer) {
-        return this.f$0.m2997lambda$load$0$comandroidsystemuiscreenshotImageLoader(this.f$1, completer);
+        return this.f$0.m3001lambda$load$0$comandroidsystemuiscreenshotImageLoader(this.f$1, completer);
     }
 }

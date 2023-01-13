@@ -41,7 +41,7 @@ import androidx.dynamicanimation.animation.FloatPropertyCompat;
 import androidx.dynamicanimation.animation.SpringAnimation;
 import androidx.dynamicanimation.animation.SpringForce;
 import com.android.internal.policy.ScreenDecorationsUtils;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.TaskView;
 import com.android.p019wm.shell.animation.Interpolators;
 import com.android.p019wm.shell.animation.PhysicsAnimator;
@@ -228,7 +228,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-wm-shell-bubbles-BubbleStackView  reason: not valid java name */
-    public /* synthetic */ void m3418lambda$new$0$comandroidwmshellbubblesBubbleStackView() {
+    public /* synthetic */ void m3422lambda$new$0$comandroidwmshellbubblesBubbleStackView() {
         animateFlyoutCollapsed(true, 0.0f);
     }
 
@@ -276,7 +276,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$1$com-android-wm-shell-bubbles-BubbleStackView  reason: not valid java name */
-    public /* synthetic */ void m3419lambda$new$1$comandroidwmshellbubblesBubbleStackView(DynamicAnimation dynamicAnimation, boolean z, float f, float f2) {
+    public /* synthetic */ void m3423lambda$new$1$comandroidwmshellbubblesBubbleStackView(DynamicAnimation dynamicAnimation, boolean z, float f, float f2) {
         if (this.mFlyoutDragDeltaX == 0.0f) {
             this.mFlyout.postDelayed(this.mHideFlyout, 5000);
         } else {
@@ -315,7 +315,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
             }
         };
         this.mSystemGestureExcludeUpdater = new BubbleStackView$$ExternalSyntheticLambda35(this);
-        C33913 r8 = new FloatPropertyCompat("FlyoutCollapseSpring") {
+        C34013 r8 = new FloatPropertyCompat("FlyoutCollapseSpring") {
             public float getValue(Object obj) {
                 return BubbleStackView.this.mFlyoutDragDeltaX;
             }
@@ -382,7 +382,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onReleasedInTarget$0$com-android-wm-shell-bubbles-BubbleStackView$5 */
-            public /* synthetic */ void mo48762x6078d28b() {
+            public /* synthetic */ void mo48771x6078d28b() {
                 BubbleStackView.this.resetDismissAnimator();
                 BubbleStackView.this.dismissMagnetizedObject();
             }
@@ -552,11 +552,11 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
         this.mBubbleController = bubbleController;
         this.mBubbleData = bubbleData;
         Resources resources = getResources();
-        this.mBubbleSize = resources.getDimensionPixelSize(C3343R.dimen.bubble_size);
-        this.mBubbleElevation = resources.getDimensionPixelSize(C3343R.dimen.bubble_elevation);
-        this.mBubbleTouchPadding = resources.getDimensionPixelSize(C3343R.dimen.bubble_touch_padding);
-        this.mExpandedViewPadding = resources.getDimensionPixelSize(C3343R.dimen.bubble_expanded_view_padding);
-        int dimensionPixelSize = resources.getDimensionPixelSize(C3343R.dimen.bubble_elevation);
+        this.mBubbleSize = resources.getDimensionPixelSize(C3353R.dimen.bubble_size);
+        this.mBubbleElevation = resources.getDimensionPixelSize(C3353R.dimen.bubble_elevation);
+        this.mBubbleTouchPadding = resources.getDimensionPixelSize(C3353R.dimen.bubble_touch_padding);
+        this.mExpandedViewPadding = resources.getDimensionPixelSize(C3353R.dimen.bubble_expanded_view_padding);
+        int dimensionPixelSize = resources.getDimensionPixelSize(C3353R.dimen.bubble_elevation);
         this.mPositioner = bubbleController.getPositioner();
         TypedArray obtainStyledAttributes = this.mContext.obtainStyledAttributes(new int[]{16844145});
         this.mCornerRadius = obtainStyledAttributes.getDimensionPixelSize(0, 0);
@@ -634,7 +634,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
         this.mManageMenuScrim.setAlpha(0.0f);
         this.mManageMenuScrim.setVisibility(4);
         this.mOrientationChangedListener = new BubbleStackView$$ExternalSyntheticLambda42(this);
-        float dimensionPixelSize2 = ((float) getResources().getDimensionPixelSize(C3343R.dimen.dismiss_circle_small)) / ((float) getResources().getDimensionPixelSize(C3343R.dimen.dismiss_circle_size));
+        float dimensionPixelSize2 = ((float) getResources().getDimensionPixelSize(C3353R.dimen.dismiss_circle_small)) / ((float) getResources().getDimensionPixelSize(C3353R.dimen.dismiss_circle_size));
         ValueAnimator ofFloat3 = ValueAnimator.ofFloat(new float[]{1.0f, 0.0f});
         this.mDismissBubbleAnimator = ofFloat3;
         ofFloat3.addUpdateListener(new BubbleStackView$$ExternalSyntheticLambda43(this, dimensionPixelSize2));
@@ -670,7 +670,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$2$com-android-wm-shell-bubbles-BubbleStackView  reason: not valid java name */
-    public /* synthetic */ void m3421lambda$new$2$comandroidwmshellbubblesBubbleStackView() {
+    public /* synthetic */ void m3425lambda$new$2$comandroidwmshellbubblesBubbleStackView() {
         if (getBubbleCount() == 0) {
             this.mBubbleController.onAllBubblesAnimatedOut();
         }
@@ -678,7 +678,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$3$com-android-wm-shell-bubbles-BubbleStackView  reason: not valid java name */
-    public /* synthetic */ void m3422lambda$new$3$comandroidwmshellbubblesBubbleStackView(View view) {
+    public /* synthetic */ void m3426lambda$new$3$comandroidwmshellbubblesBubbleStackView(View view) {
         this.mBubbleData.setShowingOverflow(true);
         this.mBubbleData.setSelectedBubble(this.mBubbleOverflow);
         this.mBubbleData.setExpanded(true);
@@ -686,7 +686,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$5$com-android-wm-shell-bubbles-BubbleStackView  reason: not valid java name */
-    public /* synthetic */ void m3424lambda$new$5$comandroidwmshellbubblesBubbleStackView(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
+    public /* synthetic */ void m3428lambda$new$5$comandroidwmshellbubblesBubbleStackView(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
         RelativeStackPosition relativeStackPosition;
         this.mPositioner.update();
         onDisplaySizeChanged();
@@ -714,14 +714,14 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$4$com-android-wm-shell-bubbles-BubbleStackView  reason: not valid java name */
-    public /* synthetic */ void m3423lambda$new$4$comandroidwmshellbubblesBubbleStackView() {
+    public /* synthetic */ void m3427lambda$new$4$comandroidwmshellbubblesBubbleStackView() {
         afterExpandedViewAnimation();
         showManageMenu(this.mShowingManage);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$6$com-android-wm-shell-bubbles-BubbleStackView  reason: not valid java name */
-    public /* synthetic */ void m3425lambda$new$6$comandroidwmshellbubblesBubbleStackView(float f, ValueAnimator valueAnimator) {
+    public /* synthetic */ void m3429lambda$new$6$comandroidwmshellbubblesBubbleStackView(float f, ValueAnimator valueAnimator) {
         float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
         DismissView dismissView = this.mDismissView;
         if (dismissView != null) {
@@ -740,7 +740,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$7$com-android-wm-shell-bubbles-BubbleStackView  reason: not valid java name */
-    public /* synthetic */ void m3426lambda$new$7$comandroidwmshellbubblesBubbleStackView(View view) {
+    public /* synthetic */ void m3430lambda$new$7$comandroidwmshellbubblesBubbleStackView(View view) {
         if (this.mShowingManage) {
             showManageMenu(false);
             return;
@@ -759,7 +759,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$8$com-android-wm-shell-bubbles-BubbleStackView  reason: not valid java name */
-    public /* synthetic */ void m3427lambda$new$8$comandroidwmshellbubblesBubbleStackView(ValueAnimator valueAnimator) {
+    public /* synthetic */ void m3431lambda$new$8$comandroidwmshellbubblesBubbleStackView(ValueAnimator valueAnimator) {
         BubbleViewProvider bubbleViewProvider = this.mExpandedBubble;
         if (bubbleViewProvider != null && bubbleViewProvider.getExpandedView() != null) {
             this.mExpandedBubble.getExpandedView().setTaskViewAlpha(((Float) valueAnimator.getAnimatedValue()).floatValue());
@@ -768,7 +768,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$9$com-android-wm-shell-bubbles-BubbleStackView  reason: not valid java name */
-    public /* synthetic */ void m3428lambda$new$9$comandroidwmshellbubblesBubbleStackView(ValueAnimator valueAnimator) {
+    public /* synthetic */ void m3432lambda$new$9$comandroidwmshellbubblesBubbleStackView(ValueAnimator valueAnimator) {
         if (!this.mExpandedViewTemporarilyHidden) {
             this.mAnimatingOutSurfaceView.setAlpha(((Float) valueAnimator.getAnimatedValue()).floatValue());
         }
@@ -789,7 +789,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$10$com-android-wm-shell-bubbles-BubbleStackView  reason: not valid java name */
-    public /* synthetic */ void m3420lambda$new$10$comandroidwmshellbubblesBubbleStackView() {
+    public /* synthetic */ void m3424lambda$new$10$comandroidwmshellbubblesBubbleStackView() {
         if (!this.mTemporarilyInvisible || this.mFlyout.getVisibility() == 0) {
             animate().translationX(0.0f).start();
         } else if (this.mStackAnimationController.isStackOnLeftSide()) {
@@ -805,7 +805,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
             removeView(dismissView);
         }
         this.mDismissView = new DismissView(getContext());
-        int dimensionPixelSize = getResources().getDimensionPixelSize(C3343R.dimen.bubble_elevation);
+        int dimensionPixelSize = getResources().getDimensionPixelSize(C3353R.dimen.bubble_elevation);
         addView(this.mDismissView);
         this.mDismissView.setElevation((float) dimensionPixelSize);
         this.mMagneticTarget = new MagnetizedObject.MagneticTarget(this.mDismissView.getCircle(), Settings.Secure.getInt(getContext().getContentResolver(), "bubble_dismiss_radius", this.mBubbleSize * 2));
@@ -817,7 +817,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
         if (viewGroup != null) {
             removeView(viewGroup);
         }
-        ViewGroup viewGroup2 = (ViewGroup) LayoutInflater.from(getContext()).inflate(C3343R.layout.bubble_manage_menu, this, false);
+        ViewGroup viewGroup2 = (ViewGroup) LayoutInflater.from(getContext()).inflate(C3353R.layout.bubble_manage_menu, this, false);
         this.mManageMenu = viewGroup2;
         viewGroup2.setVisibility(4);
         PhysicsAnimator.getInstance(this.mManageMenu).setDefaultSpringConfig(this.mManageSpringConfig);
@@ -827,33 +827,33 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
             }
         });
         this.mManageMenu.setClipToOutline(true);
-        this.mManageMenu.findViewById(C3343R.C3346id.bubble_manage_menu_dismiss_container).setOnClickListener(new BubbleStackView$$ExternalSyntheticLambda26(this));
-        this.mManageMenu.findViewById(C3343R.C3346id.bubble_manage_menu_dont_bubble_container).setOnClickListener(new BubbleStackView$$ExternalSyntheticLambda27(this));
-        this.mManageMenu.findViewById(C3343R.C3346id.bubble_manage_menu_settings_container).setOnClickListener(new BubbleStackView$$ExternalSyntheticLambda28(this));
-        this.mManageSettingsIcon = (ImageView) this.mManageMenu.findViewById(C3343R.C3346id.bubble_manage_menu_settings_icon);
-        this.mManageSettingsText = (TextView) this.mManageMenu.findViewById(C3343R.C3346id.bubble_manage_menu_settings_name);
+        this.mManageMenu.findViewById(C3353R.C3356id.bubble_manage_menu_dismiss_container).setOnClickListener(new BubbleStackView$$ExternalSyntheticLambda26(this));
+        this.mManageMenu.findViewById(C3353R.C3356id.bubble_manage_menu_dont_bubble_container).setOnClickListener(new BubbleStackView$$ExternalSyntheticLambda27(this));
+        this.mManageMenu.findViewById(C3353R.C3356id.bubble_manage_menu_settings_container).setOnClickListener(new BubbleStackView$$ExternalSyntheticLambda28(this));
+        this.mManageSettingsIcon = (ImageView) this.mManageMenu.findViewById(C3353R.C3356id.bubble_manage_menu_settings_icon);
+        this.mManageSettingsText = (TextView) this.mManageMenu.findViewById(C3353R.C3356id.bubble_manage_menu_settings_name);
         this.mManageMenu.setLayoutDirection(3);
         addView(this.mManageMenu);
-        mo48712x9871fdc0();
+        mo48721x9871fdc0();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setUpManageMenu$11$com-android-wm-shell-bubbles-BubbleStackView */
-    public /* synthetic */ void mo48703x5efc6615(View view) {
+    public /* synthetic */ void mo48712x5efc6615(View view) {
         showManageMenu(false);
         dismissBubbleIfExists(this.mBubbleData.getSelectedBubble());
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setUpManageMenu$12$com-android-wm-shell-bubbles-BubbleStackView */
-    public /* synthetic */ void mo48704x1873f3b4(View view) {
+    public /* synthetic */ void mo48713x1873f3b4(View view) {
         showManageMenu(false);
         this.mUnbubbleConversationCallback.accept(this.mBubbleData.getSelectedBubble().getKey());
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setUpManageMenu$13$com-android-wm-shell-bubbles-BubbleStackView */
-    public /* synthetic */ void mo48705xd1eb8153(View view) {
+    public /* synthetic */ void mo48714xd1eb8153(View view) {
         showManageMenu(false);
         BubbleViewProvider selectedBubble = this.mBubbleData.getSelectedBubble();
         if (selectedBubble != null && this.mBubbleData.hasBubbleInStackWithKey(selectedBubble.getKey())) {
@@ -1114,10 +1114,10 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
     /* access modifiers changed from: package-private */
     public void setupLocalMenu(AccessibilityNodeInfo accessibilityNodeInfo) {
         Resources resources = this.mContext.getResources();
-        accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3343R.C3346id.action_move_top_left, resources.getString(C3343R.string.bubble_accessibility_action_move_top_left)));
-        accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3343R.C3346id.action_move_top_right, resources.getString(C3343R.string.bubble_accessibility_action_move_top_right)));
-        accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3343R.C3346id.action_move_bottom_left, resources.getString(C3343R.string.bubble_accessibility_action_move_bottom_left)));
-        accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3343R.C3346id.action_move_bottom_right, resources.getString(C3343R.string.bubble_accessibility_action_move_bottom_right)));
+        accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3353R.C3356id.action_move_top_left, resources.getString(C3353R.string.bubble_accessibility_action_move_top_left)));
+        accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3353R.C3356id.action_move_top_right, resources.getString(C3353R.string.bubble_accessibility_action_move_top_right)));
+        accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3353R.C3356id.action_move_bottom_left, resources.getString(C3353R.string.bubble_accessibility_action_move_bottom_left)));
+        accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C3353R.C3356id.action_move_bottom_right, resources.getString(C3353R.string.bubble_accessibility_action_move_bottom_right)));
         accessibilityNodeInfo.addAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_DISMISS);
         if (this.mIsExpanded) {
             accessibilityNodeInfo.addAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_COLLAPSE);
@@ -1133,7 +1133,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
         RectF allowableStackPositionRegion = this.mPositioner.getAllowableStackPositionRegion(getBubbleCount());
         if (i == 1048576) {
             this.mBubbleData.dismissAll(6);
-            announceForAccessibility(getResources().getString(C3343R.string.accessibility_bubble_dismissed));
+            announceForAccessibility(getResources().getString(C3353R.string.accessibility_bubble_dismissed));
             return true;
         } else if (i == 524288) {
             this.mBubbleData.setExpanded(false);
@@ -1141,16 +1141,16 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
         } else if (i == 262144) {
             this.mBubbleData.setExpanded(true);
             return true;
-        } else if (i == C3343R.C3346id.action_move_top_left) {
+        } else if (i == C3353R.C3356id.action_move_top_left) {
             this.mStackAnimationController.springStackAfterFling(allowableStackPositionRegion.left, allowableStackPositionRegion.top);
             return true;
-        } else if (i == C3343R.C3346id.action_move_top_right) {
+        } else if (i == C3353R.C3356id.action_move_top_right) {
             this.mStackAnimationController.springStackAfterFling(allowableStackPositionRegion.right, allowableStackPositionRegion.top);
             return true;
-        } else if (i == C3343R.C3346id.action_move_bottom_left) {
+        } else if (i == C3353R.C3356id.action_move_bottom_left) {
             this.mStackAnimationController.springStackAfterFling(allowableStackPositionRegion.left, allowableStackPositionRegion.bottom);
             return true;
-        } else if (i != C3343R.C3346id.action_move_bottom_right) {
+        } else if (i != C3353R.C3356id.action_move_bottom_right) {
             return false;
         } else {
             this.mStackAnimationController.springStackAfterFling(allowableStackPositionRegion.right, allowableStackPositionRegion.bottom);
@@ -1165,13 +1165,13 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
                 String appName = bubble.getAppName();
                 String title = bubble.getTitle();
                 if (title == null) {
-                    title = getResources().getString(C3343R.string.notification_bubble_title);
+                    title = getResources().getString(C3353R.string.notification_bubble_title);
                 }
                 if (bubble.getIconView() != null) {
                     if (this.mIsExpanded || i > 0) {
-                        bubble.getIconView().setContentDescription(getResources().getString(C3343R.string.bubble_content_description_single, new Object[]{title, appName}));
+                        bubble.getIconView().setContentDescription(getResources().getString(C3353R.string.bubble_content_description_single, new Object[]{title, appName}));
                     } else {
-                        bubble.getIconView().setContentDescription(getResources().getString(C3343R.string.bubble_content_description_stack, new Object[]{title, appName, Integer.valueOf(this.mBubbleContainer.getChildCount() - 1)}));
+                        bubble.getIconView().setContentDescription(getResources().getString(C3353R.string.bubble_content_description_stack, new Object[]{title, appName, Integer.valueOf(this.mBubbleContainer.getChildCount() - 1)}));
                     }
                 }
             }
@@ -1376,7 +1376,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateBubbleOrder$16$com-android-wm-shell-bubbles-BubbleStackView */
-    public /* synthetic */ void mo48711x17a8a028(List list) {
+    public /* synthetic */ void mo48720x17a8a028(List list) {
         for (int i = 0; i < list.size(); i++) {
             this.mBubbleContainer.reorderView(((Bubble) list.get(i)).getIconView(), i);
         }
@@ -1415,7 +1415,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setSelectedBubble$18$com-android-wm-shell-bubbles-BubbleStackView */
-    public /* synthetic */ void mo48702x3b4521d6(BubbleViewProvider bubbleViewProvider, Boolean bool) {
+    public /* synthetic */ void mo48711x3b4521d6(BubbleViewProvider bubbleViewProvider, Boolean bool) {
         this.mAnimatingOutSurfaceContainer.setVisibility(bool.booleanValue() ? 0 : 4);
         showNewlySelectedBubble(bubbleViewProvider);
     }
@@ -1432,7 +1432,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$showNewlySelectedBubble$19$com-android-wm-shell-bubbles-BubbleStackView */
-    public /* synthetic */ void mo48710xa4db6283(BubbleViewProvider bubbleViewProvider, BubbleViewProvider bubbleViewProvider2) {
+    public /* synthetic */ void mo48719xa4db6283(BubbleViewProvider bubbleViewProvider, BubbleViewProvider bubbleViewProvider2) {
         if (bubbleViewProvider != null) {
             bubbleViewProvider.setTaskViewVisibility(false);
         }
@@ -1532,7 +1532,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$hideExpandedViewIfNeeded$20$com-android-wm-shell-bubbles-BubbleStackView */
-    public /* synthetic */ void mo48688x3a4e13a2(AnimatableScaleMatrix animatableScaleMatrix, ArrayMap arrayMap) {
+    public /* synthetic */ void mo48697x3a4e13a2(AnimatableScaleMatrix animatableScaleMatrix, ArrayMap arrayMap) {
         this.mExpandedViewContainer.setAnimationMatrix(this.mExpandedViewContainerMatrix);
     }
 
@@ -1547,7 +1547,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$showExpandedViewIfNeeded$21$com-android-wm-shell-bubbles-BubbleStackView */
-    public /* synthetic */ void mo48706x132ff17c(AnimatableScaleMatrix animatableScaleMatrix, ArrayMap arrayMap) {
+    public /* synthetic */ void mo48715x132ff17c(AnimatableScaleMatrix animatableScaleMatrix, ArrayMap arrayMap) {
         this.mExpandedViewContainer.setAnimationMatrix(this.mExpandedViewContainerMatrix);
     }
 
@@ -1623,7 +1623,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$animateExpansion$22$com-android-wm-shell-bubbles-BubbleStackView */
-    public /* synthetic */ void mo48676x57fd2a0c() {
+    public /* synthetic */ void mo48685x57fd2a0c() {
         if (this.mIsExpanded && this.mExpandedBubble.getExpandedView() != null) {
             maybeShowManageEdu();
         }
@@ -1631,7 +1631,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$animateExpansion$25$com-android-wm-shell-bubbles-BubbleStackView */
-    public /* synthetic */ void mo48679x8463d2e9(boolean z, float f) {
+    public /* synthetic */ void mo48688x8463d2e9(boolean z, float f) {
         this.mExpandedViewAlphaAnimator.start();
         PhysicsAnimator.getInstance(this.mExpandedViewContainerMatrix).cancel();
         PhysicsAnimator.getInstance(this.mExpandedViewContainerMatrix).spring(AnimatableScaleMatrix.SCALE_X, AnimatableScaleMatrix.getAnimatableValueForScaleFactor(1.0f), this.mScaleInSpringConfig).spring(AnimatableScaleMatrix.SCALE_Y, AnimatableScaleMatrix.getAnimatableValueForScaleFactor(1.0f), this.mScaleInSpringConfig).addUpdateListener(new BubbleStackView$$ExternalSyntheticLambda13(this, z, f)).withEndActions(new BubbleStackView$$ExternalSyntheticLambda14(this)).start();
@@ -1639,7 +1639,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$animateExpansion$23$com-android-wm-shell-bubbles-BubbleStackView */
-    public /* synthetic */ void mo48677x1174b7ab(boolean z, float f, AnimatableScaleMatrix animatableScaleMatrix, ArrayMap arrayMap) {
+    public /* synthetic */ void mo48686x1174b7ab(boolean z, float f, AnimatableScaleMatrix animatableScaleMatrix, ArrayMap arrayMap) {
         float f2;
         BubbleViewProvider bubbleViewProvider = this.mExpandedBubble;
         if (bubbleViewProvider != null && bubbleViewProvider.getIconView() != null) {
@@ -1655,7 +1655,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$animateExpansion$24$com-android-wm-shell-bubbles-BubbleStackView */
-    public /* synthetic */ void mo48678xcaec454a() {
+    public /* synthetic */ void mo48687xcaec454a() {
         this.mExpandedViewContainer.setAnimationMatrix((Matrix) null);
         afterExpandedViewAnimation();
         BubbleViewProvider bubbleViewProvider = this.mExpandedBubble;
@@ -1710,19 +1710,19 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$animateCollapse$26$com-android-wm-shell-bubbles-BubbleStackView */
-    public /* synthetic */ void mo48673xd439cd3e() {
+    public /* synthetic */ void mo48682xd439cd3e() {
         this.mBubbleContainer.setActiveController(this.mStackAnimationController);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$animateCollapse$27$com-android-wm-shell-bubbles-BubbleStackView */
-    public /* synthetic */ void mo48674x8db15add(AnimatableScaleMatrix animatableScaleMatrix, ArrayMap arrayMap) {
+    public /* synthetic */ void mo48683x8db15add(AnimatableScaleMatrix animatableScaleMatrix, ArrayMap arrayMap) {
         this.mExpandedViewContainer.setAnimationMatrix(this.mExpandedViewContainerMatrix);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$animateCollapse$28$com-android-wm-shell-bubbles-BubbleStackView */
-    public /* synthetic */ void mo48675x4728e87c() {
+    public /* synthetic */ void mo48684x4728e87c() {
         BubbleViewProvider bubbleViewProvider = this.mExpandedBubble;
         beforeExpandedViewAnimation();
         ManageEducationView manageEducationView = this.mManageEduView;
@@ -1788,7 +1788,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$animateSwitchBubbles$31$com-android-wm-shell-bubbles-BubbleStackView */
-    public /* synthetic */ void mo48687x34e36b82() {
+    public /* synthetic */ void mo48696x34e36b82() {
         if (!this.mIsExpanded) {
             this.mIsBubbleSwitchAnimating = false;
             return;
@@ -1799,13 +1799,13 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$animateSwitchBubbles$29$com-android-wm-shell-bubbles-BubbleStackView */
-    public /* synthetic */ void mo48685x8b25b239(AnimatableScaleMatrix animatableScaleMatrix, ArrayMap arrayMap) {
+    public /* synthetic */ void mo48694x8b25b239(AnimatableScaleMatrix animatableScaleMatrix, ArrayMap arrayMap) {
         this.mExpandedViewContainer.setAnimationMatrix(this.mExpandedViewContainerMatrix);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$animateSwitchBubbles$30$com-android-wm-shell-bubbles-BubbleStackView */
-    public /* synthetic */ void mo48686x7b6bdde3() {
+    public /* synthetic */ void mo48695x7b6bdde3() {
         this.mExpandedViewTemporarilyHidden = false;
         this.mIsBubbleSwitchAnimating = false;
         this.mExpandedViewContainer.setAnimationMatrix((Matrix) null);
@@ -1859,7 +1859,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$animateForIme$32$com-android-wm-shell-bubbles-BubbleStackView */
-    public /* synthetic */ void mo48680x8dc228e() {
+    public /* synthetic */ void mo48689x8dc228e() {
         updatePointerPosition(false);
         afterExpandedViewAnimation();
     }
@@ -2029,7 +2029,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$animateInFlyoutForBubble$33$com-android-wm-shell-bubbles-BubbleStackView */
-    public /* synthetic */ void mo48681xb6dfc042(Bubble bubble) {
+    public /* synthetic */ void mo48690xb6dfc042(Bubble bubble) {
         this.mAfterFlyoutHidden = null;
         BubbleViewProvider bubbleViewProvider = this.mBubbleToExpandAfterFlyoutCollapse;
         if (bubbleViewProvider != null) {
@@ -2045,7 +2045,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$animateInFlyoutForBubble$36$com-android-wm-shell-bubbles-BubbleStackView */
-    public /* synthetic */ void mo48684xe346691f(Bubble bubble) {
+    public /* synthetic */ void mo48693xe346691f(Bubble bubble) {
         if (!isExpanded() && bubble.getIconView() != null) {
             BubbleStackView$$ExternalSyntheticLambda46 bubbleStackView$$ExternalSyntheticLambda46 = new BubbleStackView$$ExternalSyntheticLambda46(this);
             if (this.mFlyout.getVisibility() == 0) {
@@ -2060,7 +2060,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$animateInFlyoutForBubble$35$com-android-wm-shell-bubbles-BubbleStackView */
-    public /* synthetic */ void mo48683x29cedb80() {
+    public /* synthetic */ void mo48692x29cedb80() {
         BubbleStackView$$ExternalSyntheticLambda29 bubbleStackView$$ExternalSyntheticLambda29 = new BubbleStackView$$ExternalSyntheticLambda29(this);
         this.mAnimateInFlyout = bubbleStackView$$ExternalSyntheticLambda29;
         this.mFlyout.postDelayed(bubbleStackView$$ExternalSyntheticLambda29, 200);
@@ -2068,7 +2068,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$animateInFlyoutForBubble$34$com-android-wm-shell-bubbles-BubbleStackView */
-    public /* synthetic */ void mo48682x70574de1() {
+    public /* synthetic */ void mo48691x70574de1() {
         int i;
         this.mFlyout.setVisibility(0);
         updateTemporarilyInvisibleAnimation(false);
@@ -2149,7 +2149,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
         this.mManageMenuScrim.animate().setInterpolator(z ? Interpolators.ALPHA_IN : Interpolators.ALPHA_OUT).alpha(z ? 0.6f : 0.0f).withEndAction(bubbleStackView$$ExternalSyntheticLambda20).start();
         if (z && (bubbleInStackWithKey = this.mBubbleData.getBubbleInStackWithKey(this.mExpandedBubble.getKey())) != null) {
             this.mManageSettingsIcon.setImageBitmap(bubbleInStackWithKey.getRawAppBadge());
-            this.mManageSettingsText.setText(getResources().getString(C3343R.string.bubbles_app_settings, new Object[]{bubbleInStackWithKey.getAppName()}));
+            this.mManageSettingsText.setText(getResources().getString(C3353R.string.bubbles_app_settings, new Object[]{bubbleInStackWithKey.getAppName()}));
         }
         if (this.mExpandedBubble.getExpandedView().getTaskView() != null) {
             this.mExpandedBubble.getExpandedView().getTaskView().setObscuredTouchRect(this.mShowingManage ? new Rect(0, 0, getWidth(), getHeight()) : null);
@@ -2182,7 +2182,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$showManageMenu$37$com-android-wm-shell-bubbles-BubbleStackView */
-    public /* synthetic */ void mo48707x96b4320b(boolean z) {
+    public /* synthetic */ void mo48716x96b4320b(boolean z) {
         if (!z) {
             this.mManageMenuScrim.setVisibility(4);
             this.mManageMenuScrim.setTranslationZ(0.0f);
@@ -2191,14 +2191,14 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$showManageMenu$38$com-android-wm-shell-bubbles-BubbleStackView */
-    public /* synthetic */ void mo48708x502bbfaa() {
+    public /* synthetic */ void mo48717x502bbfaa() {
         this.mManageMenu.getChildAt(0).requestAccessibilityFocus();
         this.mExpandedBubble.getExpandedView().updateObscuredTouchableRegion();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$showManageMenu$39$com-android-wm-shell-bubbles-BubbleStackView */
-    public /* synthetic */ void mo48709x9a34d49() {
+    public /* synthetic */ void mo48718x9a34d49() {
         this.mManageMenu.setVisibility(4);
         BubbleViewProvider bubbleViewProvider = this.mExpandedBubble;
         if (bubbleViewProvider != null && bubbleViewProvider.getExpandedView() != null) {
@@ -2229,13 +2229,13 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateExpandedBubble$41$com-android-wm-shell-bubbles-BubbleStackView */
-    public /* synthetic */ void mo48713x51e98b5f() {
-        post(new BubbleStackView$$ExternalSyntheticLambda25(this));
+    public /* synthetic */ void mo48722x51e98b5f() {
+        postDelayed(new BubbleStackView$$ExternalSyntheticLambda25(this), 200);
     }
 
     /* access modifiers changed from: private */
     /* renamed from: updateManageButtonListener */
-    public void mo48712x9871fdc0() {
+    public void mo48721x9871fdc0() {
         BubbleViewProvider bubbleViewProvider;
         if (this.mIsExpanded && (bubbleViewProvider = this.mExpandedBubble) != null && bubbleViewProvider.getExpandedView() != null) {
             this.mExpandedBubble.getExpandedView().setManageClickListener(new BubbleStackView$$ExternalSyntheticLambda17(this));
@@ -2244,7 +2244,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateManageButtonListener$42$com-android-wm-shell-bubbles-BubbleStackView */
-    public /* synthetic */ void mo48714x94e7e4a4(View view) {
+    public /* synthetic */ void mo48723x94e7e4a4(View view) {
         showManageMenu(true);
     }
 
@@ -2289,7 +2289,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$screenshotAnimatingOutBubbleIntoSurface$45$com-android-wm-shell-bubbles-BubbleStackView */
-    public /* synthetic */ void mo48701xb2df887e(Consumer consumer) {
+    public /* synthetic */ void mo48710xb2df887e(Consumer consumer) {
         SurfaceControl.ScreenshotHardwareBuffer screenshotHardwareBuffer = this.mAnimatingOutBubbleBuffer;
         if (screenshotHardwareBuffer == null || screenshotHardwareBuffer.getHardwareBuffer() == null || this.mAnimatingOutBubbleBuffer.getHardwareBuffer().isClosed()) {
             consumer.accept(false);
@@ -2305,7 +2305,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$screenshotAnimatingOutBubbleIntoSurface$44$com-android-wm-shell-bubbles-BubbleStackView */
-    public /* synthetic */ void mo48700xf967fadf(Consumer consumer) {
+    public /* synthetic */ void mo48709xf967fadf(Consumer consumer) {
         post(new BubbleStackView$$ExternalSyntheticLambda15(consumer));
     }
 

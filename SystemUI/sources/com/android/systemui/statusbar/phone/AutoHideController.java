@@ -25,7 +25,7 @@ public class AutoHideController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-statusbar-phone-AutoHideController */
-    public /* synthetic */ void mo43646x84907423() {
+    public /* synthetic */ void mo43654x84907423() {
         if (isAnyTransientBarShown()) {
             hideTransientBars();
         }
@@ -101,13 +101,13 @@ public class AutoHideController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$getCheckBarModesRunnable$1$com-android-systemui-statusbar-phone-AutoHideController */
-    public /* synthetic */ void mo43644x3377612a() {
+    public /* synthetic */ void mo43652x3377612a() {
         this.mStatusBar.synchronizeState();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$getCheckBarModesRunnable$2$com-android-systemui-statusbar-phone-AutoHideController */
-    public /* synthetic */ void mo43645x590b6a2b() {
+    public /* synthetic */ void mo43653x590b6a2b() {
         this.mNavigationBar.synchronizeState();
     }
 

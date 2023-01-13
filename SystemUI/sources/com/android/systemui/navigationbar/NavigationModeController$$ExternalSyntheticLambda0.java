@@ -11,6 +11,6 @@ public final /* synthetic */ class NavigationModeController$$ExternalSyntheticLa
     }
 
     public final void run() {
-        this.f$0.mo34846x24e40a4b(this.f$1);
+        this.f$0.mo34850x24e40a4b(this.f$1);
     }
 }

@@ -16,6 +16,6 @@ public final /* synthetic */ class PeopleSpaceWidgetManagerEx$$ExternalSynthetic
     }
 
     public final void run() {
-        PeopleSpaceWidgetManagerEx.m3503updateWidgetsWithNotificationChangedDelay$lambda0(this.f$0, this.f$1, this.f$2);
+        PeopleSpaceWidgetManagerEx.m3507updateWidgetsWithNotificationChangedDelay$lambda0(this.f$0, this.f$1, this.f$2);
     }
 }

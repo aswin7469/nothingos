@@ -35,9 +35,9 @@ import sun.security.x509.AlgorithmId;
 import sun.security.x509.X500Name;
 
 public class SignerInfo implements DerEncoder {
-    private static final Set<CryptoPrimitive> DIGEST_PRIMITIVE_SET = Collections.unmodifiableSet(EnumSet.m1716of(CryptoPrimitive.MESSAGE_DIGEST));
+    private static final Set<CryptoPrimitive> DIGEST_PRIMITIVE_SET = Collections.unmodifiableSet(EnumSet.m1722of(CryptoPrimitive.MESSAGE_DIGEST));
     private static final DisabledAlgorithmConstraints JAR_DISABLED_CHECK = new DisabledAlgorithmConstraints(DisabledAlgorithmConstraints.PROPERTY_JAR_DISABLED_ALGS);
-    private static final Set<CryptoPrimitive> SIG_PRIMITIVE_SET = Collections.unmodifiableSet(EnumSet.m1716of(CryptoPrimitive.SIGNATURE));
+    private static final Set<CryptoPrimitive> SIG_PRIMITIVE_SET = Collections.unmodifiableSet(EnumSet.m1722of(CryptoPrimitive.SIGNATURE));
     PKCS9Attributes authenticatedAttributes;
     BigInteger certificateSerialNumber;
     AlgorithmId digestAlgorithmId;

@@ -11,6 +11,6 @@ public final /* synthetic */ class StackScrollerDecorView$$ExternalSyntheticLamb
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo41744xe43e0945((Boolean) obj);
+        this.f$0.mo41752xe43e0945((Boolean) obj);
     }
 }

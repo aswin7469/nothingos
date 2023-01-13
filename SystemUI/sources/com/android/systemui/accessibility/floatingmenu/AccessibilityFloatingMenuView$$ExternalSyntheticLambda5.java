@@ -9,6 +9,6 @@ public final /* synthetic */ class AccessibilityFloatingMenuView$$ExternalSynthe
     }
 
     public final void run() {
-        this.f$0.mo30049x833039d8();
+        this.f$0.mo30059x833039d8();
     }
 }

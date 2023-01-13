@@ -2,12 +2,12 @@ package com.google.android.material.progressindicator;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 public final class CircularProgressIndicator extends BaseProgressIndicator<CircularProgressIndicatorSpec> {
-    public static final int DEF_STYLE_RES = C3621R.style.Widget_MaterialComponents_CircularProgressIndicator;
+    public static final int DEF_STYLE_RES = C3631R.style.Widget_MaterialComponents_CircularProgressIndicator;
     public static final int INDICATOR_DIRECTION_CLOCKWISE = 0;
     public static final int INDICATOR_DIRECTION_COUNTERCLOCKWISE = 1;
 
@@ -20,7 +20,7 @@ public final class CircularProgressIndicator extends BaseProgressIndicator<Circu
     }
 
     public CircularProgressIndicator(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, C3621R.attr.circularProgressIndicatorStyle);
+        this(context, attributeSet, C3631R.attr.circularProgressIndicatorStyle);
     }
 
     public CircularProgressIndicator(Context context, AttributeSet attributeSet, int i) {

@@ -528,7 +528,7 @@ public class ShadeListBuilder implements Dumpable {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$promoteNotifs$0$com-android-systemui-statusbar-notification-collection-ShadeListBuilder */
-    public /* synthetic */ boolean mo40125x98d96d77(List list, NotificationEntry notificationEntry) {
+    public /* synthetic */ boolean mo40127x98d96d77(List list, NotificationEntry notificationEntry) {
         boolean applyTopLevelPromoters = applyTopLevelPromoters(notificationEntry);
         if (applyTopLevelPromoters) {
             notificationEntry.setParent(GroupEntry.ROOT_ENTRY);
@@ -815,7 +815,7 @@ public class ShadeListBuilder implements Dumpable {
                 comparator.onCleanup();
             }
         }
-        callOnCleanup(List.m1723of(getStabilityManager()));
+        callOnCleanup(List.m1729of(getStabilityManager()));
         Trace.endSection();
     }
 
@@ -838,7 +838,7 @@ public class ShadeListBuilder implements Dumpable {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$2$com-android-systemui-statusbar-notification-collection-ShadeListBuilder */
-    public /* synthetic */ int mo40123xfadc8176(ListEntry listEntry, ListEntry listEntry2) {
+    public /* synthetic */ int mo40125xfadc8176(ListEntry listEntry, ListEntry listEntry2) {
         int compare;
         int compare2 = Integer.compare(listEntry.getSectionIndex(), listEntry2.getSectionIndex());
         if (compare2 != 0) {
@@ -874,7 +874,7 @@ public class ShadeListBuilder implements Dumpable {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$3$com-android-systemui-statusbar-notification-collection-ShadeListBuilder */
-    public /* synthetic */ int mo40124xc1e86877(ListEntry listEntry, ListEntry listEntry2) {
+    public /* synthetic */ int mo40126xc1e86877(ListEntry listEntry, ListEntry listEntry2) {
         int i = -1;
         int stableIndex = canReorder(listEntry) ? -1 : listEntry.getPreviousAttachState().getStableIndex();
         if (!canReorder(listEntry2)) {
@@ -965,7 +965,7 @@ public class ShadeListBuilder implements Dumpable {
 
     private void rebuildListIfBefore(int i) {
         this.mPipelineState.requireIsBefore(i);
-        if (this.mPipelineState.mo40417is(0)) {
+        if (this.mPipelineState.mo40420is(0)) {
             this.mChoreographer.schedule();
         }
     }

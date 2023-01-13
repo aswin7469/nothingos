@@ -12,6 +12,6 @@ public final /* synthetic */ class BatteryControllerImpl$$ExternalSyntheticLambd
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo45591x56786e14((BatteryController.BatteryStateChangeCallback) obj);
+        this.f$0.mo45603x56786e14((BatteryController.BatteryStateChangeCallback) obj);
     }
 }

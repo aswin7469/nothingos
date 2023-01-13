@@ -16,6 +16,6 @@ public final /* synthetic */ class AppPair$$ExternalSyntheticLambda0 implements 
     }
 
     public final void runWithTransaction(SurfaceControl.Transaction transaction) {
-        this.f$0.mo48160xaf230433(this.f$1, transaction);
+        this.f$0.mo48169xaf230433(this.f$1, transaction);
     }
 }

@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.view.ViewOverlay;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
-import com.google.android.setupcompat.C3931R;
+import com.google.android.setupcompat.C3941R;
 import com.google.android.setupcompat.template.Mixin;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,12 +45,12 @@ public class TemplateLayout extends FrameLayout {
 
     public TemplateLayout(Context context, int i, int i2) {
         super(context);
-        init(i, i2, (AttributeSet) null, C3931R.attr.sucLayoutTheme);
+        init(i, i2, (AttributeSet) null, C3941R.attr.sucLayoutTheme);
     }
 
     public TemplateLayout(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        init(0, 0, attributeSet, C3931R.attr.sucLayoutTheme);
+        init(0, 0, attributeSet, C3941R.attr.sucLayoutTheme);
     }
 
     public TemplateLayout(Context context, AttributeSet attributeSet, int i) {
@@ -59,12 +59,12 @@ public class TemplateLayout extends FrameLayout {
     }
 
     private void init(int i, int i2, AttributeSet attributeSet, int i3) {
-        TypedArray obtainStyledAttributes = getContext().obtainStyledAttributes(attributeSet, C3931R.styleable.SucTemplateLayout, i3, 0);
+        TypedArray obtainStyledAttributes = getContext().obtainStyledAttributes(attributeSet, C3941R.styleable.SucTemplateLayout, i3, 0);
         if (i == 0) {
-            i = obtainStyledAttributes.getResourceId(C3931R.styleable.SucTemplateLayout_android_layout, 0);
+            i = obtainStyledAttributes.getResourceId(C3941R.styleable.SucTemplateLayout_android_layout, 0);
         }
         if (i2 == 0) {
-            i2 = obtainStyledAttributes.getResourceId(C3931R.styleable.SucTemplateLayout_sucContainer, 0);
+            i2 = obtainStyledAttributes.getResourceId(C3941R.styleable.SucTemplateLayout_sucContainer, 0);
         }
         onBeforeTemplateInflated(attributeSet, i3);
         inflateTemplate(i, i2);

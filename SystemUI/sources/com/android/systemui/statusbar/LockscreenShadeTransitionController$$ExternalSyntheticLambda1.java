@@ -11,6 +11,6 @@ public final /* synthetic */ class LockscreenShadeTransitionController$$External
     }
 
     public final void run() {
-        LockscreenShadeTransitionController.m3029goToLockedShadeInternal$lambda7(this.f$0, this.f$1);
+        LockscreenShadeTransitionController.m3033goToLockedShadeInternal$lambda7(this.f$0, this.f$1);
     }
 }

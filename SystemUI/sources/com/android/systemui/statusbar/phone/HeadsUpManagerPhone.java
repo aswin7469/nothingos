@@ -5,7 +5,7 @@ import android.graphics.Region;
 import android.util.Pools;
 import androidx.collection.ArraySet;
 import com.android.internal.policy.SystemBarUtils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dumpable;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.AlertingNotificationManager;
@@ -78,7 +78,7 @@ public class HeadsUpManagerPhone extends HeadsUpManager implements Dumpable, OnH
 
     public HeadsUpManagerPhone(Context context, HeadsUpManagerLogger headsUpManagerLogger, StatusBarStateController statusBarStateController, KeyguardBypassController keyguardBypassController, GroupMembershipManager groupMembershipManager, VisualStabilityProvider visualStabilityProvider, ConfigurationController configurationController) {
         super(context, headsUpManagerLogger);
-        C29523 r2 = new StatusBarStateController.StateListener() {
+        C29583 r2 = new StatusBarStateController.StateListener() {
             public void onStateChanged(int i) {
                 boolean z = false;
                 boolean z2 = HeadsUpManagerPhone.this.mStatusBarState == 1;
@@ -109,7 +109,7 @@ public class HeadsUpManagerPhone extends HeadsUpManager implements Dumpable, OnH
             }
         };
         this.mStatusBarStateListener = r2;
-        this.mExtensionTime = this.mContext.getResources().getInteger(C1893R.integer.ambient_notification_extension_time);
+        this.mExtensionTime = this.mContext.getResources().getInteger(C1894R.integer.ambient_notification_extension_time);
         statusBarStateController.addCallback(r2);
         this.mBypassController = keyguardBypassController;
         this.mGroupMembershipManager = groupMembershipManager;
@@ -132,7 +132,7 @@ public class HeadsUpManagerPhone extends HeadsUpManager implements Dumpable, OnH
 
     /* access modifiers changed from: private */
     public void updateResources() {
-        this.mHeadsUpInset = SystemBarUtils.getStatusBarHeight(this.mContext) + this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.heads_up_status_bar_padding);
+        this.mHeadsUpInset = SystemBarUtils.getStatusBarHeight(this.mContext) + this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.heads_up_status_bar_padding);
     }
 
     /* access modifiers changed from: package-private */
@@ -270,7 +270,7 @@ public class HeadsUpManagerPhone extends HeadsUpManager implements Dumpable, OnH
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-statusbar-phone-HeadsUpManagerPhone */
-    public /* synthetic */ void mo44062xa2a85e19() {
+    public /* synthetic */ void mo44072xa2a85e19() {
         this.mAnimationStateHandler.setHeadsUpGoingAwayAnimationsAllowed(false);
         Iterator<NotificationEntry> it = this.mEntriesToRemoveWhenReorderingAllowed.iterator();
         while (it.hasNext()) {
@@ -354,7 +354,7 @@ public class HeadsUpManagerPhone extends HeadsUpManager implements Dumpable, OnH
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$setEntry$0$com-android-systemui-statusbar-phone-HeadsUpManagerPhone$HeadsUpEntryPhone */
-        public /* synthetic */ void mo44077x5e873775(NotificationEntry notificationEntry) {
+        public /* synthetic */ void mo44087x5e873775(NotificationEntry notificationEntry) {
             if (!HeadsUpManagerPhone.this.mVisualStabilityProvider.isReorderingAllowed() && !notificationEntry.showingPulsing()) {
                 HeadsUpManagerPhone.this.mEntriesToRemoveWhenReorderingAllowed.add(notificationEntry);
                 HeadsUpManagerPhone.this.mVisualStabilityProvider.addTemporaryReorderingAllowedListener(HeadsUpManagerPhone.this.mOnReorderingAllowedListener);

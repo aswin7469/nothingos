@@ -29,7 +29,7 @@ import java.p026io.FileDescriptor;
 import java.p026io.InterruptedIOException;
 
 /* renamed from: libcore.io.Linux */
-public final class Linux implements C4699Os {
+public final class Linux implements C4711Os {
     private native int preadBytes(FileDescriptor fileDescriptor, Object obj, int i, int i2, long j) throws ErrnoException, InterruptedIOException;
 
     private native int pwriteBytes(FileDescriptor fileDescriptor, Object obj, int i, int i2, long j) throws ErrnoException, InterruptedIOException;

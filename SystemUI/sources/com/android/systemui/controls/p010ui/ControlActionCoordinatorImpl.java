@@ -37,7 +37,7 @@ import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 
 @SysUISingleton
-@Metadata(mo64986d1 = {"\u0000¬\u0001\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010#\n\u0002\u0010\u000e\n\u0002\b\u0006\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u000b\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u0007\n\u0002\u0018\u0002\n\u0002\b\u0004\n\u0002\u0010\u0007\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0003\b\u0007\u0018\u0000 O2\u00020\u0001:\u0002NOBq\b\u0007\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\b\b\u0001\u0010\u0006\u001a\u00020\u0005\u0012\u0006\u0010\u0007\u001a\u00020\b\u0012\u0006\u0010\t\u001a\u00020\n\u0012\u0006\u0010\u000b\u001a\u00020\f\u0012\f\u0010\r\u001a\b\u0012\u0004\u0012\u00020\u000f0\u000e\u0012\u0006\u0010\u0010\u001a\u00020\u0011\u0012\u0006\u0010\u0012\u001a\u00020\u0013\u0012\u0006\u0010\u0014\u001a\u00020\u0015\u0012\u0006\u0010\u0016\u001a\u00020\u0017\u0012\b\b\u0001\u0010\u0018\u001a\u00020\u0019¢\u0006\u0002\u0010\u001aJ\u0014\u0010,\u001a\u00020-2\n\u0010.\u001a\u00060+R\u00020\u0000H\u0007J\b\u0010/\u001a\u00020-H\u0016J2\u00100\u001a\u00060+R\u00020\u00002\u0006\u00101\u001a\u00020\u001d2\f\u00102\u001a\b\u0012\u0004\u0012\u00020-032\u0006\u00104\u001a\u00020&2\u0006\u00105\u001a\u00020&H\u0007J\u0010\u00106\u001a\u00020-2\u0006\u00107\u001a\u00020&H\u0016J\u0010\u00108\u001a\u00020-2\u0006\u00101\u001a\u00020\u001dH\u0016J\u0010\u00109\u001a\u00020-2\u0006\u0010:\u001a\u00020;H\u0016J\u0010\u0010<\u001a\u00020-2\u0006\u00101\u001a\u00020\u001dH\u0016J \u0010=\u001a\u00020-2\u0006\u0010:\u001a\u00020;2\u0006\u0010>\u001a\u00020\u001d2\u0006\u0010?\u001a\u00020@H\u0016J\u0010\u0010A\u001a\u00020&2\u0006\u00101\u001a\u00020\u001dH\u0002J\u0018\u0010B\u001a\u00020-2\u0006\u0010:\u001a\u00020;2\u0006\u0010C\u001a\u00020DH\u0002J\u0014\u0010E\u001a\u00020-2\n\u0010.\u001a\u00060+R\u00020\u0000H\u0002J \u0010F\u001a\u00020-2\u0006\u0010:\u001a\u00020;2\u0006\u0010>\u001a\u00020\u001d2\u0006\u0010G\u001a\u00020&H\u0016J \u0010H\u001a\u00020-2\u0006\u0010:\u001a\u00020;2\u0006\u0010>\u001a\u00020\u001d2\u0006\u0010I\u001a\u00020JH\u0016J\u0010\u0010K\u001a\u00020-2\u0006\u0010L\u001a\u00020MH\u0002R\u0014\u0010\u001b\u001a\b\u0012\u0004\u0012\u00020\u001d0\u001cX\u000e¢\u0006\u0002\n\u0000R\u001a\u0010\u001e\u001a\u00020\u0003X.¢\u0006\u000e\n\u0000\u001a\u0004\b\u001f\u0010 \"\u0004\b!\u0010\"R\u000e\u0010\u0007\u001a\u00020\bX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0004\u001a\u00020\u0005X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\t\u001a\u00020\nX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0002\u001a\u00020\u0003X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0010\u001a\u00020\u0011X\u0004¢\u0006\u0002\n\u0000R\u0010\u0010#\u001a\u0004\u0018\u00010$X\u000e¢\u0006\u0002\n\u0000R\u0014\u0010%\u001a\u00020&8BX\u0004¢\u0006\u0006\u001a\u0004\b%\u0010'R\u000e\u0010\u000b\u001a\u00020\fX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010(\u001a\u00020&X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010)\u001a\u00020&X\u000e¢\u0006\u0002\n\u0000R\u0014\u0010*\u001a\b\u0018\u00010+R\u00020\u0000X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0014\u001a\u00020\u0015X\u0004¢\u0006\u0002\n\u0000R\u0014\u0010\r\u001a\b\u0012\u0004\u0012\u00020\u000f0\u000eX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0006\u001a\u00020\u0005X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0016\u001a\u00020\u0017X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0012\u001a\u00020\u0013X\u0004¢\u0006\u0002\n\u0000¨\u0006P"}, mo64987d2 = {"Lcom/android/systemui/controls/ui/ControlActionCoordinatorImpl;", "Lcom/android/systemui/controls/ui/ControlActionCoordinator;", "context", "Landroid/content/Context;", "bgExecutor", "Lcom/android/systemui/util/concurrency/DelayableExecutor;", "uiExecutor", "activityStarter", "Lcom/android/systemui/plugins/ActivityStarter;", "broadcastSender", "Lcom/android/systemui/broadcast/BroadcastSender;", "keyguardStateController", "Lcom/android/systemui/statusbar/policy/KeyguardStateController;", "taskViewFactory", "Ljava/util/Optional;", "Lcom/android/wm/shell/TaskViewFactory;", "controlsMetricsLogger", "Lcom/android/systemui/controls/ControlsMetricsLogger;", "vibrator", "Lcom/android/systemui/statusbar/VibratorHelper;", "secureSettings", "Lcom/android/systemui/util/settings/SecureSettings;", "userContextProvider", "Lcom/android/systemui/settings/UserContextProvider;", "mainHandler", "Landroid/os/Handler;", "(Landroid/content/Context;Lcom/android/systemui/util/concurrency/DelayableExecutor;Lcom/android/systemui/util/concurrency/DelayableExecutor;Lcom/android/systemui/plugins/ActivityStarter;Lcom/android/systemui/broadcast/BroadcastSender;Lcom/android/systemui/statusbar/policy/KeyguardStateController;Ljava/util/Optional;Lcom/android/systemui/controls/ControlsMetricsLogger;Lcom/android/systemui/statusbar/VibratorHelper;Lcom/android/systemui/util/settings/SecureSettings;Lcom/android/systemui/settings/UserContextProvider;Landroid/os/Handler;)V", "actionsInProgress", "", "", "activityContext", "getActivityContext", "()Landroid/content/Context;", "setActivityContext", "(Landroid/content/Context;)V", "dialog", "Landroid/app/Dialog;", "isLocked", "", "()Z", "mAllowTrivialControls", "mShowDeviceControlsInLockscreen", "pendingAction", "Lcom/android/systemui/controls/ui/ControlActionCoordinatorImpl$Action;", "bouncerOrRun", "", "action", "closeDialogs", "createAction", "controlId", "f", "Lkotlin/Function0;", "blockable", "authIsRequired", "drag", "isEdge", "enableActionOnTouch", "longPress", "cvh", "Lcom/android/systemui/controls/ui/ControlViewHolder;", "runPendingAction", "setValue", "templateId", "newValue", "", "shouldRunAction", "showDetail", "pendingIntent", "Landroid/app/PendingIntent;", "showSettingsDialogIfNeeded", "toggle", "isChecked", "touch", "control", "Landroid/service/controls/Control;", "vibrate", "effect", "Landroid/os/VibrationEffect;", "Action", "Companion", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000¬\u0001\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010#\n\u0002\u0010\u000e\n\u0002\b\u0006\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u000b\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u0007\n\u0002\u0018\u0002\n\u0002\b\u0004\n\u0002\u0010\u0007\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0003\b\u0007\u0018\u0000 O2\u00020\u0001:\u0002NOBq\b\u0007\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\b\b\u0001\u0010\u0006\u001a\u00020\u0005\u0012\u0006\u0010\u0007\u001a\u00020\b\u0012\u0006\u0010\t\u001a\u00020\n\u0012\u0006\u0010\u000b\u001a\u00020\f\u0012\f\u0010\r\u001a\b\u0012\u0004\u0012\u00020\u000f0\u000e\u0012\u0006\u0010\u0010\u001a\u00020\u0011\u0012\u0006\u0010\u0012\u001a\u00020\u0013\u0012\u0006\u0010\u0014\u001a\u00020\u0015\u0012\u0006\u0010\u0016\u001a\u00020\u0017\u0012\b\b\u0001\u0010\u0018\u001a\u00020\u0019¢\u0006\u0002\u0010\u001aJ\u0014\u0010,\u001a\u00020-2\n\u0010.\u001a\u00060+R\u00020\u0000H\u0007J\b\u0010/\u001a\u00020-H\u0016J2\u00100\u001a\u00060+R\u00020\u00002\u0006\u00101\u001a\u00020\u001d2\f\u00102\u001a\b\u0012\u0004\u0012\u00020-032\u0006\u00104\u001a\u00020&2\u0006\u00105\u001a\u00020&H\u0007J\u0010\u00106\u001a\u00020-2\u0006\u00107\u001a\u00020&H\u0016J\u0010\u00108\u001a\u00020-2\u0006\u00101\u001a\u00020\u001dH\u0016J\u0010\u00109\u001a\u00020-2\u0006\u0010:\u001a\u00020;H\u0016J\u0010\u0010<\u001a\u00020-2\u0006\u00101\u001a\u00020\u001dH\u0016J \u0010=\u001a\u00020-2\u0006\u0010:\u001a\u00020;2\u0006\u0010>\u001a\u00020\u001d2\u0006\u0010?\u001a\u00020@H\u0016J\u0010\u0010A\u001a\u00020&2\u0006\u00101\u001a\u00020\u001dH\u0002J\u0018\u0010B\u001a\u00020-2\u0006\u0010:\u001a\u00020;2\u0006\u0010C\u001a\u00020DH\u0002J\u0014\u0010E\u001a\u00020-2\n\u0010.\u001a\u00060+R\u00020\u0000H\u0002J \u0010F\u001a\u00020-2\u0006\u0010:\u001a\u00020;2\u0006\u0010>\u001a\u00020\u001d2\u0006\u0010G\u001a\u00020&H\u0016J \u0010H\u001a\u00020-2\u0006\u0010:\u001a\u00020;2\u0006\u0010>\u001a\u00020\u001d2\u0006\u0010I\u001a\u00020JH\u0016J\u0010\u0010K\u001a\u00020-2\u0006\u0010L\u001a\u00020MH\u0002R\u0014\u0010\u001b\u001a\b\u0012\u0004\u0012\u00020\u001d0\u001cX\u000e¢\u0006\u0002\n\u0000R\u001a\u0010\u001e\u001a\u00020\u0003X.¢\u0006\u000e\n\u0000\u001a\u0004\b\u001f\u0010 \"\u0004\b!\u0010\"R\u000e\u0010\u0007\u001a\u00020\bX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0004\u001a\u00020\u0005X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\t\u001a\u00020\nX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0002\u001a\u00020\u0003X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0010\u001a\u00020\u0011X\u0004¢\u0006\u0002\n\u0000R\u0010\u0010#\u001a\u0004\u0018\u00010$X\u000e¢\u0006\u0002\n\u0000R\u0014\u0010%\u001a\u00020&8BX\u0004¢\u0006\u0006\u001a\u0004\b%\u0010'R\u000e\u0010\u000b\u001a\u00020\fX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010(\u001a\u00020&X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010)\u001a\u00020&X\u000e¢\u0006\u0002\n\u0000R\u0014\u0010*\u001a\b\u0018\u00010+R\u00020\u0000X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0014\u001a\u00020\u0015X\u0004¢\u0006\u0002\n\u0000R\u0014\u0010\r\u001a\b\u0012\u0004\u0012\u00020\u000f0\u000eX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0006\u001a\u00020\u0005X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0016\u001a\u00020\u0017X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0012\u001a\u00020\u0013X\u0004¢\u0006\u0002\n\u0000¨\u0006P"}, mo65043d2 = {"Lcom/android/systemui/controls/ui/ControlActionCoordinatorImpl;", "Lcom/android/systemui/controls/ui/ControlActionCoordinator;", "context", "Landroid/content/Context;", "bgExecutor", "Lcom/android/systemui/util/concurrency/DelayableExecutor;", "uiExecutor", "activityStarter", "Lcom/android/systemui/plugins/ActivityStarter;", "broadcastSender", "Lcom/android/systemui/broadcast/BroadcastSender;", "keyguardStateController", "Lcom/android/systemui/statusbar/policy/KeyguardStateController;", "taskViewFactory", "Ljava/util/Optional;", "Lcom/android/wm/shell/TaskViewFactory;", "controlsMetricsLogger", "Lcom/android/systemui/controls/ControlsMetricsLogger;", "vibrator", "Lcom/android/systemui/statusbar/VibratorHelper;", "secureSettings", "Lcom/android/systemui/util/settings/SecureSettings;", "userContextProvider", "Lcom/android/systemui/settings/UserContextProvider;", "mainHandler", "Landroid/os/Handler;", "(Landroid/content/Context;Lcom/android/systemui/util/concurrency/DelayableExecutor;Lcom/android/systemui/util/concurrency/DelayableExecutor;Lcom/android/systemui/plugins/ActivityStarter;Lcom/android/systemui/broadcast/BroadcastSender;Lcom/android/systemui/statusbar/policy/KeyguardStateController;Ljava/util/Optional;Lcom/android/systemui/controls/ControlsMetricsLogger;Lcom/android/systemui/statusbar/VibratorHelper;Lcom/android/systemui/util/settings/SecureSettings;Lcom/android/systemui/settings/UserContextProvider;Landroid/os/Handler;)V", "actionsInProgress", "", "", "activityContext", "getActivityContext", "()Landroid/content/Context;", "setActivityContext", "(Landroid/content/Context;)V", "dialog", "Landroid/app/Dialog;", "isLocked", "", "()Z", "mAllowTrivialControls", "mShowDeviceControlsInLockscreen", "pendingAction", "Lcom/android/systemui/controls/ui/ControlActionCoordinatorImpl$Action;", "bouncerOrRun", "", "action", "closeDialogs", "createAction", "controlId", "f", "Lkotlin/Function0;", "blockable", "authIsRequired", "drag", "isEdge", "enableActionOnTouch", "longPress", "cvh", "Lcom/android/systemui/controls/ui/ControlViewHolder;", "runPendingAction", "setValue", "templateId", "newValue", "", "shouldRunAction", "showDetail", "pendingIntent", "Landroid/app/PendingIntent;", "showSettingsDialogIfNeeded", "toggle", "isChecked", "touch", "control", "Landroid/service/controls/Control;", "vibrate", "effect", "Landroid/os/VibrationEffect;", "Action", "Companion", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* renamed from: com.android.systemui.controls.ui.ControlActionCoordinatorImpl */
 /* compiled from: ControlActionCoordinatorImpl.kt */
 public final class ControlActionCoordinatorImpl implements ControlActionCoordinator {
@@ -120,7 +120,7 @@ public final class ControlActionCoordinatorImpl implements ControlActionCoordina
         this.activityContext = context2;
     }
 
-    @Metadata(mo64986d1 = {"\u0000\u0018\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\b\n\u0000\n\u0002\u0010\t\n\u0000\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u000e\u0010\u0003\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0005\u001a\u00020\u0006XT¢\u0006\u0002\n\u0000¨\u0006\u0007"}, mo64987d2 = {"Lcom/android/systemui/controls/ui/ControlActionCoordinatorImpl$Companion;", "", "()V", "MAX_NUMBER_ATTEMPTS_CONTROLS_DIALOG", "", "RESPONSE_TIMEOUT_IN_MILLIS", "", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u0000\u0018\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\b\n\u0000\n\u0002\u0010\t\n\u0000\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u000e\u0010\u0003\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0005\u001a\u00020\u0006XT¢\u0006\u0002\n\u0000¨\u0006\u0007"}, mo65043d2 = {"Lcom/android/systemui/controls/ui/ControlActionCoordinatorImpl$Companion;", "", "()V", "MAX_NUMBER_ATTEMPTS_CONTROLS_DIALOG", "", "RESPONSE_TIMEOUT_IN_MILLIS", "", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* renamed from: com.android.systemui.controls.ui.ControlActionCoordinatorImpl$Companion */
     /* compiled from: ControlActionCoordinatorImpl.kt */
     public static final class Companion {
@@ -222,7 +222,7 @@ public final class ControlActionCoordinatorImpl implements ControlActionCoordina
 
     /* access modifiers changed from: private */
     /* renamed from: shouldRunAction$lambda-0  reason: not valid java name */
-    public static final void m2675shouldRunAction$lambda0(ControlActionCoordinatorImpl controlActionCoordinatorImpl, String str) {
+    public static final void m2680shouldRunAction$lambda0(ControlActionCoordinatorImpl controlActionCoordinatorImpl, String str) {
         Intrinsics.checkNotNullParameter(controlActionCoordinatorImpl, "this$0");
         Intrinsics.checkNotNullParameter(str, "$controlId");
         controlActionCoordinatorImpl.actionsInProgress.remove(str);
@@ -245,7 +245,7 @@ public final class ControlActionCoordinatorImpl implements ControlActionCoordina
 
     /* access modifiers changed from: private */
     /* renamed from: bouncerOrRun$lambda-1  reason: not valid java name */
-    public static final boolean m2673bouncerOrRun$lambda1(Action action) {
+    public static final boolean m2678bouncerOrRun$lambda1(Action action) {
         Intrinsics.checkNotNullParameter(action, "$action");
         Log.d("ControlsUiController", "Device unlocked, invoking controls action");
         action.invoke();
@@ -254,7 +254,7 @@ public final class ControlActionCoordinatorImpl implements ControlActionCoordina
 
     /* access modifiers changed from: private */
     /* renamed from: bouncerOrRun$lambda-2  reason: not valid java name */
-    public static final void m2674bouncerOrRun$lambda2(ControlActionCoordinatorImpl controlActionCoordinatorImpl) {
+    public static final void m2679bouncerOrRun$lambda2(ControlActionCoordinatorImpl controlActionCoordinatorImpl) {
         Intrinsics.checkNotNullParameter(controlActionCoordinatorImpl, "this$0");
         controlActionCoordinatorImpl.pendingAction = null;
     }
@@ -270,7 +270,7 @@ public final class ControlActionCoordinatorImpl implements ControlActionCoordina
 
     /* access modifiers changed from: private */
     /* renamed from: showDetail$lambda-7  reason: not valid java name */
-    public static final void m2676showDetail$lambda7(ControlActionCoordinatorImpl controlActionCoordinatorImpl, PendingIntent pendingIntent, ControlViewHolder controlViewHolder) {
+    public static final void m2681showDetail$lambda7(ControlActionCoordinatorImpl controlActionCoordinatorImpl, PendingIntent pendingIntent, ControlViewHolder controlViewHolder) {
         Intrinsics.checkNotNullParameter(controlActionCoordinatorImpl, "this$0");
         Intrinsics.checkNotNullParameter(pendingIntent, "$pendingIntent");
         Intrinsics.checkNotNullParameter(controlViewHolder, "$cvh");
@@ -281,7 +281,7 @@ public final class ControlActionCoordinatorImpl implements ControlActionCoordina
 
     /* access modifiers changed from: private */
     /* renamed from: showDetail$lambda-7$lambda-6  reason: not valid java name */
-    public static final void m2677showDetail$lambda7$lambda6(List list, ControlActionCoordinatorImpl controlActionCoordinatorImpl, ControlViewHolder controlViewHolder, PendingIntent pendingIntent) {
+    public static final void m2682showDetail$lambda7$lambda6(List list, ControlActionCoordinatorImpl controlActionCoordinatorImpl, ControlViewHolder controlViewHolder, PendingIntent pendingIntent) {
         Intrinsics.checkNotNullParameter(list, "$activities");
         Intrinsics.checkNotNullParameter(controlActionCoordinatorImpl, "this$0");
         Intrinsics.checkNotNullParameter(controlViewHolder, "$cvh");
@@ -295,7 +295,7 @@ public final class ControlActionCoordinatorImpl implements ControlActionCoordina
 
     /* access modifiers changed from: private */
     /* renamed from: showDetail$lambda-7$lambda-6$lambda-5  reason: not valid java name */
-    public static final void m2678showDetail$lambda7$lambda6$lambda5(ControlActionCoordinatorImpl controlActionCoordinatorImpl, PendingIntent pendingIntent, ControlViewHolder controlViewHolder, TaskView taskView) {
+    public static final void m2683showDetail$lambda7$lambda6$lambda5(ControlActionCoordinatorImpl controlActionCoordinatorImpl, PendingIntent pendingIntent, ControlViewHolder controlViewHolder, TaskView taskView) {
         Intrinsics.checkNotNullParameter(controlActionCoordinatorImpl, "this$0");
         Intrinsics.checkNotNullParameter(pendingIntent, "$pendingIntent");
         Intrinsics.checkNotNullParameter(controlViewHolder, "$cvh");
@@ -310,7 +310,7 @@ public final class ControlActionCoordinatorImpl implements ControlActionCoordina
 
     /* access modifiers changed from: private */
     /* renamed from: showDetail$lambda-7$lambda-6$lambda-5$lambda-4$lambda-3  reason: not valid java name */
-    public static final void m2679showDetail$lambda7$lambda6$lambda5$lambda4$lambda3(ControlActionCoordinatorImpl controlActionCoordinatorImpl, DialogInterface dialogInterface) {
+    public static final void m2684showDetail$lambda7$lambda6$lambda5$lambda4$lambda3(ControlActionCoordinatorImpl controlActionCoordinatorImpl, DialogInterface dialogInterface) {
         Intrinsics.checkNotNullParameter(controlActionCoordinatorImpl, "this$0");
         controlActionCoordinatorImpl.dialog = null;
     }
@@ -405,7 +405,7 @@ public final class ControlActionCoordinatorImpl implements ControlActionCoordina
 
     /* access modifiers changed from: private */
     /* renamed from: showSettingsDialogIfNeeded$lambda-8  reason: not valid java name */
-    public static final void m2682showSettingsDialogIfNeeded$lambda8(int i, SharedPreferences sharedPreferences, DialogInterface dialogInterface) {
+    public static final void m2687showSettingsDialogIfNeeded$lambda8(int i, SharedPreferences sharedPreferences, DialogInterface dialogInterface) {
         if (i < 2) {
             sharedPreferences.edit().putInt(DeviceControlsControllerImpl.PREFS_SETTINGS_DIALOG_ATTEMPTS, i + 1).commit();
         }
@@ -413,7 +413,7 @@ public final class ControlActionCoordinatorImpl implements ControlActionCoordina
 
     /* access modifiers changed from: private */
     /* renamed from: showSettingsDialogIfNeeded$lambda-9  reason: not valid java name */
-    public static final void m2683showSettingsDialogIfNeeded$lambda9(int i, SharedPreferences sharedPreferences, DialogInterface dialogInterface, int i2) {
+    public static final void m2688showSettingsDialogIfNeeded$lambda9(int i, SharedPreferences sharedPreferences, DialogInterface dialogInterface, int i2) {
         if (i != 2) {
             sharedPreferences.edit().putInt(DeviceControlsControllerImpl.PREFS_SETTINGS_DIALOG_ATTEMPTS, 2).commit();
         }
@@ -421,7 +421,7 @@ public final class ControlActionCoordinatorImpl implements ControlActionCoordina
 
     /* access modifiers changed from: private */
     /* renamed from: showSettingsDialogIfNeeded$lambda-10  reason: not valid java name */
-    public static final void m2680showSettingsDialogIfNeeded$lambda10(int i, SharedPreferences sharedPreferences, ControlActionCoordinatorImpl controlActionCoordinatorImpl, DialogInterface dialogInterface, int i2) {
+    public static final void m2685showSettingsDialogIfNeeded$lambda10(int i, SharedPreferences sharedPreferences, ControlActionCoordinatorImpl controlActionCoordinatorImpl, DialogInterface dialogInterface, int i2) {
         Intrinsics.checkNotNullParameter(controlActionCoordinatorImpl, "this$0");
         if (i != 2) {
             sharedPreferences.edit().putInt(DeviceControlsControllerImpl.PREFS_SETTINGS_DIALOG_ATTEMPTS, 2).commit();
@@ -431,7 +431,7 @@ public final class ControlActionCoordinatorImpl implements ControlActionCoordina
 
     /* access modifiers changed from: private */
     /* renamed from: showSettingsDialogIfNeeded$lambda-11  reason: not valid java name */
-    public static final void m2681showSettingsDialogIfNeeded$lambda11(int i, SharedPreferences sharedPreferences, ControlActionCoordinatorImpl controlActionCoordinatorImpl, DialogInterface dialogInterface, int i2) {
+    public static final void m2686showSettingsDialogIfNeeded$lambda11(int i, SharedPreferences sharedPreferences, ControlActionCoordinatorImpl controlActionCoordinatorImpl, DialogInterface dialogInterface, int i2) {
         Intrinsics.checkNotNullParameter(controlActionCoordinatorImpl, "this$0");
         if (i != 2) {
             sharedPreferences.edit().putInt(DeviceControlsControllerImpl.PREFS_SETTINGS_DIALOG_ATTEMPTS, 2).commit();
@@ -446,7 +446,7 @@ public final class ControlActionCoordinatorImpl implements ControlActionCoordina
         return new Action(this, str, function0, z, z2);
     }
 
-    @Metadata(mo64986d1 = {"\u0000\"\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\u000e\n\u0000\n\u0002\u0018\u0002\n\u0002\u0010\u0002\n\u0000\n\u0002\u0010\u000b\n\u0002\b\u000b\b\u0004\u0018\u00002\u00020\u0001B+\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\f\u0010\u0004\u001a\b\u0012\u0004\u0012\u00020\u00060\u0005\u0012\u0006\u0010\u0007\u001a\u00020\b\u0012\u0006\u0010\t\u001a\u00020\b¢\u0006\u0002\u0010\nJ\u0006\u0010\u0012\u001a\u00020\u0006R\u0011\u0010\t\u001a\u00020\b¢\u0006\b\n\u0000\u001a\u0004\b\u000b\u0010\fR\u0011\u0010\u0007\u001a\u00020\b¢\u0006\b\n\u0000\u001a\u0004\b\r\u0010\fR\u0011\u0010\u0002\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\u000e\u0010\u000fR\u0017\u0010\u0004\u001a\b\u0012\u0004\u0012\u00020\u00060\u0005¢\u0006\b\n\u0000\u001a\u0004\b\u0010\u0010\u0011¨\u0006\u0013"}, mo64987d2 = {"Lcom/android/systemui/controls/ui/ControlActionCoordinatorImpl$Action;", "", "controlId", "", "f", "Lkotlin/Function0;", "", "blockable", "", "authIsRequired", "(Lcom/android/systemui/controls/ui/ControlActionCoordinatorImpl;Ljava/lang/String;Lkotlin/jvm/functions/Function0;ZZ)V", "getAuthIsRequired", "()Z", "getBlockable", "getControlId", "()Ljava/lang/String;", "getF", "()Lkotlin/jvm/functions/Function0;", "invoke", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u0000\"\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\u000e\n\u0000\n\u0002\u0018\u0002\n\u0002\u0010\u0002\n\u0000\n\u0002\u0010\u000b\n\u0002\b\u000b\b\u0004\u0018\u00002\u00020\u0001B+\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\f\u0010\u0004\u001a\b\u0012\u0004\u0012\u00020\u00060\u0005\u0012\u0006\u0010\u0007\u001a\u00020\b\u0012\u0006\u0010\t\u001a\u00020\b¢\u0006\u0002\u0010\nJ\u0006\u0010\u0012\u001a\u00020\u0006R\u0011\u0010\t\u001a\u00020\b¢\u0006\b\n\u0000\u001a\u0004\b\u000b\u0010\fR\u0011\u0010\u0007\u001a\u00020\b¢\u0006\b\n\u0000\u001a\u0004\b\r\u0010\fR\u0011\u0010\u0002\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\u000e\u0010\u000fR\u0017\u0010\u0004\u001a\b\u0012\u0004\u0012\u00020\u00060\u0005¢\u0006\b\n\u0000\u001a\u0004\b\u0010\u0010\u0011¨\u0006\u0013"}, mo65043d2 = {"Lcom/android/systemui/controls/ui/ControlActionCoordinatorImpl$Action;", "", "controlId", "", "f", "Lkotlin/Function0;", "", "blockable", "", "authIsRequired", "(Lcom/android/systemui/controls/ui/ControlActionCoordinatorImpl;Ljava/lang/String;Lkotlin/jvm/functions/Function0;ZZ)V", "getAuthIsRequired", "()Z", "getBlockable", "getControlId", "()Ljava/lang/String;", "getF", "()Lkotlin/jvm/functions/Function0;", "invoke", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* renamed from: com.android.systemui.controls.ui.ControlActionCoordinatorImpl$Action */
     /* compiled from: ControlActionCoordinatorImpl.kt */
     public final class Action {
@@ -455,7 +455,7 @@ public final class ControlActionCoordinatorImpl implements ControlActionCoordina
         private final String controlId;
 
         /* renamed from: f */
-        private final Function0<Unit> f299f;
+        private final Function0<Unit> f298f;
         final /* synthetic */ ControlActionCoordinatorImpl this$0;
 
         public Action(ControlActionCoordinatorImpl controlActionCoordinatorImpl, String str, Function0<Unit> function0, boolean z, boolean z2) {
@@ -463,7 +463,7 @@ public final class ControlActionCoordinatorImpl implements ControlActionCoordina
             Intrinsics.checkNotNullParameter(function0, "f");
             this.this$0 = controlActionCoordinatorImpl;
             this.controlId = str;
-            this.f299f = function0;
+            this.f298f = function0;
             this.blockable = z;
             this.authIsRequired = z2;
         }
@@ -473,7 +473,7 @@ public final class ControlActionCoordinatorImpl implements ControlActionCoordina
         }
 
         public final Function0<Unit> getF() {
-            return this.f299f;
+            return this.f298f;
         }
 
         public final boolean getBlockable() {
@@ -486,7 +486,7 @@ public final class ControlActionCoordinatorImpl implements ControlActionCoordina
 
         public final void invoke() {
             if (!this.blockable || this.this$0.shouldRunAction(this.controlId)) {
-                this.f299f.invoke();
+                this.f298f.invoke();
             }
         }
     }

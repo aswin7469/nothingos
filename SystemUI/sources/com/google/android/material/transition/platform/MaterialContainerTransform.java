@@ -26,7 +26,7 @@ import android.view.WindowManager;
 import androidx.core.util.Preconditions;
 import androidx.core.view.ViewCompat;
 import com.android.systemui.statusbar.phone.ScrimController;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.animation.AnimationUtils;
 import com.google.android.material.internal.ViewUtils;
 import com.google.android.material.shape.MaterialShapeDrawable;
@@ -315,9 +315,9 @@ public final class MaterialContainerTransform extends Transition {
             transitionValues.view = TransitionUtils.findDescendantOrAncestorById(transitionValues.view, i);
         } else if (view != null) {
             transitionValues.view = view;
-        } else if (transitionValues.view.getTag(C3621R.C3624id.mtrl_motion_snapshot_view) instanceof View) {
-            transitionValues.view.setTag(C3621R.C3624id.mtrl_motion_snapshot_view, (Object) null);
-            transitionValues.view = (View) transitionValues.view.getTag(C3621R.C3624id.mtrl_motion_snapshot_view);
+        } else if (transitionValues.view.getTag(C3631R.C3634id.mtrl_motion_snapshot_view) instanceof View) {
+            transitionValues.view.setTag(C3631R.C3634id.mtrl_motion_snapshot_view, (Object) null);
+            transitionValues.view = (View) transitionValues.view.getTag(C3631R.C3634id.mtrl_motion_snapshot_view);
         }
         View view2 = transitionValues.view;
         if (ViewCompat.isLaidOut(view2) || view2.getWidth() != 0 || view2.getHeight() != 0) {
@@ -335,8 +335,8 @@ public final class MaterialContainerTransform extends Transition {
         if (shapeAppearanceModel != null) {
             return shapeAppearanceModel;
         }
-        if (view.getTag(C3621R.C3624id.mtrl_motion_snapshot_view) instanceof ShapeAppearanceModel) {
-            return (ShapeAppearanceModel) view.getTag(C3621R.C3624id.mtrl_motion_snapshot_view);
+        if (view.getTag(C3631R.C3634id.mtrl_motion_snapshot_view) instanceof ShapeAppearanceModel) {
+            return (ShapeAppearanceModel) view.getTag(C3631R.C3634id.mtrl_motion_snapshot_view);
         }
         Context context = view.getContext();
         int transitionShapeAppearanceResId = getTransitionShapeAppearanceResId(context);
@@ -350,7 +350,7 @@ public final class MaterialContainerTransform extends Transition {
     }
 
     private static int getTransitionShapeAppearanceResId(Context context) {
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(new int[]{C3621R.attr.transitionShapeAppearance});
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(new int[]{C3631R.attr.transitionShapeAppearance});
         int resourceId = obtainStyledAttributes.getResourceId(0, -1);
         obtainStyledAttributes.recycle();
         return resourceId;
@@ -425,10 +425,10 @@ public final class MaterialContainerTransform extends Transition {
     }
 
     private void maybeApplyThemeValues(Context context, boolean z) {
-        TransitionUtils.maybeApplyThemeInterpolator(this, context, C3621R.attr.motionEasingStandard, AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR);
-        TransitionUtils.maybeApplyThemeDuration(this, context, z ? C3621R.attr.motionDurationLong1 : C3621R.attr.motionDurationMedium2);
+        TransitionUtils.maybeApplyThemeInterpolator(this, context, C3631R.attr.motionEasingStandard, AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR);
+        TransitionUtils.maybeApplyThemeDuration(this, context, z ? C3631R.attr.motionDurationLong1 : C3631R.attr.motionDurationMedium2);
         if (!this.pathMotionCustom) {
-            TransitionUtils.maybeApplyThemePath(this, context, C3621R.attr.motionPath);
+            TransitionUtils.maybeApplyThemePath(this, context, C3631R.attr.motionPath);
         }
     }
 

@@ -10,6 +10,6 @@ public final /* synthetic */ class DividerImeController$$ExternalSyntheticLambda
     }
 
     public final void run() {
-        this.f$0.mo49597x71668a32();
+        this.f$0.mo49606x71668a32();
     }
 }

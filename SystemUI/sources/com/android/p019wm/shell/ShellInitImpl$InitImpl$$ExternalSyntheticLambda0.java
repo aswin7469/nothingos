@@ -12,6 +12,6 @@ public final /* synthetic */ class ShellInitImpl$InitImpl$$ExternalSyntheticLamb
     }
 
     public final void run() {
-        this.f$0.m3376lambda$init$0$comandroidwmshellShellInitImpl$InitImpl();
+        this.f$0.m3380lambda$init$0$comandroidwmshellShellInitImpl$InitImpl();
     }
 }

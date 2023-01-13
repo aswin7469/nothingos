@@ -13,6 +13,6 @@ public final /* synthetic */ class NotificationTemplateViewWrapper$$ExternalSynt
     }
 
     public final void run() {
-        this.f$0.mo41789xed444a91(this.f$1);
+        this.f$0.mo41797xed444a91(this.f$1);
     }
 }

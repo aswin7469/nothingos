@@ -14,6 +14,6 @@ public final /* synthetic */ class GlobalActionsDialogLite$MyAdapter$$ExternalSy
     }
 
     public final boolean onLongClick(View view) {
-        return this.f$0.mo32961xd59b44f5(this.f$1, view);
+        return this.f$0.mo32971xd59b44f5(this.f$1, view);
     }
 }

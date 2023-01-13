@@ -14,8 +14,8 @@ import kotlinx.coroutines.channels.ProducerScope;
 import kotlinx.coroutines.channels.SendChannel;
 import kotlinx.coroutines.flow.Flow;
 
-@Metadata(mo64986d1 = {"\u0000\f\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\u0010\u0000\u001a\u00020\u0001\"\u0004\b\u0000\u0010\u0002*\b\u0012\u0004\u0012\u0002H\u00020\u0003H@"}, mo64987d2 = {"<anonymous>", "", "T", "Lkotlinx/coroutines/channels/ProducerScope;"}, mo64988k = 3, mo64989mv = {1, 5, 1}, mo64991xi = 48)
-@DebugMetadata(mo65240c = "androidx.lifecycle.FlowExtKt$flowWithLifecycle$1", mo65241f = "FlowExt.kt", mo65242i = {0}, mo65243l = {91}, mo65244m = "invokeSuspend", mo65245n = {"$this$callbackFlow"}, mo65246s = {"L$0"})
+@Metadata(mo65042d1 = {"\u0000\f\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\u0010\u0000\u001a\u00020\u0001\"\u0004\b\u0000\u0010\u0002*\b\u0012\u0004\u0012\u0002H\u00020\u0003H@"}, mo65043d2 = {"<anonymous>", "", "T", "Lkotlinx/coroutines/channels/ProducerScope;"}, mo65044k = 3, mo65045mv = {1, 5, 1}, mo65047xi = 48)
+@DebugMetadata(mo65296c = "androidx.lifecycle.FlowExtKt$flowWithLifecycle$1", mo65297f = "FlowExt.kt", mo65298i = {0}, mo65299l = {91}, mo65300m = "invokeSuspend", mo65301n = {"$this$callbackFlow"}, mo65302s = {"L$0"})
 /* compiled from: FlowExt.kt */
 final class FlowExtKt$flowWithLifecycle$1 extends SuspendLambda implements Function2<ProducerScope<? super T>, Continuation<? super Unit>, Object> {
     final /* synthetic */ Lifecycle $lifecycle;
@@ -42,8 +42,8 @@ final class FlowExtKt$flowWithLifecycle$1 extends SuspendLambda implements Funct
         return ((FlowExtKt$flowWithLifecycle$1) create(producerScope, continuation)).invokeSuspend(Unit.INSTANCE);
     }
 
-    @Metadata(mo64986d1 = {"\u0000\f\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\u0010\u0000\u001a\u00020\u0001\"\u0004\b\u0000\u0010\u0002*\u00020\u0003H@"}, mo64987d2 = {"<anonymous>", "", "T", "Lkotlinx/coroutines/CoroutineScope;"}, mo64988k = 3, mo64989mv = {1, 5, 1}, mo64991xi = 48)
-    @DebugMetadata(mo65240c = "androidx.lifecycle.FlowExtKt$flowWithLifecycle$1$1", mo65241f = "FlowExt.kt", mo65242i = {}, mo65243l = {99}, mo65244m = "invokeSuspend", mo65245n = {}, mo65246s = {})
+    @Metadata(mo65042d1 = {"\u0000\f\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\u0010\u0000\u001a\u00020\u0001\"\u0004\b\u0000\u0010\u0002*\u00020\u0003H@"}, mo65043d2 = {"<anonymous>", "", "T", "Lkotlinx/coroutines/CoroutineScope;"}, mo65044k = 3, mo65045mv = {1, 5, 1}, mo65047xi = 48)
+    @DebugMetadata(mo65296c = "androidx.lifecycle.FlowExtKt$flowWithLifecycle$1$1", mo65297f = "FlowExt.kt", mo65298i = {}, mo65299l = {99}, mo65300m = "invokeSuspend", mo65301n = {}, mo65302s = {})
     /* renamed from: androidx.lifecycle.FlowExtKt$flowWithLifecycle$1$1 */
     /* compiled from: FlowExt.kt */
     static final class C10861 extends SuspendLambda implements Function2<CoroutineScope, Continuation<? super Unit>, Object> {

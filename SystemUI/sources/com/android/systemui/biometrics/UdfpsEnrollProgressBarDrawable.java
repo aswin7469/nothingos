@@ -13,7 +13,7 @@ import android.view.accessibility.AccessibilityManager;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.view.animation.OvershootInterpolator;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 
 public class UdfpsEnrollProgressBarDrawable extends Drawable {
     private static final long CHECKMARK_ANIMATION_DELAY_MS = 200;
@@ -68,26 +68,26 @@ public class UdfpsEnrollProgressBarDrawable extends Drawable {
         this.mContext = context;
         float dpToPixels = Utils.dpToPixels(context, STROKE_WIDTH_DP);
         this.mStrokeWidthPx = dpToPixels;
-        int color = context.getColor(C1893R.C1894color.udfps_enroll_progress);
+        int color = context.getColor(C1894R.C1895color.udfps_enroll_progress);
         this.mProgressColor = color;
         boolean isTouchExplorationEnabled = ((AccessibilityManager) context.getSystemService(AccessibilityManager.class)).isTouchExplorationEnabled();
         this.mIsAccessibilityEnabled = isTouchExplorationEnabled;
         if (!isTouchExplorationEnabled) {
-            this.mHelpColor = context.getColor(C1893R.C1894color.udfps_enroll_progress_help);
-            this.mOnFirstBucketFailedColor = context.getColor(C1893R.C1894color.udfps_moving_target_fill_error);
+            this.mHelpColor = context.getColor(C1894R.C1895color.udfps_enroll_progress_help);
+            this.mOnFirstBucketFailedColor = context.getColor(C1894R.C1895color.udfps_moving_target_fill_error);
         } else {
-            int color2 = context.getColor(C1893R.C1894color.udfps_enroll_progress_help_with_talkback);
+            int color2 = context.getColor(C1894R.C1895color.udfps_enroll_progress_help_with_talkback);
             this.mHelpColor = color2;
             this.mOnFirstBucketFailedColor = color2;
         }
-        Drawable drawable = context.getDrawable(C1893R.C1895drawable.udfps_enroll_checkmark);
+        Drawable drawable = context.getDrawable(C1894R.C1896drawable.udfps_enroll_checkmark);
         this.mCheckmarkDrawable = drawable;
         drawable.mutate();
         this.mCheckmarkInterpolator = new OvershootInterpolator();
         Paint paint = new Paint();
         this.mBackgroundPaint = paint;
         paint.setStrokeWidth(dpToPixels);
-        paint.setColor(context.getColor(C1893R.C1894color.udfps_moving_target_fill));
+        paint.setColor(context.getColor(C1894R.C1895color.udfps_moving_target_fill));
         paint.setAntiAlias(true);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeCap(Paint.Cap.ROUND);
@@ -107,28 +107,28 @@ public class UdfpsEnrollProgressBarDrawable extends Drawable {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-biometrics-UdfpsEnrollProgressBarDrawable */
-    public /* synthetic */ void mo30922x7bc80d4b(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo30932x7bc80d4b(ValueAnimator valueAnimator) {
         this.mProgress = ((Float) valueAnimator.getAnimatedValue()).floatValue();
         invalidateSelf();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$1$com-android-systemui-biometrics-UdfpsEnrollProgressBarDrawable */
-    public /* synthetic */ void mo30923xfa29112a(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo30933xfa29112a(ValueAnimator valueAnimator) {
         this.mFillPaint.setColor(((Integer) valueAnimator.getAnimatedValue()).intValue());
         invalidateSelf();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$2$com-android-systemui-biometrics-UdfpsEnrollProgressBarDrawable */
-    public /* synthetic */ void mo30924x788a1509(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo30934x788a1509(ValueAnimator valueAnimator) {
         this.mCheckmarkScale = ((Float) valueAnimator.getAnimatedValue()).floatValue();
         invalidateSelf();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$3$com-android-systemui-biometrics-UdfpsEnrollProgressBarDrawable */
-    public /* synthetic */ void mo30925xf6eb18e8(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo30935xf6eb18e8(ValueAnimator valueAnimator) {
         this.mBackgroundPaint.setColor(((Integer) valueAnimator.getAnimatedValue()).intValue());
         invalidateSelf();
     }

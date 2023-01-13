@@ -13,6 +13,6 @@ public final /* synthetic */ class UdfpsEnrollView$$ExternalSyntheticLambda0 imp
     }
 
     public final void run() {
-        this.f$0.mo30936xf84df628(this.f$1, this.f$2);
+        this.f$0.mo30946xf84df628(this.f$1, this.f$2);
     }
 }

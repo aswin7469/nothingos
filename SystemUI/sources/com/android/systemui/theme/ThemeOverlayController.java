@@ -424,7 +424,7 @@ public class ThemeOverlayController extends CoreStartable implements Dumpable {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$start$1$com-android-systemui-theme-ThemeOverlayController  reason: not valid java name */
-    public /* synthetic */ void m3250lambda$start$1$comandroidsystemuithemeThemeOverlayController() {
+    public /* synthetic */ void m3255lambda$start$1$comandroidsystemuithemeThemeOverlayController() {
         ThemeOverlayController$$ExternalSyntheticLambda0 themeOverlayController$$ExternalSyntheticLambda0 = new ThemeOverlayController$$ExternalSyntheticLambda0(this, this.mWallpaperManager.getWallpaperColors(getLatestWallpaperType(this.mUserTracker.getUserId())));
         if (this.mDeviceProvisionedController.isCurrentUserSetup()) {
             this.mMainExecutor.execute(themeOverlayController$$ExternalSyntheticLambda0);
@@ -435,7 +435,7 @@ public class ThemeOverlayController extends CoreStartable implements Dumpable {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$start$0$com-android-systemui-theme-ThemeOverlayController  reason: not valid java name */
-    public /* synthetic */ void m3249lambda$start$0$comandroidsystemuithemeThemeOverlayController(WallpaperColors wallpaperColors) {
+    public /* synthetic */ void m3254lambda$start$0$comandroidsystemuithemeThemeOverlayController(WallpaperColors wallpaperColors) {
         Log.d(TAG, "Boot colors: " + wallpaperColors);
         this.mCurrentColors.put(this.mUserTracker.getUserId(), wallpaperColors);
         reevaluateSystemTheme(false);

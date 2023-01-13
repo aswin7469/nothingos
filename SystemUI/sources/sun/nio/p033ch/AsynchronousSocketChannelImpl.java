@@ -36,7 +36,7 @@ abstract class AsynchronousSocketChannelImpl extends AsynchronousSocketChannel i
     private final ReadWriteLock closeLock;
 
     /* renamed from: fd */
-    protected final FileDescriptor f874fd;
+    protected final FileDescriptor f872fd;
     private boolean isReuseAddress;
     protected volatile InetSocketAddress localAddress;
     private volatile boolean open;
@@ -74,7 +74,7 @@ abstract class AsynchronousSocketChannelImpl extends AsynchronousSocketChannel i
         this.writeLock = new Object();
         this.closeLock = new ReentrantReadWriteLock();
         this.open = true;
-        this.f874fd = Net.socket(true);
+        this.f872fd = Net.socket(true);
         this.state = 0;
     }
 
@@ -88,7 +88,7 @@ abstract class AsynchronousSocketChannelImpl extends AsynchronousSocketChannel i
         this.writeLock = new Object();
         this.closeLock = new ReentrantReadWriteLock();
         this.open = true;
-        this.f874fd = fileDescriptor;
+        this.f872fd = fileDescriptor;
         this.state = 2;
         this.localAddress = Net.localAddress(fileDescriptor);
         this.remoteAddress = inetSocketAddress;
@@ -344,9 +344,9 @@ abstract class AsynchronousSocketChannelImpl extends AsynchronousSocketChannel i
                     if (securityManager != null) {
                         securityManager.checkListen(inetSocketAddress.getPort());
                     }
-                    NetHooks.beforeTcpBind(this.f874fd, inetSocketAddress.getAddress(), inetSocketAddress.getPort());
-                    Net.bind(this.f874fd, inetSocketAddress.getAddress(), inetSocketAddress.getPort());
-                    this.localAddress = Net.localAddress(this.f874fd);
+                    NetHooks.beforeTcpBind(this.f872fd, inetSocketAddress.getAddress(), inetSocketAddress.getPort());
+                    Net.bind(this.f872fd, inetSocketAddress.getAddress(), inetSocketAddress.getPort());
+                    this.localAddress = Net.localAddress(this.f872fd);
                 } else {
                     throw new AlreadyBoundException();
                 }
@@ -373,7 +373,7 @@ abstract class AsynchronousSocketChannelImpl extends AsynchronousSocketChannel i
                 begin();
                 if (!this.writeShutdown) {
                     if (socketOption != StandardSocketOptions.SO_REUSEADDR || !Net.useExclusiveBind()) {
-                        Net.setSocketOption(this.f874fd, Net.UNSPEC, socketOption, t);
+                        Net.setSocketOption(this.f872fd, Net.UNSPEC, socketOption, t);
                     } else {
                         this.isReuseAddress = ((Boolean) t).booleanValue();
                     }
@@ -396,7 +396,7 @@ abstract class AsynchronousSocketChannelImpl extends AsynchronousSocketChannel i
                 if (socketOption == StandardSocketOptions.SO_REUSEADDR && Net.useExclusiveBind()) {
                     return Boolean.valueOf(this.isReuseAddress);
                 }
-                T socketOption2 = Net.getSocketOption(this.f874fd, Net.UNSPEC, socketOption);
+                T socketOption2 = Net.getSocketOption(this.f872fd, Net.UNSPEC, socketOption);
                 end();
                 return socketOption2;
             } finally {
@@ -445,7 +445,7 @@ abstract class AsynchronousSocketChannelImpl extends AsynchronousSocketChannel i
             if (this.remoteAddress != null) {
                 synchronized (this.readLock) {
                     if (!this.readShutdown) {
-                        Net.shutdown(this.f874fd, 0);
+                        Net.shutdown(this.f872fd, 0);
                         this.readShutdown = true;
                     }
                 }
@@ -465,7 +465,7 @@ abstract class AsynchronousSocketChannelImpl extends AsynchronousSocketChannel i
             if (this.remoteAddress != null) {
                 synchronized (this.writeLock) {
                     if (!this.writeShutdown) {
-                        Net.shutdown(this.f874fd, 1);
+                        Net.shutdown(this.f872fd, 1);
                         this.writeShutdown = true;
                     }
                 }

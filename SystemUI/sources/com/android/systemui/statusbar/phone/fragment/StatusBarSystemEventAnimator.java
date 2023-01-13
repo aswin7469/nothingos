@@ -6,14 +6,14 @@ import android.animation.TimeInterpolator;
 import android.animation.ValueAnimator;
 import android.content.res.Resources;
 import android.view.View;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.statusbar.events.SystemStatusAnimationCallback;
 import com.android.systemui.statusbar.events.SystemStatusAnimationSchedulerKt;
 import com.android.systemui.util.animation.AnimationUtil;
 import kotlin.Metadata;
 import kotlin.jvm.internal.Intrinsics;
 
-@Metadata(mo64986d1 = {"\u0000.\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0004\n\u0002\u0010\b\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u000b\n\u0000\u0018\u00002\u00020\u0001B\u0015\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005¢\u0006\u0002\u0010\u0006J\b\u0010\f\u001a\u00020\rH\u0016J\u0010\u0010\u000e\u001a\u00020\r2\u0006\u0010\u000f\u001a\u00020\u0010H\u0016R\u0011\u0010\u0002\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\u0007\u0010\bR\u000e\u0010\t\u001a\u00020\nX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u000b\u001a\u00020\nX\u0004¢\u0006\u0002\n\u0000¨\u0006\u0011"}, mo64987d2 = {"Lcom/android/systemui/statusbar/phone/fragment/StatusBarSystemEventAnimator;", "Lcom/android/systemui/statusbar/events/SystemStatusAnimationCallback;", "animatedView", "Landroid/view/View;", "resources", "Landroid/content/res/Resources;", "(Landroid/view/View;Landroid/content/res/Resources;)V", "getAnimatedView", "()Landroid/view/View;", "translationXIn", "", "translationXOut", "onSystemEventAnimationBegin", "Landroid/animation/Animator;", "onSystemEventAnimationFinish", "hasPersistentDot", "", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000.\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0004\n\u0002\u0010\b\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u000b\n\u0000\u0018\u00002\u00020\u0001B\u0015\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005¢\u0006\u0002\u0010\u0006J\b\u0010\f\u001a\u00020\rH\u0016J\u0010\u0010\u000e\u001a\u00020\r2\u0006\u0010\u000f\u001a\u00020\u0010H\u0016R\u0011\u0010\u0002\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\u0007\u0010\bR\u000e\u0010\t\u001a\u00020\nX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u000b\u001a\u00020\nX\u0004¢\u0006\u0002\n\u0000¨\u0006\u0011"}, mo65043d2 = {"Lcom/android/systemui/statusbar/phone/fragment/StatusBarSystemEventAnimator;", "Lcom/android/systemui/statusbar/events/SystemStatusAnimationCallback;", "animatedView", "Landroid/view/View;", "resources", "Landroid/content/res/Resources;", "(Landroid/view/View;Landroid/content/res/Resources;)V", "getAnimatedView", "()Landroid/view/View;", "translationXIn", "", "translationXOut", "onSystemEventAnimationBegin", "Landroid/animation/Animator;", "onSystemEventAnimationFinish", "hasPersistentDot", "", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* compiled from: StatusBarSystemEventAnimator.kt */
 public final class StatusBarSystemEventAnimator implements SystemStatusAnimationCallback {
     private final View animatedView;
@@ -24,8 +24,8 @@ public final class StatusBarSystemEventAnimator implements SystemStatusAnimation
         Intrinsics.checkNotNullParameter(view, "animatedView");
         Intrinsics.checkNotNullParameter(resources, "resources");
         this.animatedView = view;
-        this.translationXIn = resources.getDimensionPixelSize(C1893R.dimen.ongoing_appops_chip_animation_in_status_bar_translation_x);
-        this.translationXOut = resources.getDimensionPixelSize(C1893R.dimen.ongoing_appops_chip_animation_out_status_bar_translation_x);
+        this.translationXIn = resources.getDimensionPixelSize(C1894R.dimen.ongoing_appops_chip_animation_in_status_bar_translation_x);
+        this.translationXOut = resources.getDimensionPixelSize(C1894R.dimen.ongoing_appops_chip_animation_out_status_bar_translation_x);
     }
 
     public final View getAnimatedView() {
@@ -46,7 +46,7 @@ public final class StatusBarSystemEventAnimator implements SystemStatusAnimation
 
     /* access modifiers changed from: private */
     /* renamed from: onSystemEventAnimationBegin$lambda-0  reason: not valid java name */
-    public static final void m3198onSystemEventAnimationBegin$lambda0(StatusBarSystemEventAnimator statusBarSystemEventAnimator, ValueAnimator valueAnimator) {
+    public static final void m3203onSystemEventAnimationBegin$lambda0(StatusBarSystemEventAnimator statusBarSystemEventAnimator, ValueAnimator valueAnimator) {
         Intrinsics.checkNotNullParameter(statusBarSystemEventAnimator, "this$0");
         Intrinsics.checkNotNullParameter(valueAnimator, "animation");
         View view = statusBarSystemEventAnimator.animatedView;
@@ -61,7 +61,7 @@ public final class StatusBarSystemEventAnimator implements SystemStatusAnimation
 
     /* access modifiers changed from: private */
     /* renamed from: onSystemEventAnimationBegin$lambda-1  reason: not valid java name */
-    public static final void m3199onSystemEventAnimationBegin$lambda1(StatusBarSystemEventAnimator statusBarSystemEventAnimator, ValueAnimator valueAnimator) {
+    public static final void m3204onSystemEventAnimationBegin$lambda1(StatusBarSystemEventAnimator statusBarSystemEventAnimator, ValueAnimator valueAnimator) {
         Intrinsics.checkNotNullParameter(statusBarSystemEventAnimator, "this$0");
         Intrinsics.checkNotNullParameter(valueAnimator, "animation");
         View view = statusBarSystemEventAnimator.animatedView;
@@ -90,7 +90,7 @@ public final class StatusBarSystemEventAnimator implements SystemStatusAnimation
 
     /* access modifiers changed from: private */
     /* renamed from: onSystemEventAnimationFinish$lambda-2  reason: not valid java name */
-    public static final void m3200onSystemEventAnimationFinish$lambda2(StatusBarSystemEventAnimator statusBarSystemEventAnimator, ValueAnimator valueAnimator) {
+    public static final void m3205onSystemEventAnimationFinish$lambda2(StatusBarSystemEventAnimator statusBarSystemEventAnimator, ValueAnimator valueAnimator) {
         Intrinsics.checkNotNullParameter(statusBarSystemEventAnimator, "this$0");
         Intrinsics.checkNotNullParameter(valueAnimator, "animation");
         View view = statusBarSystemEventAnimator.animatedView;
@@ -105,7 +105,7 @@ public final class StatusBarSystemEventAnimator implements SystemStatusAnimation
 
     /* access modifiers changed from: private */
     /* renamed from: onSystemEventAnimationFinish$lambda-3  reason: not valid java name */
-    public static final void m3201onSystemEventAnimationFinish$lambda3(StatusBarSystemEventAnimator statusBarSystemEventAnimator, ValueAnimator valueAnimator) {
+    public static final void m3206onSystemEventAnimationFinish$lambda3(StatusBarSystemEventAnimator statusBarSystemEventAnimator, ValueAnimator valueAnimator) {
         Intrinsics.checkNotNullParameter(statusBarSystemEventAnimator, "this$0");
         Intrinsics.checkNotNullParameter(valueAnimator, "animation");
         View view = statusBarSystemEventAnimator.animatedView;

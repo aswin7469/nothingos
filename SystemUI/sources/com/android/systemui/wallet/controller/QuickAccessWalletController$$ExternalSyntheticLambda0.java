@@ -20,6 +20,6 @@ public final /* synthetic */ class QuickAccessWalletController$$ExternalSyntheti
     }
 
     public final void onWalletPendingIntentRetrieved(PendingIntent pendingIntent) {
-        this.f$0.mo47414xa2b4e465(this.f$1, this.f$2, this.f$3, pendingIntent);
+        this.f$0.mo47423xa2b4e465(this.f$1, this.f$2, this.f$3, pendingIntent);
     }
 }

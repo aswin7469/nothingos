@@ -196,7 +196,7 @@ public class Providers {
 
     private static void checkBouncyCastleDeprecation(String str, String str2) throws NoSuchAlgorithmException {
         String str3 = str + BaseIconCache.EMPTY_CLASS_NAME + str2;
-        if (!DEPRECATED_ALGORITHMS.contains(str3.toUpperCase(Locale.f700US))) {
+        if (!DEPRECATED_ALGORITHMS.contains(str3.toUpperCase(Locale.f698US))) {
             return;
         }
         if (VMRuntime.getRuntime().getTargetSdkVersion() <= maximumAllowableApiLevelForBcDeprecation) {

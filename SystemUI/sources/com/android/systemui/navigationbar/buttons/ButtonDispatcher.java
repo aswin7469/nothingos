@@ -41,7 +41,7 @@ public class ButtonDispatcher {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-navigationbar-buttons-ButtonDispatcher */
-    public /* synthetic */ void mo34877xef8ba53e(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo34881xef8ba53e(ValueAnimator valueAnimator) {
         setAlpha(((Float) valueAnimator.getAnimatedValue()).floatValue(), false, false);
     }
 

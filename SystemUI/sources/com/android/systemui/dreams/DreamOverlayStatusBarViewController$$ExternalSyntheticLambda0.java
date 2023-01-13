@@ -11,6 +11,6 @@ public final /* synthetic */ class DreamOverlayStatusBarViewController$$External
     }
 
     public final void onSensorBlockedChanged(int i, boolean z) {
-        this.f$0.mo32541x78901be3(i, z);
+        this.f$0.mo32552x78901be3(i, z);
     }
 }

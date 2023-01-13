@@ -26,7 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.FontSizeUtils;
 import com.android.systemui.animation.DialogLaunchAnimator;
 import com.android.systemui.broadcast.BroadcastDispatcher;
@@ -60,12 +60,12 @@ public class QSSecurityFooter extends ViewController<View> implements View.OnCli
     private final DialogLaunchAnimator mDialogLaunchAnimator;
     private final DevicePolicyManager mDpm;
     /* access modifiers changed from: private */
-    public int mFooterIconId = C1893R.C1895drawable.ic_info_outline;
+    public int mFooterIconId = C1894R.C1896drawable.ic_info_outline;
     /* access modifiers changed from: private */
-    public final TextView mFooterText = ((TextView) this.mView.findViewById(C1893R.C1897id.footer_text));
+    public final TextView mFooterText = ((TextView) this.mView.findViewById(C1894R.C1898id.footer_text));
     /* access modifiers changed from: private */
     public CharSequence mFooterTextContent = null;
-    protected C2346H mHandler;
+    protected C2349H mHandler;
     /* access modifiers changed from: private */
     public boolean mIsVisible;
     private final Handler mMainHandler;
@@ -80,7 +80,7 @@ public class QSSecurityFooter extends ViewController<View> implements View.OnCli
     private Supplier<String> mMonitoringSubtitleNetworkStringSupplier = new QSSecurityFooter$$ExternalSyntheticLambda20(this);
     private Supplier<String> mMonitoringSubtitleVpnStringSupplier = new QSSecurityFooter$$ExternalSyntheticLambda21(this);
     /* access modifiers changed from: private */
-    public final ImageView mPrimaryFooterIcon = ((ImageView) this.mView.findViewById(C1893R.C1897id.primary_footer_icon));
+    public final ImageView mPrimaryFooterIcon = ((ImageView) this.mView.findViewById(C1894R.C1898id.primary_footer_icon));
     /* access modifiers changed from: private */
     public Drawable mPrimaryFooterIconDrawable;
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -123,152 +123,152 @@ public class QSSecurityFooter extends ViewController<View> implements View.OnCli
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-qs-QSSecurityFooter  reason: not valid java name */
-    public /* synthetic */ String m2925lambda$new$0$comandroidsystemuiqsQSSecurityFooter() {
+    public /* synthetic */ String m2930lambda$new$0$comandroidsystemuiqsQSSecurityFooter() {
         Context context = this.mContext;
         if (context == null) {
             return null;
         }
-        return context.getString(C1893R.string.monitoring_title_device_owned);
+        return context.getString(C1894R.string.monitoring_title_device_owned);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$1$com-android-systemui-qs-QSSecurityFooter  reason: not valid java name */
-    public /* synthetic */ String m2926lambda$new$1$comandroidsystemuiqsQSSecurityFooter() {
+    public /* synthetic */ String m2931lambda$new$1$comandroidsystemuiqsQSSecurityFooter() {
         Context context = this.mContext;
         if (context == null) {
             return null;
         }
-        return context.getString(C1893R.string.quick_settings_disclosure_management);
+        return context.getString(C1894R.string.quick_settings_disclosure_management);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$2$com-android-systemui-qs-QSSecurityFooter  reason: not valid java name */
-    public /* synthetic */ String m2932lambda$new$2$comandroidsystemuiqsQSSecurityFooter() {
+    public /* synthetic */ String m2937lambda$new$2$comandroidsystemuiqsQSSecurityFooter() {
         Context context = this.mContext;
         if (context == null) {
             return null;
         }
-        return context.getString(C1893R.string.quick_settings_disclosure_management_monitoring);
+        return context.getString(C1894R.string.quick_settings_disclosure_management_monitoring);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$3$com-android-systemui-qs-QSSecurityFooter  reason: not valid java name */
-    public /* synthetic */ String m2933lambda$new$3$comandroidsystemuiqsQSSecurityFooter() {
+    public /* synthetic */ String m2938lambda$new$3$comandroidsystemuiqsQSSecurityFooter() {
         Context context = this.mContext;
         if (context == null) {
             return null;
         }
-        return context.getString(C1893R.string.quick_settings_disclosure_management_vpns);
+        return context.getString(C1894R.string.quick_settings_disclosure_management_vpns);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$4$com-android-systemui-qs-QSSecurityFooter  reason: not valid java name */
-    public /* synthetic */ String m2934lambda$new$4$comandroidsystemuiqsQSSecurityFooter() {
+    public /* synthetic */ String m2939lambda$new$4$comandroidsystemuiqsQSSecurityFooter() {
         Context context = this.mContext;
         if (context == null) {
             return null;
         }
-        return context.getString(C1893R.string.quick_settings_disclosure_managed_profile_monitoring);
+        return context.getString(C1894R.string.quick_settings_disclosure_managed_profile_monitoring);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$5$com-android-systemui-qs-QSSecurityFooter  reason: not valid java name */
-    public /* synthetic */ String m2935lambda$new$5$comandroidsystemuiqsQSSecurityFooter() {
+    public /* synthetic */ String m2940lambda$new$5$comandroidsystemuiqsQSSecurityFooter() {
         Context context = this.mContext;
         if (context == null) {
             return null;
         }
-        return context.getString(C1893R.string.quick_settings_disclosure_managed_profile_network_activity);
+        return context.getString(C1894R.string.quick_settings_disclosure_managed_profile_network_activity);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$6$com-android-systemui-qs-QSSecurityFooter  reason: not valid java name */
-    public /* synthetic */ String m2936lambda$new$6$comandroidsystemuiqsQSSecurityFooter() {
+    public /* synthetic */ String m2941lambda$new$6$comandroidsystemuiqsQSSecurityFooter() {
         Context context = this.mContext;
         if (context == null) {
             return null;
         }
-        return context.getString(C1893R.string.monitoring_subtitle_ca_certificate);
+        return context.getString(C1894R.string.monitoring_subtitle_ca_certificate);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$7$com-android-systemui-qs-QSSecurityFooter  reason: not valid java name */
-    public /* synthetic */ String m2937lambda$new$7$comandroidsystemuiqsQSSecurityFooter() {
+    public /* synthetic */ String m2942lambda$new$7$comandroidsystemuiqsQSSecurityFooter() {
         Context context = this.mContext;
         if (context == null) {
             return null;
         }
-        return context.getString(C1893R.string.monitoring_subtitle_network_logging);
+        return context.getString(C1894R.string.monitoring_subtitle_network_logging);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$8$com-android-systemui-qs-QSSecurityFooter  reason: not valid java name */
-    public /* synthetic */ String m2938lambda$new$8$comandroidsystemuiqsQSSecurityFooter() {
+    public /* synthetic */ String m2943lambda$new$8$comandroidsystemuiqsQSSecurityFooter() {
         Context context = this.mContext;
         if (context == null) {
             return null;
         }
-        return context.getString(C1893R.string.monitoring_subtitle_vpn);
+        return context.getString(C1894R.string.monitoring_subtitle_vpn);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$9$com-android-systemui-qs-QSSecurityFooter  reason: not valid java name */
-    public /* synthetic */ String m2939lambda$new$9$comandroidsystemuiqsQSSecurityFooter() {
+    public /* synthetic */ String m2944lambda$new$9$comandroidsystemuiqsQSSecurityFooter() {
         Context context = this.mContext;
         if (context == null) {
             return null;
         }
-        return context.getString(C1893R.string.monitoring_button_view_policies);
+        return context.getString(C1894R.string.monitoring_button_view_policies);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$10$com-android-systemui-qs-QSSecurityFooter  reason: not valid java name */
-    public /* synthetic */ String m2927lambda$new$10$comandroidsystemuiqsQSSecurityFooter() {
+    public /* synthetic */ String m2932lambda$new$10$comandroidsystemuiqsQSSecurityFooter() {
         Context context = this.mContext;
         if (context == null) {
             return null;
         }
-        return context.getString(C1893R.string.monitoring_description_management);
+        return context.getString(C1894R.string.monitoring_description_management);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$11$com-android-systemui-qs-QSSecurityFooter  reason: not valid java name */
-    public /* synthetic */ String m2928lambda$new$11$comandroidsystemuiqsQSSecurityFooter() {
+    public /* synthetic */ String m2933lambda$new$11$comandroidsystemuiqsQSSecurityFooter() {
         Context context = this.mContext;
         if (context == null) {
             return null;
         }
-        return context.getString(C1893R.string.monitoring_description_management_ca_certificate);
+        return context.getString(C1894R.string.monitoring_description_management_ca_certificate);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$12$com-android-systemui-qs-QSSecurityFooter  reason: not valid java name */
-    public /* synthetic */ String m2929lambda$new$12$comandroidsystemuiqsQSSecurityFooter() {
+    public /* synthetic */ String m2934lambda$new$12$comandroidsystemuiqsQSSecurityFooter() {
         Context context = this.mContext;
         if (context == null) {
             return null;
         }
-        return context.getString(C1893R.string.monitoring_description_managed_profile_ca_certificate);
+        return context.getString(C1894R.string.monitoring_description_managed_profile_ca_certificate);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$13$com-android-systemui-qs-QSSecurityFooter  reason: not valid java name */
-    public /* synthetic */ String m2930lambda$new$13$comandroidsystemuiqsQSSecurityFooter() {
+    public /* synthetic */ String m2935lambda$new$13$comandroidsystemuiqsQSSecurityFooter() {
         Context context = this.mContext;
         if (context == null) {
             return null;
         }
-        return context.getString(C1893R.string.monitoring_description_management_network_logging);
+        return context.getString(C1894R.string.monitoring_description_management_network_logging);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$14$com-android-systemui-qs-QSSecurityFooter  reason: not valid java name */
-    public /* synthetic */ String m2931lambda$new$14$comandroidsystemuiqsQSSecurityFooter() {
+    public /* synthetic */ String m2936lambda$new$14$comandroidsystemuiqsQSSecurityFooter() {
         Context context = this.mContext;
         if (context == null) {
             return null;
         }
-        return context.getString(C1893R.string.monitoring_description_managed_profile_network_logging);
+        return context.getString(C1894R.string.monitoring_description_managed_profile_network_logging);
     }
 
     @Inject
@@ -279,7 +279,7 @@ public class QSSecurityFooter extends ViewController<View> implements View.OnCli
         this.mMainHandler = handler;
         this.mActivityStarter = activityStarter;
         this.mSecurityController = securityController;
-        this.mHandler = new C2346H(looper);
+        this.mHandler = new C2349H(looper);
         this.mUserTracker = userTracker;
         this.mDialogLaunchAnimator = dialogLaunchAnimator;
         this.mBroadcastDispatcher = broadcastDispatcher;
@@ -311,10 +311,10 @@ public class QSSecurityFooter extends ViewController<View> implements View.OnCli
     }
 
     public void onConfigurationChanged() {
-        FontSizeUtils.updateFontSize(this.mFooterText, C1893R.dimen.qs_tile_text_size);
-        int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.qs_footer_padding);
+        FontSizeUtils.updateFontSize(this.mFooterText, C1894R.dimen.qs_tile_text_size);
+        int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.qs_footer_padding);
         this.mView.setPaddingRelative(dimensionPixelSize, 0, dimensionPixelSize, 0);
-        this.mView.setBackground(this.mContext.getDrawable(C1893R.C1895drawable.qs_security_footer_background));
+        this.mView.setBackground(this.mContext.getDrawable(C1894R.C1896drawable.qs_security_footer_background));
     }
 
     public View getView() {
@@ -367,16 +367,16 @@ public class QSSecurityFooter extends ViewController<View> implements View.OnCli
         this.mIsVisible = z3;
         if (!z3 || !isProfileOwnerOfOrganizationOwnedDevice || (z2 && isWorkProfileOn)) {
             this.mView.setClickable(true);
-            this.mView.findViewById(C1893R.C1897id.footer_icon).setVisibility(0);
+            this.mView.findViewById(C1894R.C1898id.footer_icon).setVisibility(0);
         } else {
             this.mView.setClickable(false);
-            this.mView.findViewById(C1893R.C1897id.footer_icon).setVisibility(8);
+            this.mView.findViewById(C1894R.C1898id.footer_icon).setVisibility(8);
         }
         this.mFooterTextContent = getFooterText(isDeviceManaged, hasWorkProfile, hasCACertInCurrentUser, hasCACertInWorkProfile, isNetworkLoggingEnabled, primaryVpnName, workProfileVpnName, deviceOwnerOrganizationName, workProfileOrganizationName, isProfileOwnerOfOrganizationOwnedDevice, isParentalControlsEnabled, isWorkProfileOn);
         if (primaryVpnName == null && workProfileVpnName == null) {
-            i = C1893R.C1895drawable.ic_info_outline;
+            i = C1894R.C1896drawable.ic_info_outline;
         } else {
-            i = this.mSecurityController.isVpnBranded() ? C1893R.C1895drawable.stat_sys_branded_vpn : C1893R.C1895drawable.stat_sys_vpn_ic;
+            i = this.mSecurityController.isVpnBranded() ? C1894R.C1896drawable.stat_sys_branded_vpn : C1894R.C1896drawable.stat_sys_vpn_ic;
         }
         if (this.mFooterIconId != i) {
             this.mFooterIconId = i;
@@ -393,7 +393,7 @@ public class QSSecurityFooter extends ViewController<View> implements View.OnCli
     /* access modifiers changed from: protected */
     public CharSequence getFooterText(boolean z, boolean z2, boolean z3, boolean z4, boolean z5, String str, String str2, CharSequence charSequence, CharSequence charSequence2, boolean z6, boolean z7, boolean z8) {
         if (z7) {
-            return this.mContext.getString(C1893R.string.quick_settings_disclosure_parental_controls);
+            return this.mContext.getString(C1894R.string.quick_settings_disclosure_parental_controls);
         }
         if (!z) {
             return getManagedAndPersonalProfileFooterText(z2, z3, z4, z5, str, str2, charSequence2, z6, z8);
@@ -420,8 +420,8 @@ public class QSSecurityFooter extends ViewController<View> implements View.OnCli
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$getManagedDeviceMonitoringText$15$com-android-systemui-qs-QSSecurityFooter */
-    public /* synthetic */ String mo36254xc7125115(CharSequence charSequence) {
-        return this.mContext.getString(C1893R.string.quick_settings_disclosure_named_management_monitoring, new Object[]{charSequence});
+    public /* synthetic */ String mo36258xc7125115(CharSequence charSequence) {
+        return this.mContext.getString(C1894R.string.quick_settings_disclosure_named_management_monitoring, new Object[]{charSequence});
     }
 
     private String getManagedDeviceVpnText(String str, String str2, CharSequence charSequence) {
@@ -442,20 +442,20 @@ public class QSSecurityFooter extends ViewController<View> implements View.OnCli
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$getManagedDeviceVpnText$16$com-android-systemui-qs-QSSecurityFooter */
-    public /* synthetic */ String mo36255xb5411768(CharSequence charSequence) {
-        return this.mContext.getString(C1893R.string.quick_settings_disclosure_named_management_vpns, new Object[]{charSequence});
+    public /* synthetic */ String mo36259xb5411768(CharSequence charSequence) {
+        return this.mContext.getString(C1894R.string.quick_settings_disclosure_named_management_vpns, new Object[]{charSequence});
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$getManagedDeviceVpnText$17$com-android-systemui-qs-QSSecurityFooter */
-    public /* synthetic */ String mo36256xbca64c87(String str) {
-        return this.mContext.getString(C1893R.string.quick_settings_disclosure_management_named_vpn, new Object[]{str});
+    public /* synthetic */ String mo36260xbca64c87(String str) {
+        return this.mContext.getString(C1894R.string.quick_settings_disclosure_management_named_vpn, new Object[]{str});
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$getManagedDeviceVpnText$18$com-android-systemui-qs-QSSecurityFooter */
-    public /* synthetic */ String mo36257xc40b81a6(CharSequence charSequence, String str) {
-        return this.mContext.getString(C1893R.string.quick_settings_disclosure_named_management_named_vpn, new Object[]{charSequence, str});
+    public /* synthetic */ String mo36261xc40b81a6(CharSequence charSequence, String str) {
+        return this.mContext.getString(C1894R.string.quick_settings_disclosure_named_management_named_vpn, new Object[]{charSequence, str});
     }
 
     private String getMangedDeviceGeneralText(CharSequence charSequence) {
@@ -463,15 +463,15 @@ public class QSSecurityFooter extends ViewController<View> implements View.OnCli
             return this.mDpm.getResources().getString("SystemUi.QS_MSG_MANAGEMENT", this.mManagementMessageSupplier);
         }
         if (isFinancedDevice()) {
-            return this.mContext.getString(C1893R.string.quick_settings_financed_disclosure_named_management, new Object[]{charSequence});
+            return this.mContext.getString(C1894R.string.quick_settings_financed_disclosure_named_management, new Object[]{charSequence});
         }
         return this.mDpm.getResources().getString("SystemUi.QS_MSG_NAMED_MANAGEMENT", new QSSecurityFooter$$ExternalSyntheticLambda27(this, charSequence), new Object[]{charSequence});
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$getMangedDeviceGeneralText$19$com-android-systemui-qs-QSSecurityFooter */
-    public /* synthetic */ String mo36259x4645137a(CharSequence charSequence) {
-        return this.mContext.getString(C1893R.string.quick_settings_disclosure_named_management, new Object[]{charSequence});
+    public /* synthetic */ String mo36263x4645137a(CharSequence charSequence) {
+        return this.mContext.getString(C1894R.string.quick_settings_disclosure_named_management, new Object[]{charSequence});
     }
 
     private String getManagedAndPersonalProfileFooterText(boolean z, boolean z2, boolean z3, boolean z4, String str, String str2, CharSequence charSequence, boolean z5, boolean z6) {
@@ -493,7 +493,7 @@ public class QSSecurityFooter extends ViewController<View> implements View.OnCli
     private String getMonitoringText(boolean z, boolean z2, CharSequence charSequence, boolean z3) {
         if (!z2 || !z3) {
             if (z) {
-                return this.mContext.getString(C1893R.string.quick_settings_disclosure_monitoring);
+                return this.mContext.getString(C1894R.string.quick_settings_disclosure_monitoring);
             }
             return null;
         } else if (charSequence == null) {
@@ -505,13 +505,13 @@ public class QSSecurityFooter extends ViewController<View> implements View.OnCli
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$getMonitoringText$20$com-android-systemui-qs-QSSecurityFooter */
-    public /* synthetic */ String mo36260x10b55e98(CharSequence charSequence) {
-        return this.mContext.getString(C1893R.string.quick_settings_disclosure_named_managed_profile_monitoring, new Object[]{charSequence});
+    public /* synthetic */ String mo36264x10b55e98(CharSequence charSequence) {
+        return this.mContext.getString(C1894R.string.quick_settings_disclosure_named_managed_profile_monitoring, new Object[]{charSequence});
     }
 
     private String getVpnText(boolean z, String str, String str2, boolean z2) {
         if (str != null && str2 != null) {
-            return this.mContext.getString(C1893R.string.quick_settings_disclosure_vpns);
+            return this.mContext.getString(C1894R.string.quick_settings_disclosure_vpns);
         }
         if (str2 != null && z2) {
             return this.mDpm.getResources().getString("SystemUi.QS_MSG_WORK_PROFILE_NAMED_VPN", new QSSecurityFooter$$ExternalSyntheticLambda5(this, str2), new Object[]{str2});
@@ -521,20 +521,20 @@ public class QSSecurityFooter extends ViewController<View> implements View.OnCli
             if (z) {
                 return this.mDpm.getResources().getString("SystemUi.QS_MSG_PERSONAL_PROFILE_NAMED_VPN", new QSSecurityFooter$$ExternalSyntheticLambda6(this, str), new Object[]{str});
             }
-            return this.mContext.getString(C1893R.string.quick_settings_disclosure_named_vpn, new Object[]{str});
+            return this.mContext.getString(C1894R.string.quick_settings_disclosure_named_vpn, new Object[]{str});
         }
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$getVpnText$21$com-android-systemui-qs-QSSecurityFooter  reason: not valid java name */
-    public /* synthetic */ String m2923lambda$getVpnText$21$comandroidsystemuiqsQSSecurityFooter(String str) {
-        return this.mContext.getString(C1893R.string.quick_settings_disclosure_managed_profile_named_vpn, new Object[]{str});
+    public /* synthetic */ String m2928lambda$getVpnText$21$comandroidsystemuiqsQSSecurityFooter(String str) {
+        return this.mContext.getString(C1894R.string.quick_settings_disclosure_managed_profile_named_vpn, new Object[]{str});
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$getVpnText$22$com-android-systemui-qs-QSSecurityFooter  reason: not valid java name */
-    public /* synthetic */ String m2924lambda$getVpnText$22$comandroidsystemuiqsQSSecurityFooter(String str) {
-        return this.mContext.getString(C1893R.string.quick_settings_disclosure_personal_profile_named_vpn, new Object[]{str});
+    public /* synthetic */ String m2929lambda$getVpnText$22$comandroidsystemuiqsQSSecurityFooter(String str) {
+        return this.mContext.getString(C1894R.string.quick_settings_disclosure_personal_profile_named_vpn, new Object[]{str});
     }
 
     private String getManagedProfileNetworkActivityText() {
@@ -556,13 +556,13 @@ public class QSSecurityFooter extends ViewController<View> implements View.OnCli
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$createDialog$24$com-android-systemui-qs-QSSecurityFooter  reason: not valid java name */
-    public /* synthetic */ void m2917lambda$createDialog$24$comandroidsystemuiqsQSSecurityFooter() {
+    public /* synthetic */ void m2922lambda$createDialog$24$comandroidsystemuiqsQSSecurityFooter() {
         this.mMainHandler.post(new QSSecurityFooter$$ExternalSyntheticLambda24(this, getSettingsButton(), createDialogView()));
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$createDialog$23$com-android-systemui-qs-QSSecurityFooter  reason: not valid java name */
-    public /* synthetic */ void m2916lambda$createDialog$23$comandroidsystemuiqsQSSecurityFooter(String str, View view) {
+    public /* synthetic */ void m2921lambda$createDialog$23$comandroidsystemuiqsQSSecurityFooter(String str, View view) {
         SystemUIDialog systemUIDialog = new SystemUIDialog(this.mContext, 0);
         this.mDialog = systemUIDialog;
         systemUIDialog.requestWindowFeature(1);
@@ -603,43 +603,43 @@ public class QSSecurityFooter extends ViewController<View> implements View.OnCli
         String primaryVpnName = this.mSecurityController.getPrimaryVpnName();
         String workProfileVpnName = this.mSecurityController.getWorkProfileVpnName();
         boolean z = false;
-        View inflate = LayoutInflater.from(this.mContext).inflate(C1893R.layout.quick_settings_footer_dialog, (ViewGroup) null, false);
-        ((TextView) inflate.findViewById(C1893R.C1897id.device_management_subtitle)).setText(getManagementTitle(deviceOwnerOrganizationName));
+        View inflate = LayoutInflater.from(this.mContext).inflate(C1894R.layout.quick_settings_footer_dialog, (ViewGroup) null, false);
+        ((TextView) inflate.findViewById(C1894R.C1898id.device_management_subtitle)).setText(getManagementTitle(deviceOwnerOrganizationName));
         CharSequence managementMessage = getManagementMessage(isDeviceManaged, deviceOwnerOrganizationName);
         if (managementMessage == null) {
-            inflate.findViewById(C1893R.C1897id.device_management_disclosures).setVisibility(8);
+            inflate.findViewById(C1894R.C1898id.device_management_disclosures).setVisibility(8);
         } else {
-            inflate.findViewById(C1893R.C1897id.device_management_disclosures).setVisibility(0);
-            ((TextView) inflate.findViewById(C1893R.C1897id.device_management_warning)).setText(managementMessage);
+            inflate.findViewById(C1894R.C1898id.device_management_disclosures).setVisibility(0);
+            ((TextView) inflate.findViewById(C1894R.C1898id.device_management_warning)).setText(managementMessage);
             this.mShouldUseSettingsButton.set(true);
         }
         CharSequence caCertsMessage = getCaCertsMessage(isDeviceManaged, hasCACertInCurrentUser, hasCACertInWorkProfile);
         if (caCertsMessage == null) {
-            inflate.findViewById(C1893R.C1897id.ca_certs_disclosures).setVisibility(8);
+            inflate.findViewById(C1894R.C1898id.ca_certs_disclosures).setVisibility(8);
         } else {
-            inflate.findViewById(C1893R.C1897id.ca_certs_disclosures).setVisibility(0);
-            TextView textView = (TextView) inflate.findViewById(C1893R.C1897id.ca_certs_warning);
+            inflate.findViewById(C1894R.C1898id.ca_certs_disclosures).setVisibility(0);
+            TextView textView = (TextView) inflate.findViewById(C1894R.C1898id.ca_certs_warning);
             textView.setText(caCertsMessage);
             textView.setMovementMethod(new LinkMovementMethod());
-            ((TextView) inflate.findViewById(C1893R.C1897id.ca_certs_subtitle)).setText(this.mDpm.getResources().getString("SystemUi.QS_DIALOG_MONITORING_CA_CERT_SUBTITLE", this.mMonitoringSubtitleCaCertStringSupplier));
+            ((TextView) inflate.findViewById(C1894R.C1898id.ca_certs_subtitle)).setText(this.mDpm.getResources().getString("SystemUi.QS_DIALOG_MONITORING_CA_CERT_SUBTITLE", this.mMonitoringSubtitleCaCertStringSupplier));
         }
         CharSequence networkLoggingMessage = getNetworkLoggingMessage(isDeviceManaged, isNetworkLoggingEnabled);
         if (networkLoggingMessage == null) {
-            inflate.findViewById(C1893R.C1897id.network_logging_disclosures).setVisibility(8);
+            inflate.findViewById(C1894R.C1898id.network_logging_disclosures).setVisibility(8);
         } else {
-            inflate.findViewById(C1893R.C1897id.network_logging_disclosures).setVisibility(0);
-            ((TextView) inflate.findViewById(C1893R.C1897id.network_logging_warning)).setText(networkLoggingMessage);
-            ((TextView) inflate.findViewById(C1893R.C1897id.network_logging_subtitle)).setText(this.mDpm.getResources().getString("SystemUi.QS_DIALOG_MONITORING_NETWORK_SUBTITLE", this.mMonitoringSubtitleNetworkStringSupplier));
+            inflate.findViewById(C1894R.C1898id.network_logging_disclosures).setVisibility(0);
+            ((TextView) inflate.findViewById(C1894R.C1898id.network_logging_warning)).setText(networkLoggingMessage);
+            ((TextView) inflate.findViewById(C1894R.C1898id.network_logging_subtitle)).setText(this.mDpm.getResources().getString("SystemUi.QS_DIALOG_MONITORING_NETWORK_SUBTITLE", this.mMonitoringSubtitleNetworkStringSupplier));
         }
         CharSequence vpnMessage = getVpnMessage(isDeviceManaged, hasWorkProfile, primaryVpnName, workProfileVpnName);
         if (vpnMessage == null) {
-            inflate.findViewById(C1893R.C1897id.vpn_disclosures).setVisibility(8);
+            inflate.findViewById(C1894R.C1898id.vpn_disclosures).setVisibility(8);
         } else {
-            inflate.findViewById(C1893R.C1897id.vpn_disclosures).setVisibility(0);
-            TextView textView2 = (TextView) inflate.findViewById(C1893R.C1897id.vpn_warning);
+            inflate.findViewById(C1894R.C1898id.vpn_disclosures).setVisibility(0);
+            TextView textView2 = (TextView) inflate.findViewById(C1894R.C1898id.vpn_warning);
             textView2.setText(vpnMessage);
             textView2.setMovementMethod(new LinkMovementMethod());
-            ((TextView) inflate.findViewById(C1893R.C1897id.vpn_subtitle)).setText(this.mDpm.getResources().getString("SystemUi.QS_DIALOG_MONITORING_VPN_SUBTITLE", this.mMonitoringSubtitleVpnStringSupplier));
+            ((TextView) inflate.findViewById(C1894R.C1898id.vpn_subtitle)).setText(this.mDpm.getResources().getString("SystemUi.QS_DIALOG_MONITORING_VPN_SUBTITLE", this.mMonitoringSubtitleVpnStringSupplier));
         }
         boolean z2 = managementMessage != null;
         boolean z3 = caCertsMessage != null;
@@ -652,13 +652,13 @@ public class QSSecurityFooter extends ViewController<View> implements View.OnCli
     }
 
     private View createParentalControlsDialogView() {
-        View inflate = LayoutInflater.from(this.mContext).inflate(C1893R.layout.quick_settings_footer_dialog_parental_controls, (ViewGroup) null, false);
+        View inflate = LayoutInflater.from(this.mContext).inflate(C1894R.layout.quick_settings_footer_dialog_parental_controls, (ViewGroup) null, false);
         DeviceAdminInfo deviceAdminInfo = this.mSecurityController.getDeviceAdminInfo();
         Drawable icon = this.mSecurityController.getIcon(deviceAdminInfo);
         if (icon != null) {
-            ((ImageView) inflate.findViewById(C1893R.C1897id.parental_controls_icon)).setImageDrawable(icon);
+            ((ImageView) inflate.findViewById(C1894R.C1898id.parental_controls_icon)).setImageDrawable(icon);
         }
-        ((TextView) inflate.findViewById(C1893R.C1897id.parental_controls_title)).setText(this.mSecurityController.getLabel(deviceAdminInfo));
+        ((TextView) inflate.findViewById(C1894R.C1898id.parental_controls_title)).setText(this.mSecurityController.getLabel(deviceAdminInfo));
         return inflate;
     }
 
@@ -671,13 +671,13 @@ public class QSSecurityFooter extends ViewController<View> implements View.OnCli
             }
             if (i == 1) {
                 if (z2) {
-                    view.findViewById(C1893R.C1897id.ca_certs_subtitle).setVisibility(8);
+                    view.findViewById(C1894R.C1898id.ca_certs_subtitle).setVisibility(8);
                 }
                 if (z3) {
-                    view.findViewById(C1893R.C1897id.network_logging_subtitle).setVisibility(8);
+                    view.findViewById(C1894R.C1898id.network_logging_subtitle).setVisibility(8);
                 }
                 if (z4) {
-                    view.findViewById(C1893R.C1897id.vpn_subtitle).setVisibility(8);
+                    view.findViewById(C1894R.C1898id.vpn_subtitle).setVisibility(8);
                 }
             }
         }
@@ -689,12 +689,12 @@ public class QSSecurityFooter extends ViewController<View> implements View.OnCli
     }
 
     private String getPositiveButton() {
-        return this.mContext.getString(C1893R.string.f262ok);
+        return this.mContext.getString(C1894R.string.f262ok);
     }
 
     private String getNegativeButton() {
         if (this.mSecurityController.isParentalControlsEnabled()) {
-            return this.mContext.getString(C1893R.string.monitoring_button_view_controls);
+            return this.mContext.getString(C1894R.string.monitoring_button_view_controls);
         }
         return null;
     }
@@ -708,15 +708,15 @@ public class QSSecurityFooter extends ViewController<View> implements View.OnCli
             return this.mDpm.getResources().getString("SystemUi.QS_DIALOG_MANAGEMENT", this.mManagementDialogStringSupplier);
         }
         if (isFinancedDevice()) {
-            return this.mContext.getString(C1893R.string.monitoring_financed_description_named_management, new Object[]{charSequence, charSequence});
+            return this.mContext.getString(C1894R.string.monitoring_financed_description_named_management, new Object[]{charSequence, charSequence});
         }
         return this.mDpm.getResources().getString("SystemUi.QS_DIALOG_NAMED_MANAGEMENT", new QSSecurityFooter$$ExternalSyntheticLambda25(this, charSequence), new Object[]{charSequence});
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$getManagementMessage$25$com-android-systemui-qs-QSSecurityFooter */
-    public /* synthetic */ String mo36258xca8ef810(CharSequence charSequence) {
-        return this.mContext.getString(C1893R.string.monitoring_description_named_management, new Object[]{charSequence});
+    public /* synthetic */ String mo36262xca8ef810(CharSequence charSequence) {
+        return this.mContext.getString(C1894R.string.monitoring_description_named_management, new Object[]{charSequence});
     }
 
     /* access modifiers changed from: protected */
@@ -730,7 +730,7 @@ public class QSSecurityFooter extends ViewController<View> implements View.OnCli
         if (z3) {
             return this.mDpm.getResources().getString("SystemUi.QS_DIALOG_WORK_PROFILE_CA_CERT", this.mWorkProfileDialogCaCertStringSupplier);
         }
-        return this.mContext.getString(C1893R.string.monitoring_description_ca_certificate);
+        return this.mContext.getString(C1894R.string.monitoring_description_ca_certificate);
     }
 
     /* access modifiers changed from: protected */
@@ -766,41 +766,41 @@ public class QSSecurityFooter extends ViewController<View> implements View.OnCli
         } else if (z2) {
             spannableStringBuilder.append(this.mDpm.getResources().getString("SystemUi.QS_DIALOG_PERSONAL_PROFILE_NAMED_VPN", new QSSecurityFooter$$ExternalSyntheticLambda4(this, str), new Object[]{str}));
         } else {
-            spannableStringBuilder.append(this.mContext.getString(C1893R.string.monitoring_description_named_vpn, new Object[]{str}));
+            spannableStringBuilder.append(this.mContext.getString(C1894R.string.monitoring_description_named_vpn, new Object[]{str}));
         }
-        spannableStringBuilder.append(this.mContext.getString(C1893R.string.monitoring_description_vpn_settings_separator));
-        spannableStringBuilder.append(this.mContext.getString(C1893R.string.monitoring_description_vpn_settings), new VpnSpan(), 0);
+        spannableStringBuilder.append(this.mContext.getString(C1894R.string.monitoring_description_vpn_settings_separator));
+        spannableStringBuilder.append(this.mContext.getString(C1894R.string.monitoring_description_vpn_settings), new VpnSpan(), 0);
         return spannableStringBuilder;
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$getVpnMessage$26$com-android-systemui-qs-QSSecurityFooter  reason: not valid java name */
-    public /* synthetic */ String m2918lambda$getVpnMessage$26$comandroidsystemuiqsQSSecurityFooter(String str, String str2) {
-        return this.mContext.getString(C1893R.string.monitoring_description_two_named_vpns, new Object[]{str, str2});
+    public /* synthetic */ String m2923lambda$getVpnMessage$26$comandroidsystemuiqsQSSecurityFooter(String str, String str2) {
+        return this.mContext.getString(C1894R.string.monitoring_description_two_named_vpns, new Object[]{str, str2});
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$getVpnMessage$27$com-android-systemui-qs-QSSecurityFooter  reason: not valid java name */
-    public /* synthetic */ String m2919lambda$getVpnMessage$27$comandroidsystemuiqsQSSecurityFooter(String str) {
-        return this.mContext.getString(C1893R.string.monitoring_description_named_vpn, new Object[]{str});
+    public /* synthetic */ String m2924lambda$getVpnMessage$27$comandroidsystemuiqsQSSecurityFooter(String str) {
+        return this.mContext.getString(C1894R.string.monitoring_description_named_vpn, new Object[]{str});
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$getVpnMessage$28$com-android-systemui-qs-QSSecurityFooter  reason: not valid java name */
-    public /* synthetic */ String m2920lambda$getVpnMessage$28$comandroidsystemuiqsQSSecurityFooter(String str, String str2) {
-        return this.mContext.getString(C1893R.string.monitoring_description_two_named_vpns, new Object[]{str, str2});
+    public /* synthetic */ String m2925lambda$getVpnMessage$28$comandroidsystemuiqsQSSecurityFooter(String str, String str2) {
+        return this.mContext.getString(C1894R.string.monitoring_description_two_named_vpns, new Object[]{str, str2});
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$getVpnMessage$29$com-android-systemui-qs-QSSecurityFooter  reason: not valid java name */
-    public /* synthetic */ String m2921lambda$getVpnMessage$29$comandroidsystemuiqsQSSecurityFooter(String str) {
-        return this.mContext.getString(C1893R.string.monitoring_description_managed_profile_named_vpn, new Object[]{str});
+    public /* synthetic */ String m2926lambda$getVpnMessage$29$comandroidsystemuiqsQSSecurityFooter(String str) {
+        return this.mContext.getString(C1894R.string.monitoring_description_managed_profile_named_vpn, new Object[]{str});
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$getVpnMessage$30$com-android-systemui-qs-QSSecurityFooter  reason: not valid java name */
-    public /* synthetic */ String m2922lambda$getVpnMessage$30$comandroidsystemuiqsQSSecurityFooter(String str) {
-        return this.mContext.getString(C1893R.string.monitoring_description_personal_profile_named_vpn, new Object[]{str});
+    public /* synthetic */ String m2927lambda$getVpnMessage$30$comandroidsystemuiqsQSSecurityFooter(String str) {
+        return this.mContext.getString(C1894R.string.monitoring_description_personal_profile_named_vpn, new Object[]{str});
     }
 
     /* access modifiers changed from: package-private */
@@ -808,7 +808,7 @@ public class QSSecurityFooter extends ViewController<View> implements View.OnCli
         if (charSequence == null || !isFinancedDevice()) {
             return this.mDpm.getResources().getString("SystemUi.QS_DIALOG_MANAGEMENT_TITLE", this.mManagementTitleSupplier);
         }
-        return this.mContext.getString(C1893R.string.monitoring_title_financed_device, new Object[]{charSequence});
+        return this.mContext.getString(C1894R.string.monitoring_title_financed_device, new Object[]{charSequence});
     }
 
     private boolean isFinancedDevice() {
@@ -832,11 +832,11 @@ public class QSSecurityFooter extends ViewController<View> implements View.OnCli
     }
 
     /* renamed from: com.android.systemui.qs.QSSecurityFooter$H */
-    private class C2346H extends Handler {
+    private class C2349H extends Handler {
         private static final int CLICK = 0;
         private static final int REFRESH_STATE = 1;
 
-        private C2346H(Looper looper) {
+        private C2349H(Looper looper) {
             super(looper);
         }
 

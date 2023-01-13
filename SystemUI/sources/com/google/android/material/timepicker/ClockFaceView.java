@@ -23,7 +23,7 @@ import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.view.AccessibilityDelegateCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.resources.MaterialResources;
 import com.google.android.material.timepicker.ClockHandView;
 import java.util.Arrays;
@@ -55,7 +55,7 @@ class ClockFaceView extends RadialViewGroup implements ClockHandView.OnRotateLis
     }
 
     public ClockFaceView(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, C3621R.attr.materialClockStyle);
+        this(context, attributeSet, C3631R.attr.materialClockStyle);
     }
 
     public ClockFaceView(Context context, AttributeSet attributeSet, int i) {
@@ -64,19 +64,19 @@ class ClockFaceView extends RadialViewGroup implements ClockHandView.OnRotateLis
         this.scratch = new RectF();
         this.textViewPool = new SparseArray<>();
         this.gradientPositions = new float[]{0.0f, 0.9f, 1.0f};
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C3621R.styleable.ClockFaceView, i, C3621R.style.Widget_MaterialComponents_TimePicker_Clock);
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C3631R.styleable.ClockFaceView, i, C3631R.style.Widget_MaterialComponents_TimePicker_Clock);
         Resources resources = getResources();
-        ColorStateList colorStateList = MaterialResources.getColorStateList(context, obtainStyledAttributes, C3621R.styleable.ClockFaceView_clockNumberTextColor);
+        ColorStateList colorStateList = MaterialResources.getColorStateList(context, obtainStyledAttributes, C3631R.styleable.ClockFaceView_clockNumberTextColor);
         this.textColor = colorStateList;
-        LayoutInflater.from(context).inflate(C3621R.layout.material_clockface_view, this, true);
-        ClockHandView clockHandView2 = (ClockHandView) findViewById(C3621R.C3624id.material_clock_hand);
+        LayoutInflater.from(context).inflate(C3631R.layout.material_clockface_view, this, true);
+        ClockHandView clockHandView2 = (ClockHandView) findViewById(C3631R.C3634id.material_clock_hand);
         this.clockHandView = clockHandView2;
-        this.clockHandPadding = resources.getDimensionPixelSize(C3621R.dimen.material_clock_hand_padding);
+        this.clockHandPadding = resources.getDimensionPixelSize(C3631R.dimen.material_clock_hand_padding);
         int colorForState = colorStateList.getColorForState(new int[]{16842913}, colorStateList.getDefaultColor());
         this.gradientColors = new int[]{colorForState, colorForState, colorStateList.getDefaultColor()};
         clockHandView2.addOnRotateListener(this);
-        int defaultColor = AppCompatResources.getColorStateList(context, C3621R.C3622color.material_timepicker_clockface).getDefaultColor();
-        ColorStateList colorStateList2 = MaterialResources.getColorStateList(context, obtainStyledAttributes, C3621R.styleable.ClockFaceView_clockFaceBackgroundColor);
+        int defaultColor = AppCompatResources.getColorStateList(context, C3631R.C3632color.material_timepicker_clockface).getDefaultColor();
+        ColorStateList colorStateList2 = MaterialResources.getColorStateList(context, obtainStyledAttributes, C3631R.styleable.ClockFaceView_clockFaceBackgroundColor);
         setBackgroundColor(colorStateList2 != null ? colorStateList2.getDefaultColor() : defaultColor);
         getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             public boolean onPreDraw() {
@@ -93,7 +93,7 @@ class ClockFaceView extends RadialViewGroup implements ClockHandView.OnRotateLis
         this.valueAccessibilityDelegate = new AccessibilityDelegateCompat() {
             public void onInitializeAccessibilityNodeInfo(View view, AccessibilityNodeInfoCompat accessibilityNodeInfoCompat) {
                 super.onInitializeAccessibilityNodeInfo(view, accessibilityNodeInfoCompat);
-                int intValue = ((Integer) view.getTag(C3621R.C3624id.material_value_index)).intValue();
+                int intValue = ((Integer) view.getTag(C3631R.C3634id.material_value_index)).intValue();
                 if (intValue > 0) {
                     accessibilityNodeInfoCompat.setTraversalAfter((View) ClockFaceView.this.textViewPool.get(intValue - 1));
                 }
@@ -119,9 +119,9 @@ class ClockFaceView extends RadialViewGroup implements ClockHandView.OnRotateLis
         String[] strArr = new String[12];
         Arrays.fill((Object[]) strArr, (Object) "");
         setValues(strArr, 0);
-        this.minimumHeight = resources.getDimensionPixelSize(C3621R.dimen.material_time_picker_minimum_screen_height);
-        this.minimumWidth = resources.getDimensionPixelSize(C3621R.dimen.material_time_picker_minimum_screen_width);
-        this.clockSize = resources.getDimensionPixelSize(C3621R.dimen.material_clock_size);
+        this.minimumHeight = resources.getDimensionPixelSize(C3631R.dimen.material_time_picker_minimum_screen_height);
+        this.minimumWidth = resources.getDimensionPixelSize(C3631R.dimen.material_time_picker_minimum_screen_width);
+        this.clockSize = resources.getDimensionPixelSize(C3631R.dimen.material_clock_size);
     }
 
     public void setValues(String[] strArr, int i) {
@@ -139,13 +139,13 @@ class ClockFaceView extends RadialViewGroup implements ClockHandView.OnRotateLis
                 this.textViewPool.remove(i2);
             } else {
                 if (textView == null) {
-                    textView = (TextView) from.inflate(C3621R.layout.material_clockface_textview, this, false);
+                    textView = (TextView) from.inflate(C3631R.layout.material_clockface_textview, this, false);
                     this.textViewPool.put(i2, textView);
                     addView(textView);
                 }
                 textView.setVisibility(0);
                 textView.setText(this.values[i2]);
-                textView.setTag(C3621R.C3624id.material_value_index, Integer.valueOf(i2));
+                textView.setTag(C3631R.C3634id.material_value_index, Integer.valueOf(i2));
                 ViewCompat.setAccessibilityDelegate(textView, this.valueAccessibilityDelegate);
                 textView.setTextColor(this.textColor);
                 if (i != 0) {

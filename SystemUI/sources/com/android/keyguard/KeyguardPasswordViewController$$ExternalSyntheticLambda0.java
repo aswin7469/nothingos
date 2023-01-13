@@ -12,6 +12,6 @@ public final /* synthetic */ class KeyguardPasswordViewController$$ExternalSynth
     }
 
     public final boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-        return this.f$0.m2287lambda$new$0$comandroidkeyguardKeyguardPasswordViewController(textView, i, keyEvent);
+        return this.f$0.m2293lambda$new$0$comandroidkeyguardKeyguardPasswordViewController(textView, i, keyEvent);
     }
 }

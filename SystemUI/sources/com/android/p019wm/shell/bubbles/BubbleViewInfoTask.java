@@ -16,7 +16,7 @@ import android.util.PathParser;
 import android.view.LayoutInflater;
 import com.android.internal.graphics.ColorUtils;
 import com.android.launcher3.icons.BitmapInfo;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.bubbles.Bubble;
 import java.lang.ref.WeakReference;
 import java.util.Objects;
@@ -66,7 +66,7 @@ public class BubbleViewInfoTask extends AsyncTask<Void, Void, BubbleViewInfo> {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onPostExecute$0$com-android-wm-shell-bubbles-BubbleViewInfoTask */
-    public /* synthetic */ void mo48783x4542a15(BubbleViewInfo bubbleViewInfo) {
+    public /* synthetic */ void mo48792x4542a15(BubbleViewInfo bubbleViewInfo) {
         this.mBubble.setViewInfo(bubbleViewInfo);
         Callback callback = this.mCallback;
         if (callback != null) {
@@ -91,10 +91,10 @@ public class BubbleViewInfoTask extends AsyncTask<Void, Void, BubbleViewInfo> {
             BubbleViewInfo bubbleViewInfo = new BubbleViewInfo();
             if (!z && !bubble.isInflated()) {
                 LayoutInflater from = LayoutInflater.from(context);
-                BadgedImageView badgedImageView = (BadgedImageView) from.inflate(C3343R.layout.bubble_view, bubbleStackView, false);
+                BadgedImageView badgedImageView = (BadgedImageView) from.inflate(C3353R.layout.bubble_view, bubbleStackView, false);
                 bubbleViewInfo.imageView = badgedImageView;
                 badgedImageView.initialize(bubbleController.getPositioner());
-                BubbleExpandedView bubbleExpandedView = (BubbleExpandedView) from.inflate(C3343R.layout.bubble_expanded_view, bubbleStackView, false);
+                BubbleExpandedView bubbleExpandedView = (BubbleExpandedView) from.inflate(C3353R.layout.bubble_expanded_view, bubbleStackView, false);
                 bubbleViewInfo.expandedView = bubbleExpandedView;
                 bubbleExpandedView.initialize(bubbleController, bubbleStackView, false);
             }

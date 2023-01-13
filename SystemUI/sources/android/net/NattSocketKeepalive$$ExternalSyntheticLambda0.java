@@ -9,6 +9,6 @@ public final /* synthetic */ class NattSocketKeepalive$$ExternalSyntheticLambda0
     }
 
     public final void run() {
-        this.f$0.m1884lambda$stopImpl$1$androidnetNattSocketKeepalive();
+        this.f$0.m1890lambda$stopImpl$1$androidnetNattSocketKeepalive();
     }
 }

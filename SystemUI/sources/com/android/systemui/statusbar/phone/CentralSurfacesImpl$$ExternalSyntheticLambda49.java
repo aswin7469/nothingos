@@ -11,6 +11,6 @@ public final /* synthetic */ class CentralSurfacesImpl$$ExternalSyntheticLambda4
     }
 
     public final void onOngoingCallStateChanged(boolean z) {
-        this.f$0.mo43892x927828c2(z);
+        this.f$0.mo43901x927828c2(z);
     }
 }

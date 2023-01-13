@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import com.airbnb.lottie.LottieAnimationView;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.doze.DozeReceiver;
 import com.nothing.systemui.biometrics.NTUdfpsSurfaceView;
 import com.nothing.systemui.util.NTLogUtil;
@@ -20,7 +20,7 @@ import java.util.Map;
 import kotlin.Metadata;
 import kotlin.jvm.internal.Intrinsics;
 
-@Metadata(mo64986d1 = {"\u0000\u0001\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0010\u000e\n\u0002\b\u0006\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u000b\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\t\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0007\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0002\b\u0007\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0016\u0018\u00002\u00020\u00012\u00020\u00022\u00020\u0003:\u0001`B\u0017\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\b\u0010\u0006\u001a\u0004\u0018\u00010\u0007¢\u0006\u0002\u0010\bJ\u0012\u00107\u001a\u0002082\b\u00109\u001a\u0004\u0018\u00010:H\u0002J\b\u0010;\u001a\u000208H\u0016J\u000e\u0010<\u001a\u0002082\u0006\u0010=\u001a\u00020\u001bJ\b\u0010>\u001a\u0004\u0018\u00010?J\u0016\u0010@\u001a\u00020\u001b2\u0006\u0010A\u001a\u0002062\u0006\u0010B\u001a\u000206J\b\u0010C\u001a\u000208H\u0014J\b\u0010D\u001a\u000208H\u0014J\u0010\u0010E\u001a\u0002082\u0006\u0010F\u001a\u00020GH\u0014J\b\u0010H\u001a\u000208H\u0014J\u0010\u0010I\u001a\u00020\u001b2\u0006\u0010J\u001a\u00020KH\u0016J0\u0010L\u001a\u0002082\u0006\u0010M\u001a\u00020\u001b2\u0006\u0010N\u001a\u00020(2\u0006\u0010O\u001a\u00020(2\u0006\u0010P\u001a\u00020(2\u0006\u0010Q\u001a\u00020(H\u0014J\u0006\u0010R\u001a\u000208J\u0018\u0010S\u001a\u0002082\u0006\u0010T\u001a\u00020?2\u0006\u0010U\u001a\u00020(H\u0014J\u0012\u0010V\u001a\u0002082\b\u0010W\u001a\u0004\u0018\u00010!H\u0016J\u0010\u0010X\u001a\u0002082\b\u0010Y\u001a\u0004\u0018\u00010*J\u0012\u0010Z\u001a\u0002082\b\u00109\u001a\u0004\u0018\u00010:H\u0016J\b\u0010[\u001a\u000208H\u0002J\b\u0010\\\u001a\u000208H\u0016J\b\u0010]\u001a\u000208H\u0002J\b\u0010^\u001a\u000208H\u0002J\b\u0010_\u001a\u000208H\u0002R \u0010\t\u001a\b\u0012\u0002\b\u0003\u0018\u00010\nX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u000b\u0010\f\"\u0004\b\r\u0010\u000eR(\u0010\u0011\u001a\u0004\u0018\u00010\u00102\b\u0010\u000f\u001a\u0004\u0018\u00010\u0010@FX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0012\u0010\u0013\"\u0004\b\u0014\u0010\u0015R\u000e\u0010\u0016\u001a\u00020\u0017X\u0004¢\u0006\u0002\n\u0000R\u0010\u0010\u0018\u001a\u0004\u0018\u00010\u0019X\u000e¢\u0006\u0002\n\u0000R\u001a\u0010\u001a\u001a\u00020\u001bX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u001c\u0010\u001d\"\u0004\b\u001e\u0010\u001fR\u0010\u0010 \u001a\u0004\u0018\u00010!X\u000e¢\u0006\u0002\n\u0000R\u001e\u0010#\u001a\u00020\u001b2\u0006\u0010\"\u001a\u00020\u001b@BX\u000e¢\u0006\b\n\u0000\u001a\u0004\b#\u0010\u001dR\u000e\u0010$\u001a\u00020\u001bX\u000e¢\u0006\u0002\n\u0000R\u0010\u0010%\u001a\u0004\u0018\u00010&X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010'\u001a\u00020(XD¢\u0006\u0002\n\u0000R\u0010\u0010)\u001a\u0004\u0018\u00010*X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010+\u001a\u00020,X\u0004¢\u0006\u0002\n\u0000R\u001a\u0010-\u001a\u00020.X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b/\u00100\"\u0004\b1\u00102R\u000e\u00103\u001a\u000204X\u0004¢\u0006\u0002\n\u0000R\u000e\u00105\u001a\u000206X\u0004¢\u0006\u0002\n\u0000¨\u0006a"}, mo64987d2 = {"Lcom/android/systemui/biometrics/UdfpsView;", "Landroid/widget/FrameLayout;", "Lcom/android/systemui/doze/DozeReceiver;", "Lcom/android/systemui/biometrics/UdfpsIlluminator;", "context", "Landroid/content/Context;", "attrs", "Landroid/util/AttributeSet;", "(Landroid/content/Context;Landroid/util/AttributeSet;)V", "animationViewController", "Lcom/android/systemui/biometrics/UdfpsAnimationViewController;", "getAnimationViewController", "()Lcom/android/systemui/biometrics/UdfpsAnimationViewController;", "setAnimationViewController", "(Lcom/android/systemui/biometrics/UdfpsAnimationViewController;)V", "value", "", "debugMessage", "getDebugMessage", "()Ljava/lang/String;", "setDebugMessage", "(Ljava/lang/String;)V", "debugTextPaint", "Landroid/graphics/Paint;", "ghbmView", "Lcom/nothing/systemui/biometrics/NTUdfpsSurfaceView;", "halControlsIllumination", "", "getHalControlsIllumination", "()Z", "setHalControlsIllumination", "(Z)V", "hbmProvider", "Lcom/android/systemui/biometrics/UdfpsHbmProvider;", "<set-?>", "isIlluminationRequested", "mEnableScanningAnim", "mScanningAnimView", "Lcom/airbnb/lottie/LottieAnimationView;", "mUdfpsScanningViewSize", "", "mVisibilityListener", "Lcom/android/systemui/biometrics/UdfpsView$UdfpsViewVisibilityListener;", "onIlluminatedDelayMs", "", "overlayParams", "Lcom/android/systemui/biometrics/UdfpsOverlayParams;", "getOverlayParams", "()Lcom/android/systemui/biometrics/UdfpsOverlayParams;", "setOverlayParams", "(Lcom/android/systemui/biometrics/UdfpsOverlayParams;)V", "sensorRect", "Landroid/graphics/RectF;", "sensorTouchAreaCoefficient", "", "doIlluminate", "", "onIlluminatedRunnable", "Ljava/lang/Runnable;", "dozeTimeTick", "enableScanningAnim", "enable", "getGhbmView", "Landroid/view/View;", "isWithinSensorArea", "x", "y", "onAttachedToWindow", "onDetachedFromWindow", "onDraw", "canvas", "Landroid/graphics/Canvas;", "onFinishInflate", "onInterceptTouchEvent", "ev", "Landroid/view/MotionEvent;", "onLayout", "changed", "left", "top", "right", "bottom", "onTouchOutsideView", "onVisibilityChanged", "changedView", "visibility", "setHbmProvider", "provider", "setVisibilityListener", "listener", "startIllumination", "startScanningAnimation", "stopIllumination", "stopScanningAnimation", "updateViewLayoutParams", "updateghbmLayoutParams", "UdfpsViewVisibilityListener", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000\u0001\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0010\u000e\n\u0002\b\u0006\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u000b\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\t\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0007\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0002\b\u0007\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0016\u0018\u00002\u00020\u00012\u00020\u00022\u00020\u0003:\u0001`B\u0017\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\b\u0010\u0006\u001a\u0004\u0018\u00010\u0007¢\u0006\u0002\u0010\bJ\u0012\u00107\u001a\u0002082\b\u00109\u001a\u0004\u0018\u00010:H\u0002J\b\u0010;\u001a\u000208H\u0016J\u000e\u0010<\u001a\u0002082\u0006\u0010=\u001a\u00020\u001bJ\b\u0010>\u001a\u0004\u0018\u00010?J\u0016\u0010@\u001a\u00020\u001b2\u0006\u0010A\u001a\u0002062\u0006\u0010B\u001a\u000206J\b\u0010C\u001a\u000208H\u0014J\b\u0010D\u001a\u000208H\u0014J\u0010\u0010E\u001a\u0002082\u0006\u0010F\u001a\u00020GH\u0014J\b\u0010H\u001a\u000208H\u0014J\u0010\u0010I\u001a\u00020\u001b2\u0006\u0010J\u001a\u00020KH\u0016J0\u0010L\u001a\u0002082\u0006\u0010M\u001a\u00020\u001b2\u0006\u0010N\u001a\u00020(2\u0006\u0010O\u001a\u00020(2\u0006\u0010P\u001a\u00020(2\u0006\u0010Q\u001a\u00020(H\u0014J\u0006\u0010R\u001a\u000208J\u0018\u0010S\u001a\u0002082\u0006\u0010T\u001a\u00020?2\u0006\u0010U\u001a\u00020(H\u0014J\u0012\u0010V\u001a\u0002082\b\u0010W\u001a\u0004\u0018\u00010!H\u0016J\u0010\u0010X\u001a\u0002082\b\u0010Y\u001a\u0004\u0018\u00010*J\u0012\u0010Z\u001a\u0002082\b\u00109\u001a\u0004\u0018\u00010:H\u0016J\b\u0010[\u001a\u000208H\u0002J\b\u0010\\\u001a\u000208H\u0016J\b\u0010]\u001a\u000208H\u0002J\b\u0010^\u001a\u000208H\u0002J\b\u0010_\u001a\u000208H\u0002R \u0010\t\u001a\b\u0012\u0002\b\u0003\u0018\u00010\nX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u000b\u0010\f\"\u0004\b\r\u0010\u000eR(\u0010\u0011\u001a\u0004\u0018\u00010\u00102\b\u0010\u000f\u001a\u0004\u0018\u00010\u0010@FX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0012\u0010\u0013\"\u0004\b\u0014\u0010\u0015R\u000e\u0010\u0016\u001a\u00020\u0017X\u0004¢\u0006\u0002\n\u0000R\u0010\u0010\u0018\u001a\u0004\u0018\u00010\u0019X\u000e¢\u0006\u0002\n\u0000R\u001a\u0010\u001a\u001a\u00020\u001bX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u001c\u0010\u001d\"\u0004\b\u001e\u0010\u001fR\u0010\u0010 \u001a\u0004\u0018\u00010!X\u000e¢\u0006\u0002\n\u0000R\u001e\u0010#\u001a\u00020\u001b2\u0006\u0010\"\u001a\u00020\u001b@BX\u000e¢\u0006\b\n\u0000\u001a\u0004\b#\u0010\u001dR\u000e\u0010$\u001a\u00020\u001bX\u000e¢\u0006\u0002\n\u0000R\u0010\u0010%\u001a\u0004\u0018\u00010&X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010'\u001a\u00020(XD¢\u0006\u0002\n\u0000R\u0010\u0010)\u001a\u0004\u0018\u00010*X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010+\u001a\u00020,X\u0004¢\u0006\u0002\n\u0000R\u001a\u0010-\u001a\u00020.X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b/\u00100\"\u0004\b1\u00102R\u000e\u00103\u001a\u000204X\u0004¢\u0006\u0002\n\u0000R\u000e\u00105\u001a\u000206X\u0004¢\u0006\u0002\n\u0000¨\u0006a"}, mo65043d2 = {"Lcom/android/systemui/biometrics/UdfpsView;", "Landroid/widget/FrameLayout;", "Lcom/android/systemui/doze/DozeReceiver;", "Lcom/android/systemui/biometrics/UdfpsIlluminator;", "context", "Landroid/content/Context;", "attrs", "Landroid/util/AttributeSet;", "(Landroid/content/Context;Landroid/util/AttributeSet;)V", "animationViewController", "Lcom/android/systemui/biometrics/UdfpsAnimationViewController;", "getAnimationViewController", "()Lcom/android/systemui/biometrics/UdfpsAnimationViewController;", "setAnimationViewController", "(Lcom/android/systemui/biometrics/UdfpsAnimationViewController;)V", "value", "", "debugMessage", "getDebugMessage", "()Ljava/lang/String;", "setDebugMessage", "(Ljava/lang/String;)V", "debugTextPaint", "Landroid/graphics/Paint;", "ghbmView", "Lcom/nothing/systemui/biometrics/NTUdfpsSurfaceView;", "halControlsIllumination", "", "getHalControlsIllumination", "()Z", "setHalControlsIllumination", "(Z)V", "hbmProvider", "Lcom/android/systemui/biometrics/UdfpsHbmProvider;", "<set-?>", "isIlluminationRequested", "mEnableScanningAnim", "mScanningAnimView", "Lcom/airbnb/lottie/LottieAnimationView;", "mUdfpsScanningViewSize", "", "mVisibilityListener", "Lcom/android/systemui/biometrics/UdfpsView$UdfpsViewVisibilityListener;", "onIlluminatedDelayMs", "", "overlayParams", "Lcom/android/systemui/biometrics/UdfpsOverlayParams;", "getOverlayParams", "()Lcom/android/systemui/biometrics/UdfpsOverlayParams;", "setOverlayParams", "(Lcom/android/systemui/biometrics/UdfpsOverlayParams;)V", "sensorRect", "Landroid/graphics/RectF;", "sensorTouchAreaCoefficient", "", "doIlluminate", "", "onIlluminatedRunnable", "Ljava/lang/Runnable;", "dozeTimeTick", "enableScanningAnim", "enable", "getGhbmView", "Landroid/view/View;", "isWithinSensorArea", "x", "y", "onAttachedToWindow", "onDetachedFromWindow", "onDraw", "canvas", "Landroid/graphics/Canvas;", "onFinishInflate", "onInterceptTouchEvent", "ev", "Landroid/view/MotionEvent;", "onLayout", "changed", "left", "top", "right", "bottom", "onTouchOutsideView", "onVisibilityChanged", "changedView", "visibility", "setHbmProvider", "provider", "setVisibilityListener", "listener", "startIllumination", "startScanningAnimation", "stopIllumination", "stopScanningAnimation", "updateViewLayoutParams", "updateghbmLayoutParams", "UdfpsViewVisibilityListener", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* compiled from: UdfpsView.kt */
 public final class UdfpsView extends FrameLayout implements DozeReceiver, UdfpsIlluminator {
     public Map<Integer, View> _$_findViewCache = new LinkedHashMap();
@@ -40,7 +40,7 @@ public final class UdfpsView extends FrameLayout implements DozeReceiver, UdfpsI
     private final RectF sensorRect;
     private final float sensorTouchAreaCoefficient;
 
-    @Metadata(mo64986d1 = {"\u0000\u0016\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0010\b\n\u0000\bf\u0018\u00002\u00020\u0001J\u0010\u0010\u0002\u001a\u00020\u00032\u0006\u0010\u0004\u001a\u00020\u0005H&ø\u0001\u0000\u0002\u0006\n\u0004\b!0\u0001¨\u0006\u0006À\u0006\u0001"}, mo64987d2 = {"Lcom/android/systemui/biometrics/UdfpsView$UdfpsViewVisibilityListener;", "", "onVisibilityChanged", "", "visibility", "", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u0000\u0016\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0010\b\n\u0000\bf\u0018\u00002\u00020\u0001J\u0010\u0010\u0002\u001a\u00020\u00032\u0006\u0010\u0004\u001a\u00020\u0005H&ø\u0001\u0000\u0002\u0006\n\u0004\b!0\u0001¨\u0006\u0006À\u0006\u0001"}, mo65043d2 = {"Lcom/android/systemui/biometrics/UdfpsView$UdfpsViewVisibilityListener;", "", "onVisibilityChanged", "", "visibility", "", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* compiled from: UdfpsView.kt */
     public interface UdfpsViewVisibilityListener {
         void onVisibilityChanged(int i);
@@ -101,7 +101,7 @@ public final class UdfpsView extends FrameLayout implements DozeReceiver, UdfpsI
             r0.setTextSize(r2)
             r10.debugTextPaint = r0
             android.content.res.Resources$Theme r0 = r11.getTheme()
-            int[] r2 = com.android.systemui.C1893R.styleable.UdfpsView
+            int[] r2 = com.android.systemui.C1894R.styleable.UdfpsView
             r3 = 0
             android.content.res.TypedArray r12 = r0.obtainStyledAttributes(r12, r2, r3, r3)
             java.lang.AutoCloseable r12 = (java.lang.AutoCloseable) r12
@@ -221,7 +221,7 @@ public final class UdfpsView extends FrameLayout implements DozeReceiver, UdfpsI
         }
         this.sensorRect.set((float) paddingX, (float) i5, (float) (this.overlayParams.getSensorBounds().width() + paddingX), (float) (this.overlayParams.getSensorBounds().height() + i5));
         if (this.ghbmView == null) {
-            this.ghbmView = (NTUdfpsSurfaceView) findViewById(C1893R.C1897id.hbm_view);
+            this.ghbmView = (NTUdfpsSurfaceView) findViewById(C1894R.C1898id.hbm_view);
             updateghbmLayoutParams();
         }
         UdfpsAnimationViewController<?> udfpsAnimationViewController3 = this.animationViewController;
@@ -276,21 +276,23 @@ public final class UdfpsView extends FrameLayout implements DozeReceiver, UdfpsI
         float f4 = (this.sensorRect.bottom - this.sensorRect.top) / 2.0f;
         StringBuilder sb = new StringBuilder("isWithinSensorArea | centerX()=");
         sb.append(this.sensorRect.centerX()).append(", centerY=").append(this.sensorRect.centerY()).append("，translation.x=").append(pointF.x).append("，translation.y=").append(pointF.y).append("，mSensorRect=").append((Object) this.sensorRect).append(",x=").append(f).append(", y=").append(f2).append(", mSensorTouchAreaCoefficient=").append(this.sensorTouchAreaCoefficient).append(", cx=").append(centerX).append(", rx=").append(f3).append(", cy=").append(centerY).append(", ry=");
-        sb.append(f4).append(", ").append((this.mUdfpsScanningViewSize / 2) - width);
-        NTLogUtil.m1683v("UdfpsView", sb.toString());
+        StringBuilder append = sb.append(f4).append(", ").append((this.mUdfpsScanningViewSize / 2) - width).append(",shouldPauseAuth=");
+        UdfpsAnimationViewController<?> udfpsAnimationViewController2 = this.animationViewController;
+        append.append(udfpsAnimationViewController2 != null ? udfpsAnimationViewController2.shouldPauseAuth() : false);
+        NTLogUtil.m1689v("UdfpsView", sb.toString());
         float f5 = this.sensorTouchAreaCoefficient;
         if (f <= centerX - (f3 * f5) || f >= centerX + (f3 * f5) || f2 <= centerY - (f4 * f5) || f2 >= centerY + (f4 * f5)) {
             return false;
         }
-        UdfpsAnimationViewController<?> udfpsAnimationViewController2 = this.animationViewController;
-        if (!(udfpsAnimationViewController2 != null ? udfpsAnimationViewController2.shouldPauseAuth() : false)) {
+        UdfpsAnimationViewController<?> udfpsAnimationViewController3 = this.animationViewController;
+        if (!(udfpsAnimationViewController3 != null ? udfpsAnimationViewController3.shouldPauseAuth() : false)) {
             return true;
         }
         return false;
     }
 
     public void startIllumination(Runnable runnable) {
-        NTLogUtil.m1680d("UdfpsView", "startIllumination " + Debug.getCallers(5));
+        NTLogUtil.m1686d("UdfpsView", "startIllumination " + Debug.getCallers(5));
         boolean z = this.isIlluminationRequested;
         this.isIlluminationRequested = true;
         UdfpsAnimationViewController<?> udfpsAnimationViewController = this.animationViewController;
@@ -311,7 +313,7 @@ public final class UdfpsView extends FrameLayout implements DozeReceiver, UdfpsI
     }
 
     public void stopIllumination() {
-        NTLogUtil.m1680d("UdfpsView", "stopIllumination " + Debug.getCallers(5));
+        NTLogUtil.m1686d("UdfpsView", "stopIllumination " + Debug.getCallers(5));
         this.isIlluminationRequested = false;
         UdfpsAnimationViewController<?> udfpsAnimationViewController = this.animationViewController;
         if (udfpsAnimationViewController != null) {
@@ -334,7 +336,7 @@ public final class UdfpsView extends FrameLayout implements DozeReceiver, UdfpsI
 
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
-        LottieAnimationView lottieAnimationView = (LottieAnimationView) findViewById(C1893R.C1897id.nt_fp_scanning);
+        LottieAnimationView lottieAnimationView = (LottieAnimationView) findViewById(C1894R.C1898id.nt_fp_scanning);
         this.mScanningAnimView = lottieAnimationView;
         if (lottieAnimationView != null) {
             lottieAnimationView.setAlpha(0.0f);
@@ -386,7 +388,7 @@ public final class UdfpsView extends FrameLayout implements DozeReceiver, UdfpsI
     }
 
     private final void updateViewLayoutParams() {
-        NTLogUtil.m1682i("UdfpsView", "updateViewLayoutParams mUdfpsScanningViewRadius=" + this.mUdfpsScanningViewSize);
+        NTLogUtil.m1688i("UdfpsView", "updateViewLayoutParams mUdfpsScanningViewRadius=" + this.mUdfpsScanningViewSize);
         LottieAnimationView lottieAnimationView = this.mScanningAnimView;
         if (lottieAnimationView != null) {
             ViewGroup.LayoutParams layoutParams = lottieAnimationView.getLayoutParams();
@@ -409,7 +411,7 @@ public final class UdfpsView extends FrameLayout implements DozeReceiver, UdfpsI
     public void onVisibilityChanged(View view, int i) {
         Intrinsics.checkNotNullParameter(view, "changedView");
         super.onVisibilityChanged(view, i);
-        NTLogUtil.m1682i("UdfpsView", "onVisibilityChanged: " + i);
+        NTLogUtil.m1688i("UdfpsView", "onVisibilityChanged: " + i);
         UdfpsViewVisibilityListener udfpsViewVisibilityListener = this.mVisibilityListener;
         if (udfpsViewVisibilityListener != null) {
             Intrinsics.checkNotNull(udfpsViewVisibilityListener);

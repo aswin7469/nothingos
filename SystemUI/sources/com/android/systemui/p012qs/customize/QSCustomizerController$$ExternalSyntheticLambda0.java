@@ -12,6 +12,6 @@ public final /* synthetic */ class QSCustomizerController$$ExternalSyntheticLamb
     }
 
     public final void onClick(View view) {
-        this.f$0.mo36512x148df215(view);
+        this.f$0.mo36516x148df215(view);
     }
 }

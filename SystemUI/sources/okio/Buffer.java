@@ -1741,7 +1741,7 @@ public final class Buffer implements BufferedSource, BufferedSink, Cloneable, By
                     instance.update(segment2.data, segment2.pos, segment2.limit - segment2.pos);
                 }
             }
-            return ByteString.m1815of(instance.digest());
+            return ByteString.m1821of(instance.digest());
         } catch (NoSuchAlgorithmException unused) {
             throw new AssertionError();
         }
@@ -1775,7 +1775,7 @@ public final class Buffer implements BufferedSource, BufferedSink, Cloneable, By
                     instance.update(segment2.data, segment2.pos, segment2.limit - segment2.pos);
                 }
             }
-            return ByteString.m1815of(instance.doFinal());
+            return ByteString.m1821of(instance.doFinal());
         } catch (NoSuchAlgorithmException unused) {
             throw new AssertionError();
         } catch (InvalidKeyException e) {

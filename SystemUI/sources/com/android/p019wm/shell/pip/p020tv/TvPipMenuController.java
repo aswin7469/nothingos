@@ -20,7 +20,7 @@ import android.view.ViewGroup;
 import android.view.ViewRootImpl;
 import android.view.WindowManagerGlobal;
 import com.android.internal.protolog.common.ProtoLog;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.common.SystemWindows;
 import com.android.p019wm.shell.pip.PipMediaController;
 import com.android.p019wm.shell.pip.PipMenuController;
@@ -93,9 +93,9 @@ public class TvPipMenuController implements PipMenuController, TvPipMenuView.Lis
             }
         }, new IntentFilter("android.intent.action.CLOSE_SYSTEM_DIALOGS"), (String) null, handler, 2);
         pipMediaController.addActionListener(new TvPipMenuController$$ExternalSyntheticLambda1(this));
-        this.mPipEduTextShowDurationMs = context.getResources().getInteger(C3343R.integer.pip_edu_text_show_duration_ms);
-        this.mPipEduTextHeight = context.getResources().getDimensionPixelSize(C3343R.dimen.pip_menu_edu_text_view_height);
-        this.mPipMenuBorderWidth = context.getResources().getDimensionPixelSize(C3343R.dimen.pip_menu_border_width);
+        this.mPipEduTextShowDurationMs = context.getResources().getInteger(C3353R.integer.pip_edu_text_show_duration_ms);
+        this.mPipEduTextHeight = context.getResources().getDimensionPixelSize(C3353R.dimen.pip_menu_edu_text_view_height);
+        this.mPipMenuBorderWidth = context.getResources().getDimensionPixelSize(C3353R.dimen.pip_menu_border_width);
     }
 
     /* access modifiers changed from: package-private */
@@ -141,7 +141,7 @@ public class TvPipMenuController implements PipMenuController, TvPipMenuView.Lis
     }
 
     private void attachPipBackgroundView() {
-        View inflate = LayoutInflater.from(this.mContext).inflate(C3343R.layout.tv_pip_menu_background, (ViewGroup) null);
+        View inflate = LayoutInflater.from(this.mContext).inflate(C3353R.layout.tv_pip_menu_background, (ViewGroup) null);
         this.mPipBackgroundView = inflate;
         setUpViewSurfaceZOrder(inflate, -1);
         addPipMenuViewToSystemWindows(this.mPipBackgroundView, BACKGROUND_WINDOW_TITLE);

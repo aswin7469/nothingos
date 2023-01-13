@@ -16,13 +16,13 @@ public class NavigationBarControllerEx {
     private SparseArray<NavigationBar> mNavigationBars = new SparseArray<>();
 
     public void registerNavBarCombinationObserver(Context context, Handler handler, SparseArray<NavigationBar> sparseArray) {
-        NTLogUtil.m1680d(TAG, "registerNavBarCombinationObserver");
+        NTLogUtil.m1686d(TAG, "registerNavBarCombinationObserver");
         this.mContext = context;
         this.mHandler = handler;
         this.mNavigationBars = sparseArray;
         this.mContext.getContentResolver().registerContentObserver(Settings.Secure.getUriFor(NavigationBarInflaterViewEx.NAV_BAR_COMBINATION), false, new ContentObserver(this.mHandler) {
             public void onChange(boolean z) {
-                NTLogUtil.m1680d(NavigationBarControllerEx.TAG, "receive NavBarCombinationChange");
+                NTLogUtil.m1686d(NavigationBarControllerEx.TAG, "receive NavBarCombinationChange");
                 NavigationBarControllerEx.this.onNavBarCombinationChange();
             }
         }, -1);
@@ -35,15 +35,15 @@ public class NavigationBarControllerEx {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onNavBarCombinationChange$0$com-nothing-systemui-navigationbar-NavigationBarControllerEx */
-    public /* synthetic */ void mo57489x378af467() {
+    public /* synthetic */ void mo57510x378af467() {
         for (int i = 0; i < this.mNavigationBars.size(); i++) {
             NavigationBar valueAt = this.mNavigationBars.valueAt(i);
             if (valueAt == null) {
-                NTLogUtil.m1684w(TAG, "onNavBarCombinationChange: navbar is null");
+                NTLogUtil.m1690w(TAG, "onNavBarCombinationChange: navbar is null");
             } else {
                 NavigationBarView view = valueAt.getView();
                 if (view != null) {
-                    NTLogUtil.m1684w(TAG, "onNavBarCombinationChange: update");
+                    NTLogUtil.m1690w(TAG, "onNavBarCombinationChange: update");
                     view.updateNavBarCombination();
                 }
             }

@@ -3,7 +3,7 @@ package com.google.android.setupdesign.util;
 import android.app.Activity;
 import android.content.Intent;
 import com.google.android.setupcompat.util.WizardManagerHelper;
-import com.google.android.setupdesign.C3953R;
+import com.google.android.setupdesign.C3963R;
 
 public class ThemeResolver {
     private static ThemeResolver defaultResolver;
@@ -25,7 +25,7 @@ public class ThemeResolver {
 
     public static ThemeResolver getDefault() {
         if (defaultResolver == null) {
-            defaultResolver = new Builder().setDefaultTheme(C3953R.style.SudThemeGlif_DayNight).setUseDayNight(true).build();
+            defaultResolver = new Builder().setDefaultTheme(C3963R.style.SudThemeGlif_DayNight).setUseDayNight(true).build();
         }
         return defaultResolver;
     }
@@ -139,19 +139,19 @@ public class ThemeResolver {
             switch (c) {
                 case 0:
                 case 5:
-                    return C3953R.style.SudThemeGlifV2_DayNight;
+                    return C3963R.style.SudThemeGlifV2_DayNight;
                 case 1:
                 case 8:
-                    return C3953R.style.SudThemeMaterial_DayNight;
+                    return C3963R.style.SudThemeMaterial_DayNight;
                 case 2:
                 case 6:
-                    return C3953R.style.SudThemeGlifV3_DayNight;
+                    return C3963R.style.SudThemeGlifV3_DayNight;
                 case 3:
                 case 7:
-                    return C3953R.style.SudThemeGlifV4_DayNight;
+                    return C3963R.style.SudThemeGlifV4_DayNight;
                 case 4:
                 case 9:
-                    return C3953R.style.SudThemeGlif_DayNight;
+                    return C3963R.style.SudThemeGlif_DayNight;
             }
         }
         return 0;
@@ -225,25 +225,25 @@ public class ThemeResolver {
             }
             switch (c) {
                 case 0:
-                    return C3953R.style.SudThemeGlifV2_Light;
+                    return C3963R.style.SudThemeGlifV2_Light;
                 case 1:
-                    return C3953R.style.SudThemeMaterial_Light;
+                    return C3963R.style.SudThemeMaterial_Light;
                 case 2:
-                    return C3953R.style.SudThemeGlifV3_Light;
+                    return C3963R.style.SudThemeGlifV3_Light;
                 case 3:
-                    return C3953R.style.SudThemeGlifV4_Light;
+                    return C3963R.style.SudThemeGlifV4_Light;
                 case 4:
-                    return C3953R.style.SudThemeGlif;
+                    return C3963R.style.SudThemeGlif;
                 case 5:
-                    return C3953R.style.SudThemeGlifV2;
+                    return C3963R.style.SudThemeGlifV2;
                 case 6:
-                    return C3953R.style.SudThemeGlifV3;
+                    return C3963R.style.SudThemeGlifV3;
                 case 7:
-                    return C3953R.style.SudThemeGlifV4;
+                    return C3963R.style.SudThemeGlifV4;
                 case 8:
-                    return C3953R.style.SudThemeMaterial;
+                    return C3963R.style.SudThemeMaterial;
                 case 9:
-                    return C3953R.style.SudThemeGlif_Light;
+                    return C3963R.style.SudThemeGlif_Light;
             }
         }
         return 0;
@@ -394,7 +394,7 @@ public class ThemeResolver {
     }
 
     public static class Builder {
-        private int defaultTheme = C3953R.style.SudThemeGlif_DayNight;
+        private int defaultTheme = C3963R.style.SudThemeGlif_DayNight;
         private ThemeSupplier defaultThemeSupplier;
         private String oldestSupportedTheme = null;
         private boolean useDayNight = true;

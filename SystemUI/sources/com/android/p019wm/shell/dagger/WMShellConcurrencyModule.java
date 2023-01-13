@@ -6,7 +6,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.common.HandlerExecutor;
 import com.android.p019wm.shell.common.ShellExecutor;
 import com.android.p019wm.shell.common.annotations.ChoreographerSfVsync;
@@ -25,7 +25,7 @@ public abstract class WMShellConcurrencyModule {
     private static final int MSGQ_SLOW_DISPATCH_THRESHOLD_MS = 30;
 
     public static boolean enableShellMainThread(Context context) {
-        return context.getResources().getBoolean(C3343R.bool.config_enableShellMainThread);
+        return context.getResources().getBoolean(C3353R.bool.config_enableShellMainThread);
     }
 
     @ExternalMainThread

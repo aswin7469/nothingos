@@ -10,6 +10,6 @@ public final /* synthetic */ class SyncTransactionQueue$$ExternalSyntheticLambda
     }
 
     public final void run() {
-        this.f$0.m3450lambda$new$0$comandroidwmshellcommonSyncTransactionQueue();
+        this.f$0.m3454lambda$new$0$comandroidwmshellcommonSyncTransactionQueue();
     }
 }

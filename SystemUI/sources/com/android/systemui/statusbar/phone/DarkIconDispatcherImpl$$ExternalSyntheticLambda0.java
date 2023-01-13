@@ -15,6 +15,6 @@ public final /* synthetic */ class DarkIconDispatcherImpl$$ExternalSyntheticLamb
     }
 
     public final void onDarkChanged(ArrayList arrayList, float f, int i) {
-        this.f$0.mo43968xf0c28192(this.f$1, arrayList, f, i);
+        this.f$0.mo43978xf0c28192(this.f$1, arrayList, f, i);
     }
 }

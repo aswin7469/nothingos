@@ -6,13 +6,13 @@ import com.android.systemui.statusbar.phone.StatusBarNotificationActivityStarter
 
 /* compiled from: D8$$SyntheticClass */
 public final /* synthetic */ class StatusBarNotificationActivityStarter$4$$ExternalSyntheticLambda1 implements Runnable {
-    public final /* synthetic */ StatusBarNotificationActivityStarter.C30914 f$0;
+    public final /* synthetic */ StatusBarNotificationActivityStarter.C31014 f$0;
     public final /* synthetic */ ExpandableNotificationRow f$1;
     public final /* synthetic */ boolean f$2;
     public final /* synthetic */ Intent f$3;
     public final /* synthetic */ int f$4;
 
-    public /* synthetic */ StatusBarNotificationActivityStarter$4$$ExternalSyntheticLambda1(StatusBarNotificationActivityStarter.C30914 r1, ExpandableNotificationRow expandableNotificationRow, boolean z, Intent intent, int i) {
+    public /* synthetic */ StatusBarNotificationActivityStarter$4$$ExternalSyntheticLambda1(StatusBarNotificationActivityStarter.C31014 r1, ExpandableNotificationRow expandableNotificationRow, boolean z, Intent intent, int i) {
         this.f$0 = r1;
         this.f$1 = expandableNotificationRow;
         this.f$2 = z;
@@ -21,6 +21,6 @@ public final /* synthetic */ class StatusBarNotificationActivityStarter$4$$Exter
     }
 
     public final void run() {
-        this.f$0.mo45302xc4764c46(this.f$1, this.f$2, this.f$3, this.f$4);
+        this.f$0.mo45314xc4764c46(this.f$1, this.f$2, this.f$3, this.f$4);
     }
 }

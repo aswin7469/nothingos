@@ -12,6 +12,6 @@ public final /* synthetic */ class HandlerDispatcherKt$$ExternalSyntheticLambda0
     }
 
     public final void doFrame(long j) {
-        HandlerDispatcherKt.m5422postFrameCallback$lambda6(this.f$0, j);
+        HandlerDispatcherKt.m5440postFrameCallback$lambda6(this.f$0, j);
     }
 }

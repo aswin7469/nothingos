@@ -2,7 +2,7 @@ package com.android.systemui.statusbar.notification.stack;
 
 import android.content.res.Resources;
 import android.util.MathUtils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.statusbar.notification.NotificationSectionsFeatureManager;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
@@ -134,6 +134,12 @@ public class NotificationRoundnessManager {
         if (expandableView == this.mViewBeforeSwipedView || expandableView == this.mSwipedView || expandableView == this.mViewAfterSwipedView || (((expandableView instanceof ExpandableNotificationRow) && ((ExpandableNotificationRow) expandableView).canViewBeCleared() && this.mIsClearAllInProgress) || expandableView.isPinned() || (expandableView.isHeadsUpAnimatingAway() && !this.mExpanded))) {
             return 1.0f;
         }
+        if (isFirstInSection(expandableView) && z && expandableView.isChildInGroup()) {
+            return 0.0f;
+        }
+        if (!isFirstInSection(expandableView) && !isLastInSection(expandableView)) {
+            return 0.0f;
+        }
         if (isFirstInSection(expandableView) && z) {
             return 1.0f;
         }
@@ -147,7 +153,7 @@ public class NotificationRoundnessManager {
             return 1.0f;
         }
         Resources resources = expandableView.getResources();
-        return resources.getDimension(C1893R.dimen.notification_corner_radius_small) / resources.getDimension(C1893R.dimen.notification_corner_radius);
+        return resources.getDimension(C1894R.dimen.notification_corner_radius_small) / resources.getDimension(C1894R.dimen.notification_corner_radius);
     }
 
     public void setExpanded(float f, float f2) {

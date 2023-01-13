@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.Switch;
 import androidx.lifecycle.LifecycleOwner;
 import com.android.internal.logging.MetricsLogger;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.animation.DialogLaunchAnimator;
 import com.android.systemui.dagger.qualifiers.Background;
 import com.android.systemui.dagger.qualifiers.Main;
@@ -59,7 +59,7 @@ public class ScreenRecordTile extends QSTileImpl<QSTile.BooleanState> implements
 
     public QSTile.BooleanState newTileState() {
         QSTile.BooleanState booleanState = new QSTile.BooleanState();
-        booleanState.label = this.mContext.getString(C1893R.string.quick_settings_screen_record_label);
+        booleanState.label = this.mContext.getString(C1894R.string.quick_settings_screen_record_label);
         booleanState.handlesLongClick = false;
         return booleanState;
     }
@@ -83,15 +83,15 @@ public class ScreenRecordTile extends QSTileImpl<QSTile.BooleanState> implements
         boolean isRecording = this.mController.isRecording();
         booleanState.value = isRecording || isStarting;
         booleanState.state = (isRecording || isStarting) ? 2 : 1;
-        booleanState.label = this.mContext.getString(C1893R.string.quick_settings_screen_record_label);
-        booleanState.icon = QSTileImpl.ResourceIcon.get(C1893R.C1895drawable.ic_screenrecord);
+        booleanState.label = this.mContext.getString(C1894R.string.quick_settings_screen_record_label);
+        booleanState.icon = QSTileImpl.ResourceIcon.get(C1894R.C1896drawable.ic_screenrecord);
         booleanState.forceExpandIcon = booleanState.state == 1;
         if (isRecording) {
-            booleanState.secondaryLabel = this.mContext.getString(C1893R.string.quick_settings_screen_record_stop);
+            booleanState.secondaryLabel = this.mContext.getString(C1894R.string.quick_settings_screen_record_stop);
         } else if (isStarting) {
             booleanState.secondaryLabel = String.format("%d...", Integer.valueOf((int) Math.floorDiv(this.mMillisUntilFinished + 500, 1000)));
         } else {
-            booleanState.secondaryLabel = this.mContext.getString(C1893R.string.quick_settings_screen_record_start);
+            booleanState.secondaryLabel = this.mContext.getString(C1894R.string.quick_settings_screen_record_start);
         }
         if (TextUtils.isEmpty(booleanState.secondaryLabel)) {
             charSequence = booleanState.label;
@@ -103,25 +103,25 @@ public class ScreenRecordTile extends QSTileImpl<QSTile.BooleanState> implements
     }
 
     public CharSequence getTileLabel() {
-        return this.mContext.getString(C1893R.string.quick_settings_screen_record_label);
+        return this.mContext.getString(C1894R.string.quick_settings_screen_record_label);
     }
 
     /* access modifiers changed from: private */
     /* renamed from: showPrompt */
-    public void mo36915x9dce93d3(View view) {
+    public void mo36913x9dce93d3(View view) {
         this.mKeyguardDismissUtil.executeWhenUnlocked(new ScreenRecordTile$$ExternalSyntheticLambda2(this, view != null && !this.mKeyguardStateController.isShowing(), this.mController.createScreenRecordDialog(this.mContext, new ScreenRecordTile$$ExternalSyntheticLambda1(this)), view), false, true);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$showPrompt$1$com-android-systemui-qs-tiles-ScreenRecordTile */
-    public /* synthetic */ void mo36916x62fdca37() {
+    public /* synthetic */ void mo36914x62fdca37() {
         this.mDialogLaunchAnimator.disableAllCurrentDialogsExitAnimations();
         getHost().collapsePanels();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$showPrompt$2$com-android-systemui-qs-tiles-ScreenRecordTile */
-    public /* synthetic */ boolean mo36917x9cc86c16(boolean z, ScreenRecordDialog screenRecordDialog, View view) {
+    public /* synthetic */ boolean mo36915x9cc86c16(boolean z, ScreenRecordDialog screenRecordDialog, View view) {
         if (z) {
             this.mDialogLaunchAnimator.showFromView(screenRecordDialog, view);
             return false;

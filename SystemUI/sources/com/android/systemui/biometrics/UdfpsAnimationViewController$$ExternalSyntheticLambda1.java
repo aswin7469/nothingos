@@ -14,6 +14,6 @@ public final /* synthetic */ class UdfpsAnimationViewController$$ExternalSynthet
     }
 
     public final void onPanelExpansionChanged(PanelExpansionChangeEvent panelExpansionChangeEvent) {
-        UdfpsAnimationViewController.m2580panelExpansionListener$lambda1(this.f$0, this.f$1, panelExpansionChangeEvent);
+        UdfpsAnimationViewController.m2586panelExpansionListener$lambda1(this.f$0, this.f$1, panelExpansionChangeEvent);
     }
 }

@@ -13,6 +13,6 @@ public final /* synthetic */ class PasspointWifiEntry$$ExternalSyntheticLambda0 
     }
 
     public final void run() {
-        this.f$0.mo47831xb18ecc00(this.f$1);
+        this.f$0.mo47840xb18ecc00(this.f$1);
     }
 }

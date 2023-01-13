@@ -12,6 +12,6 @@ public final /* synthetic */ class ControlViewHolder$$ExternalSyntheticLambda1 i
     }
 
     public final boolean onLongClick(View view) {
-        return ControlViewHolder.m2685bindData$lambda5$lambda4(this.f$0, view);
+        return ControlViewHolder.m2690bindData$lambda5$lambda4(this.f$0, view);
     }
 }

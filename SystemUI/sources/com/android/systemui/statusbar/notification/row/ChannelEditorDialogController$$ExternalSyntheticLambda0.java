@@ -11,6 +11,6 @@ public final /* synthetic */ class ChannelEditorDialogController$$ExternalSynthe
     }
 
     public final void onDismiss(DialogInterface dialogInterface) {
-        ChannelEditorDialogController.m3134initDialog$lambda9$lambda2(this.f$0, dialogInterface);
+        ChannelEditorDialogController.m3138initDialog$lambda9$lambda2(this.f$0, dialogInterface);
     }
 }

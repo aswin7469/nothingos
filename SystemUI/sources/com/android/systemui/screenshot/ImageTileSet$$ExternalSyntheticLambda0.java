@@ -11,6 +11,6 @@ public final /* synthetic */ class ImageTileSet$$ExternalSyntheticLambda0 implem
     }
 
     public final void run() {
-        this.f$0.m2998lambda$addTile$0$comandroidsystemuiscreenshotImageTileSet(this.f$1);
+        this.f$0.m3002lambda$addTile$0$comandroidsystemuiscreenshotImageTileSet(this.f$1);
     }
 }

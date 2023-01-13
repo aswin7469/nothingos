@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.os.RemoteException;
 import android.os.Trace;
 import android.util.DisplayMetrics;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dumpable;
 import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.dump.DumpManager;
@@ -155,9 +155,9 @@ public class WakefulnessLifecycle extends Lifecycle<Observer> implements Dumpabl
             z = false;
         }
         if (z) {
-            return new Point(this.mDisplayMetrics.widthPixels, this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.physical_power_button_center_screen_location_y));
+            return new Point(this.mDisplayMetrics.widthPixels, this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.physical_power_button_center_screen_location_y));
         }
-        return new Point(this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.physical_power_button_center_screen_location_y), this.mDisplayMetrics.heightPixels);
+        return new Point(this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.physical_power_button_center_screen_location_y), this.mDisplayMetrics.heightPixels);
     }
 
     private Point getDefaultWakeSleepOrigin() {

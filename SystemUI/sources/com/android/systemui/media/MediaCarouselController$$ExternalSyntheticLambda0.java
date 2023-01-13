@@ -11,6 +11,6 @@ public final /* synthetic */ class MediaCarouselController$$ExternalSyntheticLam
     }
 
     public final void onReorderingAllowed() {
-        MediaCarouselController.m2769_init_$lambda1(this.f$0);
+        MediaCarouselController.m2774_init_$lambda1(this.f$0);
     }
 }

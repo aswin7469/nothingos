@@ -9,7 +9,7 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 
 public class MultiUserSwitch extends FrameLayout {
     public boolean hasOverlappingRendering() {
@@ -37,7 +37,7 @@ public class MultiUserSwitch extends FrameLayout {
     public void refreshContentDescription(String str) {
         String str2;
         if (!TextUtils.isEmpty(str)) {
-            str2 = this.mContext.getString(C1893R.string.accessibility_quick_settings_user, new Object[]{str});
+            str2 = this.mContext.getString(C1894R.string.accessibility_quick_settings_user, new Object[]{str});
         } else {
             str2 = null;
         }

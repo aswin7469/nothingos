@@ -120,7 +120,7 @@ final class DecodedBitStreamParser {
             com.google.zxing.qrcode.decoder.Mode r1 = com.google.zxing.qrcode.decoder.Mode.forBits(r1)     // Catch:{ IllegalArgumentException -> 0x012e }
             goto L_0x002b
         L_0x0036:
-            int[] r1 = com.google.zxing.qrcode.decoder.DecodedBitStreamParser.C41101.$SwitchMap$com$google$zxing$qrcode$decoder$Mode     // Catch:{ IllegalArgumentException -> 0x012e }
+            int[] r1 = com.google.zxing.qrcode.decoder.DecodedBitStreamParser.C41201.$SwitchMap$com$google$zxing$qrcode$decoder$Mode     // Catch:{ IllegalArgumentException -> 0x012e }
             int r2 = r5.ordinal()     // Catch:{ IllegalArgumentException -> 0x012e }
             r1 = r1[r2]     // Catch:{ IllegalArgumentException -> 0x012e }
             r4 = 2
@@ -188,7 +188,7 @@ final class DecodedBitStreamParser {
             goto L_0x00eb
         L_0x00a1:
             int r2 = r7.readBits(r1)     // Catch:{ IllegalArgumentException -> 0x012e }
-            int[] r1 = com.google.zxing.qrcode.decoder.DecodedBitStreamParser.C41101.$SwitchMap$com$google$zxing$qrcode$decoder$Mode     // Catch:{ IllegalArgumentException -> 0x012e }
+            int[] r1 = com.google.zxing.qrcode.decoder.DecodedBitStreamParser.C41201.$SwitchMap$com$google$zxing$qrcode$decoder$Mode     // Catch:{ IllegalArgumentException -> 0x012e }
             int r19 = r5.ordinal()     // Catch:{ IllegalArgumentException -> 0x012e }
             r1 = r1[r19]     // Catch:{ IllegalArgumentException -> 0x012e }
             if (r1 == r11) goto L_0x00e0

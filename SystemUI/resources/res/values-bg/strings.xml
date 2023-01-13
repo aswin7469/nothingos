@@ -708,9 +708,15 @@
     <string name="force_rtl_layout_all_locales_summary">Принудително оформление на екрана от дясно наляво за всички локали</string>
     <string name="forced_resizable_secondary_display">Възможно е приложението да не работи на алтернативни дисплеи.</string>
     <string name="game_status">Играете</string>
+    <string name="gamemode_description">Режимът на игра ще разбере, ако играете игра, и ще се включи автоматично</string>
+    <string name="gamemode_gamedashboard_title">Игрово табло</string>
+    <string name="gamemode_notification_content">Натиснете, за да влезете в „Настройки“</string>
+    <string name="gamemode_notification_title">Режимът на игра в момента е активен</string>
     <string name="global_action_lock_message">Отключете телефона си за още опции</string>
     <string name="global_action_screenshot">Екранна снимка</string>
     <string name="global_action_smart_lock_disabled">Функцията Smart Lock е деактивирана</string>
+    <string name="gm_guide_status_on">Вкл.</string>
+    <string name="gm_notification_title">Режим на игра</string>
     <string name="go_to_web">Към браузъра</string>
     <string name="got_it">Разбрах</string>
     <string name="guest_exit_guest">Премахване на госта</string>

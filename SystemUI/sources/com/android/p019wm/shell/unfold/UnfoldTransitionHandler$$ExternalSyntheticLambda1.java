@@ -15,6 +15,6 @@ public final /* synthetic */ class UnfoldTransitionHandler$$ExternalSyntheticLam
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo51310x2f816bed(this.f$1, (TransitionInfo.Change) obj);
+        this.f$0.mo51321x2f816bed(this.f$1, (TransitionInfo.Change) obj);
     }
 }

@@ -13,6 +13,6 @@ public final /* synthetic */ class HotspotControllerImpl$$ExternalSyntheticLambd
     }
 
     public final void run() {
-        this.f$0.mo45807xf425eaad(this.f$1);
+        this.f$0.mo45819xf425eaad(this.f$1);
     }
 }

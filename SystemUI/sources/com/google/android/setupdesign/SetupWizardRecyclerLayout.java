@@ -63,7 +63,7 @@ public class SetupWizardRecyclerLayout extends SetupWizardLayout {
     /* access modifiers changed from: protected */
     public ViewGroup findContainer(int i) {
         if (i == 0) {
-            i = C3953R.C3956id.sud_recycler_view;
+            i = C3963R.C3966id.sud_recycler_view;
         }
         return super.findContainer(i);
     }
@@ -71,14 +71,14 @@ public class SetupWizardRecyclerLayout extends SetupWizardLayout {
     /* access modifiers changed from: protected */
     public View onInflateTemplate(LayoutInflater layoutInflater, int i) {
         if (i == 0) {
-            i = C3953R.layout.sud_recycler_template;
+            i = C3963R.layout.sud_recycler_template;
         }
         return super.onInflateTemplate(layoutInflater, i);
     }
 
     /* access modifiers changed from: protected */
     public void onTemplateInflated() {
-        View findViewById = findViewById(C3953R.C3956id.sud_recycler_view);
+        View findViewById = findViewById(C3963R.C3966id.sud_recycler_view);
         if (findViewById instanceof RecyclerView) {
             this.recyclerMixin = new RecyclerMixin(this, (RecyclerView) findViewById);
             return;

@@ -11,6 +11,6 @@ public final /* synthetic */ class ApplicationsState$BackgroundHandler$$External
     }
 
     public final void run() {
-        this.f$0.mo27987x363bbbe7();
+        this.f$0.mo27992x363bbbe7();
     }
 }

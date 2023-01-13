@@ -18,7 +18,7 @@ public class SimpleAsynchronousFileChannelImpl extends AsynchronousFileChannelIm
     /* access modifiers changed from: private */
 
     /* renamed from: nd */
-    public static final FileDispatcher f890nd = new FileDispatcherImpl();
+    public static final FileDispatcher f888nd = new FileDispatcherImpl();
     /* access modifiers changed from: private */
     public final NativeThreadSet threads = new NativeThreadSet(2);
 
@@ -46,7 +46,7 @@ public class SimpleAsynchronousFileChannelImpl extends AsynchronousFileChannelIm
                 this.threads.signalAndWait();
                 this.closeLock.writeLock().lock();
                 this.closeLock.writeLock().unlock();
-                f890nd.close(this.fdObj);
+                f888nd.close(this.fdObj);
             }
         }
     }
@@ -65,7 +65,7 @@ public class SimpleAsynchronousFileChannelImpl extends AsynchronousFileChannelIm
             r9.begin()     // Catch:{ all -> 0x0033 }
             r5 = r3
         L_0x000e:
-            sun.nio.ch.FileDispatcher r7 = f890nd     // Catch:{ all -> 0x0031 }
+            sun.nio.ch.FileDispatcher r7 = f888nd     // Catch:{ all -> 0x0031 }
             java.io.FileDescriptor r8 = r9.fdObj     // Catch:{ all -> 0x0031 }
             long r5 = r7.size(r8)     // Catch:{ all -> 0x0031 }
             r7 = -3
@@ -126,7 +126,7 @@ public class SimpleAsynchronousFileChannelImpl extends AsynchronousFileChannelIm
             r11.begin()     // Catch:{ all -> 0x0058 }
             r5 = r0
         L_0x0016:
-            sun.nio.ch.FileDispatcher r7 = f890nd     // Catch:{ all -> 0x0056 }
+            sun.nio.ch.FileDispatcher r7 = f888nd     // Catch:{ all -> 0x0056 }
             java.io.FileDescriptor r8 = r11.fdObj     // Catch:{ all -> 0x0056 }
             long r5 = r7.size(r8)     // Catch:{ all -> 0x0056 }
             r7 = -3
@@ -140,7 +140,7 @@ public class SimpleAsynchronousFileChannelImpl extends AsynchronousFileChannelIm
             boolean r9 = r11.isOpen()     // Catch:{ all -> 0x0056 }
             if (r9 == 0) goto L_0x0047
         L_0x0034:
-            sun.nio.ch.FileDispatcher r9 = f890nd     // Catch:{ all -> 0x0056 }
+            sun.nio.ch.FileDispatcher r9 = f888nd     // Catch:{ all -> 0x0056 }
             java.io.FileDescriptor r10 = r11.fdObj     // Catch:{ all -> 0x0056 }
             int r5 = r9.truncate(r10, r12)     // Catch:{ all -> 0x0056 }
             long r5 = (long) r5     // Catch:{ all -> 0x0056 }
@@ -206,7 +206,7 @@ public class SimpleAsynchronousFileChannelImpl extends AsynchronousFileChannelIm
             r6.begin()     // Catch:{ all -> 0x002c }
             r3 = r2
         L_0x000c:
-            sun.nio.ch.FileDispatcher r4 = f890nd     // Catch:{ all -> 0x002a }
+            sun.nio.ch.FileDispatcher r4 = f888nd     // Catch:{ all -> 0x002a }
             java.io.FileDescriptor r5 = r6.fdObj     // Catch:{ all -> 0x002a }
             int r3 = r4.force(r5, r7)     // Catch:{ all -> 0x002a }
             r4 = -3
@@ -289,7 +289,7 @@ public class SimpleAsynchronousFileChannelImpl extends AsynchronousFileChannelIm
                         r1 = move-exception;
                      */
                     /* JADX WARNING: Code restructure failed: missing block: B:32:0x0084, code lost:
-                        sun.nio.p033ch.SimpleAsynchronousFileChannelImpl.m5590$$Nest$fgetthreads(r10.this$0).remove(r0);
+                        sun.nio.p033ch.SimpleAsynchronousFileChannelImpl.m5608$$Nest$fgetthreads(r10.this$0).remove(r0);
                      */
                     /* JADX WARNING: Code restructure failed: missing block: B:33:0x008d, code lost:
                         throw r1;
@@ -307,7 +307,7 @@ public class SimpleAsynchronousFileChannelImpl extends AsynchronousFileChannelIm
                             sun.nio.ch.SimpleAsynchronousFileChannelImpl r1 = sun.nio.p033ch.SimpleAsynchronousFileChannelImpl.this     // Catch:{ IOException -> 0x0046 }
                             r1.begin()     // Catch:{ IOException -> 0x0046 }
                         L_0x000f:
-                            sun.nio.ch.FileDispatcher r2 = sun.nio.p033ch.SimpleAsynchronousFileChannelImpl.f890nd     // Catch:{ IOException -> 0x0046 }
+                            sun.nio.ch.FileDispatcher r2 = sun.nio.p033ch.SimpleAsynchronousFileChannelImpl.f888nd     // Catch:{ IOException -> 0x0046 }
                             sun.nio.ch.SimpleAsynchronousFileChannelImpl r1 = sun.nio.p033ch.SimpleAsynchronousFileChannelImpl.this     // Catch:{ IOException -> 0x0046 }
                             java.io.FileDescriptor r3 = r1.fdObj     // Catch:{ IOException -> 0x0046 }
                             r4 = 1
@@ -376,7 +376,7 @@ public class SimpleAsynchronousFileChannelImpl extends AsynchronousFileChannelIm
                             r10.remove(r0)
                             throw r1
                         */
-                        throw new UnsupportedOperationException("Method not decompiled: sun.nio.p033ch.SimpleAsynchronousFileChannelImpl.C47681.run():void");
+                        throw new UnsupportedOperationException("Method not decompiled: sun.nio.p033ch.SimpleAsynchronousFileChannelImpl.C47801.run():void");
                     }
                 });
                 return pendingFuture2;
@@ -420,7 +420,7 @@ public class SimpleAsynchronousFileChannelImpl extends AsynchronousFileChannelIm
             int r1 = r1.add()
             r10.begin()     // Catch:{ all -> 0x006d }
         L_0x0029:
-            sun.nio.ch.FileDispatcher r2 = f890nd     // Catch:{ all -> 0x006d }
+            sun.nio.ch.FileDispatcher r2 = f888nd     // Catch:{ all -> 0x006d }
             java.io.FileDescriptor r3 = r10.fdObj     // Catch:{ all -> 0x006d }
             r4 = 0
             r5 = r11
@@ -474,7 +474,7 @@ public class SimpleAsynchronousFileChannelImpl extends AsynchronousFileChannelIm
 
     /* access modifiers changed from: protected */
     public void implRelease(FileLockImpl fileLockImpl) throws IOException {
-        f890nd.release(this.fdObj, fileLockImpl.position(), fileLockImpl.size());
+        f888nd.release(this.fdObj, fileLockImpl.position(), fileLockImpl.size());
     }
 
     /* access modifiers changed from: package-private */
@@ -518,7 +518,7 @@ public class SimpleAsynchronousFileChannelImpl extends AsynchronousFileChannelIm
                         java.io.FileDescriptor r2 = r2.fdObj     // Catch:{ IOException -> 0x004e }
                         java.nio.ByteBuffer r3 = r4     // Catch:{ IOException -> 0x004e }
                         long r4 = r5     // Catch:{ IOException -> 0x004e }
-                        sun.nio.ch.FileDispatcher r6 = sun.nio.p033ch.SimpleAsynchronousFileChannelImpl.f890nd     // Catch:{ IOException -> 0x004e }
+                        sun.nio.ch.FileDispatcher r6 = sun.nio.p033ch.SimpleAsynchronousFileChannelImpl.f888nd     // Catch:{ IOException -> 0x004e }
                         int r1 = sun.nio.p033ch.IOUtil.read(r2, r3, r4, r6)     // Catch:{ IOException -> 0x004e }
                         r2 = -3
                         if (r1 != r2) goto L_0x002b
@@ -581,7 +581,7 @@ public class SimpleAsynchronousFileChannelImpl extends AsynchronousFileChannelIm
                         r7.remove(r0)
                         throw r1
                     */
-                    throw new UnsupportedOperationException("Method not decompiled: sun.nio.p033ch.SimpleAsynchronousFileChannelImpl.C47692.run():void");
+                    throw new UnsupportedOperationException("Method not decompiled: sun.nio.p033ch.SimpleAsynchronousFileChannelImpl.C47812.run():void");
                 }
             });
             return pendingFuture;
@@ -629,7 +629,7 @@ public class SimpleAsynchronousFileChannelImpl extends AsynchronousFileChannelIm
                         java.io.FileDescriptor r2 = r2.fdObj     // Catch:{ IOException -> 0x004e }
                         java.nio.ByteBuffer r3 = r4     // Catch:{ IOException -> 0x004e }
                         long r4 = r5     // Catch:{ IOException -> 0x004e }
-                        sun.nio.ch.FileDispatcher r6 = sun.nio.p033ch.SimpleAsynchronousFileChannelImpl.f890nd     // Catch:{ IOException -> 0x004e }
+                        sun.nio.ch.FileDispatcher r6 = sun.nio.p033ch.SimpleAsynchronousFileChannelImpl.f888nd     // Catch:{ IOException -> 0x004e }
                         int r1 = sun.nio.p033ch.IOUtil.write(r2, r3, r4, r6)     // Catch:{ IOException -> 0x004e }
                         r2 = -3
                         if (r1 != r2) goto L_0x002b
@@ -692,7 +692,7 @@ public class SimpleAsynchronousFileChannelImpl extends AsynchronousFileChannelIm
                         r7.remove(r0)
                         throw r1
                     */
-                    throw new UnsupportedOperationException("Method not decompiled: sun.nio.p033ch.SimpleAsynchronousFileChannelImpl.C47703.run():void");
+                    throw new UnsupportedOperationException("Method not decompiled: sun.nio.p033ch.SimpleAsynchronousFileChannelImpl.C47823.run():void");
                 }
             });
             return pendingFuture;

@@ -13,6 +13,6 @@ public final /* synthetic */ class BootCompleteCacheImpl$$ExternalSyntheticLambd
     }
 
     public final boolean test(Object obj) {
-        return BootCompleteCacheImpl.m2513removeListener$lambda4$lambda3(this.f$0, (WeakReference) obj);
+        return BootCompleteCacheImpl.m2519removeListener$lambda4$lambda3(this.f$0, (WeakReference) obj);
     }
 }

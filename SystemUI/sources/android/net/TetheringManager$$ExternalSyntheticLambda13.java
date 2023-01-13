@@ -15,6 +15,6 @@ public final /* synthetic */ class TetheringManager$$ExternalSyntheticLambda13 i
     }
 
     public final void runRequest(ITetheringConnector iTetheringConnector, IIntResultListener iIntResultListener) {
-        this.f$0.m1951lambda$untether$4$androidnetTetheringManager(this.f$1, this.f$2, iTetheringConnector, iIntResultListener);
+        this.f$0.m1957lambda$untether$4$androidnetTetheringManager(this.f$1, this.f$2, iTetheringConnector, iIntResultListener);
     }
 }

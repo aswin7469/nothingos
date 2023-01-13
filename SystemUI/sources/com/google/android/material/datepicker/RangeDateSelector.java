@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import androidx.core.util.Pair;
 import androidx.core.util.Preconditions;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.internal.ManufacturerUtils;
 import com.google.android.material.internal.ViewUtils;
 import com.google.android.material.resources.MaterialAttributes;
@@ -113,10 +113,10 @@ public class RangeDateSelector implements DateSelector<Pair<Long, Long>> {
         int i;
         Resources resources = context.getResources();
         DisplayMetrics displayMetrics = resources.getDisplayMetrics();
-        if (Math.min(displayMetrics.widthPixels, displayMetrics.heightPixels) > resources.getDimensionPixelSize(C3621R.dimen.mtrl_calendar_maximum_default_fullscreen_minor_axis)) {
-            i = C3621R.attr.materialCalendarTheme;
+        if (Math.min(displayMetrics.widthPixels, displayMetrics.heightPixels) > resources.getDimensionPixelSize(C3631R.dimen.mtrl_calendar_maximum_default_fullscreen_minor_axis)) {
+            i = C3631R.attr.materialCalendarTheme;
         } else {
-            i = C3621R.attr.materialCalendarFullscreenTheme;
+            i = C3631R.attr.materialCalendarFullscreenTheme;
         }
         return MaterialAttributes.resolveOrThrow(context, i, MaterialDatePicker.class.getCanonicalName());
     }
@@ -125,34 +125,34 @@ public class RangeDateSelector implements DateSelector<Pair<Long, Long>> {
         Resources resources = context.getResources();
         Long l = this.selectedStartItem;
         if (l == null && this.selectedEndItem == null) {
-            return resources.getString(C3621R.string.mtrl_picker_range_header_unselected);
+            return resources.getString(C3631R.string.mtrl_picker_range_header_unselected);
         }
         Long l2 = this.selectedEndItem;
         if (l2 == null) {
-            return resources.getString(C3621R.string.mtrl_picker_range_header_only_start_selected, new Object[]{DateStrings.getDateString(this.selectedStartItem.longValue())});
+            return resources.getString(C3631R.string.mtrl_picker_range_header_only_start_selected, new Object[]{DateStrings.getDateString(this.selectedStartItem.longValue())});
         } else if (l == null) {
-            return resources.getString(C3621R.string.mtrl_picker_range_header_only_end_selected, new Object[]{DateStrings.getDateString(this.selectedEndItem.longValue())});
+            return resources.getString(C3631R.string.mtrl_picker_range_header_only_end_selected, new Object[]{DateStrings.getDateString(this.selectedEndItem.longValue())});
         } else {
             Pair<String, String> dateRangeString = DateStrings.getDateRangeString(l, l2);
-            return resources.getString(C3621R.string.mtrl_picker_range_header_selected, new Object[]{dateRangeString.first, dateRangeString.second});
+            return resources.getString(C3631R.string.mtrl_picker_range_header_selected, new Object[]{dateRangeString.first, dateRangeString.second});
         }
     }
 
     public int getDefaultTitleResId() {
-        return C3621R.string.mtrl_picker_range_header_title;
+        return C3631R.string.mtrl_picker_range_header_title;
     }
 
     public View onCreateTextInputView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle, CalendarConstraints calendarConstraints, OnSelectionChangedListener<Pair<Long, Long>> onSelectionChangedListener) {
-        View inflate = layoutInflater.inflate(C3621R.layout.mtrl_picker_text_input_date_range, viewGroup, false);
-        TextInputLayout textInputLayout = (TextInputLayout) inflate.findViewById(C3621R.C3624id.mtrl_picker_text_input_range_start);
-        TextInputLayout textInputLayout2 = (TextInputLayout) inflate.findViewById(C3621R.C3624id.mtrl_picker_text_input_range_end);
+        View inflate = layoutInflater.inflate(C3631R.layout.mtrl_picker_text_input_date_range, viewGroup, false);
+        TextInputLayout textInputLayout = (TextInputLayout) inflate.findViewById(C3631R.C3634id.mtrl_picker_text_input_range_start);
+        TextInputLayout textInputLayout2 = (TextInputLayout) inflate.findViewById(C3631R.C3634id.mtrl_picker_text_input_range_end);
         EditText editText = textInputLayout.getEditText();
         EditText editText2 = textInputLayout2.getEditText();
         if (ManufacturerUtils.isDateInputKeyboardMissingSeparatorCharacters()) {
             editText.setInputType(17);
             editText2.setInputType(17);
         }
-        this.invalidRangeStartError = inflate.getResources().getString(C3621R.string.mtrl_picker_invalid_range);
+        this.invalidRangeStartError = inflate.getResources().getString(C3631R.string.mtrl_picker_invalid_range);
         SimpleDateFormat textInputFormat = UtcDates.getTextInputFormat();
         Long l = this.selectedStartItem;
         if (l != null) {
@@ -170,11 +170,11 @@ public class RangeDateSelector implements DateSelector<Pair<Long, Long>> {
         SimpleDateFormat simpleDateFormat = textInputFormat;
         CalendarConstraints calendarConstraints2 = calendarConstraints;
         final TextInputLayout textInputLayout3 = textInputLayout;
-        C37151 r9 = r0;
+        C37251 r9 = r0;
         final TextInputLayout textInputLayout4 = textInputLayout2;
         String str = textInputHint;
         final OnSelectionChangedListener<Pair<Long, Long>> onSelectionChangedListener2 = onSelectionChangedListener;
-        C37151 r0 = new DateFormatTextWatcher(textInputHint, simpleDateFormat, textInputLayout, calendarConstraints2) {
+        C37251 r0 = new DateFormatTextWatcher(textInputHint, simpleDateFormat, textInputLayout, calendarConstraints2) {
             /* access modifiers changed from: package-private */
             public void onValidDate(Long l) {
                 Long unused = RangeDateSelector.this.proposedTextStart = l;

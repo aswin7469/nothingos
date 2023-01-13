@@ -11,6 +11,6 @@ public final /* synthetic */ class ComplicationHostViewController$$ExternalSynth
     }
 
     public final boolean test(Object obj) {
-        return this.f$0.mo32564xa2648db4((ComplicationViewModel) obj);
+        return this.f$0.mo32575xa2648db4((ComplicationViewModel) obj);
     }
 }

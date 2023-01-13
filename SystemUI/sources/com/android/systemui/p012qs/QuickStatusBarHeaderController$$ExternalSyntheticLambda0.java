@@ -12,6 +12,6 @@ public final /* synthetic */ class QuickStatusBarHeaderController$$ExternalSynth
     }
 
     public final void onColorsChanged(ColorExtractor colorExtractor, int i) {
-        this.f$0.mo36351x3675a37d(colorExtractor, i);
+        this.f$0.mo36355x3675a37d(colorExtractor, i);
     }
 }

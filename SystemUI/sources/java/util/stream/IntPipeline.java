@@ -234,7 +234,7 @@ public abstract class IntPipeline<E_IN> extends AbstractPipeline<E_IN, Integer, 
 
                     /* access modifiers changed from: package-private */
                     /* renamed from: lambda$accept$0$java-util-stream-IntPipeline$7$1  reason: not valid java name */
-                    public /* synthetic */ void m3871lambda$accept$0$javautilstreamIntPipeline$7$1(int i) {
+                    public /* synthetic */ void m3889lambda$accept$0$javautilstreamIntPipeline$7$1(int i) {
                         this.downstream.accept(i);
                     }
                 };
@@ -339,7 +339,7 @@ public abstract class IntPipeline<E_IN> extends AbstractPipeline<E_IN, Integer, 
         long[] jArr = (long[]) collect(new IntPipeline$$ExternalSyntheticLambda9(), new IntPipeline$$ExternalSyntheticLambda10(), new IntPipeline$$ExternalSyntheticLambda11());
         long j = jArr[0];
         if (j > 0) {
-            return OptionalDouble.m1747of(((double) jArr[1]) / ((double) j));
+            return OptionalDouble.m1753of(((double) jArr[1]) / ((double) j));
         }
         return OptionalDouble.empty();
     }

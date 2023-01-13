@@ -6,14 +6,14 @@ import kotlin.Metadata;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 
-@Metadata(mo64986d1 = {"\u00002\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\u000b\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\r\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u000e\n\u0002\b\u0018\n\u0002\u0010\b\n\u0002\b\u0002\b\b\u0018\u00002\u00020\u0001BC\b\u0007\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\b\u0010\u0004\u001a\u0004\u0018\u00010\u0005\u0012\b\u0010\u0006\u001a\u0004\u0018\u00010\u0007\u0012\n\b\u0002\u0010\b\u001a\u0004\u0018\u00010\t\u0012\n\b\u0002\u0010\n\u001a\u0004\u0018\u00010\u000b\u0012\u0006\u0010\f\u001a\u00020\u0003¢\u0006\u0002\u0010\rJ\t\u0010\u0019\u001a\u00020\u0003HÆ\u0003J\u000b\u0010\u001a\u001a\u0004\u0018\u00010\u0005HÆ\u0003J\u000b\u0010\u001b\u001a\u0004\u0018\u00010\u0007HÆ\u0003J\u000b\u0010\u001c\u001a\u0004\u0018\u00010\tHÆ\u0003J\u000b\u0010\u001d\u001a\u0004\u0018\u00010\u000bHÆ\u0003J\t\u0010\u001e\u001a\u00020\u0003HÆ\u0003JM\u0010\u001f\u001a\u00020\u00002\b\b\u0002\u0010\u0002\u001a\u00020\u00032\n\b\u0002\u0010\u0004\u001a\u0004\u0018\u00010\u00052\n\b\u0002\u0010\u0006\u001a\u0004\u0018\u00010\u00072\n\b\u0002\u0010\b\u001a\u0004\u0018\u00010\t2\n\b\u0002\u0010\n\u001a\u0004\u0018\u00010\u000b2\b\b\u0002\u0010\f\u001a\u00020\u0003HÆ\u0001J\u0013\u0010 \u001a\u00020\u00032\b\u0010!\u001a\u0004\u0018\u00010\u0001HÖ\u0003J\u0010\u0010\"\u001a\u00020\u00032\b\u0010!\u001a\u0004\u0018\u00010\u0000J\t\u0010#\u001a\u00020$HÖ\u0001J\t\u0010%\u001a\u00020\u000bHÖ\u0001R\u0011\u0010\u0002\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\u000e\u0010\u000fR\u0013\u0010\u0004\u001a\u0004\u0018\u00010\u0005¢\u0006\b\n\u0000\u001a\u0004\b\u0010\u0010\u0011R\u0013\u0010\n\u001a\u0004\u0018\u00010\u000b¢\u0006\b\n\u0000\u001a\u0004\b\u0012\u0010\u0013R\u0013\u0010\b\u001a\u0004\u0018\u00010\t¢\u0006\b\n\u0000\u001a\u0004\b\u0014\u0010\u0015R\u0013\u0010\u0006\u001a\u0004\u0018\u00010\u0007¢\u0006\b\n\u0000\u001a\u0004\b\u0016\u0010\u0017R\u0011\u0010\f\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\u0018\u0010\u000f¨\u0006&"}, mo64987d2 = {"Lcom/android/systemui/media/MediaDeviceData;", "", "enabled", "", "icon", "Landroid/graphics/drawable/Drawable;", "name", "", "intent", "Landroid/app/PendingIntent;", "id", "", "showBroadcastButton", "(ZLandroid/graphics/drawable/Drawable;Ljava/lang/CharSequence;Landroid/app/PendingIntent;Ljava/lang/String;Z)V", "getEnabled", "()Z", "getIcon", "()Landroid/graphics/drawable/Drawable;", "getId", "()Ljava/lang/String;", "getIntent", "()Landroid/app/PendingIntent;", "getName", "()Ljava/lang/CharSequence;", "getShowBroadcastButton", "component1", "component2", "component3", "component4", "component5", "component6", "copy", "equals", "other", "equalsWithoutIcon", "hashCode", "", "toString", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u00002\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\u000b\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\r\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u000e\n\u0002\b\u0018\n\u0002\u0010\b\n\u0002\b\u0002\b\b\u0018\u00002\u00020\u0001BC\b\u0007\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\b\u0010\u0004\u001a\u0004\u0018\u00010\u0005\u0012\b\u0010\u0006\u001a\u0004\u0018\u00010\u0007\u0012\n\b\u0002\u0010\b\u001a\u0004\u0018\u00010\t\u0012\n\b\u0002\u0010\n\u001a\u0004\u0018\u00010\u000b\u0012\u0006\u0010\f\u001a\u00020\u0003¢\u0006\u0002\u0010\rJ\t\u0010\u0019\u001a\u00020\u0003HÆ\u0003J\u000b\u0010\u001a\u001a\u0004\u0018\u00010\u0005HÆ\u0003J\u000b\u0010\u001b\u001a\u0004\u0018\u00010\u0007HÆ\u0003J\u000b\u0010\u001c\u001a\u0004\u0018\u00010\tHÆ\u0003J\u000b\u0010\u001d\u001a\u0004\u0018\u00010\u000bHÆ\u0003J\t\u0010\u001e\u001a\u00020\u0003HÆ\u0003JM\u0010\u001f\u001a\u00020\u00002\b\b\u0002\u0010\u0002\u001a\u00020\u00032\n\b\u0002\u0010\u0004\u001a\u0004\u0018\u00010\u00052\n\b\u0002\u0010\u0006\u001a\u0004\u0018\u00010\u00072\n\b\u0002\u0010\b\u001a\u0004\u0018\u00010\t2\n\b\u0002\u0010\n\u001a\u0004\u0018\u00010\u000b2\b\b\u0002\u0010\f\u001a\u00020\u0003HÆ\u0001J\u0013\u0010 \u001a\u00020\u00032\b\u0010!\u001a\u0004\u0018\u00010\u0001HÖ\u0003J\u0010\u0010\"\u001a\u00020\u00032\b\u0010!\u001a\u0004\u0018\u00010\u0000J\t\u0010#\u001a\u00020$HÖ\u0001J\t\u0010%\u001a\u00020\u000bHÖ\u0001R\u0011\u0010\u0002\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\u000e\u0010\u000fR\u0013\u0010\u0004\u001a\u0004\u0018\u00010\u0005¢\u0006\b\n\u0000\u001a\u0004\b\u0010\u0010\u0011R\u0013\u0010\n\u001a\u0004\u0018\u00010\u000b¢\u0006\b\n\u0000\u001a\u0004\b\u0012\u0010\u0013R\u0013\u0010\b\u001a\u0004\u0018\u00010\t¢\u0006\b\n\u0000\u001a\u0004\b\u0014\u0010\u0015R\u0013\u0010\u0006\u001a\u0004\u0018\u00010\u0007¢\u0006\b\n\u0000\u001a\u0004\b\u0016\u0010\u0017R\u0011\u0010\f\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\u0018\u0010\u000f¨\u0006&"}, mo65043d2 = {"Lcom/android/systemui/media/MediaDeviceData;", "", "enabled", "", "icon", "Landroid/graphics/drawable/Drawable;", "name", "", "intent", "Landroid/app/PendingIntent;", "id", "", "showBroadcastButton", "(ZLandroid/graphics/drawable/Drawable;Ljava/lang/CharSequence;Landroid/app/PendingIntent;Ljava/lang/String;Z)V", "getEnabled", "()Z", "getIcon", "()Landroid/graphics/drawable/Drawable;", "getId", "()Ljava/lang/String;", "getIntent", "()Landroid/app/PendingIntent;", "getName", "()Ljava/lang/CharSequence;", "getShowBroadcastButton", "component1", "component2", "component3", "component4", "component5", "component6", "copy", "equals", "other", "equalsWithoutIcon", "hashCode", "", "toString", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* compiled from: MediaData.kt */
 public final class MediaDeviceData {
     private final boolean enabled;
     private final Drawable icon;
 
     /* renamed from: id */
-    private final String f316id;
+    private final String f315id;
     private final PendingIntent intent;
     private final CharSequence name;
     private final boolean showBroadcastButton;
@@ -43,7 +43,7 @@ public final class MediaDeviceData {
         }
         PendingIntent pendingIntent2 = pendingIntent;
         if ((i & 16) != 0) {
-            str = mediaDeviceData.f316id;
+            str = mediaDeviceData.f315id;
         }
         String str2 = str;
         if ((i & 32) != 0) {
@@ -69,7 +69,7 @@ public final class MediaDeviceData {
     }
 
     public final String component5() {
-        return this.f316id;
+        return this.f315id;
     }
 
     public final boolean component6() {
@@ -88,7 +88,7 @@ public final class MediaDeviceData {
             return false;
         }
         MediaDeviceData mediaDeviceData = (MediaDeviceData) obj;
-        return this.enabled == mediaDeviceData.enabled && Intrinsics.areEqual((Object) this.icon, (Object) mediaDeviceData.icon) && Intrinsics.areEqual((Object) this.name, (Object) mediaDeviceData.name) && Intrinsics.areEqual((Object) this.intent, (Object) mediaDeviceData.intent) && Intrinsics.areEqual((Object) this.f316id, (Object) mediaDeviceData.f316id) && this.showBroadcastButton == mediaDeviceData.showBroadcastButton;
+        return this.enabled == mediaDeviceData.enabled && Intrinsics.areEqual((Object) this.icon, (Object) mediaDeviceData.icon) && Intrinsics.areEqual((Object) this.name, (Object) mediaDeviceData.name) && Intrinsics.areEqual((Object) this.intent, (Object) mediaDeviceData.intent) && Intrinsics.areEqual((Object) this.f315id, (Object) mediaDeviceData.f315id) && this.showBroadcastButton == mediaDeviceData.showBroadcastButton;
     }
 
     public int hashCode() {
@@ -105,7 +105,7 @@ public final class MediaDeviceData {
         int hashCode2 = (hashCode + (charSequence == null ? 0 : charSequence.hashCode())) * 31;
         PendingIntent pendingIntent = this.intent;
         int hashCode3 = (hashCode2 + (pendingIntent == null ? 0 : pendingIntent.hashCode())) * 31;
-        String str = this.f316id;
+        String str = this.f315id;
         if (str != null) {
             i2 = str.hashCode();
         }
@@ -118,7 +118,7 @@ public final class MediaDeviceData {
     }
 
     public String toString() {
-        return "MediaDeviceData(enabled=" + this.enabled + ", icon=" + this.icon + ", name=" + this.name + ", intent=" + this.intent + ", id=" + this.f316id + ", showBroadcastButton=" + this.showBroadcastButton + ')';
+        return "MediaDeviceData(enabled=" + this.enabled + ", icon=" + this.icon + ", name=" + this.name + ", intent=" + this.intent + ", id=" + this.f315id + ", showBroadcastButton=" + this.showBroadcastButton + ')';
     }
 
     public MediaDeviceData(boolean z, Drawable drawable, CharSequence charSequence, PendingIntent pendingIntent, String str, boolean z2) {
@@ -126,7 +126,7 @@ public final class MediaDeviceData {
         this.icon = drawable;
         this.name = charSequence;
         this.intent = pendingIntent;
-        this.f316id = str;
+        this.f315id = str;
         this.showBroadcastButton = z2;
     }
 
@@ -152,7 +152,7 @@ public final class MediaDeviceData {
     }
 
     public final String getId() {
-        return this.f316id;
+        return this.f315id;
     }
 
     public final boolean getShowBroadcastButton() {
@@ -160,7 +160,7 @@ public final class MediaDeviceData {
     }
 
     public final boolean equalsWithoutIcon(MediaDeviceData mediaDeviceData) {
-        if (mediaDeviceData != null && this.enabled == mediaDeviceData.enabled && Intrinsics.areEqual((Object) this.name, (Object) mediaDeviceData.name) && Intrinsics.areEqual((Object) this.intent, (Object) mediaDeviceData.intent) && Intrinsics.areEqual((Object) this.f316id, (Object) mediaDeviceData.f316id)) {
+        if (mediaDeviceData != null && this.enabled == mediaDeviceData.enabled && Intrinsics.areEqual((Object) this.name, (Object) mediaDeviceData.name) && Intrinsics.areEqual((Object) this.intent, (Object) mediaDeviceData.intent) && Intrinsics.areEqual((Object) this.f315id, (Object) mediaDeviceData.f315id)) {
             return true;
         }
         return false;

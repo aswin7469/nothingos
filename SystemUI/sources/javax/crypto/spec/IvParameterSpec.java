@@ -5,7 +5,7 @@ import java.security.spec.AlgorithmParameterSpec;
 public class IvParameterSpec implements AlgorithmParameterSpec {
 
     /* renamed from: iv */
-    private byte[] f823iv;
+    private byte[] f821iv;
 
     public IvParameterSpec(byte[] bArr) {
         this(bArr, 0, bArr.length);
@@ -20,7 +20,7 @@ public class IvParameterSpec implements AlgorithmParameterSpec {
             throw new ArrayIndexOutOfBoundsException("len is negative");
         } else if (bArr.length - i >= i2) {
             byte[] bArr2 = new byte[i2];
-            this.f823iv = bArr2;
+            this.f821iv = bArr2;
             System.arraycopy((Object) bArr, i, (Object) bArr2, 0, i2);
         } else {
             throw new IllegalArgumentException("IV buffer too short for given offset/length combination");
@@ -28,6 +28,6 @@ public class IvParameterSpec implements AlgorithmParameterSpec {
     }
 
     public byte[] getIV() {
-        return (byte[]) this.f823iv.clone();
+        return (byte[]) this.f821iv.clone();
     }
 }

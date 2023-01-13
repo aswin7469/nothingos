@@ -8,7 +8,7 @@ import java.util.List;
 public class SettingItemLiveData extends LiveData<List<SettingItemData>> {
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setDataChange$0$com-nothing-systemui-qs-tiles-settings-panel-SettingItemLiveData */
-    public /* synthetic */ void mo57924x80eaff34(List list) {
+    public /* synthetic */ void mo57967x80eaff34(List list) {
         setValue(list);
     }
 

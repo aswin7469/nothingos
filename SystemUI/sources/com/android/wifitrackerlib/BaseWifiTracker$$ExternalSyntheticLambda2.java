@@ -9,6 +9,6 @@ public final /* synthetic */ class BaseWifiTracker$$ExternalSyntheticLambda2 imp
     }
 
     public final void run() {
-        this.f$0.m3369lambda$onStart$0$comandroidwifitrackerlibBaseWifiTracker();
+        this.f$0.m3373lambda$onStart$0$comandroidwifitrackerlibBaseWifiTracker();
     }
 }

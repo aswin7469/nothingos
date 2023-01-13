@@ -15,6 +15,6 @@ public final /* synthetic */ class MediaDeviceManager$Entry$$ExternalSyntheticLa
     }
 
     public final void run() {
-        MediaDeviceManager.Entry.m2804_set_current_$lambda0(this.f$0, this.f$1, this.f$2);
+        MediaDeviceManager.Entry.m2809_set_current_$lambda0(this.f$0, this.f$1, this.f$2);
     }
 }

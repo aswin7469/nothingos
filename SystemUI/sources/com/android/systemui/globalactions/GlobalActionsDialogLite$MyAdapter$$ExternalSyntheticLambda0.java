@@ -14,6 +14,6 @@ public final /* synthetic */ class GlobalActionsDialogLite$MyAdapter$$ExternalSy
     }
 
     public final void onClick(View view) {
-        this.f$0.mo32960x9cbae456(this.f$1, view);
+        this.f$0.mo32970x9cbae456(this.f$1, view);
     }
 }

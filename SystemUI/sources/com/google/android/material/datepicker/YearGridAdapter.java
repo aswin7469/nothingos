@@ -5,7 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.datepicker.MaterialCalendar;
 import java.util.Calendar;
 import java.util.Locale;
@@ -28,12 +28,12 @@ class YearGridAdapter extends RecyclerView.Adapter<ViewHolder> {
     }
 
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        return new ViewHolder((TextView) LayoutInflater.from(viewGroup.getContext()).inflate(C3621R.layout.mtrl_calendar_year, viewGroup, false));
+        return new ViewHolder((TextView) LayoutInflater.from(viewGroup.getContext()).inflate(C3631R.layout.mtrl_calendar_year, viewGroup, false));
     }
 
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
         int yearForPosition = getYearForPosition(i);
-        String string = viewHolder.textView.getContext().getString(C3621R.string.mtrl_picker_navigate_to_year_description);
+        String string = viewHolder.textView.getContext().getString(C3631R.string.mtrl_picker_navigate_to_year_description);
         viewHolder.textView.setText(String.format(Locale.getDefault(), TimeModel.NUMBER_FORMAT, Integer.valueOf(yearForPosition)));
         viewHolder.textView.setContentDescription(String.format(string, Integer.valueOf(yearForPosition)));
         CalendarStyle calendarStyle = this.materialCalendar.getCalendarStyle();

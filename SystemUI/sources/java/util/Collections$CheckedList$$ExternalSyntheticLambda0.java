@@ -14,6 +14,6 @@ public final /* synthetic */ class Collections$CheckedList$$ExternalSyntheticLam
     }
 
     public final Object apply(Object obj) {
-        return this.f$0.m3735lambda$replaceAll$0$javautilCollections$CheckedList(this.f$1, obj);
+        return this.f$0.m3753lambda$replaceAll$0$javautilCollections$CheckedList(this.f$1, obj);
     }
 }

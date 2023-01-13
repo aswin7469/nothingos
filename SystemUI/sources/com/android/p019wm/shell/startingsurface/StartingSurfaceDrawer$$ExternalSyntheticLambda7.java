@@ -12,6 +12,6 @@ public final /* synthetic */ class StartingSurfaceDrawer$$ExternalSyntheticLambd
     }
 
     public final void run() {
-        this.f$0.mo51165x9a1aa546(this.f$1);
+        this.f$0.mo51176x9a1aa546(this.f$1);
     }
 }

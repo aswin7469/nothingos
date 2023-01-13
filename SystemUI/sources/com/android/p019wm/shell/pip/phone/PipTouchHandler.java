@@ -16,7 +16,7 @@ import android.view.accessibility.AccessibilityManager;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.view.accessibility.IAccessibilityInteractionConnection;
 import com.android.internal.protolog.common.ProtoLog;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.common.FloatingContentCoordinator;
 import com.android.p019wm.shell.common.ShellExecutor;
 import com.android.p019wm.shell.pip.PipBoundsAlgorithm;
@@ -152,7 +152,7 @@ public class PipTouchHandler {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-wm-shell-pip-phone-PipTouchHandler  reason: not valid java name */
-    public /* synthetic */ void m3476lambda$new$0$comandroidwmshellpipphonePipTouchHandler() {
+    public /* synthetic */ void m3480lambda$new$0$comandroidwmshellpipphonePipTouchHandler() {
         if (this.mPipBoundsState.isStashed()) {
             animateToUnStashedState();
             this.mPipUiEventLogger.log(PipUiEventLogger.PipUiEventEnum.PICTURE_IN_PICTURE_STASH_UNSTASHED);
@@ -163,7 +163,7 @@ public class PipTouchHandler {
     }
 
     public void init() {
-        this.mEnableResize = this.mContext.getResources().getBoolean(C3343R.bool.config_pipEnableResizeForMenu);
+        this.mEnableResize = this.mContext.getResources().getBoolean(C3353R.bool.config_pipEnableResizeForMenu);
         reloadResources();
         this.mMotionHelper.init();
         this.mPipResizeGestureHandler.init();
@@ -176,7 +176,7 @@ public class PipTouchHandler {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$init$1$com-android-wm-shell-pip-phone-PipTouchHandler  reason: not valid java name */
-    public /* synthetic */ void m3474lambda$init$1$comandroidwmshellpipphonePipTouchHandler(DeviceConfig.Properties properties) {
+    public /* synthetic */ void m3478lambda$init$1$comandroidwmshellpipphonePipTouchHandler(DeviceConfig.Properties properties) {
         if (properties.getKeyset().contains("pip_stashing")) {
             this.mEnableStash = properties.getBoolean("pip_stashing", true);
         }
@@ -184,7 +184,7 @@ public class PipTouchHandler {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$init$2$com-android-wm-shell-pip-phone-PipTouchHandler  reason: not valid java name */
-    public /* synthetic */ void m3475lambda$init$2$comandroidwmshellpipphonePipTouchHandler(DeviceConfig.Properties properties) {
+    public /* synthetic */ void m3479lambda$init$2$comandroidwmshellpipphonePipTouchHandler(DeviceConfig.Properties properties) {
         if (properties.getKeyset().contains("pip_velocity_threshold")) {
             this.mStashVelocityThreshold = properties.getFloat("pip_velocity_threshold", DEFAULT_STASH_VELOCITY_THRESHOLD);
         }
@@ -192,10 +192,10 @@ public class PipTouchHandler {
 
     private void reloadResources() {
         Resources resources = this.mContext.getResources();
-        this.mBottomOffsetBufferPx = resources.getDimensionPixelSize(C3343R.dimen.pip_bottom_offset_buffer);
-        this.mExpandedShortestEdgeSize = resources.getDimensionPixelSize(C3343R.dimen.pip_expanded_shortest_edge_size);
-        this.mImeOffset = resources.getDimensionPixelSize(C3343R.dimen.pip_ime_offset);
-        this.mMinimumSizePercent = resources.getFraction(C3343R.fraction.config_pipShortestEdgePercent, 1, 1);
+        this.mBottomOffsetBufferPx = resources.getDimensionPixelSize(C3353R.dimen.pip_bottom_offset_buffer);
+        this.mExpandedShortestEdgeSize = resources.getDimensionPixelSize(C3353R.dimen.pip_expanded_shortest_edge_size);
+        this.mImeOffset = resources.getDimensionPixelSize(C3353R.dimen.pip_ime_offset);
+        this.mMinimumSizePercent = resources.getFraction(C3353R.fraction.config_pipShortestEdgePercent, 1, 1);
         this.mPipDismissTargetHandler.updateMagneticTargetSize();
     }
 

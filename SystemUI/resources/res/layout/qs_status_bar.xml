@@ -6,5 +6,5 @@
         <include layout="@layout/ongoing_privacy_chip"/>
     </FrameLayout>
     <com.android.systemui.statusbar.phone.StatusIconContainer android:id="@+id/qs_statusIcons" android:layout_width="wrap_content" android:layout_height="match_parent" android:layout_centerVertical="true" android:paddingEnd="@dimen/signal_cluster_battery_padding" android:layout_toStartOf="@+id/qs_batteryRemainingIcon"/>
-    <com.android.systemui.battery.BatteryMeterView android:id="@+id/qs_batteryRemainingIcon" android:layout_width="wrap_content" android:layout_height="match_parent" android:layout_centerVertical="true" android:layout_alignParentEnd="true" app:textAppearance="@style/TextAppearance.QS.Status"/>
+    <com.android.systemui.battery.BatteryMeterView android:id="@+id/qs_batteryRemainingIcon" android:layout_width="wrap_content" android:layout_height="match_parent" android:layout_centerVertical="true" android:layout_alignParentEnd="true" app:textAppearance="@style/TextAppearance.StatusBar.Clock"/>
 </com.nothing.systemui.p024qs.NTQSStatusBar>

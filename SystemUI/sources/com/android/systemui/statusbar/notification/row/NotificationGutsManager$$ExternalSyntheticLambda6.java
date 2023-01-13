@@ -22,6 +22,6 @@ public final /* synthetic */ class NotificationGutsManager$$ExternalSyntheticLam
     }
 
     public final void onClick(View view, NotificationChannel notificationChannel, int i) {
-        this.f$0.mo41606x9b984b08(this.f$1, this.f$2, this.f$3, this.f$4, view, notificationChannel, i);
+        this.f$0.mo41614x9b984b08(this.f$1, this.f$2, this.f$3, this.f$4, view, notificationChannel, i);
     }
 }

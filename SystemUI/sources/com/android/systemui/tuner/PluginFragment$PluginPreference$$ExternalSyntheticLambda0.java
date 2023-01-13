@@ -12,6 +12,6 @@ public final /* synthetic */ class PluginFragment$PluginPreference$$ExternalSynt
     }
 
     public final void onClick(View view) {
-        this.f$0.mo46424x7725852a(view);
+        this.f$0.mo46436x7725852a(view);
     }
 }

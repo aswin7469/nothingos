@@ -2,7 +2,7 @@ package com.android.systemui.p012qs.external;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 
 /* renamed from: com.android.systemui.qs.external.TileColorPicker */
 public class TileColorPicker {
@@ -13,7 +13,7 @@ public class TileColorPicker {
     private ColorStateList mColorStateList;
 
     private TileColorPicker(Context context) {
-        this.mColorStateList = context.getResources().getColorStateList(C1893R.C1894color.tint_color_selector, context.getTheme());
+        this.mColorStateList = context.getResources().getColorStateList(C1894R.C1895color.tint_color_selector, context.getTheme());
     }
 
     public static TileColorPicker getInstance(Context context) {

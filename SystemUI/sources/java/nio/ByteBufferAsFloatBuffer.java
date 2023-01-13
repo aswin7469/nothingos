@@ -6,14 +6,14 @@ class ByteBufferAsFloatBuffer extends FloatBuffer {
     static final /* synthetic */ boolean $assertionsDisabled = false;
 
     /* renamed from: bb */
-    protected final ByteBuffer f563bb;
+    protected final ByteBuffer f561bb;
     protected final int offset;
     private final ByteOrder order;
 
     ByteBufferAsFloatBuffer(ByteBuffer byteBuffer, int i, int i2, int i3, int i4, int i5, ByteOrder byteOrder) {
         super(i, i2, i3, i4);
         ByteBuffer duplicate = byteBuffer.duplicate();
-        this.f563bb = duplicate;
+        this.f561bb = duplicate;
         this.isReadOnly = byteBuffer.isReadOnly;
         if (byteBuffer instanceof DirectByteBuffer) {
             this.address = byteBuffer.address + ((long) i5);
@@ -27,20 +27,20 @@ class ByteBufferAsFloatBuffer extends FloatBuffer {
         int position = position();
         int limit = limit();
         int i = position <= limit ? limit - position : 0;
-        return new ByteBufferAsFloatBuffer(this.f563bb, -1, 0, i, i, (position << 2) + this.offset, this.order);
+        return new ByteBufferAsFloatBuffer(this.f561bb, -1, 0, i, i, (position << 2) + this.offset, this.order);
     }
 
     public FloatBuffer duplicate() {
-        return new ByteBufferAsFloatBuffer(this.f563bb, markValue(), position(), limit(), capacity(), this.offset, this.order);
+        return new ByteBufferAsFloatBuffer(this.f561bb, markValue(), position(), limit(), capacity(), this.offset, this.order);
     }
 
     public FloatBuffer asReadOnlyBuffer() {
-        return new ByteBufferAsFloatBuffer(this.f563bb.asReadOnlyBuffer(), markValue(), position(), limit(), capacity(), this.offset, this.order);
+        return new ByteBufferAsFloatBuffer(this.f561bb.asReadOnlyBuffer(), markValue(), position(), limit(), capacity(), this.offset, this.order);
     }
 
     /* access modifiers changed from: protected */
     /* renamed from: ix */
-    public int mo60847ix(int i) {
+    public int mo60903ix(int i) {
         return (i << 2) + this.offset;
     }
 
@@ -49,13 +49,13 @@ class ByteBufferAsFloatBuffer extends FloatBuffer {
     }
 
     public float get(int i) {
-        return this.f563bb.getFloatUnchecked(mo60847ix(checkIndex(i)));
+        return this.f561bb.getFloatUnchecked(mo60903ix(checkIndex(i)));
     }
 
     public FloatBuffer get(float[] fArr, int i, int i2) {
         checkBounds(i, i2, fArr.length);
         if (i2 <= remaining()) {
-            this.f563bb.getUnchecked(mo60847ix(this.position), fArr, i, i2);
+            this.f561bb.getUnchecked(mo60903ix(this.position), fArr, i, i2);
             this.position += i2;
             return this;
         }
@@ -69,7 +69,7 @@ class ByteBufferAsFloatBuffer extends FloatBuffer {
 
     public FloatBuffer put(int i, float f) {
         if (!this.isReadOnly) {
-            this.f563bb.putFloatUnchecked(mo60847ix(checkIndex(i)), f);
+            this.f561bb.putFloatUnchecked(mo60903ix(checkIndex(i)), f);
             return this;
         }
         throw new ReadOnlyBufferException();
@@ -78,7 +78,7 @@ class ByteBufferAsFloatBuffer extends FloatBuffer {
     public FloatBuffer put(float[] fArr, int i, int i2) {
         checkBounds(i, i2, fArr.length);
         if (i2 <= remaining()) {
-            this.f563bb.putUnchecked(mo60847ix(this.position), fArr, i, i2);
+            this.f561bb.putUnchecked(mo60903ix(this.position), fArr, i, i2);
             this.position += i2;
             return this;
         }
@@ -90,11 +90,11 @@ class ByteBufferAsFloatBuffer extends FloatBuffer {
             int position = position();
             int limit = limit();
             int i = position <= limit ? limit - position : 0;
-            ByteBuffer byteBuffer = this.f563bb;
+            ByteBuffer byteBuffer = this.f561bb;
             if (!(byteBuffer instanceof DirectByteBuffer)) {
-                System.arraycopy((Object) byteBuffer.array(), mo60847ix(position), (Object) this.f563bb.array(), mo60847ix(0), i << 2);
+                System.arraycopy((Object) byteBuffer.array(), mo60903ix(position), (Object) this.f561bb.array(), mo60903ix(0), i << 2);
             } else {
-                Memory.memmove(this, mo60847ix(0), this, mo60847ix(position), (long) (i << 2));
+                Memory.memmove(this, mo60903ix(0), this, mo60903ix(position), (long) (i << 2));
             }
             position(i);
             limit(capacity());
@@ -105,7 +105,7 @@ class ByteBufferAsFloatBuffer extends FloatBuffer {
     }
 
     public boolean isDirect() {
-        return this.f563bb.isDirect();
+        return this.f561bb.isDirect();
     }
 
     public boolean isReadOnly() {

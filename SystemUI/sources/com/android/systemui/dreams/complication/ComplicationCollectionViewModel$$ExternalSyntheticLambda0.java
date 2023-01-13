@@ -11,6 +11,6 @@ public final /* synthetic */ class ComplicationCollectionViewModel$$ExternalSynt
     }
 
     public final Object apply(Object obj) {
-        return this.f$0.mo32557x6ea173d7((Complication) obj);
+        return this.f$0.mo32568x6ea173d7((Complication) obj);
     }
 }

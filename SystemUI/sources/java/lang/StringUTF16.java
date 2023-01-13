@@ -200,7 +200,7 @@ final class StringUTF16 {
         private final String array;
 
         /* renamed from: cs */
-        private final int f548cs;
+        private final int f546cs;
         private final int fence;
         private int index;
 
@@ -212,7 +212,7 @@ final class StringUTF16 {
             this.array = str;
             this.index = i;
             this.fence = i2;
-            this.f548cs = i3 | 16 | 64 | 16384;
+            this.f546cs = i3 | 16 | 64 | 16384;
         }
 
         public Spliterator.OfInt trySplit() {
@@ -223,7 +223,7 @@ final class StringUTF16 {
             }
             String str = this.array;
             this.index = i2;
-            return new CharsSpliterator(str, i, i2, this.f548cs);
+            return new CharsSpliterator(str, i, i2, this.f546cs);
         }
 
         public void forEachRemaining(IntConsumer intConsumer) {
@@ -259,7 +259,7 @@ final class StringUTF16 {
         }
 
         public int characteristics() {
-            return this.f548cs;
+            return this.f546cs;
         }
     }
 
@@ -267,7 +267,7 @@ final class StringUTF16 {
         private final String array;
 
         /* renamed from: cs */
-        private final int f549cs;
+        private final int f547cs;
         private final int fence;
         private int index;
 
@@ -279,7 +279,7 @@ final class StringUTF16 {
             this.array = str;
             this.index = i;
             this.fence = i2;
-            this.f549cs = i3 | 16;
+            this.f547cs = i3 | 16;
         }
 
         public Spliterator.OfInt trySplit() {
@@ -296,12 +296,12 @@ final class StringUTF16 {
                     }
                     String str = this.array;
                     this.index = i3;
-                    return new CodePointsSpliterator(str, i, i3, this.f549cs);
+                    return new CodePointsSpliterator(str, i, i3, this.f547cs);
                 }
             }
             String str2 = this.array;
             this.index = i2;
-            return new CodePointsSpliterator(str2, i, i2, this.f549cs);
+            return new CodePointsSpliterator(str2, i, i2, this.f547cs);
         }
 
         public void forEachRemaining(IntConsumer intConsumer) {
@@ -362,7 +362,7 @@ final class StringUTF16 {
         }
 
         public int characteristics() {
-            return this.f549cs;
+            return this.f547cs;
         }
     }
 

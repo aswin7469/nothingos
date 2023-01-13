@@ -19,7 +19,7 @@ class DatagramSocketWrapper extends Socket {
     private static class DatagramSocketImplWrapper extends SocketImpl {
         DatagramSocketImplWrapper(DatagramSocket datagramSocket, FileDescriptor fileDescriptor) {
             this.localport = datagramSocket.getLocalPort();
-            this.f559fd = fileDescriptor;
+            this.f557fd = fileDescriptor;
         }
 
         /* access modifiers changed from: protected */

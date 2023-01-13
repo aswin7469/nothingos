@@ -11,6 +11,6 @@ public final /* synthetic */ class KeyguardIndicationController$$ExternalSynthet
     }
 
     public final void onAlignmentStateChanged(int i) {
-        this.f$0.mo38587xf7d60e40(i);
+        this.f$0.mo38588xf7d60e40(i);
     }
 }

@@ -11,6 +11,6 @@ public final /* synthetic */ class NotificationRankingManager$$ExternalSynthetic
     }
 
     public final int compare(Object obj, Object obj2) {
-        return NotificationRankingManager.m3097rankingComparator$lambda0(this.f$0, (NotificationEntry) obj, (NotificationEntry) obj2);
+        return NotificationRankingManager.m3101rankingComparator$lambda0(this.f$0, (NotificationEntry) obj, (NotificationEntry) obj2);
     }
 }

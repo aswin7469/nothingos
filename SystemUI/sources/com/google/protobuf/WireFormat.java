@@ -139,7 +139,7 @@ public final class WireFormat {
     }
 
     /* renamed from: com.google.protobuf.WireFormat$1 */
-    static /* synthetic */ class C40801 {
+    static /* synthetic */ class C40901 {
         static final /* synthetic */ int[] $SwitchMap$com$google$protobuf$WireFormat$FieldType;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(36:0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31|32|33|34|(3:35|36|38)) */
@@ -277,12 +277,12 @@ public final class WireFormat {
             L_0x00d8:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: com.google.protobuf.WireFormat.C40801.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: com.google.protobuf.WireFormat.C40901.<clinit>():void");
         }
     }
 
     static Object readPrimitiveField(CodedInputStream codedInputStream, FieldType fieldType, Utf8Validation utf8Validation) throws IOException {
-        switch (C40801.$SwitchMap$com$google$protobuf$WireFormat$FieldType[fieldType.ordinal()]) {
+        switch (C40901.$SwitchMap$com$google$protobuf$WireFormat$FieldType[fieldType.ordinal()]) {
             case 1:
                 return Double.valueOf(codedInputStream.readDouble());
             case 2:

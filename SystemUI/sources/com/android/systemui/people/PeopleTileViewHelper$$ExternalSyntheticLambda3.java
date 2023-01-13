@@ -12,6 +12,6 @@ public final /* synthetic */ class PeopleTileViewHelper$$ExternalSyntheticLambda
     }
 
     public final boolean test(Object obj) {
-        return this.f$0.mo35148xe68ae94c((ConversationStatus) obj);
+        return this.f$0.mo35152xe68ae94c((ConversationStatus) obj);
     }
 }

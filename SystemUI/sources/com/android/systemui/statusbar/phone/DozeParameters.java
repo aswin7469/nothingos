@@ -16,7 +16,7 @@ import android.util.MathUtils;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardUpdateMonitorCallback;
 import com.android.keyguard.mediator.ScreenOnCoordinator$$ExternalSyntheticLambda1;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dumpable;
 import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.dagger.qualifiers.Background;
@@ -68,7 +68,7 @@ public class DozeParameters implements TunerService.Tunable, com.android.systemu
 
     @Inject
     protected DozeParameters(Context context, @Background Handler handler, @Main Resources resources, AmbientDisplayConfiguration ambientDisplayConfiguration, AlwaysOnDisplayPolicy alwaysOnDisplayPolicy, PowerManager powerManager, BatteryController batteryController, TunerService tunerService, DumpManager dumpManager, FeatureFlags featureFlags, ScreenOffAnimationController screenOffAnimationController, Optional<SysUIUnfoldComponent> optional, UnlockedScreenOffAnimationController unlockedScreenOffAnimationController, KeyguardUpdateMonitor keyguardUpdateMonitor, ConfigurationController configurationController, StatusBarStateController statusBarStateController) {
-        C29431 r2 = new KeyguardUpdateMonitorCallback() {
+        C29491 r2 = new KeyguardUpdateMonitorCallback() {
             public void onKeyguardVisibilityChanged(boolean z) {
                 boolean unused = DozeParameters.this.mKeyguardShowing = z;
                 DozeParameters.this.updateControlScreenOff();
@@ -117,11 +117,11 @@ public class DozeParameters implements TunerService.Tunable, com.android.systemu
     }
 
     public boolean getDisplayStateSupported() {
-        return getBoolean("doze.display.supported", C1893R.bool.doze_display_state_supported);
+        return getBoolean("doze.display.supported", C1894R.bool.doze_display_state_supported);
     }
 
     public boolean getDozeSuspendDisplayStateSupported() {
-        return this.mResources.getBoolean(C1893R.bool.doze_suspend_display_state_supported);
+        return this.mResources.getBoolean(C1894R.bool.doze_suspend_display_state_supported);
     }
 
     public int getPulseDuration() {
@@ -133,19 +133,19 @@ public class DozeParameters implements TunerService.Tunable, com.android.systemu
     }
 
     public int getPulseInDuration() {
-        return getInt("doze.pulse.duration.in", C1893R.integer.doze_pulse_duration_in);
+        return getInt("doze.pulse.duration.in", C1894R.integer.doze_pulse_duration_in);
     }
 
     public int getPulseVisibleDuration() {
-        return getInt("doze.pulse.duration.visible", C1893R.integer.doze_pulse_duration_visible);
+        return getInt("doze.pulse.duration.visible", C1894R.integer.doze_pulse_duration_visible);
     }
 
     public int getPulseOutDuration() {
-        return getInt("doze.pulse.duration.out", C1893R.integer.doze_pulse_duration_out);
+        return getInt("doze.pulse.duration.out", C1894R.integer.doze_pulse_duration_out);
     }
 
     public boolean getPulseOnSigMotion() {
-        return getBoolean("doze.pulse.sigmotion", C1893R.bool.doze_pulse_on_significant_motion);
+        return getBoolean("doze.pulse.sigmotion", C1894R.bool.doze_pulse_on_significant_motion);
     }
 
     public boolean getVibrateOnSigMotion() {
@@ -157,19 +157,19 @@ public class DozeParameters implements TunerService.Tunable, com.android.systemu
     }
 
     public boolean getProxCheckBeforePulse() {
-        return getBoolean("doze.pulse.proxcheck", C1893R.bool.doze_proximity_check_before_pulse);
+        return getBoolean("doze.pulse.proxcheck", C1894R.bool.doze_proximity_check_before_pulse);
     }
 
     public boolean getSelectivelyRegisterSensorsUsingProx() {
-        return getBoolean("doze.prox.selectively_register", C1893R.bool.doze_selectively_register_prox);
+        return getBoolean("doze.prox.selectively_register", C1894R.bool.doze_selectively_register_prox);
     }
 
     public int getPickupVibrationThreshold() {
-        return getInt("doze.pickup.vibration.threshold", C1893R.integer.doze_pickup_vibration_threshold);
+        return getInt("doze.pickup.vibration.threshold", C1894R.integer.doze_pickup_vibration_threshold);
     }
 
     public int getQuickPickupAodDuration() {
-        return getInt("doze.gesture.quickpickup.duration", C1893R.integer.doze_quick_pickup_aod_duration);
+        return getInt("doze.gesture.quickpickup.duration", C1894R.integer.doze_quick_pickup_aod_duration);
     }
 
     public long getWallpaperAodDuration() {
@@ -257,23 +257,23 @@ public class DozeParameters implements TunerService.Tunable, com.android.systemu
     }
 
     public boolean doubleTapReportsTouchCoordinates() {
-        return this.mResources.getBoolean(C1893R.bool.doze_double_tap_reports_touch_coordinates);
+        return this.mResources.getBoolean(C1894R.bool.doze_double_tap_reports_touch_coordinates);
     }
 
     public boolean singleTapUsesProx(int i) {
-        return getPostureSpecificBool(this.mResources.getIntArray(C1893R.array.doze_single_tap_uses_prox_posture_mapping), singleTapUsesProx(), i);
+        return getPostureSpecificBool(this.mResources.getIntArray(C1894R.array.doze_single_tap_uses_prox_posture_mapping), singleTapUsesProx(), i);
     }
 
     private boolean singleTapUsesProx() {
-        return this.mResources.getBoolean(C1893R.bool.doze_single_tap_uses_prox);
+        return this.mResources.getBoolean(C1894R.bool.doze_single_tap_uses_prox);
     }
 
     public boolean longPressUsesProx() {
-        return this.mResources.getBoolean(C1893R.bool.doze_long_press_uses_prox);
+        return this.mResources.getBoolean(C1894R.bool.doze_long_press_uses_prox);
     }
 
     public String[] brightnessNames() {
-        return this.mResources.getStringArray(C1893R.array.doze_brightness_sensor_name_posture_mapping);
+        return this.mResources.getStringArray(C1894R.array.doze_brightness_sensor_name_posture_mapping);
     }
 
     public void addCallback(Callback callback) {

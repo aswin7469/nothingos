@@ -63,7 +63,7 @@ final class DistinctOps {
                     java.util.stream.Node r2 = java.util.stream.Nodes.node(r3)
                     return r2
                 */
-                throw new UnsupportedOperationException("Method not decompiled: java.util.stream.DistinctOps.C44401.opEvaluateParallel(java.util.stream.PipelineHelper, java.util.Spliterator, java.util.function.IntFunction):java.util.stream.Node");
+                throw new UnsupportedOperationException("Method not decompiled: java.util.stream.DistinctOps.C44521.opEvaluateParallel(java.util.stream.PipelineHelper, java.util.Spliterator, java.util.function.IntFunction):java.util.stream.Node");
             }
 
             static /* synthetic */ void lambda$opEvaluateParallel$0(AtomicBoolean atomicBoolean, ConcurrentHashMap concurrentHashMap, Object obj) {
@@ -100,7 +100,7 @@ final class DistinctOps {
                     r2.<init>(r3)
                     return r2
                 */
-                throw new UnsupportedOperationException("Method not decompiled: java.util.stream.DistinctOps.C44401.opEvaluateParallelLazy(java.util.stream.PipelineHelper, java.util.Spliterator):java.util.Spliterator");
+                throw new UnsupportedOperationException("Method not decompiled: java.util.stream.DistinctOps.C44521.opEvaluateParallelLazy(java.util.stream.PipelineHelper, java.util.Spliterator):java.util.Spliterator");
             }
 
             public Sink<T> opWrapSink(int i, Sink<T> sink) {

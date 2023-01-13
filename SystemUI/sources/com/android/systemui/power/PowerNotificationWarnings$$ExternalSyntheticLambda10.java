@@ -11,6 +11,6 @@ public final /* synthetic */ class PowerNotificationWarnings$$ExternalSyntheticL
     }
 
     public final void onDismiss(DialogInterface dialogInterface) {
-        this.f$0.mo35553x3be3e817(dialogInterface);
+        this.f$0.mo35557x3be3e817(dialogInterface);
     }
 }

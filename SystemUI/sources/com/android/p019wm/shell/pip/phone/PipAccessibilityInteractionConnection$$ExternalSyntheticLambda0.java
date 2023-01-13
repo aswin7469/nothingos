@@ -13,6 +13,6 @@ public final /* synthetic */ class PipAccessibilityInteractionConnection$$Extern
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo50296xd98a70b5((Rect) obj);
+        this.f$0.mo50305xd98a70b5((Rect) obj);
     }
 }

@@ -88,41 +88,41 @@ public final class Preconditions {
 
     public static int checkArgumentInRange(int i, int i2, int i3, String str) {
         if (i < i2) {
-            throw new IllegalArgumentException(String.format(Locale.f700US, "%s is out of range of [%d, %d] (too low)", str, Integer.valueOf(i2), Integer.valueOf(i3)));
+            throw new IllegalArgumentException(String.format(Locale.f698US, "%s is out of range of [%d, %d] (too low)", str, Integer.valueOf(i2), Integer.valueOf(i3)));
         } else if (i <= i3) {
             return i;
         } else {
-            throw new IllegalArgumentException(String.format(Locale.f700US, "%s is out of range of [%d, %d] (too high)", str, Integer.valueOf(i2), Integer.valueOf(i3)));
+            throw new IllegalArgumentException(String.format(Locale.f698US, "%s is out of range of [%d, %d] (too high)", str, Integer.valueOf(i2), Integer.valueOf(i3)));
         }
     }
 
     public static long checkArgumentInRange(long j, long j2, long j3, String str) {
         if (j < j2) {
-            throw new IllegalArgumentException(String.format(Locale.f700US, "%s is out of range of [%d, %d] (too low)", str, Long.valueOf(j2), Long.valueOf(j3)));
+            throw new IllegalArgumentException(String.format(Locale.f698US, "%s is out of range of [%d, %d] (too low)", str, Long.valueOf(j2), Long.valueOf(j3)));
         } else if (j <= j3) {
             return j;
         } else {
-            throw new IllegalArgumentException(String.format(Locale.f700US, "%s is out of range of [%d, %d] (too high)", str, Long.valueOf(j2), Long.valueOf(j3)));
+            throw new IllegalArgumentException(String.format(Locale.f698US, "%s is out of range of [%d, %d] (too high)", str, Long.valueOf(j2), Long.valueOf(j3)));
         }
     }
 
     public static float checkArgumentInRange(float f, float f2, float f3, String str) {
         if (f < f2) {
-            throw new IllegalArgumentException(String.format(Locale.f700US, "%s is out of range of [%f, %f] (too low)", str, Float.valueOf(f2), Float.valueOf(f3)));
+            throw new IllegalArgumentException(String.format(Locale.f698US, "%s is out of range of [%f, %f] (too low)", str, Float.valueOf(f2), Float.valueOf(f3)));
         } else if (f <= f3) {
             return f;
         } else {
-            throw new IllegalArgumentException(String.format(Locale.f700US, "%s is out of range of [%f, %f] (too high)", str, Float.valueOf(f2), Float.valueOf(f3)));
+            throw new IllegalArgumentException(String.format(Locale.f698US, "%s is out of range of [%f, %f] (too high)", str, Float.valueOf(f2), Float.valueOf(f3)));
         }
     }
 
     public static double checkArgumentInRange(double d, double d2, double d3, String str) {
         if (d < d2) {
-            throw new IllegalArgumentException(String.format(Locale.f700US, "%s is out of range of [%f, %f] (too low)", str, Double.valueOf(d2), Double.valueOf(d3)));
+            throw new IllegalArgumentException(String.format(Locale.f698US, "%s is out of range of [%f, %f] (too low)", str, Double.valueOf(d2), Double.valueOf(d3)));
         } else if (d <= d3) {
             return d;
         } else {
-            throw new IllegalArgumentException(String.format(Locale.f700US, "%s is out of range of [%f, %f] (too high)", str, Double.valueOf(d2), Double.valueOf(d3)));
+            throw new IllegalArgumentException(String.format(Locale.f698US, "%s is out of range of [%f, %f] (too high)", str, Double.valueOf(d2), Double.valueOf(d3)));
         }
     }
 

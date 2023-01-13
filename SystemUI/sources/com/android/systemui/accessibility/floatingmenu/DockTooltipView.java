@@ -1,7 +1,7 @@
 package com.android.systemui.accessibility.floatingmenu;
 
 import android.content.Context;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 
 class DockTooltipView extends BaseTooltipView {
     private final AccessibilityFloatingMenuView mAnchorView;
@@ -9,7 +9,7 @@ class DockTooltipView extends BaseTooltipView {
     DockTooltipView(Context context, AccessibilityFloatingMenuView accessibilityFloatingMenuView) {
         super(context, accessibilityFloatingMenuView);
         this.mAnchorView = accessibilityFloatingMenuView;
-        setDescription(getContext().getText(C1893R.string.accessibility_floating_button_docking_tooltip));
+        setDescription(getContext().getText(C1894R.string.accessibility_floating_button_docking_tooltip));
     }
 
     /* access modifiers changed from: package-private */

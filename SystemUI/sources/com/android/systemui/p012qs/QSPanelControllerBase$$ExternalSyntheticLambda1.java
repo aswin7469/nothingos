@@ -12,6 +12,6 @@ public final /* synthetic */ class QSPanelControllerBase$$ExternalSyntheticLambd
     }
 
     public final Object invoke(Object obj) {
-        return this.f$0.m2915lambda$new$0$comandroidsystemuiqsQSPanelControllerBase((Boolean) obj);
+        return this.f$0.m2920lambda$new$0$comandroidsystemuiqsQSPanelControllerBase((Boolean) obj);
     }
 }

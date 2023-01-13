@@ -6,12 +6,12 @@ import android.service.controls.Control;
 import android.service.controls.templates.ControlTemplate;
 import android.service.controls.templates.StatelessTemplate;
 import android.view.View;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import kotlin.Metadata;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 
-@Metadata(mo64986d1 = {"\u0000J\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0010\u000b\n\u0002\b\u0003\n\u0002\u0010\b\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0004\u0018\u0000 (2\u00020\u0001:\u0001(B\u0005¢\u0006\u0002\u0010\u0002J\u0018\u0010\"\u001a\u00020#2\u0006\u0010$\u001a\u00020%2\u0006\u0010&\u001a\u00020\u001aH\u0016J\u0010\u0010'\u001a\u00020#2\u0006\u0010\u000f\u001a\u00020\u0010H\u0016R\u001a\u0010\u0003\u001a\u00020\u0004X.¢\u0006\u000e\n\u0000\u001a\u0004\b\u0005\u0010\u0006\"\u0004\b\u0007\u0010\bR\u001a\u0010\t\u001a\u00020\nX.¢\u0006\u000e\n\u0000\u001a\u0004\b\u000b\u0010\f\"\u0004\b\r\u0010\u000eR\u001a\u0010\u000f\u001a\u00020\u0010X.¢\u0006\u000e\n\u0000\u001a\u0004\b\u0011\u0010\u0012\"\u0004\b\u0013\u0010\u0014R\u0014\u0010\u0015\u001a\u00020\u00168BX\u0004¢\u0006\u0006\u001a\u0004\b\u0017\u0010\u0018R\u000e\u0010\u0019\u001a\u00020\u001aX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u001b\u001a\u00020\u0016X\u000e¢\u0006\u0002\n\u0000R\u001a\u0010\u001c\u001a\u00020\u001dX.¢\u0006\u000e\n\u0000\u001a\u0004\b\u001e\u0010\u001f\"\u0004\b \u0010!¨\u0006)"}, mo64987d2 = {"Lcom/android/systemui/controls/ui/TouchBehavior;", "Lcom/android/systemui/controls/ui/Behavior;", "()V", "clipLayer", "Landroid/graphics/drawable/Drawable;", "getClipLayer", "()Landroid/graphics/drawable/Drawable;", "setClipLayer", "(Landroid/graphics/drawable/Drawable;)V", "control", "Landroid/service/controls/Control;", "getControl", "()Landroid/service/controls/Control;", "setControl", "(Landroid/service/controls/Control;)V", "cvh", "Lcom/android/systemui/controls/ui/ControlViewHolder;", "getCvh", "()Lcom/android/systemui/controls/ui/ControlViewHolder;", "setCvh", "(Lcom/android/systemui/controls/ui/ControlViewHolder;)V", "enabled", "", "getEnabled", "()Z", "lastColorOffset", "", "statelessTouch", "template", "Landroid/service/controls/templates/ControlTemplate;", "getTemplate", "()Landroid/service/controls/templates/ControlTemplate;", "setTemplate", "(Landroid/service/controls/templates/ControlTemplate;)V", "bind", "", "cws", "Lcom/android/systemui/controls/ui/ControlWithState;", "colorOffset", "initialize", "Companion", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000J\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0010\u000b\n\u0002\b\u0003\n\u0002\u0010\b\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0004\u0018\u0000 (2\u00020\u0001:\u0001(B\u0005¢\u0006\u0002\u0010\u0002J\u0018\u0010\"\u001a\u00020#2\u0006\u0010$\u001a\u00020%2\u0006\u0010&\u001a\u00020\u001aH\u0016J\u0010\u0010'\u001a\u00020#2\u0006\u0010\u000f\u001a\u00020\u0010H\u0016R\u001a\u0010\u0003\u001a\u00020\u0004X.¢\u0006\u000e\n\u0000\u001a\u0004\b\u0005\u0010\u0006\"\u0004\b\u0007\u0010\bR\u001a\u0010\t\u001a\u00020\nX.¢\u0006\u000e\n\u0000\u001a\u0004\b\u000b\u0010\f\"\u0004\b\r\u0010\u000eR\u001a\u0010\u000f\u001a\u00020\u0010X.¢\u0006\u000e\n\u0000\u001a\u0004\b\u0011\u0010\u0012\"\u0004\b\u0013\u0010\u0014R\u0014\u0010\u0015\u001a\u00020\u00168BX\u0004¢\u0006\u0006\u001a\u0004\b\u0017\u0010\u0018R\u000e\u0010\u0019\u001a\u00020\u001aX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u001b\u001a\u00020\u0016X\u000e¢\u0006\u0002\n\u0000R\u001a\u0010\u001c\u001a\u00020\u001dX.¢\u0006\u000e\n\u0000\u001a\u0004\b\u001e\u0010\u001f\"\u0004\b \u0010!¨\u0006)"}, mo65043d2 = {"Lcom/android/systemui/controls/ui/TouchBehavior;", "Lcom/android/systemui/controls/ui/Behavior;", "()V", "clipLayer", "Landroid/graphics/drawable/Drawable;", "getClipLayer", "()Landroid/graphics/drawable/Drawable;", "setClipLayer", "(Landroid/graphics/drawable/Drawable;)V", "control", "Landroid/service/controls/Control;", "getControl", "()Landroid/service/controls/Control;", "setControl", "(Landroid/service/controls/Control;)V", "cvh", "Lcom/android/systemui/controls/ui/ControlViewHolder;", "getCvh", "()Lcom/android/systemui/controls/ui/ControlViewHolder;", "setCvh", "(Lcom/android/systemui/controls/ui/ControlViewHolder;)V", "enabled", "", "getEnabled", "()Z", "lastColorOffset", "", "statelessTouch", "template", "Landroid/service/controls/templates/ControlTemplate;", "getTemplate", "()Landroid/service/controls/templates/ControlTemplate;", "setTemplate", "(Landroid/service/controls/templates/ControlTemplate;)V", "bind", "", "cws", "Lcom/android/systemui/controls/ui/ControlWithState;", "colorOffset", "initialize", "Companion", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* renamed from: com.android.systemui.controls.ui.TouchBehavior */
 /* compiled from: TouchBehavior.kt */
 public final class TouchBehavior implements Behavior {
@@ -84,7 +84,7 @@ public final class TouchBehavior implements Behavior {
         return this.lastColorOffset > 0 || this.statelessTouch;
     }
 
-    @Metadata(mo64986d1 = {"\u0000\u0012\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\t\n\u0000\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u000e\u0010\u0003\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000¨\u0006\u0005"}, mo64987d2 = {"Lcom/android/systemui/controls/ui/TouchBehavior$Companion;", "", "()V", "STATELESS_ENABLE_TIMEOUT_IN_MILLIS", "", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u0000\u0012\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\t\n\u0000\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u000e\u0010\u0003\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000¨\u0006\u0005"}, mo65043d2 = {"Lcom/android/systemui/controls/ui/TouchBehavior$Companion;", "", "()V", "STATELESS_ENABLE_TIMEOUT_IN_MILLIS", "", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* renamed from: com.android.systemui.controls.ui.TouchBehavior$Companion */
     /* compiled from: TouchBehavior.kt */
     public static final class Companion {
@@ -104,7 +104,7 @@ public final class TouchBehavior implements Behavior {
 
     /* access modifiers changed from: private */
     /* renamed from: initialize$lambda-1  reason: not valid java name */
-    public static final void m2733initialize$lambda1(ControlViewHolder controlViewHolder, TouchBehavior touchBehavior, View view) {
+    public static final void m2738initialize$lambda1(ControlViewHolder controlViewHolder, TouchBehavior touchBehavior, View view) {
         Intrinsics.checkNotNullParameter(controlViewHolder, "$cvh");
         Intrinsics.checkNotNullParameter(touchBehavior, "this$0");
         ControlActionCoordinator controlActionCoordinator = controlViewHolder.getControlActionCoordinator();
@@ -120,7 +120,7 @@ public final class TouchBehavior implements Behavior {
 
     /* access modifiers changed from: private */
     /* renamed from: initialize$lambda-1$lambda-0  reason: not valid java name */
-    public static final void m2734initialize$lambda1$lambda0(TouchBehavior touchBehavior, ControlViewHolder controlViewHolder) {
+    public static final void m2739initialize$lambda1$lambda0(TouchBehavior touchBehavior, ControlViewHolder controlViewHolder) {
         Intrinsics.checkNotNullParameter(touchBehavior, "this$0");
         Intrinsics.checkNotNullParameter(controlViewHolder, "$cvh");
         touchBehavior.statelessTouch = false;
@@ -143,7 +143,7 @@ public final class TouchBehavior implements Behavior {
         setTemplate(controlTemplate);
         Drawable background = getCvh().getLayout().getBackground();
         if (background != null) {
-            Drawable findDrawableByLayerId = ((LayerDrawable) background).findDrawableByLayerId(C1893R.C1897id.clip_layer);
+            Drawable findDrawableByLayerId = ((LayerDrawable) background).findDrawableByLayerId(C1894R.C1898id.clip_layer);
             Intrinsics.checkNotNullExpressionValue(findDrawableByLayerId, "ld.findDrawableByLayerId(R.id.clip_layer)");
             setClipLayer(findDrawableByLayerId);
             Drawable clipLayer2 = getClipLayer();

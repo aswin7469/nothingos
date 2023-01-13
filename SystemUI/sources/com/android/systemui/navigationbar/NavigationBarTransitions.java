@@ -7,7 +7,7 @@ import android.util.SparseArray;
 import android.view.IWallpaperVisibilityListener;
 import android.view.IWindowManager;
 import android.view.View;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.navigationbar.NavigationBarComponent;
 import com.android.systemui.navigationbar.buttons.ButtonDispatcher;
 import com.android.systemui.statusbar.phone.BarTransitions;
@@ -48,8 +48,8 @@ public final class NavigationBarTransitions extends BarTransitions implements Li
 
     @Inject
     public NavigationBarTransitions(NavigationBarView navigationBarView, IWindowManager iWindowManager, LightBarTransitionsController.Factory factory) {
-        super(navigationBarView, C1893R.C1895drawable.nav_background);
-        C22581 r1 = new IWallpaperVisibilityListener.Stub() {
+        super(navigationBarView, C1894R.C1896drawable.nav_background);
+        C22611 r1 = new IWallpaperVisibilityListener.Stub() {
             public void onWallpaperVisibilityChanged(boolean z, int i) throws RemoteException {
                 boolean unused = NavigationBarTransitions.this.mWallpaperVisible = z;
                 NavigationBarTransitions.this.mHandler.post(new NavigationBarTransitions$1$$ExternalSyntheticLambda0(this));
@@ -57,7 +57,7 @@ public final class NavigationBarTransitions extends BarTransitions implements Li
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onWallpaperVisibilityChanged$0$com-android-systemui-navigationbar-NavigationBarTransitions$1 */
-            public /* synthetic */ void mo34753x88dc2d7e() {
+            public /* synthetic */ void mo34757x88dc2d7e() {
                 NavigationBarTransitions.this.applyLightsOut(true, false);
             }
         };
@@ -65,7 +65,7 @@ public final class NavigationBarTransitions extends BarTransitions implements Li
         this.mView = navigationBarView;
         this.mWindowManagerService = iWindowManager;
         this.mLightTransitionsController = factory.create(this);
-        this.mAllowAutoDimWallpaperNotVisible = navigationBarView.getContext().getResources().getBoolean(C1893R.bool.config_navigation_bar_enable_auto_dim_no_visible_wallpaper);
+        this.mAllowAutoDimWallpaperNotVisible = navigationBarView.getContext().getResources().getBoolean(C1894R.bool.config_navigation_bar_enable_auto_dim_no_visible_wallpaper);
         this.mDarkIntensityListeners = new ArrayList();
         try {
             this.mWallpaperVisible = iWindowManager.registerWallpaperVisibilityListener(r1, 0);
@@ -74,16 +74,16 @@ public final class NavigationBarTransitions extends BarTransitions implements Li
         this.mView.addOnLayoutChangeListener(new NavigationBarTransitions$$ExternalSyntheticLambda0(this));
         View currentView = this.mView.getCurrentView();
         if (currentView != null) {
-            this.mNavButtons = currentView.findViewById(C1893R.C1897id.nav_buttons);
+            this.mNavButtons = currentView.findViewById(C1894R.C1898id.nav_buttons);
         }
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-navigationbar-NavigationBarTransitions */
-    public /* synthetic */ void mo34744x342af7d8(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
+    public /* synthetic */ void mo34748x342af7d8(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
         View currentView = this.mView.getCurrentView();
         if (currentView != null) {
-            this.mNavButtons = currentView.findViewById(C1893R.C1897id.nav_buttons);
+            this.mNavButtons = currentView.findViewById(C1894R.C1898id.nav_buttons);
             applyLightsOut(false, true);
         }
     }

@@ -28,7 +28,7 @@ public class NTUdfpsScanningViewController extends ViewController<LottieAnimatio
     private AuthController mAuthController;
     private AuthController.Callback mAuthControllerCallback = new AuthController.Callback() {
         public void onAllAuthenticatorsRegistered() {
-            NTLogUtil.m1682i(NTUdfpsScanningViewController.TAG, "onAllAuthenticatorsRegistered");
+            NTLogUtil.m1688i(NTUdfpsScanningViewController.TAG, "onAllAuthenticatorsRegistered");
             NTUdfpsScanningViewController.this.updateSensorLocation();
             NTUdfpsScanningViewController.this.updateUdfpsDependentParams();
         }
@@ -51,9 +51,9 @@ public class NTUdfpsScanningViewController extends ViewController<LottieAnimatio
     private UdfpsController mUdfpsController;
     private UdfpsController.Callback mUdfpsControllerCallback = new UdfpsController.Callback() {
         public void onFingerDown() {
-            NTLogUtil.m1682i(NTUdfpsScanningViewController.TAG, "onFingerDown mFingerprintSensorLocation=" + NTUdfpsScanningViewController.this.mFingerprintSensorLocation);
+            NTLogUtil.m1688i(NTUdfpsScanningViewController.TAG, "onFingerDown mFingerprintSensorLocation=" + NTUdfpsScanningViewController.this.mFingerprintSensorLocation);
             if (NTUdfpsScanningViewController.this.mFingerprintSensorLocation == null) {
-                NTLogUtil.m1682i(NTUdfpsScanningViewController.TAG, "fingerprintSensorLocation=null onFingerDown. Skip showing dwell ripple");
+                NTLogUtil.m1688i(NTUdfpsScanningViewController.TAG, "fingerprintSensorLocation=null onFingerDown. Skip showing dwell ripple");
                 return;
             }
             ((LottieAnimationView) NTUdfpsScanningViewController.this.mView).setVisibility(0);
@@ -61,7 +61,7 @@ public class NTUdfpsScanningViewController extends ViewController<LottieAnimatio
         }
 
         public void onFingerUp() {
-            NTLogUtil.m1680d(NTUdfpsScanningViewController.TAG, "onFingerUp: ");
+            NTLogUtil.m1686d(NTUdfpsScanningViewController.TAG, "onFingerUp: ");
             NTUdfpsScanningViewController.this.stopAnimation();
         }
     };
@@ -93,7 +93,7 @@ public class NTUdfpsScanningViewController extends ViewController<LottieAnimatio
 
     /* access modifiers changed from: protected */
     public void onInit() {
-        NTLogUtil.m1681e(TAG, "onInit=");
+        NTLogUtil.m1687e(TAG, "onInit=");
     }
 
     public void onViewAttached() {
@@ -101,7 +101,7 @@ public class NTUdfpsScanningViewController extends ViewController<LottieAnimatio
         updateSensorLocation();
         updateUdfpsDependentParams();
         if (this.mUdfpsController != null) {
-            NTLogUtil.m1682i(TAG, "mUdfpsController addCallback");
+            NTLogUtil.m1688i(TAG, "mUdfpsController addCallback");
             this.mUdfpsController.addCallback(this.mUdfpsControllerCallback);
         }
         this.mKeyguardUpdateMonitor.registerCallback(this.mKeyguardUpdateMonitorCallback);
@@ -135,16 +135,16 @@ public class NTUdfpsScanningViewController extends ViewController<LottieAnimatio
     /* access modifiers changed from: private */
     public void updateSensorLocation() {
         this.mFingerprintSensorLocation = this.mAuthController.getFingerprintSensorLocation();
-        NTLogUtil.m1682i(TAG, "updateSensorLocation fingerprintSensorLocation= " + this.mFingerprintSensorLocation);
+        NTLogUtil.m1688i(TAG, "updateSensorLocation fingerprintSensorLocation= " + this.mFingerprintSensorLocation);
     }
 
     /* access modifiers changed from: private */
     public void updateUdfpsDependentParams() {
-        NTLogUtil.m1682i(TAG, "updateUdfpsDependentParams");
+        NTLogUtil.m1688i(TAG, "updateUdfpsDependentParams");
     }
 
     private void updateViewLayoutParams() {
-        NTLogUtil.m1682i(TAG, "updateViewLayoutParams fingerprintSensorLocation= " + this.mFingerprintSensorLocation + ", mUdfpsScanningViewRadius=" + this.mUdfpsScanningViewSize);
+        NTLogUtil.m1688i(TAG, "updateViewLayoutParams fingerprintSensorLocation= " + this.mFingerprintSensorLocation + ", mUdfpsScanningViewRadius=" + this.mUdfpsScanningViewSize);
         ViewGroup.LayoutParams layoutParams = ((LottieAnimationView) this.mView).getLayoutParams();
         layoutParams.width = this.mUdfpsScanningViewSize;
         layoutParams.height = this.mUdfpsScanningViewSize;

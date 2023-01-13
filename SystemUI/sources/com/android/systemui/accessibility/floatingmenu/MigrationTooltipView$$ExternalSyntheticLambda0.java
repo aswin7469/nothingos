@@ -14,6 +14,6 @@ public final /* synthetic */ class MigrationTooltipView$$ExternalSyntheticLambda
     }
 
     public final void onClick(View view) {
-        this.f$0.mo30092x76f5a678(this.f$1, view);
+        this.f$0.mo30102x76f5a678(this.f$1, view);
     }
 }

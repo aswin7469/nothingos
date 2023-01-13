@@ -5,7 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import androidx.core.graphics.drawable.IconCompat;
 import com.android.internal.logging.UiEventLogger;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.broadcast.BroadcastSender;
 import com.android.systemui.dagger.SysUISingleton;
 
@@ -39,7 +39,7 @@ public class MediaOutputDialog extends MediaOutputBaseDialog {
 
     /* access modifiers changed from: package-private */
     public int getHeaderIconSize() {
-        return this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.media_output_dialog_header_album_icon_size);
+        return this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.media_output_dialog_header_album_icon_size);
     }
 
     /* access modifiers changed from: package-private */
@@ -76,7 +76,7 @@ public class MediaOutputDialog extends MediaOutputBaseDialog {
     }
 
     public CharSequence getStopButtonText() {
-        return this.mContext.getText((!isBroadcastSupported() || !this.mMediaOutputController.isPlaying() || this.mMediaOutputController.isBluetoothLeBroadcastEnabled()) ? C1893R.string.media_output_dialog_button_stop_casting : C1893R.string.media_output_broadcast);
+        return this.mContext.getText((!isBroadcastSupported() || !this.mMediaOutputController.isPlaying() || this.mMediaOutputController.isBluetoothLeBroadcastEnabled()) ? C1894R.string.media_output_dialog_button_stop_casting : C1894R.string.media_output_broadcast);
     }
 
     public void onStopButtonClick() {

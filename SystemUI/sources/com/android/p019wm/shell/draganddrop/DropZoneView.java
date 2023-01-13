@@ -16,7 +16,7 @@ import android.view.ViewOverlay;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import com.android.internal.policy.ScreenDecorationsUtils;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.animation.Interpolators;
 
 /* renamed from: com.android.wm.shell.draganddrop.DropZoneView */
@@ -94,14 +94,14 @@ public class DropZoneView extends FrameLayout {
         this.mContainerMargin = new float[4];
         setContainerMargin(0.0f, 0.0f, 0.0f, 0.0f);
         this.mCornerRadius = ScreenDecorationsUtils.getWindowCornerRadius(context);
-        this.mMarginColor = getResources().getColor(C3343R.C3344color.taskbar_background);
+        this.mMarginColor = getResources().getColor(C3353R.C3354color.taskbar_background);
         int color = getResources().getColor(17170494);
         this.mHighlightColor = Color.argb(1.0f, (float) Color.red(color), (float) Color.green(color), (float) Color.blue(color));
         this.mSplashScreenColor = Color.argb(0.9f, 0.0f, 0.0f, 0.0f);
         ColorDrawable colorDrawable = new ColorDrawable();
         this.mColorDrawable = colorDrawable;
         setBackgroundDrawable(colorDrawable);
-        int dimensionPixelSize = context.getResources().getDimensionPixelSize(C3343R.dimen.split_icon_size);
+        int dimensionPixelSize = context.getResources().getDimensionPixelSize(C3353R.dimen.split_icon_size);
         ImageView imageView = new ImageView(context);
         this.mSplashScreenView = imageView;
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
@@ -114,7 +114,7 @@ public class DropZoneView extends FrameLayout {
 
     public void onThemeChange() {
         this.mCornerRadius = ScreenDecorationsUtils.getWindowCornerRadius(getContext());
-        this.mMarginColor = getResources().getColor(C3343R.C3344color.taskbar_background);
+        this.mMarginColor = getResources().getColor(C3353R.C3354color.taskbar_background);
         this.mHighlightColor = getResources().getColor(17170494);
         if (this.mMarginPercent > 0.0f) {
             this.mMarginView.invalidate();

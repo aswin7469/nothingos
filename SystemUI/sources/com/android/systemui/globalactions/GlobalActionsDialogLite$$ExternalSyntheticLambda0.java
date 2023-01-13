@@ -11,6 +11,6 @@ public final /* synthetic */ class GlobalActionsDialogLite$$ExternalSyntheticLam
     }
 
     public final void onChanged(Object obj) {
-        this.f$0.mo32883x3753a6f2((Integer) obj);
+        this.f$0.mo32893x3753a6f2((Integer) obj);
     }
 }

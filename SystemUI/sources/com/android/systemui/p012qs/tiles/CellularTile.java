@@ -14,7 +14,7 @@ import android.view.View;
 import android.widget.Switch;
 import com.android.internal.logging.MetricsLogger;
 import com.android.settingslib.net.DataUsageController;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Prefs;
 import com.android.systemui.dagger.qualifiers.Background;
 import com.android.systemui.dagger.qualifiers.Main;
@@ -75,7 +75,7 @@ public class CellularTile extends QSTileImpl<QSTile.SignalState> {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$createTileView$0$com-android-systemui-qs-tiles-CellularTile */
-    public /* synthetic */ void mo36859xa5811257(View view) {
+    public /* synthetic */ void mo36856xa5811257(View view) {
         if (((QSTile.SignalState) getState()).state != 0) {
             if (this.mDataController.isMobileDataEnabled()) {
                 maybeShowDisableDialog();
@@ -87,7 +87,7 @@ public class CellularTile extends QSTileImpl<QSTile.SignalState> {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$createTileView$1$com-android-systemui-qs-tiles-CellularTile */
-    public /* synthetic */ boolean mo36860x686d7bb6(View view) {
+    public /* synthetic */ boolean mo36857x686d7bb6(View view) {
         handleLongClick(view);
         return true;
     }
@@ -120,9 +120,9 @@ public class CellularTile extends QSTileImpl<QSTile.SignalState> {
         String mobileDataNetworkName = this.mController.getMobileDataNetworkName();
         boolean isMobileDataNetworkInService = this.mController.isMobileDataNetworkInService();
         if (TextUtils.isEmpty(mobileDataNetworkName) || !isMobileDataNetworkInService) {
-            mobileDataNetworkName = this.mContext.getString(C1893R.string.mobile_data_disable_message_default_carrier);
+            mobileDataNetworkName = this.mContext.getString(C1894R.string.mobile_data_disable_message_default_carrier);
         }
-        AlertDialog create = new AlertDialog.Builder(this.mContext).setTitle(C1893R.string.mobile_data_disable_title).setMessage(this.mContext.getString(C1893R.string.mobile_data_disable_message, new Object[]{mobileDataNetworkName})).setNegativeButton(17039360, (DialogInterface.OnClickListener) null).setPositiveButton(17039659, new CellularTile$$ExternalSyntheticLambda2(this)).create();
+        AlertDialog create = new AlertDialog.Builder(this.mContext).setTitle(C1894R.string.mobile_data_disable_title).setMessage(this.mContext.getString(C1894R.string.mobile_data_disable_message, new Object[]{mobileDataNetworkName})).setNegativeButton(17039360, (DialogInterface.OnClickListener) null).setPositiveButton(17039659, new CellularTile$$ExternalSyntheticLambda2(this)).create();
         create.getWindow().setType(Types.SQLXML);
         SystemUIDialog.setShowForAllUsers(create, true);
         SystemUIDialog.registerDismissListener(create);
@@ -132,7 +132,7 @@ public class CellularTile extends QSTileImpl<QSTile.SignalState> {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$maybeShowDisableDialog$2$com-android-systemui-qs-tiles-CellularTile */
-    public /* synthetic */ void mo36861x40d52059(DialogInterface dialogInterface, int i) {
+    public /* synthetic */ void mo36858x40d52059(DialogInterface dialogInterface, int i) {
         this.mDataController.setMobileDataEnabled(false);
         Prefs.putBoolean(this.mContext, Prefs.Key.QS_HAS_TURNED_OFF_MOBILE_DATA, true);
     }
@@ -143,7 +143,7 @@ public class CellularTile extends QSTileImpl<QSTile.SignalState> {
     }
 
     public CharSequence getTileLabel() {
-        return this.mContext.getString(C1893R.string.quick_settings_cellular_detail_title);
+        return this.mContext.getString(C1894R.string.quick_settings_cellular_detail_title);
     }
 
     /* access modifiers changed from: protected */
@@ -154,23 +154,23 @@ public class CellularTile extends QSTileImpl<QSTile.SignalState> {
             callbackInfo = this.mSignalCallback.mInfo;
         }
         Resources resources = this.mContext.getResources();
-        signalState.label = resources.getString(C1893R.string.mobile_data);
+        signalState.label = resources.getString(C1894R.string.mobile_data);
         boolean z = this.mDataController.isMobileDataSupported() && this.mDataController.isMobileDataEnabled();
         signalState.value = z;
         signalState.activityIn = z && callbackInfo.activityIn;
         signalState.activityOut = z && callbackInfo.activityOut;
         signalState.expandedAccessibilityClassName = Switch.class.getName();
         if (callbackInfo.noSim) {
-            signalState.icon = QSTileImpl.ResourceIcon.get(C1893R.C1895drawable.ic_qs_no_sim);
+            signalState.icon = QSTileImpl.ResourceIcon.get(C1894R.C1896drawable.ic_qs_no_sim);
         } else {
-            signalState.icon = QSTileImpl.ResourceIcon.get(C1893R.C1895drawable.ic_swap_vert);
+            signalState.icon = QSTileImpl.ResourceIcon.get(C1894R.C1896drawable.ic_swap_vert);
         }
         if (callbackInfo.noSim) {
             signalState.state = 0;
-            signalState.secondaryLabel = resources.getString(C1893R.string.keyguard_missing_sim_message_short);
+            signalState.secondaryLabel = resources.getString(C1894R.string.keyguard_missing_sim_message_short);
         } else if (callbackInfo.airplaneModeEnabled) {
             signalState.state = 0;
-            signalState.secondaryLabel = resources.getString(C1893R.string.status_bar_airplane);
+            signalState.secondaryLabel = resources.getString(C1894R.string.status_bar_airplane);
         } else if (z) {
             signalState.state = 2;
             CharSequence charSequence2 = callbackInfo.dataSubscriptionName;
@@ -179,10 +179,11 @@ public class CellularTile extends QSTileImpl<QSTile.SignalState> {
             } else {
                 charSequence = "";
             }
-            signalState.secondaryLabel = appendMobileDataType(charSequence2, charSequence);
+            signalState.label = appendMobileDataType(charSequence2, charSequence);
+            signalState.secondaryLabel = this.mEx.getDataUsage(SubscriptionManager.getDefaultDataSubscriptionId(), this.mContext);
         } else {
             signalState.state = 1;
-            signalState.secondaryLabel = resources.getString(C1893R.string.cell_data_off);
+            signalState.secondaryLabel = resources.getString(C1894R.string.cell_data_off);
         }
         signalState.contentDescription = signalState.label;
         if (signalState.state == 1) {
@@ -199,16 +200,16 @@ public class CellularTile extends QSTileImpl<QSTile.SignalState> {
         if (TextUtils.isEmpty(charSequence)) {
             return Html.fromHtml(charSequence2.toString(), 0);
         }
-        return Html.fromHtml(this.mContext.getString(C1893R.string.mobile_carrier_text_format, new Object[]{charSequence, charSequence2}), 0);
+        return Html.fromHtml(this.mContext.getString(C1894R.string.mobile_carrier_text_format, new Object[]{charSequence, charSequence2}), 0);
     }
 
     private CharSequence getMobileDataContentName(CallbackInfo callbackInfo) {
         if (callbackInfo.roaming && !TextUtils.isEmpty(callbackInfo.dataContentDescription)) {
-            String string = this.mContext.getString(C1893R.string.data_connection_roaming);
+            String string = this.mContext.getString(C1894R.string.data_connection_roaming);
             String charSequence = callbackInfo.dataContentDescription.toString();
-            return this.mContext.getString(C1893R.string.mobile_data_text_format, new Object[]{string, charSequence});
+            return this.mContext.getString(C1894R.string.mobile_data_text_format, new Object[]{string, charSequence});
         } else if (callbackInfo.roaming) {
-            return this.mContext.getString(C1893R.string.data_connection_roaming);
+            return this.mContext.getString(C1894R.string.data_connection_roaming);
         } else {
             return callbackInfo.dataContentDescription;
         }

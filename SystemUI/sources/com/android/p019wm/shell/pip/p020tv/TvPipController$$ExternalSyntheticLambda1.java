@@ -10,6 +10,6 @@ public final /* synthetic */ class TvPipController$$ExternalSyntheticLambda1 imp
     }
 
     public final void run() {
-        this.f$0.m3479lambda$closePip$1$comandroidwmshellpiptvTvPipController();
+        this.f$0.m3483lambda$closePip$1$comandroidwmshellpiptvTvPipController();
     }
 }

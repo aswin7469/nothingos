@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.animation.Interpolator;
 import androidx.dynamicanimation.animation.DynamicAnimation;
 import androidx.dynamicanimation.animation.SpringForce;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.animation.Interpolators;
 import com.android.p019wm.shell.animation.PhysicsAnimator;
 import com.android.p019wm.shell.bubbles.BubblePositioner;
@@ -89,7 +89,7 @@ public class ExpandedAnimationController extends PhysicsAnimationLayout.PhysicsA
 
     public void updateResources() {
         if (this.mLayout != null) {
-            this.mStackOffsetPx = (float) this.mLayout.getContext().getResources().getDimensionPixelSize(C3343R.dimen.bubble_stack_offset);
+            this.mStackOffsetPx = (float) this.mLayout.getContext().getResources().getDimensionPixelSize(C3353R.dimen.bubble_stack_offset);
             this.mBubbleSizePx = (float) this.mPositioner.getBubbleSize();
         }
     }
@@ -106,7 +106,7 @@ public class ExpandedAnimationController extends PhysicsAnimationLayout.PhysicsA
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startOrUpdatePathAnimation$0$com-android-wm-shell-bubbles-animation-ExpandedAnimationController */
-    public /* synthetic */ void mo48852x669bdaf8() {
+    public /* synthetic */ void mo48861x669bdaf8() {
         this.mAnimatingExpand = false;
         Runnable runnable = this.mAfterExpand;
         if (runnable != null) {
@@ -118,7 +118,7 @@ public class ExpandedAnimationController extends PhysicsAnimationLayout.PhysicsA
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startOrUpdatePathAnimation$1$com-android-wm-shell-bubbles-animation-ExpandedAnimationController */
-    public /* synthetic */ void mo48853x309d757() {
+    public /* synthetic */ void mo48862x309d757() {
         this.mAnimatingCollapse = false;
         Runnable runnable = this.mAfterCollapse;
         if (runnable != null) {
@@ -129,7 +129,7 @@ public class ExpandedAnimationController extends PhysicsAnimationLayout.PhysicsA
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startOrUpdatePathAnimation$3$com-android-wm-shell-bubbles-animation-ExpandedAnimationController */
-    public /* synthetic */ void mo48855x3be5d015(boolean z, int i, PhysicsAnimationLayout.PhysicsPropertyAnimator physicsPropertyAnimator) {
+    public /* synthetic */ void mo48864x3be5d015(boolean z, int i, PhysicsAnimationLayout.PhysicsPropertyAnimator physicsPropertyAnimator) {
         int i2;
         View childAt = this.mLayout.getChildAt(i);
         Path path = new Path();
@@ -159,7 +159,7 @@ public class ExpandedAnimationController extends PhysicsAnimationLayout.PhysicsA
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startOrUpdatePathAnimation$2$com-android-wm-shell-bubbles-animation-ExpandedAnimationController */
-    public /* synthetic */ void mo48854x9f77d3b6() {
+    public /* synthetic */ void mo48863x9f77d3b6() {
         this.mLeadBubbleEndAction = null;
     }
 
@@ -171,7 +171,7 @@ public class ExpandedAnimationController extends PhysicsAnimationLayout.PhysicsA
         this.mLayout.cancelAnimationsOnView(view);
         view.setTranslationZ(32767.0f);
         final View view2 = view;
-        C34001 r1 = new MagnetizedObject<View>(this.mLayout.getContext(), view, DynamicAnimation.TRANSLATION_X, DynamicAnimation.TRANSLATION_Y) {
+        C34101 r1 = new MagnetizedObject<View>(this.mLayout.getContext(), view, DynamicAnimation.TRANSLATION_X, DynamicAnimation.TRANSLATION_Y) {
             public float getWidth(View view) {
                 return ExpandedAnimationController.this.mBubbleSizePx;
             }

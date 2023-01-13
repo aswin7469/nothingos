@@ -12,6 +12,6 @@ public final /* synthetic */ class OneHandedController$$ExternalSyntheticLambda2
     }
 
     public final void onStop() {
-        this.f$0.mo49858x48d93ae0();
+        this.f$0.mo49867x48d93ae0();
     }
 }

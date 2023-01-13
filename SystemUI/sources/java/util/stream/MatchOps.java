@@ -169,16 +169,16 @@ final class MatchOps {
     private static final class MatchTask<P_IN, P_OUT> extends AbstractShortCircuitTask<P_IN, P_OUT, Boolean, MatchTask<P_IN, P_OUT>> {
 
         /* renamed from: op */
-        private final MatchOp<P_OUT> f780op;
+        private final MatchOp<P_OUT> f778op;
 
         MatchTask(MatchOp<P_OUT> matchOp, PipelineHelper<P_OUT> pipelineHelper, Spliterator<P_IN> spliterator) {
             super(pipelineHelper, spliterator);
-            this.f780op = matchOp;
+            this.f778op = matchOp;
         }
 
         MatchTask(MatchTask<P_IN, P_OUT> matchTask, Spliterator<P_IN> spliterator) {
             super(matchTask, spliterator);
-            this.f780op = matchTask.f780op;
+            this.f778op = matchTask.f778op;
         }
 
         /* access modifiers changed from: protected */
@@ -188,8 +188,8 @@ final class MatchOps {
 
         /* access modifiers changed from: protected */
         public Boolean doLeaf() {
-            boolean andClearState = ((BooleanTerminalSink) this.helper.wrapAndCopyInto(this.f780op.sinkSupplier.get(), this.spliterator)).getAndClearState();
-            if (andClearState != this.f780op.matchKind.shortCircuitResult) {
+            boolean andClearState = ((BooleanTerminalSink) this.helper.wrapAndCopyInto(this.f778op.sinkSupplier.get(), this.spliterator)).getAndClearState();
+            if (andClearState != this.f778op.matchKind.shortCircuitResult) {
                 return null;
             }
             shortCircuit(Boolean.valueOf(andClearState));
@@ -198,7 +198,7 @@ final class MatchOps {
 
         /* access modifiers changed from: protected */
         public Boolean getEmptyResult() {
-            return Boolean.valueOf(!this.f780op.matchKind.shortCircuitResult);
+            return Boolean.valueOf(!this.f778op.matchKind.shortCircuitResult);
         }
     }
 }

@@ -3,13 +3,13 @@ package com.android.systemui.statusbar.notification;
 import android.util.Pools;
 import android.view.View;
 import com.android.internal.widget.MessagingImageMessage;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.statusbar.ViewTransformationHelper;
 import com.android.systemui.statusbar.notification.TransformState;
 
 public class MessagingImageTransformState extends ImageTransformState {
-    private static final int START_ACTUAL_HEIGHT = 2131429072;
-    private static final int START_ACTUAL_WIDTH = 2131429073;
+    private static final int START_ACTUAL_HEIGHT = 2131429089;
+    private static final int START_ACTUAL_WIDTH = 2131429090;
     private static Pools.SimplePool<MessagingImageTransformState> sInstancePool = new Pools.SimplePool<>(40);
     private MessagingImageMessage mImageMessage;
 
@@ -60,7 +60,7 @@ public class MessagingImageTransformState extends ImageTransformState {
     }
 
     public int getStartActualWidth() {
-        Object tag = this.mTransformedView.getTag(C1893R.C1897id.transformation_start_actual_width);
+        Object tag = this.mTransformedView.getTag(C1894R.C1898id.transformation_start_actual_width);
         if (tag == null) {
             return -1;
         }
@@ -68,11 +68,11 @@ public class MessagingImageTransformState extends ImageTransformState {
     }
 
     public void setStartActualWidth(int i) {
-        this.mTransformedView.setTag(C1893R.C1897id.transformation_start_actual_width, Integer.valueOf(i));
+        this.mTransformedView.setTag(C1894R.C1898id.transformation_start_actual_width, Integer.valueOf(i));
     }
 
     public int getStartActualHeight() {
-        Object tag = this.mTransformedView.getTag(C1893R.C1897id.transformation_start_actual_height);
+        Object tag = this.mTransformedView.getTag(C1894R.C1898id.transformation_start_actual_height);
         if (tag == null) {
             return -1;
         }
@@ -80,7 +80,7 @@ public class MessagingImageTransformState extends ImageTransformState {
     }
 
     public void setStartActualHeight(int i) {
-        this.mTransformedView.setTag(C1893R.C1897id.transformation_start_actual_height, Integer.valueOf(i));
+        this.mTransformedView.setTag(C1894R.C1898id.transformation_start_actual_height, Integer.valueOf(i));
     }
 
     public void recycle() {

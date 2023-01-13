@@ -15,6 +15,6 @@ public final /* synthetic */ class BubbleDataRepository$loadBubbles$1$$ExternalS
     }
 
     public final void run() {
-        BubbleDataRepository$loadBubbles$1.m3414invokeSuspend$lambda6(this.f$0, this.f$1);
+        BubbleDataRepository$loadBubbles$1.m3418invokeSuspend$lambda6(this.f$0, this.f$1);
     }
 }

@@ -708,9 +708,15 @@
     <string name="force_rtl_layout_all_locales_summary">Vsili smer postavitve na zaslonu od desne proti levi za vse jezike.</string>
     <string name="forced_resizable_secondary_display">Aplikacija morda ne bo delovala na sekundarnem zaslonu.</string>
     <string name="game_status">Igranje</string>
+    <string name="gamemode_description">Igralni način bo ugotovil, če igrate igro, in se bo za vas vklopil samodejno</string>
+    <string name="gamemode_gamedashboard_title">Nadzorna plošča za igre</string>
+    <string name="gamemode_notification_content">Tapnite za Nastavitve</string>
+    <string name="gamemode_notification_title">Igralni način je trenutno vklopljen</string>
     <string name="global_action_lock_message">Za več možnosti odklenite telefon</string>
     <string name="global_action_screenshot">Posnetek zaslona</string>
     <string name="global_action_smart_lock_disabled">Storitev Smart Lock je onemogočena.</string>
+    <string name="gm_guide_status_on">VKLOP</string>
+    <string name="gm_notification_title">Igralni način</string>
     <string name="go_to_web">Odpri brskalnik</string>
     <string name="got_it">Razumem</string>
     <string name="guest_exit_guest">Odstrani gosta</string>

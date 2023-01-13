@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.core.view.ViewCompat;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.navigation.NavigationBarItemView;
 import com.google.android.material.navigation.NavigationBarMenuView;
 
@@ -24,10 +24,10 @@ public class BottomNavigationMenuView extends NavigationBarMenuView {
         layoutParams.gravity = 17;
         setLayoutParams(layoutParams);
         Resources resources = getResources();
-        this.inactiveItemMaxWidth = resources.getDimensionPixelSize(C3621R.dimen.design_bottom_navigation_item_max_width);
-        this.inactiveItemMinWidth = resources.getDimensionPixelSize(C3621R.dimen.design_bottom_navigation_item_min_width);
-        this.activeItemMaxWidth = resources.getDimensionPixelSize(C3621R.dimen.design_bottom_navigation_active_item_max_width);
-        this.activeItemMinWidth = resources.getDimensionPixelSize(C3621R.dimen.design_bottom_navigation_active_item_min_width);
+        this.inactiveItemMaxWidth = resources.getDimensionPixelSize(C3631R.dimen.design_bottom_navigation_item_max_width);
+        this.inactiveItemMinWidth = resources.getDimensionPixelSize(C3631R.dimen.design_bottom_navigation_item_min_width);
+        this.activeItemMaxWidth = resources.getDimensionPixelSize(C3631R.dimen.design_bottom_navigation_active_item_max_width);
+        this.activeItemMinWidth = resources.getDimensionPixelSize(C3631R.dimen.design_bottom_navigation_active_item_min_width);
     }
 
     /* access modifiers changed from: protected */

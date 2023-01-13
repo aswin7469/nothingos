@@ -7,14 +7,14 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.PathInterpolator;
 import androidx.constraintlayout.motion.widget.Key;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import kotlin.Metadata;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 
-@Metadata(mo64986d1 = {"\u0000(\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\b\n\u0002\b\u0003\n\u0002\u0010\u0002\n\u0002\b\u0005\b\u0016\u0018\u0000 \u00102\u00020\u0001:\u0001\u0010B\u001d\b\u0016\u0012\b\u0010\u0002\u001a\u0004\u0018\u00010\u0003\u0012\n\b\u0002\u0010\u0004\u001a\u0004\u0018\u00010\u0005¢\u0006\u0002\u0010\u0006J\b\u0010\u0007\u001a\u00020\bH\u0014J\b\u0010\t\u001a\u00020\bH\u0014J\b\u0010\n\u001a\u00020\bH\u0014J\b\u0010\u000b\u001a\u00020\fH\u0014J\b\u0010\r\u001a\u00020\fH\u0014J\b\u0010\u000e\u001a\u00020\fH\u0002J\b\u0010\u000f\u001a\u00020\fH\u0014¨\u0006\u0011"}, mo64987d2 = {"Lcom/nothing/systemui/statusbar/notification/NTLightweightHeadsupNotificationToast;", "Lcom/nothing/systemui/statusbar/notification/NTLightweightHeadsupView;", "context", "Landroid/content/Context;", "attrs", "Landroid/util/AttributeSet;", "(Landroid/content/Context;Landroid/util/AttributeSet;)V", "calculateTextLayoutWidth", "", "getLayoutHeight", "getLayoutWidth", "init", "", "initAnimator", "initLayoutText", "initView", "Companion", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000(\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\b\n\u0002\b\u0003\n\u0002\u0010\u0002\n\u0002\b\u0005\b\u0016\u0018\u0000 \u00102\u00020\u0001:\u0001\u0010B\u001d\b\u0016\u0012\b\u0010\u0002\u001a\u0004\u0018\u00010\u0003\u0012\n\b\u0002\u0010\u0004\u001a\u0004\u0018\u00010\u0005¢\u0006\u0002\u0010\u0006J\b\u0010\u0007\u001a\u00020\bH\u0014J\b\u0010\t\u001a\u00020\bH\u0014J\b\u0010\n\u001a\u00020\bH\u0014J\b\u0010\u000b\u001a\u00020\fH\u0014J\b\u0010\r\u001a\u00020\fH\u0014J\b\u0010\u000e\u001a\u00020\fH\u0002J\b\u0010\u000f\u001a\u00020\fH\u0014¨\u0006\u0011"}, mo65043d2 = {"Lcom/nothing/systemui/statusbar/notification/NTLightweightHeadsupNotificationToast;", "Lcom/nothing/systemui/statusbar/notification/NTLightweightHeadsupView;", "context", "Landroid/content/Context;", "attrs", "Landroid/util/AttributeSet;", "(Landroid/content/Context;Landroid/util/AttributeSet;)V", "calculateTextLayoutWidth", "", "getLayoutHeight", "getLayoutWidth", "init", "", "initAnimator", "initLayoutText", "initView", "Companion", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* compiled from: NTLightweightHeadsupNotificationToast.kt */
 public class NTLightweightHeadsupNotificationToast extends NTLightweightHeadsupView {
     public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
@@ -61,7 +61,7 @@ public class NTLightweightHeadsupNotificationToast extends NTLightweightHeadsupV
             r3 = this;
             super.init()
             android.content.res.Resources r0 = r3.getResources()
-            r1 = 2131166647(0x7f0705b7, float:1.7947545E38)
+            r1 = 2131166653(0x7f0705bd, float:1.7947557E38)
             int r0 = r0.getDimensionPixelSize(r1)
             r3.setDiameter(r0)
             java.lang.String r0 = TAG
@@ -73,7 +73,7 @@ public class NTLightweightHeadsupNotificationToast extends NTLightweightHeadsupV
             java.lang.String r1 = r1.toString()
             android.util.Log.d(r0, r1)
             android.content.res.Resources r0 = r3.getResources()
-            r1 = 2131166686(0x7f0705de, float:1.7947624E38)
+            r1 = 2131166692(0x7f0705e4, float:1.7947637E38)
             int r0 = r0.getDimensionPixelSize(r1)
             r3.setMessagePaddingEnd(r0)
             int r0 = r3.getDiameter()
@@ -84,7 +84,7 @@ public class NTLightweightHeadsupNotificationToast extends NTLightweightHeadsupV
             if (r0 == 0) goto L_0x0059
             android.content.res.Resources r0 = r0.getResources()
             if (r0 == 0) goto L_0x0059
-            r2 = 2131166677(0x7f0705d5, float:1.7947606E38)
+            r2 = 2131166683(0x7f0705db, float:1.7947618E38)
             float r0 = r0.getDimension(r2)
             java.lang.Float r0 = java.lang.Float.valueOf((float) r0)
             goto L_0x005a
@@ -99,7 +99,7 @@ public class NTLightweightHeadsupNotificationToast extends NTLightweightHeadsupV
             android.content.res.Resources r1 = r0.getResources()
         L_0x006e:
             kotlin.jvm.internal.Intrinsics.checkNotNull(r1)
-            r0 = 2131166646(0x7f0705b6, float:1.7947543E38)
+            r0 = 2131166652(0x7f0705bc, float:1.7947555E38)
             float r0 = r1.getDimension(r0)
             float r0 = -r0
             float r1 = r3.getOFFSET_Y()
@@ -114,15 +114,20 @@ public class NTLightweightHeadsupNotificationToast extends NTLightweightHeadsupV
     /* access modifiers changed from: protected */
     public void initView() {
         super.initView();
-        getAppIconView().setImageDrawable(this.mContext.getDrawable(C1893R.C1895drawable.ic_game_mode));
+        getAppIconView().setImageDrawable(this.mContext.getDrawable(C1894R.C1896drawable.ic_game_mode));
         getContentView().setAlpha(0.6f);
+        float f = getResources().getConfiguration().fontScale;
+        if (!(f == 1.0f)) {
+            getContentView().setTextSize(2, (getContentView().getScaledTextSize() / f) / f);
+            getTitleView().setTextSize(2, (getTitleView().getScaledTextSize() / f) / f);
+        }
     }
 
     /* access modifiers changed from: protected */
     public int getLayoutWidth() {
-        int dimensionPixelSize = getResources().getDimensionPixelSize(C1893R.dimen.nt_game_mode_toast_margin_start) + getResources().getDimensionPixelSize(C1893R.dimen.nt_game_mode_toast_icon_diameter) + getResources().getDimensionPixelSize(C1893R.dimen.nt_game_mode_toast_margin_mid) + getResources().getDimensionPixelSize(C1893R.dimen.nt_game_mode_toast_margin_end) + getLargerTextViewWidth();
-        int dimensionPixelSize2 = getResources().getDimensionPixelSize(C1893R.dimen.nt_game_mode_toast_min_width);
-        int dimensionPixelSize3 = getResources().getDimensionPixelSize(C1893R.dimen.nt_game_mode_toast_max_width);
+        int dimensionPixelSize = getResources().getDimensionPixelSize(C1894R.dimen.nt_game_mode_toast_margin_start) + getResources().getDimensionPixelSize(C1894R.dimen.nt_game_mode_toast_icon_diameter) + getResources().getDimensionPixelSize(C1894R.dimen.nt_game_mode_toast_margin_mid) + getResources().getDimensionPixelSize(C1894R.dimen.nt_game_mode_toast_margin_end) + getLargerTextViewWidth();
+        int dimensionPixelSize2 = getResources().getDimensionPixelSize(C1894R.dimen.nt_game_mode_toast_min_width);
+        int dimensionPixelSize3 = getResources().getDimensionPixelSize(C1894R.dimen.nt_game_mode_toast_max_width);
         if (dimensionPixelSize3 > getScreenWidth()) {
             dimensionPixelSize3 = getScreenWidth();
         }
@@ -134,9 +139,9 @@ public class NTLightweightHeadsupNotificationToast extends NTLightweightHeadsupV
 
     /* access modifiers changed from: protected */
     public int calculateTextLayoutWidth() {
-        int dimensionPixelSize = getResources().getDimensionPixelSize(C1893R.dimen.nt_game_mode_toast_margin_start) + getResources().getDimensionPixelSize(C1893R.dimen.nt_game_mode_toast_icon_diameter) + getResources().getDimensionPixelSize(C1893R.dimen.nt_game_mode_toast_margin_mid) + getResources().getDimensionPixelSize(C1893R.dimen.nt_game_mode_toast_margin_end);
+        int dimensionPixelSize = getResources().getDimensionPixelSize(C1894R.dimen.nt_game_mode_toast_margin_start) + getResources().getDimensionPixelSize(C1894R.dimen.nt_game_mode_toast_icon_diameter) + getResources().getDimensionPixelSize(C1894R.dimen.nt_game_mode_toast_margin_mid) + getResources().getDimensionPixelSize(C1894R.dimen.nt_game_mode_toast_margin_end);
         int largerTextViewWidth = getLargerTextViewWidth();
-        int dimensionPixelSize2 = getResources().getDimensionPixelSize(C1893R.dimen.nt_game_mode_toast_max_width);
+        int dimensionPixelSize2 = getResources().getDimensionPixelSize(C1894R.dimen.nt_game_mode_toast_max_width);
         if (dimensionPixelSize2 > getScreenWidth()) {
             dimensionPixelSize2 = getScreenWidth();
         }
@@ -145,12 +150,12 @@ public class NTLightweightHeadsupNotificationToast extends NTLightweightHeadsupV
 
     /* access modifiers changed from: protected */
     public int getLayoutHeight() {
-        return getResources().getDimensionPixelSize(C1893R.dimen.nt_pop_view_height);
+        return getResources().getDimensionPixelSize(C1894R.dimen.nt_pop_view_height);
     }
 
     private final void initLayoutText() {
-        getTitleView().setText(C1893R.string.game_mode);
-        getContentView().setText(C1893R.string.f263on);
+        getTitleView().setText(C1894R.string.gm_notification_title);
+        getContentView().setText(C1894R.string.gm_guide_status_on);
     }
 
     /* access modifiers changed from: protected */
@@ -200,7 +205,7 @@ public class NTLightweightHeadsupNotificationToast extends NTLightweightHeadsupV
         getOutAnimatorSet().play(ofFloat7).with(getTranslationYOutAnimator());
     }
 
-    @Metadata(mo64986d1 = {"\u0000\u0012\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\u000e\n\u0000\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u000e\u0010\u0003\u001a\u00020\u0004X\u0004¢\u0006\u0002\n\u0000¨\u0006\u0005"}, mo64987d2 = {"Lcom/nothing/systemui/statusbar/notification/NTLightweightHeadsupNotificationToast$Companion;", "", "()V", "TAG", "", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u0000\u0012\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\u000e\n\u0000\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u000e\u0010\u0003\u001a\u00020\u0004X\u0004¢\u0006\u0002\n\u0000¨\u0006\u0005"}, mo65043d2 = {"Lcom/nothing/systemui/statusbar/notification/NTLightweightHeadsupNotificationToast$Companion;", "", "()V", "TAG", "", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* compiled from: NTLightweightHeadsupNotificationToast.kt */
     public static final class Companion {
         public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {

@@ -73,7 +73,7 @@ class LetterboxEduAnimationController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startEnterAnimation$1$com-android-wm-shell-compatui-letterboxedu-LetterboxEduAnimationController */
-    public /* synthetic */ void mo49433xa0979e06(Runnable runnable) {
+    public /* synthetic */ void mo49442xa0979e06(Runnable runnable) {
         this.mDialogAnimation = null;
         runnable.run();
     }
@@ -98,7 +98,7 @@ class LetterboxEduAnimationController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startExitAnimation$3$com-android-wm-shell-compatui-letterboxedu-LetterboxEduAnimationController */
-    public /* synthetic */ void mo49434xbcf86834(View view, Runnable runnable) {
+    public /* synthetic */ void mo49443xbcf86834(View view, Runnable runnable) {
         view.setAlpha(0.0f);
         this.mDialogAnimation = null;
         runnable.run();

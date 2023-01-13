@@ -61,7 +61,7 @@ public abstract class ActionDisabledLearnMoreButtonLauncher {
     }
 
     /* renamed from: showHelpPage */
-    public void mo28694xbb0b65cf(Context context, String str, UserHandle userHandle) {
+    public void mo28699xbb0b65cf(Context context, String str, UserHandle userHandle) {
         context.startActivityAsUser(createLearnMoreIntent(str), userHandle);
         finishSelf();
     }
@@ -73,7 +73,7 @@ public abstract class ActionDisabledLearnMoreButtonLauncher {
 
     /* access modifiers changed from: private */
     /* renamed from: showAdminPolicies */
-    public void mo28695xd743b19d(Context context, RestrictedLockUtils.EnforcedAdmin enforcedAdmin) {
+    public void mo28700xd743b19d(Context context, RestrictedLockUtils.EnforcedAdmin enforcedAdmin) {
         if (enforcedAdmin == null || enforcedAdmin.component == null) {
             launchShowAdminSettings(context);
         } else {

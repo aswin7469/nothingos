@@ -91,7 +91,7 @@ public class ScrollCaptureClient {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$request$0$com-android-systemui-screenshot-ScrollCaptureClient */
-    public /* synthetic */ Object mo37563xf116bb57(int i, int i2, final CallbackToFutureAdapter.Completer completer) throws Exception {
+    public /* synthetic */ Object mo37564xf116bb57(int i, int i2, final CallbackToFutureAdapter.Completer completer) throws Exception {
         try {
             this.mWindowManagerService.requestScrollCapture(i, this.mHostWindowToken, i2, new IScrollCaptureResponseListener.Stub() {
                 public void onScrollCaptureResponse(ScrollCaptureResponse scrollCaptureResponse) {
@@ -111,7 +111,7 @@ public class ScrollCaptureClient {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$start$1$com-android-systemui-screenshot-ScrollCaptureClient */
-    public /* synthetic */ Object mo37564xc725f2b(IScrollCaptureConnection iScrollCaptureConnection, ScrollCaptureResponse scrollCaptureResponse, float f, CallbackToFutureAdapter.Completer completer) throws Exception {
+    public /* synthetic */ Object mo37565xc725f2b(IScrollCaptureConnection iScrollCaptureConnection, ScrollCaptureResponse scrollCaptureResponse, float f, CallbackToFutureAdapter.Completer completer) throws Exception {
         if (iScrollCaptureConnection == null || !iScrollCaptureConnection.asBinder().isBinderAlive()) {
             completer.setException(new DeadObjectException("No active connection!"));
             return "";
@@ -195,7 +195,7 @@ public class ScrollCaptureClient {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$start$0$com-android-systemui-screenshot-ScrollCaptureClient$SessionWrapper */
-        public /* synthetic */ void mo37584xd9936b77() {
+        public /* synthetic */ void mo37585xd9936b77() {
             try {
                 this.mCancellationSignal.cancel();
             } catch (RemoteException unused) {
@@ -214,7 +214,7 @@ public class ScrollCaptureClient {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$requestTile$2$com-android-systemui-screenshot-ScrollCaptureClient$SessionWrapper */
-        public /* synthetic */ Object mo37583x975269da(CallbackToFutureAdapter.Completer completer) throws Exception {
+        public /* synthetic */ Object mo37584x975269da(CallbackToFutureAdapter.Completer completer) throws Exception {
             IScrollCaptureConnection iScrollCaptureConnection = this.mConnection;
             if (iScrollCaptureConnection == null || !iScrollCaptureConnection.asBinder().isBinderAlive()) {
                 completer.setException(new DeadObjectException("Connection is closed!"));
@@ -233,7 +233,7 @@ public class ScrollCaptureClient {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$requestTile$1$com-android-systemui-screenshot-ScrollCaptureClient$SessionWrapper */
-        public /* synthetic */ void mo37582xfae46d7b() {
+        public /* synthetic */ void mo37583xfae46d7b() {
             try {
                 this.mCancellationSignal.cancel();
             } catch (RemoteException unused) {
@@ -275,7 +275,7 @@ public class ScrollCaptureClient {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$end$3$com-android-systemui-screenshot-ScrollCaptureClient$SessionWrapper */
-        public /* synthetic */ Object mo37581xd5f9e2fb(CallbackToFutureAdapter.Completer completer) throws Exception {
+        public /* synthetic */ Object mo37582xd5f9e2fb(CallbackToFutureAdapter.Completer completer) throws Exception {
             if (!this.mStarted) {
                 try {
                     this.mConnection.asBinder().unlinkToDeath(this, 0);

@@ -62,7 +62,7 @@ public final class NetworkInterface {
             private int count = 0;
 
             /* renamed from: i */
-            private int f557i = 0;
+            private int f555i = 0;
             private InetAddress[] local_addrs;
 
             {
@@ -92,17 +92,17 @@ public final class NetworkInterface {
             }
 
             public InetAddress nextElement() {
-                int i = this.f557i;
+                int i = this.f555i;
                 if (i < this.count) {
                     InetAddress[] inetAddressArr = this.local_addrs;
-                    this.f557i = i + 1;
+                    this.f555i = i + 1;
                     return inetAddressArr[i];
                 }
                 throw new NoSuchElementException();
             }
 
             public boolean hasMoreElements() {
-                return this.f557i < this.count;
+                return this.f555i < this.count;
             }
         };
     }
@@ -198,7 +198,7 @@ public final class NetworkInterface {
     private static NetworkInterface[] getAll() throws SocketException {
         HashMap hashMap = new HashMap();
         try {
-            StructIfaddrs[] structIfaddrsArr = Libcore.f857os.getifaddrs();
+            StructIfaddrs[] structIfaddrsArr = Libcore.f855os.getifaddrs();
             if (structIfaddrsArr != null) {
                 for (StructIfaddrs structIfaddrs : structIfaddrsArr) {
                     String str = structIfaddrs.ifa_name;
@@ -212,7 +212,7 @@ public final class NetworkInterface {
                 HashMap hashMap2 = new HashMap(hashMap.size());
                 for (Map.Entry entry : hashMap.entrySet()) {
                     String str2 = (String) entry.getKey();
-                    int if_nametoindex = Libcore.f857os.if_nametoindex((String) entry.getKey());
+                    int if_nametoindex = Libcore.f855os.if_nametoindex((String) entry.getKey());
                     if (if_nametoindex != 0) {
                         NetworkInterface networkInterface = new NetworkInterface(str2, if_nametoindex, (InetAddress[]) null);
                         networkInterface.displayName = str2;

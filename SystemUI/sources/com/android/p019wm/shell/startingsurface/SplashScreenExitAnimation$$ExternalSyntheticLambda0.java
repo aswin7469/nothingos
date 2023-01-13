@@ -12,6 +12,6 @@ public final /* synthetic */ class SplashScreenExitAnimation$$ExternalSyntheticL
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        this.f$0.mo51087x2b507fc1(valueAnimator);
+        this.f$0.mo51098x2b507fc1(valueAnimator);
     }
 }

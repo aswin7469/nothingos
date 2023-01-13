@@ -7,7 +7,7 @@ import com.android.keyguard.EmergencyButtonController;
 import com.android.keyguard.KeyguardInputViewController;
 import com.android.keyguard.KeyguardSecurityModel;
 import com.android.keyguard.dagger.KeyguardBouncerScope;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.util.ViewController;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -138,21 +138,21 @@ public class KeyguardSecurityViewFlipperController extends ViewController<Keygua
     private int getLayoutIdFor(KeyguardSecurityModel.SecurityMode securityMode) {
         int i = C16321.f233xdc0e830a[securityMode.ordinal()];
         if (i == 1) {
-            return C1893R.layout.keyguard_pattern_view;
+            return C1894R.layout.keyguard_pattern_view;
         }
         if (i == 2) {
-            return C1893R.layout.keyguard_pin_view;
+            return C1894R.layout.keyguard_pin_view;
         }
         if (i == 3) {
-            return C1893R.layout.keyguard_password_view;
+            return C1894R.layout.keyguard_password_view;
         }
         if (i == 4) {
-            return C1893R.layout.keyguard_sim_pin_view;
+            return C1894R.layout.keyguard_sim_pin_view;
         }
         if (i != 5) {
             return 0;
         }
-        return C1893R.layout.keyguard_sim_puk_view;
+        return C1894R.layout.keyguard_sim_puk_view;
     }
 
     public void show(KeyguardInputViewController<KeyguardInputView> keyguardInputViewController) {

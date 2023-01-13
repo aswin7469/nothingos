@@ -24,6 +24,6 @@ public final /* synthetic */ class SplashscreenContentDrawer$$ExternalSyntheticL
     }
 
     public final void run() {
-        this.f$0.mo51107x7fa7d540(this.f$1, this.f$2, this.f$3, this.f$4, this.f$5);
+        this.f$0.mo51118x7fa7d540(this.f$1, this.f$2, this.f$3, this.f$4, this.f$5);
     }
 }

@@ -697,6 +697,6 @@ public class DatagramSocket implements Closeable {
     }
 
     public FileDescriptor getFileDescriptor$() {
-        return this.impl.f556fd;
+        return this.impl.f554fd;
     }
 }

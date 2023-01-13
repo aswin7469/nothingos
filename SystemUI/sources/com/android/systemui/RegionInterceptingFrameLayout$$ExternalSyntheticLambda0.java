@@ -11,6 +11,6 @@ public final /* synthetic */ class RegionInterceptingFrameLayout$$ExternalSynthe
     }
 
     public final void onComputeInternalInsets(ViewTreeObserver.InternalInsetsInfo internalInsetsInfo) {
-        this.f$0.m2522lambda$new$0$comandroidsystemuiRegionInterceptingFrameLayout(internalInsetsInfo);
+        this.f$0.m2528lambda$new$0$comandroidsystemuiRegionInterceptingFrameLayout(internalInsetsInfo);
     }
 }

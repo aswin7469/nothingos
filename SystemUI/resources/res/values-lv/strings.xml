@@ -708,9 +708,15 @@
     <string name="force_rtl_layout_all_locales_summary">Obl. izkārt. virz. no labās uz kr. pusi visām lok.</string>
     <string name="forced_resizable_secondary_display">Lietotne, iespējams, nedarbosies sekundārajā displejā.</string>
     <string name="game_status">Tiek spēlēta spēle…</string>
+    <string name="gamemode_description">Spēļu režīms nosaka, vai jūs spēlējat spēli, un automātiski ieslēdzas</string>
+    <string name="gamemode_gamedashboard_title">Spēļu informācijas panelis</string>
+    <string name="gamemode_notification_content">Pieskarieties, lai atvērtu opciju Iestatījumi</string>
+    <string name="gamemode_notification_title">Spēļu režīms pašlaik ir ieslēgts</string>
     <string name="global_action_lock_message">Atbloķējiet tālruni, lai skatītu citas opcijas.</string>
     <string name="global_action_screenshot">Ekrānuzņēmums</string>
     <string name="global_action_smart_lock_disabled">Sistēma Smart Lock ir atspējota</string>
+    <string name="gm_guide_status_on">IESL.</string>
+    <string name="gm_notification_title">Spēļu režīms</string>
     <string name="go_to_web">Atvērt pārlūku</string>
     <string name="got_it">Labi</string>
     <string name="guest_exit_guest">Noņemt viesi</string>

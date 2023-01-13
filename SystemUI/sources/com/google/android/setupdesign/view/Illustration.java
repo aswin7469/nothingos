@@ -10,7 +10,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewOutlineProvider;
 import android.widget.FrameLayout;
-import com.google.android.setupdesign.C3953R;
+import com.google.android.setupdesign.C3963R;
 
 public class Illustration extends FrameLayout {
     private float aspectRatio = 0.0f;
@@ -39,8 +39,8 @@ public class Illustration extends FrameLayout {
     private void init(AttributeSet attributeSet, int i) {
         if (!isInEditMode()) {
             if (attributeSet != null) {
-                TypedArray obtainStyledAttributes = getContext().obtainStyledAttributes(attributeSet, C3953R.styleable.SudIllustration, i, 0);
-                this.aspectRatio = obtainStyledAttributes.getFloat(C3953R.styleable.SudIllustration_sudAspectRatio, 0.0f);
+                TypedArray obtainStyledAttributes = getContext().obtainStyledAttributes(attributeSet, C3963R.styleable.SudIllustration, i, 0);
+                this.aspectRatio = obtainStyledAttributes.getFloat(C3963R.styleable.SudIllustration_sudAspectRatio, 0.0f);
                 obtainStyledAttributes.recycle();
             }
             this.baselineGridSize = getResources().getDisplayMetrics().density * 8.0f;

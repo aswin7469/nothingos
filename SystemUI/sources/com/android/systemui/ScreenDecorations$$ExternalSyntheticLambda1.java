@@ -9,6 +9,6 @@ public final /* synthetic */ class ScreenDecorations$$ExternalSyntheticLambda1 i
     }
 
     public final void run() {
-        this.f$0.m2527lambda$setupDecorations$2$comandroidsystemuiScreenDecorations();
+        this.f$0.m2533lambda$setupDecorations$2$comandroidsystemuiScreenDecorations();
     }
 }

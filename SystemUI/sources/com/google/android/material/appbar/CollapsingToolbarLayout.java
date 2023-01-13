@@ -25,7 +25,7 @@ import androidx.core.math.MathUtils;
 import androidx.core.util.ObjectsCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.animation.AnimationUtils;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.elevation.ElevationOverlayProvider;
@@ -36,7 +36,7 @@ import java.lang.annotation.RetentionPolicy;
 
 public class CollapsingToolbarLayout extends FrameLayout {
     private static final int DEFAULT_SCRIM_ANIMATION_DURATION = 600;
-    private static final int DEF_STYLE_RES = C3621R.style.Widget_Design_CollapsingToolbar;
+    private static final int DEF_STYLE_RES = C3631R.style.Widget_Design_CollapsingToolbar;
     public static final int TITLE_COLLAPSE_MODE_FADE = 1;
     public static final int TITLE_COLLAPSE_MODE_SCALE = 0;
     final CollapsingTextHelper collapsingTextHelper;
@@ -78,7 +78,7 @@ public class CollapsingToolbarLayout extends FrameLayout {
     }
 
     public CollapsingToolbarLayout(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, C3621R.attr.collapsingToolbarLayoutStyle);
+        this(context, attributeSet, C3631R.attr.collapsingToolbarLayoutStyle);
     }
 
     /* JADX WARNING: Illegal instructions before constructor call */
@@ -109,131 +109,131 @@ public class CollapsingToolbarLayout extends FrameLayout {
             com.google.android.material.elevation.ElevationOverlayProvider r0 = new com.google.android.material.elevation.ElevationOverlayProvider
             r0.<init>(r8)
             r10.elevationOverlayProvider = r0
-            int[] r2 = com.google.android.material.C3621R.styleable.CollapsingToolbarLayout
+            int[] r2 = com.google.android.material.C3631R.styleable.CollapsingToolbarLayout
             int[] r5 = new int[r7]
             r0 = r8
             r1 = r12
             r3 = r13
             android.content.res.TypedArray r12 = com.google.android.material.internal.ThemeEnforcement.obtainStyledAttributes(r0, r1, r2, r3, r4, r5)
-            int r13 = com.google.android.material.C3621R.styleable.CollapsingToolbarLayout_expandedTitleGravity
+            int r13 = com.google.android.material.C3631R.styleable.CollapsingToolbarLayout_expandedTitleGravity
             r0 = 8388691(0x800053, float:1.175506E-38)
             int r13 = r12.getInt(r13, r0)
             r9.setExpandedTextGravity(r13)
-            int r13 = com.google.android.material.C3621R.styleable.CollapsingToolbarLayout_collapsedTitleGravity
+            int r13 = com.google.android.material.C3631R.styleable.CollapsingToolbarLayout_collapsedTitleGravity
             r0 = 8388627(0x800013, float:1.175497E-38)
             int r13 = r12.getInt(r13, r0)
             r9.setCollapsedTextGravity(r13)
-            int r13 = com.google.android.material.C3621R.styleable.CollapsingToolbarLayout_expandedTitleMargin
+            int r13 = com.google.android.material.C3631R.styleable.CollapsingToolbarLayout_expandedTitleMargin
             int r13 = r12.getDimensionPixelSize(r13, r7)
             r10.expandedMarginBottom = r13
             r10.expandedMarginEnd = r13
             r10.expandedMarginTop = r13
             r10.expandedMarginStart = r13
-            int r13 = com.google.android.material.C3621R.styleable.CollapsingToolbarLayout_expandedTitleMarginStart
+            int r13 = com.google.android.material.C3631R.styleable.CollapsingToolbarLayout_expandedTitleMarginStart
             boolean r13 = r12.hasValue(r13)
             if (r13 == 0) goto L_0x0076
-            int r13 = com.google.android.material.C3621R.styleable.CollapsingToolbarLayout_expandedTitleMarginStart
+            int r13 = com.google.android.material.C3631R.styleable.CollapsingToolbarLayout_expandedTitleMarginStart
             int r13 = r12.getDimensionPixelSize(r13, r7)
             r10.expandedMarginStart = r13
         L_0x0076:
-            int r13 = com.google.android.material.C3621R.styleable.CollapsingToolbarLayout_expandedTitleMarginEnd
+            int r13 = com.google.android.material.C3631R.styleable.CollapsingToolbarLayout_expandedTitleMarginEnd
             boolean r13 = r12.hasValue(r13)
             if (r13 == 0) goto L_0x0086
-            int r13 = com.google.android.material.C3621R.styleable.CollapsingToolbarLayout_expandedTitleMarginEnd
+            int r13 = com.google.android.material.C3631R.styleable.CollapsingToolbarLayout_expandedTitleMarginEnd
             int r13 = r12.getDimensionPixelSize(r13, r7)
             r10.expandedMarginEnd = r13
         L_0x0086:
-            int r13 = com.google.android.material.C3621R.styleable.CollapsingToolbarLayout_expandedTitleMarginTop
+            int r13 = com.google.android.material.C3631R.styleable.CollapsingToolbarLayout_expandedTitleMarginTop
             boolean r13 = r12.hasValue(r13)
             if (r13 == 0) goto L_0x0096
-            int r13 = com.google.android.material.C3621R.styleable.CollapsingToolbarLayout_expandedTitleMarginTop
+            int r13 = com.google.android.material.C3631R.styleable.CollapsingToolbarLayout_expandedTitleMarginTop
             int r13 = r12.getDimensionPixelSize(r13, r7)
             r10.expandedMarginTop = r13
         L_0x0096:
-            int r13 = com.google.android.material.C3621R.styleable.CollapsingToolbarLayout_expandedTitleMarginBottom
+            int r13 = com.google.android.material.C3631R.styleable.CollapsingToolbarLayout_expandedTitleMarginBottom
             boolean r13 = r12.hasValue(r13)
             if (r13 == 0) goto L_0x00a6
-            int r13 = com.google.android.material.C3621R.styleable.CollapsingToolbarLayout_expandedTitleMarginBottom
+            int r13 = com.google.android.material.C3631R.styleable.CollapsingToolbarLayout_expandedTitleMarginBottom
             int r13 = r12.getDimensionPixelSize(r13, r7)
             r10.expandedMarginBottom = r13
         L_0x00a6:
-            int r13 = com.google.android.material.C3621R.styleable.CollapsingToolbarLayout_titleEnabled
+            int r13 = com.google.android.material.C3631R.styleable.CollapsingToolbarLayout_titleEnabled
             boolean r13 = r12.getBoolean(r13, r11)
             r10.collapsingTitleEnabled = r13
-            int r13 = com.google.android.material.C3621R.styleable.CollapsingToolbarLayout_title
+            int r13 = com.google.android.material.C3631R.styleable.CollapsingToolbarLayout_title
             java.lang.CharSequence r13 = r12.getText(r13)
             r10.setTitle(r13)
-            int r13 = com.google.android.material.C3621R.style.TextAppearance_Design_CollapsingToolbar_Expanded
+            int r13 = com.google.android.material.C3631R.style.TextAppearance_Design_CollapsingToolbar_Expanded
             r9.setExpandedTextAppearance(r13)
             int r13 = androidx.appcompat.C0329R.style.TextAppearance_AppCompat_Widget_ActionBar_Title
             r9.setCollapsedTextAppearance(r13)
-            int r13 = com.google.android.material.C3621R.styleable.CollapsingToolbarLayout_expandedTitleTextAppearance
+            int r13 = com.google.android.material.C3631R.styleable.CollapsingToolbarLayout_expandedTitleTextAppearance
             boolean r13 = r12.hasValue(r13)
             if (r13 == 0) goto L_0x00d2
-            int r13 = com.google.android.material.C3621R.styleable.CollapsingToolbarLayout_expandedTitleTextAppearance
+            int r13 = com.google.android.material.C3631R.styleable.CollapsingToolbarLayout_expandedTitleTextAppearance
             int r13 = r12.getResourceId(r13, r7)
             r9.setExpandedTextAppearance(r13)
         L_0x00d2:
-            int r13 = com.google.android.material.C3621R.styleable.CollapsingToolbarLayout_collapsedTitleTextAppearance
+            int r13 = com.google.android.material.C3631R.styleable.CollapsingToolbarLayout_collapsedTitleTextAppearance
             boolean r13 = r12.hasValue(r13)
             if (r13 == 0) goto L_0x00e3
-            int r13 = com.google.android.material.C3621R.styleable.CollapsingToolbarLayout_collapsedTitleTextAppearance
+            int r13 = com.google.android.material.C3631R.styleable.CollapsingToolbarLayout_collapsedTitleTextAppearance
             int r13 = r12.getResourceId(r13, r7)
             r9.setCollapsedTextAppearance(r13)
         L_0x00e3:
-            int r13 = com.google.android.material.C3621R.styleable.CollapsingToolbarLayout_expandedTitleTextColor
+            int r13 = com.google.android.material.C3631R.styleable.CollapsingToolbarLayout_expandedTitleTextColor
             boolean r13 = r12.hasValue(r13)
             if (r13 == 0) goto L_0x00f4
-            int r13 = com.google.android.material.C3621R.styleable.CollapsingToolbarLayout_expandedTitleTextColor
+            int r13 = com.google.android.material.C3631R.styleable.CollapsingToolbarLayout_expandedTitleTextColor
             android.content.res.ColorStateList r13 = com.google.android.material.resources.MaterialResources.getColorStateList((android.content.Context) r8, (android.content.res.TypedArray) r12, (int) r13)
             r9.setExpandedTextColor(r13)
         L_0x00f4:
-            int r13 = com.google.android.material.C3621R.styleable.CollapsingToolbarLayout_collapsedTitleTextColor
+            int r13 = com.google.android.material.C3631R.styleable.CollapsingToolbarLayout_collapsedTitleTextColor
             boolean r13 = r12.hasValue(r13)
             if (r13 == 0) goto L_0x0105
-            int r13 = com.google.android.material.C3621R.styleable.CollapsingToolbarLayout_collapsedTitleTextColor
+            int r13 = com.google.android.material.C3631R.styleable.CollapsingToolbarLayout_collapsedTitleTextColor
             android.content.res.ColorStateList r13 = com.google.android.material.resources.MaterialResources.getColorStateList((android.content.Context) r8, (android.content.res.TypedArray) r12, (int) r13)
             r9.setCollapsedTextColor(r13)
         L_0x0105:
-            int r13 = com.google.android.material.C3621R.styleable.CollapsingToolbarLayout_scrimVisibleHeightTrigger
+            int r13 = com.google.android.material.C3631R.styleable.CollapsingToolbarLayout_scrimVisibleHeightTrigger
             int r13 = r12.getDimensionPixelSize(r13, r6)
             r10.scrimVisibleHeightTrigger = r13
-            int r13 = com.google.android.material.C3621R.styleable.CollapsingToolbarLayout_maxLines
+            int r13 = com.google.android.material.C3631R.styleable.CollapsingToolbarLayout_maxLines
             boolean r13 = r12.hasValue(r13)
             if (r13 == 0) goto L_0x011e
-            int r13 = com.google.android.material.C3621R.styleable.CollapsingToolbarLayout_maxLines
+            int r13 = com.google.android.material.C3631R.styleable.CollapsingToolbarLayout_maxLines
             int r11 = r12.getInt(r13, r11)
             r9.setMaxLines(r11)
         L_0x011e:
-            int r11 = com.google.android.material.C3621R.styleable.CollapsingToolbarLayout_titlePositionInterpolator
+            int r11 = com.google.android.material.C3631R.styleable.CollapsingToolbarLayout_titlePositionInterpolator
             boolean r11 = r12.hasValue(r11)
             if (r11 == 0) goto L_0x0133
-            int r11 = com.google.android.material.C3621R.styleable.CollapsingToolbarLayout_titlePositionInterpolator
+            int r11 = com.google.android.material.C3631R.styleable.CollapsingToolbarLayout_titlePositionInterpolator
             int r11 = r12.getResourceId(r11, r7)
             android.view.animation.Interpolator r11 = android.view.animation.AnimationUtils.loadInterpolator(r8, r11)
             r9.setPositionInterpolator(r11)
         L_0x0133:
-            int r11 = com.google.android.material.C3621R.styleable.CollapsingToolbarLayout_scrimAnimationDuration
+            int r11 = com.google.android.material.C3631R.styleable.CollapsingToolbarLayout_scrimAnimationDuration
             r13 = 600(0x258, float:8.41E-43)
             int r11 = r12.getInt(r11, r13)
             long r0 = (long) r11
             r10.scrimAnimationDuration = r0
-            int r11 = com.google.android.material.C3621R.styleable.CollapsingToolbarLayout_contentScrim
+            int r11 = com.google.android.material.C3631R.styleable.CollapsingToolbarLayout_contentScrim
             android.graphics.drawable.Drawable r11 = r12.getDrawable(r11)
             r10.setContentScrim(r11)
-            int r11 = com.google.android.material.C3621R.styleable.CollapsingToolbarLayout_statusBarScrim
+            int r11 = com.google.android.material.C3631R.styleable.CollapsingToolbarLayout_statusBarScrim
             android.graphics.drawable.Drawable r11 = r12.getDrawable(r11)
             r10.setStatusBarScrim(r11)
-            int r11 = com.google.android.material.C3621R.styleable.CollapsingToolbarLayout_titleCollapseMode
+            int r11 = com.google.android.material.C3631R.styleable.CollapsingToolbarLayout_titleCollapseMode
             int r11 = r12.getInt(r11, r7)
             r10.setTitleCollapseMode(r11)
-            int r11 = com.google.android.material.C3621R.styleable.CollapsingToolbarLayout_toolbarId
+            int r11 = com.google.android.material.C3631R.styleable.CollapsingToolbarLayout_toolbarId
             int r11 = r12.getResourceId(r11, r6)
             r10.toolbarId = r11
-            int r11 = com.google.android.material.C3621R.styleable.CollapsingToolbarLayout_forceApplySystemWindowInsetTop
+            int r11 = com.google.android.material.C3631R.styleable.CollapsingToolbarLayout_forceApplySystemWindowInsetTop
             boolean r11 = r12.getBoolean(r11, r7)
             r10.forceApplySystemWindowInsetTop = r11
-            int r11 = com.google.android.material.C3621R.styleable.CollapsingToolbarLayout_extraMultilineHeightEnabled
+            int r11 = com.google.android.material.C3631R.styleable.CollapsingToolbarLayout_extraMultilineHeightEnabled
             boolean r11 = r12.getBoolean(r11, r7)
             r10.extraMultilineHeightEnabled = r11
             r12.recycle()
@@ -603,12 +603,12 @@ public class CollapsingToolbarLayout extends FrameLayout {
     }
 
     static ViewOffsetHelper getViewOffsetHelper(View view) {
-        ViewOffsetHelper viewOffsetHelper = (ViewOffsetHelper) view.getTag(C3621R.C3624id.view_offset_helper);
+        ViewOffsetHelper viewOffsetHelper = (ViewOffsetHelper) view.getTag(C3631R.C3634id.view_offset_helper);
         if (viewOffsetHelper != null) {
             return viewOffsetHelper;
         }
         ViewOffsetHelper viewOffsetHelper2 = new ViewOffsetHelper(view);
-        view.setTag(C3621R.C3624id.view_offset_helper, viewOffsetHelper2);
+        view.setTag(C3631R.C3634id.view_offset_helper, viewOffsetHelper2);
         return viewOffsetHelper2;
     }
 
@@ -633,7 +633,7 @@ public class CollapsingToolbarLayout extends FrameLayout {
             disableLiftOnScrollIfNeeded((AppBarLayout) parent);
         }
         if (isTitleCollapseFadeMode && this.contentScrim == null) {
-            setContentScrimColor(this.elevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(getResources().getDimension(C3621R.dimen.design_appbar_elevation)));
+            setContentScrimColor(this.elevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(getResources().getDimension(C3631R.dimen.design_appbar_elevation)));
         }
     }
 
@@ -1053,9 +1053,9 @@ public class CollapsingToolbarLayout extends FrameLayout {
 
         public LayoutParams(Context context, AttributeSet attributeSet) {
             super(context, attributeSet);
-            TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C3621R.styleable.CollapsingToolbarLayout_Layout);
-            this.collapseMode = obtainStyledAttributes.getInt(C3621R.styleable.CollapsingToolbarLayout_Layout_layout_collapseMode, 0);
-            setParallaxMultiplier(obtainStyledAttributes.getFloat(C3621R.styleable.CollapsingToolbarLayout_Layout_layout_collapseParallaxMultiplier, 0.5f));
+            TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C3631R.styleable.CollapsingToolbarLayout_Layout);
+            this.collapseMode = obtainStyledAttributes.getInt(C3631R.styleable.CollapsingToolbarLayout_Layout_layout_collapseMode, 0);
+            setParallaxMultiplier(obtainStyledAttributes.getFloat(C3631R.styleable.CollapsingToolbarLayout_Layout_layout_collapseParallaxMultiplier, 0.5f));
             obtainStyledAttributes.recycle();
         }
 

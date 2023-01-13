@@ -15,7 +15,7 @@ import sun.nio.p034cs.ArrayEncoder;
 final class ZipCoder {
 
     /* renamed from: cs */
-    private Charset f807cs;
+    private Charset f805cs;
     private CharsetDecoder dec;
     private CharsetEncoder enc;
     private boolean isUTF8;
@@ -115,7 +115,7 @@ final class ZipCoder {
     }
 
     private ZipCoder(Charset charset) {
-        this.f807cs = charset;
+        this.f805cs = charset;
         this.isUTF8 = charset.name().equals(StandardCharsets.UTF_8.name());
     }
 
@@ -125,14 +125,14 @@ final class ZipCoder {
 
     private CharsetDecoder decoder() {
         if (this.dec == null) {
-            this.dec = this.f807cs.newDecoder().onMalformedInput(CodingErrorAction.REPORT).onUnmappableCharacter(CodingErrorAction.REPORT);
+            this.dec = this.f805cs.newDecoder().onMalformedInput(CodingErrorAction.REPORT).onUnmappableCharacter(CodingErrorAction.REPORT);
         }
         return this.dec;
     }
 
     private CharsetEncoder encoder() {
         if (this.enc == null) {
-            this.enc = this.f807cs.newEncoder().onMalformedInput(CodingErrorAction.REPORT).onUnmappableCharacter(CodingErrorAction.REPORT);
+            this.enc = this.f805cs.newEncoder().onMalformedInput(CodingErrorAction.REPORT).onUnmappableCharacter(CodingErrorAction.REPORT);
         }
         return this.enc;
     }

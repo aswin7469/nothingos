@@ -11,6 +11,6 @@ public final /* synthetic */ class TransitionLayoutController$$ExternalSynthetic
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        TransitionLayoutController.m3304lambda1$lambda0(this.f$0, valueAnimator);
+        TransitionLayoutController.m3309lambda1$lambda0(this.f$0, valueAnimator);
     }
 }

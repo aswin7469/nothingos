@@ -708,9 +708,15 @@
     <string name="force_rtl_layout_all_locales_summary">모든 언어에 대해 화면 레이아웃 방향을 RTL로 강제 적용</string>
     <string name="forced_resizable_secondary_display">앱이 보조 디스플레이에서 작동하지 않을 수도 있습니다.</string>
     <string name="game_status">플레이 중</string>
+    <string name="gamemode_description">사용자가 게임 중인지를 확인하고 게임 모드가 자동으로 켜집니다</string>
+    <string name="gamemode_gamedashboard_title">게임 대시보드</string>
+    <string name="gamemode_notification_content">탭해서 설정으로 이동</string>
+    <string name="gamemode_notification_title">현재 게임 모드가 켜져 있습니다</string>
     <string name="global_action_lock_message">더 많은 옵션을 확인하려면 휴대전화를 잠금 해제하세요.</string>
     <string name="global_action_screenshot">스크린샷</string>
     <string name="global_action_smart_lock_disabled">Smart Lock 사용 중지됨</string>
+    <string name="gm_guide_status_on">켜기</string>
+    <string name="gm_notification_title">게임 모드</string>
     <string name="go_to_web">브라우저로 이동</string>
     <string name="got_it">확인</string>
     <string name="guest_exit_guest">게스트 삭제</string>

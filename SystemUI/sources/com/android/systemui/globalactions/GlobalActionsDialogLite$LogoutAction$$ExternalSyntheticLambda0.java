@@ -11,6 +11,6 @@ public final /* synthetic */ class GlobalActionsDialogLite$LogoutAction$$Externa
     }
 
     public final void run() {
-        this.f$0.mo32953x93287276();
+        this.f$0.mo32963x93287276();
     }
 }

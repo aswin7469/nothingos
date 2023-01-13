@@ -14,6 +14,6 @@ public final /* synthetic */ class TouchInsetManager$TouchInsetSession$$External
     }
 
     public final void run() {
-        this.f$0.mo46342xcffa8ed1(this.f$1);
+        this.f$0.mo46354xcffa8ed1(this.f$1);
     }
 }

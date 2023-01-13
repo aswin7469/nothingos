@@ -8,7 +8,7 @@ import kotlin.coroutines.Continuation;
 import kotlin.coroutines.CoroutineContext;
 import kotlin.jvm.functions.Function0;
 
-@Metadata(mo64986d1 = {"kotlinx/coroutines/JobKt__FutureKt", "kotlinx/coroutines/JobKt__JobKt"}, mo64988k = 4, mo64989mv = {1, 5, 1}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"kotlinx/coroutines/JobKt__FutureKt", "kotlinx/coroutines/JobKt__JobKt"}, mo65044k = 4, mo65045mv = {1, 5, 1}, mo65047xi = 48)
 public final class JobKt {
     public static final DisposableHandle DisposableHandle(Function0<Unit> function0) {
         return JobKt__JobKt.DisposableHandle(function0);

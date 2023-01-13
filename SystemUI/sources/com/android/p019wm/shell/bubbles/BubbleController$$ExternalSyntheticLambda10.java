@@ -14,6 +14,6 @@ public final /* synthetic */ class BubbleController$$ExternalSyntheticLambda10 i
     }
 
     public final void onBubbleViewsReady(Bubble bubble) {
-        this.f$0.mo48351xe764411(this.f$1, bubble);
+        this.f$0.mo48360xe764411(this.f$1, bubble);
     }
 }

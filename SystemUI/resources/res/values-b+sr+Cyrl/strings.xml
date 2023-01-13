@@ -12,6 +12,12 @@
     <string name="critical_temperature_warning_content">ваш телефон мора да се охлади пре него што будете могли да га користите</string>
     <string name="critical_temperature_warning_title">Висока температура</string>
     <string name="empty_shade_text">Нема обавештења</string>
+    <string name="gamemode_description">Режим играња ће утврдити да ли сте у игри и аутоматски ће се укључити за вас</string>
+    <string name="gamemode_gamedashboard_title">Контролна табла за игре</string>
+    <string name="gamemode_notification_content">Додирните да бисте отишли ​​у Поставке</string>
+    <string name="gamemode_notification_title">Режим играња је тренутно укључен</string>
+    <string name="gm_guide_status_on">УКЉУЧЕНО</string>
+    <string name="gm_notification_title">Режим играња</string>
     <string name="mic_mode_ambient_sound">Окружење</string>
     <string name="mic_mode_standard">Нормално</string>
     <string name="mic_mode_voice_focus">Фокус гласа</string>

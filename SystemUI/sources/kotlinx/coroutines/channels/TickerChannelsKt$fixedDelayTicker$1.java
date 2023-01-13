@@ -6,8 +6,8 @@ import kotlin.coroutines.Continuation;
 import kotlin.coroutines.jvm.internal.ContinuationImpl;
 import kotlin.coroutines.jvm.internal.DebugMetadata;
 
-@Metadata(mo64988k = 3, mo64989mv = {1, 5, 1}, mo64991xi = 48)
-@DebugMetadata(mo65240c = "kotlinx.coroutines.channels.TickerChannelsKt", mo65241f = "TickerChannels.kt", mo65242i = {0, 0, 1, 1, 2, 2}, mo65243l = {106, 108, 109}, mo65244m = "fixedDelayTicker", mo65245n = {"channel", "delayMillis", "channel", "delayMillis", "channel", "delayMillis"}, mo65246s = {"L$0", "J$0", "L$0", "J$0", "L$0", "J$0"})
+@Metadata(mo65044k = 3, mo65045mv = {1, 5, 1}, mo65047xi = 48)
+@DebugMetadata(mo65296c = "kotlinx.coroutines.channels.TickerChannelsKt", mo65297f = "TickerChannels.kt", mo65298i = {0, 0, 1, 1, 2, 2}, mo65299l = {106, 108, 109}, mo65300m = "fixedDelayTicker", mo65301n = {"channel", "delayMillis", "channel", "delayMillis", "channel", "delayMillis"}, mo65302s = {"L$0", "J$0", "L$0", "J$0", "L$0", "J$0"})
 /* compiled from: TickerChannels.kt */
 final class TickerChannelsKt$fixedDelayTicker$1 extends ContinuationImpl {
     long J$0;

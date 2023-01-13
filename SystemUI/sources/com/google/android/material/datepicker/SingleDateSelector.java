@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import androidx.core.util.Pair;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.internal.ManufacturerUtils;
 import com.google.android.material.internal.ViewUtils;
 import com.google.android.material.resources.MaterialAttributes;
@@ -73,8 +73,8 @@ public class SingleDateSelector implements DateSelector<Long> {
     }
 
     public View onCreateTextInputView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle, CalendarConstraints calendarConstraints, OnSelectionChangedListener<Long> onSelectionChangedListener) {
-        View inflate = layoutInflater.inflate(C3621R.layout.mtrl_picker_text_input_date, viewGroup, false);
-        TextInputLayout textInputLayout = (TextInputLayout) inflate.findViewById(C3621R.C3624id.mtrl_picker_text_input_date);
+        View inflate = layoutInflater.inflate(C3631R.layout.mtrl_picker_text_input_date, viewGroup, false);
+        TextInputLayout textInputLayout = (TextInputLayout) inflate.findViewById(C3631R.C3634id.mtrl_picker_text_input_date);
         EditText editText = textInputLayout.getEditText();
         if (ManufacturerUtils.isDateInputKeyboardMissingSeparatorCharacters()) {
             editText.setInputType(17);
@@ -108,21 +108,21 @@ public class SingleDateSelector implements DateSelector<Long> {
     }
 
     public int getDefaultThemeResId(Context context) {
-        return MaterialAttributes.resolveOrThrow(context, C3621R.attr.materialCalendarTheme, MaterialDatePicker.class.getCanonicalName());
+        return MaterialAttributes.resolveOrThrow(context, C3631R.attr.materialCalendarTheme, MaterialDatePicker.class.getCanonicalName());
     }
 
     public String getSelectionDisplayString(Context context) {
         Resources resources = context.getResources();
         Long l = this.selectedItem;
         if (l == null) {
-            return resources.getString(C3621R.string.mtrl_picker_date_header_unselected);
+            return resources.getString(C3631R.string.mtrl_picker_date_header_unselected);
         }
         String yearMonthDay = DateStrings.getYearMonthDay(l.longValue());
-        return resources.getString(C3621R.string.mtrl_picker_date_header_selected, new Object[]{yearMonthDay});
+        return resources.getString(C3631R.string.mtrl_picker_date_header_selected, new Object[]{yearMonthDay});
     }
 
     public int getDefaultTitleResId() {
-        return C3621R.string.mtrl_picker_date_header_title;
+        return C3631R.string.mtrl_picker_date_header_title;
     }
 
     public void writeToParcel(Parcel parcel, int i) {

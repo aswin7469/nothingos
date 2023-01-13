@@ -33,35 +33,35 @@ class HeapIntBuffer extends IntBuffer {
     }
 
     public IntBuffer slice() {
-        return new HeapIntBuffer(this.f570hb, -1, 0, remaining(), remaining(), this.offset + position(), this.isReadOnly);
+        return new HeapIntBuffer(this.f568hb, -1, 0, remaining(), remaining(), this.offset + position(), this.isReadOnly);
     }
 
     public IntBuffer duplicate() {
-        return new HeapIntBuffer(this.f570hb, markValue(), position(), limit(), capacity(), this.offset, this.isReadOnly);
+        return new HeapIntBuffer(this.f568hb, markValue(), position(), limit(), capacity(), this.offset, this.isReadOnly);
     }
 
     public IntBuffer asReadOnlyBuffer() {
-        return new HeapIntBuffer(this.f570hb, markValue(), position(), limit(), capacity(), this.offset, true);
+        return new HeapIntBuffer(this.f568hb, markValue(), position(), limit(), capacity(), this.offset, true);
     }
 
     /* access modifiers changed from: protected */
     /* renamed from: ix */
-    public int mo60912ix(int i) {
+    public int mo60968ix(int i) {
         return i + this.offset;
     }
 
     public int get() {
-        return this.f570hb[mo60912ix(nextGetIndex())];
+        return this.f568hb[mo60968ix(nextGetIndex())];
     }
 
     public int get(int i) {
-        return this.f570hb[mo60912ix(checkIndex(i))];
+        return this.f568hb[mo60968ix(checkIndex(i))];
     }
 
     public IntBuffer get(int[] iArr, int i, int i2) {
         checkBounds(i, i2, iArr.length);
         if (i2 <= remaining()) {
-            System.arraycopy((Object) this.f570hb, mo60912ix(position()), (Object) iArr, i, i2);
+            System.arraycopy((Object) this.f568hb, mo60968ix(position()), (Object) iArr, i, i2);
             position(position() + i2);
             return this;
         }
@@ -74,7 +74,7 @@ class HeapIntBuffer extends IntBuffer {
 
     public IntBuffer put(int i) {
         if (!this.isReadOnly) {
-            this.f570hb[mo60912ix(nextPutIndex())] = i;
+            this.f568hb[mo60968ix(nextPutIndex())] = i;
             return this;
         }
         throw new ReadOnlyBufferException();
@@ -82,7 +82,7 @@ class HeapIntBuffer extends IntBuffer {
 
     public IntBuffer put(int i, int i2) {
         if (!this.isReadOnly) {
-            this.f570hb[mo60912ix(checkIndex(i))] = i2;
+            this.f568hb[mo60968ix(checkIndex(i))] = i2;
             return this;
         }
         throw new ReadOnlyBufferException();
@@ -92,7 +92,7 @@ class HeapIntBuffer extends IntBuffer {
         if (!this.isReadOnly) {
             checkBounds(i, i2, iArr.length);
             if (i2 <= remaining()) {
-                System.arraycopy((Object) iArr, i, (Object) this.f570hb, mo60912ix(position()), i2);
+                System.arraycopy((Object) iArr, i, (Object) this.f568hb, mo60968ix(position()), i2);
                 position(position() + i2);
                 return this;
             }
@@ -109,7 +109,7 @@ class HeapIntBuffer extends IntBuffer {
                 HeapIntBuffer heapIntBuffer = (HeapIntBuffer) intBuffer;
                 int remaining = heapIntBuffer.remaining();
                 if (remaining <= remaining()) {
-                    System.arraycopy((Object) heapIntBuffer.f570hb, heapIntBuffer.mo60912ix(heapIntBuffer.position()), (Object) this.f570hb, mo60912ix(position()), remaining);
+                    System.arraycopy((Object) heapIntBuffer.f568hb, heapIntBuffer.mo60968ix(heapIntBuffer.position()), (Object) this.f568hb, mo60968ix(position()), remaining);
                     heapIntBuffer.position(heapIntBuffer.position() + remaining);
                     position(position() + remaining);
                 } else {
@@ -118,7 +118,7 @@ class HeapIntBuffer extends IntBuffer {
             } else if (intBuffer.isDirect()) {
                 int remaining2 = intBuffer.remaining();
                 if (remaining2 <= remaining()) {
-                    intBuffer.get(this.f570hb, mo60912ix(position()), remaining2);
+                    intBuffer.get(this.f568hb, mo60968ix(position()), remaining2);
                     position(position() + remaining2);
                 } else {
                     throw new BufferOverflowException();
@@ -134,7 +134,7 @@ class HeapIntBuffer extends IntBuffer {
 
     public IntBuffer compact() {
         if (!this.isReadOnly) {
-            System.arraycopy((Object) this.f570hb, mo60912ix(position()), (Object) this.f570hb, mo60912ix(0), remaining());
+            System.arraycopy((Object) this.f568hb, mo60968ix(position()), (Object) this.f568hb, mo60968ix(0), remaining());
             position(remaining());
             limit(capacity());
             discardMark();

@@ -12,6 +12,6 @@ public final /* synthetic */ class TaskView$$ExternalSyntheticLambda4 implements
     }
 
     public final void run() {
-        this.f$0.m3380lambda$onTaskVanished$9$comandroidwmshellTaskView(this.f$1);
+        this.f$0.m3384lambda$onTaskVanished$9$comandroidwmshellTaskView(this.f$1);
     }
 }

@@ -12,6 +12,6 @@ public final /* synthetic */ class CentralSurfacesImpl$$ExternalSyntheticLambda3
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo43911x47c7eaa1((Bubbles) obj);
+        this.f$0.mo43920x47c7eaa1((Bubbles) obj);
     }
 }

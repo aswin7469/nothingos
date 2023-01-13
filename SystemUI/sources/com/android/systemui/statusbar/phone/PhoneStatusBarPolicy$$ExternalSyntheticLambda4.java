@@ -11,6 +11,6 @@ public final /* synthetic */ class PhoneStatusBarPolicy$$ExternalSyntheticLambda
     }
 
     public final void onChanged(Object obj) {
-        this.f$0.mo44962x439b9625((Integer) obj);
+        this.f$0.mo44977x439b9625((Integer) obj);
     }
 }

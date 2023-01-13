@@ -82,32 +82,32 @@ class LinuxWatchService extends AbstractWatchService {
         private final int ifd;
 
         /* renamed from: wd */
-        private volatile int f908wd;
+        private volatile int f906wd;
 
         LinuxWatchKey(UnixPath unixPath, LinuxWatchService linuxWatchService, int i, int i2) {
             super(unixPath, linuxWatchService);
             this.ifd = i;
-            this.f908wd = i2;
+            this.f906wd = i2;
         }
 
         /* access modifiers changed from: package-private */
         public int descriptor() {
-            return this.f908wd;
+            return this.f906wd;
         }
 
         /* access modifiers changed from: package-private */
         public void invalidate(boolean z) {
             if (z) {
                 try {
-                    LinuxWatchService.inotifyRmWatch(this.ifd, this.f908wd);
+                    LinuxWatchService.inotifyRmWatch(this.ifd, this.f906wd);
                 } catch (UnixException unused) {
                 }
             }
-            this.f908wd = -1;
+            this.f906wd = -1;
         }
 
         public boolean isValid() {
-            return this.f908wd != -1;
+            return this.f906wd != -1;
         }
 
         public void cancel() {
@@ -138,7 +138,7 @@ class LinuxWatchService extends AbstractWatchService {
         private final long address = LinuxWatchService.unsafe.allocateMemory(8192);
 
         /* renamed from: fs */
-        private final UnixFileSystem f909fs;
+        private final UnixFileSystem f907fs;
         private final CloseGuard guard;
         private final int ifd;
         private final int[] socketpair;
@@ -157,7 +157,7 @@ class LinuxWatchService extends AbstractWatchService {
         Poller(UnixFileSystem fs, LinuxWatchService watcher2, int ifd2, int[] sp) {
             CloseGuard closeGuard = CloseGuard.get();
             this.guard = closeGuard;
-            this.f909fs = fs;
+            this.f907fs = fs;
             this.watcher = watcher2;
             this.ifd = ifd2;
             this.socketpair = sp;
@@ -320,7 +320,7 @@ class LinuxWatchService extends AbstractWatchService {
                             }
                             i2 = r2;
                             long j2 = j;
-                            unixPath = new UnixPath(this.f909fs, bArr);
+                            unixPath = new UnixPath(this.f907fs, bArr);
                             processEvent(i6, i7, unixPath);
                             i5 += SIZEOF_INOTIFY_EVENT + i8;
                             r2 = i2;

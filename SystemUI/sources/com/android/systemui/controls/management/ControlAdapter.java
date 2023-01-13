@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.recyclerview.widget.RecyclerView;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.controls.ControlInterface;
 import java.util.List;
 import kotlin.Metadata;
@@ -16,7 +16,7 @@ import kotlin.jvm.JvmStatic;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 
-@Metadata(mo64986d1 = {"\u0000>\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0007\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0010\b\n\u0002\b\u0006\n\u0002\u0010!\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0003\u0018\u0000 \u00182\b\u0012\u0004\u0012\u00020\u00020\u0001:\u0001\u0018B\r\u0012\u0006\u0010\u0003\u001a\u00020\u0004¢\u0006\u0002\u0010\u0005J\u000e\u0010\b\u001a\u00020\t2\u0006\u0010\u0006\u001a\u00020\u0007J\b\u0010\n\u001a\u00020\u000bH\u0016J\u0010\u0010\f\u001a\u00020\u000b2\u0006\u0010\r\u001a\u00020\u000bH\u0016J\u0018\u0010\u000e\u001a\u00020\t2\u0006\u0010\u000f\u001a\u00020\u00022\u0006\u0010\u0010\u001a\u00020\u000bH\u0016J&\u0010\u000e\u001a\u00020\t2\u0006\u0010\u000f\u001a\u00020\u00022\u0006\u0010\r\u001a\u00020\u000b2\f\u0010\u0011\u001a\b\u0012\u0004\u0012\u00020\u00130\u0012H\u0016J\u0018\u0010\u0014\u001a\u00020\u00022\u0006\u0010\u0015\u001a\u00020\u00162\u0006\u0010\u0017\u001a\u00020\u000bH\u0016R\u000e\u0010\u0003\u001a\u00020\u0004X\u0004¢\u0006\u0002\n\u0000R\u0010\u0010\u0006\u001a\u0004\u0018\u00010\u0007X\u000e¢\u0006\u0002\n\u0000¨\u0006\u0019"}, mo64987d2 = {"Lcom/android/systemui/controls/management/ControlAdapter;", "Landroidx/recyclerview/widget/RecyclerView$Adapter;", "Lcom/android/systemui/controls/management/Holder;", "elevation", "", "(F)V", "model", "Lcom/android/systemui/controls/management/ControlsModel;", "changeModel", "", "getItemCount", "", "getItemViewType", "position", "onBindViewHolder", "holder", "index", "payloads", "", "", "onCreateViewHolder", "parent", "Landroid/view/ViewGroup;", "viewType", "Companion", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000>\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0007\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0010\b\n\u0002\b\u0006\n\u0002\u0010!\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0003\u0018\u0000 \u00182\b\u0012\u0004\u0012\u00020\u00020\u0001:\u0001\u0018B\r\u0012\u0006\u0010\u0003\u001a\u00020\u0004¢\u0006\u0002\u0010\u0005J\u000e\u0010\b\u001a\u00020\t2\u0006\u0010\u0006\u001a\u00020\u0007J\b\u0010\n\u001a\u00020\u000bH\u0016J\u0010\u0010\f\u001a\u00020\u000b2\u0006\u0010\r\u001a\u00020\u000bH\u0016J\u0018\u0010\u000e\u001a\u00020\t2\u0006\u0010\u000f\u001a\u00020\u00022\u0006\u0010\u0010\u001a\u00020\u000bH\u0016J&\u0010\u000e\u001a\u00020\t2\u0006\u0010\u000f\u001a\u00020\u00022\u0006\u0010\r\u001a\u00020\u000b2\f\u0010\u0011\u001a\b\u0012\u0004\u0012\u00020\u00130\u0012H\u0016J\u0018\u0010\u0014\u001a\u00020\u00022\u0006\u0010\u0015\u001a\u00020\u00162\u0006\u0010\u0017\u001a\u00020\u000bH\u0016R\u000e\u0010\u0003\u001a\u00020\u0004X\u0004¢\u0006\u0002\n\u0000R\u0010\u0010\u0006\u001a\u0004\u0018\u00010\u0007X\u000e¢\u0006\u0002\n\u0000¨\u0006\u0019"}, mo65043d2 = {"Lcom/android/systemui/controls/management/ControlAdapter;", "Landroidx/recyclerview/widget/RecyclerView$Adapter;", "Lcom/android/systemui/controls/management/Holder;", "elevation", "", "(F)V", "model", "Lcom/android/systemui/controls/management/ControlsModel;", "changeModel", "", "getItemCount", "", "getItemViewType", "position", "onBindViewHolder", "holder", "index", "payloads", "", "", "onCreateViewHolder", "parent", "Landroid/view/ViewGroup;", "viewType", "Companion", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* compiled from: ControlAdapter.kt */
 public final class ControlAdapter extends RecyclerView.Adapter<Holder> {
     public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
@@ -36,7 +36,7 @@ public final class ControlAdapter extends RecyclerView.Adapter<Holder> {
         this.elevation = f;
     }
 
-    @Metadata(mo64986d1 = {"\u0000\u001a\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\b\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0000\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002J\u0010\u0010\u0007\u001a\u00020\u00042\u0006\u0010\b\u001a\u00020\tH\u0007R\u000e\u0010\u0003\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0005\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0006\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000¨\u0006\n"}, mo64987d2 = {"Lcom/android/systemui/controls/management/ControlAdapter$Companion;", "", "()V", "TYPE_CONTROL", "", "TYPE_DIVIDER", "TYPE_ZONE", "findMaxColumns", "res", "Landroid/content/res/Resources;", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u0000\u001a\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\b\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0000\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002J\u0010\u0010\u0007\u001a\u00020\u00042\u0006\u0010\b\u001a\u00020\tH\u0007R\u000e\u0010\u0003\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0005\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0006\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000¨\u0006\n"}, mo65043d2 = {"Lcom/android/systemui/controls/management/ControlAdapter$Companion;", "", "()V", "TYPE_CONTROL", "", "TYPE_DIVIDER", "TYPE_ZONE", "findMaxColumns", "res", "Landroid/content/res/Resources;", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* compiled from: ControlAdapter.kt */
     public static final class Companion {
         public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
@@ -49,11 +49,11 @@ public final class ControlAdapter extends RecyclerView.Adapter<Holder> {
         @JvmStatic
         public final int findMaxColumns(Resources resources) {
             Intrinsics.checkNotNullParameter(resources, "res");
-            int integer = resources.getInteger(C1893R.integer.controls_max_columns);
-            int integer2 = resources.getInteger(C1893R.integer.controls_max_columns_adjust_below_width_dp);
+            int integer = resources.getInteger(C1894R.integer.controls_max_columns);
+            int integer2 = resources.getInteger(C1894R.integer.controls_max_columns_adjust_below_width_dp);
             TypedValue typedValue = new TypedValue();
             boolean z = true;
-            resources.getValue(C1893R.dimen.controls_max_columns_adjust_above_font_scale, typedValue, true);
+            resources.getValue(C1894R.dimen.controls_max_columns_adjust_above_font_scale, typedValue, true);
             float f = typedValue.getFloat();
             Configuration configuration = resources.getConfiguration();
             if (configuration.orientation != 1) {
@@ -67,11 +67,11 @@ public final class ControlAdapter extends RecyclerView.Adapter<Holder> {
         Intrinsics.checkNotNullParameter(viewGroup, "parent");
         LayoutInflater from = LayoutInflater.from(viewGroup.getContext());
         if (i == 0) {
-            View inflate = from.inflate(C1893R.layout.controls_zone_header, viewGroup, false);
+            View inflate = from.inflate(C1894R.layout.controls_zone_header, viewGroup, false);
             Intrinsics.checkNotNullExpressionValue(inflate, "layoutInflater.inflate(R…ne_header, parent, false)");
             return new ZoneHolder(inflate);
         } else if (i == 1) {
-            View inflate2 = from.inflate(C1893R.layout.controls_base_item, viewGroup, false);
+            View inflate2 = from.inflate(C1894R.layout.controls_base_item, viewGroup, false);
             ViewGroup.LayoutParams layoutParams = inflate2.getLayoutParams();
             if (layoutParams != null) {
                 ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) layoutParams;
@@ -81,14 +81,14 @@ public final class ControlAdapter extends RecyclerView.Adapter<Holder> {
                 marginLayoutParams.leftMargin = 0;
                 marginLayoutParams.rightMargin = 0;
                 inflate2.setElevation(this.elevation);
-                inflate2.setBackground(viewGroup.getContext().getDrawable(C1893R.C1895drawable.control_background_ripple));
+                inflate2.setBackground(viewGroup.getContext().getDrawable(C1894R.C1896drawable.control_background_ripple));
                 Intrinsics.checkNotNullExpressionValue(inflate2, "layoutInflater.inflate(R…le)\n                    }");
                 ControlsModel controlsModel = this.model;
                 return new ControlHolder(inflate2, controlsModel != null ? controlsModel.getMoveHelper() : null, new ControlAdapter$onCreateViewHolder$2(this));
             }
             throw new NullPointerException("null cannot be cast to non-null type android.view.ViewGroup.MarginLayoutParams");
         } else if (i == 2) {
-            View inflate3 = from.inflate(C1893R.layout.controls_horizontal_divider_with_empty, viewGroup, false);
+            View inflate3 = from.inflate(C1894R.layout.controls_horizontal_divider_with_empty, viewGroup, false);
             Intrinsics.checkNotNullExpressionValue(inflate3, "layoutInflater.inflate(\n…ith_empty, parent, false)");
             return new DividerHolder(inflate3);
         } else {

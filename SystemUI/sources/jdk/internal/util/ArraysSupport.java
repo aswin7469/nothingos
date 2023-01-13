@@ -15,7 +15,7 @@ public class ArraysSupport {
     private static final int LOG2_BYTE_BIT_SIZE = exactLog2(8);
 
     /* renamed from: U */
-    static final Unsafe f832U = Unsafe.getUnsafe();
+    static final Unsafe f830U = Unsafe.getUnsafe();
 
     private static int exactLog2(int i) {
         if (((i - 1) & i) == 0) {
@@ -32,7 +32,7 @@ public class ArraysSupport {
         int i4 = 0;
         while (i4 < (i >> i3)) {
             long j3 = ((long) i4) << LOG2_ARRAY_LONG_INDEX_SCALE;
-            Unsafe unsafe = f832U;
+            Unsafe unsafe = f830U;
             long longUnaligned = unsafe.getLongUnaligned(obj, j + j3);
             long longUnaligned2 = unsafe.getLongUnaligned(obj2, j3 + j2);
             if (longUnaligned != longUnaligned2) {
@@ -49,7 +49,7 @@ public class ArraysSupport {
         int i8 = 1 << (i7 - i2);
         if (i6 >= i8) {
             long j4 = ((long) i4) << LOG2_ARRAY_LONG_INDEX_SCALE;
-            Unsafe unsafe2 = f832U;
+            Unsafe unsafe2 = f830U;
             int intUnaligned = unsafe2.getIntUnaligned(obj, j + j4);
             int intUnaligned2 = unsafe2.getIntUnaligned(obj2, j2 + j4);
             if (intUnaligned != intUnaligned2) {

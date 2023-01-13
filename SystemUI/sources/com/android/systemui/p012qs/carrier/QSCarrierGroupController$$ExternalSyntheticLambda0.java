@@ -12,6 +12,6 @@ public final /* synthetic */ class QSCarrierGroupController$$ExternalSyntheticLa
     }
 
     public final void onClick(View view) {
-        this.f$0.mo36464xe730b13a(view);
+        this.f$0.mo36468xe730b13a(view);
     }
 }

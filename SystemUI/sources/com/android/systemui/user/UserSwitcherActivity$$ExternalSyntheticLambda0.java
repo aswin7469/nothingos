@@ -14,6 +14,6 @@ public final /* synthetic */ class UserSwitcherActivity$$ExternalSyntheticLambda
     }
 
     public final void onClick(View view) {
-        UserSwitcherActivity.m3296buildUserViews$lambda9(this.f$0, this.f$1, view);
+        UserSwitcherActivity.m3301buildUserViews$lambda9(this.f$0, this.f$1, view);
     }
 }

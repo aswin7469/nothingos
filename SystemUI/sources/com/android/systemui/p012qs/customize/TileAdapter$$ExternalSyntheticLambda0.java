@@ -12,6 +12,6 @@ public final /* synthetic */ class TileAdapter$$ExternalSyntheticLambda0 impleme
     }
 
     public final void run() {
-        this.f$0.mo36528xba7506ba(this.f$1);
+        this.f$0.mo36532xba7506ba(this.f$1);
     }
 }

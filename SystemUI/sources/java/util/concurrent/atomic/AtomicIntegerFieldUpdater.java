@@ -127,7 +127,7 @@ public abstract class AtomicIntegerFieldUpdater<T> {
     private static final class AtomicIntegerFieldUpdaterImpl<T> extends AtomicIntegerFieldUpdater<T> {
 
         /* renamed from: U */
-        private static final Unsafe f763U = Unsafe.getUnsafe();
+        private static final Unsafe f761U = Unsafe.getUnsafe();
         private final Class<?> cclass;
         private final long offset;
         private final Class<T> tclass;
@@ -161,7 +161,7 @@ public abstract class AtomicIntegerFieldUpdater<T> {
             L_0x0031:
                 r3.cclass = r6
                 r3.tclass = r4
-                jdk.internal.misc.Unsafe r4 = f763U
+                jdk.internal.misc.Unsafe r4 = f761U
                 long r4 = r4.objectFieldOffset(r5)
                 r3.offset = r4
                 return
@@ -203,37 +203,37 @@ public abstract class AtomicIntegerFieldUpdater<T> {
 
         public final boolean compareAndSet(T t, int i, int i2) {
             accessCheck(t);
-            return f763U.compareAndSetInt(t, this.offset, i, i2);
+            return f761U.compareAndSetInt(t, this.offset, i, i2);
         }
 
         public final boolean weakCompareAndSet(T t, int i, int i2) {
             accessCheck(t);
-            return f763U.compareAndSetInt(t, this.offset, i, i2);
+            return f761U.compareAndSetInt(t, this.offset, i, i2);
         }
 
         public final void set(T t, int i) {
             accessCheck(t);
-            f763U.putIntVolatile(t, this.offset, i);
+            f761U.putIntVolatile(t, this.offset, i);
         }
 
         public final void lazySet(T t, int i) {
             accessCheck(t);
-            f763U.putIntRelease(t, this.offset, i);
+            f761U.putIntRelease(t, this.offset, i);
         }
 
         public final int get(T t) {
             accessCheck(t);
-            return f763U.getIntVolatile(t, this.offset);
+            return f761U.getIntVolatile(t, this.offset);
         }
 
         public final int getAndSet(T t, int i) {
             accessCheck(t);
-            return f763U.getAndSetInt(t, this.offset, i);
+            return f761U.getAndSetInt(t, this.offset, i);
         }
 
         public final int getAndAdd(T t, int i) {
             accessCheck(t);
-            return f763U.getAndAddInt(t, this.offset, i);
+            return f761U.getAndAddInt(t, this.offset, i);
         }
 
         public final int getAndIncrement(T t) {

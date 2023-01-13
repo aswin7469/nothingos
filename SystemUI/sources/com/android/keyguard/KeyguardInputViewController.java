@@ -10,7 +10,7 @@ import com.android.keyguard.EmergencyButtonController;
 import com.android.keyguard.KeyguardInputView;
 import com.android.keyguard.KeyguardMessageAreaController;
 import com.android.keyguard.KeyguardSecurityModel;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.classifier.FalsingCollector;
 import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.statusbar.policy.DevicePostureController;
@@ -73,7 +73,7 @@ public abstract class KeyguardInputViewController<T extends KeyguardInputView> e
         if (t == null) {
             emergencyButton = null;
         } else {
-            emergencyButton = (EmergencyButton) t.findViewById(C1893R.C1897id.emergency_call_button);
+            emergencyButton = (EmergencyButton) t.findViewById(C1894R.C1898id.emergency_call_button);
         }
         this.mEmergencyButton = emergencyButton;
         this.mEmergencyButtonController = emergencyButtonController;
@@ -162,7 +162,7 @@ public abstract class KeyguardInputViewController<T extends KeyguardInputView> e
 
         public KeyguardInputViewController create(KeyguardInputView keyguardInputView, KeyguardSecurityModel.SecurityMode securityMode, KeyguardSecurityCallback keyguardSecurityCallback) {
             KeyguardInputView keyguardInputView2 = keyguardInputView;
-            EmergencyButtonController create = this.mEmergencyButtonControllerFactory.create((EmergencyButton) keyguardInputView2.findViewById(C1893R.C1897id.emergency_call_button));
+            EmergencyButtonController create = this.mEmergencyButtonControllerFactory.create((EmergencyButton) keyguardInputView2.findViewById(C1894R.C1898id.emergency_call_button));
             if (keyguardInputView2 instanceof KeyguardPatternView) {
                 return new KeyguardPatternViewController((KeyguardPatternView) keyguardInputView2, this.mKeyguardUpdateMonitor, securityMode, this.mLockPatternUtils, keyguardSecurityCallback, this.mLatencyTracker, this.mFalsingCollector, create, this.mMessageAreaControllerFactory, this.mDevicePostureController);
             } else if (keyguardInputView2 instanceof KeyguardPasswordView) {

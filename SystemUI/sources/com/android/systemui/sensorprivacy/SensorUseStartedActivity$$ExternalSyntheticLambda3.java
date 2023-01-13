@@ -11,6 +11,6 @@ public final /* synthetic */ class SensorUseStartedActivity$$ExternalSyntheticLa
     }
 
     public final void onSensorBlockedChanged(int i, boolean z) {
-        SensorUseStartedActivity.m3017onCreate$lambda0(this.f$0, i, z);
+        SensorUseStartedActivity.m3021onCreate$lambda0(this.f$0, i, z);
     }
 }

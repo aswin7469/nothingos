@@ -165,7 +165,7 @@ public class HotspotControllerImpl implements HotspotController, WifiManager.Sof
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$addCallback$0$com-android-systemui-statusbar-policy-HotspotControllerImpl */
-    public /* synthetic */ void mo45807xf425eaad(HotspotController.Callback callback) {
+    public /* synthetic */ void mo45819xf425eaad(HotspotController.Callback callback) {
         callback.onHotspotChanged(isHotspotEnabled(), this.mNumConnectedDevices, getHotspotWifiStandard());
     }
 

@@ -12,6 +12,6 @@ public final /* synthetic */ class PhysicsAnimatorTestUtils$$ExternalSyntheticLa
     }
 
     public final void run() {
-        PhysicsAnimatorTestUtils.m3396tearDown$lambda1(this.f$0);
+        PhysicsAnimatorTestUtils.m3400tearDown$lambda1(this.f$0);
     }
 }

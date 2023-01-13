@@ -11,6 +11,6 @@ public final /* synthetic */ class NotificationPanelViewController$$ExternalSynt
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        this.f$0.mo44612x647b0faf(valueAnimator);
+        this.f$0.mo44627x647b0faf(valueAnimator);
     }
 }

@@ -10,8 +10,8 @@ import kotlin.coroutines.jvm.internal.RestrictedSuspendLambda;
 import kotlin.jvm.functions.Function2;
 import kotlin.sequences.SequenceScope;
 
-@Metadata(mo64986d1 = {"\u0000\u0010\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\u0010 \u0010\u0000\u001a\u00020\u0001\"\u0004\b\u0000\u0010\u0002*\u000e\u0012\n\u0012\b\u0012\u0004\u0012\u0002H\u00020\u00040\u0003H@"}, mo64987d2 = {"<anonymous>", "", "T", "Lkotlin/sequences/SequenceScope;", ""}, mo64988k = 3, mo64989mv = {1, 7, 1}, mo64991xi = 48)
-@DebugMetadata(mo65240c = "kotlin.collections.SlidingWindowKt$windowedIterator$1", mo65241f = "SlidingWindow.kt", mo65242i = {0, 0, 0, 2, 2, 3, 3}, mo65243l = {34, 40, 49, 55, 58}, mo65244m = "invokeSuspend", mo65245n = {"$this$iterator", "buffer", "gap", "$this$iterator", "buffer", "$this$iterator", "buffer"}, mo65246s = {"L$0", "L$1", "I$0", "L$0", "L$1", "L$0", "L$1"})
+@Metadata(mo65042d1 = {"\u0000\u0010\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\u0010 \u0010\u0000\u001a\u00020\u0001\"\u0004\b\u0000\u0010\u0002*\u000e\u0012\n\u0012\b\u0012\u0004\u0012\u0002H\u00020\u00040\u0003H@"}, mo65043d2 = {"<anonymous>", "", "T", "Lkotlin/sequences/SequenceScope;", ""}, mo65044k = 3, mo65045mv = {1, 7, 1}, mo65047xi = 48)
+@DebugMetadata(mo65296c = "kotlin.collections.SlidingWindowKt$windowedIterator$1", mo65297f = "SlidingWindow.kt", mo65298i = {0, 0, 0, 2, 2, 3, 3}, mo65299l = {34, 40, 49, 55, 58}, mo65300m = "invokeSuspend", mo65301n = {"$this$iterator", "buffer", "gap", "$this$iterator", "buffer", "$this$iterator", "buffer"}, mo65302s = {"L$0", "L$1", "I$0", "L$0", "L$1", "L$0", "L$1"})
 /* compiled from: SlidingWindow.kt */
 final class SlidingWindowKt$windowedIterator$1 extends RestrictedSuspendLambda implements Function2<SequenceScope<? super List<? extends T>>, Continuation<? super Unit>, Object> {
     final /* synthetic */ Iterator<T> $iterator;

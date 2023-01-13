@@ -13,6 +13,6 @@ public final /* synthetic */ class SafetyController$$ExternalSyntheticLambda0 im
     }
 
     public final void run() {
-        this.f$0.mo46041xba028ac(this.f$1);
+        this.f$0.mo46053xba028ac(this.f$1);
     }
 }

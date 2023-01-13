@@ -9,7 +9,7 @@ import android.graphics.Paint;
 import android.util.Property;
 import android.view.View;
 import android.view.animation.Interpolator;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dumpable;
 import com.android.systemui.animation.Interpolators;
 import com.android.systemui.statusbar.notification.AnimatableProperty;
@@ -31,15 +31,15 @@ public class ViewState implements Dumpable {
     };
     private static final AnimatableProperty SCALE_X_PROPERTY = new AnimatableProperty() {
         public int getAnimationEndTag() {
-            return C1893R.C1897id.scale_x_animator_end_value_tag;
+            return C1894R.C1898id.scale_x_animator_end_value_tag;
         }
 
         public int getAnimationStartTag() {
-            return C1893R.C1897id.scale_x_animator_start_value_tag;
+            return C1894R.C1898id.scale_x_animator_start_value_tag;
         }
 
         public int getAnimatorTag() {
-            return C1893R.C1897id.scale_x_animator_tag;
+            return C1894R.C1898id.scale_x_animator_tag;
         }
 
         public Property getProperty() {
@@ -48,15 +48,15 @@ public class ViewState implements Dumpable {
     };
     private static final AnimatableProperty SCALE_Y_PROPERTY = new AnimatableProperty() {
         public int getAnimationEndTag() {
-            return C1893R.C1897id.scale_y_animator_end_value_tag;
+            return C1894R.C1898id.scale_y_animator_end_value_tag;
         }
 
         public int getAnimationStartTag() {
-            return C1893R.C1897id.scale_y_animator_start_value_tag;
+            return C1894R.C1898id.scale_y_animator_start_value_tag;
         }
 
         public int getAnimatorTag() {
-            return C1893R.C1897id.scale_y_animator_tag;
+            return C1894R.C1898id.scale_y_animator_tag;
         }
 
         public Property getProperty() {
@@ -64,17 +64,17 @@ public class ViewState implements Dumpable {
         }
     };
     private static final int TAG_ANIMATOR_ALPHA = 2131427480;
-    private static final int TAG_ANIMATOR_TRANSLATION_X = 2131429089;
-    private static final int TAG_ANIMATOR_TRANSLATION_Y = 2131429093;
-    private static final int TAG_ANIMATOR_TRANSLATION_Z = 2131429097;
+    private static final int TAG_ANIMATOR_TRANSLATION_X = 2131429106;
+    private static final int TAG_ANIMATOR_TRANSLATION_Y = 2131429110;
+    private static final int TAG_ANIMATOR_TRANSLATION_Z = 2131429114;
     private static final int TAG_END_ALPHA = 2131427478;
-    private static final int TAG_END_TRANSLATION_X = 2131429087;
-    private static final int TAG_END_TRANSLATION_Y = 2131429091;
-    private static final int TAG_END_TRANSLATION_Z = 2131429095;
+    private static final int TAG_END_TRANSLATION_X = 2131429104;
+    private static final int TAG_END_TRANSLATION_Y = 2131429108;
+    private static final int TAG_END_TRANSLATION_Z = 2131429112;
     private static final int TAG_START_ALPHA = 2131427479;
-    private static final int TAG_START_TRANSLATION_X = 2131429088;
-    private static final int TAG_START_TRANSLATION_Y = 2131429092;
-    private static final int TAG_START_TRANSLATION_Z = 2131429096;
+    private static final int TAG_START_TRANSLATION_X = 2131429105;
+    private static final int TAG_START_TRANSLATION_Y = 2131429109;
+    private static final int TAG_START_TRANSLATION_Z = 2131429113;
     public float alpha;
     public boolean gone;
     public boolean hidden;
@@ -112,7 +112,7 @@ public class ViewState implements Dumpable {
 
     public void applyToView(View view) {
         if (!this.gone) {
-            if (isAnimating(view, (int) C1893R.C1897id.translation_x_animator_tag)) {
+            if (isAnimating(view, (int) C1894R.C1898id.translation_x_animator_tag)) {
                 updateAnimationX(view);
             } else {
                 float translationX = view.getTranslationX();
@@ -121,7 +121,7 @@ public class ViewState implements Dumpable {
                     view.setTranslationX(f);
                 }
             }
-            if (isAnimating(view, (int) C1893R.C1897id.translation_y_animator_tag)) {
+            if (isAnimating(view, (int) C1894R.C1898id.translation_y_animator_tag)) {
                 updateAnimationY(view);
             } else {
                 float translationY = view.getTranslationY();
@@ -130,7 +130,7 @@ public class ViewState implements Dumpable {
                     view.setTranslationY(f2);
                 }
             }
-            if (isAnimating(view, (int) C1893R.C1897id.translation_z_animator_tag)) {
+            if (isAnimating(view, (int) C1894R.C1898id.translation_z_animator_tag)) {
                 updateAnimationZ(view);
             } else {
                 float translationZ = view.getTranslationZ();
@@ -163,7 +163,7 @@ public class ViewState implements Dumpable {
             boolean z = true;
             int i = 0;
             boolean z2 = this.alpha == 0.0f || (this.hidden && (!isAnimating(view) || visibility != 0));
-            if (isAnimating(view, (int) C1893R.C1897id.alpha_animator_tag)) {
+            if (isAnimating(view, (int) C1894R.C1898id.alpha_animator_tag)) {
                 updateAlphaAnimation(view);
             } else {
                 float alpha2 = view.getAlpha();
@@ -201,7 +201,7 @@ public class ViewState implements Dumpable {
     }
 
     public boolean isAnimating(View view) {
-        if (!isAnimating(view, (int) C1893R.C1897id.translation_x_animator_tag) && !isAnimating(view, (int) C1893R.C1897id.translation_y_animator_tag) && !isAnimating(view, (int) C1893R.C1897id.translation_z_animator_tag) && !isAnimating(view, (int) C1893R.C1897id.alpha_animator_tag) && !isAnimating(view, SCALE_X_PROPERTY) && !isAnimating(view, SCALE_Y_PROPERTY)) {
+        if (!isAnimating(view, (int) C1894R.C1898id.translation_x_animator_tag) && !isAnimating(view, (int) C1894R.C1898id.translation_y_animator_tag) && !isAnimating(view, (int) C1894R.C1898id.translation_z_animator_tag) && !isAnimating(view, (int) C1894R.C1898id.alpha_animator_tag) && !isAnimating(view, SCALE_X_PROPERTY) && !isAnimating(view, SCALE_Y_PROPERTY)) {
             return false;
         }
         return true;
@@ -231,17 +231,17 @@ public class ViewState implements Dumpable {
         if (view.getTranslationX() != this.xTranslation) {
             startXTranslationAnimation(view, animationProperties);
         } else {
-            abortAnimation(view, C1893R.C1897id.translation_x_animator_tag);
+            abortAnimation(view, C1894R.C1898id.translation_x_animator_tag);
         }
         if (view.getTranslationY() != this.yTranslation) {
             startYTranslationAnimation(view, animationProperties);
         } else {
-            abortAnimation(view, C1893R.C1897id.translation_y_animator_tag);
+            abortAnimation(view, C1894R.C1898id.translation_y_animator_tag);
         }
         if (view.getTranslationZ() != this.zTranslation) {
             startZTranslationAnimation(view, animationProperties);
         } else {
-            abortAnimation(view, C1893R.C1897id.translation_z_animator_tag);
+            abortAnimation(view, C1894R.C1898id.translation_z_animator_tag);
         }
         float scaleX2 = view.getScaleX();
         float f2 = this.scaleX;
@@ -260,7 +260,7 @@ public class ViewState implements Dumpable {
         if (z) {
             startAlphaAnimation(view, animationProperties);
         } else {
-            abortAnimation(view, C1893R.C1897id.alpha_animator_tag);
+            abortAnimation(view, C1894R.C1898id.alpha_animator_tag);
         }
     }
 
@@ -269,18 +269,18 @@ public class ViewState implements Dumpable {
     }
 
     private void startAlphaAnimation(final View view, AnimationProperties animationProperties) {
-        Float f = (Float) getChildTag(view, C1893R.C1897id.alpha_animator_start_value_tag);
-        Float f2 = (Float) getChildTag(view, C1893R.C1897id.alpha_animator_end_value_tag);
+        Float f = (Float) getChildTag(view, C1894R.C1898id.alpha_animator_start_value_tag);
+        Float f2 = (Float) getChildTag(view, C1894R.C1898id.alpha_animator_end_value_tag);
         final float f3 = this.alpha;
         if (f2 == null || f2.floatValue() != f3) {
-            ObjectAnimator objectAnimator = (ObjectAnimator) getChildTag(view, C1893R.C1897id.alpha_animator_tag);
+            ObjectAnimator objectAnimator = (ObjectAnimator) getChildTag(view, C1894R.C1898id.alpha_animator_tag);
             if (!animationProperties.getAnimationFilter().animateAlpha) {
                 if (objectAnimator != null) {
                     PropertyValuesHolder[] values = objectAnimator.getValues();
                     float floatValue = f.floatValue() + (f3 - f2.floatValue());
                     values[0].setFloatValues(new float[]{floatValue, f3});
-                    view.setTag(C1893R.C1897id.alpha_animator_start_value_tag, Float.valueOf(floatValue));
-                    view.setTag(C1893R.C1897id.alpha_animator_end_value_tag, Float.valueOf(f3));
+                    view.setTag(C1894R.C1898id.alpha_animator_start_value_tag, Float.valueOf(floatValue));
+                    view.setTag(C1894R.C1898id.alpha_animator_end_value_tag, Float.valueOf(f3));
                     objectAnimator.setCurrentPlayTime(objectAnimator.getCurrentPlayTime());
                     return;
                 }
@@ -300,9 +300,9 @@ public class ViewState implements Dumpable {
                     if (f3 == 0.0f && !this.mWasCancelled) {
                         view.setVisibility(4);
                     }
-                    view.setTag(C1893R.C1897id.alpha_animator_tag, (Object) null);
-                    view.setTag(C1893R.C1897id.alpha_animator_start_value_tag, (Object) null);
-                    view.setTag(C1893R.C1897id.alpha_animator_end_value_tag, (Object) null);
+                    view.setTag(C1894R.C1898id.alpha_animator_tag, (Object) null);
+                    view.setTag(C1894R.C1898id.alpha_animator_start_value_tag, (Object) null);
+                    view.setTag(C1894R.C1898id.alpha_animator_end_value_tag, (Object) null);
                 }
 
                 public void onAnimationCancel(Animator animator) {
@@ -322,9 +322,9 @@ public class ViewState implements Dumpable {
                 ofFloat.addListener(animationFinishListener);
             }
             startAnimator(ofFloat, animationFinishListener);
-            view.setTag(C1893R.C1897id.alpha_animator_tag, ofFloat);
-            view.setTag(C1893R.C1897id.alpha_animator_start_value_tag, Float.valueOf(view.getAlpha()));
-            view.setTag(C1893R.C1897id.alpha_animator_end_value_tag, Float.valueOf(f3));
+            view.setTag(C1894R.C1898id.alpha_animator_tag, ofFloat);
+            view.setTag(C1894R.C1898id.alpha_animator_start_value_tag, Float.valueOf(view.getAlpha()));
+            view.setTag(C1894R.C1898id.alpha_animator_end_value_tag, Float.valueOf(f3));
         }
     }
 
@@ -337,18 +337,18 @@ public class ViewState implements Dumpable {
     }
 
     private void startZTranslationAnimation(final View view, AnimationProperties animationProperties) {
-        Float f = (Float) getChildTag(view, C1893R.C1897id.translation_z_animator_start_value_tag);
-        Float f2 = (Float) getChildTag(view, C1893R.C1897id.translation_z_animator_end_value_tag);
+        Float f = (Float) getChildTag(view, C1894R.C1898id.translation_z_animator_start_value_tag);
+        Float f2 = (Float) getChildTag(view, C1894R.C1898id.translation_z_animator_end_value_tag);
         float f3 = this.zTranslation;
         if (f2 == null || f2.floatValue() != f3) {
-            ObjectAnimator objectAnimator = (ObjectAnimator) getChildTag(view, C1893R.C1897id.translation_z_animator_tag);
+            ObjectAnimator objectAnimator = (ObjectAnimator) getChildTag(view, C1894R.C1898id.translation_z_animator_tag);
             if (!animationProperties.getAnimationFilter().animateZ) {
                 if (objectAnimator != null) {
                     PropertyValuesHolder[] values = objectAnimator.getValues();
                     float floatValue = f.floatValue() + (f3 - f2.floatValue());
                     values[0].setFloatValues(new float[]{floatValue, f3});
-                    view.setTag(C1893R.C1897id.translation_z_animator_start_value_tag, Float.valueOf(floatValue));
-                    view.setTag(C1893R.C1897id.translation_z_animator_end_value_tag, Float.valueOf(f3));
+                    view.setTag(C1894R.C1898id.translation_z_animator_start_value_tag, Float.valueOf(floatValue));
+                    view.setTag(C1894R.C1898id.translation_z_animator_end_value_tag, Float.valueOf(f3));
                     objectAnimator.setCurrentPlayTime(objectAnimator.getCurrentPlayTime());
                     return;
                 }
@@ -366,15 +366,15 @@ public class ViewState implements Dumpable {
             }
             ofFloat.addListener(new AnimatorListenerAdapter() {
                 public void onAnimationEnd(Animator animator) {
-                    view.setTag(C1893R.C1897id.translation_z_animator_tag, (Object) null);
-                    view.setTag(C1893R.C1897id.translation_z_animator_start_value_tag, (Object) null);
-                    view.setTag(C1893R.C1897id.translation_z_animator_end_value_tag, (Object) null);
+                    view.setTag(C1894R.C1898id.translation_z_animator_tag, (Object) null);
+                    view.setTag(C1894R.C1898id.translation_z_animator_start_value_tag, (Object) null);
+                    view.setTag(C1894R.C1898id.translation_z_animator_end_value_tag, (Object) null);
                 }
             });
             startAnimator(ofFloat, animationFinishListener);
-            view.setTag(C1893R.C1897id.translation_z_animator_tag, ofFloat);
-            view.setTag(C1893R.C1897id.translation_z_animator_start_value_tag, Float.valueOf(view.getTranslationZ()));
-            view.setTag(C1893R.C1897id.translation_z_animator_end_value_tag, Float.valueOf(f3));
+            view.setTag(C1894R.C1898id.translation_z_animator_tag, ofFloat);
+            view.setTag(C1894R.C1898id.translation_z_animator_start_value_tag, Float.valueOf(view.getTranslationZ()));
+            view.setTag(C1894R.C1898id.translation_z_animator_end_value_tag, Float.valueOf(f3));
         }
     }
 
@@ -383,11 +383,11 @@ public class ViewState implements Dumpable {
     }
 
     private void startXTranslationAnimation(final View view, AnimationProperties animationProperties) {
-        Float f = (Float) getChildTag(view, C1893R.C1897id.translation_x_animator_start_value_tag);
-        Float f2 = (Float) getChildTag(view, C1893R.C1897id.translation_x_animator_end_value_tag);
+        Float f = (Float) getChildTag(view, C1894R.C1898id.translation_x_animator_start_value_tag);
+        Float f2 = (Float) getChildTag(view, C1894R.C1898id.translation_x_animator_end_value_tag);
         float f3 = this.xTranslation;
         if (f2 == null || f2.floatValue() != f3) {
-            ObjectAnimator objectAnimator = (ObjectAnimator) getChildTag(view, C1893R.C1897id.translation_x_animator_tag);
+            ObjectAnimator objectAnimator = (ObjectAnimator) getChildTag(view, C1894R.C1898id.translation_x_animator_tag);
             if (animationProperties.getAnimationFilter().animateX) {
                 ObjectAnimator ofFloat = ObjectAnimator.ofFloat(view, View.TRANSLATION_X, new float[]{view.getTranslationX(), f3});
                 Interpolator customInterpolator = animationProperties.getCustomInterpolator(view, View.TRANSLATION_X);
@@ -405,21 +405,21 @@ public class ViewState implements Dumpable {
                 }
                 ofFloat.addListener(new AnimatorListenerAdapter() {
                     public void onAnimationEnd(Animator animator) {
-                        view.setTag(C1893R.C1897id.translation_x_animator_tag, (Object) null);
-                        view.setTag(C1893R.C1897id.translation_x_animator_start_value_tag, (Object) null);
-                        view.setTag(C1893R.C1897id.translation_x_animator_end_value_tag, (Object) null);
+                        view.setTag(C1894R.C1898id.translation_x_animator_tag, (Object) null);
+                        view.setTag(C1894R.C1898id.translation_x_animator_start_value_tag, (Object) null);
+                        view.setTag(C1894R.C1898id.translation_x_animator_end_value_tag, (Object) null);
                     }
                 });
                 startAnimator(ofFloat, animationFinishListener);
-                view.setTag(C1893R.C1897id.translation_x_animator_tag, ofFloat);
-                view.setTag(C1893R.C1897id.translation_x_animator_start_value_tag, Float.valueOf(view.getTranslationX()));
-                view.setTag(C1893R.C1897id.translation_x_animator_end_value_tag, Float.valueOf(f3));
+                view.setTag(C1894R.C1898id.translation_x_animator_tag, ofFloat);
+                view.setTag(C1894R.C1898id.translation_x_animator_start_value_tag, Float.valueOf(view.getTranslationX()));
+                view.setTag(C1894R.C1898id.translation_x_animator_end_value_tag, Float.valueOf(f3));
             } else if (objectAnimator != null) {
                 PropertyValuesHolder[] values = objectAnimator.getValues();
                 float floatValue = f.floatValue() + (f3 - f2.floatValue());
                 values[0].setFloatValues(new float[]{floatValue, f3});
-                view.setTag(C1893R.C1897id.translation_x_animator_start_value_tag, Float.valueOf(floatValue));
-                view.setTag(C1893R.C1897id.translation_x_animator_end_value_tag, Float.valueOf(f3));
+                view.setTag(C1894R.C1898id.translation_x_animator_start_value_tag, Float.valueOf(floatValue));
+                view.setTag(C1894R.C1898id.translation_x_animator_end_value_tag, Float.valueOf(f3));
                 objectAnimator.setCurrentPlayTime(objectAnimator.getCurrentPlayTime());
             } else {
                 view.setTranslationX(f3);
@@ -432,11 +432,11 @@ public class ViewState implements Dumpable {
     }
 
     private void startYTranslationAnimation(final View view, AnimationProperties animationProperties) {
-        Float f = (Float) getChildTag(view, C1893R.C1897id.translation_y_animator_start_value_tag);
-        Float f2 = (Float) getChildTag(view, C1893R.C1897id.translation_y_animator_end_value_tag);
+        Float f = (Float) getChildTag(view, C1894R.C1898id.translation_y_animator_start_value_tag);
+        Float f2 = (Float) getChildTag(view, C1894R.C1898id.translation_y_animator_end_value_tag);
         float f3 = this.yTranslation;
         if (f2 == null || f2.floatValue() != f3) {
-            ObjectAnimator objectAnimator = (ObjectAnimator) getChildTag(view, C1893R.C1897id.translation_y_animator_tag);
+            ObjectAnimator objectAnimator = (ObjectAnimator) getChildTag(view, C1894R.C1898id.translation_y_animator_tag);
             if (animationProperties.getAnimationFilter().shouldAnimateY(view)) {
                 ObjectAnimator ofFloat = ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, new float[]{view.getTranslationY(), f3});
                 Interpolator customInterpolator = animationProperties.getCustomInterpolator(view, View.TRANSLATION_Y);
@@ -455,22 +455,22 @@ public class ViewState implements Dumpable {
                 ofFloat.addListener(new AnimatorListenerAdapter() {
                     public void onAnimationEnd(Animator animator) {
                         HeadsUpUtil.setNeedsHeadsUpDisappearAnimationAfterClick(view, false);
-                        view.setTag(C1893R.C1897id.translation_y_animator_tag, (Object) null);
-                        view.setTag(C1893R.C1897id.translation_y_animator_start_value_tag, (Object) null);
-                        view.setTag(C1893R.C1897id.translation_y_animator_end_value_tag, (Object) null);
+                        view.setTag(C1894R.C1898id.translation_y_animator_tag, (Object) null);
+                        view.setTag(C1894R.C1898id.translation_y_animator_start_value_tag, (Object) null);
+                        view.setTag(C1894R.C1898id.translation_y_animator_end_value_tag, (Object) null);
                         ViewState.this.onYTranslationAnimationFinished(view);
                     }
                 });
                 startAnimator(ofFloat, animationFinishListener);
-                view.setTag(C1893R.C1897id.translation_y_animator_tag, ofFloat);
-                view.setTag(C1893R.C1897id.translation_y_animator_start_value_tag, Float.valueOf(view.getTranslationY()));
-                view.setTag(C1893R.C1897id.translation_y_animator_end_value_tag, Float.valueOf(f3));
+                view.setTag(C1894R.C1898id.translation_y_animator_tag, ofFloat);
+                view.setTag(C1894R.C1898id.translation_y_animator_start_value_tag, Float.valueOf(view.getTranslationY()));
+                view.setTag(C1894R.C1898id.translation_y_animator_end_value_tag, Float.valueOf(f3));
             } else if (objectAnimator != null) {
                 PropertyValuesHolder[] values = objectAnimator.getValues();
                 float floatValue = f.floatValue() + (f3 - f2.floatValue());
                 values[0].setFloatValues(new float[]{floatValue, f3});
-                view.setTag(C1893R.C1897id.translation_y_animator_start_value_tag, Float.valueOf(floatValue));
-                view.setTag(C1893R.C1897id.translation_y_animator_end_value_tag, Float.valueOf(f3));
+                view.setTag(C1894R.C1898id.translation_y_animator_start_value_tag, Float.valueOf(floatValue));
+                view.setTag(C1894R.C1898id.translation_y_animator_end_value_tag, Float.valueOf(f3));
                 objectAnimator.setCurrentPlayTime(objectAnimator.getCurrentPlayTime());
             } else {
                 view.setTranslationY(f3);
@@ -517,50 +517,50 @@ public class ViewState implements Dumpable {
         if (view == null) {
             return 0.0f;
         }
-        if (((ValueAnimator) getChildTag(view, C1893R.C1897id.translation_x_animator_tag)) == null) {
+        if (((ValueAnimator) getChildTag(view, C1894R.C1898id.translation_x_animator_tag)) == null) {
             return view.getTranslationX();
         }
-        return ((Float) getChildTag(view, C1893R.C1897id.translation_x_animator_end_value_tag)).floatValue();
+        return ((Float) getChildTag(view, C1894R.C1898id.translation_x_animator_end_value_tag)).floatValue();
     }
 
     public static float getFinalTranslationY(View view) {
         if (view == null) {
             return 0.0f;
         }
-        if (((ValueAnimator) getChildTag(view, C1893R.C1897id.translation_y_animator_tag)) == null) {
+        if (((ValueAnimator) getChildTag(view, C1894R.C1898id.translation_y_animator_tag)) == null) {
             return view.getTranslationY();
         }
-        return ((Float) getChildTag(view, C1893R.C1897id.translation_y_animator_end_value_tag)).floatValue();
+        return ((Float) getChildTag(view, C1894R.C1898id.translation_y_animator_end_value_tag)).floatValue();
     }
 
     public static float getFinalTranslationZ(View view) {
         if (view == null) {
             return 0.0f;
         }
-        if (((ValueAnimator) getChildTag(view, C1893R.C1897id.translation_z_animator_tag)) == null) {
+        if (((ValueAnimator) getChildTag(view, C1894R.C1898id.translation_z_animator_tag)) == null) {
             return view.getTranslationZ();
         }
-        return ((Float) getChildTag(view, C1893R.C1897id.translation_z_animator_end_value_tag)).floatValue();
+        return ((Float) getChildTag(view, C1894R.C1898id.translation_z_animator_end_value_tag)).floatValue();
     }
 
     public static boolean isAnimatingY(View view) {
-        return getChildTag(view, C1893R.C1897id.translation_y_animator_tag) != null;
+        return getChildTag(view, C1894R.C1898id.translation_y_animator_tag) != null;
     }
 
     public void cancelAnimations(View view) {
-        Animator animator = (Animator) getChildTag(view, C1893R.C1897id.translation_x_animator_tag);
+        Animator animator = (Animator) getChildTag(view, C1894R.C1898id.translation_x_animator_tag);
         if (animator != null) {
             animator.cancel();
         }
-        Animator animator2 = (Animator) getChildTag(view, C1893R.C1897id.translation_y_animator_tag);
+        Animator animator2 = (Animator) getChildTag(view, C1894R.C1898id.translation_y_animator_tag);
         if (animator2 != null) {
             animator2.cancel();
         }
-        Animator animator3 = (Animator) getChildTag(view, C1893R.C1897id.translation_z_animator_tag);
+        Animator animator3 = (Animator) getChildTag(view, C1894R.C1898id.translation_z_animator_tag);
         if (animator3 != null) {
             animator3.cancel();
         }
-        Animator animator4 = (Animator) getChildTag(view, C1893R.C1897id.alpha_animator_tag);
+        Animator animator4 = (Animator) getChildTag(view, C1894R.C1898id.alpha_animator_tag);
         if (animator4 != null) {
             animator4.cancel();
         }

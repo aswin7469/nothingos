@@ -13,6 +13,6 @@ public final /* synthetic */ class Monitor$$ExternalSyntheticLambda3 implements 
     }
 
     public final void run() {
-        this.f$0.m3308lambda$addCallback$4$comandroidsystemuiutilconditionMonitor(this.f$1);
+        this.f$0.m3313lambda$addCallback$4$comandroidsystemuiutilconditionMonitor(this.f$1);
     }
 }

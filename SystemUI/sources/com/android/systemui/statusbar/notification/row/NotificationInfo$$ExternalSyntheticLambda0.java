@@ -9,6 +9,6 @@ public final /* synthetic */ class NotificationInfo$$ExternalSyntheticLambda0 im
     }
 
     public final void onChannelEditorDialogFinished() {
-        this.f$0.mo41628x5869447();
+        this.f$0.mo41636x5869447();
     }
 }

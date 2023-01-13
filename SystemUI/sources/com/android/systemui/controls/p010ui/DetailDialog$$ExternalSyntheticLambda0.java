@@ -12,6 +12,6 @@ public final /* synthetic */ class DetailDialog$$ExternalSyntheticLambda0 implem
     }
 
     public final void onClick(View view) {
-        DetailDialog.m2713lambda3$lambda2(this.f$0, view);
+        DetailDialog.m2718lambda3$lambda2(this.f$0, view);
     }
 }

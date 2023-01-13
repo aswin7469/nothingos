@@ -12,7 +12,7 @@ import androidx.core.util.Pair;
 import androidx.core.view.AccessibilityDelegateCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.internal.ViewUtils;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -33,8 +33,8 @@ final class MaterialCalendarGridView extends GridView {
         super(context, attributeSet, i);
         this.dayCompute = UtcDates.getUtcCalendar();
         if (MaterialDatePicker.isFullscreen(getContext())) {
-            setNextFocusLeftId(C3621R.C3624id.cancel_button);
-            setNextFocusRightId(C3621R.C3624id.confirm_button);
+            setNextFocusLeftId(C3631R.C3634id.cancel_button);
+            setNextFocusRightId(C3631R.C3634id.confirm_button);
         }
         this.nestedScrollable = MaterialDatePicker.isNestedScrollable(getContext());
         ViewCompat.setAccessibilityDelegate(this, new AccessibilityDelegateCompat() {

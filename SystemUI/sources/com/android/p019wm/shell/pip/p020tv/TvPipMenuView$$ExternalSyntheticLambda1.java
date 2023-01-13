@@ -14,6 +14,6 @@ public final /* synthetic */ class TvPipMenuView$$ExternalSyntheticLambda1 imple
     }
 
     public final void run() {
-        this.f$0.mo50657x3a588eaa(this.f$1);
+        this.f$0.mo50666x3a588eaa(this.f$1);
     }
 }

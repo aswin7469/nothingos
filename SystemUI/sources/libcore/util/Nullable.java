@@ -13,5 +13,5 @@ public @interface Nullable {
     int from() default Integer.MIN_VALUE;
 
     /* renamed from: to */
-    int mo66773to() default Integer.MAX_VALUE;
+    int mo66829to() default Integer.MAX_VALUE;
 }

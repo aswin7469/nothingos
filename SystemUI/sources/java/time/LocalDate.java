@@ -38,9 +38,9 @@ import sun.util.locale.LanguageTag;
 public final class LocalDate implements Temporal, TemporalAdjuster, ChronoLocalDate, Serializable {
     static final long DAYS_0000_TO_1970 = 719528;
     private static final int DAYS_PER_CYCLE = 146097;
-    public static final LocalDate EPOCH = m908of(1970, 1, 1);
-    public static final LocalDate MAX = m908of((int) Year.MAX_VALUE, 12, 31);
-    public static final LocalDate MIN = m908of((int) Year.MIN_VALUE, 1, 1);
+    public static final LocalDate EPOCH = m906of(1970, 1, 1);
+    public static final LocalDate MAX = m906of((int) Year.MAX_VALUE, 12, 31);
+    public static final LocalDate MIN = m906of((int) Year.MIN_VALUE, 1, 1);
     private static final long serialVersionUID = 2942565459149668126L;
     private final short day;
     private final short month;
@@ -60,7 +60,7 @@ public final class LocalDate implements Temporal, TemporalAdjuster, ChronoLocalD
     }
 
     /* renamed from: of */
-    public static LocalDate m909of(int i, Month month2, int i2) {
+    public static LocalDate m907of(int i, Month month2, int i2) {
         ChronoField.YEAR.checkValidValue((long) i);
         Objects.requireNonNull(month2, "month");
         ChronoField.DAY_OF_MONTH.checkValidValue((long) i2);
@@ -68,7 +68,7 @@ public final class LocalDate implements Temporal, TemporalAdjuster, ChronoLocalD
     }
 
     /* renamed from: of */
-    public static LocalDate m908of(int i, int i2, int i3) {
+    public static LocalDate m906of(int i, int i2, int i3) {
         ChronoField.YEAR.checkValidValue((long) i);
         ChronoField.MONTH_OF_YEAR.checkValidValue((long) i2);
         ChronoField.DAY_OF_MONTH.checkValidValue((long) i3);
@@ -81,7 +81,7 @@ public final class LocalDate implements Temporal, TemporalAdjuster, ChronoLocalD
         ChronoField.DAY_OF_YEAR.checkValidValue((long) i2);
         boolean isLeapYear = IsoChronology.INSTANCE.isLeapYear(j);
         if (i2 != 366 || isLeapYear) {
-            Month of = Month.m920of(((i2 - 1) / 31) + 1);
+            Month of = Month.m918of(((i2 - 1) / 31) + 1);
             if (i2 > (of.firstDayOfYear(isLeapYear) + of.length(isLeapYear)) - 1) {
                 of = of.plus(1);
             }
@@ -149,7 +149,7 @@ public final class LocalDate implements Temporal, TemporalAdjuster, ChronoLocalD
                 if (i3 == 29) {
                     throw new DateTimeException("Invalid date 'February 29' as '" + i + "' is not a leap year");
                 }
-                throw new DateTimeException("Invalid date '" + Month.m920of(i2).name() + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + i3 + "'");
+                throw new DateTimeException("Invalid date '" + Month.m918of(i2).name() + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + i3 + "'");
             }
         }
         return new LocalDate(i, i2, i3);
@@ -184,19 +184,19 @@ public final class LocalDate implements Temporal, TemporalAdjuster, ChronoLocalD
         }
         ChronoField chronoField = (ChronoField) temporalField;
         if (chronoField.isDateBased()) {
-            int i = C28511.$SwitchMap$java$time$temporal$ChronoField[chronoField.ordinal()];
+            int i = C28571.$SwitchMap$java$time$temporal$ChronoField[chronoField.ordinal()];
             if (i == 1) {
-                return ValueRange.m955of(1, (long) lengthOfMonth());
+                return ValueRange.m953of(1, (long) lengthOfMonth());
             }
             if (i == 2) {
-                return ValueRange.m955of(1, (long) lengthOfYear());
+                return ValueRange.m953of(1, (long) lengthOfYear());
             }
             if (i == 3) {
-                return ValueRange.m955of(1, (getMonth() != Month.FEBRUARY || isLeapYear()) ? 5 : 4);
+                return ValueRange.m953of(1, (getMonth() != Month.FEBRUARY || isLeapYear()) ? 5 : 4);
             } else if (i != 4) {
                 return temporalField.range();
             } else {
-                return ValueRange.m955of(1, getYear() <= 0 ? 1000000000 : 999999999);
+                return ValueRange.m953of(1, getYear() <= 0 ? 1000000000 : 999999999);
             }
         } else {
             throw new UnsupportedTemporalTypeException("Unsupported field: " + temporalField);
@@ -224,7 +224,7 @@ public final class LocalDate implements Temporal, TemporalAdjuster, ChronoLocalD
     }
 
     private int get0(TemporalField temporalField) {
-        switch (C28511.$SwitchMap$java$time$temporal$ChronoField[((ChronoField) temporalField).ordinal()]) {
+        switch (C28571.$SwitchMap$java$time$temporal$ChronoField[((ChronoField) temporalField).ordinal()]) {
             case 1:
                 return this.day;
             case 2:
@@ -281,7 +281,7 @@ public final class LocalDate implements Temporal, TemporalAdjuster, ChronoLocalD
     }
 
     public Month getMonth() {
-        return Month.m920of(this.month);
+        return Month.m918of(this.month);
     }
 
     public int getDayOfMonth() {
@@ -293,7 +293,7 @@ public final class LocalDate implements Temporal, TemporalAdjuster, ChronoLocalD
     }
 
     public DayOfWeek getDayOfWeek() {
-        return DayOfWeek.m906of(Math.floorMod(toEpochDay() + 3, 7) + 1);
+        return DayOfWeek.m904of(Math.floorMod(toEpochDay() + 3, 7) + 1);
     }
 
     public boolean isLeapYear() {
@@ -322,7 +322,7 @@ public final class LocalDate implements Temporal, TemporalAdjuster, ChronoLocalD
         }
         ChronoField chronoField = (ChronoField) temporalField;
         chronoField.checkValidValue(j);
-        switch (C28511.$SwitchMap$java$time$temporal$ChronoField[chronoField.ordinal()]) {
+        switch (C28571.$SwitchMap$java$time$temporal$ChronoField[chronoField.ordinal()]) {
             case 1:
                 return withDayOfMonth((int) j);
             case 2:
@@ -377,7 +377,7 @@ public final class LocalDate implements Temporal, TemporalAdjuster, ChronoLocalD
         if (this.day == i) {
             return this;
         }
-        return m908of(this.year, (int) this.month, i);
+        return m906of(this.year, (int) this.month, i);
     }
 
     public LocalDate withDayOfYear(int i) {
@@ -400,7 +400,7 @@ public final class LocalDate implements Temporal, TemporalAdjuster, ChronoLocalD
         if (!(temporalUnit instanceof ChronoUnit)) {
             return (LocalDate) temporalUnit.addTo(this, j);
         }
-        switch (C28511.$SwitchMap$java$time$temporal$ChronoUnit[((ChronoUnit) temporalUnit).ordinal()]) {
+        switch (C28571.$SwitchMap$java$time$temporal$ChronoUnit[((ChronoUnit) temporalUnit).ordinal()]) {
             case 1:
                 return plusDays(j);
             case 2:
@@ -423,7 +423,7 @@ public final class LocalDate implements Temporal, TemporalAdjuster, ChronoLocalD
     }
 
     /* renamed from: java.time.LocalDate$1 */
-    static /* synthetic */ class C28511 {
+    static /* synthetic */ class C28571 {
         static final /* synthetic */ int[] $SwitchMap$java$time$temporal$ChronoField;
         static final /* synthetic */ int[] $SwitchMap$java$time$temporal$ChronoUnit;
 
@@ -574,7 +574,7 @@ public final class LocalDate implements Temporal, TemporalAdjuster, ChronoLocalD
             L_0x00f3:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: java.time.LocalDate.C28511.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: java.time.LocalDate.C28571.<clinit>():void");
         }
     }
 
@@ -702,7 +702,7 @@ public final class LocalDate implements Temporal, TemporalAdjuster, ChronoLocalD
         if (!(temporalUnit instanceof ChronoUnit)) {
             return temporalUnit.between(this, from);
         }
-        switch (C28511.$SwitchMap$java$time$temporal$ChronoUnit[((ChronoUnit) temporalUnit).ordinal()]) {
+        switch (C28571.$SwitchMap$java$time$temporal$ChronoUnit[((ChronoUnit) temporalUnit).ordinal()]) {
             case 1:
                 return daysUntil(from);
             case 2:
@@ -745,7 +745,7 @@ public final class LocalDate implements Temporal, TemporalAdjuster, ChronoLocalD
             prolepticMonth++;
             i -= from.lengthOfMonth();
         }
-        return Period.m928of(Math.toIntExact(prolepticMonth / 12), (int) (prolepticMonth % 12), i);
+        return Period.m926of(Math.toIntExact(prolepticMonth / 12), (int) (prolepticMonth % 12), i);
     }
 
     public Stream<LocalDate> datesUntil(LocalDate localDate) {
@@ -819,7 +819,7 @@ public final class LocalDate implements Temporal, TemporalAdjuster, ChronoLocalD
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$datesUntil$1$java-time-LocalDate  reason: not valid java name */
-    public /* synthetic */ LocalDate m3160lambda$datesUntil$1$javatimeLocalDate(long j, long j2, long j3) {
+    public /* synthetic */ LocalDate m3164lambda$datesUntil$1$javatimeLocalDate(long j, long j2, long j3) {
         return plusMonths(j * j3).plusDays(j2 * j3);
     }
 
@@ -829,27 +829,27 @@ public final class LocalDate implements Temporal, TemporalAdjuster, ChronoLocalD
     }
 
     public LocalDateTime atTime(LocalTime localTime) {
-        return LocalDateTime.m916of(this, localTime);
+        return LocalDateTime.m914of(this, localTime);
     }
 
     public LocalDateTime atTime(int i, int i2) {
-        return atTime(LocalTime.m917of(i, i2));
+        return atTime(LocalTime.m915of(i, i2));
     }
 
     public LocalDateTime atTime(int i, int i2, int i3) {
-        return atTime(LocalTime.m918of(i, i2, i3));
+        return atTime(LocalTime.m916of(i, i2, i3));
     }
 
     public LocalDateTime atTime(int i, int i2, int i3, int i4) {
-        return atTime(LocalTime.m919of(i, i2, i3, i4));
+        return atTime(LocalTime.m917of(i, i2, i3, i4));
     }
 
     public OffsetDateTime atTime(OffsetTime offsetTime) {
-        return OffsetDateTime.m925of(LocalDateTime.m916of(this, offsetTime.toLocalTime()), offsetTime.getOffset());
+        return OffsetDateTime.m923of(LocalDateTime.m914of(this, offsetTime.toLocalTime()), offsetTime.getOffset());
     }
 
     public LocalDateTime atStartOfDay() {
-        return LocalDateTime.m916of(this, LocalTime.MIDNIGHT);
+        return LocalDateTime.m914of(this, LocalTime.MIDNIGHT);
     }
 
     public ZonedDateTime atStartOfDay(ZoneId zoneId) {
@@ -859,7 +859,7 @@ public final class LocalDate implements Temporal, TemporalAdjuster, ChronoLocalD
         if (!(zoneId instanceof ZoneOffset) && (transition = zoneId.getRules().getTransition(atTime)) != null && transition.isGap()) {
             atTime = transition.getDateTimeAfter();
         }
-        return ZonedDateTime.m938of(atTime, zoneId);
+        return ZonedDateTime.m936of(atTime, zoneId);
     }
 
     public long toEpochDay() {
@@ -989,6 +989,6 @@ public final class LocalDate implements Temporal, TemporalAdjuster, ChronoLocalD
     }
 
     static LocalDate readExternal(DataInput dataInput) throws IOException {
-        return m908of(dataInput.readInt(), (int) dataInput.readByte(), (int) dataInput.readByte());
+        return m906of(dataInput.readInt(), (int) dataInput.readByte(), (int) dataInput.readByte());
     }
 }

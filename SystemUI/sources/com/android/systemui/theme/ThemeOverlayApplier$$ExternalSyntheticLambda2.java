@@ -12,6 +12,6 @@ public final /* synthetic */ class ThemeOverlayApplier$$ExternalSyntheticLambda2
     }
 
     public final boolean test(Object obj) {
-        return this.f$0.mo46305x186b9440((OverlayInfo) obj);
+        return this.f$0.mo46317x186b9440((OverlayInfo) obj);
     }
 }

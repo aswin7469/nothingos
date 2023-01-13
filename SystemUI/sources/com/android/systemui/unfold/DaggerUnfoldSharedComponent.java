@@ -15,7 +15,7 @@ import com.android.systemui.unfold.updates.hinge.HingeAngleProvider;
 import com.android.systemui.unfold.updates.screen.ScreenStatusProvider;
 import com.android.systemui.unfold.util.ATraceLoggerTransitionProgressListener;
 import com.android.systemui.unfold.util.ATraceLoggerTransitionProgressListener_Factory;
-import com.android.systemui.unfold.util.C4830ScaleAwareTransitionProgressProvider_Factory;
+import com.android.systemui.unfold.util.C4842ScaleAwareTransitionProgressProvider_Factory;
 import com.android.systemui.unfold.util.ScaleAwareTransitionProgressProvider;
 import com.android.systemui.unfold.util.ScaleAwareTransitionProgressProvider_Factory_Impl;
 import dagger.internal.DoubleCheck;
@@ -67,7 +67,7 @@ public final class DaggerUnfoldSharedComponent {
         private Provider<Handler> handlerProvider;
         private Provider<HingeAngleProvider> hingeAngleProvider;
         private Provider<FoldStateProvider> provideFoldStateProvider;
-        private C4830ScaleAwareTransitionProgressProvider_Factory scaleAwareTransitionProgressProvider;
+        private C4842ScaleAwareTransitionProgressProvider_Factory scaleAwareTransitionProgressProvider;
         private Provider<ScreenStatusProvider> screenStatusProvider;
         private Provider<SensorManager> sensorManagerProvider;
         private Provider<String> tracingTagPrefixProvider;
@@ -83,7 +83,7 @@ public final class DaggerUnfoldSharedComponent {
             this.configProvider = InstanceFactory.create(unfoldTransitionConfig);
             dagger.internal.Factory create = InstanceFactory.create(contentResolver);
             this.contentResolverProvider = create;
-            C4830ScaleAwareTransitionProgressProvider_Factory create2 = C4830ScaleAwareTransitionProgressProvider_Factory.create(create);
+            C4842ScaleAwareTransitionProgressProvider_Factory create2 = C4842ScaleAwareTransitionProgressProvider_Factory.create(create);
             this.scaleAwareTransitionProgressProvider = create2;
             this.factoryProvider = ScaleAwareTransitionProgressProvider_Factory_Impl.create(create2);
             dagger.internal.Factory create3 = InstanceFactory.create(str);

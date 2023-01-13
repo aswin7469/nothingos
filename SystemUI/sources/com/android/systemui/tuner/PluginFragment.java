@@ -19,7 +19,7 @@ import androidx.preference.PreferenceScreen;
 import androidx.preference.PreferenceViewHolder;
 import androidx.preference.SwitchPreference;
 import com.android.internal.util.ArrayUtils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.PluginEnablerImpl;
 import com.android.systemui.shared.plugins.PluginActionManager;
@@ -86,7 +86,7 @@ public class PluginFragment extends PreferenceFragment {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$loadPrefs$0$com-android-systemui-tuner-PluginFragment  reason: not valid java name */
-    public /* synthetic */ void m3260lambda$loadPrefs$0$comandroidsystemuitunerPluginFragment(ArrayMap arrayMap, PluginManager pluginManager, Context context, PreferenceScreen preferenceScreen, PackageInfo packageInfo) {
+    public /* synthetic */ void m3265lambda$loadPrefs$0$comandroidsystemuitunerPluginFragment(ArrayMap arrayMap, PluginManager pluginManager, Context context, PreferenceScreen preferenceScreen, PackageInfo packageInfo) {
         if (arrayMap.containsKey(packageInfo.packageName) && !ArrayUtils.contains(pluginManager.getPrivilegedPlugins(), packageInfo.packageName)) {
             PluginPreference pluginPreference = new PluginPreference(context, packageInfo, this.mPluginEnabler);
             pluginPreference.setSummary((CharSequence) "Plugins: " + toString((ArraySet) arrayMap.get(packageInfo.packageName)));
@@ -133,7 +133,7 @@ public class PluginFragment extends PreferenceFragment {
             this.mPluginEnabler = pluginEnabler;
             setTitle(packageInfo.applicationInfo.loadLabel(packageManager));
             setChecked(isPluginEnabled());
-            setWidgetLayoutResource(C1893R.layout.tuner_widget_settings_switch);
+            setWidgetLayoutResource(C1894R.layout.tuner_widget_settings_switch);
         }
 
         private boolean isPluginEnabled() {
@@ -173,19 +173,19 @@ public class PluginFragment extends PreferenceFragment {
         public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
             super.onBindViewHolder(preferenceViewHolder);
             int i = 0;
-            preferenceViewHolder.findViewById(C1893R.C1897id.settings).setVisibility(this.mHasSettings ? 0 : 8);
-            View findViewById = preferenceViewHolder.findViewById(C1893R.C1897id.divider);
+            preferenceViewHolder.findViewById(C1894R.C1898id.settings).setVisibility(this.mHasSettings ? 0 : 8);
+            View findViewById = preferenceViewHolder.findViewById(C1894R.C1898id.divider);
             if (!this.mHasSettings) {
                 i = 8;
             }
             findViewById.setVisibility(i);
-            preferenceViewHolder.findViewById(C1893R.C1897id.settings).setOnClickListener(new PluginFragment$PluginPreference$$ExternalSyntheticLambda0(this));
+            preferenceViewHolder.findViewById(C1894R.C1898id.settings).setOnClickListener(new PluginFragment$PluginPreference$$ExternalSyntheticLambda0(this));
             preferenceViewHolder.itemView.setOnLongClickListener(new PluginFragment$PluginPreference$$ExternalSyntheticLambda1(this));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onBindViewHolder$0$com-android-systemui-tuner-PluginFragment$PluginPreference */
-        public /* synthetic */ void mo46424x7725852a(View view) {
+        public /* synthetic */ void mo46436x7725852a(View view) {
             ResolveInfo resolveActivity = view.getContext().getPackageManager().resolveActivity(new Intent(PluginFragment.ACTION_PLUGIN_SETTINGS).setPackage(this.mInfo.packageName), 0);
             if (resolveActivity != null) {
                 view.getContext().startActivity(new Intent().setComponent(new ComponentName(resolveActivity.activityInfo.packageName, resolveActivity.activityInfo.name)));
@@ -194,7 +194,7 @@ public class PluginFragment extends PreferenceFragment {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onBindViewHolder$1$com-android-systemui-tuner-PluginFragment$PluginPreference */
-        public /* synthetic */ boolean mo46425x7d295089(View view) {
+        public /* synthetic */ boolean mo46437x7d295089(View view) {
             Intent intent = new Intent("android.settings.APPLICATION_DETAILS_SETTINGS");
             intent.setData(Uri.fromParts("package", this.mInfo.packageName, (String) null));
             getContext().startActivity(intent);

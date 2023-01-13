@@ -8,7 +8,7 @@ import android.util.MathUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 
 public abstract class MirrorWindowControl {
     private static final boolean DBG = (Log.isLoggable(TAG, 3) | false);
@@ -48,7 +48,7 @@ public abstract class MirrorWindowControl {
         Point point = this.mTmpPoint;
         this.mControlsView = onCreateView(LayoutInflater.from(this.mContext), point);
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
-        int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.magnification_controls_size);
+        int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.magnification_controls_size);
         layoutParams.width = point.x <= 0 ? dimensionPixelSize : point.x;
         if (point.y > 0) {
             dimensionPixelSize = point.y;

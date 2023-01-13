@@ -195,57 +195,57 @@ public interface Map<K, V> {
     }
 
     /* renamed from: of */
-    static <K, V> Map<K, V> m1734of() {
+    static <K, V> Map<K, V> m1740of() {
         return ImmutableCollections.Map0.instance();
     }
 
     /* renamed from: of */
-    static <K, V> Map<K, V> m1735of(K k, V v) {
+    static <K, V> Map<K, V> m1741of(K k, V v) {
         return new ImmutableCollections.Map1(k, v);
     }
 
     /* renamed from: of */
-    static <K, V> Map<K, V> m1736of(K k, V v, K k2, V v2) {
+    static <K, V> Map<K, V> m1742of(K k, V v, K k2, V v2) {
         return new ImmutableCollections.MapN(k, v, k2, v2);
     }
 
     /* renamed from: of */
-    static <K, V> Map<K, V> m1737of(K k, V v, K k2, V v2, K k3, V v3) {
+    static <K, V> Map<K, V> m1743of(K k, V v, K k2, V v2, K k3, V v3) {
         return new ImmutableCollections.MapN(k, v, k2, v2, k3, v3);
     }
 
     /* renamed from: of */
-    static <K, V> Map<K, V> m1738of(K k, V v, K k2, V v2, K k3, V v3, K k4, V v4) {
+    static <K, V> Map<K, V> m1744of(K k, V v, K k2, V v2, K k3, V v3, K k4, V v4) {
         return new ImmutableCollections.MapN(k, v, k2, v2, k3, v3, k4, v4);
     }
 
     /* renamed from: of */
-    static <K, V> Map<K, V> m1739of(K k, V v, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5) {
+    static <K, V> Map<K, V> m1745of(K k, V v, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5) {
         return new ImmutableCollections.MapN(k, v, k2, v2, k3, v3, k4, v4, k5, v5);
     }
 
     /* renamed from: of */
-    static <K, V> Map<K, V> m1740of(K k, V v, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6) {
+    static <K, V> Map<K, V> m1746of(K k, V v, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6) {
         return new ImmutableCollections.MapN(k, v, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6);
     }
 
     /* renamed from: of */
-    static <K, V> Map<K, V> m1741of(K k, V v, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7) {
+    static <K, V> Map<K, V> m1747of(K k, V v, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7) {
         return new ImmutableCollections.MapN(k, v, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7);
     }
 
     /* renamed from: of */
-    static <K, V> Map<K, V> m1742of(K k, V v, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7, K k8, V v8) {
+    static <K, V> Map<K, V> m1748of(K k, V v, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7, K k8, V v8) {
         return new ImmutableCollections.MapN(k, v, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8);
     }
 
     /* renamed from: of */
-    static <K, V> Map<K, V> m1743of(K k, V v, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7, K k8, V v8, K k9, V v9) {
+    static <K, V> Map<K, V> m1749of(K k, V v, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7, K k8, V v8, K k9, V v9) {
         return new ImmutableCollections.MapN(k, v, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9);
     }
 
     /* renamed from: of */
-    static <K, V> Map<K, V> m1744of(K k, V v, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7, K k8, V v8, K k9, V v9, K k10, V v10) {
+    static <K, V> Map<K, V> m1750of(K k, V v, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7, K k8, V v8, K k9, V v9, K k10, V v10) {
         return new ImmutableCollections.MapN(k, v, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9, k10, v10);
     }
 

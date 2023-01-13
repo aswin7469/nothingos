@@ -12,6 +12,6 @@ public final /* synthetic */ class DreamOverlayStatusBarViewController$$External
     }
 
     public final void onNextAlarmChanged(AlarmManager.AlarmClockInfo alarmClockInfo) {
-        this.f$0.mo32542xc64f93e4(alarmClockInfo);
+        this.f$0.mo32553xc64f93e4(alarmClockInfo);
     }
 }

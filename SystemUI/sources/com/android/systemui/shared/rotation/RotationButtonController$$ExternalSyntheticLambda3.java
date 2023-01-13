@@ -9,6 +9,6 @@ public final /* synthetic */ class RotationButtonController$$ExternalSyntheticLa
     }
 
     public final void run() {
-        this.f$0.mo37983xa4e55dff();
+        this.f$0.mo37984xa4e55dff();
     }
 }

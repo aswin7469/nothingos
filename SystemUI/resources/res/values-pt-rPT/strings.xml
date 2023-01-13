@@ -708,9 +708,15 @@
     <string name="force_rtl_layout_all_locales_summary">Forçar dir. do esq. do ecrã p. RTL tds os locais</string>
     <string name="forced_resizable_secondary_display">A app pode não funcionar num ecrã secundário.</string>
     <string name="game_status">Em reprodução</string>
+    <string name="gamemode_description">O Game Mode verá se está num jogo e será ativado automaticamente para si</string>
+    <string name="gamemode_gamedashboard_title">Menu de Jogo</string>
+    <string name="gamemode_notification_content">Toque para ir às Definições</string>
+    <string name="gamemode_notification_title">Game Mode atualmente ativado</string>
     <string name="global_action_lock_message">Desbloqueie o telemóvel para obter mais opções.</string>
     <string name="global_action_screenshot">Captura de ecrã</string>
     <string name="global_action_smart_lock_disabled">Smart Lock desativado</string>
+    <string name="gm_guide_status_on">ON</string>
+    <string name="gm_notification_title">Game Mode</string>
     <string name="go_to_web">Ir para o navegador</string>
     <string name="got_it">OK</string>
     <string name="guest_exit_guest">Remover convidado</string>

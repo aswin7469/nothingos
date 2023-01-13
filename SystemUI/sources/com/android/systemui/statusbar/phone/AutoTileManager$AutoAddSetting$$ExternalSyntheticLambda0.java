@@ -11,6 +11,6 @@ public final /* synthetic */ class AutoTileManager$AutoAddSetting$$ExternalSynth
     }
 
     public final void run() {
-        this.f$0.mo43670xad5dd92d();
+        this.f$0.mo43678xad5dd92d();
     }
 }

@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.android.keyguard.CarrierTextManager;
 import com.android.settingslib.AccessibilityContentDescriptions;
 import com.android.settingslib.mobile.TelephonyIcons;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.dagger.qualifiers.Background;
 import com.android.systemui.dagger.qualifiers.Main;
@@ -49,7 +49,7 @@ public class QSCarrierGroupController {
     public String[] mLastSignalLevelDescription;
     private boolean mListening;
     /* access modifiers changed from: private */
-    public C2355H mMainHandler;
+    public C2358H mMainHandler;
     private final NetworkController mNetworkController;
     private final TextView mNoSimTextView;
     private OnSingleCarrierChangedListener mOnSingleCarrierChangedListener;
@@ -72,9 +72,9 @@ public class QSCarrierGroupController {
 
     /* renamed from: com.android.systemui.qs.carrier.QSCarrierGroupController$Callback */
     private static class Callback implements CarrierTextManager.CarrierTextCallback {
-        private C2355H mHandler;
+        private C2358H mHandler;
 
-        Callback(C2355H h) {
+        Callback(C2358H h) {
             this.mHandler = h;
         }
 
@@ -115,24 +115,24 @@ public class QSCarrierGroupController {
                         Log.e(QSCarrierGroupController.TAG, "Invalid SIM slot index for subscription: " + i);
                     } else {
                         boolean callStrengthConfig = QSCarrierGroupController.this.mCarrierConfigTracker.getCallStrengthConfig(i);
-                        if (iconState.icon == C1893R.C1895drawable.ic_qs_no_calling_sms) {
+                        if (iconState.icon == C1894R.C1896drawable.ic_qs_no_calling_sms) {
                             if (iconState.visible) {
                                 QSCarrierGroupController.this.mInfos[slotIndex] = new CellSignalState(true, iconState.icon, iconState.contentDescription, "", false, QSCarrierGroupController.this.mProviderModel);
                             } else if (callStrengthConfig) {
                                 QSCarrierGroupController.this.mInfos[slotIndex] = new CellSignalState(true, QSCarrierGroupController.this.mLastSignalLevel[slotIndex], QSCarrierGroupController.this.mLastSignalLevelDescription[slotIndex], "", false, QSCarrierGroupController.this.mProviderModel);
                             } else {
-                                QSCarrierGroupController.this.mInfos[slotIndex] = new CellSignalState(true, C1893R.C1895drawable.ic_qs_sim_card, "", "", false, QSCarrierGroupController.this.mProviderModel);
+                                QSCarrierGroupController.this.mInfos[slotIndex] = new CellSignalState(true, C1894R.C1896drawable.ic_qs_sim_card, "", "", false, QSCarrierGroupController.this.mProviderModel);
                             }
                             QSCarrierGroupController.this.mMainHandler.obtainMessage(1).sendToTarget();
                             return;
                         }
                         QSCarrierGroupController.this.mLastSignalLevel[slotIndex] = iconState.icon;
                         QSCarrierGroupController.this.mLastSignalLevelDescription[slotIndex] = iconState.contentDescription;
-                        if (QSCarrierGroupController.this.mInfos[slotIndex].mobileSignalIconId != C1893R.C1895drawable.ic_qs_no_calling_sms) {
+                        if (QSCarrierGroupController.this.mInfos[slotIndex].mobileSignalIconId != C1894R.C1896drawable.ic_qs_no_calling_sms) {
                             if (callStrengthConfig) {
                                 QSCarrierGroupController.this.mInfos[slotIndex] = new CellSignalState(true, iconState.icon, iconState.contentDescription, "", false, QSCarrierGroupController.this.mProviderModel);
                             } else {
-                                QSCarrierGroupController.this.mInfos[slotIndex] = new CellSignalState(true, C1893R.C1895drawable.ic_qs_sim_card, "", "", false, QSCarrierGroupController.this.mProviderModel);
+                                QSCarrierGroupController.this.mInfos[slotIndex] = new CellSignalState(true, C1894R.C1896drawable.ic_qs_sim_card, "", "", false, QSCarrierGroupController.this.mProviderModel);
                             }
                             QSCarrierGroupController.this.mMainHandler.obtainMessage(1).sendToTarget();
                         }
@@ -165,7 +165,7 @@ public class QSCarrierGroupController {
         TextView noSimTextView = qSCarrierGroup.getNoSimTextView();
         this.mNoSimTextView = noSimTextView;
         noSimTextView.setOnClickListener(qSCarrierGroupController$$ExternalSyntheticLambda0);
-        this.mMainHandler = new C2355H(looper, new QSCarrierGroupController$$ExternalSyntheticLambda1(this), new QSCarrierGroupController$$ExternalSyntheticLambda2(this));
+        this.mMainHandler = new C2358H(looper, new QSCarrierGroupController$$ExternalSyntheticLambda1(this), new QSCarrierGroupController$$ExternalSyntheticLambda2(this));
         this.mCallback = new Callback(this.mMainHandler);
         this.mCarrierGroups[0] = qSCarrierGroup.getCarrier1View();
         this.mCarrierGroups[1] = qSCarrierGroup.getCarrier2View();
@@ -173,7 +173,7 @@ public class QSCarrierGroupController {
         this.mCarrierDividers[0] = qSCarrierGroup.getCarrierDivider1();
         this.mCarrierDividers[1] = qSCarrierGroup.getCarrierDivider2();
         for (int i = 0; i < 3; i++) {
-            this.mInfos[i] = new CellSignalState(true, C1893R.C1895drawable.ic_qs_no_calling_sms, context2.getText(AccessibilityContentDescriptions.NO_CALLING).toString(), "", false, this.mProviderModel);
+            this.mInfos[i] = new CellSignalState(true, C1894R.C1896drawable.ic_qs_no_calling_sms, context2.getText(AccessibilityContentDescriptions.NO_CALLING).toString(), "", false, this.mProviderModel);
             this.mLastSignalLevel[i] = TelephonyIcons.MOBILE_CALL_STRENGTH_ICONS[0];
             this.mLastSignalLevelDescription[i] = context2.getText(AccessibilityContentDescriptions.PHONE_SIGNAL_STRENGTH[0]).toString();
             this.mCarrierGroups[i].setOnClickListener(qSCarrierGroupController$$ExternalSyntheticLambda0);
@@ -192,7 +192,7 @@ public class QSCarrierGroupController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-qs-carrier-QSCarrierGroupController */
-    public /* synthetic */ void mo36464xe730b13a(View view) {
+    public /* synthetic */ void mo36468xe730b13a(View view) {
         if (view.isVisibleToUser()) {
             this.mActivityStarter.postStartActivityDismissingKeyguard(new Intent("android.settings.WIRELESS_SETTINGS"), 0);
         }
@@ -251,8 +251,8 @@ public class QSCarrierGroupController {
         int i = 0;
         if (computeIsSingleCarrier) {
             for (int i2 = 0; i2 < 3; i2++) {
-                if (this.mInfos[i2].visible && this.mInfos[i2].mobileSignalIconId == C1893R.C1895drawable.ic_qs_sim_card) {
-                    this.mInfos[i2] = new CellSignalState(true, C1893R.C1895drawable.ic_blank, "", "", false, this.mProviderModel);
+                if (this.mInfos[i2].visible && this.mInfos[i2].mobileSignalIconId == C1894R.C1896drawable.ic_qs_sim_card) {
+                    this.mInfos[i2] = new CellSignalState(true, C1894R.C1896drawable.ic_blank, "", "", false, this.mProviderModel);
                 }
             }
         }
@@ -326,13 +326,13 @@ public class QSCarrierGroupController {
     }
 
     /* renamed from: com.android.systemui.qs.carrier.QSCarrierGroupController$H */
-    private static class C2355H extends Handler {
+    private static class C2358H extends Handler {
         static final int MSG_UPDATE_CARRIER_INFO = 0;
         static final int MSG_UPDATE_STATE = 1;
         private Consumer<CarrierTextManager.CarrierTextCallbackInfo> mUpdateCarrierInfo;
         private Runnable mUpdateState;
 
-        C2355H(Looper looper, Consumer<CarrierTextManager.CarrierTextCallbackInfo> consumer, Runnable runnable) {
+        C2358H(Looper looper, Consumer<CarrierTextManager.CarrierTextCallbackInfo> consumer, Runnable runnable) {
             super(looper);
             this.mUpdateCarrierInfo = consumer;
             this.mUpdateState = runnable;

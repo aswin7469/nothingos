@@ -5,7 +5,7 @@ import com.android.internal.util.LatencyTracker;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.keyguard.KeyguardMessageAreaController;
 import com.android.keyguard.KeyguardSecurityModel;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.classifier.FalsingCollector;
 import com.android.systemui.statusbar.policy.DevicePostureController;
 
@@ -16,7 +16,7 @@ public class KeyguardPinViewController extends KeyguardPinBasedInputViewControll
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-keyguard-KeyguardPinViewController  reason: not valid java name */
-    public /* synthetic */ void m2289lambda$new$0$comandroidkeyguardKeyguardPinViewController(int i) {
+    public /* synthetic */ void m2295lambda$new$0$comandroidkeyguardKeyguardPinViewController(int i) {
         ((KeyguardPINView) this.mView).onDevicePostureChanged(i);
     }
 
@@ -29,7 +29,7 @@ public class KeyguardPinViewController extends KeyguardPinBasedInputViewControll
     /* access modifiers changed from: protected */
     public void onViewAttached() {
         super.onViewAttached();
-        View findViewById = ((KeyguardPINView) this.mView).findViewById(C1893R.C1897id.cancel_button);
+        View findViewById = ((KeyguardPINView) this.mView).findViewById(C1894R.C1898id.cancel_button);
         if (findViewById != null) {
             findViewById.setOnClickListener(new KeyguardPinViewController$$ExternalSyntheticLambda0(this));
         }

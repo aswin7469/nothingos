@@ -1,11 +1,11 @@
 package com.android.systemui.controls.p010ui;
 
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import kotlin.Metadata;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Lambda;
 
-@Metadata(mo64986d1 = {"\u0000\n\n\u0000\n\u0002\u0010\b\n\u0002\b\u0003\u0010\u0000\u001a\u00020\u00012\u0006\u0010\u0002\u001a\u00020\u0001H\n¢\u0006\u0004\b\u0003\u0010\u0004"}, mo64987d2 = {"<anonymous>", "", "it", "invoke", "(I)Ljava/lang/Integer;"}, mo64988k = 3, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000\n\n\u0000\n\u0002\u0010\b\n\u0002\b\u0003\u0010\u0000\u001a\u00020\u00012\u0006\u0010\u0002\u001a\u00020\u0001H\n¢\u0006\u0004\b\u0003\u0010\u0004"}, mo65043d2 = {"<anonymous>", "", "it", "invoke", "(I)Ljava/lang/Integer;"}, mo65044k = 3, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* renamed from: com.android.systemui.controls.ui.RenderInfoKt$deviceIconMap$1 */
 /* compiled from: RenderInfo.kt */
 final class RenderInfoKt$deviceIconMap$1 extends Lambda implements Function1<Integer, Integer> {
@@ -20,6 +20,6 @@ final class RenderInfoKt$deviceIconMap$1 extends Lambda implements Function1<Int
     }
 
     public final Integer invoke(int i) {
-        return Integer.valueOf((int) C1893R.C1895drawable.ic_device_unknown);
+        return Integer.valueOf((int) C1894R.C1896drawable.ic_device_unknown);
     }
 }

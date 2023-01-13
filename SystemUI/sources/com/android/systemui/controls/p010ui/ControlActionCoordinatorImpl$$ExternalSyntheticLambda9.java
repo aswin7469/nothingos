@@ -13,6 +13,6 @@ public final /* synthetic */ class ControlActionCoordinatorImpl$$ExternalSynthet
     }
 
     public final boolean onDismiss() {
-        return ControlActionCoordinatorImpl.m2673bouncerOrRun$lambda1(this.f$0);
+        return ControlActionCoordinatorImpl.m2678bouncerOrRun$lambda1(this.f$0);
     }
 }

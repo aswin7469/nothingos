@@ -11,6 +11,6 @@ public final /* synthetic */ class NotifPipelineChoreographerImpl$$ExternalSynth
     }
 
     public final void doFrame(long j) {
-        NotifPipelineChoreographerImpl.m3096frameCallback$lambda1(this.f$0, j);
+        NotifPipelineChoreographerImpl.m3100frameCallback$lambda1(this.f$0, j);
     }
 }

@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Switch;
 import androidx.lifecycle.LifecycleOwner;
 import com.android.internal.logging.MetricsLogger;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.qualifiers.Background;
 import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.p012qs.QSHost;
@@ -25,7 +25,7 @@ import javax.inject.Inject;
 public class LocationTile extends QSTileImpl<QSTile.BooleanState> {
     private final Callback mCallback;
     private final LocationController mController;
-    private final QSTile.Icon mIcon = QSTileImpl.ResourceIcon.get(C1893R.C1895drawable.ic_location);
+    private final QSTile.Icon mIcon = QSTileImpl.ResourceIcon.get(C1894R.C1896drawable.ic_location);
     private final KeyguardStateController mKeyguard;
 
     public int getMetricsCategory() {
@@ -62,14 +62,14 @@ public class LocationTile extends QSTileImpl<QSTile.BooleanState> {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$handleClick$0$com-android-systemui-qs-tiles-LocationTile  reason: not valid java name */
-    public /* synthetic */ void m2979lambda$handleClick$0$comandroidsystemuiqstilesLocationTile() {
+    public /* synthetic */ void m2983lambda$handleClick$0$comandroidsystemuiqstilesLocationTile() {
         boolean z = ((QSTile.BooleanState) this.mState).value;
         this.mHost.openPanels();
         this.mController.setLocationEnabled(!z);
     }
 
     public CharSequence getTileLabel() {
-        return this.mContext.getString(C1893R.string.quick_settings_location_label);
+        return this.mContext.getString(C1894R.string.quick_settings_location_label);
     }
 
     /* access modifiers changed from: protected */
@@ -85,7 +85,7 @@ public class LocationTile extends QSTileImpl<QSTile.BooleanState> {
         booleanState.icon = this.mIcon;
         int i = 1;
         booleanState.slash.isSlashed = !booleanState.value;
-        booleanState.label = this.mContext.getString(C1893R.string.quick_settings_location_label);
+        booleanState.label = this.mContext.getString(C1894R.string.quick_settings_location_label);
         booleanState.contentDescription = booleanState.label;
         if (booleanState.value) {
             i = 2;

@@ -7,7 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 
 public class Slider extends BaseSlider<Slider, OnChangeListener, OnSliderTouchListener> {
 
@@ -278,7 +278,7 @@ public class Slider extends BaseSlider<Slider, OnChangeListener, OnSliderTouchLi
     }
 
     public Slider(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, C3621R.attr.sliderStyle);
+        this(context, attributeSet, C3631R.attr.sliderStyle);
     }
 
     public Slider(Context context, AttributeSet attributeSet, int i) {

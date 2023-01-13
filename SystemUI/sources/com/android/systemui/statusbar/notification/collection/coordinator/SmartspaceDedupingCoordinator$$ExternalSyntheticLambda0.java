@@ -11,6 +11,6 @@ public final /* synthetic */ class SmartspaceDedupingCoordinator$$ExternalSynthe
     }
 
     public final void run() {
-        SmartspaceDedupingCoordinator.m3114updateAlertException$lambda3(this.f$0, this.f$1);
+        SmartspaceDedupingCoordinator.m3118updateAlertException$lambda3(this.f$0, this.f$1);
     }
 }

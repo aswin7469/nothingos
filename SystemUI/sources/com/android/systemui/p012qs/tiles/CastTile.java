@@ -1,7 +1,10 @@
 package com.android.systemui.p012qs.tiles;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.media.MediaRouter;
 import android.os.Handler;
 import android.os.Looper;
@@ -12,7 +15,8 @@ import android.widget.Button;
 import androidx.lifecycle.LifecycleOwner;
 import com.android.internal.app.MediaRouteDialogPresenter;
 import com.android.internal.logging.MetricsLogger;
-import com.android.systemui.C1893R;
+import com.android.settingslib.Utils;
+import com.android.systemui.C1894R;
 import com.android.systemui.animation.ActivityLaunchAnimator;
 import com.android.systemui.animation.DialogLaunchAnimator;
 import com.android.systemui.dagger.qualifiers.Background;
@@ -62,7 +66,7 @@ public class CastTile extends QSTileImpl<QSTile.BooleanState> {
         super(qSHost, looper, handler, falsingManager, metricsLogger, statusBarStateController, activityStarter, qSLogger);
         Callback callback = new Callback();
         this.mCallback = callback;
-        C23901 r2 = new SignalCallback() {
+        C23942 r2 = new SignalCallback() {
             public void setWifiIndicators(WifiIndicators wifiIndicators) {
                 boolean z = false;
                 if (!SystemProperties.getBoolean(CastTile.WFD_ENABLE, false)) {
@@ -82,7 +86,7 @@ public class CastTile extends QSTileImpl<QSTile.BooleanState> {
             }
         };
         this.mSignalCallback = r2;
-        C23912 r3 = new HotspotController.Callback() {
+        C23953 r3 = new HotspotController.Callback() {
             public void onHotspotChanged(boolean z, int i) {
                 boolean z2 = z && i > 0;
                 if (z2 != CastTile.this.mHotspotConnected) {
@@ -151,7 +155,7 @@ public class CastTile extends QSTileImpl<QSTile.BooleanState> {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$handleClick$0$com-android-systemui-qs-tiles-CastTile  reason: not valid java name */
-    public /* synthetic */ void m2968lambda$handleClick$0$comandroidsystemuiqstilesCastTile() {
+    public /* synthetic */ void m2973lambda$handleClick$0$comandroidsystemuiqstilesCastTile() {
         showDialog((View) null);
     }
 
@@ -190,9 +194,20 @@ public class CastTile extends QSTileImpl<QSTile.BooleanState> {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$showDialog$3$com-android-systemui-qs-tiles-CastTile  reason: not valid java name */
-    public /* synthetic */ void m2971lambda$showDialog$3$comandroidsystemuiqstilesCastTile(View view) {
+    public /* synthetic */ void m2976lambda$showDialog$3$comandroidsystemuiqstilesCastTile(View view) {
         DialogHolder dialogHolder = new DialogHolder();
-        Dialog createDialog = MediaRouteDialogPresenter.createDialog(this.mContext, 4, new CastTile$$ExternalSyntheticLambda2(this, dialogHolder), C1893R.style.Theme_SystemUI_Dialog_Cast, false);
+        Dialog createDialog = MediaRouteDialogPresenter.createDialog(this.mContext, 4, new CastTile$$ExternalSyntheticLambda2(this, dialogHolder), C1894R.style.Theme_SystemUI_Dialog_Cast, false);
+        createDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            public void onShow(DialogInterface dialogInterface) {
+                if (dialogInterface instanceof AlertDialog) {
+                    ColorStateList colorAttr = Utils.getColorAttr(CastTile.this.mContext, 17957103);
+                    Button button = (Button) ((AlertDialog) dialogInterface).findViewById(16909214);
+                    if (button != null) {
+                        button.setTextColor(colorAttr);
+                    }
+                }
+            }
+        });
         dialogHolder.init(createDialog);
         SystemUIDialog.setShowForAllUsers(createDialog, true);
         SystemUIDialog.registerDismissListener(createDialog);
@@ -203,7 +218,7 @@ public class CastTile extends QSTileImpl<QSTile.BooleanState> {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$showDialog$1$com-android-systemui-qs-tiles-CastTile  reason: not valid java name */
-    public /* synthetic */ void m2969lambda$showDialog$1$comandroidsystemuiqstilesCastTile(DialogHolder dialogHolder, View view) {
+    public /* synthetic */ void m2974lambda$showDialog$1$comandroidsystemuiqstilesCastTile(DialogHolder dialogHolder, View view) {
         ActivityLaunchAnimator.Controller createActivityLaunchController = this.mDialogLaunchAnimator.createActivityLaunchController(view);
         if (createActivityLaunchController == null) {
             dialogHolder.mDialog.dismiss();
@@ -213,7 +228,7 @@ public class CastTile extends QSTileImpl<QSTile.BooleanState> {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$showDialog$2$com-android-systemui-qs-tiles-CastTile  reason: not valid java name */
-    public /* synthetic */ void m2970lambda$showDialog$2$comandroidsystemuiqstilesCastTile(View view, Dialog dialog) {
+    public /* synthetic */ void m2975lambda$showDialog$2$comandroidsystemuiqstilesCastTile(View view, Dialog dialog) {
         if (view != null) {
             this.mDialogLaunchAnimator.showFromView(dialog, view);
         } else {
@@ -222,13 +237,13 @@ public class CastTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     public CharSequence getTileLabel() {
-        return this.mContext.getString(C1893R.string.quick_settings_cast_title);
+        return this.mContext.getString(C1894R.string.quick_settings_cast_title);
     }
 
     /* access modifiers changed from: protected */
     public void handleUpdateState(QSTile.BooleanState booleanState, Object obj) {
         int i;
-        booleanState.label = this.mContext.getString(C1893R.string.quick_settings_cast_title);
+        booleanState.label = this.mContext.getString(C1894R.string.quick_settings_cast_title);
         booleanState.contentDescription = booleanState.label;
         booleanState.stateDescription = "";
         booleanState.value = false;
@@ -243,7 +258,7 @@ public class CastTile extends QSTileImpl<QSTile.BooleanState> {
             if (next.state == 2) {
                 booleanState.value = true;
                 booleanState.secondaryLabel = getDeviceName(next);
-                booleanState.stateDescription += NavigationBarInflaterView.BUTTON_SEPARATOR + this.mContext.getString(C1893R.string.accessibility_cast_name, new Object[]{booleanState.label});
+                booleanState.stateDescription += NavigationBarInflaterView.BUTTON_SEPARATOR + this.mContext.getString(C1894R.string.accessibility_cast_name, new Object[]{booleanState.label});
                 z = false;
                 break;
             } else if (next.state == 1) {
@@ -251,9 +266,9 @@ public class CastTile extends QSTileImpl<QSTile.BooleanState> {
             }
         }
         if (z && !booleanState.value) {
-            booleanState.secondaryLabel = this.mContext.getString(C1893R.string.quick_settings_connecting);
+            booleanState.secondaryLabel = this.mContext.getString(C1894R.string.quick_settings_connecting);
         }
-        booleanState.icon = QSTileImpl.ResourceIcon.get(booleanState.value ? C1893R.C1895drawable.ic_cast_connected : C1893R.C1895drawable.ic_cast);
+        booleanState.icon = QSTileImpl.ResourceIcon.get(booleanState.value ? C1894R.C1896drawable.ic_cast_connected : C1894R.C1896drawable.ic_cast);
         if (canCastToWifi() || booleanState.value) {
             if (!booleanState.value) {
                 i = 1;
@@ -266,7 +281,7 @@ public class CastTile extends QSTileImpl<QSTile.BooleanState> {
             booleanState.forceExpandIcon = willPopDialog();
         } else {
             booleanState.state = 0;
-            booleanState.secondaryLabel = this.mContext.getString(C1893R.string.quick_settings_cast_no_wifi);
+            booleanState.secondaryLabel = this.mContext.getString(C1894R.string.quick_settings_cast_no_wifi);
             booleanState.forceExpandIcon = false;
         }
         booleanState.stateDescription += ", " + booleanState.secondaryLabel;
@@ -276,7 +291,7 @@ public class CastTile extends QSTileImpl<QSTile.BooleanState> {
         if (castDevice.name != null) {
             return castDevice.name;
         }
-        return this.mContext.getString(C1893R.string.quick_settings_cast_device_default_name);
+        return this.mContext.getString(C1894R.string.quick_settings_cast_device_default_name);
     }
 
     private boolean canCastToWifi() {

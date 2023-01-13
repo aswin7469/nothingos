@@ -11,6 +11,6 @@ public final /* synthetic */ class NotificationStackScrollLayout$$ExternalSynthe
     }
 
     public final boolean onPreDraw() {
-        return this.f$0.mo42211x7a749905();
+        return this.f$0.mo42219x7a749905();
     }
 }

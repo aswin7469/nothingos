@@ -251,7 +251,7 @@ public abstract class UnixFileSystemProvider extends AbstractFileSystemProvider 
             z2 = false;
             z = false;
             for (AccessMode ordinal : accessModeArr) {
-                int i2 = C47993.$SwitchMap$java$nio$file$AccessMode[ordinal.ordinal()];
+                int i2 = C48113.$SwitchMap$java$nio$file$AccessMode[ordinal.ordinal()];
                 if (i2 == 1) {
                     z3 = true;
                 } else if (i2 == 2) {
@@ -287,7 +287,7 @@ public abstract class UnixFileSystemProvider extends AbstractFileSystemProvider 
     }
 
     /* renamed from: sun.nio.fs.UnixFileSystemProvider$3 */
-    static /* synthetic */ class C47993 {
+    static /* synthetic */ class C48113 {
         static final /* synthetic */ int[] $SwitchMap$java$nio$file$AccessMode;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(6:0|1|2|3|4|(3:5|6|8)) */
@@ -319,7 +319,7 @@ public abstract class UnixFileSystemProvider extends AbstractFileSystemProvider 
             L_0x0028:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: sun.nio.p035fs.UnixFileSystemProvider.C47993.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: sun.nio.p035fs.UnixFileSystemProvider.C48113.<clinit>():void");
         }
     }
 

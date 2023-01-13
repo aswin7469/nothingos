@@ -11,6 +11,6 @@ public final /* synthetic */ class PluginActionManager$$ExternalSyntheticLambda3
     }
 
     public final void run() {
-        this.f$0.mo37856xbe1da2ee(this.f$1);
+        this.f$0.mo37857xbe1da2ee(this.f$1);
     }
 }

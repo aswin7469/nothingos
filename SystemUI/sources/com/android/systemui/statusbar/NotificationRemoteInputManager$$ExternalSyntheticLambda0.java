@@ -12,6 +12,6 @@ public final /* synthetic */ class NotificationRemoteInputManager$$ExternalSynth
     }
 
     public final void onSmartReplySent(NotificationEntry notificationEntry, CharSequence charSequence) {
-        this.f$0.mo38817x7995d1d3(notificationEntry, charSequence);
+        this.f$0.mo38818x7995d1d3(notificationEntry, charSequence);
     }
 }

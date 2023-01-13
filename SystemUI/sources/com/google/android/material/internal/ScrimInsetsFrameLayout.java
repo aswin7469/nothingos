@@ -11,7 +11,7 @@ import android.widget.FrameLayout;
 import androidx.core.view.OnApplyWindowInsetsListener;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 
 public class ScrimInsetsFrameLayout extends FrameLayout {
     private boolean drawBottomInsetForeground;
@@ -37,8 +37,8 @@ public class ScrimInsetsFrameLayout extends FrameLayout {
         this.tempRect = new Rect();
         this.drawTopInsetForeground = true;
         this.drawBottomInsetForeground = true;
-        TypedArray obtainStyledAttributes = ThemeEnforcement.obtainStyledAttributes(context, attributeSet, C3621R.styleable.ScrimInsetsFrameLayout, i, C3621R.style.Widget_Design_ScrimInsetsFrameLayout, new int[0]);
-        this.insetForeground = obtainStyledAttributes.getDrawable(C3621R.styleable.ScrimInsetsFrameLayout_insetForeground);
+        TypedArray obtainStyledAttributes = ThemeEnforcement.obtainStyledAttributes(context, attributeSet, C3631R.styleable.ScrimInsetsFrameLayout, i, C3631R.style.Widget_Design_ScrimInsetsFrameLayout, new int[0]);
+        this.insetForeground = obtainStyledAttributes.getDrawable(C3631R.styleable.ScrimInsetsFrameLayout_insetForeground);
         obtainStyledAttributes.recycle();
         setWillNotDraw(true);
         ViewCompat.setOnApplyWindowInsetsListener(this, new OnApplyWindowInsetsListener() {

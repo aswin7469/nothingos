@@ -18,7 +18,7 @@ import android.widget.FrameLayout;
 import androidx.dynamicanimation.animation.DynamicAnimation;
 import androidx.dynamicanimation.animation.SpringAnimation;
 import androidx.dynamicanimation.animation.SpringForce;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -108,12 +108,12 @@ public class PhysicsAnimationLayout extends FrameLayout {
 
         /* access modifiers changed from: protected */
         public PhysicsPropertyAnimator animationForChild(View view) {
-            PhysicsPropertyAnimator physicsPropertyAnimator = (PhysicsPropertyAnimator) view.getTag(C3343R.C3346id.physics_animator_tag);
+            PhysicsPropertyAnimator physicsPropertyAnimator = (PhysicsPropertyAnimator) view.getTag(C3353R.C3356id.physics_animator_tag);
             if (physicsPropertyAnimator == null) {
                 PhysicsAnimationLayout physicsAnimationLayout = this.mLayout;
                 Objects.requireNonNull(physicsAnimationLayout);
                 physicsPropertyAnimator = new PhysicsPropertyAnimator(view);
-                view.setTag(C3343R.C3346id.physics_animator_tag, physicsPropertyAnimator);
+                view.setTag(C3353R.C3356id.physics_animator_tag, physicsPropertyAnimator);
             }
             physicsPropertyAnimator.clearAnimator();
             physicsPropertyAnimator.setAssociatedController(this);
@@ -136,13 +136,13 @@ public class PhysicsAnimationLayout extends FrameLayout {
                 arrayList.add(animationForChildAtIndex);
                 i++;
             }
-            return new C3406x49ea1e05(this, hashSet, arrayList);
+            return new C3416x49ea1e05(this, hashSet, arrayList);
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$animationsForChildrenFromIndex$1$com-android-wm-shell-bubbles-animation-PhysicsAnimationLayout$PhysicsAnimationController */
-        public /* synthetic */ void mo48895x6a525548(Set set, List list, Runnable[] runnableArr) {
-            C3407x49ea1e06 physicsAnimationLayout$PhysicsAnimationController$$ExternalSyntheticLambda1 = new C3407x49ea1e06(runnableArr);
+        public /* synthetic */ void mo48904x6a525548(Set set, List list, Runnable[] runnableArr) {
+            C3417x49ea1e06 physicsAnimationLayout$PhysicsAnimationController$$ExternalSyntheticLambda1 = new C3417x49ea1e06(runnableArr);
             if (this.mLayout.getChildCount() == 0) {
                 physicsAnimationLayout$PhysicsAnimationController$$ExternalSyntheticLambda1.run();
                 return;
@@ -169,7 +169,7 @@ public class PhysicsAnimationLayout extends FrameLayout {
 
         /* access modifiers changed from: protected */
         public void setEndActionForMultipleProperties(Runnable runnable, DynamicAnimation.ViewProperty... viewPropertyArr) {
-            C3408x49ea1e07 physicsAnimationLayout$PhysicsAnimationController$$ExternalSyntheticLambda2 = new C3408x49ea1e07(this, viewPropertyArr, runnable);
+            C3418x49ea1e07 physicsAnimationLayout$PhysicsAnimationController$$ExternalSyntheticLambda2 = new C3418x49ea1e07(this, viewPropertyArr, runnable);
             for (DynamicAnimation.ViewProperty endActionForProperty : viewPropertyArr) {
                 setEndActionForProperty(physicsAnimationLayout$PhysicsAnimationController$$ExternalSyntheticLambda2, endActionForProperty);
             }
@@ -177,7 +177,7 @@ public class PhysicsAnimationLayout extends FrameLayout {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$setEndActionForMultipleProperties$2$com-android-wm-shell-bubbles-animation-PhysicsAnimationLayout$PhysicsAnimationController */
-        public /* synthetic */ void mo48896x612ec9b3(DynamicAnimation.ViewProperty[] viewPropertyArr, Runnable runnable) {
+        public /* synthetic */ void mo48905x612ec9b3(DynamicAnimation.ViewProperty[] viewPropertyArr, Runnable runnable) {
             if (!this.mLayout.arePropertiesAnimating(viewPropertyArr)) {
                 runnable.run();
                 for (DynamicAnimation.ViewProperty removeEndActionForProperty : viewPropertyArr) {
@@ -223,7 +223,7 @@ public class PhysicsAnimationLayout extends FrameLayout {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$removeView$0$com-android-wm-shell-bubbles-animation-PhysicsAnimationLayout */
-    public /* synthetic */ void mo48884xeadfc8e(View view) {
+    public /* synthetic */ void mo48893xeadfc8e(View view) {
         cancelAnimationsOnView(view);
         removeTransientView(view);
     }
@@ -357,12 +357,12 @@ public class PhysicsAnimationLayout extends FrameLayout {
     }
 
     private ViewPropertyAnimator getViewPropertyAnimatorFromView(View view) {
-        return (ViewPropertyAnimator) view.getTag(C3343R.C3346id.reorder_animator_tag);
+        return (ViewPropertyAnimator) view.getTag(C3353R.C3356id.reorder_animator_tag);
     }
 
     /* access modifiers changed from: private */
     public ObjectAnimator getTargetAnimatorFromView(View view) {
-        return (ObjectAnimator) view.getTag(C3343R.C3346id.target_animator_tag);
+        return (ObjectAnimator) view.getTag(C3353R.C3356id.target_animator_tag);
     }
 
     private void setUpAnimationsForProperty(DynamicAnimation.ViewProperty viewProperty) {
@@ -381,7 +381,7 @@ public class PhysicsAnimationLayout extends FrameLayout {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setUpAnimationForChild$1$com-android-wm-shell-bubbles-animation-PhysicsAnimationLayout */
-    public /* synthetic */ void mo48885x19036060(View view, DynamicAnimation.ViewProperty viewProperty, DynamicAnimation dynamicAnimation, float f, float f2) {
+    public /* synthetic */ void mo48894x19036060(View view, DynamicAnimation.ViewProperty viewProperty, DynamicAnimation dynamicAnimation, float f, float f2) {
         SpringAnimation springAnimationAtIndex;
         int indexOfChild = indexOfChild(view);
         int nextAnimationInChain = this.mController.getNextAnimationInChain(viewProperty, indexOfChild);
@@ -396,19 +396,19 @@ public class PhysicsAnimationLayout extends FrameLayout {
     /* access modifiers changed from: private */
     public int getTagIdForProperty(DynamicAnimation.ViewProperty viewProperty) {
         if (viewProperty.equals(DynamicAnimation.TRANSLATION_X)) {
-            return C3343R.C3346id.translation_x_dynamicanimation_tag;
+            return C3353R.C3356id.translation_x_dynamicanimation_tag;
         }
         if (viewProperty.equals(DynamicAnimation.TRANSLATION_Y)) {
-            return C3343R.C3346id.translation_y_dynamicanimation_tag;
+            return C3353R.C3356id.translation_y_dynamicanimation_tag;
         }
         if (viewProperty.equals(DynamicAnimation.SCALE_X)) {
-            return C3343R.C3346id.scale_x_dynamicanimation_tag;
+            return C3353R.C3356id.scale_x_dynamicanimation_tag;
         }
         if (viewProperty.equals(DynamicAnimation.SCALE_Y)) {
-            return C3343R.C3346id.scale_y_dynamicanimation_tag;
+            return C3353R.C3356id.scale_y_dynamicanimation_tag;
         }
         if (viewProperty.equals(DynamicAnimation.ALPHA)) {
-            return C3343R.C3346id.alpha_dynamicanimation_tag;
+            return C3353R.C3356id.alpha_dynamicanimation_tag;
         }
         return -1;
     }
@@ -605,10 +605,10 @@ public class PhysicsAnimationLayout extends FrameLayout {
             }
             Set<DynamicAnimation.ViewProperty> animatedProperties = getAnimatedProperties();
             if (runnableArr != null && runnableArr.length > 0) {
-                this.mAssociatedController.setEndActionForMultipleProperties(new C3412x4b8fea78(runnableArr), (DynamicAnimation.ViewProperty[]) animatedProperties.toArray(new DynamicAnimation.ViewProperty[0]));
+                this.mAssociatedController.setEndActionForMultipleProperties(new C3422x4b8fea78(runnableArr), (DynamicAnimation.ViewProperty[]) animatedProperties.toArray(new DynamicAnimation.ViewProperty[0]));
             }
             if (this.mPositionEndActions != null) {
-                C3413x4b8fea79 physicsAnimationLayout$PhysicsPropertyAnimator$$ExternalSyntheticLambda4 = new C3413x4b8fea79(this, PhysicsAnimationLayout.this.getSpringAnimationFromView(DynamicAnimation.TRANSLATION_X, this.mView), PhysicsAnimationLayout.this.getSpringAnimationFromView(DynamicAnimation.TRANSLATION_Y, this.mView));
+                C3423x4b8fea79 physicsAnimationLayout$PhysicsPropertyAnimator$$ExternalSyntheticLambda4 = new C3423x4b8fea79(this, PhysicsAnimationLayout.this.getSpringAnimationFromView(DynamicAnimation.TRANSLATION_X, this.mView), PhysicsAnimationLayout.this.getSpringAnimationFromView(DynamicAnimation.TRANSLATION_Y, this.mView));
                 this.mEndActionsForProperty.put(DynamicAnimation.TRANSLATION_X, new Runnable[]{physicsAnimationLayout$PhysicsPropertyAnimator$$ExternalSyntheticLambda4});
                 this.mEndActionsForProperty.put(DynamicAnimation.TRANSLATION_Y, new Runnable[]{physicsAnimationLayout$PhysicsPropertyAnimator$$ExternalSyntheticLambda4});
             }
@@ -647,7 +647,7 @@ public class PhysicsAnimationLayout extends FrameLayout {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$start$1$com-android-wm-shell-bubbles-animation-PhysicsAnimationLayout$PhysicsPropertyAnimator */
-        public /* synthetic */ void mo48907x30d28d4d(SpringAnimation springAnimation, SpringAnimation springAnimation2) {
+        public /* synthetic */ void mo48916x30d28d4d(SpringAnimation springAnimation, SpringAnimation springAnimation2) {
             if (!springAnimation.isRunning() && !springAnimation2.isRunning()) {
                 Runnable[] runnableArr = this.mPositionEndActions;
                 if (runnableArr != null) {
@@ -689,7 +689,7 @@ public class PhysicsAnimationLayout extends FrameLayout {
                     }
                     SpringForce spring = springAnimation.getSpring();
                     if (spring != null) {
-                        C3411x4b8fea77 physicsAnimationLayout$PhysicsPropertyAnimator$$ExternalSyntheticLambda2 = new C3411x4b8fea77(spring, f3, f4, f2, springAnimation, f);
+                        C3421x4b8fea77 physicsAnimationLayout$PhysicsPropertyAnimator$$ExternalSyntheticLambda2 = new C3421x4b8fea77(spring, f3, f4, f2, springAnimation, f);
                         if (j2 > 0) {
                             PhysicsAnimationLayout.this.postDelayed(physicsAnimationLayout$PhysicsPropertyAnimator$$ExternalSyntheticLambda2, j2);
                         } else {
@@ -727,8 +727,8 @@ public class PhysicsAnimationLayout extends FrameLayout {
             if (j > 0) {
                 this.mPathAnimator.setStartDelay(j);
             }
-            final C3409x4b8fea75 physicsAnimationLayout$PhysicsPropertyAnimator$$ExternalSyntheticLambda0 = new C3409x4b8fea75(this);
-            this.mPathAnimator.addUpdateListener(new C3410x4b8fea76(physicsAnimationLayout$PhysicsPropertyAnimator$$ExternalSyntheticLambda0));
+            final C3419x4b8fea75 physicsAnimationLayout$PhysicsPropertyAnimator$$ExternalSyntheticLambda0 = new C3419x4b8fea75(this);
+            this.mPathAnimator.addUpdateListener(new C3420x4b8fea76(physicsAnimationLayout$PhysicsPropertyAnimator$$ExternalSyntheticLambda0));
             this.mPathAnimator.addListener(new AnimatorListenerAdapter() {
                 public void onAnimationStart(Animator animator) {
                     float f;
@@ -767,13 +767,13 @@ public class PhysicsAnimationLayout extends FrameLayout {
             if (access$900 != null) {
                 access$900.cancel();
             }
-            this.mView.setTag(C3343R.C3346id.target_animator_tag, this.mPathAnimator);
+            this.mView.setTag(C3353R.C3356id.target_animator_tag, this.mPathAnimator);
             this.mPathAnimator.start();
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$startPathAnimation$3$com-android-wm-shell-bubbles-animation-PhysicsAnimationLayout$PhysicsPropertyAnimator */
-        public /* synthetic */ void mo48908x1aeeb724() {
+        public /* synthetic */ void mo48917x1aeeb724() {
             updateValueForChild(DynamicAnimation.TRANSLATION_X, this.mView, this.mCurrentPointOnPath.x);
             updateValueForChild(DynamicAnimation.TRANSLATION_Y, this.mView, this.mCurrentPointOnPath.y);
         }

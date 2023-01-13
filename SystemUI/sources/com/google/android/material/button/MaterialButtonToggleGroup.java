@@ -13,7 +13,7 @@ import androidx.core.view.AccessibilityDelegateCompat;
 import androidx.core.view.MarginLayoutParamsCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.internal.ViewUtils;
 import com.google.android.material.shape.AbsoluteCornerSize;
@@ -30,7 +30,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 public class MaterialButtonToggleGroup extends LinearLayout {
-    private static final int DEF_STYLE_RES = C3621R.style.Widget_MaterialComponents_MaterialButtonToggleGroup;
+    private static final int DEF_STYLE_RES = C3631R.style.Widget_MaterialComponents_MaterialButtonToggleGroup;
     private static final String LOG_TAG = "MaterialButtonToggleGroup";
     private Set<Integer> checkedIds;
     private Integer[] childOrder;
@@ -52,7 +52,7 @@ public class MaterialButtonToggleGroup extends LinearLayout {
     }
 
     public MaterialButtonToggleGroup(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, C3621R.attr.materialButtonToggleGroupStyle);
+        this(context, attributeSet, C3631R.attr.materialButtonToggleGroupStyle);
     }
 
     /* JADX WARNING: Illegal instructions before constructor call */
@@ -82,19 +82,19 @@ public class MaterialButtonToggleGroup extends LinearLayout {
             r0.<init>()
             r6.checkedIds = r0
             android.content.Context r0 = r6.getContext()
-            int[] r2 = com.google.android.material.C3621R.styleable.MaterialButtonToggleGroup
+            int[] r2 = com.google.android.material.C3631R.styleable.MaterialButtonToggleGroup
             int[] r5 = new int[r7]
             r1 = r8
             r3 = r9
             android.content.res.TypedArray r8 = com.google.android.material.internal.ThemeEnforcement.obtainStyledAttributes(r0, r1, r2, r3, r4, r5)
-            int r9 = com.google.android.material.C3621R.styleable.MaterialButtonToggleGroup_singleSelection
+            int r9 = com.google.android.material.C3631R.styleable.MaterialButtonToggleGroup_singleSelection
             boolean r9 = r8.getBoolean(r9, r7)
             r6.setSingleSelection((boolean) r9)
-            int r9 = com.google.android.material.C3621R.styleable.MaterialButtonToggleGroup_checkedButton
+            int r9 = com.google.android.material.C3631R.styleable.MaterialButtonToggleGroup_checkedButton
             r0 = -1
             int r9 = r8.getResourceId(r9, r0)
             r6.defaultCheckId = r9
-            int r9 = com.google.android.material.C3621R.styleable.MaterialButtonToggleGroup_selectionRequired
+            int r9 = com.google.android.material.C3631R.styleable.MaterialButtonToggleGroup_selectionRequired
             boolean r7 = r8.getBoolean(r9, r7)
             r6.selectionRequired = r7
             r7 = 1

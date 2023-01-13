@@ -6,7 +6,7 @@ import java.p026io.ObjectInputStream;
 import java.p026io.Serializable;
 import java.time.temporal.TemporalAmount;
 import java.util.Objects;
-import jdk.internal.misc.C4581VM;
+import jdk.internal.misc.C4593VM;
 
 public abstract class Clock {
     public abstract ZoneId getZone();
@@ -118,10 +118,10 @@ public abstract class Clock {
 
         public Instant instant() {
             long j = this.offset;
-            long nanoTimeAdjustment = C4581VM.getNanoTimeAdjustment(j);
+            long nanoTimeAdjustment = C4593VM.getNanoTimeAdjustment(j);
             if (nanoTimeAdjustment == -1) {
                 j = (System.currentTimeMillis() / 1000) - 1024;
-                nanoTimeAdjustment = C4581VM.getNanoTimeAdjustment(j);
+                nanoTimeAdjustment = C4593VM.getNanoTimeAdjustment(j);
                 if (nanoTimeAdjustment != -1) {
                     this.offset = j;
                 } else {

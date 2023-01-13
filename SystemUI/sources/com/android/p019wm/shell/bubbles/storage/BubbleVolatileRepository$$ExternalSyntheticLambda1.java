@@ -12,6 +12,6 @@ public final /* synthetic */ class BubbleVolatileRepository$$ExternalSyntheticLa
     }
 
     public final boolean test(Object obj) {
-        return BubbleVolatileRepository.m3441removeBubblesForUserWithParent$lambda5(this.f$0, (BubbleEntity) obj);
+        return BubbleVolatileRepository.m3445removeBubblesForUserWithParent$lambda5(this.f$0, (BubbleEntity) obj);
     }
 }

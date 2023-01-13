@@ -15,6 +15,6 @@ public final /* synthetic */ class DragAndDropController$DragAndDropImpl$$Extern
     }
 
     public final void run() {
-        this.f$0.mo49484x8bb88078(this.f$1);
+        this.f$0.mo49493x8bb88078(this.f$1);
     }
 }

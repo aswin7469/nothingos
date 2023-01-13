@@ -41,7 +41,7 @@ import com.android.internal.graphics.palette.VariationalKMeansQuantizer;
 import com.android.internal.protolog.common.ProtoLog;
 import com.android.launcher3.icons.BaseIconFactory;
 import com.android.launcher3.icons.IconProvider;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.common.TransactionPool;
 import com.android.p019wm.shell.protolog.ShellProtoLogGroup;
 import com.android.systemui.statusbar.notification.stack.StackStateAnimator;
@@ -116,7 +116,7 @@ public class SplashscreenContentDrawer {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$createContentView$0$com-android-wm-shell-startingsurface-SplashscreenContentDrawer */
-    public /* synthetic */ void mo51107x7fa7d540(Context context, StartingWindowInfo startingWindowInfo, int i, Consumer consumer, Consumer consumer2) {
+    public /* synthetic */ void mo51118x7fa7d540(Context context, StartingWindowInfo startingWindowInfo, int i, Consumer consumer, Consumer consumer2) {
         SplashScreenView splashScreenView;
         try {
             Trace.traceBegin(32, "makeSplashScreenContentView");
@@ -136,7 +136,7 @@ public class SplashscreenContentDrawer {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$createContentView$1$com-android-wm-shell-startingsurface-SplashscreenContentDrawer */
-    public /* synthetic */ void mo51108xfe08d91f(Context context, StartingWindowInfo startingWindowInfo, int i, Consumer consumer, Drawable drawable, Consumer consumer2) {
+    public /* synthetic */ void mo51119xfe08d91f(Context context, StartingWindowInfo startingWindowInfo, int i, Consumer consumer, Drawable drawable, Consumer consumer2) {
         SplashScreenView splashScreenView;
         try {
             Trace.traceBegin(32, "makeSplashScreenContentView");
@@ -152,15 +152,15 @@ public class SplashscreenContentDrawer {
     private void updateDensity() {
         this.mIconSize = this.mContext.getResources().getDimensionPixelSize(17105545);
         this.mDefaultIconSize = this.mContext.getResources().getDimensionPixelSize(17105544);
-        this.mBrandingImageWidth = this.mContext.getResources().getDimensionPixelSize(C3343R.dimen.starting_surface_brand_image_width);
-        this.mBrandingImageHeight = this.mContext.getResources().getDimensionPixelSize(C3343R.dimen.starting_surface_brand_image_height);
-        this.mMainWindowShiftLength = this.mContext.getResources().getDimensionPixelSize(C3343R.dimen.starting_surface_exit_animation_window_shift_length);
+        this.mBrandingImageWidth = this.mContext.getResources().getDimensionPixelSize(C3353R.dimen.starting_surface_brand_image_width);
+        this.mBrandingImageHeight = this.mContext.getResources().getDimensionPixelSize(C3353R.dimen.starting_surface_brand_image_height);
+        this.mMainWindowShiftLength = this.mContext.getResources().getDimensionPixelSize(C3353R.dimen.starting_surface_exit_animation_window_shift_length);
     }
 
     public static int getSystemBGColor() {
         Application currentApplication = ActivityThread.currentApplication();
         if (currentApplication != null) {
-            return currentApplication.getResources().getColor(C3343R.C3344color.splash_window_background_default);
+            return currentApplication.getResources().getColor(C3353R.C3354color.splash_window_background_default);
         }
         Slog.e("ShellStartingWindow", "System context does not exist!");
         return ViewCompat.MEASURED_STATE_MASK;
@@ -239,7 +239,7 @@ public class SplashscreenContentDrawer {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$makeSplashScreenContentView$4$com-android-wm-shell-startingsurface-SplashscreenContentDrawer */
-    public /* synthetic */ int mo51109x8eaa16c1(Context context) {
+    public /* synthetic */ int mo51120x8eaa16c1(Context context) {
         return peekWindowBGColor(context, this.mTmpAttrs);
     }
 
@@ -265,7 +265,7 @@ public class SplashscreenContentDrawer {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$makeSplashScreenContentView$6$com-android-wm-shell-startingsurface-SplashscreenContentDrawer */
-    public /* synthetic */ int mo51110x8b6c1e7f(Context context) {
+    public /* synthetic */ int mo51121x8b6c1e7f(Context context) {
         return peekWindowBGColor(context, this.mTmpAttrs);
     }
 
@@ -425,7 +425,7 @@ public class SplashscreenContentDrawer {
             Trace.traceBegin(32, "processAdaptiveIcon");
             AdaptiveIconDrawable adaptiveIconDrawable = (AdaptiveIconDrawable) drawable;
             Drawable foreground = adaptiveIconDrawable.getForeground();
-            ColorCache.IconColor iconColor = SplashscreenContentDrawer.this.mColorCache.getIconColor(this.mActivityInfo.packageName, this.mActivityInfo.getIconResource(), SplashscreenContentDrawer.this.mLastPackageContextConfigHash, new C3590xa4ba13a8(foreground), new C3591xa4ba13a9(adaptiveIconDrawable));
+            ColorCache.IconColor iconColor = SplashscreenContentDrawer.this.mColorCache.getIconColor(this.mActivityInfo.packageName, this.mActivityInfo.getIconResource(), SplashscreenContentDrawer.this.mLastPackageContextConfigHash, new C3600xa4ba13a8(foreground), new C3601xa4ba13a9(adaptiveIconDrawable));
             ShellProtoLogGroup shellProtoLogGroup = ShellProtoLogGroup.WM_SHELL_STARTING_WINDOW;
             Object[] objArr = new Object[5];
             objArr[0] = Integer.toHexString(iconColor.mFgColor);
@@ -686,9 +686,9 @@ public class SplashscreenContentDrawer {
 
                 private AlphaFilterQuantizer() {
                     this.mInnerQuantizer = new VariationalKMeansQuantizer();
-                    C3588xf5e80cfe splashscreenContentDrawer$DrawableColorTester$ComplexDrawableTester$AlphaFilterQuantizer$$ExternalSyntheticLambda0 = new C3588xf5e80cfe();
+                    C3598xf5e80cfe splashscreenContentDrawer$DrawableColorTester$ComplexDrawableTester$AlphaFilterQuantizer$$ExternalSyntheticLambda0 = new C3598xf5e80cfe();
                     this.mTransparentFilter = splashscreenContentDrawer$DrawableColorTester$ComplexDrawableTester$AlphaFilterQuantizer$$ExternalSyntheticLambda0;
-                    this.mTranslucentFilter = new C3589xf5e80cff();
+                    this.mTranslucentFilter = new C3599xf5e80cff();
                     this.mFilter = splashscreenContentDrawer$DrawableColorTester$ComplexDrawableTester$AlphaFilterQuantizer$$ExternalSyntheticLambda0;
                 }
 
@@ -878,7 +878,7 @@ public class SplashscreenContentDrawer {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$applyExitAnimation$11$com-android-wm-shell-startingsurface-SplashscreenContentDrawer */
-    public /* synthetic */ void mo51106xe85b2b62(SplashScreenView splashScreenView, SurfaceControl surfaceControl, Rect rect, Runnable runnable) {
+    public /* synthetic */ void mo51117xe85b2b62(SplashScreenView splashScreenView, SurfaceControl surfaceControl, Rect rect, Runnable runnable) {
         new SplashScreenExitAnimation(this.mContext, splashScreenView, surfaceControl, rect, this.mMainWindowShiftLength, this.mTransactionPool, runnable).startAnimations();
     }
 

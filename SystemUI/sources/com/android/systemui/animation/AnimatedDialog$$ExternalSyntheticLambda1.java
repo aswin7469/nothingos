@@ -15,6 +15,6 @@ public final /* synthetic */ class AnimatedDialog$$ExternalSyntheticLambda1 impl
     }
 
     public final void onLayoutChange(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
-        AnimatedDialog.m2540start$lambda1(this.f$0, this.f$1, view, i, i2, i3, i4, i5, i6, i7, i8);
+        AnimatedDialog.m2546start$lambda1(this.f$0, this.f$1, view, i, i2, i3, i4, i5, i6, i7, i8);
     }
 }

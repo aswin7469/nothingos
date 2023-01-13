@@ -31,7 +31,7 @@ public final class SyncTransactionQueue {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-wm-shell-common-SyncTransactionQueue  reason: not valid java name */
-    public /* synthetic */ void m3450lambda$new$0$comandroidwmshellcommonSyncTransactionQueue() {
+    public /* synthetic */ void m3454lambda$new$0$comandroidwmshellcommonSyncTransactionQueue() {
         synchronized (this.mQueue) {
             SyncCallback syncCallback = this.mInFlight;
             if (syncCallback != null && this.mQueue.contains(syncCallback)) {
@@ -176,7 +176,7 @@ public final class SyncTransactionQueue {
          */
         /* renamed from: lambda$onTransactionReady$0$com-android-wm-shell-common-SyncTransactionQueue$SyncCallback */
         /* Code decompiled incorrectly, please refer to instructions dump. */
-        public /* synthetic */ void mo49126x2b2040e7(int r5, android.view.SurfaceControl.Transaction r6) {
+        public /* synthetic */ void mo49135x2b2040e7(int r5, android.view.SurfaceControl.Transaction r6) {
             /*
                 r4 = this;
                 java.lang.String r0 = "Error sending callback to legacy transition: "
@@ -250,7 +250,7 @@ public final class SyncTransactionQueue {
                 monitor-exit(r2)     // Catch:{ all -> 0x009a }
                 throw r4
             */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.p019wm.shell.common.SyncTransactionQueue.SyncCallback.mo49126x2b2040e7(int, android.view.SurfaceControl$Transaction):void");
+            throw new UnsupportedOperationException("Method not decompiled: com.android.p019wm.shell.common.SyncTransactionQueue.SyncCallback.mo49135x2b2040e7(int, android.view.SurfaceControl$Transaction):void");
         }
     }
 }

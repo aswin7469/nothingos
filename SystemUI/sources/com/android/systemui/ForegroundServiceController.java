@@ -33,7 +33,7 @@ public class ForegroundServiceController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$1$com-android-systemui-ForegroundServiceController  reason: not valid java name */
-    public /* synthetic */ void m2516lambda$new$1$comandroidsystemuiForegroundServiceController(int i, int i2, String str, boolean z) {
+    public /* synthetic */ void m2522lambda$new$1$comandroidsystemuiForegroundServiceController(int i, int i2, String str, boolean z) {
         this.mMainHandler.post(new ForegroundServiceController$$ExternalSyntheticLambda0(this, i, i2, str, z));
     }
 
@@ -92,7 +92,7 @@ public class ForegroundServiceController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: onAppOpChanged */
-    public void m2515lambda$new$0$comandroidsystemuiForegroundServiceController(int i, int i2, String str, boolean z) {
+    public void m2521lambda$new$0$comandroidsystemuiForegroundServiceController(int i, int i2, String str, boolean z) {
         Assert.isMainThread();
         int userId = UserHandle.getUserId(i2);
         synchronized (this.mMutex) {

@@ -21,7 +21,7 @@ import kotlin.jvm.internal.Lambda;
 import kotlin.sequences.Sequence;
 import kotlin.sequences.SequencesKt;
 
-@Metadata(mo64986d1 = {"\u0000\u000e\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\u0010\u0000\u001a\u00020\u00012\u0006\u0010\u0002\u001a\u00020\u0003H\n¢\u0006\u0002\b\u0004"}, mo64987d2 = {"<anonymous>", "", "hunMutator", "Lcom/android/systemui/statusbar/notification/collection/coordinator/HunMutator;", "invoke"}, mo64988k = 3, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000\u000e\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\u0010\u0000\u001a\u00020\u00012\u0006\u0010\u0002\u001a\u00020\u0003H\n¢\u0006\u0002\b\u0004"}, mo65043d2 = {"<anonymous>", "", "hunMutator", "Lcom/android/systemui/statusbar/notification/collection/coordinator/HunMutator;", "invoke"}, mo65044k = 3, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* compiled from: HeadsUpCoordinator.kt */
 final class HeadsUpCoordinator$onBeforeFinalizeFilter$1 extends Lambda implements Function1<HunMutator, Unit> {
     final /* synthetic */ List<ListEntry> $list;
@@ -62,7 +62,7 @@ final class HeadsUpCoordinator$onBeforeFinalizeFilter$1 extends Lambda implement
                 Intrinsics.throwUninitializedPropertyAccessException("mNotifPipeline");
                 access$getMNotifPipeline$p = null;
             }
-            Sequence filter = SequencesKt.filter(CollectionsKt.asSequence(access$getMNotifPipeline$p.getAllNotifs()), new C2681xa0ab4184(linkedHashMap));
+            Sequence filter = SequencesKt.filter(CollectionsKt.asSequence(access$getMNotifPipeline$p.getAllNotifs()), new C2687xa0ab4184(linkedHashMap));
             Map linkedHashMap2 = new LinkedHashMap();
             for (Object next2 : filter) {
                 String groupKey2 = ((NotificationEntry) next2).getSbn().getGroupKey();
@@ -73,7 +73,7 @@ final class HeadsUpCoordinator$onBeforeFinalizeFilter$1 extends Lambda implement
                 }
                 ((List) obj3).add(next2);
             }
-            Lazy lazy = LazyKt.lazy(new C2680x1fe0a1b6(this.this$0, this.$list));
+            Lazy lazy = LazyKt.lazy(new C2686x1fe0a1b6(this.this$0, this.$list));
             this.this$0.mLogger.logEvaluatingGroups(linkedHashMap.size());
             HeadsUpCoordinator headsUpCoordinator = this.this$0;
             for (Map.Entry entry : linkedHashMap.entrySet()) {
@@ -111,13 +111,13 @@ final class HeadsUpCoordinator$onBeforeFinalizeFilter$1 extends Lambda implement
                             headsUpCoordinator.handlePostedEntry(postedEntry2, hunMutator2, "logical-summary-not-alerting");
                         }
                     } else {
-                        NotificationEntry access$findAlertOverride = headsUpCoordinator.findAlertOverride(list, new HeadsUpCoordinator$onBeforeFinalizeFilter$1$1$3(m3107invoke$lambda2(lazy)));
+                        NotificationEntry access$findAlertOverride = headsUpCoordinator.findAlertOverride(list, new HeadsUpCoordinator$onBeforeFinalizeFilter$1$1$3(m3111invoke$lambda2(lazy)));
                         String str2 = access$findAlertOverride != null ? "alertOverride" : "undefined";
-                        Map<String, GroupLocation> r14 = m3107invoke$lambda2(lazy);
+                        Map<String, GroupLocation> r14 = m3111invoke$lambda2(lazy);
                         String key = notificationEntry.getKey();
                         Intrinsics.checkNotNullExpressionValue(key, "logicalSummary.key");
                         boolean containsKey = r14.containsKey(key);
-                        if (!containsKey && access$findAlertOverride == null && (access$findAlertOverride = headsUpCoordinator.findBestTransferChild(list2, new HeadsUpCoordinator$onBeforeFinalizeFilter$1$1$4(m3107invoke$lambda2(lazy)))) != null) {
+                        if (!containsKey && access$findAlertOverride == null && (access$findAlertOverride = headsUpCoordinator.findBestTransferChild(list2, new HeadsUpCoordinator$onBeforeFinalizeFilter$1$1$4(m3111invoke$lambda2(lazy)))) != null) {
                             str2 = "bestChild";
                         }
                         NotificationEntry notificationEntry2 = access$findAlertOverride;
@@ -173,7 +173,7 @@ final class HeadsUpCoordinator$onBeforeFinalizeFilter$1 extends Lambda implement
     }
 
     /* renamed from: invoke$lambda-2  reason: not valid java name */
-    private static final Map<String, GroupLocation> m3107invoke$lambda2(Lazy<? extends Map<String, ? extends GroupLocation>> lazy) {
+    private static final Map<String, GroupLocation> m3111invoke$lambda2(Lazy<? extends Map<String, ? extends GroupLocation>> lazy) {
         return (Map) lazy.getValue();
     }
 }

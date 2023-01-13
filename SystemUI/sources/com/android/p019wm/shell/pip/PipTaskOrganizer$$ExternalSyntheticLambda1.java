@@ -18,6 +18,6 @@ public final /* synthetic */ class PipTaskOrganizer$$ExternalSyntheticLambda1 im
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo50211xfcb41eef(this.f$1, this.f$2, (SplitScreenController) obj);
+        this.f$0.mo50220xfcb41eef(this.f$1, this.f$2, (SplitScreenController) obj);
     }
 }

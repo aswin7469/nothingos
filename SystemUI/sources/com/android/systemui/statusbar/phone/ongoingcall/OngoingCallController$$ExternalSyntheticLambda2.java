@@ -16,6 +16,6 @@ public final /* synthetic */ class OngoingCallController$$ExternalSyntheticLambd
     }
 
     public final void onClick(View view) {
-        OngoingCallController.m3210updateChipClickListener$lambda4(this.f$0, this.f$1, this.f$2, view);
+        OngoingCallController.m3215updateChipClickListener$lambda4(this.f$0, this.f$1, this.f$2, view);
     }
 }

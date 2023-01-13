@@ -12,6 +12,6 @@ public final /* synthetic */ class WindowMagnificationController$$ExternalSynthe
     }
 
     public final WindowInsets onApplyWindowInsets(View view, WindowInsets windowInsets) {
-        return this.f$0.mo30004xceecd97b(view, windowInsets);
+        return this.f$0.mo30014xceecd97b(view, windowInsets);
     }
 }

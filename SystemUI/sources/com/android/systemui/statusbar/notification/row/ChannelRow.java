@@ -11,13 +11,13 @@ import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import com.android.settingslib.Utils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import kotlin.Metadata;
 import kotlin.jvm.internal.Intrinsics;
 
-@Metadata(mo64986d1 = {"\u0000L\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0006\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0010\u000b\n\u0002\b\u0005\n\u0002\u0010\b\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0004\u0018\u00002\u00020\u0001B\u0015\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005¢\u0006\u0002\u0010\u0006J\b\u0010!\u001a\u00020\"H\u0014J\u0006\u0010#\u001a\u00020\"J\b\u0010$\u001a\u00020\"H\u0002J\b\u0010%\u001a\u00020\"H\u0002R(\u0010\t\u001a\u0004\u0018\u00010\b2\b\u0010\u0007\u001a\u0004\u0018\u00010\b@FX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\n\u0010\u000b\"\u0004\b\f\u0010\rR\u000e\u0010\u000e\u001a\u00020\u000fX.¢\u0006\u0002\n\u0000R\u000e\u0010\u0010\u001a\u00020\u000fX.¢\u0006\u0002\n\u0000R\u001a\u0010\u0011\u001a\u00020\u0012X.¢\u0006\u000e\n\u0000\u001a\u0004\b\u0013\u0010\u0014\"\u0004\b\u0015\u0010\u0016R\u001a\u0010\u0017\u001a\u00020\u0018X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0019\u0010\u001a\"\u0004\b\u001b\u0010\u001cR\u000e\u0010\u001d\u001a\u00020\u001eX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u001f\u001a\u00020 X.¢\u0006\u0002\n\u0000¨\u0006&"}, mo64987d2 = {"Lcom/android/systemui/statusbar/notification/row/ChannelRow;", "Landroid/widget/LinearLayout;", "c", "Landroid/content/Context;", "attrs", "Landroid/util/AttributeSet;", "(Landroid/content/Context;Landroid/util/AttributeSet;)V", "newValue", "Landroid/app/NotificationChannel;", "channel", "getChannel", "()Landroid/app/NotificationChannel;", "setChannel", "(Landroid/app/NotificationChannel;)V", "channelDescription", "Landroid/widget/TextView;", "channelName", "controller", "Lcom/android/systemui/statusbar/notification/row/ChannelEditorDialogController;", "getController", "()Lcom/android/systemui/statusbar/notification/row/ChannelEditorDialogController;", "setController", "(Lcom/android/systemui/statusbar/notification/row/ChannelEditorDialogController;)V", "gentle", "", "getGentle", "()Z", "setGentle", "(Z)V", "highlightColor", "", "switch", "Landroid/widget/Switch;", "onFinishInflate", "", "playHighlight", "updateImportance", "updateViews", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000L\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0006\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0010\u000b\n\u0002\b\u0005\n\u0002\u0010\b\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0004\u0018\u00002\u00020\u0001B\u0015\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005¢\u0006\u0002\u0010\u0006J\b\u0010!\u001a\u00020\"H\u0014J\u0006\u0010#\u001a\u00020\"J\b\u0010$\u001a\u00020\"H\u0002J\b\u0010%\u001a\u00020\"H\u0002R(\u0010\t\u001a\u0004\u0018\u00010\b2\b\u0010\u0007\u001a\u0004\u0018\u00010\b@FX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\n\u0010\u000b\"\u0004\b\f\u0010\rR\u000e\u0010\u000e\u001a\u00020\u000fX.¢\u0006\u0002\n\u0000R\u000e\u0010\u0010\u001a\u00020\u000fX.¢\u0006\u0002\n\u0000R\u001a\u0010\u0011\u001a\u00020\u0012X.¢\u0006\u000e\n\u0000\u001a\u0004\b\u0013\u0010\u0014\"\u0004\b\u0015\u0010\u0016R\u001a\u0010\u0017\u001a\u00020\u0018X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0019\u0010\u001a\"\u0004\b\u001b\u0010\u001cR\u000e\u0010\u001d\u001a\u00020\u001eX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u001f\u001a\u00020 X.¢\u0006\u0002\n\u0000¨\u0006&"}, mo65043d2 = {"Lcom/android/systemui/statusbar/notification/row/ChannelRow;", "Landroid/widget/LinearLayout;", "c", "Landroid/content/Context;", "attrs", "Landroid/util/AttributeSet;", "(Landroid/content/Context;Landroid/util/AttributeSet;)V", "newValue", "Landroid/app/NotificationChannel;", "channel", "getChannel", "()Landroid/app/NotificationChannel;", "setChannel", "(Landroid/app/NotificationChannel;)V", "channelDescription", "Landroid/widget/TextView;", "channelName", "controller", "Lcom/android/systemui/statusbar/notification/row/ChannelEditorDialogController;", "getController", "()Lcom/android/systemui/statusbar/notification/row/ChannelEditorDialogController;", "setController", "(Lcom/android/systemui/statusbar/notification/row/ChannelEditorDialogController;)V", "gentle", "", "getGentle", "()Z", "setGentle", "(Z)V", "highlightColor", "", "switch", "Landroid/widget/Switch;", "onFinishInflate", "", "playHighlight", "updateImportance", "updateViews", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* compiled from: ChannelEditorListView.kt */
 public final class ChannelRow extends LinearLayout {
     public Map<Integer, View> _$_findViewCache = new LinkedHashMap();
@@ -29,7 +29,7 @@ public final class ChannelRow extends LinearLayout {
     private final int highlightColor;
 
     /* renamed from: switch  reason: not valid java name */
-    private Switch f949switch;
+    private Switch f947switch;
 
     public void _$_clearFindViewByIdCache() {
         this._$_findViewCache.clear();
@@ -92,16 +92,16 @@ public final class ChannelRow extends LinearLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        View findViewById = findViewById(C1893R.C1897id.channel_name);
+        View findViewById = findViewById(C1894R.C1898id.channel_name);
         Intrinsics.checkNotNullExpressionValue(findViewById, "findViewById(R.id.channel_name)");
         this.channelName = (TextView) findViewById;
-        View findViewById2 = findViewById(C1893R.C1897id.channel_description);
+        View findViewById2 = findViewById(C1894R.C1898id.channel_description);
         Intrinsics.checkNotNullExpressionValue(findViewById2, "findViewById(R.id.channel_description)");
         this.channelDescription = (TextView) findViewById2;
-        View findViewById3 = findViewById(C1893R.C1897id.toggle);
+        View findViewById3 = findViewById(C1894R.C1898id.toggle);
         Intrinsics.checkNotNullExpressionValue(findViewById3, "findViewById(R.id.toggle)");
         Switch switchR = (Switch) findViewById3;
-        this.f949switch = switchR;
+        this.f947switch = switchR;
         if (switchR == null) {
             Intrinsics.throwUninitializedPropertyAccessException("switch");
             switchR = null;
@@ -112,7 +112,7 @@ public final class ChannelRow extends LinearLayout {
 
     /* access modifiers changed from: private */
     /* renamed from: onFinishInflate$lambda-1  reason: not valid java name */
-    public static final void m3142onFinishInflate$lambda1(ChannelRow channelRow, CompoundButton compoundButton, boolean z) {
+    public static final void m3146onFinishInflate$lambda1(ChannelRow channelRow, CompoundButton compoundButton, boolean z) {
         Intrinsics.checkNotNullParameter(channelRow, "this$0");
         NotificationChannel notificationChannel = channelRow.channel;
         if (notificationChannel != null) {
@@ -122,9 +122,9 @@ public final class ChannelRow extends LinearLayout {
 
     /* access modifiers changed from: private */
     /* renamed from: onFinishInflate$lambda-2  reason: not valid java name */
-    public static final void m3143onFinishInflate$lambda2(ChannelRow channelRow, View view) {
+    public static final void m3147onFinishInflate$lambda2(ChannelRow channelRow, View view) {
         Intrinsics.checkNotNullParameter(channelRow, "this$0");
-        Switch switchR = channelRow.f949switch;
+        Switch switchR = channelRow.f947switch;
         if (switchR == null) {
             Intrinsics.throwUninitializedPropertyAccessException("switch");
             switchR = null;
@@ -143,7 +143,7 @@ public final class ChannelRow extends LinearLayout {
 
     /* access modifiers changed from: private */
     /* renamed from: playHighlight$lambda-3  reason: not valid java name */
-    public static final void m3144playHighlight$lambda3(ChannelRow channelRow, ValueAnimator valueAnimator) {
+    public static final void m3148playHighlight$lambda3(ChannelRow channelRow, ValueAnimator valueAnimator) {
         Intrinsics.checkNotNullParameter(channelRow, "this$0");
         Object animatedValue = valueAnimator.getAnimatedValue();
         if (animatedValue != null) {
@@ -218,7 +218,7 @@ public final class ChannelRow extends LinearLayout {
             r3 = 8
             r1.setVisibility(r3)
         L_0x006b:
-            android.widget.Switch r6 = r6.f949switch
+            android.widget.Switch r6 = r6.f947switch
             if (r6 != 0) goto L_0x0076
             java.lang.String r6 = "switch"
             kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r6)

@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.WindowManagerGlobal;
 import com.android.keyguard.KeyguardUpdateMonitor;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.DejankUtils;
 import com.android.systemui.Dumpable;
 import com.android.systemui.biometrics.AuthController;
@@ -75,7 +75,7 @@ public class NotificationShadeWindowControllerImpl implements NotificationShadeW
 
     @Inject
     public NotificationShadeWindowControllerImpl(Context context, WindowManager windowManager, IActivityManager iActivityManager, DozeParameters dozeParameters, StatusBarStateController statusBarStateController, ConfigurationController configurationController, KeyguardViewMediator keyguardViewMediator, KeyguardBypassController keyguardBypassController, SysuiColorExtractor sysuiColorExtractor, DumpManager dumpManager, KeyguardStateController keyguardStateController, ScreenOffAnimationController screenOffAnimationController, AuthController authController) {
-        C30351 r0 = new StatusBarStateController.StateListener() {
+        C30451 r0 = new StatusBarStateController.StateListener() {
             public void onStateChanged(int i) {
                 NotificationShadeWindowControllerImpl.this.setStatusBarState(i);
             }
@@ -99,10 +99,10 @@ public class NotificationShadeWindowControllerImpl implements NotificationShadeW
         dumpManager.registerDumpable(getClass().getName(), this);
         this.mAuthController = authController;
         this.mLastKeyguardRotationAllowed = keyguardStateController.isKeyguardScreenRotationAllowed();
-        this.mLockScreenDisplayTimeout = (long) context.getResources().getInteger(C1893R.integer.config_lockScreenDisplayTimeout);
+        this.mLockScreenDisplayTimeout = (long) context.getResources().getInteger(C1894R.integer.config_lockScreenDisplayTimeout);
         ((SysuiStatusBarStateController) statusBarStateController).addCallback(r0, 1);
         configurationController.addCallback(this);
-        float integer = (float) context.getResources().getInteger(C1893R.integer.config_keyguardRefreshRate);
+        float integer = (float) context.getResources().getInteger(C1894R.integer.config_keyguardRefreshRate);
         float f = -1.0f;
         if (integer > -1.0f) {
             Display.Mode[] supportedModes = context.getDisplay().getSupportedModes();
@@ -121,7 +121,7 @@ public class NotificationShadeWindowControllerImpl implements NotificationShadeW
             }
         }
         this.mKeyguardPreferredRefreshRate = f;
-        this.mKeyguardMaxRefreshRate = (float) context.getResources().getInteger(C1893R.integer.config_keyguardMaxRefreshRate);
+        this.mKeyguardMaxRefreshRate = (float) context.getResources().getInteger(C1894R.integer.config_keyguardMaxRefreshRate);
     }
 
     public void registerCallback(StatusBarWindowCallback statusBarWindowCallback) {
@@ -249,7 +249,11 @@ public class NotificationShadeWindowControllerImpl implements NotificationShadeW
             this.mLpChanged.flags &= -9;
             this.mLpChanged.flags &= -131073;
         } else if (state.isKeyguardShowingAndNotOccluded() || z) {
-            this.mLpChanged.flags &= -9;
+            if (this.mCurrentState.mKeyguardGoingAway) {
+                this.mLpChanged.flags |= 8;
+            } else {
+                this.mLpChanged.flags &= -9;
+            }
             if (!state.mKeyguardNeedsInput || !state.isKeyguardShowingAndNotOccluded()) {
                 this.mLpChanged.flags |= 131072;
             } else {
@@ -373,7 +377,7 @@ public class NotificationShadeWindowControllerImpl implements NotificationShadeW
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$apply$0$com-android-systemui-statusbar-phone-NotificationShadeWindowControllerImpl */
-    public /* synthetic */ void mo44746x55fd2eea() {
+    public /* synthetic */ void mo44761x55fd2eea() {
         try {
             this.mActivityManager.setHasTopUi(this.mHasTopUiChanged);
         } catch (RemoteException e) {

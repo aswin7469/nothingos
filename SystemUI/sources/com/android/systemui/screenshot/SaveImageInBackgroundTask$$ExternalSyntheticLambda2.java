@@ -20,6 +20,6 @@ public final /* synthetic */ class SaveImageInBackgroundTask$$ExternalSyntheticL
     }
 
     public final Object get() {
-        return this.f$0.mo37412x8a47bd93(this.f$1, this.f$2, this.f$3);
+        return this.f$0.mo37413x8a47bd93(this.f$1, this.f$2, this.f$3);
     }
 }

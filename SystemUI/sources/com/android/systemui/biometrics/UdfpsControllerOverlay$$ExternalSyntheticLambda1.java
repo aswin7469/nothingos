@@ -12,6 +12,6 @@ public final /* synthetic */ class UdfpsControllerOverlay$$ExternalSyntheticLamb
     }
 
     public final boolean onTouch(View view, MotionEvent motionEvent) {
-        return UdfpsControllerOverlay.m2588show$lambda4$lambda3$lambda2(this.f$0, view, motionEvent);
+        return UdfpsControllerOverlay.m2594show$lambda4$lambda3$lambda2(this.f$0, view, motionEvent);
     }
 }

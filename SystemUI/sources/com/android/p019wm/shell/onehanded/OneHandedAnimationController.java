@@ -119,18 +119,18 @@ public class OneHandedAnimationController {
             this.mEndValue = f2;
             addListener(this);
             addUpdateListener(this);
-            this.mSurfaceControlTransactionFactory = new C3490x55a9da47();
+            this.mSurfaceControlTransactionFactory = new C3500x55a9da47();
             this.mTransitionDirection = 0;
         }
 
         public void onAnimationStart(Animator animator) {
             this.mCurrentValue = this.mStartValue;
-            this.mOneHandedAnimationCallbacks.forEach(new C3491x55a9da48(this));
+            this.mOneHandedAnimationCallbacks.forEach(new C3501x55a9da48(this));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onAnimationStart$0$com-android-wm-shell-onehanded-OneHandedAnimationController$OneHandedTransitionAnimator */
-        public /* synthetic */ void mo49836x65730abd(OneHandedAnimationCallback oneHandedAnimationCallback) {
+        public /* synthetic */ void mo49845x65730abd(OneHandedAnimationCallback oneHandedAnimationCallback) {
             oneHandedAnimationCallback.onOneHandedAnimationStart(this);
         }
 
@@ -138,37 +138,37 @@ public class OneHandedAnimationController {
             this.mCurrentValue = this.mEndValue;
             SurfaceControl.Transaction newSurfaceControlTransaction = newSurfaceControlTransaction();
             onEndTransaction(this.mLeash, newSurfaceControlTransaction);
-            this.mOneHandedAnimationCallbacks.forEach(new C3492x55a9da49(this, newSurfaceControlTransaction));
+            this.mOneHandedAnimationCallbacks.forEach(new C3502x55a9da49(this, newSurfaceControlTransaction));
             this.mOneHandedAnimationCallbacks.clear();
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onAnimationEnd$1$com-android-wm-shell-onehanded-OneHandedAnimationController$OneHandedTransitionAnimator */
-        public /* synthetic */ void mo49835xb3944cf7(SurfaceControl.Transaction transaction, OneHandedAnimationCallback oneHandedAnimationCallback) {
+        public /* synthetic */ void mo49844xb3944cf7(SurfaceControl.Transaction transaction, OneHandedAnimationCallback oneHandedAnimationCallback) {
             oneHandedAnimationCallback.onOneHandedAnimationEnd(transaction, this);
         }
 
         public void onAnimationCancel(Animator animator) {
             this.mCurrentValue = this.mEndValue;
-            this.mOneHandedAnimationCallbacks.forEach(new C3493x55a9da4a(this));
+            this.mOneHandedAnimationCallbacks.forEach(new C3503x55a9da4a(this));
             this.mOneHandedAnimationCallbacks.clear();
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onAnimationCancel$2$com-android-wm-shell-onehanded-OneHandedAnimationController$OneHandedTransitionAnimator */
-        public /* synthetic */ void mo49834x1e131427(OneHandedAnimationCallback oneHandedAnimationCallback) {
+        public /* synthetic */ void mo49843x1e131427(OneHandedAnimationCallback oneHandedAnimationCallback) {
             oneHandedAnimationCallback.onOneHandedAnimationCancel(this);
         }
 
         public void onAnimationUpdate(ValueAnimator valueAnimator) {
             SurfaceControl.Transaction newSurfaceControlTransaction = newSurfaceControlTransaction();
-            this.mOneHandedAnimationCallbacks.forEach(new C3494x55a9da4b(this, newSurfaceControlTransaction));
+            this.mOneHandedAnimationCallbacks.forEach(new C3504x55a9da4b(this, newSurfaceControlTransaction));
             applySurfaceControlTransaction(this.mLeash, newSurfaceControlTransaction, valueAnimator.getAnimatedFraction());
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onAnimationUpdate$3$com-android-wm-shell-onehanded-OneHandedAnimationController$OneHandedTransitionAnimator */
-        public /* synthetic */ void mo49837xcb9896b7(SurfaceControl.Transaction transaction, OneHandedAnimationCallback oneHandedAnimationCallback) {
+        public /* synthetic */ void mo49846xcb9896b7(SurfaceControl.Transaction transaction, OneHandedAnimationCallback oneHandedAnimationCallback) {
             oneHandedAnimationCallback.onAnimationUpdate(transaction, 0.0f, this.mCurrentValue);
         }
 

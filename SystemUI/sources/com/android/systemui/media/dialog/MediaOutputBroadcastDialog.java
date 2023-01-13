@@ -19,7 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.core.graphics.drawable.IconCompat;
 import com.android.settingslib.qrcode.QrCodeGenerator;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.broadcast.BroadcastSender;
 import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.media.dialog.MediaOutputController;
@@ -84,7 +84,7 @@ public class MediaOutputBroadcastDialog extends MediaOutputBaseDialog {
 
     /* access modifiers changed from: package-private */
     public int getHeaderIconSize() {
-        return this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.media_output_dialog_header_album_icon_size);
+        return this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.media_output_dialog_header_album_icon_size);
     }
 
     /* access modifiers changed from: package-private */
@@ -116,21 +116,21 @@ public class MediaOutputBroadcastDialog extends MediaOutputBaseDialog {
 
     private void initBtQrCodeUI() {
         inflateBroadcastInfoArea();
-        this.mBroadcastQrCodeView = (ImageView) getDialogView().requireViewById(C1893R.C1897id.qrcode_view);
-        ImageView imageView = (ImageView) getDialogView().requireViewById(C1893R.C1897id.broadcast_info);
+        this.mBroadcastQrCodeView = (ImageView) getDialogView().requireViewById(C1894R.C1898id.qrcode_view);
+        ImageView imageView = (ImageView) getDialogView().requireViewById(C1894R.C1898id.broadcast_info);
         this.mBroadcastNotify = imageView;
         imageView.setOnClickListener(new MediaOutputBroadcastDialog$$ExternalSyntheticLambda0(this));
-        this.mBroadcastName = (TextView) getDialogView().requireViewById(C1893R.C1897id.broadcast_name_summary);
-        ImageView imageView2 = (ImageView) getDialogView().requireViewById(C1893R.C1897id.broadcast_name_edit);
+        this.mBroadcastName = (TextView) getDialogView().requireViewById(C1894R.C1898id.broadcast_name_summary);
+        ImageView imageView2 = (ImageView) getDialogView().requireViewById(C1894R.C1898id.broadcast_name_edit);
         this.mBroadcastNameEdit = imageView2;
         imageView2.setOnClickListener(new MediaOutputBroadcastDialog$$ExternalSyntheticLambda1(this));
-        TextView textView = (TextView) getDialogView().requireViewById(C1893R.C1897id.broadcast_code_summary);
+        TextView textView = (TextView) getDialogView().requireViewById(C1894R.C1898id.broadcast_code_summary);
         this.mBroadcastCode = textView;
         textView.setTransformationMethod(PasswordTransformationMethod.getInstance());
-        ImageView imageView3 = (ImageView) getDialogView().requireViewById(C1893R.C1897id.broadcast_code_eye);
+        ImageView imageView3 = (ImageView) getDialogView().requireViewById(C1894R.C1898id.broadcast_code_eye);
         this.mBroadcastCodeEye = imageView3;
         imageView3.setOnClickListener(new MediaOutputBroadcastDialog$$ExternalSyntheticLambda2(this));
-        ImageView imageView4 = (ImageView) getDialogView().requireViewById(C1893R.C1897id.broadcast_code_edit);
+        ImageView imageView4 = (ImageView) getDialogView().requireViewById(C1894R.C1898id.broadcast_code_edit);
         this.mBroadcastCodeEdit = imageView4;
         imageView4.setOnClickListener(new MediaOutputBroadcastDialog$$ExternalSyntheticLambda3(this));
         refreshUi();
@@ -138,25 +138,25 @@ public class MediaOutputBroadcastDialog extends MediaOutputBaseDialog {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$initBtQrCodeUI$0$com-android-systemui-media-dialog-MediaOutputBroadcastDialog */
-    public /* synthetic */ void mo34367xc14e5c77(View view) {
+    public /* synthetic */ void mo34371xc14e5c77(View view) {
         this.mMediaOutputController.launchLeBroadcastNotifyDialog((View) null, (BroadcastSender) null, MediaOutputController.BroadcastNotifyDialog.ACTION_BROADCAST_INFO_ICON, (DialogInterface.OnClickListener) null);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$initBtQrCodeUI$1$com-android-systemui-media-dialog-MediaOutputBroadcastDialog */
-    public /* synthetic */ void mo34368x558ccc16(View view) {
+    public /* synthetic */ void mo34372x558ccc16(View view) {
         launchBroadcastUpdatedDialog(false, this.mBroadcastName.getText().toString());
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$initBtQrCodeUI$2$com-android-systemui-media-dialog-MediaOutputBroadcastDialog */
-    public /* synthetic */ void mo34369xe9cb3bb5(View view) {
+    public /* synthetic */ void mo34373xe9cb3bb5(View view) {
         updateBroadcastCodeVisibility();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$initBtQrCodeUI$3$com-android-systemui-media-dialog-MediaOutputBroadcastDialog */
-    public /* synthetic */ void mo34370x7e09ab54(View view) {
+    public /* synthetic */ void mo34374x7e09ab54(View view) {
         launchBroadcastUpdatedDialog(true, this.mBroadcastCode.getText().toString());
     }
 
@@ -169,7 +169,7 @@ public class MediaOutputBroadcastDialog extends MediaOutputBaseDialog {
     }
 
     private void inflateBroadcastInfoArea() {
-        ViewStub viewStub = (ViewStub) getDialogView().requireViewById(C1893R.C1897id.broadcast_qrcode);
+        ViewStub viewStub = (ViewStub) getDialogView().requireViewById(C1894R.C1898id.broadcast_qrcode);
         this.mBroadcastInfoArea = viewStub;
         viewStub.inflate();
     }
@@ -178,7 +178,7 @@ public class MediaOutputBroadcastDialog extends MediaOutputBaseDialog {
         String broadcastMetadata = getBroadcastMetadata();
         if (!broadcastMetadata.isEmpty()) {
             try {
-                this.mBroadcastQrCodeView.setImageBitmap(QrCodeGenerator.encodeQrCode(broadcastMetadata, getContext().getResources().getDimensionPixelSize(C1893R.dimen.media_output_qrcode_size)));
+                this.mBroadcastQrCodeView.setImageBitmap(QrCodeGenerator.encodeQrCode(broadcastMetadata, getContext().getResources().getDimensionPixelSize(C1894R.dimen.media_output_qrcode_size)));
             } catch (WriterException e) {
                 Log.e(TAG, "Error generatirng QR code bitmap " + e);
             }
@@ -198,11 +198,11 @@ public class MediaOutputBroadcastDialog extends MediaOutputBaseDialog {
     }
 
     private void launchBroadcastUpdatedDialog(boolean z, String str) {
-        View inflate = LayoutInflater.from(this.mContext).inflate(C1893R.layout.media_output_broadcast_update_dialog, (ViewGroup) null);
-        EditText editText = (EditText) inflate.requireViewById(C1893R.C1897id.broadcast_edit_text);
+        View inflate = LayoutInflater.from(this.mContext).inflate(C1894R.layout.media_output_broadcast_update_dialog, (ViewGroup) null);
+        EditText editText = (EditText) inflate.requireViewById(C1894R.C1898id.broadcast_edit_text);
         editText.setText(str);
-        this.mBroadcastErrorMessage = (TextView) inflate.requireViewById(C1893R.C1897id.broadcast_error_message);
-        AlertDialog create = new AlertDialog.Builder(this.mContext).setTitle(z ? C1893R.string.media_output_broadcast_code : C1893R.string.media_output_broadcast_name).setView(inflate).setNegativeButton(17039360, (DialogInterface.OnClickListener) null).setPositiveButton(C1893R.string.media_output_broadcast_dialog_save, new MediaOutputBroadcastDialog$$ExternalSyntheticLambda4(this, z, editText)).create();
+        this.mBroadcastErrorMessage = (TextView) inflate.requireViewById(C1894R.C1898id.broadcast_error_message);
+        AlertDialog create = new AlertDialog.Builder(this.mContext).setTitle(z ? C1894R.string.media_output_broadcast_code : C1894R.string.media_output_broadcast_name).setView(inflate).setNegativeButton(17039360, (DialogInterface.OnClickListener) null).setPositiveButton(C1894R.string.media_output_broadcast_dialog_save, new MediaOutputBroadcastDialog$$ExternalSyntheticLambda4(this, z, editText)).create();
         this.mAlertDialog = create;
         create.getWindow().setType(Types.SQLXML);
         SystemUIDialog.setShowForAllUsers(this.mAlertDialog, true);
@@ -212,7 +212,7 @@ public class MediaOutputBroadcastDialog extends MediaOutputBaseDialog {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$launchBroadcastUpdatedDialog$4$com-android-systemui-media-dialog-MediaOutputBroadcastDialog */
-    public /* synthetic */ void mo34371xe92903c2(boolean z, EditText editText, DialogInterface dialogInterface, int i) {
+    public /* synthetic */ void mo34375xe92903c2(boolean z, EditText editText, DialogInterface dialogInterface, int i) {
         updateBroadcastInfo(z, editText.getText().toString());
     }
 
@@ -306,10 +306,10 @@ public class MediaOutputBroadcastDialog extends MediaOutputBaseDialog {
             if (button != null) {
                 button.setEnabled(true);
             }
-            this.mBroadcastErrorMessage.setText(C1893R.string.media_output_broadcast_update_error);
+            this.mBroadcastErrorMessage.setText(C1894R.string.media_output_broadcast_update_error);
             return;
         }
         this.mRetryCount = 0;
-        this.mBroadcastErrorMessage.setText(C1893R.string.media_output_broadcast_last_update_error);
+        this.mBroadcastErrorMessage.setText(C1894R.string.media_output_broadcast_last_update_error);
     }
 }

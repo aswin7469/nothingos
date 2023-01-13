@@ -18,6 +18,6 @@ public final /* synthetic */ class AppPairsController$AppPairsImpl$$ExternalSynt
     }
 
     public final void run() {
-        this.f$0.mo48194xe2052ddc(this.f$1, this.f$2, this.f$3);
+        this.f$0.mo48203xe2052ddc(this.f$1, this.f$2, this.f$3);
     }
 }

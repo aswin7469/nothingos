@@ -15,7 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.ViewCompat;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.animation.MotionSpec;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -27,7 +27,7 @@ public class ExtendedFloatingActionButton extends MaterialButton implements Coor
     private static final int ANIM_STATE_HIDING = 1;
     private static final int ANIM_STATE_NONE = 0;
     private static final int ANIM_STATE_SHOWING = 2;
-    private static final int DEF_STYLE_RES = C3621R.style.Widget_MaterialComponents_ExtendedFloatingActionButton_Icon;
+    private static final int DEF_STYLE_RES = C3631R.style.Widget_MaterialComponents_ExtendedFloatingActionButton_Icon;
     static final Property<View, Float> HEIGHT = new Property<View, Float>(Float.class, "height") {
         public void set(View view, Float f) {
             view.getLayoutParams().height = f.intValue();
@@ -121,7 +121,7 @@ public class ExtendedFloatingActionButton extends MaterialButton implements Coor
     }
 
     public ExtendedFloatingActionButton(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, C3621R.attr.extendedFloatingActionButtonStyle);
+        this(context, attributeSet, C3631R.attr.extendedFloatingActionButtonStyle);
     }
 
     /* JADX WARNING: Illegal instructions before constructor call */
@@ -155,22 +155,22 @@ public class ExtendedFloatingActionButton extends MaterialButton implements Coor
             com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton$ExtendedFloatingActionButtonBehavior r1 = new com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton$ExtendedFloatingActionButtonBehavior
             r1.<init>(r14, r7)
             r0.behavior = r1
-            int[] r3 = com.google.android.material.C3621R.styleable.ExtendedFloatingActionButton
+            int[] r3 = com.google.android.material.C3631R.styleable.ExtendedFloatingActionButton
             int[] r6 = new int[r10]
             r1 = r14
             r2 = r18
             r4 = r19
             r5 = r9
             android.content.res.TypedArray r1 = com.google.android.material.internal.ThemeEnforcement.obtainStyledAttributes(r1, r2, r3, r4, r5, r6)
-            int r2 = com.google.android.material.C3621R.styleable.ExtendedFloatingActionButton_showMotionSpec
+            int r2 = com.google.android.material.C3631R.styleable.ExtendedFloatingActionButton_showMotionSpec
             com.google.android.material.animation.MotionSpec r2 = com.google.android.material.animation.MotionSpec.createFromAttribute(r14, r1, r2)
-            int r3 = com.google.android.material.C3621R.styleable.ExtendedFloatingActionButton_hideMotionSpec
+            int r3 = com.google.android.material.C3631R.styleable.ExtendedFloatingActionButton_hideMotionSpec
             com.google.android.material.animation.MotionSpec r3 = com.google.android.material.animation.MotionSpec.createFromAttribute(r14, r1, r3)
-            int r4 = com.google.android.material.C3621R.styleable.ExtendedFloatingActionButton_extendMotionSpec
+            int r4 = com.google.android.material.C3631R.styleable.ExtendedFloatingActionButton_extendMotionSpec
             com.google.android.material.animation.MotionSpec r4 = com.google.android.material.animation.MotionSpec.createFromAttribute(r14, r1, r4)
-            int r5 = com.google.android.material.C3621R.styleable.ExtendedFloatingActionButton_shrinkMotionSpec
+            int r5 = com.google.android.material.C3631R.styleable.ExtendedFloatingActionButton_shrinkMotionSpec
             com.google.android.material.animation.MotionSpec r5 = com.google.android.material.animation.MotionSpec.createFromAttribute(r14, r1, r5)
-            int r6 = com.google.android.material.C3621R.styleable.ExtendedFloatingActionButton_collapsedSize
+            int r6 = com.google.android.material.C3631R.styleable.ExtendedFloatingActionButton_collapsedSize
             r15 = -1
             int r6 = r1.getDimensionPixelSize(r6, r15)
             r0.collapsedSize = r6
@@ -480,9 +480,9 @@ public class ExtendedFloatingActionButton extends MaterialButton implements Coor
 
         public ExtendedFloatingActionButtonBehavior(Context context, AttributeSet attributeSet) {
             super(context, attributeSet);
-            TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C3621R.styleable.ExtendedFloatingActionButton_Behavior_Layout);
-            this.autoHideEnabled = obtainStyledAttributes.getBoolean(C3621R.styleable.ExtendedFloatingActionButton_Behavior_Layout_behavior_autoHide, false);
-            this.autoShrinkEnabled = obtainStyledAttributes.getBoolean(C3621R.styleable.ExtendedFloatingActionButton_Behavior_Layout_behavior_autoShrink, true);
+            TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C3631R.styleable.ExtendedFloatingActionButton_Behavior_Layout);
+            this.autoHideEnabled = obtainStyledAttributes.getBoolean(C3631R.styleable.ExtendedFloatingActionButton_Behavior_Layout_behavior_autoHide, false);
+            this.autoShrinkEnabled = obtainStyledAttributes.getBoolean(C3631R.styleable.ExtendedFloatingActionButton_Behavior_Layout_behavior_autoShrink, true);
             obtainStyledAttributes.recycle();
         }
 
@@ -666,9 +666,9 @@ public class ExtendedFloatingActionButton extends MaterialButton implements Coor
 
         public int getDefaultMotionSpecResource() {
             if (this.extending) {
-                return C3621R.animator.mtrl_extended_fab_change_size_expand_motion_spec;
+                return C3631R.animator.mtrl_extended_fab_change_size_expand_motion_spec;
             }
-            return C3621R.animator.mtrl_extended_fab_change_size_collapse_motion_spec;
+            return C3631R.animator.mtrl_extended_fab_change_size_collapse_motion_spec;
         }
 
         public AnimatorSet createAnimator() {
@@ -749,7 +749,7 @@ public class ExtendedFloatingActionButton extends MaterialButton implements Coor
         }
 
         public int getDefaultMotionSpecResource() {
-            return C3621R.animator.mtrl_extended_fab_show_motion_spec;
+            return C3631R.animator.mtrl_extended_fab_show_motion_spec;
         }
 
         public void onAnimationStart(Animator animator) {
@@ -790,7 +790,7 @@ public class ExtendedFloatingActionButton extends MaterialButton implements Coor
         }
 
         public int getDefaultMotionSpecResource() {
-            return C3621R.animator.mtrl_extended_fab_hide_motion_spec;
+            return C3631R.animator.mtrl_extended_fab_hide_motion_spec;
         }
 
         public void onAnimationStart(Animator animator) {

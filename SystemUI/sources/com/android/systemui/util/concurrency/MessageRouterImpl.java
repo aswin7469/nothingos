@@ -109,7 +109,7 @@ public class MessageRouterImpl implements MessageRouter {
 
     /* access modifiers changed from: private */
     /* renamed from: onMessage */
-    public void mo46942xed48953(int i) {
+    public void mo46954xed48953(int i) {
         synchronized (this.mSimpleMessageListenerMap) {
             if (this.mSimpleMessageListenerMap.containsKey(Integer.valueOf(i))) {
                 for (MessageRouter.SimpleMessageListener onMessage : this.mSimpleMessageListenerMap.get(Integer.valueOf(i))) {
@@ -129,7 +129,7 @@ public class MessageRouterImpl implements MessageRouter {
 
     /* access modifiers changed from: private */
     /* renamed from: onMessage */
-    public void mo46943x34689254(Object obj) {
+    public void mo46955x34689254(Object obj) {
         synchronized (this.mDataMessageListenerMap) {
             if (this.mDataMessageListenerMap.containsKey(obj.getClass())) {
                 for (MessageRouter.DataMessageListener onMessage : this.mDataMessageListenerMap.get(obj.getClass())) {

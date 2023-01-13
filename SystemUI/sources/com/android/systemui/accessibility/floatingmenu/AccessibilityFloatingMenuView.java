@@ -31,7 +31,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerViewAccessibilityDelegate;
 import com.android.internal.accessibility.dialog.AccessibilityTarget;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
@@ -132,11 +132,11 @@ public class AccessibilityFloatingMenuView extends FrameLayout implements Recycl
     }
 
     private int getLargeSizeResIdWith(int i) {
-        return i > 1 ? C1893R.dimen.accessibility_floating_menu_large_multiple_radius : C1893R.dimen.accessibility_floating_menu_large_single_radius;
+        return i > 1 ? C1894R.dimen.accessibility_floating_menu_large_multiple_radius : C1894R.dimen.accessibility_floating_menu_large_single_radius;
     }
 
     private int getSmallSizeResIdWith(int i) {
-        return i > 1 ? C1893R.dimen.accessibility_floating_menu_small_multiple_radius : C1893R.dimen.accessibility_floating_menu_small_single_radius;
+        return i > 1 ? C1894R.dimen.accessibility_floating_menu_small_multiple_radius : C1894R.dimen.accessibility_floating_menu_small_single_radius;
     }
 
     private boolean isMovingTowardsScreenEdge(int i, int i2, int i3) {
@@ -222,7 +222,7 @@ public class AccessibilityFloatingMenuView extends FrameLayout implements Recycl
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onAnimationEnd$0$com-android-systemui-accessibility-floatingmenu-AccessibilityFloatingMenuView$1 */
-            public /* synthetic */ void mo30067x15544f97(OnDragEndListener onDragEndListener) {
+            public /* synthetic */ void mo30077x15544f97(OnDragEndListener onDragEndListener) {
                 onDragEndListener.onDragEnd(AccessibilityFloatingMenuView.this.mPosition);
             }
         });
@@ -232,7 +232,7 @@ public class AccessibilityFloatingMenuView extends FrameLayout implements Recycl
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-accessibility-floatingmenu-AccessibilityFloatingMenuView */
-    public /* synthetic */ void mo30051xa8eaac1a(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo30061xa8eaac1a(ValueAnimator valueAnimator) {
         setAlpha(((Float) valueAnimator.getAnimatedValue()).floatValue());
     }
 
@@ -356,7 +356,7 @@ public class AccessibilityFloatingMenuView extends FrameLayout implements Recycl
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$show$1$com-android-systemui-accessibility-floatingmenu-AccessibilityFloatingMenuView */
-    public /* synthetic */ WindowInsets mo30054xebc882d2(View view, WindowInsets windowInsets) {
+    public /* synthetic */ WindowInsets mo30064xebc882d2(View view, WindowInsets windowInsets) {
         return onWindowInsetsApplied(windowInsets);
     }
 
@@ -422,7 +422,7 @@ public class AccessibilityFloatingMenuView extends FrameLayout implements Recycl
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setShapeType$2$com-android-systemui-accessibility-floatingmenu-AccessibilityFloatingMenuView */
-    public /* synthetic */ boolean mo30052xab37714f(View view, MotionEvent motionEvent) {
+    public /* synthetic */ boolean mo30062xab37714f(View view, MotionEvent motionEvent) {
         return onTouched(motionEvent);
     }
 
@@ -484,7 +484,7 @@ public class AccessibilityFloatingMenuView extends FrameLayout implements Recycl
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$fadeIn$3$com-android-systemui-accessibility-floatingmenu-AccessibilityFloatingMenuView */
-    public /* synthetic */ void mo30049x833039d8() {
+    public /* synthetic */ void mo30059x833039d8() {
         setAlpha(1.0f);
     }
 
@@ -497,7 +497,7 @@ public class AccessibilityFloatingMenuView extends FrameLayout implements Recycl
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$fadeOut$4$com-android-systemui-accessibility-floatingmenu-AccessibilityFloatingMenuView */
-    public /* synthetic */ void mo30050x7f450d30() {
+    public /* synthetic */ void mo30060x7f450d30() {
         this.mFadeOutAnimator.start();
     }
 
@@ -558,8 +558,8 @@ public class AccessibilityFloatingMenuView extends FrameLayout implements Recycl
     private void updateDimensions() {
         Resources resources = getResources();
         updateDisplaySizeWith(this.mWindowManager.getCurrentWindowMetrics());
-        this.mMargin = resources.getDimensionPixelSize(C1893R.dimen.accessibility_floating_menu_margin);
-        this.mInset = resources.getDimensionPixelSize(C1893R.dimen.accessibility_floating_menu_stroke_inset);
+        this.mMargin = resources.getDimensionPixelSize(C1894R.dimen.accessibility_floating_menu_margin);
+        this.mInset = resources.getDimensionPixelSize(C1894R.dimen.accessibility_floating_menu_stroke_inset);
         this.mSquareScaledTouchSlop = MathUtils.sq((float) ViewConfiguration.get(getContext()).getScaledTouchSlop());
         updateItemViewDimensionsWith(this.mSizeType);
     }
@@ -575,8 +575,8 @@ public class AccessibilityFloatingMenuView extends FrameLayout implements Recycl
 
     private void updateItemViewDimensionsWith(int i) {
         Resources resources = getResources();
-        this.mPadding = resources.getDimensionPixelSize(i == 0 ? C1893R.dimen.accessibility_floating_menu_small_padding : C1893R.dimen.accessibility_floating_menu_large_padding);
-        int dimensionPixelSize = resources.getDimensionPixelSize(i == 0 ? C1893R.dimen.accessibility_floating_menu_small_width_height : C1893R.dimen.accessibility_floating_menu_large_width_height);
+        this.mPadding = resources.getDimensionPixelSize(i == 0 ? C1894R.dimen.accessibility_floating_menu_small_padding : C1894R.dimen.accessibility_floating_menu_large_padding);
+        int dimensionPixelSize = resources.getDimensionPixelSize(i == 0 ? C1894R.dimen.accessibility_floating_menu_small_width_height : C1894R.dimen.accessibility_floating_menu_large_width_height);
         this.mIconWidth = dimensionPixelSize;
         this.mIconHeight = dimensionPixelSize;
     }
@@ -589,7 +589,7 @@ public class AccessibilityFloatingMenuView extends FrameLayout implements Recycl
     }
 
     private void initListView() {
-        Drawable drawable = getContext().getDrawable(C1893R.C1895drawable.accessibility_floating_menu_background);
+        Drawable drawable = getContext().getDrawable(C1894R.C1896drawable.accessibility_floating_menu_background);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         this.mListView.setLayoutParams(new FrameLayout.LayoutParams(-2, -2));
         this.mListView.setBackground(new InstantInsetLayerDrawable(new Drawable[]{drawable}));
@@ -608,7 +608,7 @@ public class AccessibilityFloatingMenuView extends FrameLayout implements Recycl
 
     private void updateListViewWith(Configuration configuration) {
         updateMarginWith(configuration);
-        this.mListView.setElevation((float) getResources().getDimensionPixelSize(C1893R.dimen.accessibility_floating_menu_elevation));
+        this.mListView.setElevation((float) getResources().getDimensionPixelSize(C1894R.dimen.accessibility_floating_menu_elevation));
     }
 
     private WindowManager.LayoutParams createDefaultLayoutParams() {
@@ -651,12 +651,14 @@ public class AccessibilityFloatingMenuView extends FrameLayout implements Recycl
 
     /* access modifiers changed from: private */
     /* renamed from: onDragAnimationUpdate */
-    public void mo30055xb4652553(ValueAnimator valueAnimator, int i, int i2) {
+    public void mo30065xb4652553(ValueAnimator valueAnimator, int i, int i2) {
         float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
         float f = 1.0f - floatValue;
         this.mCurrentLayoutParams.x = (int) ((((float) this.mCurrentLayoutParams.x) * f) + (((float) i) * floatValue));
         this.mCurrentLayoutParams.y = (int) ((f * ((float) this.mCurrentLayoutParams.y)) + (floatValue * ((float) i2)));
-        this.mWindowManager.updateViewLayout(this, this.mCurrentLayoutParams);
+        if (isShowing()) {
+            this.mWindowManager.updateViewLayout(this, this.mCurrentLayoutParams);
+        }
     }
 
     private int getMinWindowX() {
@@ -725,7 +727,7 @@ public class AccessibilityFloatingMenuView extends FrameLayout implements Recycl
     }
 
     private void updateColor() {
-        getMenuGradientDrawable().setColor(getResources().getColor(C1893R.C1894color.accessibility_floating_menu_background));
+        getMenuGradientDrawable().setColor(getResources().getColor(C1894R.C1895color.accessibility_floating_menu_background));
     }
 
     private void updateStrokeWith(int i, int i2) {
@@ -733,11 +735,11 @@ public class AccessibilityFloatingMenuView extends FrameLayout implements Recycl
         int i3 = 0;
         boolean z = (i & 48) == 32;
         Resources resources = getResources();
-        int dimensionPixelSize = resources.getDimensionPixelSize(C1893R.dimen.accessibility_floating_menu_stroke_width);
+        int dimensionPixelSize = resources.getDimensionPixelSize(C1894R.dimen.accessibility_floating_menu_stroke_width);
         if (z) {
             i3 = dimensionPixelSize;
         }
-        getMenuGradientDrawable().setStroke(i3, resources.getColor(C1893R.C1894color.accessibility_floating_menu_stroke_dark));
+        getMenuGradientDrawable().setStroke(i3, resources.getColor(C1894R.C1895color.accessibility_floating_menu_stroke_dark));
     }
 
     /* access modifiers changed from: private */
@@ -837,7 +839,7 @@ public class AccessibilityFloatingMenuView extends FrameLayout implements Recycl
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setSystemGestureExclusion$6$com-android-systemui-accessibility-floatingmenu-AccessibilityFloatingMenuView */
-    public /* synthetic */ void mo30053x330bb596(Rect rect) {
+    public /* synthetic */ void mo30063x330bb596(Rect rect) {
         List list;
         if (this.mIsShowing) {
             list = Collections.singletonList(rect);

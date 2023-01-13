@@ -14,6 +14,6 @@ public final /* synthetic */ class StackAnimationController$$ExternalSyntheticLa
     }
 
     public final void configureAnimationForChildAtIndex(int i, PhysicsAnimationLayout.PhysicsPropertyAnimator physicsPropertyAnimator) {
-        this.f$0.mo48952xc7b6588b(this.f$1, i, physicsPropertyAnimator);
+        this.f$0.mo48961xc7b6588b(this.f$1, i, physicsPropertyAnimator);
     }
 }

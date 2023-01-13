@@ -7,7 +7,7 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 
 /* renamed from: com.android.wm.shell.legacysplitscreen.ForcedResizableInfoActivity */
 public class ForcedResizableInfoActivity extends Activity implements View.OnTouchListener {
@@ -26,13 +26,13 @@ public class ForcedResizableInfoActivity extends Activity implements View.OnTouc
     public void onCreate(Bundle bundle) {
         String str;
         super.onCreate(bundle);
-        setContentView(C3343R.layout.forced_resizable_activity);
+        setContentView(C3353R.layout.forced_resizable_activity);
         TextView textView = (TextView) findViewById(16908299);
         int intExtra = getIntent().getIntExtra(EXTRA_FORCED_RESIZEABLE_REASON, -1);
         if (intExtra == 1) {
-            str = getString(C3343R.string.dock_forced_resizable);
+            str = getString(C3353R.string.dock_forced_resizable);
         } else if (intExtra == 2) {
-            str = getString(C3343R.string.forced_resizable_secondary_display);
+            str = getString(C3353R.string.forced_resizable_secondary_display);
         } else {
             throw new IllegalArgumentException("Unexpected forced resizeable reason: " + intExtra);
         }
@@ -65,6 +65,6 @@ public class ForcedResizableInfoActivity extends Activity implements View.OnTouc
 
     public void finish() {
         super.finish();
-        overridePendingTransition(0, C3343R.anim.forced_resizable_exit);
+        overridePendingTransition(0, C3353R.anim.forced_resizable_exit);
     }
 }

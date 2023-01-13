@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Handler;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.pip.p020tv.TvPipKeepClearAlgorithm;
 import java.util.Objects;
 import java.util.function.Supplier;
@@ -46,8 +46,8 @@ public class TvPipBoundsController {
 
     private void loadConfigurations() {
         Resources resources = this.mContext.getResources();
-        this.mResizeAnimationDuration = resources.getInteger(C3343R.integer.config_pipResizeAnimationDuration);
-        this.mStashDurationMs = resources.getInteger(C3343R.integer.config_pipStashDuration);
+        this.mResizeAnimationDuration = resources.getInteger(C3353R.integer.config_pipResizeAnimationDuration);
+        this.mStashDurationMs = resources.getInteger(C3353R.integer.config_pipStashDuration);
     }
 
     /* access modifiers changed from: package-private */
@@ -116,7 +116,7 @@ public class TvPipBoundsController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$scheduleUnstashIfNeeded$0$com-android-wm-shell-pip-tv-TvPipBoundsController */
-    public /* synthetic */ void mo50536xd823d93d(TvPipKeepClearAlgorithm.Placement placement) {
+    public /* synthetic */ void mo50545xd823d93d(TvPipKeepClearAlgorithm.Placement placement) {
         applyPlacementBounds(placement.getUnstashDestinationBounds(), this.mResizeAnimationDuration);
         this.mUnstashRunnable = null;
     }

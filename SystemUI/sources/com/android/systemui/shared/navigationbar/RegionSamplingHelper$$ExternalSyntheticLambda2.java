@@ -13,6 +13,6 @@ public final /* synthetic */ class RegionSamplingHelper$$ExternalSyntheticLambda
     }
 
     public final void run() {
-        this.f$0.mo37830x26531156(this.f$1);
+        this.f$0.mo37831x26531156(this.f$1);
     }
 }

@@ -18,8 +18,8 @@ import kotlinx.coroutines.flow.internal.NullSurrogateKt;
 import kotlinx.coroutines.selects.SelectBuilder;
 import kotlinx.coroutines.selects.SelectBuilderImpl;
 
-@Metadata(mo64986d1 = {"\u0000\u0012\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\u0010\u0000\u001a\u00020\u0001\"\u0004\b\u0000\u0010\u0002*\u00020\u00032\f\u0010\u0004\u001a\b\u0012\u0004\u0012\u0002H\u00020\u0005H@"}, mo64987d2 = {"<anonymous>", "", "T", "Lkotlinx/coroutines/CoroutineScope;", "downstream", "Lkotlinx/coroutines/flow/FlowCollector;"}, mo64988k = 3, mo64989mv = {1, 5, 1}, mo64991xi = 48)
-@DebugMetadata(mo65240c = "kotlinx.coroutines.flow.FlowKt__DelayKt$sample$2", mo65241f = "Delay.kt", mo65242i = {0, 0, 0, 0}, mo65243l = {355}, mo65244m = "invokeSuspend", mo65245n = {"downstream", "values", "lastValue", "ticker"}, mo65246s = {"L$0", "L$1", "L$2", "L$3"})
+@Metadata(mo65042d1 = {"\u0000\u0012\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\u0010\u0000\u001a\u00020\u0001\"\u0004\b\u0000\u0010\u0002*\u00020\u00032\f\u0010\u0004\u001a\b\u0012\u0004\u0012\u0002H\u00020\u0005H@"}, mo65043d2 = {"<anonymous>", "", "T", "Lkotlinx/coroutines/CoroutineScope;", "downstream", "Lkotlinx/coroutines/flow/FlowCollector;"}, mo65044k = 3, mo65045mv = {1, 5, 1}, mo65047xi = 48)
+@DebugMetadata(mo65296c = "kotlinx.coroutines.flow.FlowKt__DelayKt$sample$2", mo65297f = "Delay.kt", mo65298i = {0, 0, 0, 0}, mo65299l = {355}, mo65300m = "invokeSuspend", mo65301n = {"downstream", "values", "lastValue", "ticker"}, mo65302s = {"L$0", "L$1", "L$2", "L$3"})
 /* compiled from: Delay.kt */
 final class FlowKt__DelayKt$sample$2 extends SuspendLambda implements Function3<CoroutineScope, FlowCollector<? super T>, Continuation<? super Unit>, Object> {
     final /* synthetic */ long $periodMillis;

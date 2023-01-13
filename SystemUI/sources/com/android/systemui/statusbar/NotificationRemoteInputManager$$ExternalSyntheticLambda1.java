@@ -29,6 +29,6 @@ public final /* synthetic */ class NotificationRemoteInputManager$$ExternalSynth
     }
 
     public final void run() {
-        this.f$0.mo38815x794a631d(this.f$1, this.f$2, this.f$3, this.f$4, this.f$5, this.f$6, this.f$7);
+        this.f$0.mo38816x794a631d(this.f$1, this.f$2, this.f$3, this.f$4, this.f$5, this.f$6, this.f$7);
     }
 }

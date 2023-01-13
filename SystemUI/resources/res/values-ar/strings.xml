@@ -696,9 +696,15 @@
     <string name="force_rtl_layout_all_locales_summary">فرض اتجاه تنسيق الشاشة ليكون من اليمين إلى اليسار لجميع اللغات</string>
     <string name="forced_resizable_secondary_display">قد لا يعمل التطبيق على شاشة عرض ثانوية.</string>
     <string name="game_status">جارٍ اللعب</string>
+    <string name="gamemode_description">سيحدد وضع اللعب ما إذا كنت تلعب وسيتم تشغيله تلقائيًا لك</string>
+    <string name="gamemode_gamedashboard_title">لوحة تحكم اللعبة</string>
+    <string name="gamemode_notification_content">انقر للانتقال إلى الإعدادات</string>
+    <string name="gamemode_notification_title">وضع اللعب قيد التشغيل حاليًا</string>
     <string name="global_action_lock_message">يمكنك فتح قفل هاتفك للوصول إلى مزيد من الخيارات.</string>
     <string name="global_action_screenshot">لقطة شاشة</string>
     <string name="global_action_smart_lock_disabled">‏تم إيقاف Smart Lock.</string>
+    <string name="gm_guide_status_on">تشغيل</string>
+    <string name="gm_notification_title">وضع اللعب</string>
     <string name="go_to_web">الانتقال إلى المتصفح</string>
     <string name="got_it">حسنًا</string>
     <string name="guest_exit_guest">إزالة جلسة الضيف</string>

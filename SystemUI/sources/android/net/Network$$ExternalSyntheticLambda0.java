@@ -12,6 +12,6 @@ public final /* synthetic */ class Network$$ExternalSyntheticLambda0 implements 
     }
 
     public final List lookup(String str) {
-        return this.f$0.m1885lambda$openConnection$0$androidnetNetwork(str);
+        return this.f$0.m1891lambda$openConnection$0$androidnetNetwork(str);
     }
 }

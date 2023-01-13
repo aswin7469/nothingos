@@ -11,6 +11,6 @@ public final /* synthetic */ class CentralSurfacesImpl$$ExternalSyntheticLambda3
     }
 
     public final void onClick(View view) {
-        this.f$0.mo43887xb66b3b63(view);
+        this.f$0.mo43896xb66b3b63(view);
     }
 }

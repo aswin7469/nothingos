@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.LinearLayout;
 import com.android.internal.logging.UiEventLogger;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.p012qs.QSPanelControllerBase;
 import com.android.systemui.plugins.p011qs.QSTile;
 
@@ -15,7 +15,7 @@ public class QuickQSPanel extends QSPanel {
     private static final String TAG = "QuickQSPanel";
     public static final int TUNER_MAX_TILES_FALLBACK = 6;
     private boolean mDisabledByPolicy;
-    private int mMaxTiles = getResources().getInteger(C1893R.integer.quick_qs_panel_max_tiles);
+    private int mMaxTiles = getResources().getInteger(C1894R.integer.quick_qs_panel_max_tiles);
 
     public void createCirclePagedTileLayouts() {
     }
@@ -51,8 +51,8 @@ public class QuickQSPanel extends QSPanel {
 
     /* access modifiers changed from: protected */
     public void updatePadding() {
-        getResources().getDimensionPixelSize(C1893R.dimen.qqs_layout_padding_bottom);
-        setPaddingRelative(getPaddingStart(), getPaddingTop(), getPaddingEnd(), this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.qqs_padding_bottom));
+        getResources().getDimensionPixelSize(C1894R.dimen.qqs_layout_padding_bottom);
+        setPaddingRelative(getPaddingStart(), getPaddingTop(), getPaddingEnd(), this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.qqs_padding_bottom));
     }
 
     /* access modifiers changed from: protected */
@@ -146,9 +146,9 @@ public class QuickQSPanel extends QSPanel {
         }
 
         public boolean updateResources() {
-            this.mCellHeightResId = C1893R.dimen.qs_quick_tile_size;
+            this.mCellHeightResId = C1894R.dimen.qs_quick_tile_size;
             boolean updateResources = super.updateResources();
-            this.mMaxAllowedRows = getResources().getInteger(C1893R.integer.quick_settings_max_rows);
+            this.mMaxAllowedRows = getResources().getInteger(C1894R.integer.quick_settings_max_rows);
             return updateResources;
         }
 

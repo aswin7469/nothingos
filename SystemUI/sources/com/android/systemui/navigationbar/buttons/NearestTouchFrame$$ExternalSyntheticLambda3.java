@@ -12,6 +12,6 @@ public final /* synthetic */ class NearestTouchFrame$$ExternalSyntheticLambda3 i
     }
 
     public final int compare(Object obj, Object obj2) {
-        return this.f$0.mo35019x2049347((View) obj, (View) obj2);
+        return this.f$0.mo35023x2049347((View) obj, (View) obj2);
     }
 }

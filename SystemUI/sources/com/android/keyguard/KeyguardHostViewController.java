@@ -17,7 +17,7 @@ import com.android.keyguard.KeyguardSecurityContainerController;
 import com.android.keyguard.KeyguardSecurityModel;
 import com.android.keyguard.dagger.KeyguardBouncerScope;
 import com.android.settingslib.Utils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.util.ViewController;
 import java.p026io.File;
@@ -71,7 +71,7 @@ public class KeyguardHostViewController extends ViewController<KeyguardHostView>
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-keyguard-KeyguardHostViewController  reason: not valid java name */
-    public /* synthetic */ boolean m2286lambda$new$0$comandroidkeyguardKeyguardHostViewController(View view, int i, KeyEvent keyEvent) {
+    public /* synthetic */ boolean m2292lambda$new$0$comandroidkeyguardKeyguardHostViewController(View view, int i, KeyEvent keyEvent) {
         return interceptMediaKey(keyEvent);
     }
 
@@ -254,7 +254,7 @@ public class KeyguardHostViewController extends ViewController<KeyguardHostView>
 
     public int getTop() {
         int top = ((KeyguardHostView) this.mView).getTop();
-        return getCurrentSecurityMode() == KeyguardSecurityModel.SecurityMode.Password ? top + ((KeyguardHostView) this.mView).findViewById(C1893R.C1897id.keyguard_message_area).getTop() : top;
+        return getCurrentSecurityMode() == KeyguardSecurityModel.SecurityMode.Password ? top + ((KeyguardHostView) this.mView).findViewById(C1894R.C1898id.keyguard_message_area).getTop() : top;
     }
 
     public boolean handleBackKey() {
@@ -267,7 +267,7 @@ public class KeyguardHostViewController extends ViewController<KeyguardHostView>
     }
 
     public boolean shouldEnableMenuKey() {
-        return !((KeyguardHostView) this.mView).getResources().getBoolean(C1893R.bool.config_disableMenuKeyInLockScreen) || ActivityManager.isRunningInTestHarness() || new File(ENABLE_MENU_KEY_FILE).exists();
+        return !((KeyguardHostView) this.mView).getResources().getBoolean(C1894R.bool.config_disableMenuKeyInLockScreen) || ActivityManager.isRunningInTestHarness() || new File(ENABLE_MENU_KEY_FILE).exists();
     }
 
     public boolean dispatchBackKeyEventPreIme() {
@@ -333,12 +333,12 @@ public class KeyguardHostViewController extends ViewController<KeyguardHostView>
     public void updateResources() {
         int i;
         Resources resources = ((KeyguardHostView) this.mView).getResources();
-        if (resources.getBoolean(C1893R.bool.can_use_one_handed_bouncer)) {
-            i = resources.getInteger(C1893R.integer.keyguard_host_view_one_handed_gravity);
+        if (resources.getBoolean(C1894R.bool.can_use_one_handed_bouncer)) {
+            i = resources.getInteger(C1894R.integer.keyguard_host_view_one_handed_gravity);
         } else {
-            i = resources.getInteger(C1893R.integer.keyguard_host_view_gravity);
+            i = resources.getInteger(C1894R.integer.keyguard_host_view_gravity);
         }
-        this.mTranslationY = resources.getDimensionPixelSize(C1893R.dimen.keyguard_host_view_translation_y);
+        this.mTranslationY = resources.getDimensionPixelSize(C1894R.dimen.keyguard_host_view_translation_y);
         if (((KeyguardHostView) this.mView).getLayoutParams() instanceof FrameLayout.LayoutParams) {
             FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) ((KeyguardHostView) this.mView).getLayoutParams();
             if (layoutParams.gravity != i) {

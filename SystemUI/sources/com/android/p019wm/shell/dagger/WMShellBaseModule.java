@@ -174,7 +174,7 @@ public abstract class WMShellBaseModule {
     @WMSingleton
     @Provides
     static Optional<DragAndDrop> provideDragAndDrop(DragAndDropController dragAndDropController) {
-        return Optional.m1745of(dragAndDropController.asDragAndDrop());
+        return Optional.m1751of(dragAndDropController.asDragAndDrop());
     }
 
     @WMSingleton
@@ -192,7 +192,7 @@ public abstract class WMShellBaseModule {
     @WMSingleton
     @Provides
     static Optional<CompatUI> provideCompatUI(CompatUIController compatUIController) {
-        return Optional.m1745of(compatUIController.asCompatUI());
+        return Optional.m1751of(compatUIController.asCompatUI());
     }
 
     @WMSingleton
@@ -271,7 +271,7 @@ public abstract class WMShellBaseModule {
     @Provides
     static Optional<UnfoldTransitionHandler> provideUnfoldTransitionHandler(Optional<ShellUnfoldProgressProvider> optional, TransactionPool transactionPool, Transitions transitions, @ShellMainThread ShellExecutor shellExecutor) {
         if (optional.isPresent()) {
-            return Optional.m1745of(new UnfoldTransitionHandler(optional.get(), transactionPool, shellExecutor, transitions));
+            return Optional.m1751of(new UnfoldTransitionHandler(optional.get(), transactionPool, shellExecutor, transitions));
         }
         return Optional.empty();
     }
@@ -392,7 +392,7 @@ public abstract class WMShellBaseModule {
     @WMSingleton
     @Provides
     static Optional<DisplayAreaHelper> provideDisplayAreaHelper(@ShellMainThread ShellExecutor shellExecutor, RootDisplayAreaOrganizer rootDisplayAreaOrganizer) {
-        return Optional.m1745of(new DisplayAreaHelperController(shellExecutor, rootDisplayAreaOrganizer));
+        return Optional.m1751of(new DisplayAreaHelperController(shellExecutor, rootDisplayAreaOrganizer));
     }
 
     @WMSingleton
@@ -425,7 +425,7 @@ public abstract class WMShellBaseModule {
     @WMSingleton
     @Provides
     static Optional<StartingSurface> provideStartingSurface(StartingWindowController startingWindowController) {
-        return Optional.m1745of(startingWindowController.asStartingSurface());
+        return Optional.m1751of(startingWindowController.asStartingSurface());
     }
 
     @WMSingleton
@@ -446,7 +446,7 @@ public abstract class WMShellBaseModule {
     @WMSingleton
     @Provides
     static Optional<TaskViewFactory> provideTaskViewFactory(TaskViewFactoryController taskViewFactoryController) {
-        return Optional.m1745of(taskViewFactoryController.asTaskViewFactory());
+        return Optional.m1751of(taskViewFactoryController.asTaskViewFactory());
     }
 
     @WMSingleton
@@ -470,7 +470,7 @@ public abstract class WMShellBaseModule {
     @WMSingleton
     @Provides
     static Optional<ShellCommandHandler> provideShellCommandHandler(ShellCommandHandlerImpl shellCommandHandlerImpl) {
-        return Optional.m1745of(shellCommandHandlerImpl.asShellCommandHandler());
+        return Optional.m1751of(shellCommandHandlerImpl.asShellCommandHandler());
     }
 
     @WMSingleton
@@ -483,7 +483,7 @@ public abstract class WMShellBaseModule {
     @Provides
     static Optional<BackAnimationController> provideBackAnimationController(Context context, @ShellMainThread ShellExecutor shellExecutor, @ShellBackgroundThread Handler handler) {
         if (BackAnimationController.IS_ENABLED) {
-            return Optional.m1745of(new BackAnimationController(shellExecutor, handler, context));
+            return Optional.m1751of(new BackAnimationController(shellExecutor, handler, context));
         }
         return Optional.empty();
     }

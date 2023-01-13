@@ -9,6 +9,6 @@ public final /* synthetic */ class WifiEntry$$ExternalSyntheticLambda5 implement
     }
 
     public final void run() {
-        this.f$0.m3374lambda$notifyOnUpdated$8$comandroidwifitrackerlibWifiEntry();
+        this.f$0.m3378lambda$notifyOnUpdated$8$comandroidwifitrackerlibWifiEntry();
     }
 }

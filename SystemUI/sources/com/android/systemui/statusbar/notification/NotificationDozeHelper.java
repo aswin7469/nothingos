@@ -8,7 +8,7 @@ import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.view.View;
 import android.widget.ImageView;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.animation.Interpolators;
 import java.util.function.Consumer;
 
@@ -64,16 +64,16 @@ public class NotificationDozeHelper {
         if (z2) {
             startIntensityAnimation(new NotificationDozeHelper$$ExternalSyntheticLambda0(consumer), z, j, new AnimatorListenerAdapter() {
                 public void onAnimationEnd(Animator animator) {
-                    view.setTag(C1893R.C1897id.doze_intensity_tag, (Object) null);
+                    view.setTag(C1894R.C1898id.doze_intensity_tag, (Object) null);
                 }
 
                 public void onAnimationStart(Animator animator) {
-                    view.setTag(C1893R.C1897id.doze_intensity_tag, animator);
+                    view.setTag(C1894R.C1898id.doze_intensity_tag, animator);
                 }
             });
             return;
         }
-        Animator animator = (Animator) view.getTag(C1893R.C1897id.doze_intensity_tag);
+        Animator animator = (Animator) view.getTag(C1894R.C1898id.doze_intensity_tag);
         if (animator != null) {
             animator.cancel();
         }

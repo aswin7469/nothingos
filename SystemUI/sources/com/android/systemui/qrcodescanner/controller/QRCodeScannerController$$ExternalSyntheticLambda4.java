@@ -11,6 +11,6 @@ public final /* synthetic */ class QRCodeScannerController$$ExternalSyntheticLam
     }
 
     public final void onPropertiesChanged(DeviceConfig.Properties properties) {
-        this.f$0.mo35804x42737249(properties);
+        this.f$0.mo35808x42737249(properties);
     }
 }

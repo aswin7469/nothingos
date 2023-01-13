@@ -11,6 +11,6 @@ public final /* synthetic */ class StatusBarIconView$$ExternalSyntheticLambda0 i
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        this.f$0.m3042lambda$new$0$comandroidsystemuistatusbarStatusBarIconView(valueAnimator);
+        this.f$0.m3046lambda$new$0$comandroidsystemuistatusbarStatusBarIconView(valueAnimator);
     }
 }

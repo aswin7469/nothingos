@@ -21,7 +21,7 @@ import android.view.ContextThemeWrapper;
 import android.widget.TextView;
 import androidx.slice.core.SliceHints;
 import com.android.settingslib.Utils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dependency;
 import com.android.systemui.FontSizeUtils;
 import com.android.systemui.broadcast.BroadcastDispatcher;
@@ -110,7 +110,7 @@ public class Clock extends TextView implements DemoModeCommandReceiver, TunerSer
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onReceive$0$com-android-systemui-statusbar-policy-Clock$2  reason: not valid java name */
-            public /* synthetic */ void m3225lambda$onReceive$0$comandroidsystemuistatusbarpolicyClock$2(String str) {
+            public /* synthetic */ void m3230lambda$onReceive$0$comandroidsystemuistatusbarpolicyClock$2(String str) {
                 Calendar unused = Clock.this.mCalendar = Calendar.getInstance(TimeZone.getTimeZone(str));
                 if (Clock.this.mClockFormat != null) {
                     Clock.this.mClockFormat.setTimeZone(Clock.this.mCalendar.getTimeZone());
@@ -119,7 +119,7 @@ public class Clock extends TextView implements DemoModeCommandReceiver, TunerSer
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onReceive$1$com-android-systemui-statusbar-policy-Clock$2  reason: not valid java name */
-            public /* synthetic */ void m3226lambda$onReceive$1$comandroidsystemuistatusbarpolicyClock$2(Locale locale) {
+            public /* synthetic */ void m3231lambda$onReceive$1$comandroidsystemuistatusbarpolicyClock$2(Locale locale) {
                 if (!locale.equals(Clock.this.mLocale)) {
                     Locale unused = Clock.this.mLocale = locale;
                     String unused2 = Clock.this.mContentDescriptionFormatString = "";
@@ -129,7 +129,7 @@ public class Clock extends TextView implements DemoModeCommandReceiver, TunerSer
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onReceive$2$com-android-systemui-statusbar-policy-Clock$2  reason: not valid java name */
-            public /* synthetic */ void m3227lambda$onReceive$2$comandroidsystemuistatusbarpolicyClock$2() {
+            public /* synthetic */ void m3232lambda$onReceive$2$comandroidsystemuistatusbarpolicyClock$2() {
                 Clock.this.updateClock();
             }
         };
@@ -154,7 +154,7 @@ public class Clock extends TextView implements DemoModeCommandReceiver, TunerSer
             }
         };
         this.mCommandQueue = (CommandQueue) Dependency.get(CommandQueue.class);
-        TypedArray obtainStyledAttributes = context.getTheme().obtainStyledAttributes(attributeSet, C1893R.styleable.Clock, 0, 0);
+        TypedArray obtainStyledAttributes = context.getTheme().obtainStyledAttributes(attributeSet, C1894R.styleable.Clock, 0, 0);
         try {
             this.mAmPmStyle = obtainStyledAttributes.getInt(0, 2);
             this.mNonAdaptedColor = getCurrentTextColor();
@@ -327,12 +327,12 @@ public class Clock extends TextView implements DemoModeCommandReceiver, TunerSer
     }
 
     public void onColorsChanged(boolean z) {
-        setTextColor(Utils.getColorAttrDefaultColor(new ContextThemeWrapper(this.mContext, z ? C1893R.style.Theme_SystemUI_LightWallpaper : C1893R.style.Theme_SystemUI), C1893R.attr.wallpaperTextColor));
+        setTextColor(Utils.getColorAttrDefaultColor(new ContextThemeWrapper(this.mContext, z ? C1894R.style.Theme_SystemUI_LightWallpaper : C1894R.style.Theme_SystemUI), C1894R.attr.wallpaperTextColor));
     }
 
     public void onDensityOrFontScaleChanged() {
-        FontSizeUtils.updateFontSize(this, C1893R.dimen.status_bar_clock_size);
-        setPaddingRelative(this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.status_bar_clock_starting_padding), 0, this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.status_bar_clock_end_padding), 0);
+        FontSizeUtils.updateFontSize(this, C1894R.dimen.status_bar_clock_size);
+        setPaddingRelative(this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.status_bar_clock_starting_padding), 0, this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.status_bar_clock_end_padding), 0);
     }
 
     private void updateShowSeconds() {

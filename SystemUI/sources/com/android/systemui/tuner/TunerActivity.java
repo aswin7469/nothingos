@@ -10,7 +10,7 @@ import android.widget.Toolbar;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragment;
 import androidx.preference.PreferenceScreen;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dependency;
 import com.android.systemui.demomode.DemoModeController;
 import com.android.systemui.fragments.FragmentService;
@@ -35,8 +35,8 @@ public class TunerActivity extends Activity implements PreferenceFragment.OnPref
         getWindow().addFlags(Integer.MIN_VALUE);
         boolean z = true;
         requestWindowFeature(1);
-        setContentView(C1893R.layout.tuner_activity);
-        Toolbar toolbar = (Toolbar) findViewById(C1893R.C1897id.action_bar);
+        setContentView(C1894R.layout.tuner_activity);
+        Toolbar toolbar = (Toolbar) findViewById(C1894R.C1898id.action_bar);
         if (toolbar != null) {
             setActionBar(toolbar);
         }
@@ -50,7 +50,7 @@ public class TunerActivity extends Activity implements PreferenceFragment.OnPref
             } else {
                 fragment = new TunerFragment(this.mTunerService);
             }
-            getFragmentManager().beginTransaction().replace(C1893R.C1897id.content_frame, fragment, TAG_TUNER).commit();
+            getFragmentManager().beginTransaction().replace(C1894R.C1898id.content_frame, fragment, TAG_TUNER).commit();
         }
     }
 
@@ -82,7 +82,7 @@ public class TunerActivity extends Activity implements PreferenceFragment.OnPref
             fragment.setArguments(bundle);
             FragmentTransaction beginTransaction = getFragmentManager().beginTransaction();
             setTitle(preference.getTitle());
-            beginTransaction.replace(C1893R.C1897id.content_frame, fragment);
+            beginTransaction.replace(C1894R.C1898id.content_frame, fragment);
             beginTransaction.addToBackStack("PreferenceFragment");
             beginTransaction.commit();
             return true;
@@ -99,7 +99,7 @@ public class TunerActivity extends Activity implements PreferenceFragment.OnPref
         bundle.putString("androidx.preference.PreferenceFragmentCompat.PREFERENCE_ROOT", preferenceScreen.getKey());
         subSettingsFragment.setArguments(bundle);
         subSettingsFragment.setTargetFragment(preferenceFragment, 0);
-        beginTransaction.replace(C1893R.C1897id.content_frame, subSettingsFragment);
+        beginTransaction.replace(C1894R.C1898id.content_frame, subSettingsFragment);
         beginTransaction.addToBackStack("PreferenceFragment");
         beginTransaction.commit();
         return true;

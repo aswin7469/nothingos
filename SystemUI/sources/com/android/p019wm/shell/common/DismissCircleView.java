@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.view.ViewOverlay;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 
 /* renamed from: com.android.wm.shell.common.DismissCircleView */
 public class DismissCircleView extends FrameLayout {
@@ -32,8 +32,8 @@ public class DismissCircleView extends FrameLayout {
         ImageView imageView = new ImageView(getContext());
         this.mIconView = imageView;
         Resources resources = getResources();
-        setBackground(resources.getDrawable(C3343R.C3345drawable.dismiss_circle_background));
-        imageView.setImageDrawable(resources.getDrawable(C3343R.C3345drawable.pip_ic_close_white));
+        setBackground(resources.getDrawable(C3353R.C3355drawable.dismiss_circle_background));
+        imageView.setImageDrawable(resources.getDrawable(C3353R.C3355drawable.pip_ic_close_white));
         addView(imageView);
         setViewSizes();
     }
@@ -45,7 +45,7 @@ public class DismissCircleView extends FrameLayout {
     }
 
     private void setViewSizes() {
-        int dimensionPixelSize = getResources().getDimensionPixelSize(C3343R.dimen.dismiss_target_x_size);
+        int dimensionPixelSize = getResources().getDimensionPixelSize(C3353R.dimen.dismiss_target_x_size);
         this.mIconView.setLayoutParams(new FrameLayout.LayoutParams(dimensionPixelSize, dimensionPixelSize, 17));
     }
 }

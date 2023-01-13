@@ -21,6 +21,6 @@ public final /* synthetic */ class OneShotRemoteHandler$1$$ExternalSyntheticLamb
     }
 
     public final void run() {
-        OneShotRemoteHandler.C36111.lambda$onTransitionFinished$0(this.f$0, this.f$1, this.f$2, this.f$3);
+        OneShotRemoteHandler.C36211.lambda$onTransitionFinished$0(this.f$0, this.f$1, this.f$2, this.f$3);
     }
 }

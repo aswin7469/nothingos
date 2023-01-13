@@ -12,6 +12,6 @@ public final /* synthetic */ class Collections$CopiesList$$ExternalSyntheticLamb
     }
 
     public final Object apply(int i) {
-        return this.f$0.m3740lambda$stream$0$javautilCollections$CopiesList(i);
+        return this.f$0.m3758lambda$stream$0$javautilCollections$CopiesList(i);
     }
 }

@@ -140,7 +140,7 @@ class UnixCopyFile {
                 if (i >= 0) {
                     try {
                         if (UnixNativeDispatcher.futimesSupported()) {
-                            UnixNativeDispatcher.futimes(i, unixFileAttributes.lastAccessTime().mo61298to(TimeUnit.MICROSECONDS), unixFileAttributes.lastModifiedTime().mo61298to(TimeUnit.MICROSECONDS));
+                            UnixNativeDispatcher.futimes(i, unixFileAttributes.lastAccessTime().mo61354to(TimeUnit.MICROSECONDS), unixFileAttributes.lastModifiedTime().mo61354to(TimeUnit.MICROSECONDS));
                         }
                     } catch (UnixException e5) {
                         if (flags.failIfUnableToCopyBasic) {
@@ -148,7 +148,7 @@ class UnixCopyFile {
                         }
                     }
                 }
-                UnixNativeDispatcher.utimes(unixPath2, unixFileAttributes.lastAccessTime().mo61298to(TimeUnit.MICROSECONDS), unixFileAttributes.lastModifiedTime().mo61298to(TimeUnit.MICROSECONDS));
+                UnixNativeDispatcher.utimes(unixPath2, unixFileAttributes.lastAccessTime().mo61354to(TimeUnit.MICROSECONDS), unixFileAttributes.lastModifiedTime().mo61354to(TimeUnit.MICROSECONDS));
             }
             if (i >= 0) {
                 UnixNativeDispatcher.close(i);
@@ -222,19 +222,19 @@ class UnixCopyFile {
             if (r4 == 0) goto L_0x007d
             java.nio.file.attribute.FileTime r4 = r5.lastAccessTime()     // Catch:{ UnixException -> 0x0095 }
             java.util.concurrent.TimeUnit r8 = java.util.concurrent.TimeUnit.MICROSECONDS     // Catch:{ UnixException -> 0x0095 }
-            long r8 = r4.mo61298to(r8)     // Catch:{ UnixException -> 0x0095 }
+            long r8 = r4.mo61354to(r8)     // Catch:{ UnixException -> 0x0095 }
             java.nio.file.attribute.FileTime r4 = r5.lastModifiedTime()     // Catch:{ UnixException -> 0x0095 }
             java.util.concurrent.TimeUnit r5 = java.util.concurrent.TimeUnit.MICROSECONDS     // Catch:{ UnixException -> 0x0095 }
-            long r4 = r4.mo61298to(r5)     // Catch:{ UnixException -> 0x0095 }
+            long r4 = r4.mo61354to(r5)     // Catch:{ UnixException -> 0x0095 }
             sun.nio.p035fs.UnixNativeDispatcher.futimes(r0, r8, r4)     // Catch:{ UnixException -> 0x0095 }
             goto L_0x009d
         L_0x007d:
             java.nio.file.attribute.FileTime r4 = r5.lastAccessTime()     // Catch:{ UnixException -> 0x0095 }
             java.util.concurrent.TimeUnit r8 = java.util.concurrent.TimeUnit.MICROSECONDS     // Catch:{ UnixException -> 0x0095 }
-            long r8 = r4.mo61298to(r8)     // Catch:{ UnixException -> 0x0095 }
+            long r8 = r4.mo61354to(r8)     // Catch:{ UnixException -> 0x0095 }
             java.nio.file.attribute.FileTime r4 = r5.lastModifiedTime()     // Catch:{ UnixException -> 0x0095 }
             java.util.concurrent.TimeUnit r5 = java.util.concurrent.TimeUnit.MICROSECONDS     // Catch:{ UnixException -> 0x0095 }
-            long r4 = r4.mo61298to(r5)     // Catch:{ UnixException -> 0x0095 }
+            long r4 = r4.mo61354to(r5)     // Catch:{ UnixException -> 0x0095 }
             sun.nio.p035fs.UnixNativeDispatcher.utimes(r6, r8, r4)     // Catch:{ UnixException -> 0x0095 }
             goto L_0x009d
         L_0x0095:
@@ -303,7 +303,7 @@ class UnixCopyFile {
         }
         if (flags.copyBasicAttributes) {
             try {
-                UnixNativeDispatcher.utimes(unixPath2, unixFileAttributes.lastAccessTime().mo61298to(TimeUnit.MICROSECONDS), unixFileAttributes.lastModifiedTime().mo61298to(TimeUnit.MICROSECONDS));
+                UnixNativeDispatcher.utimes(unixPath2, unixFileAttributes.lastAccessTime().mo61354to(TimeUnit.MICROSECONDS), unixFileAttributes.lastModifiedTime().mo61354to(TimeUnit.MICROSECONDS));
             } catch (UnixException e3) {
                 if (flags.failIfUnableToCopyBasic) {
                     e3.rethrowAsIOException(unixPath2);

@@ -14,6 +14,6 @@ public final /* synthetic */ class StackAnimationController$$ExternalSyntheticLa
     }
 
     public final void run() {
-        this.f$0.mo48951xaaa65b3(this.f$1);
+        this.f$0.mo48960xaaa65b3(this.f$1);
     }
 }

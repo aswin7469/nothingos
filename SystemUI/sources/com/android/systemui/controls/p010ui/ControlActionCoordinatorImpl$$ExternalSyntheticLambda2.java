@@ -19,6 +19,6 @@ public final /* synthetic */ class ControlActionCoordinatorImpl$$ExternalSynthet
     }
 
     public final void run() {
-        ControlActionCoordinatorImpl.m2677showDetail$lambda7$lambda6(this.f$0, this.f$1, this.f$2, this.f$3);
+        ControlActionCoordinatorImpl.m2682showDetail$lambda7$lambda6(this.f$0, this.f$1, this.f$2, this.f$3);
     }
 }

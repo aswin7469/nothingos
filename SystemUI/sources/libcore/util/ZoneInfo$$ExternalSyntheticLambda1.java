@@ -14,6 +14,6 @@ public final /* synthetic */ class ZoneInfo$$ExternalSyntheticLambda1 implements
     }
 
     public final void set(Field field) {
-        this.f$0.m5501lambda$readObject$1$libcoreutilZoneInfo(this.f$1, field);
+        this.f$0.m5519lambda$readObject$1$libcoreutilZoneInfo(this.f$1, field);
     }
 }

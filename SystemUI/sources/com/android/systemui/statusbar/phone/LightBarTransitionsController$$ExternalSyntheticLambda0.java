@@ -11,6 +11,6 @@ public final /* synthetic */ class LightBarTransitionsController$$ExternalSynthe
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        this.f$0.mo44383x56438732(valueAnimator);
+        this.f$0.mo44398x56438732(valueAnimator);
     }
 }

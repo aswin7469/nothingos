@@ -11,6 +11,6 @@ public final /* synthetic */ class ViewRootSync$$ExternalSyntheticLambda0 implem
     }
 
     public final void run() {
-        ViewRootSync.m2550synchronizeNextDraw$lambda1$lambda0(this.f$0);
+        ViewRootSync.m2556synchronizeNextDraw$lambda1$lambda0(this.f$0);
     }
 }

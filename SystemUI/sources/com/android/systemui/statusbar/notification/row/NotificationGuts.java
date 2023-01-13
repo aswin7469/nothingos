@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import android.view.ViewOverlay;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.FrameLayout;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.animation.Interpolators;
 
 public class NotificationGuts extends FrameLayout {
@@ -35,6 +35,8 @@ public class NotificationGuts extends FrameLayout {
     private OnHeightChangedListener mHeightListener;
     /* access modifiers changed from: private */
     public boolean mNeedsFalsingProtection;
+    /* access modifiers changed from: private */
+    public boolean mRunningAnimationClose;
 
     public interface GutsContent {
         int getActualHeight();
@@ -92,6 +94,7 @@ public class NotificationGuts extends FrameLayout {
 
     public NotificationGuts(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
+        this.mRunningAnimationClose = false;
         this.mGutsContentAccessibilityDelegate = new View.AccessibilityDelegate() {
             public void onInitializeAccessibilityNodeInfo(View view, AccessibilityNodeInfo accessibilityNodeInfo) {
                 super.onInitializeAccessibilityNodeInfo(view, accessibilityNodeInfo);
@@ -160,7 +163,7 @@ public class NotificationGuts extends FrameLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        Drawable drawable = this.mContext.getDrawable(C1893R.C1895drawable.notification_guts_bg);
+        Drawable drawable = this.mContext.getDrawable(C1894R.C1896drawable.notification_guts_bg);
         this.mBackground = drawable;
         if (drawable != null) {
             drawable.setCallback(this);
@@ -378,6 +381,18 @@ public class NotificationGuts extends FrameLayout {
                 this.mView.setVisibility(8);
                 this.mGutsContent.onFinishedClosing();
             }
+            boolean unused = NotificationGuts.this.mRunningAnimationClose = false;
+        }
+
+        public void onAnimationStart(Animator animator) {
+            boolean unused = NotificationGuts.this.mRunningAnimationClose = true;
+            super.onAnimationStart(animator);
+        }
+    }
+
+    public void invalidateDrawable(Drawable drawable) {
+        if (!this.mRunningAnimationClose) {
+            super.invalidateDrawable(drawable);
         }
     }
 }

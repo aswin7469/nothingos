@@ -47,11 +47,11 @@ public class NTColorController {
         this.mColorDisplayManager = (ColorDisplayManager) this.mContext.getSystemService(ColorDisplayManager.class);
         int integer = this.mContext.getResources().getInteger(17694809);
         this.mTemperatureDefault = integer;
-        NTLogUtil.m1682i(TAG, "mTemperatureDefault=" + integer);
+        NTLogUtil.m1688i(TAG, "mTemperatureDefault=" + integer);
     }
 
     public boolean isColorControlled() {
-        NTLogUtil.m1682i(TAG, "isColorControlled=" + this.mIsColorControlled);
+        NTLogUtil.m1688i(TAG, "isColorControlled=" + this.mIsColorControlled);
         return this.mIsColorControlled;
     }
 
@@ -70,7 +70,7 @@ public class NTColorController {
     }
 
     public void restoreDisplaySettingsIfNeeded() {
-        NTLogUtil.m1682i(TAG, "restoreDisplaySettingsIfNeeded getNightDisplayAutoMode===" + this.mColorDisplayManager.getNightDisplayAutoMode());
+        NTLogUtil.m1688i(TAG, "restoreDisplaySettingsIfNeeded getNightDisplayAutoMode===" + this.mColorDisplayManager.getNightDisplayAutoMode());
         this.mIsColorControlled = false;
         restoreNightMode();
         restoreColorTemp();
@@ -110,7 +110,7 @@ public class NTColorController {
     }
 
     public void resetInversion() {
-        NTLogUtil.m1682i(TAG, "resetInversion  mIsInversionHasReset=" + this.mIsInversionHasReset);
+        NTLogUtil.m1688i(TAG, "resetInversion  mIsInversionHasReset=" + this.mIsInversionHasReset);
         synchronized (this) {
             if (!this.mIsInversionHasReset) {
                 int i = Settings.Secure.getInt(this.mContentResolver, "accessibility_display_inversion_enabled", 0);
@@ -118,17 +118,17 @@ public class NTColorController {
                 if (i == 1) {
                     Settings.Secure.putInt(this.mContentResolver, "accessibility_display_inversion_enabled", 0);
                 }
-                NTLogUtil.m1682i(TAG, "resetInversion  savedInversion=" + this.savedInversion);
+                NTLogUtil.m1688i(TAG, "resetInversion  savedInversion=" + this.savedInversion);
                 this.mIsInversionHasReset = true;
             }
         }
     }
 
     public void restoreInversion() {
-        NTLogUtil.m1682i(TAG, "restoreInversion  mIsInversionHasReset=" + this.mIsInversionHasReset);
+        NTLogUtil.m1688i(TAG, "restoreInversion  mIsInversionHasReset=" + this.mIsInversionHasReset);
         synchronized (this) {
             if (this.mIsInversionHasReset) {
-                NTLogUtil.m1682i(TAG, "restoreInversion  savedInversion=" + this.savedInversion);
+                NTLogUtil.m1688i(TAG, "restoreInversion  savedInversion=" + this.savedInversion);
                 int i = this.savedInversion;
                 if (i != 0) {
                     Settings.Secure.putInt(this.mContentResolver, "accessibility_display_inversion_enabled", i);
@@ -141,7 +141,7 @@ public class NTColorController {
     /* access modifiers changed from: private */
     public void resetNightMode() {
         int i = Settings.Secure.getInt(this.mContentResolver, "night_display_activated", 0);
-        NTLogUtil.m1682i(TAG, "resetNightMode settings: " + i);
+        NTLogUtil.m1688i(TAG, "resetNightMode settings: " + i);
         if (i == 1) {
             this.mColorDisplayManager.setNightDisplayActivatedImmediately(false);
             this.mIsNightDisplayReset = true;
@@ -149,7 +149,7 @@ public class NTColorController {
     }
 
     private void restoreNightMode() {
-        NTLogUtil.m1682i(TAG, "saveStatus:" + getKeyguardQsEyeStatus() + " mIsNightDisplayReset: " + this.mIsNightDisplayReset);
+        NTLogUtil.m1688i(TAG, "saveStatus:" + getKeyguardQsEyeStatus() + " mIsNightDisplayReset: " + this.mIsNightDisplayReset);
         boolean z = true;
         if (getKeyguardQsEyeStatus() != -1) {
             ColorDisplayManager colorDisplayManager = this.mColorDisplayManager;
@@ -170,7 +170,7 @@ public class NTColorController {
         LocalTime nightDisplayCustomStartTime = this.mColorDisplayManager.getNightDisplayCustomStartTime();
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime dateTimeAfter = getDateTimeAfter(nightDisplayCustomEndTime, getDateTimeBefore(nightDisplayCustomStartTime, now));
-        NTLogUtil.m1682i(TAG, "isNightModeCustomActive startTime=" + nightDisplayCustomStartTime + ", endTime=" + nightDisplayCustomEndTime);
+        NTLogUtil.m1688i(TAG, "isNightModeCustomActive startTime=" + nightDisplayCustomStartTime + ", endTime=" + nightDisplayCustomEndTime);
         return now.isBefore(dateTimeAfter);
     }
 
@@ -187,12 +187,12 @@ public class NTColorController {
     }
 
     private LocalDateTime getDateTimeAfter(LocalTime localTime, LocalDateTime localDateTime) {
-        LocalDateTime of = LocalDateTime.m913of(localDateTime.getYear(), localDateTime.getMonth(), localDateTime.getDayOfMonth(), localTime.getHour(), localTime.getMinute());
+        LocalDateTime of = LocalDateTime.m911of(localDateTime.getYear(), localDateTime.getMonth(), localDateTime.getDayOfMonth(), localTime.getHour(), localTime.getMinute());
         return of.isBefore(localDateTime) ? of.plusDays(1) : of;
     }
 
     private LocalDateTime getDateTimeBefore(LocalTime localTime, LocalDateTime localDateTime) {
-        LocalDateTime of = LocalDateTime.m913of(localDateTime.getYear(), localDateTime.getMonth(), localDateTime.getDayOfMonth(), localTime.getHour(), localTime.getMinute());
+        LocalDateTime of = LocalDateTime.m911of(localDateTime.getYear(), localDateTime.getMonth(), localDateTime.getDayOfMonth(), localTime.getHour(), localTime.getMinute());
         return of.isAfter(localDateTime) ? of.minusDays(1) : of;
     }
 

@@ -36,13 +36,13 @@ class UnixSecureDirectoryStream implements SecureDirectoryStream<Path> {
     /* access modifiers changed from: private */
 
     /* renamed from: ds */
-    public final UnixDirectoryStream f912ds;
+    public final UnixDirectoryStream f910ds;
     private final CloseGuard guard;
 
     UnixSecureDirectoryStream(UnixPath dir, long dp, int dfd2, DirectoryStream.Filter<? super Path> filter) {
         CloseGuard closeGuard = CloseGuard.get();
         this.guard = closeGuard;
-        this.f912ds = new UnixDirectoryStream(dir, dp, filter);
+        this.f910ds = new UnixDirectoryStream(dir, dp, filter);
         this.dfd = dfd2;
         if (dfd2 != -1) {
             closeGuard.open("close");
@@ -51,21 +51,21 @@ class UnixSecureDirectoryStream implements SecureDirectoryStream<Path> {
 
     /* JADX INFO: finally extract failed */
     public void close() throws IOException {
-        this.f912ds.writeLock().lock();
+        this.f910ds.writeLock().lock();
         try {
-            if (this.f912ds.closeImpl()) {
+            if (this.f910ds.closeImpl()) {
                 UnixNativeDispatcher.close(this.dfd);
             }
-            this.f912ds.writeLock().unlock();
+            this.f910ds.writeLock().unlock();
             this.guard.close();
         } catch (Throwable th) {
-            this.f912ds.writeLock().unlock();
+            this.f910ds.writeLock().unlock();
             throw th;
         }
     }
 
     public Iterator<Path> iterator() {
-        return this.f912ds.iterator(this);
+        return this.f910ds.iterator(this);
     }
 
     private UnixPath getName(Path obj) {
@@ -80,14 +80,14 @@ class UnixSecureDirectoryStream implements SecureDirectoryStream<Path> {
 
     public SecureDirectoryStream<Path> newDirectoryStream(Path obj, LinkOption... options) throws IOException {
         UnixPath name = getName(obj);
-        UnixPath resolve = this.f912ds.directory().resolve((Path) name);
+        UnixPath resolve = this.f910ds.directory().resolve((Path) name);
         boolean followLinks = Util.followLinks(options);
         if (System.getSecurityManager() != null) {
             resolve.checkRead();
         }
-        this.f912ds.readLock().lock();
+        this.f910ds.readLock().lock();
         try {
-            if (this.f912ds.isOpen()) {
+            if (this.f910ds.isOpen()) {
                 int i = -1;
                 int i2 = -1;
                 long j = 0;
@@ -100,7 +100,7 @@ class UnixSecureDirectoryStream implements SecureDirectoryStream<Path> {
                 j = UnixNativeDispatcher.fdopendir(i);
                 int i4 = i;
                 UnixSecureDirectoryStream unixSecureDirectoryStream = new UnixSecureDirectoryStream(resolve, j, i2, (DirectoryStream.Filter<? super Path>) null);
-                this.f912ds.readLock().unlock();
+                this.f910ds.readLock().unlock();
                 return unixSecureDirectoryStream;
             }
             throw new ClosedDirectoryStreamException();
@@ -117,7 +117,7 @@ class UnixSecureDirectoryStream implements SecureDirectoryStream<Path> {
                 throw new NotDirectoryException(name.toString());
             }
         } catch (Throwable th) {
-            this.f912ds.readLock().unlock();
+            this.f910ds.readLock().unlock();
             throw th;
         }
     }
@@ -126,21 +126,21 @@ class UnixSecureDirectoryStream implements SecureDirectoryStream<Path> {
     public SeekableByteChannel newByteChannel(Path obj, Set<? extends OpenOption> set, FileAttribute<?>... fileAttributeArr) throws IOException {
         UnixPath name = getName(obj);
         int unixMode = UnixFileModeAttribute.toUnixMode(UnixFileModeAttribute.ALL_READWRITE, fileAttributeArr);
-        String pathForPermissionCheck = this.f912ds.directory().resolve((Path) name).getPathForPermissionCheck();
-        this.f912ds.readLock().lock();
+        String pathForPermissionCheck = this.f910ds.directory().resolve((Path) name).getPathForPermissionCheck();
+        this.f910ds.readLock().lock();
         try {
-            if (this.f912ds.isOpen()) {
+            if (this.f910ds.isOpen()) {
                 FileChannel newFileChannel = UnixChannelFactory.newFileChannel(this.dfd, name, pathForPermissionCheck, set, unixMode);
-                this.f912ds.readLock().unlock();
+                this.f910ds.readLock().unlock();
                 return newFileChannel;
             }
             throw new ClosedDirectoryStreamException();
         } catch (UnixException e) {
             e.rethrowAsIOException(name);
-            this.f912ds.readLock().unlock();
+            this.f910ds.readLock().unlock();
             return null;
         } catch (Throwable th) {
-            this.f912ds.readLock().unlock();
+            this.f910ds.readLock().unlock();
             throw th;
         }
     }
@@ -148,11 +148,11 @@ class UnixSecureDirectoryStream implements SecureDirectoryStream<Path> {
     private void implDelete(Path obj, boolean haveFlags, int flags) throws IOException {
         UnixPath name = getName(obj);
         if (System.getSecurityManager() != null) {
-            this.f912ds.directory().resolve((Path) name).checkDelete();
+            this.f910ds.directory().resolve((Path) name).checkDelete();
         }
-        this.f912ds.readLock().lock();
+        this.f910ds.readLock().lock();
         try {
-            if (this.f912ds.isOpen()) {
+            if (this.f910ds.isOpen()) {
                 if (!haveFlags) {
                     UnixFileAttributes unixFileAttributes = null;
                     int i = 0;
@@ -163,7 +163,7 @@ class UnixSecureDirectoryStream implements SecureDirectoryStream<Path> {
                     flags = i;
                 }
                 UnixNativeDispatcher.unlinkat(this.dfd, name.asByteArray(), flags);
-                this.f912ds.readLock().unlock();
+                this.f910ds.readLock().unlock();
                 return;
             }
             throw new ClosedDirectoryStreamException();
@@ -177,7 +177,7 @@ class UnixSecureDirectoryStream implements SecureDirectoryStream<Path> {
         } catch (UnixException e2) {
             e2.rethrowAsIOException(name);
         } catch (Throwable th) {
-            this.f912ds.readLock().unlock();
+            this.f910ds.readLock().unlock();
             throw th;
         }
     }
@@ -198,18 +198,18 @@ class UnixSecureDirectoryStream implements SecureDirectoryStream<Path> {
         } else if (secureDirectoryStream instanceof UnixSecureDirectoryStream) {
             this = (UnixSecureDirectoryStream) secureDirectoryStream;
             if (System.getSecurityManager() != null) {
-                this.f912ds.directory().resolve((Path) name).checkWrite();
-                this.f912ds.directory().resolve((Path) name2).checkWrite();
+                this.f910ds.directory().resolve((Path) name).checkWrite();
+                this.f910ds.directory().resolve((Path) name2).checkWrite();
             }
-            this.f912ds.readLock().lock();
+            this.f910ds.readLock().lock();
             try {
-                this.f912ds.readLock().lock();
+                this.f910ds.readLock().lock();
                 try {
-                    if (!this.f912ds.isOpen() || !this.f912ds.isOpen()) {
+                    if (!this.f910ds.isOpen() || !this.f910ds.isOpen()) {
                         throw new ClosedDirectoryStreamException();
                     }
                     UnixNativeDispatcher.renameat(this.dfd, name.asByteArray(), this.dfd, name2.asByteArray());
-                    this.f912ds.readLock().unlock();
+                    this.f910ds.readLock().unlock();
                 } catch (UnixException e) {
                     if (e.errno() != UnixConstants.EXDEV) {
                         e.rethrowAsIOException(name, name2);
@@ -217,11 +217,11 @@ class UnixSecureDirectoryStream implements SecureDirectoryStream<Path> {
                         throw new AtomicMoveNotSupportedException(name.toString(), name2.toString(), e.errorString());
                     }
                 } catch (Throwable th) {
-                    this.f912ds.readLock().unlock();
+                    this.f910ds.readLock().unlock();
                     throw th;
                 }
             } finally {
-                this.f912ds.readLock().unlock();
+                this.f910ds.readLock().unlock();
             }
         } else {
             throw new ProviderMismatchException();
@@ -285,23 +285,23 @@ class UnixSecureDirectoryStream implements SecureDirectoryStream<Path> {
                 return;
             }
             if (this.file == null) {
-                UnixSecureDirectoryStream.this.f912ds.directory().checkWrite();
+                UnixSecureDirectoryStream.this.f910ds.directory().checkWrite();
             } else {
-                UnixSecureDirectoryStream.this.f912ds.directory().resolve((Path) this.file).checkWrite();
+                UnixSecureDirectoryStream.this.f910ds.directory().resolve((Path) this.file).checkWrite();
             }
         }
 
         /* JADX INFO: finally extract failed */
         public BasicFileAttributes readAttributes() throws IOException {
             UnixFileAttributes unixFileAttributes;
-            UnixSecureDirectoryStream.this.f912ds.readLock().lock();
+            UnixSecureDirectoryStream.this.f910ds.readLock().lock();
             try {
-                if (UnixSecureDirectoryStream.this.f912ds.isOpen()) {
+                if (UnixSecureDirectoryStream.this.f910ds.isOpen()) {
                     if (System.getSecurityManager() != null) {
                         if (this.file == null) {
-                            UnixSecureDirectoryStream.this.f912ds.directory().checkRead();
+                            UnixSecureDirectoryStream.this.f910ds.directory().checkRead();
                         } else {
-                            UnixSecureDirectoryStream.this.f912ds.directory().resolve((Path) this.file).checkRead();
+                            UnixSecureDirectoryStream.this.f910ds.directory().resolve((Path) this.file).checkRead();
                         }
                     }
                     if (this.file == null) {
@@ -310,16 +310,16 @@ class UnixSecureDirectoryStream implements SecureDirectoryStream<Path> {
                         unixFileAttributes = UnixFileAttributes.get(UnixSecureDirectoryStream.this.dfd, this.file, this.followLinks);
                     }
                     BasicFileAttributes asBasicFileAttributes = unixFileAttributes.asBasicFileAttributes();
-                    UnixSecureDirectoryStream.this.f912ds.readLock().unlock();
+                    UnixSecureDirectoryStream.this.f910ds.readLock().unlock();
                     return asBasicFileAttributes;
                 }
                 throw new ClosedDirectoryStreamException();
             } catch (UnixException e) {
                 e.rethrowAsIOException(this.file);
-                UnixSecureDirectoryStream.this.f912ds.readLock().unlock();
+                UnixSecureDirectoryStream.this.f910ds.readLock().unlock();
                 return null;
             } catch (Throwable th) {
-                UnixSecureDirectoryStream.this.f912ds.readLock().unlock();
+                UnixSecureDirectoryStream.this.f910ds.readLock().unlock();
                 throw th;
             }
         }
@@ -327,9 +327,9 @@ class UnixSecureDirectoryStream implements SecureDirectoryStream<Path> {
         public void setTimes(FileTime fileTime, FileTime fileTime2, FileTime fileTime3) throws IOException {
             int r5;
             checkWriteAccess();
-            UnixSecureDirectoryStream.this.f912ds.readLock().lock();
+            UnixSecureDirectoryStream.this.f910ds.readLock().lock();
             try {
-                if (UnixSecureDirectoryStream.this.f912ds.isOpen()) {
+                if (UnixSecureDirectoryStream.this.f910ds.isOpen()) {
                     r5 = this.file == null ? UnixSecureDirectoryStream.this.dfd : open();
                     if (fileTime == null || fileTime2 == null) {
                         try {
@@ -345,19 +345,19 @@ class UnixSecureDirectoryStream implements SecureDirectoryStream<Path> {
                         }
                     }
                     try {
-                        UnixNativeDispatcher.futimes(r5, fileTime2.mo61298to(TimeUnit.MICROSECONDS), fileTime.mo61298to(TimeUnit.MICROSECONDS));
+                        UnixNativeDispatcher.futimes(r5, fileTime2.mo61354to(TimeUnit.MICROSECONDS), fileTime.mo61354to(TimeUnit.MICROSECONDS));
                     } catch (UnixException e2) {
                         e2.rethrowAsIOException(this.file);
                     }
                     if (this.file != null) {
                         UnixNativeDispatcher.close(r5);
                     }
-                    UnixSecureDirectoryStream.this.f912ds.readLock().unlock();
+                    UnixSecureDirectoryStream.this.f910ds.readLock().unlock();
                     return;
                 }
                 throw new ClosedDirectoryStreamException();
             } catch (Throwable th) {
-                UnixSecureDirectoryStream.this.f912ds.readLock().unlock();
+                UnixSecureDirectoryStream.this.f910ds.readLock().unlock();
                 throw th;
             }
         }
@@ -387,30 +387,30 @@ class UnixSecureDirectoryStream implements SecureDirectoryStream<Path> {
             SecurityManager securityManager = System.getSecurityManager();
             if (securityManager != null) {
                 if (this.file == null) {
-                    UnixSecureDirectoryStream.this.f912ds.directory().checkRead();
+                    UnixSecureDirectoryStream.this.f910ds.directory().checkRead();
                 } else {
-                    UnixSecureDirectoryStream.this.f912ds.directory().resolve((Path) this.file).checkRead();
+                    UnixSecureDirectoryStream.this.f910ds.directory().resolve((Path) this.file).checkRead();
                 }
                 securityManager.checkPermission(new RuntimePermission("accessUserInformation"));
             }
-            UnixSecureDirectoryStream.this.f912ds.readLock().lock();
+            UnixSecureDirectoryStream.this.f910ds.readLock().lock();
             try {
-                if (UnixSecureDirectoryStream.this.f912ds.isOpen()) {
+                if (UnixSecureDirectoryStream.this.f910ds.isOpen()) {
                     if (this.file == null) {
                         unixFileAttributes = UnixFileAttributes.get(UnixSecureDirectoryStream.this.dfd);
                     } else {
                         unixFileAttributes = UnixFileAttributes.get(UnixSecureDirectoryStream.this.dfd, this.file, this.followLinks);
                     }
-                    UnixSecureDirectoryStream.this.f912ds.readLock().unlock();
+                    UnixSecureDirectoryStream.this.f910ds.readLock().unlock();
                     return unixFileAttributes;
                 }
                 throw new ClosedDirectoryStreamException();
             } catch (UnixException e) {
                 e.rethrowAsIOException(this.file);
-                UnixSecureDirectoryStream.this.f912ds.readLock().unlock();
+                UnixSecureDirectoryStream.this.f910ds.readLock().unlock();
                 return null;
             } catch (Throwable th) {
-                UnixSecureDirectoryStream.this.f912ds.readLock().unlock();
+                UnixSecureDirectoryStream.this.f910ds.readLock().unlock();
                 throw th;
             }
         }
@@ -430,11 +430,11 @@ class UnixSecureDirectoryStream implements SecureDirectoryStream<Path> {
                 r2 = this;
                 r2.checkWriteAndUserAccess()
                 sun.nio.fs.UnixSecureDirectoryStream r0 = sun.nio.p035fs.UnixSecureDirectoryStream.this
-                sun.nio.fs.UnixDirectoryStream r0 = r0.f912ds
+                sun.nio.fs.UnixDirectoryStream r0 = r0.f910ds
                 java.util.concurrent.locks.Lock r0 = r0.readLock()
                 r0.lock()
                 sun.nio.fs.UnixSecureDirectoryStream r0 = sun.nio.p035fs.UnixSecureDirectoryStream.this     // Catch:{ all -> 0x0069 }
-                sun.nio.fs.UnixDirectoryStream r0 = r0.f912ds     // Catch:{ all -> 0x0069 }
+                sun.nio.fs.UnixDirectoryStream r0 = r0.f910ds     // Catch:{ all -> 0x0069 }
                 boolean r0 = r0.isOpen()     // Catch:{ all -> 0x0069 }
                 if (r0 == 0) goto L_0x0063
                 sun.nio.fs.UnixPath r0 = r2.file     // Catch:{ all -> 0x0069 }
@@ -466,7 +466,7 @@ class UnixSecureDirectoryStream implements SecureDirectoryStream<Path> {
                 goto L_0x0038
             L_0x004b:
                 sun.nio.fs.UnixSecureDirectoryStream r2 = sun.nio.p035fs.UnixSecureDirectoryStream.this
-                sun.nio.fs.UnixDirectoryStream r2 = r2.f912ds
+                sun.nio.fs.UnixDirectoryStream r2 = r2.f910ds
                 java.util.concurrent.locks.Lock r2 = r2.readLock()
                 r2.unlock()
                 return
@@ -484,7 +484,7 @@ class UnixSecureDirectoryStream implements SecureDirectoryStream<Path> {
             L_0x0069:
                 r3 = move-exception
                 sun.nio.fs.UnixSecureDirectoryStream r2 = sun.nio.p035fs.UnixSecureDirectoryStream.this
-                sun.nio.fs.UnixDirectoryStream r2 = r2.f912ds
+                sun.nio.fs.UnixDirectoryStream r2 = r2.f910ds
                 java.util.concurrent.locks.Lock r2 = r2.readLock()
                 r2.unlock()
                 throw r3
@@ -507,11 +507,11 @@ class UnixSecureDirectoryStream implements SecureDirectoryStream<Path> {
                 r1 = this;
                 r1.checkWriteAndUserAccess()
                 sun.nio.fs.UnixSecureDirectoryStream r0 = sun.nio.p035fs.UnixSecureDirectoryStream.this
-                sun.nio.fs.UnixDirectoryStream r0 = r0.f912ds
+                sun.nio.fs.UnixDirectoryStream r0 = r0.f910ds
                 java.util.concurrent.locks.Lock r0 = r0.readLock()
                 r0.lock()
                 sun.nio.fs.UnixSecureDirectoryStream r0 = sun.nio.p035fs.UnixSecureDirectoryStream.this     // Catch:{ all -> 0x0065 }
-                sun.nio.fs.UnixDirectoryStream r0 = r0.f912ds     // Catch:{ all -> 0x0065 }
+                sun.nio.fs.UnixDirectoryStream r0 = r0.f910ds     // Catch:{ all -> 0x0065 }
                 boolean r0 = r0.isOpen()     // Catch:{ all -> 0x0065 }
                 if (r0 == 0) goto L_0x005f
                 sun.nio.fs.UnixPath r0 = r1.file     // Catch:{ all -> 0x0065 }
@@ -542,7 +542,7 @@ class UnixSecureDirectoryStream implements SecureDirectoryStream<Path> {
                 goto L_0x0034
             L_0x0047:
                 sun.nio.fs.UnixSecureDirectoryStream r1 = sun.nio.p035fs.UnixSecureDirectoryStream.this
-                sun.nio.fs.UnixDirectoryStream r1 = r1.f912ds
+                sun.nio.fs.UnixDirectoryStream r1 = r1.f910ds
                 java.util.concurrent.locks.Lock r1 = r1.readLock()
                 r1.unlock()
                 return
@@ -560,7 +560,7 @@ class UnixSecureDirectoryStream implements SecureDirectoryStream<Path> {
             L_0x0065:
                 r2 = move-exception
                 sun.nio.fs.UnixSecureDirectoryStream r1 = sun.nio.p035fs.UnixSecureDirectoryStream.this
-                sun.nio.fs.UnixDirectoryStream r1 = r1.f912ds
+                sun.nio.fs.UnixDirectoryStream r1 = r1.f910ds
                 java.util.concurrent.locks.Lock r1 = r1.readLock()
                 r1.unlock()
                 throw r2

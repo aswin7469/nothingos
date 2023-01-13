@@ -15,7 +15,7 @@ public final class HttpDate {
     private static final ThreadLocal<DateFormat> STANDARD_DATE_FORMAT = new ThreadLocal<DateFormat>() {
         /* access modifiers changed from: protected */
         public DateFormat initialValue() {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss 'GMT'", Locale.f700US);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss 'GMT'", Locale.f698US);
             simpleDateFormat.setLenient(false);
             simpleDateFormat.setTimeZone(HttpDate.GMT);
             return simpleDateFormat;
@@ -44,7 +44,7 @@ public final class HttpDate {
                 DateFormat[] dateFormatArr = BROWSER_COMPATIBLE_DATE_FORMATS;
                 DateFormat dateFormat = dateFormatArr[i];
                 if (dateFormat == null) {
-                    dateFormat = new SimpleDateFormat(BROWSER_COMPATIBLE_DATE_FORMAT_STRINGS[i], Locale.f700US);
+                    dateFormat = new SimpleDateFormat(BROWSER_COMPATIBLE_DATE_FORMAT_STRINGS[i], Locale.f698US);
                     dateFormat.setTimeZone(GMT);
                     dateFormatArr[i] = dateFormat;
                 }

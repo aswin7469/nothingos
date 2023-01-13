@@ -7,7 +7,7 @@ import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.icu.text.NumberFormat;
 import com.android.settingslib.Utils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
@@ -91,8 +91,8 @@ public class AnimatableClockController extends ViewController<AnimatableClockVie
         this.mKeyguardUpdateMonitor = keyguardUpdateMonitor;
         this.mBatteryController = batteryController;
         this.mBurmeseNumerals = instance.format(1234567890);
-        this.mBurmeseLineSpacing = resources.getFloat(C1893R.dimen.keyguard_clock_line_spacing_scale_burmese);
-        this.mDefaultLineSpacing = resources.getFloat(C1893R.dimen.keyguard_clock_line_spacing_scale);
+        this.mBurmeseLineSpacing = resources.getFloat(C1894R.dimen.keyguard_clock_line_spacing_scale_burmese);
+        this.mDefaultLineSpacing = resources.getFloat(C1894R.dimen.keyguard_clock_line_spacing_scale);
     }
 
     /* access modifiers changed from: private */
@@ -175,7 +175,7 @@ public class AnimatableClockController extends ViewController<AnimatableClockVie
     }
 
     private void initColors() {
-        this.mLockScreenColor = Utils.getColorAttrDefaultColor(getContext(), C1893R.attr.wallpaperTextColorAccent);
+        this.mLockScreenColor = Utils.getColorAttrDefaultColor(getContext(), C1894R.attr.wallpaperTextColorAccent);
         ((AnimatableClockView) this.mView).setColors(-1, this.mLockScreenColor);
         ((AnimatableClockView) this.mView).animateDoze(this.mIsDozing, false);
     }

@@ -16,6 +16,6 @@ public final /* synthetic */ class ForegroundServiceNotificationListener$$Extern
     }
 
     public final boolean updateUserState(ForegroundServicesUserState foregroundServicesUserState) {
-        return this.f$0.mo29637x855961b8(this.f$1, this.f$2, foregroundServicesUserState);
+        return this.f$0.mo29647x855961b8(this.f$1, this.f$2, foregroundServicesUserState);
     }
 }

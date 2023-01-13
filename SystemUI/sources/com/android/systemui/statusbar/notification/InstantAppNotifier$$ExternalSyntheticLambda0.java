@@ -15,6 +15,6 @@ public final /* synthetic */ class InstantAppNotifier$$ExternalSyntheticLambda0 
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo39683x7d4ce98a(this.f$1, (Pair) obj);
+        this.f$0.mo39685x7d4ce98a(this.f$1, (Pair) obj);
     }
 }

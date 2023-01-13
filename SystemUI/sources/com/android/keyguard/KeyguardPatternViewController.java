@@ -17,7 +17,7 @@ import com.android.keyguard.EmergencyButtonController;
 import com.android.keyguard.KeyguardMessageAreaController;
 import com.android.keyguard.KeyguardSecurityModel;
 import com.android.settingslib.Utils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.classifier.FalsingClassifier;
 import com.android.systemui.classifier.FalsingCollector;
 import com.android.systemui.statusbar.policy.DevicePostureController;
@@ -65,7 +65,7 @@ public class KeyguardPatternViewController extends KeyguardInputViewController<K
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-keyguard-KeyguardPatternViewController  reason: not valid java name */
-    public /* synthetic */ void m2288lambda$new$0$comandroidkeyguardKeyguardPatternViewController(int i) {
+    public /* synthetic */ void m2294lambda$new$0$comandroidkeyguardKeyguardPatternViewController(int i) {
         ((KeyguardPatternView) this.mView).onDevicePostureChanged(i);
     }
 
@@ -151,7 +151,7 @@ public class KeyguardPatternViewController extends KeyguardInputViewController<K
                 }
             }
             if (i2 == 0) {
-                KeyguardPatternViewController.this.mMessageAreaController.setMessage((int) C1893R.string.kg_wrong_pattern);
+                KeyguardPatternViewController.this.mMessageAreaController.setMessage((int) C1894R.string.kg_wrong_pattern);
                 KeyguardPatternViewController.this.mLockPatternView.postDelayed(KeyguardPatternViewController.this.mCancelPatternRunnable, StatsManager.DEFAULT_TIMEOUT_MILLIS);
             }
             SystemUIEventUtils.collectUnLockResults(KeyguardPatternViewController.this.getContext(), SystemUIEventUtils.EVENT_PROPERTY_KEY_UNLOCK_FAIL, 3);
@@ -167,7 +167,7 @@ public class KeyguardPatternViewController extends KeyguardInputViewController<K
         this.mEmergencyButtonController = emergencyButtonController;
         this.mMessageAreaControllerFactory = factory;
         this.mMessageAreaController = factory.create(KeyguardMessageArea.findSecurityMessageDisplay(this.mView));
-        this.mLockPatternView = ((KeyguardPatternView) this.mView).findViewById(C1893R.C1897id.lockPatternView);
+        this.mLockPatternView = ((KeyguardPatternView) this.mView).findViewById(C1894R.C1898id.lockPatternView);
         this.mPostureController = devicePostureController;
     }
 
@@ -184,7 +184,7 @@ public class KeyguardPatternViewController extends KeyguardInputViewController<K
         this.mLockPatternView.setInStealthMode(!this.mLockPatternUtils.isVisiblePatternEnabled(KeyguardUpdateMonitor.getCurrentUser()));
         this.mLockPatternView.setOnTouchListener(new KeyguardPatternViewController$$ExternalSyntheticLambda0(this));
         this.mEmergencyButtonController.setEmergencyButtonCallback(this.mEmergencyButtonCallback);
-        View findViewById = ((KeyguardPatternView) this.mView).findViewById(C1893R.C1897id.cancel_button);
+        View findViewById = ((KeyguardPatternView) this.mView).findViewById(C1894R.C1898id.cancel_button);
         if (findViewById != null) {
             findViewById.setOnClickListener(new KeyguardPatternViewController$$ExternalSyntheticLambda1(this));
         }
@@ -214,7 +214,7 @@ public class KeyguardPatternViewController extends KeyguardInputViewController<K
         this.mLockPatternView.setOnPatternListener((LockPatternView.OnPatternListener) null);
         this.mLockPatternView.setOnTouchListener((View.OnTouchListener) null);
         this.mEmergencyButtonController.setEmergencyButtonCallback((EmergencyButtonController.EmergencyButtonCallback) null);
-        View findViewById = ((KeyguardPatternView) this.mView).findViewById(C1893R.C1897id.cancel_button);
+        View findViewById = ((KeyguardPatternView) this.mView).findViewById(C1894R.C1898id.cancel_button);
         if (findViewById != null) {
             findViewById.setOnClickListener((View.OnClickListener) null);
         }
@@ -261,19 +261,19 @@ public class KeyguardPatternViewController extends KeyguardInputViewController<K
             return;
         }
         if (i == 1) {
-            this.mMessageAreaController.setMessage((int) C1893R.string.kg_prompt_reason_restart_pattern);
+            this.mMessageAreaController.setMessage((int) C1894R.string.kg_prompt_reason_restart_pattern);
         } else if (i == 2) {
-            this.mMessageAreaController.setMessage((int) C1893R.string.kg_prompt_reason_timeout_pattern);
+            this.mMessageAreaController.setMessage((int) C1894R.string.kg_prompt_reason_timeout_pattern);
         } else if (i == 3) {
-            this.mMessageAreaController.setMessage((int) C1893R.string.kg_prompt_reason_device_admin);
+            this.mMessageAreaController.setMessage((int) C1894R.string.kg_prompt_reason_device_admin);
         } else if (i == 4) {
-            this.mMessageAreaController.setMessage((int) C1893R.string.kg_prompt_reason_user_request);
+            this.mMessageAreaController.setMessage((int) C1894R.string.kg_prompt_reason_user_request);
         } else if (i == 6) {
-            this.mMessageAreaController.setMessage((int) C1893R.string.kg_prompt_reason_timeout_pattern);
+            this.mMessageAreaController.setMessage((int) C1894R.string.kg_prompt_reason_timeout_pattern);
         } else if (i != 7) {
-            this.mMessageAreaController.setMessage((int) C1893R.string.kg_prompt_reason_timeout_pattern);
+            this.mMessageAreaController.setMessage((int) C1894R.string.kg_prompt_reason_timeout_pattern);
         } else {
-            this.mMessageAreaController.setMessage((int) C1893R.string.kg_prompt_reason_timeout_pattern);
+            this.mMessageAreaController.setMessage((int) C1894R.string.kg_prompt_reason_timeout_pattern);
         }
     }
 
@@ -305,7 +305,7 @@ public class KeyguardPatternViewController extends KeyguardInputViewController<K
             public void onTick(long j) {
                 HashMap hashMap = new HashMap();
                 hashMap.put("count", Integer.valueOf((int) Math.round(((double) j) / 1000.0d)));
-                KeyguardPatternViewController.this.mMessageAreaController.setMessage((CharSequence) PluralsMessageFormatter.format(((KeyguardPatternView) KeyguardPatternViewController.this.mView).getResources(), hashMap, C1893R.string.kg_too_many_failed_attempts_countdown));
+                KeyguardPatternViewController.this.mMessageAreaController.setMessage((CharSequence) PluralsMessageFormatter.format(((KeyguardPatternView) KeyguardPatternViewController.this.mView).getResources(), hashMap, C1894R.string.kg_too_many_failed_attempts_countdown));
             }
 
             public void onFinish() {

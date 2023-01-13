@@ -15,6 +15,6 @@ public final /* synthetic */ class QSIconViewImpl$$ExternalSyntheticLambda0 impl
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        this.f$0.mo36730xff879a00(this.f$1, valueAnimator);
+        this.f$0.mo36734xff879a00(this.f$1, valueAnimator);
     }
 }

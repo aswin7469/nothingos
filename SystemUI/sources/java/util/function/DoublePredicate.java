@@ -24,7 +24,7 @@ public interface DoublePredicate {
     }
 
     /* renamed from: or */
-    DoublePredicate mo63104or(DoublePredicate doublePredicate) {
+    DoublePredicate mo63160or(DoublePredicate doublePredicate) {
         Objects.requireNonNull(doublePredicate);
         return new DoublePredicate$$ExternalSyntheticLambda0(this, doublePredicate);
     }

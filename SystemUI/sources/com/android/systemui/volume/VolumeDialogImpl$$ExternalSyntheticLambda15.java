@@ -9,6 +9,6 @@ public final /* synthetic */ class VolumeDialogImpl$$ExternalSyntheticLambda15 i
     }
 
     public final void run() {
-        this.f$0.m3317lambda$initDialog$5$comandroidsystemuivolumeVolumeDialogImpl();
+        this.f$0.mo47366x583d471e();
     }
 }

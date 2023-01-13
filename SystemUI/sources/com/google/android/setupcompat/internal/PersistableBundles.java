@@ -75,7 +75,7 @@ public final class PersistableBundles {
         for (String next : baseBundle.keySet()) {
             Object obj = baseBundle.get(next);
             if (!isSupportedDataType(obj)) {
-                LOG.mo55164w(String.format("Unknown/unsupported data type [%s] for key %s", obj, next));
+                LOG.mo55175w(String.format("Unknown/unsupported data type [%s] for key %s", obj, next));
             } else {
                 arrayMap.put(next, baseBundle.get(next));
             }

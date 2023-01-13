@@ -9,6 +9,6 @@ public final /* synthetic */ class StatusBarUserInfoTracker$$ExternalSyntheticLa
     }
 
     public final void run() {
-        StatusBarUserInfoTracker.m3218checkEnabled$lambda4(this.f$0);
+        StatusBarUserInfoTracker.m3223checkEnabled$lambda4(this.f$0);
     }
 }

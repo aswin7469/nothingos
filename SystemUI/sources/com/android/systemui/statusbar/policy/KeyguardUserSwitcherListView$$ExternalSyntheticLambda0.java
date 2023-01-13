@@ -13,6 +13,6 @@ public final /* synthetic */ class KeyguardUserSwitcherListView$$ExternalSynthet
     }
 
     public final void run() {
-        this.f$0.mo45900xbcc43ce6(this.f$1, this.f$2);
+        this.f$0.mo45912xbcc43ce6(this.f$1, this.f$2);
     }
 }

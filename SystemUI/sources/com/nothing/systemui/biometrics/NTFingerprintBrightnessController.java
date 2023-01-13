@@ -8,14 +8,15 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.provider.Settings;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.biometrics.UdfpsController;
 import com.nothing.systemui.util.NTLogUtil;
 
 public class NTFingerprintBrightnessController {
+    private static final String SETTINGS_NT_SCREEN_BRIGHTNESS = "screen_brightness_alpha";
     private static final String TAG = "FpBrightnessController";
     /* access modifiers changed from: private */
-    public static final Uri URI_SCREEN_BRIGHTNESS = Settings.System.getUriFor("screen_brightness");
+    public static final Uri URI_SCREEN_BRIGHTNESS = Settings.System.getUriFor(SETTINGS_NT_SCREEN_BRIGHTNESS);
     private final float BRIGHTNESS_SCALE_RATE;
     /* access modifiers changed from: private */
     public AlphaCallback mAlphaCallback;
@@ -51,16 +52,16 @@ public class NTFingerprintBrightnessController {
         handlerThread.start();
         this.mWorkerHandler = new Handler(handlerThread.getLooper());
         this.mUdfpsController = udfpsController;
-        this.mAlphaMap = context.getResources().getIntArray(C1893R.array.nt_udfps_alpha_array);
+        this.mAlphaMap = context.getResources().getIntArray(C1894R.array.nt_udfps_alpha_array);
         this.mLocalObserver = new LocalObserver(handler);
     }
 
     public void dismiss() {
-        NTLogUtil.m1680d(TAG, "=dismiss=");
+        NTLogUtil.m1686d(TAG, "=dismiss=");
         this.mWorkerHandler.removeCallbacks(this.mDimLayerRunnable);
         this.mWorkerHandler.post(new Runnable() {
             public void run() {
-                NTLogUtil.m1680d(NTFingerprintBrightnessController.TAG, "===dismiss dimlayer===");
+                NTLogUtil.m1686d(NTFingerprintBrightnessController.TAG, "===dismiss dimlayer===");
                 NTFingerprintBrightnessController.this.mNTFingerprintDimLayer.dismiss();
             }
         });
@@ -70,7 +71,7 @@ public class NTFingerprintBrightnessController {
 
     public boolean needUpdateAlpha() {
         boolean z = this.mCurrentBrightness != getScreenBrightnessInt();
-        NTLogUtil.m1680d(TAG, "=needUpdateAlpha=" + z);
+        NTLogUtil.m1686d(TAG, "=needUpdateAlpha=" + z);
         return z;
     }
 
@@ -83,7 +84,7 @@ public class NTFingerprintBrightnessController {
             } else if (screenBrightnessInt != -2) {
                 f = getAlpha(screenBrightnessInt);
             }
-            NTLogUtil.m1680d(TAG, "updateDimLayerAlphaIfNeed brightness=" + screenBrightnessInt + ", alpha=" + f);
+            NTLogUtil.m1686d(TAG, "updateDimLayerAlphaIfNeed brightness=" + screenBrightnessInt + ", alpha=" + f);
             this.mCurrentBrightness = screenBrightnessInt;
             this.mDimLayerUpdateAlphaRunnable.setAlpha(f);
             this.mWorkerHandler.removeCallbacks(this.mDimLayerUpdateAlphaRunnable);
@@ -97,7 +98,7 @@ public class NTFingerprintBrightnessController {
             this.mCurrentBrightness = screenBrightnessInt;
             try {
                 if (this.mDelayDraw) {
-                    NTLogUtil.m1680d(TAG, "delay waking up 16ms for drawing fingerprint dimlayer.");
+                    NTLogUtil.m1686d(TAG, "delay waking up 16ms for drawing fingerprint dimlayer.");
                     Thread.sleep(16);
                     this.mDelayDraw = false;
                 }
@@ -109,19 +110,19 @@ public class NTFingerprintBrightnessController {
             } else if (screenBrightnessInt != -2) {
                 f = getAlpha(screenBrightnessInt);
             }
-            NTLogUtil.m1680d(TAG, "drawDimLayer brightness=" + screenBrightnessInt + ", alpha=" + f);
+            NTLogUtil.m1686d(TAG, "drawDimLayer brightness=" + screenBrightnessInt + ", alpha=" + f);
             this.mDimLayerRunnable.setAlpha(f);
             this.mWorkerHandler.removeCallbacks(this.mDimLayerRunnable);
             this.mWorkerHandler.post(this.mDimLayerRunnable);
             this.mLocalObserver.register();
             return;
         }
-        NTLogUtil.m1680d(TAG, "don't draw fingerprint dimlayer again, brightness=" + screenBrightnessInt);
+        NTLogUtil.m1686d(TAG, "don't draw fingerprint dimlayer again, brightness=" + screenBrightnessInt);
     }
 
     private float getAlpha(int i) {
         int i2 = (int) (((float) i) * 13.784314f);
-        NTLogUtil.m1680d(TAG, "get brightness = " + i + ", mAlphaMap.length=" + this.mAlphaMap.length + ", brightnessIndex=" + i2);
+        NTLogUtil.m1686d(TAG, "get brightness = " + i + ", mAlphaMap.length=" + this.mAlphaMap.length + ", brightnessIndex=" + i2);
         if (i2 < 0) {
             return 0.0f;
         }
@@ -134,7 +135,7 @@ public class NTFingerprintBrightnessController {
 
     /* access modifiers changed from: private */
     public int getScreenBrightnessInt() {
-        return Settings.System.getIntForUser(this.mContext.getContentResolver(), "screen_brightness", -1, -2);
+        return Settings.System.getInt(this.mContext.getContentResolver(), SETTINGS_NT_SCREEN_BRIGHTNESS, -1);
     }
 
     private final class LocalObserver extends ContentObserver {
@@ -150,13 +151,13 @@ public class NTFingerprintBrightnessController {
             if (this.mRegistered) {
                 this.mResolver.unregisterContentObserver(this);
             }
-            NTLogUtil.m1682i(NTFingerprintBrightnessController.TAG, "register");
-            this.mResolver.registerContentObserver(NTFingerprintBrightnessController.URI_SCREEN_BRIGHTNESS, true, this);
+            NTLogUtil.m1688i(NTFingerprintBrightnessController.TAG, "register");
+            this.mResolver.registerContentObserver(NTFingerprintBrightnessController.URI_SCREEN_BRIGHTNESS, true, this, -1);
             this.mRegistered = true;
         }
 
         public void unregister() {
-            NTLogUtil.m1682i(NTFingerprintBrightnessController.TAG, "unregister");
+            NTLogUtil.m1688i(NTFingerprintBrightnessController.TAG, "unregister");
             if (this.mRegistered) {
                 this.mResolver.unregisterContentObserver(this);
             }
@@ -164,9 +165,9 @@ public class NTFingerprintBrightnessController {
         }
 
         public void onChange(boolean z, Uri uri) {
-            NTLogUtil.m1682i(NTFingerprintBrightnessController.TAG, "onChange uri=" + uri);
+            NTLogUtil.m1688i(NTFingerprintBrightnessController.TAG, "onChange uri=" + uri);
             if (NTFingerprintBrightnessController.URI_SCREEN_BRIGHTNESS.equals(uri)) {
-                NTLogUtil.m1682i(NTFingerprintBrightnessController.TAG, "newScreenBrightness=" + NTFingerprintBrightnessController.this.getScreenBrightnessInt());
+                NTLogUtil.m1688i(NTFingerprintBrightnessController.TAG, "newScreenBrightness=" + NTFingerprintBrightnessController.this.getScreenBrightnessInt());
                 NTFingerprintBrightnessController.this.updateDimLayerAlphaIfNeed();
             }
         }
@@ -180,7 +181,7 @@ public class NTFingerprintBrightnessController {
         }
 
         public void run() {
-            NTLogUtil.m1680d(NTFingerprintBrightnessController.TAG, "drawDimLayer alpha = " + this.mAlpha);
+            NTLogUtil.m1686d(NTFingerprintBrightnessController.TAG, "drawDimLayer alpha = " + this.mAlpha);
             if (NTFingerprintBrightnessController.this.mAlphaCallback != null) {
                 NTFingerprintBrightnessController.this.mAlphaCallback.onAlpha(this.mAlpha);
             }
@@ -204,7 +205,7 @@ public class NTFingerprintBrightnessController {
         }
 
         public void run() {
-            NTLogUtil.m1680d(NTFingerprintBrightnessController.TAG, "DimLayerUpdateAlphaRunnable alpha = " + this.mAlpha);
+            NTLogUtil.m1686d(NTFingerprintBrightnessController.TAG, "DimLayerUpdateAlphaRunnable alpha = " + this.mAlpha);
             if (NTFingerprintBrightnessController.this.mAlphaCallback != null) {
                 NTFingerprintBrightnessController.this.mAlphaCallback.onAlpha(this.mAlpha);
             }

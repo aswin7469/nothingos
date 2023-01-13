@@ -19,7 +19,7 @@ import com.android.keyguard.EmergencyButtonController;
 import com.android.keyguard.KeyguardAbsKeyInputView;
 import com.android.keyguard.KeyguardMessageAreaController;
 import com.android.keyguard.KeyguardSecurityModel;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.classifier.FalsingClassifier;
 import com.android.systemui.classifier.FalsingCollector;
 import com.nothing.systemui.util.SystemUIEventUtils;
@@ -124,7 +124,7 @@ public abstract class KeyguardAbsKeyInputViewController<T extends KeyguardAbsKey
             public void onTick(long j) {
                 HashMap hashMap = new HashMap();
                 hashMap.put("count", Integer.valueOf((int) Math.round(((double) j) / 1000.0d)));
-                KeyguardAbsKeyInputViewController.this.mMessageAreaController.setMessage((CharSequence) PluralsMessageFormatter.format(((KeyguardAbsKeyInputView) KeyguardAbsKeyInputViewController.this.mView).getResources(), hashMap, C1893R.string.kg_too_many_failed_attempts_countdown));
+                KeyguardAbsKeyInputViewController.this.mMessageAreaController.setMessage((CharSequence) PluralsMessageFormatter.format(((KeyguardAbsKeyInputView) KeyguardAbsKeyInputViewController.this.mView).getResources(), hashMap, C1894R.string.kg_too_many_failed_attempts_countdown));
             }
 
             public void onFinish() {
@@ -234,7 +234,7 @@ public abstract class KeyguardAbsKeyInputViewController<T extends KeyguardAbsKey
     public void onResume(int i) {
         View findViewById;
         this.mResumed = true;
-        if ((this.mView instanceof KeyguardPINView) && (findViewById = ((KeyguardAbsKeyInputView) this.mView).findViewById(C1893R.C1897id.key_enter)) != null) {
+        if ((this.mView instanceof KeyguardPINView) && (findViewById = ((KeyguardAbsKeyInputView) this.mView).findViewById(C1894R.C1898id.key_enter)) != null) {
             if (getPasswordLength() > 0) {
                 findViewById.setVisibility(4);
             } else {

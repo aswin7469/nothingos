@@ -17,7 +17,7 @@ public final class Options extends AbstractList<ByteString> implements RandomAcc
     }
 
     /* renamed from: of */
-    public static Options m1817of(ByteString... byteStringArr) {
+    public static Options m1823of(ByteString... byteStringArr) {
         if (byteStringArr.length == 0) {
             return new Options(new ByteString[0], new int[]{0, -1});
         }

@@ -97,7 +97,7 @@ public class FalsingDataProvider {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$completePriorGesture$1$com-android-systemui-classifier-FalsingDataProvider */
-    public /* synthetic */ void mo31248x8cafd2ed(GestureFinalizedListener gestureFinalizedListener) {
+    public /* synthetic */ void mo31259x8cafd2ed(GestureFinalizedListener gestureFinalizedListener) {
         TimeLimitedMotionEventBuffer timeLimitedMotionEventBuffer = this.mRecentMotionEvents;
         gestureFinalizedListener.onGestureFinalized(timeLimitedMotionEventBuffer.get(timeLimitedMotionEventBuffer.size() - 1).getEventTime());
     }

@@ -6,7 +6,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.p012qs.dagger.QSScope;
 import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.plugins.FalsingManager;
@@ -18,10 +18,10 @@ import javax.inject.Inject;
 /* renamed from: com.android.systemui.qs.QSFooterViewController */
 public class QSFooterViewController extends ViewController<QSFooterView> implements QSFooter {
     private final ActivityStarter mActivityStarter;
-    private final TextView mBuildText = ((TextView) ((QSFooterView) this.mView).findViewById(C1893R.C1897id.build));
+    private final TextView mBuildText = ((TextView) ((QSFooterView) this.mView).findViewById(C1894R.C1898id.build));
     private final View mEditButton = ((QSFooterView) this.mView).findViewById(16908291);
     private final FalsingManager mFalsingManager;
-    private final PageIndicator mPageIndicator = ((PageIndicator) ((QSFooterView) this.mView).findViewById(C1893R.C1897id.footer_page_indicator));
+    private final PageIndicator mPageIndicator = ((PageIndicator) ((QSFooterView) this.mView).findViewById(C1894R.C1898id.footer_page_indicator));
     private final QSPanelController mQsPanelController;
     private final UserTracker mUserTracker;
 
@@ -48,19 +48,19 @@ public class QSFooterViewController extends ViewController<QSFooterView> impleme
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onViewAttached$0$com-android-systemui-qs-QSFooterViewController */
-    public /* synthetic */ boolean mo36077xb48f3fdc(View view) {
+    public /* synthetic */ boolean mo36081xb48f3fdc(View view) {
         CharSequence text = this.mBuildText.getText();
         if (TextUtils.isEmpty(text)) {
             return false;
         }
-        ((ClipboardManager) this.mUserTracker.getUserContext().getSystemService(ClipboardManager.class)).setPrimaryClip(ClipData.newPlainText(getResources().getString(C1893R.string.build_number_clip_data_label), text));
-        Toast.makeText(getContext(), C1893R.string.build_number_copy_toast, 0).show();
+        ((ClipboardManager) this.mUserTracker.getUserContext().getSystemService(ClipboardManager.class)).setPrimaryClip(ClipData.newPlainText(getResources().getString(C1894R.string.build_number_clip_data_label), text));
+        Toast.makeText(getContext(), C1894R.string.build_number_copy_toast, 0).show();
         return true;
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onViewAttached$2$com-android-systemui-qs-QSFooterViewController */
-    public /* synthetic */ void mo36079x2824839a(View view) {
+    public /* synthetic */ void mo36083x2824839a(View view) {
         if (!this.mFalsingManager.isFalseTap(1)) {
             this.mActivityStarter.postQSRunnableDismissingKeyguard(new QSFooterViewController$$ExternalSyntheticLambda0(this, view));
         }
@@ -68,7 +68,7 @@ public class QSFooterViewController extends ViewController<QSFooterView> impleme
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onViewAttached$1$com-android-systemui-qs-QSFooterViewController */
-    public /* synthetic */ void mo36078xee59e1bb(View view) {
+    public /* synthetic */ void mo36082xee59e1bb(View view) {
         this.mQsPanelController.showEdit(view);
     }
 

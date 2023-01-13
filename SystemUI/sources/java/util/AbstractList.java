@@ -484,12 +484,12 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
             return new ListIterator<E>(i) {
 
                 /* renamed from: i */
-                private final ListIterator<E> f586i;
+                private final ListIterator<E> f584i;
                 final /* synthetic */ int val$index;
 
                 {
                     this.val$index = r3;
-                    this.f586i = SubList.this.root.listIterator(SubList.this.offset + r3);
+                    this.f584i = SubList.this.root.listIterator(SubList.this.offset + r3);
                 }
 
                 public boolean hasNext() {
@@ -498,7 +498,7 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
 
                 public E next() {
                     if (hasNext()) {
-                        return this.f586i.next();
+                        return this.f584i.next();
                     }
                     throw new NoSuchElementException();
                 }
@@ -509,30 +509,30 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
 
                 public E previous() {
                     if (hasPrevious()) {
-                        return this.f586i.previous();
+                        return this.f584i.previous();
                     }
                     throw new NoSuchElementException();
                 }
 
                 public int nextIndex() {
-                    return this.f586i.nextIndex() - SubList.this.offset;
+                    return this.f584i.nextIndex() - SubList.this.offset;
                 }
 
                 public int previousIndex() {
-                    return this.f586i.previousIndex() - SubList.this.offset;
+                    return this.f584i.previousIndex() - SubList.this.offset;
                 }
 
                 public void remove() {
-                    this.f586i.remove();
+                    this.f584i.remove();
                     SubList.this.updateSizeAndModCount(-1);
                 }
 
                 public void set(E e) {
-                    this.f586i.set(e);
+                    this.f584i.set(e);
                 }
 
                 public void add(E e) {
-                    this.f586i.add(e);
+                    this.f584i.add(e);
                     SubList.this.updateSizeAndModCount(1);
                 }
             };

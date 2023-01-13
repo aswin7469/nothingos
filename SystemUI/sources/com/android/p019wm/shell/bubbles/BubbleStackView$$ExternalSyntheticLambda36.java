@@ -12,6 +12,6 @@ public final /* synthetic */ class BubbleStackView$$ExternalSyntheticLambda36 im
     }
 
     public final void onAnimationEnd(DynamicAnimation dynamicAnimation, boolean z, float f, float f2) {
-        this.f$0.m3419lambda$new$1$comandroidwmshellbubblesBubbleStackView(dynamicAnimation, z, f, f2);
+        this.f$0.m3423lambda$new$1$comandroidwmshellbubblesBubbleStackView(dynamicAnimation, z, f, f2);
     }
 }

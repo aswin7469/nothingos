@@ -17,6 +17,6 @@ public final /* synthetic */ class ApplicationsState$$ExternalSyntheticLambda0 i
     }
 
     public final void run() {
-        this.f$0.mo27965xde7da91e(this.f$1, this.f$2, this.f$3);
+        this.f$0.mo27970xde7da91e(this.f$1, this.f$2, this.f$3);
     }
 }

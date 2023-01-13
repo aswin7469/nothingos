@@ -131,7 +131,7 @@ public abstract class AtomicLongFieldUpdater<T> {
     private static final class CASUpdater<T> extends AtomicLongFieldUpdater<T> {
 
         /* renamed from: U */
-        private static final Unsafe f765U = Unsafe.getUnsafe();
+        private static final Unsafe f763U = Unsafe.getUnsafe();
         private final Class<?> cclass;
         private final long offset;
         private final Class<T> tclass;
@@ -165,7 +165,7 @@ public abstract class AtomicLongFieldUpdater<T> {
             L_0x0031:
                 r3.cclass = r6
                 r3.tclass = r4
-                jdk.internal.misc.Unsafe r4 = f765U
+                jdk.internal.misc.Unsafe r4 = f763U
                 long r4 = r4.objectFieldOffset(r5)
                 r3.offset = r4
                 return
@@ -203,37 +203,37 @@ public abstract class AtomicLongFieldUpdater<T> {
 
         public final boolean compareAndSet(T t, long j, long j2) {
             accessCheck(t);
-            return f765U.compareAndSetLong(t, this.offset, j, j2);
+            return f763U.compareAndSetLong(t, this.offset, j, j2);
         }
 
         public final boolean weakCompareAndSet(T t, long j, long j2) {
             accessCheck(t);
-            return f765U.compareAndSetLong(t, this.offset, j, j2);
+            return f763U.compareAndSetLong(t, this.offset, j, j2);
         }
 
         public final void set(T t, long j) {
             accessCheck(t);
-            f765U.putLongVolatile(t, this.offset, j);
+            f763U.putLongVolatile(t, this.offset, j);
         }
 
         public final void lazySet(T t, long j) {
             accessCheck(t);
-            f765U.putLongRelease(t, this.offset, j);
+            f763U.putLongRelease(t, this.offset, j);
         }
 
         public final long get(T t) {
             accessCheck(t);
-            return f765U.getLongVolatile(t, this.offset);
+            return f763U.getLongVolatile(t, this.offset);
         }
 
         public final long getAndSet(T t, long j) {
             accessCheck(t);
-            return f765U.getAndSetLong(t, this.offset, j);
+            return f763U.getAndSetLong(t, this.offset, j);
         }
 
         public final long getAndAdd(T t, long j) {
             accessCheck(t);
-            return f765U.getAndAddLong(t, this.offset, j);
+            return f763U.getAndAddLong(t, this.offset, j);
         }
 
         public final long getAndIncrement(T t) {
@@ -260,7 +260,7 @@ public abstract class AtomicLongFieldUpdater<T> {
     private static final class LockedUpdater<T> extends AtomicLongFieldUpdater<T> {
 
         /* renamed from: U */
-        private static final Unsafe f766U = Unsafe.getUnsafe();
+        private static final Unsafe f764U = Unsafe.getUnsafe();
         private final Class<?> cclass;
         private final long offset;
         private final Class<T> tclass;
@@ -294,7 +294,7 @@ public abstract class AtomicLongFieldUpdater<T> {
             L_0x0031:
                 r3.cclass = r6
                 r3.tclass = r4
-                jdk.internal.misc.Unsafe r4 = f766U
+                jdk.internal.misc.Unsafe r4 = f764U
                 long r4 = r4.objectFieldOffset(r5)
                 r3.offset = r4
                 return
@@ -333,7 +333,7 @@ public abstract class AtomicLongFieldUpdater<T> {
         public final boolean compareAndSet(T t, long j, long j2) {
             accessCheck(t);
             synchronized (this) {
-                Unsafe unsafe = f766U;
+                Unsafe unsafe = f764U;
                 if (unsafe.getLong(t, this.offset) != j) {
                     return false;
                 }
@@ -349,7 +349,7 @@ public abstract class AtomicLongFieldUpdater<T> {
         public final void set(T t, long j) {
             accessCheck(t);
             synchronized (this) {
-                f766U.putLong(t, this.offset, j);
+                f764U.putLong(t, this.offset, j);
             }
         }
 
@@ -361,7 +361,7 @@ public abstract class AtomicLongFieldUpdater<T> {
             long j;
             accessCheck(t);
             synchronized (this) {
-                j = f766U.getLong(t, this.offset);
+                j = f764U.getLong(t, this.offset);
             }
             return j;
         }

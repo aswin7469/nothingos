@@ -12,6 +12,6 @@ public final /* synthetic */ class BiometricUnlockController$$ExternalSyntheticL
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo43700xa5f887f2((BiometricUnlockController.BiometricUiEvent) obj);
+        this.f$0.mo43708xa5f887f2((BiometricUnlockController.BiometricUiEvent) obj);
     }
 }

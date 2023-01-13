@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.TextView;
 import androidx.constraintlayout.motion.widget.MotionLayout;
 import com.android.settingslib.Utils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dumpable;
 import com.android.systemui.animation.ShadeInterpolation;
 import com.android.systemui.battery.BatteryMeterView;
@@ -32,19 +32,19 @@ import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import org.xmlpull.p032v1.XmlPullParser;
 
-@Metadata(mo64986d1 = {"\u0000\u0001\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u000b\n\u0002\b\u0006\n\u0002\u0010 \n\u0002\u0010\u000e\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0007\n\u0002\b\u0005\n\u0002\u0010\b\n\u0002\b\u000e\n\u0002\u0010\u0002\n\u0002\b\u0006\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0011\n\u0002\b\f\b\u0007\u0018\u0000 U2\u00020\u0001:\u0001UBK\b\u0007\u0012\b\b\u0001\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\u0006\u0010\u0006\u001a\u00020\u0007\u0012\u0006\u0010\b\u001a\u00020\t\u0012\u0006\u0010\n\u001a\u00020\u000b\u0012\u0006\u0010\f\u001a\u00020\r\u0012\b\b\u0001\u0010\u000e\u001a\u00020\u000f\u0012\u0006\u0010\u0010\u001a\u00020\u0011¢\u0006\u0002\u0010\u0012J\b\u0010@\u001a\u00020AH\u0002J\u001e\u0010B\u001a\u00020A2\u0006\u0010C\u001a\u0002022\u0006\u0010D\u001a\u0002022\u0006\u0010E\u001a\u00020\u0014J%\u0010F\u001a\u00020A2\u0006\u0010G\u001a\u00020H2\u000e\u0010I\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u001c0JH\u0016¢\u0006\u0002\u0010KJ\b\u0010L\u001a\u00020AH\u0002J\b\u0010M\u001a\u00020AH\u0002J\b\u0010N\u001a\u00020AH\u0002J\b\u0010O\u001a\u00020AH\u0002J\b\u0010P\u001a\u00020AH\u0002J\b\u0010Q\u001a\u00020AH\u0002J\u0010\u0010R\u001a\u00020A2\u0006\u0010S\u001a\u00020\u0014H\u0002J\b\u0010T\u001a\u00020AH\u0002R$\u0010\u0015\u001a\u00020\u00142\u0006\u0010\u0013\u001a\u00020\u0014@FX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0016\u0010\u0017\"\u0004\b\u0018\u0010\u0019R\u0014\u0010\u001a\u001a\b\u0012\u0004\u0012\u00020\u001c0\u001bX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u001d\u001a\u00020\u001eX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u001f\u001a\u00020 X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010!\u001a\u00020\u0014X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\b\u001a\u00020\tX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\"\u001a\u00020 X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0002\u001a\u00020\u0003X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010#\u001a\u00020$X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010%\u001a\u00020&X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0006\u001a\u00020\u0007X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010'\u001a\u00020(X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010)\u001a\u00020*X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010+\u001a\u00020\u0014X\u000e¢\u0006\u0002\n\u0000R$\u0010-\u001a\u00020,2\u0006\u0010\u0013\u001a\u00020,@FX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b.\u0010/\"\u0004\b0\u00101R$\u00103\u001a\u0002022\u0006\u0010\u0013\u001a\u000202@FX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b4\u00105\"\u0004\b6\u00107R$\u00108\u001a\u00020\u00142\u0006\u0010\u0013\u001a\u00020\u0014@FX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b9\u0010\u0017\"\u0004\b:\u0010\u0019R$\u0010;\u001a\u00020,2\u0006\u0010\u0013\u001a\u00020,@FX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b<\u0010/\"\u0004\b=\u00101R\u000e\u0010\u0004\u001a\u00020\u0005X\u0004¢\u0006\u0002\n\u0000R\u001e\u0010>\u001a\u00020\u00142\u0006\u0010\u0013\u001a\u00020\u0014@BX\u000e¢\u0006\b\n\u0000\"\u0004\b?\u0010\u0019¨\u0006V"}, mo64987d2 = {"Lcom/android/systemui/statusbar/phone/LargeScreenShadeHeaderController;", "Lcom/android/systemui/Dumpable;", "header", "Landroid/view/View;", "statusBarIconController", "Lcom/android/systemui/statusbar/phone/StatusBarIconController;", "privacyIconsController", "Lcom/android/systemui/qs/HeaderPrivacyIconsController;", "configurationController", "Lcom/android/systemui/statusbar/policy/ConfigurationController;", "qsCarrierGroupControllerBuilder", "Lcom/android/systemui/qs/carrier/QSCarrierGroupController$Builder;", "featureFlags", "Lcom/android/systemui/flags/FeatureFlags;", "batteryMeterViewController", "Lcom/android/systemui/battery/BatteryMeterViewController;", "dumpManager", "Lcom/android/systemui/dump/DumpManager;", "(Landroid/view/View;Lcom/android/systemui/statusbar/phone/StatusBarIconController;Lcom/android/systemui/qs/HeaderPrivacyIconsController;Lcom/android/systemui/statusbar/policy/ConfigurationController;Lcom/android/systemui/qs/carrier/QSCarrierGroupController$Builder;Lcom/android/systemui/flags/FeatureFlags;Lcom/android/systemui/battery/BatteryMeterViewController;Lcom/android/systemui/dump/DumpManager;)V", "value", "", "active", "getActive", "()Z", "setActive", "(Z)V", "carrierIconSlots", "", "", "chipVisibilityListener", "Lcom/android/systemui/qs/ChipVisibilityListener;", "clock", "Landroid/widget/TextView;", "combinedHeaders", "date", "iconContainer", "Lcom/android/systemui/statusbar/phone/StatusIconContainer;", "iconManager", "Lcom/android/systemui/statusbar/phone/StatusBarIconController$TintedIconManager;", "qsCarrierGroup", "Lcom/android/systemui/qs/carrier/QSCarrierGroup;", "qsCarrierGroupController", "Lcom/android/systemui/qs/carrier/QSCarrierGroupController;", "qsDisabled", "", "qsExpandedFraction", "getQsExpandedFraction", "()F", "setQsExpandedFraction", "(F)V", "", "qsScrollY", "getQsScrollY", "()I", "setQsScrollY", "(I)V", "shadeExpanded", "getShadeExpanded", "setShadeExpanded", "shadeExpandedFraction", "getShadeExpandedFraction", "setShadeExpandedFraction", "visible", "setVisible", "bindConfigurationListener", "", "disable", "state1", "state2", "animate", "dump", "pw", "Ljava/io/PrintWriter;", "args", "", "(Ljava/io/PrintWriter;[Ljava/lang/String;)V", "onHeaderStateChanged", "onShadeExpandedChanged", "updateConstraints", "updateListeners", "updatePosition", "updateScrollY", "updateSingleCarrier", "singleCarrier", "updateVisibility", "Companion", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000\u0001\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u000b\n\u0002\b\u0006\n\u0002\u0010 \n\u0002\u0010\u000e\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0007\n\u0002\b\u0005\n\u0002\u0010\b\n\u0002\b\u000e\n\u0002\u0010\u0002\n\u0002\b\u0006\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0011\n\u0002\b\f\b\u0007\u0018\u0000 U2\u00020\u0001:\u0001UBK\b\u0007\u0012\b\b\u0001\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\u0006\u0010\u0006\u001a\u00020\u0007\u0012\u0006\u0010\b\u001a\u00020\t\u0012\u0006\u0010\n\u001a\u00020\u000b\u0012\u0006\u0010\f\u001a\u00020\r\u0012\b\b\u0001\u0010\u000e\u001a\u00020\u000f\u0012\u0006\u0010\u0010\u001a\u00020\u0011¢\u0006\u0002\u0010\u0012J\b\u0010@\u001a\u00020AH\u0002J\u001e\u0010B\u001a\u00020A2\u0006\u0010C\u001a\u0002022\u0006\u0010D\u001a\u0002022\u0006\u0010E\u001a\u00020\u0014J%\u0010F\u001a\u00020A2\u0006\u0010G\u001a\u00020H2\u000e\u0010I\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u001c0JH\u0016¢\u0006\u0002\u0010KJ\b\u0010L\u001a\u00020AH\u0002J\b\u0010M\u001a\u00020AH\u0002J\b\u0010N\u001a\u00020AH\u0002J\b\u0010O\u001a\u00020AH\u0002J\b\u0010P\u001a\u00020AH\u0002J\b\u0010Q\u001a\u00020AH\u0002J\u0010\u0010R\u001a\u00020A2\u0006\u0010S\u001a\u00020\u0014H\u0002J\b\u0010T\u001a\u00020AH\u0002R$\u0010\u0015\u001a\u00020\u00142\u0006\u0010\u0013\u001a\u00020\u0014@FX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0016\u0010\u0017\"\u0004\b\u0018\u0010\u0019R\u0014\u0010\u001a\u001a\b\u0012\u0004\u0012\u00020\u001c0\u001bX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u001d\u001a\u00020\u001eX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u001f\u001a\u00020 X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010!\u001a\u00020\u0014X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\b\u001a\u00020\tX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\"\u001a\u00020 X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0002\u001a\u00020\u0003X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010#\u001a\u00020$X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010%\u001a\u00020&X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0006\u001a\u00020\u0007X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010'\u001a\u00020(X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010)\u001a\u00020*X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010+\u001a\u00020\u0014X\u000e¢\u0006\u0002\n\u0000R$\u0010-\u001a\u00020,2\u0006\u0010\u0013\u001a\u00020,@FX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b.\u0010/\"\u0004\b0\u00101R$\u00103\u001a\u0002022\u0006\u0010\u0013\u001a\u000202@FX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b4\u00105\"\u0004\b6\u00107R$\u00108\u001a\u00020\u00142\u0006\u0010\u0013\u001a\u00020\u0014@FX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b9\u0010\u0017\"\u0004\b:\u0010\u0019R$\u0010;\u001a\u00020,2\u0006\u0010\u0013\u001a\u00020,@FX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b<\u0010/\"\u0004\b=\u00101R\u000e\u0010\u0004\u001a\u00020\u0005X\u0004¢\u0006\u0002\n\u0000R\u001e\u0010>\u001a\u00020\u00142\u0006\u0010\u0013\u001a\u00020\u0014@BX\u000e¢\u0006\b\n\u0000\"\u0004\b?\u0010\u0019¨\u0006V"}, mo65043d2 = {"Lcom/android/systemui/statusbar/phone/LargeScreenShadeHeaderController;", "Lcom/android/systemui/Dumpable;", "header", "Landroid/view/View;", "statusBarIconController", "Lcom/android/systemui/statusbar/phone/StatusBarIconController;", "privacyIconsController", "Lcom/android/systemui/qs/HeaderPrivacyIconsController;", "configurationController", "Lcom/android/systemui/statusbar/policy/ConfigurationController;", "qsCarrierGroupControllerBuilder", "Lcom/android/systemui/qs/carrier/QSCarrierGroupController$Builder;", "featureFlags", "Lcom/android/systemui/flags/FeatureFlags;", "batteryMeterViewController", "Lcom/android/systemui/battery/BatteryMeterViewController;", "dumpManager", "Lcom/android/systemui/dump/DumpManager;", "(Landroid/view/View;Lcom/android/systemui/statusbar/phone/StatusBarIconController;Lcom/android/systemui/qs/HeaderPrivacyIconsController;Lcom/android/systemui/statusbar/policy/ConfigurationController;Lcom/android/systemui/qs/carrier/QSCarrierGroupController$Builder;Lcom/android/systemui/flags/FeatureFlags;Lcom/android/systemui/battery/BatteryMeterViewController;Lcom/android/systemui/dump/DumpManager;)V", "value", "", "active", "getActive", "()Z", "setActive", "(Z)V", "carrierIconSlots", "", "", "chipVisibilityListener", "Lcom/android/systemui/qs/ChipVisibilityListener;", "clock", "Landroid/widget/TextView;", "combinedHeaders", "date", "iconContainer", "Lcom/android/systemui/statusbar/phone/StatusIconContainer;", "iconManager", "Lcom/android/systemui/statusbar/phone/StatusBarIconController$TintedIconManager;", "qsCarrierGroup", "Lcom/android/systemui/qs/carrier/QSCarrierGroup;", "qsCarrierGroupController", "Lcom/android/systemui/qs/carrier/QSCarrierGroupController;", "qsDisabled", "", "qsExpandedFraction", "getQsExpandedFraction", "()F", "setQsExpandedFraction", "(F)V", "", "qsScrollY", "getQsScrollY", "()I", "setQsScrollY", "(I)V", "shadeExpanded", "getShadeExpanded", "setShadeExpanded", "shadeExpandedFraction", "getShadeExpandedFraction", "setShadeExpandedFraction", "visible", "setVisible", "bindConfigurationListener", "", "disable", "state1", "state2", "animate", "dump", "pw", "Ljava/io/PrintWriter;", "args", "", "(Ljava/io/PrintWriter;[Ljava/lang/String;)V", "onHeaderStateChanged", "onShadeExpandedChanged", "updateConstraints", "updateListeners", "updatePosition", "updateScrollY", "updateSingleCarrier", "singleCarrier", "updateVisibility", "Companion", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 @CentralSurfacesComponent.CentralSurfacesScope
 /* compiled from: LargeScreenShadeHeaderController.kt */
 public final class LargeScreenShadeHeaderController implements Dumpable {
     public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
-    private static final int HEADER_TRANSITION_ID = C1893R.C1897id.header_transition;
+    private static final int HEADER_TRANSITION_ID = C1894R.C1898id.header_transition;
     /* access modifiers changed from: private */
-    public static final int LARGE_SCREEN_HEADER_CONSTRAINT = C1893R.C1897id.large_screen_header_constraint;
-    private static final int LARGE_SCREEN_HEADER_TRANSITION_ID = C1893R.C1897id.large_screen_header_transition;
+    public static final int LARGE_SCREEN_HEADER_CONSTRAINT = C1894R.C1898id.large_screen_header_constraint;
+    private static final int LARGE_SCREEN_HEADER_TRANSITION_ID = C1894R.C1898id.large_screen_header_transition;
     /* access modifiers changed from: private */
-    public static final int QQS_HEADER_CONSTRAINT = C1893R.C1897id.qqs_header_constraint;
+    public static final int QQS_HEADER_CONSTRAINT = C1894R.C1898id.qqs_header_constraint;
     /* access modifiers changed from: private */
-    public static final int QS_HEADER_CONSTRAINT = C1893R.C1897id.qs_header_constraint;
+    public static final int QS_HEADER_CONSTRAINT = C1894R.C1898id.qs_header_constraint;
     private boolean active;
     private final List<String> carrierIconSlots;
     private final ChipVisibilityListener chipVisibilityListener;
@@ -88,13 +88,13 @@ public final class LargeScreenShadeHeaderController implements Dumpable {
         BooleanFlag booleanFlag = Flags.COMBINED_QS_HEADERS;
         Intrinsics.checkNotNullExpressionValue(booleanFlag, "COMBINED_QS_HEADERS");
         this.combinedHeaders = featureFlags.isEnabled(booleanFlag);
-        View findViewById = view.findViewById(C1893R.C1897id.clock);
+        View findViewById = view.findViewById(C1894R.C1898id.clock);
         Intrinsics.checkNotNullExpressionValue(findViewById, "header.findViewById(R.id.clock)");
         this.clock = (TextView) findViewById;
-        View findViewById2 = view.findViewById(C1893R.C1897id.date);
+        View findViewById2 = view.findViewById(C1894R.C1898id.date);
         Intrinsics.checkNotNullExpressionValue(findViewById2, "header.findViewById(R.id.date)");
         this.date = (TextView) findViewById2;
-        View findViewById3 = view.findViewById(C1893R.C1897id.carrier_group);
+        View findViewById3 = view.findViewById(C1894R.C1898id.carrier_group);
         Intrinsics.checkNotNullExpressionValue(findViewById3, "header.findViewById(R.id.carrier_group)");
         this.qsCarrierGroup = (QSCarrierGroup) findViewById3;
         ChipVisibilityListener largeScreenShadeHeaderController$chipVisibilityListener$1 = new LargeScreenShadeHeaderController$chipVisibilityListener$1(this);
@@ -102,18 +102,18 @@ public final class LargeScreenShadeHeaderController implements Dumpable {
         if (view instanceof MotionLayout) {
             Context context = ((MotionLayout) view).getContext();
             Resources resources = ((MotionLayout) view).getResources();
-            ((MotionLayout) view).getConstraintSet(QQS_HEADER_CONSTRAINT).load(context, (XmlPullParser) resources.getXml(C1893R.C1901xml.qqs_header));
-            ((MotionLayout) view).getConstraintSet(QS_HEADER_CONSTRAINT).load(context, (XmlPullParser) resources.getXml(C1893R.C1901xml.qs_header));
-            ((MotionLayout) view).getConstraintSet(LARGE_SCREEN_HEADER_CONSTRAINT).load(context, (XmlPullParser) resources.getXml(C1893R.C1901xml.large_screen_shade_header));
+            ((MotionLayout) view).getConstraintSet(QQS_HEADER_CONSTRAINT).load(context, (XmlPullParser) resources.getXml(C1894R.C1902xml.qqs_header));
+            ((MotionLayout) view).getConstraintSet(QS_HEADER_CONSTRAINT).load(context, (XmlPullParser) resources.getXml(C1894R.C1902xml.qs_header));
+            ((MotionLayout) view).getConstraintSet(LARGE_SCREEN_HEADER_CONSTRAINT).load(context, (XmlPullParser) resources.getXml(C1894R.C1902xml.large_screen_shade_header));
             headerPrivacyIconsController.setChipVisibilityListener(largeScreenShadeHeaderController$chipVisibilityListener$1);
         }
         bindConfigurationListener();
         batteryMeterViewController.init();
-        View findViewById4 = view.findViewById(C1893R.C1897id.batteryRemainingIcon);
+        View findViewById4 = view.findViewById(C1894R.C1898id.batteryRemainingIcon);
         Intrinsics.checkNotNullExpressionValue(findViewById4, "header.findViewById(R.id.batteryRemainingIcon)");
         batteryMeterViewController.ignoreTunerUpdates();
         ((BatteryMeterView) findViewById4).setPercentShowMode(3);
-        View findViewById5 = view.findViewById(C1893R.C1897id.statusIcons);
+        View findViewById5 = view.findViewById(C1894R.C1898id.statusIcons);
         Intrinsics.checkNotNullExpressionValue(findViewById5, "header.findViewById(R.id.statusIcons)");
         StatusIconContainer statusIconContainer = (StatusIconContainer) findViewById5;
         this.iconContainer = statusIconContainer;
@@ -128,7 +128,7 @@ public final class LargeScreenShadeHeaderController implements Dumpable {
             list = CollectionsKt.listOf(view.getContext().getString(17041571));
         }
         this.carrierIconSlots = list;
-        QSCarrierGroupController build = builder.setQSCarrierGroup((QSCarrierGroup) view.findViewById(C1893R.C1897id.carrier_group)).build();
+        QSCarrierGroupController build = builder.setQSCarrierGroup((QSCarrierGroup) view.findViewById(C1894R.C1898id.carrier_group)).build();
         Intrinsics.checkNotNullExpressionValue(build, "qsCarrierGroupController…\n                .build()");
         this.qsCarrierGroupController = build;
         dumpManager.registerDumpable(this);
@@ -136,7 +136,7 @@ public final class LargeScreenShadeHeaderController implements Dumpable {
         updateConstraints();
     }
 
-    @Metadata(mo64986d1 = {"\u0000\u001a\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\b\n\u0002\b\u0005\n\u0002\u0010\u000e\n\u0000\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002J\f\u0010\t\u001a\u00020\n*\u00020\u0004H\u0002R\u000e\u0010\u0003\u001a\u00020\u0004XD¢\u0006\u0002\n\u0000R\u000e\u0010\u0005\u001a\u00020\u0004XD¢\u0006\u0002\n\u0000R\u000e\u0010\u0006\u001a\u00020\u0004XD¢\u0006\u0002\n\u0000R\u000e\u0010\u0007\u001a\u00020\u0004XD¢\u0006\u0002\n\u0000R\u000e\u0010\b\u001a\u00020\u0004XD¢\u0006\u0002\n\u0000¨\u0006\u000b"}, mo64987d2 = {"Lcom/android/systemui/statusbar/phone/LargeScreenShadeHeaderController$Companion;", "", "()V", "HEADER_TRANSITION_ID", "", "LARGE_SCREEN_HEADER_CONSTRAINT", "LARGE_SCREEN_HEADER_TRANSITION_ID", "QQS_HEADER_CONSTRAINT", "QS_HEADER_CONSTRAINT", "stateToString", "", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u0000\u001a\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\b\n\u0002\b\u0005\n\u0002\u0010\u000e\n\u0000\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002J\f\u0010\t\u001a\u00020\n*\u00020\u0004H\u0002R\u000e\u0010\u0003\u001a\u00020\u0004XD¢\u0006\u0002\n\u0000R\u000e\u0010\u0005\u001a\u00020\u0004XD¢\u0006\u0002\n\u0000R\u000e\u0010\u0006\u001a\u00020\u0004XD¢\u0006\u0002\n\u0000R\u000e\u0010\u0007\u001a\u00020\u0004XD¢\u0006\u0002\n\u0000R\u000e\u0010\b\u001a\u00020\u0004XD¢\u0006\u0002\n\u0000¨\u0006\u000b"}, mo65043d2 = {"Lcom/android/systemui/statusbar/phone/LargeScreenShadeHeaderController$Companion;", "", "()V", "HEADER_TRANSITION_ID", "", "LARGE_SCREEN_HEADER_CONSTRAINT", "LARGE_SCREEN_HEADER_TRANSITION_ID", "QQS_HEADER_CONSTRAINT", "QS_HEADER_CONSTRAINT", "stateToString", "", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* compiled from: LargeScreenShadeHeaderController.kt */
     public static final class Companion {
         public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
@@ -243,7 +243,7 @@ public final class LargeScreenShadeHeaderController implements Dumpable {
     }
 
     private final void bindConfigurationListener() {
-        this.configurationController.addCallback(new C2993x12adfc0d(this));
+        this.configurationController.addCallback(new C3003x12adfc0d(this));
     }
 
     private final void onShadeExpandedChanged() {
@@ -319,7 +319,7 @@ public final class LargeScreenShadeHeaderController implements Dumpable {
 
     /* access modifiers changed from: private */
     /* renamed from: updateListeners$lambda-0  reason: not valid java name */
-    public static final void m3179updateListeners$lambda0(LargeScreenShadeHeaderController largeScreenShadeHeaderController, boolean z) {
+    public static final void m3184updateListeners$lambda0(LargeScreenShadeHeaderController largeScreenShadeHeaderController, boolean z) {
         Intrinsics.checkNotNullParameter(largeScreenShadeHeaderController, "this$0");
         largeScreenShadeHeaderController.updateSingleCarrier(z);
     }

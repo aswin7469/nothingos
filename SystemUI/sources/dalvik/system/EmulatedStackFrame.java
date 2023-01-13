@@ -38,11 +38,11 @@ public class EmulatedStackFrame {
         }
 
         public static Range all(MethodType methodType) {
-            return m1687of(methodType, 0, methodType.parameterCount());
+            return m1693of(methodType, 0, methodType.parameterCount());
         }
 
         /* renamed from: of */
-        public static Range m1687of(MethodType methodType, int i, int i2) {
+        public static Range m1693of(MethodType methodType, int i, int i2) {
             if (i >= i2) {
                 return EMPTY_RANGE;
             }
@@ -72,7 +72,7 @@ public class EmulatedStackFrame {
         }
 
         public static Range from(MethodType methodType, int i) {
-            return m1687of(methodType, i, methodType.parameterCount());
+            return m1693of(methodType, i, methodType.parameterCount());
         }
     }
 

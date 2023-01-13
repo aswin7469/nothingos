@@ -12,6 +12,6 @@ public final /* synthetic */ class FooterActionsController$$ExternalSyntheticLam
     }
 
     public final void onClick(View view) {
-        FooterActionsController.m2895onClickListener$lambda3(this.f$0, view);
+        FooterActionsController.m2900onClickListener$lambda3(this.f$0, view);
     }
 }

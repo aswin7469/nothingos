@@ -9,7 +9,6 @@ import android.graphics.ColorFilter;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.MathUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,7 @@ import com.airbnb.lottie.LottieProperty;
 import com.airbnb.lottie.model.KeyPath;
 import com.airbnb.lottie.value.LottieFrameInfo;
 import com.android.settingslib.Utils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.animation.Interpolators;
 import com.android.systemui.doze.util.BurnInHelperKt;
 import com.android.systemui.navigationbar.NavigationBarInflaterView;
@@ -51,24 +50,24 @@ public class UdfpsKeyguardView extends UdfpsAnimationView {
     private final AsyncLayoutInflater.OnInflateFinishedListener mLayoutInflaterFinishListener = new AsyncLayoutInflater.OnInflateFinishedListener() {
         public void onInflateFinished(View view, int i, ViewGroup viewGroup) {
             boolean unused = UdfpsKeyguardView.this.mFullyInflated = true;
-            LottieAnimationView unused2 = UdfpsKeyguardView.this.mAodFp = (LottieAnimationView) view.findViewById(C1893R.C1897id.udfps_aod_fp);
-            LottieAnimationView unused3 = UdfpsKeyguardView.this.mLockScreenFp = (LottieAnimationView) view.findViewById(C1893R.C1897id.udfps_lockscreen_fp);
-            ImageView unused4 = UdfpsKeyguardView.this.mBgProtection = (ImageView) view.findViewById(C1893R.C1897id.udfps_keyguard_fp_bg);
+            LottieAnimationView unused2 = UdfpsKeyguardView.this.mAodFp = (LottieAnimationView) view.findViewById(C1894R.C1898id.udfps_aod_fp);
+            LottieAnimationView unused3 = UdfpsKeyguardView.this.mLockScreenFp = (LottieAnimationView) view.findViewById(C1894R.C1898id.udfps_lockscreen_fp);
+            ImageView unused4 = UdfpsKeyguardView.this.mBgProtection = (ImageView) view.findViewById(C1894R.C1898id.udfps_keyguard_fp_bg);
             UdfpsKeyguardView.this.mLockScreenFp.setVisibility(8);
             UdfpsKeyguardView.this.mBgProtection.setVisibility(8);
             UdfpsKeyguardView.this.mAodFp.setVisibility(8);
             UdfpsKeyguardView udfpsKeyguardView = UdfpsKeyguardView.this;
-            LottieAnimationView unused5 = udfpsKeyguardView.mNTLockScreenFp = (LottieAnimationView) udfpsKeyguardView.findViewById(C1893R.C1897id.nt_udfps_lockscreen_fp);
+            LottieAnimationView unused5 = udfpsKeyguardView.mNTLockScreenFp = (LottieAnimationView) udfpsKeyguardView.findViewById(C1894R.C1898id.nt_udfps_lockscreen_fp);
             UdfpsKeyguardView.this.updatePadding();
             UdfpsKeyguardView.this.updateColor();
-            UdfpsKeyguardView.this.updateAlpha();
+            UdfpsKeyguardView.this.updateAlpha("onInflateFinished");
             viewGroup.addView(view);
             UdfpsKeyguardView.this.mLockScreenFp.addValueCallback(new KeyPath("**"), LottieProperty.COLOR_FILTER, new UdfpsKeyguardView$2$$ExternalSyntheticLambda0(this));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onInflateFinished$0$com-android-systemui-biometrics-UdfpsKeyguardView$2 */
-        public /* synthetic */ ColorFilter mo30974xc49f4e46(LottieFrameInfo lottieFrameInfo) {
+        public /* synthetic */ ColorFilter mo30984xc49f4e46(LottieFrameInfo lottieFrameInfo) {
             return new PorterDuffColorFilter(UdfpsKeyguardView.this.mTextColorPrimary, PorterDuff.Mode.SRC_ATOP);
         }
     };
@@ -87,6 +86,10 @@ public class UdfpsKeyguardView extends UdfpsAnimationView {
     private @interface AnimationType {
     }
 
+    public boolean dozeTimeTick() {
+        return true;
+    }
+
     /* access modifiers changed from: package-private */
     public void onIlluminationStarting() {
     }
@@ -98,23 +101,18 @@ public class UdfpsKeyguardView extends UdfpsAnimationView {
     public UdfpsKeyguardView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         this.mFingerprintDrawable = new UdfpsFpDrawable(context);
-        this.mMaxBurnInOffsetX = context.getResources().getDimensionPixelSize(C1893R.dimen.udfps_burn_in_offset_x);
-        this.mMaxBurnInOffsetY = context.getResources().getDimensionPixelSize(C1893R.dimen.udfps_burn_in_offset_y);
+        this.mMaxBurnInOffsetX = context.getResources().getDimensionPixelSize(C1894R.dimen.udfps_burn_in_offset_x);
+        this.mMaxBurnInOffsetY = context.getResources().getDimensionPixelSize(C1894R.dimen.udfps_burn_in_offset_y);
     }
 
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        new AsyncLayoutInflater(this.mContext).inflate(C1893R.layout.udfps_keyguard_view_internal, this, this.mLayoutInflaterFinishListener);
+        new AsyncLayoutInflater(this.mContext).inflate(C1894R.layout.udfps_keyguard_view_internal, this, this.mLayoutInflaterFinishListener);
     }
 
     public UdfpsDrawable getDrawable() {
         return this.mFingerprintDrawable;
-    }
-
-    public boolean dozeTimeTick() {
-        updateBurnInOffsets();
-        return true;
     }
 
     private void updateBurnInOffsets() {
@@ -180,7 +178,7 @@ public class UdfpsKeyguardView extends UdfpsAnimationView {
     public void updateColor() {
         if (this.mFullyInflated) {
             this.mTextColorPrimary = Utils.getColorAttrDefaultColor(this.mContext, 16842806);
-            this.mBgProtection.setImageDrawable(getContext().getDrawable(C1893R.C1895drawable.fingerprint_bg));
+            this.mBgProtection.setImageDrawable(getContext().getDrawable(C1894R.C1896drawable.fingerprint_bg));
             this.mLockScreenFp.invalidate();
         }
     }
@@ -193,7 +191,7 @@ public class UdfpsKeyguardView extends UdfpsAnimationView {
     /* access modifiers changed from: package-private */
     public void updatePadding() {
         if (this.mLockScreenFp != null && this.mAodFp != null) {
-            int dimensionPixelSize = (int) (((float) getResources().getDimensionPixelSize(C1893R.dimen.lock_icon_padding)) * this.mScaleFactor);
+            int dimensionPixelSize = (int) (((float) getResources().getDimensionPixelSize(C1894R.dimen.lock_icon_padding)) * this.mScaleFactor);
             this.mLockScreenFp.setPadding(dimensionPixelSize, dimensionPixelSize, dimensionPixelSize, dimensionPixelSize);
             this.mAodFp.setPadding(dimensionPixelSize, dimensionPixelSize, dimensionPixelSize, dimensionPixelSize);
         }
@@ -202,7 +200,7 @@ public class UdfpsKeyguardView extends UdfpsAnimationView {
     /* access modifiers changed from: package-private */
     public void setUnpausedAlpha(int i) {
         this.mAlpha = i;
-        updateAlpha();
+        updateAlpha("setUnpausedAlpha " + this.mAlpha);
     }
 
     /* access modifiers changed from: package-private */
@@ -211,16 +209,14 @@ public class UdfpsKeyguardView extends UdfpsAnimationView {
     }
 
     /* access modifiers changed from: protected */
-    public int updateAlpha() {
-        int updateAlpha = super.updateAlpha();
-        NTLogUtil.m1680d(TAG, "updateAlpha: alpha = " + updateAlpha + ", mPauseAuth=" + this.mPauseAuth);
-        updateBurnInOffsets();
+    public int updateAlpha(String str) {
+        int updateAlpha = super.updateAlpha(str);
+        NTLogUtil.m1686d(TAG, "updateAlpha: alpha = " + updateAlpha + ", mPauseAuth=" + this.mPauseAuth + ", reason=" + str);
         return updateAlpha;
     }
 
     /* access modifiers changed from: package-private */
     public int calculateAlpha() {
-        Log.d(TAG, "calculateAlpha: mpauseAuth = " + this.mPauseAuth);
         return this.mPauseAuth ? 0 : 255;
     }
 
@@ -228,7 +224,6 @@ public class UdfpsKeyguardView extends UdfpsAnimationView {
     public void onDozeAmountChanged(float f, float f2, int i) {
         this.mAnimationType = i;
         this.mInterpolatedDarkAmount = f2;
-        updateAlpha();
     }
 
     /* access modifiers changed from: package-private */
@@ -263,7 +258,7 @@ public class UdfpsKeyguardView extends UdfpsAnimationView {
     public void startFpsBreatheAnim() {
         LottieAnimationView lottieAnimationView = this.mNTLockScreenFp;
         if (lottieAnimationView != null && !lottieAnimationView.isAnimating()) {
-            NTLogUtil.m1682i(TAG, "startFpsBreatheAnim");
+            NTLogUtil.m1688i(TAG, "startFpsBreatheAnim");
             this.mNTLockScreenFp.playAnimation();
         }
     }
@@ -271,7 +266,7 @@ public class UdfpsKeyguardView extends UdfpsAnimationView {
     public void stopFpsBreatheAnim() {
         LottieAnimationView lottieAnimationView = this.mNTLockScreenFp;
         if (lottieAnimationView != null && lottieAnimationView.isAnimating()) {
-            NTLogUtil.m1682i(TAG, "stopFpsBreatheAnim");
+            NTLogUtil.m1688i(TAG, "stopFpsBreatheAnim");
             this.mNTLockScreenFp.pauseAnimation();
             this.mNTLockScreenFp.setProgress(0.0f);
         }

@@ -4,33 +4,33 @@ final class ViewingConditions {
     public static final ViewingConditions DEFAULT = make(ColorUtils.whitePointD65(), (float) ((((double) ColorUtils.yFromLstar(50.0f)) * 63.66197723675813d) / 100.0d), 50.0f, 2.0f, false);
 
     /* renamed from: aw */
-    private final float f437aw;
+    private final float f436aw;
 
     /* renamed from: c */
-    private final float f438c;
+    private final float f437c;
 
     /* renamed from: fl */
-    private final float f439fl;
+    private final float f438fl;
     private final float flRoot;
 
     /* renamed from: n */
-    private final float f440n;
+    private final float f439n;
     private final float nbb;
 
     /* renamed from: nc */
-    private final float f441nc;
+    private final float f440nc;
     private final float ncb;
     private final float[] rgbD;
 
     /* renamed from: z */
-    private final float f442z;
+    private final float f441z;
 
     public float getAw() {
-        return this.f437aw;
+        return this.f436aw;
     }
 
     public float getN() {
-        return this.f440n;
+        return this.f439n;
     }
 
     public float getNbb() {
@@ -44,12 +44,12 @@ final class ViewingConditions {
 
     /* access modifiers changed from: package-private */
     public float getC() {
-        return this.f438c;
+        return this.f437c;
     }
 
     /* access modifiers changed from: package-private */
     public float getNc() {
-        return this.f441nc;
+        return this.f440nc;
     }
 
     public float[] getRgbD() {
@@ -58,7 +58,7 @@ final class ViewingConditions {
 
     /* access modifiers changed from: package-private */
     public float getFl() {
-        return this.f439fl;
+        return this.f438fl;
     }
 
     public float getFlRoot() {
@@ -67,7 +67,7 @@ final class ViewingConditions {
 
     /* access modifiers changed from: package-private */
     public float getZ() {
-        return this.f442z;
+        return this.f441z;
     }
 
     static ViewingConditions make(float[] fArr, float f, float f2, float f3, boolean z) {
@@ -119,15 +119,15 @@ final class ViewingConditions {
     }
 
     private ViewingConditions(float f, float f2, float f3, float f4, float f5, float f6, float[] fArr, float f7, float f8, float f9) {
-        this.f440n = f;
-        this.f437aw = f2;
+        this.f439n = f;
+        this.f436aw = f2;
         this.nbb = f3;
         this.ncb = f4;
-        this.f438c = f5;
-        this.f441nc = f6;
+        this.f437c = f5;
+        this.f440nc = f6;
         this.rgbD = fArr;
-        this.f439fl = f7;
+        this.f438fl = f7;
         this.flRoot = f8;
-        this.f442z = f9;
+        this.f441z = f9;
     }
 }

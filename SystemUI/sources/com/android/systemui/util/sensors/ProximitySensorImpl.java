@@ -57,7 +57,7 @@ class ProximitySensorImpl implements ProximitySensor {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onThresholdCrossed$0$com-android-systemui-util-sensors-ProximitySensorImpl$1 */
-        public /* synthetic */ void mo47083xe46fb3df() {
+        public /* synthetic */ void mo47095xe46fb3df() {
             ProximitySensorImpl.this.mPrimaryThresholdSensor.pause();
             ProximitySensorImpl.this.mSecondaryThresholdSensor.resume();
         }

@@ -38,23 +38,23 @@ public class TaskSurfaceHelperController {
         }
 
         public void setGameModeForTask(int i, int i2) {
-            TaskSurfaceHelperController.this.mMainExecutor.execute(new C3607x3c1cf256(this, i, i2));
+            TaskSurfaceHelperController.this.mMainExecutor.execute(new C3617x3c1cf256(this, i, i2));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$setGameModeForTask$0$com-android-wm-shell-tasksurfacehelper-TaskSurfaceHelperController$TaskSurfaceHelperImpl */
-        public /* synthetic */ void mo51225x15e153a7(int i, int i2) {
+        public /* synthetic */ void mo51236x15e153a7(int i, int i2) {
             TaskSurfaceHelperController.this.setGameModeForTask(i, i2);
         }
 
         public void screenshotTask(ActivityManager.RunningTaskInfo runningTaskInfo, Rect rect, Executor executor, Consumer<SurfaceControl.ScreenshotHardwareBuffer> consumer) {
-            TaskSurfaceHelperController.this.mMainExecutor.execute(new C3605x3c1cf254(this, runningTaskInfo, rect, executor, consumer));
+            TaskSurfaceHelperController.this.mMainExecutor.execute(new C3615x3c1cf254(this, runningTaskInfo, rect, executor, consumer));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$screenshotTask$3$com-android-wm-shell-tasksurfacehelper-TaskSurfaceHelperController$TaskSurfaceHelperImpl */
-        public /* synthetic */ void mo51224xe141e4b0(ActivityManager.RunningTaskInfo runningTaskInfo, Rect rect, Executor executor, Consumer consumer) {
-            TaskSurfaceHelperController.this.screenshotTask(runningTaskInfo, rect, new C3604x3c1cf253(executor, consumer));
+        public /* synthetic */ void mo51235xe141e4b0(ActivityManager.RunningTaskInfo runningTaskInfo, Rect rect, Executor executor, Consumer consumer) {
+            TaskSurfaceHelperController.this.screenshotTask(runningTaskInfo, rect, new C3614x3c1cf253(executor, consumer));
         }
     }
 }

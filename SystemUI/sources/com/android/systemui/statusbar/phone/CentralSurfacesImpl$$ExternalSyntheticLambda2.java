@@ -12,6 +12,6 @@ public final /* synthetic */ class CentralSurfacesImpl$$ExternalSyntheticLambda2
     }
 
     public final void onMessage(Object obj) {
-        this.f$0.mo43895x393f6e1f((CentralSurfacesImpl.AnimateExpandSettingsPanelMessage) obj);
+        this.f$0.mo43904x393f6e1f((CentralSurfacesImpl.AnimateExpandSettingsPanelMessage) obj);
     }
 }

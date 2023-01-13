@@ -34,7 +34,7 @@ import sun.security.pkcs.SignerInfo;
 
 public class SignatureFileVerifier {
     private static final String ATTR_DIGEST = "-DIGEST-Manifest-Main-Attributes".toUpperCase(Locale.ENGLISH);
-    private static final Set<CryptoPrimitive> DIGEST_PRIMITIVE_SET = Collections.unmodifiableSet(EnumSet.m1716of(CryptoPrimitive.MESSAGE_DIGEST));
+    private static final Set<CryptoPrimitive> DIGEST_PRIMITIVE_SET = Collections.unmodifiableSet(EnumSet.m1722of(CryptoPrimitive.MESSAGE_DIGEST));
     private static final DisabledAlgorithmConstraints JAR_DISABLED_CHECK = new DisabledAlgorithmConstraints(DisabledAlgorithmConstraints.PROPERTY_JAR_DISABLED_ALGS);
     private static final Debug debug = Debug.getInstance("jar");
     private static final char[] hexc = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
@@ -43,7 +43,7 @@ public class SignatureFileVerifier {
     private HashMap<String, MessageDigest> createdDigests;
 
     /* renamed from: md */
-    private ManifestDigester f926md;
+    private ManifestDigester f924md;
     private String name;
     private byte[] sfBytes;
     private ArrayList<CodeSigner[]> signerCache;
@@ -61,7 +61,7 @@ public class SignatureFileVerifier {
             this.certificateFactory = CertificateFactory.getInstance("X509");
             Providers.stopJarVerification(obj);
             this.name = str.substring(0, str.lastIndexOf(BaseIconCache.EMPTY_CLASS_NAME)).toUpperCase(Locale.ENGLISH);
-            this.f926md = manifestDigester;
+            this.f924md = manifestDigester;
             this.signerCache = arrayList;
         } catch (Throwable th) {
             Providers.stopJarVerification(obj);
@@ -167,11 +167,11 @@ public class SignatureFileVerifier {
             if (verify != null) {
                 CodeSigner[] signers = getSigners(verify, this.block);
                 if (signers != null) {
-                    boolean verifyManifestHash = verifyManifestHash(manifest, this.f926md, list);
-                    if (verifyManifestHash || verifyManifestMainAttrs(manifest, this.f926md)) {
+                    boolean verifyManifestHash = verifyManifestHash(manifest, this.f924md, list);
+                    if (verifyManifestHash || verifyManifestMainAttrs(manifest, this.f924md)) {
                         for (Map.Entry next : manifest.getEntries().entrySet()) {
                             String str = (String) next.getKey();
-                            if (verifyManifestHash || verifySection((Attributes) next.getValue(), str, this.f926md)) {
+                            if (verifyManifestHash || verifySection((Attributes) next.getValue(), str, this.f924md)) {
                                 if (str.startsWith("./")) {
                                     str = str.substring(2);
                                 }

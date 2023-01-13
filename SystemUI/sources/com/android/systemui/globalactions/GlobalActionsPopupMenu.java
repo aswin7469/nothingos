@@ -7,7 +7,7 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListPopupWindow;
 import android.widget.ListView;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 
 public class GlobalActionsPopupMenu extends ListPopupWindow {
     private ListAdapter mAdapter;
@@ -22,13 +22,13 @@ public class GlobalActionsPopupMenu extends ListPopupWindow {
         super(context);
         this.mContext = context;
         Resources resources = context.getResources();
-        setBackgroundDrawable(resources.getDrawable(C1893R.C1895drawable.global_actions_popup_bg, context.getTheme()));
+        setBackgroundDrawable(resources.getDrawable(C1894R.C1896drawable.global_actions_popup_bg, context.getTheme()));
         this.mIsDropDownMode = z;
         setInputMethodMode(2);
         setModal(true);
-        this.mGlobalActionsSidePadding = resources.getDimensionPixelSize(C1893R.dimen.global_actions_side_margin);
+        this.mGlobalActionsSidePadding = resources.getDimensionPixelSize(C1894R.dimen.global_actions_side_margin);
         if (!z) {
-            this.mMenuVerticalPadding = resources.getDimensionPixelSize(C1893R.dimen.control_menu_vertical_padding);
+            this.mMenuVerticalPadding = resources.getDimensionPixelSize(C1894R.dimen.control_menu_vertical_padding);
         }
     }
 
@@ -46,8 +46,8 @@ public class GlobalActionsPopupMenu extends ListPopupWindow {
         Resources resources = this.mContext.getResources();
         setVerticalOffset((-getAnchorView().getHeight()) / 2);
         if (this.mIsDropDownMode) {
-            listView.setDividerHeight(resources.getDimensionPixelSize(C1893R.dimen.control_list_divider));
-            listView.setDivider(resources.getDrawable(C1893R.C1895drawable.controls_list_divider_inset));
+            listView.setDividerHeight(resources.getDimensionPixelSize(C1894R.dimen.control_list_divider));
+            listView.setDivider(resources.getDrawable(C1894R.C1896drawable.controls_list_divider_inset));
         } else if (this.mAdapter != null) {
             int i = Resources.getSystem().getDisplayMetrics().widthPixels;
             float f = ((float) i) / Resources.getSystem().getDisplayMetrics().density;

@@ -66,7 +66,7 @@ public class ScanResultUpdater {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$evictOldScans$0$com-android-wifitrackerlib-ScanResultUpdater */
-    public /* synthetic */ boolean mo47844xaae8eb8b(Map.Entry entry) {
+    public /* synthetic */ boolean mo47853xaae8eb8b(Map.Entry entry) {
         return this.mClock.millis() - (((ScanResult) entry.getValue()).timestamp / 1000) > this.mMaxScanAgeMillis;
     }
 }

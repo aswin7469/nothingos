@@ -96,7 +96,7 @@ public abstract class Selector implements Closeable {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$doSelect$0$java-nio-channels-Selector  reason: not valid java name */
-    public /* synthetic */ void m3706lambda$doSelect$0$javaniochannelsSelector(Consumer consumer, SelectionKey selectionKey) {
+    public /* synthetic */ void m3724lambda$doSelect$0$javaniochannelsSelector(Consumer consumer, SelectionKey selectionKey) {
         consumer.accept(selectionKey);
         if (!isOpen()) {
             throw new ClosedSelectorException();

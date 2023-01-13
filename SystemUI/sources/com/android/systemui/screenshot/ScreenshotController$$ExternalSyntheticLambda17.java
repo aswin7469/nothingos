@@ -14,6 +14,6 @@ public final /* synthetic */ class ScreenshotController$$ExternalSyntheticLambda
     }
 
     public final void onActionsReady(ScreenshotController.SavedImageData savedImageData) {
-        this.f$0.mo37434x5b040d35(this.f$1, savedImageData);
+        this.f$0.mo37435x5b040d35(this.f$1, savedImageData);
     }
 }

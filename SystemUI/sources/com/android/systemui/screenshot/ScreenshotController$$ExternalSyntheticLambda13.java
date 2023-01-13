@@ -15,6 +15,6 @@ public final /* synthetic */ class ScreenshotController$$ExternalSyntheticLambda
     }
 
     public final void setTransitionDestination(Rect rect, Runnable runnable) {
-        this.f$0.mo37430x61d93a0b(this.f$1, rect, runnable);
+        this.f$0.mo37431x61d93a0b(this.f$1, rect, runnable);
     }
 }

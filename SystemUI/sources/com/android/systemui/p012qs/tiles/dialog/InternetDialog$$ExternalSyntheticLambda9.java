@@ -10,6 +10,6 @@ public final /* synthetic */ class InternetDialog$$ExternalSyntheticLambda9 impl
     }
 
     public final void run() {
-        this.f$0.m2988lambda$new$1$comandroidsystemuiqstilesdialogInternetDialog();
+        this.f$0.m2992lambda$new$1$comandroidsystemuiqstilesdialogInternetDialog();
     }
 }

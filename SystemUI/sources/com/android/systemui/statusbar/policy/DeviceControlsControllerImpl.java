@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 import androidx.slice.compat.SliceProviderCompat;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.controls.ControlsServiceInfo;
 import com.android.systemui.controls.controller.ControlsController;
 import com.android.systemui.controls.controller.SeedResponse;
@@ -26,7 +26,7 @@ import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 
 @SysUISingleton
-@Metadata(mo64986d1 = {"\u0000Y\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\b\u0003\n\u0002\u0010\b\n\u0002\b\u0006\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u000e\n\u0002\b\u0005\n\u0002\u0010 \n\u0002\u0018\u0002\n\u0002\b\u0003*\u0001\u000e\b\u0007\u0018\u0000 %2\u00020\u0001:\u0001%B'\b\u0007\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\u0006\u0010\u0006\u001a\u00020\u0007\u0012\u0006\u0010\b\u001a\u00020\t¢\u0006\u0002\u0010\nJ\u0018\u0010\u0017\u001a\u00020\u00182\u0006\u0010\u0019\u001a\u00020\u001a2\u0006\u0010\u001b\u001a\u00020\u001cH\u0002J\b\u0010\u001d\u001a\u00020\u0018H\u0002J\b\u0010\u001e\u001a\u00020\u0018H\u0002J\b\u0010\u001f\u001a\u00020\u0018H\u0016J\u0016\u0010 \u001a\u00020\u00182\f\u0010!\u001a\b\u0012\u0004\u0012\u00020#0\"H\u0002J\u0010\u0010$\u001a\u00020\u00182\u0006\u0010\u000b\u001a\u00020\fH\u0016R\u0010\u0010\u000b\u001a\u0004\u0018\u00010\fX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0002\u001a\u00020\u0003X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0004\u001a\u00020\u0005X\u0004¢\u0006\u0002\n\u0000R\u0010\u0010\r\u001a\u00020\u000eX\u0004¢\u0006\u0004\n\u0002\u0010\u000fR\u001e\u0010\u0010\u001a\u0004\u0018\u00010\u0011X\u000e¢\u0006\u0010\n\u0002\u0010\u0016\u001a\u0004\b\u0012\u0010\u0013\"\u0004\b\u0014\u0010\u0015R\u000e\u0010\b\u001a\u00020\tX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0006\u001a\u00020\u0007X\u0004¢\u0006\u0002\n\u0000¨\u0006&"}, mo64987d2 = {"Lcom/android/systemui/statusbar/policy/DeviceControlsControllerImpl;", "Lcom/android/systemui/statusbar/policy/DeviceControlsController;", "context", "Landroid/content/Context;", "controlsComponent", "Lcom/android/systemui/controls/dagger/ControlsComponent;", "userContextProvider", "Lcom/android/systemui/settings/UserContextProvider;", "secureSettings", "Lcom/android/systemui/util/settings/SecureSettings;", "(Landroid/content/Context;Lcom/android/systemui/controls/dagger/ControlsComponent;Lcom/android/systemui/settings/UserContextProvider;Lcom/android/systemui/util/settings/SecureSettings;)V", "callback", "Lcom/android/systemui/statusbar/policy/DeviceControlsController$Callback;", "listingCallback", "com/android/systemui/statusbar/policy/DeviceControlsControllerImpl$listingCallback$1", "Lcom/android/systemui/statusbar/policy/DeviceControlsControllerImpl$listingCallback$1;", "position", "", "getPosition$SystemUI_nothingRelease", "()Ljava/lang/Integer;", "setPosition$SystemUI_nothingRelease", "(Ljava/lang/Integer;)V", "Ljava/lang/Integer;", "addPackageToSeededSet", "", "prefs", "Landroid/content/SharedPreferences;", "pkg", "", "checkMigrationToQs", "fireControlsUpdate", "removeCallback", "seedFavorites", "serviceInfos", "", "Lcom/android/systemui/controls/ControlsServiceInfo;", "setCallback", "Companion", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000Y\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\b\u0003\n\u0002\u0010\b\n\u0002\b\u0006\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u000e\n\u0002\b\u0005\n\u0002\u0010 \n\u0002\u0018\u0002\n\u0002\b\u0003*\u0001\u000e\b\u0007\u0018\u0000 %2\u00020\u0001:\u0001%B'\b\u0007\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\u0006\u0010\u0006\u001a\u00020\u0007\u0012\u0006\u0010\b\u001a\u00020\t¢\u0006\u0002\u0010\nJ\u0018\u0010\u0017\u001a\u00020\u00182\u0006\u0010\u0019\u001a\u00020\u001a2\u0006\u0010\u001b\u001a\u00020\u001cH\u0002J\b\u0010\u001d\u001a\u00020\u0018H\u0002J\b\u0010\u001e\u001a\u00020\u0018H\u0002J\b\u0010\u001f\u001a\u00020\u0018H\u0016J\u0016\u0010 \u001a\u00020\u00182\f\u0010!\u001a\b\u0012\u0004\u0012\u00020#0\"H\u0002J\u0010\u0010$\u001a\u00020\u00182\u0006\u0010\u000b\u001a\u00020\fH\u0016R\u0010\u0010\u000b\u001a\u0004\u0018\u00010\fX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0002\u001a\u00020\u0003X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0004\u001a\u00020\u0005X\u0004¢\u0006\u0002\n\u0000R\u0010\u0010\r\u001a\u00020\u000eX\u0004¢\u0006\u0004\n\u0002\u0010\u000fR\u001e\u0010\u0010\u001a\u0004\u0018\u00010\u0011X\u000e¢\u0006\u0010\n\u0002\u0010\u0016\u001a\u0004\b\u0012\u0010\u0013\"\u0004\b\u0014\u0010\u0015R\u000e\u0010\b\u001a\u00020\tX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0006\u001a\u00020\u0007X\u0004¢\u0006\u0002\n\u0000¨\u0006&"}, mo65043d2 = {"Lcom/android/systemui/statusbar/policy/DeviceControlsControllerImpl;", "Lcom/android/systemui/statusbar/policy/DeviceControlsController;", "context", "Landroid/content/Context;", "controlsComponent", "Lcom/android/systemui/controls/dagger/ControlsComponent;", "userContextProvider", "Lcom/android/systemui/settings/UserContextProvider;", "secureSettings", "Lcom/android/systemui/util/settings/SecureSettings;", "(Landroid/content/Context;Lcom/android/systemui/controls/dagger/ControlsComponent;Lcom/android/systemui/settings/UserContextProvider;Lcom/android/systemui/util/settings/SecureSettings;)V", "callback", "Lcom/android/systemui/statusbar/policy/DeviceControlsController$Callback;", "listingCallback", "com/android/systemui/statusbar/policy/DeviceControlsControllerImpl$listingCallback$1", "Lcom/android/systemui/statusbar/policy/DeviceControlsControllerImpl$listingCallback$1;", "position", "", "getPosition$SystemUI_nothingRelease", "()Ljava/lang/Integer;", "setPosition$SystemUI_nothingRelease", "(Ljava/lang/Integer;)V", "Ljava/lang/Integer;", "addPackageToSeededSet", "", "prefs", "Landroid/content/SharedPreferences;", "pkg", "", "checkMigrationToQs", "fireControlsUpdate", "removeCallback", "seedFavorites", "serviceInfos", "", "Lcom/android/systemui/controls/ControlsServiceInfo;", "setCallback", "Companion", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* compiled from: DeviceControlsControllerImpl.kt */
 public final class DeviceControlsControllerImpl implements DeviceControlsController {
     public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
@@ -65,7 +65,7 @@ public final class DeviceControlsControllerImpl implements DeviceControlsControl
         this.position = num;
     }
 
-    @Metadata(mo64986d1 = {"\u0000\u001c\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\u000e\n\u0002\b\u0003\n\u0002\u0010\b\n\u0002\b\u0004\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u000e\u0010\u0003\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0005\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0006\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0007\u001a\u00020\bXT¢\u0006\u0002\n\u0000R\u000e\u0010\t\u001a\u00020\bXT¢\u0006\u0002\n\u0000R\u000e\u0010\n\u001a\u00020\bXT¢\u0006\u0002\n\u0000R\u000e\u0010\u000b\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000¨\u0006\f"}, mo64987d2 = {"Lcom/android/systemui/statusbar/policy/DeviceControlsControllerImpl$Companion;", "", "()V", "PREFS_CONTROLS_FILE", "", "PREFS_CONTROLS_SEEDING_COMPLETED", "PREFS_SETTINGS_DIALOG_ATTEMPTS", "QS_DEFAULT_POSITION", "", "QS_PRIORITY_POSITION", "SEEDING_MAX", "TAG", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u0000\u001c\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\u000e\n\u0002\b\u0003\n\u0002\u0010\b\n\u0002\b\u0004\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u000e\u0010\u0003\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0005\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0006\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0007\u001a\u00020\bXT¢\u0006\u0002\n\u0000R\u000e\u0010\t\u001a\u00020\bXT¢\u0006\u0002\n\u0000R\u000e\u0010\n\u001a\u00020\bXT¢\u0006\u0002\n\u0000R\u000e\u0010\u000b\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000¨\u0006\f"}, mo65043d2 = {"Lcom/android/systemui/statusbar/policy/DeviceControlsControllerImpl$Companion;", "", "()V", "PREFS_CONTROLS_FILE", "", "PREFS_CONTROLS_SEEDING_COMPLETED", "PREFS_SETTINGS_DIALOG_ATTEMPTS", "QS_DEFAULT_POSITION", "", "QS_PRIORITY_POSITION", "SEEDING_MAX", "TAG", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* compiled from: DeviceControlsControllerImpl.kt */
     public static final class Companion {
         public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
@@ -82,7 +82,7 @@ public final class DeviceControlsControllerImpl implements DeviceControlsControl
 
     /* access modifiers changed from: private */
     /* renamed from: checkMigrationToQs$lambda-0  reason: not valid java name */
-    public static final void m3232checkMigrationToQs$lambda0(DeviceControlsControllerImpl deviceControlsControllerImpl, ControlsController controlsController) {
+    public static final void m3237checkMigrationToQs$lambda0(DeviceControlsControllerImpl deviceControlsControllerImpl, ControlsController controlsController) {
         Intrinsics.checkNotNullParameter(deviceControlsControllerImpl, "this$0");
         Intrinsics.checkNotNullParameter(controlsController, "it");
         if (!controlsController.getFavorites().isEmpty()) {
@@ -105,7 +105,7 @@ public final class DeviceControlsControllerImpl implements DeviceControlsControl
 
     /* access modifiers changed from: private */
     /* renamed from: setCallback$lambda-1  reason: not valid java name */
-    public static final void m3236setCallback$lambda1(DeviceControlsControllerImpl deviceControlsControllerImpl, ControlsListingController controlsListingController) {
+    public static final void m3241setCallback$lambda1(DeviceControlsControllerImpl deviceControlsControllerImpl, ControlsListingController controlsListingController) {
         Intrinsics.checkNotNullParameter(deviceControlsControllerImpl, "this$0");
         Intrinsics.checkNotNullParameter(controlsListingController, "it");
         controlsListingController.addCallback(deviceControlsControllerImpl.listingCallback);
@@ -119,7 +119,7 @@ public final class DeviceControlsControllerImpl implements DeviceControlsControl
 
     /* access modifiers changed from: private */
     /* renamed from: removeCallback$lambda-2  reason: not valid java name */
-    public static final void m3233removeCallback$lambda2(DeviceControlsControllerImpl deviceControlsControllerImpl, ControlsListingController controlsListingController) {
+    public static final void m3238removeCallback$lambda2(DeviceControlsControllerImpl deviceControlsControllerImpl, ControlsListingController controlsListingController) {
         Intrinsics.checkNotNullParameter(deviceControlsControllerImpl, "this$0");
         Intrinsics.checkNotNullParameter(controlsListingController, "it");
         controlsListingController.removeCallback(deviceControlsControllerImpl.listingCallback);
@@ -135,7 +135,7 @@ public final class DeviceControlsControllerImpl implements DeviceControlsControl
 
     /* access modifiers changed from: private */
     public final void seedFavorites(List<ControlsServiceInfo> list) {
-        String[] stringArray = this.context.getResources().getStringArray(C1893R.array.config_controlsPreferredPackages);
+        String[] stringArray = this.context.getResources().getStringArray(C1894R.array.config_controlsPreferredPackages);
         SharedPreferences sharedPreferences = this.userContextProvider.getUserContext().getSharedPreferences(PREFS_CONTROLS_FILE, 0);
         Set<String> stringSet = sharedPreferences.getStringSet(PREFS_CONTROLS_SEEDING_COMPLETED, SetsKt.emptySet());
         ControlsController controlsController = this.controlsComponent.getControlsController().get();
@@ -167,7 +167,7 @@ public final class DeviceControlsControllerImpl implements DeviceControlsControl
 
     /* access modifiers changed from: private */
     /* renamed from: seedFavorites$lambda-5  reason: not valid java name */
-    public static final void m3234seedFavorites$lambda5(DeviceControlsControllerImpl deviceControlsControllerImpl, SharedPreferences sharedPreferences, SeedResponse seedResponse) {
+    public static final void m3239seedFavorites$lambda5(DeviceControlsControllerImpl deviceControlsControllerImpl, SharedPreferences sharedPreferences, SeedResponse seedResponse) {
         Intrinsics.checkNotNullParameter(deviceControlsControllerImpl, "this$0");
         Intrinsics.checkNotNullParameter(seedResponse, "response");
         Log.d(TAG, "Controls seeded: " + seedResponse);
@@ -184,7 +184,7 @@ public final class DeviceControlsControllerImpl implements DeviceControlsControl
 
     /* access modifiers changed from: private */
     /* renamed from: seedFavorites$lambda-5$lambda-4  reason: not valid java name */
-    public static final void m3235seedFavorites$lambda5$lambda4(DeviceControlsControllerImpl deviceControlsControllerImpl, ControlsListingController controlsListingController) {
+    public static final void m3240seedFavorites$lambda5$lambda4(DeviceControlsControllerImpl deviceControlsControllerImpl, ControlsListingController controlsListingController) {
         Intrinsics.checkNotNullParameter(deviceControlsControllerImpl, "this$0");
         Intrinsics.checkNotNullParameter(controlsListingController, "it");
         controlsListingController.removeCallback(deviceControlsControllerImpl.listingCallback);

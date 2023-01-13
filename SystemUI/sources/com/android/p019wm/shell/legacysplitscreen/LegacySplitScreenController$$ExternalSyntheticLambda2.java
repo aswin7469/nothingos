@@ -12,6 +12,6 @@ public final /* synthetic */ class LegacySplitScreenController$$ExternalSyntheti
     }
 
     public final void run() {
-        this.f$0.mo49704xdcd70392(this.f$1);
+        this.f$0.mo49713xdcd70392(this.f$1);
     }
 }

@@ -11,6 +11,6 @@ public final /* synthetic */ class BouncerSwipeTouchHandler$$ExternalSyntheticLa
     }
 
     public final void onRemoved() {
-        this.f$0.mo32623xabef0776();
+        this.f$0.mo32634xabef0776();
     }
 }

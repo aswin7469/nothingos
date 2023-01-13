@@ -11,6 +11,6 @@ public final /* synthetic */ class BiometricUnlockController$$ExternalSyntheticL
     }
 
     public final void run() {
-        this.f$0.mo43702x883d0792(this.f$1);
+        this.f$0.mo43710x883d0792(this.f$1);
     }
 }

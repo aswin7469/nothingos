@@ -13,6 +13,6 @@ public final /* synthetic */ class PipDismissTargetHandler$$ExternalSyntheticLam
     }
 
     public final WindowInsets onApplyWindowInsets(View view, WindowInsets windowInsets) {
-        return this.f$0.mo50352x4d27b292(view, windowInsets);
+        return this.f$0.mo50361x4d27b292(view, windowInsets);
     }
 }

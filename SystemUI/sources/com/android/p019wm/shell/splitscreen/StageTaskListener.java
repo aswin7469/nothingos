@@ -154,7 +154,7 @@ class StageTaskListener implements ShellTaskOrganizer.TaskListener {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onTaskAppeared$0$com-android-wm-shell-splitscreen-StageTaskListener */
-    public /* synthetic */ void mo50892x80074c89(SurfaceControl.Transaction transaction) {
+    public /* synthetic */ void mo50903x80074c89(SurfaceControl.Transaction transaction) {
         this.mDimLayer = SurfaceUtils.makeDimLayer(transaction, this.mRootLeash, "Dim layer", this.mSurfaceSession);
     }
 
@@ -188,7 +188,7 @@ class StageTaskListener implements ShellTaskOrganizer.TaskListener {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onTaskInfoChanged$1$com-android-wm-shell-splitscreen-StageTaskListener */
-    public /* synthetic */ void mo50893x63ac4898(SurfaceControl.Transaction transaction) {
+    public /* synthetic */ void mo50904x63ac4898(SurfaceControl.Transaction transaction) {
         this.mSplitDecorManager.release(transaction);
     }
 
@@ -221,7 +221,7 @@ class StageTaskListener implements ShellTaskOrganizer.TaskListener {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onTaskVanished$2$com-android-wm-shell-splitscreen-StageTaskListener */
-    public /* synthetic */ void mo50894x77b7e9a1(SurfaceControl.Transaction transaction) {
+    public /* synthetic */ void mo50905x77b7e9a1(SurfaceControl.Transaction transaction) {
         transaction.remove(this.mDimLayer);
         this.mSplitDecorManager.release(transaction);
     }

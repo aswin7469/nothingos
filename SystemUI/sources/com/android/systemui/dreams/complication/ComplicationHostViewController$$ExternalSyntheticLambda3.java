@@ -11,6 +11,6 @@ public final /* synthetic */ class ComplicationHostViewController$$ExternalSynth
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo32563xdb58a6b3((ComplicationId) obj);
+        this.f$0.mo32574xdb58a6b3((ComplicationId) obj);
     }
 }

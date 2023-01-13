@@ -21,6 +21,6 @@ public final /* synthetic */ class NavBarTuner$$ExternalSyntheticLambda7 impleme
     }
 
     public final void onTuningChanged(String str, String str2) {
-        this.f$0.m3254lambda$bindButton$5$comandroidsystemuitunerNavBarTuner(this.f$1, this.f$2, this.f$3, this.f$4, str, str2);
+        this.f$0.m3259lambda$bindButton$5$comandroidsystemuitunerNavBarTuner(this.f$1, this.f$2, this.f$3, this.f$4, str, str2);
     }
 }

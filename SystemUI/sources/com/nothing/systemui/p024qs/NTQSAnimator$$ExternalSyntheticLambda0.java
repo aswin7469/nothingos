@@ -10,6 +10,6 @@ public final /* synthetic */ class NTQSAnimator$$ExternalSyntheticLambda0 implem
     }
 
     public final void run() {
-        this.f$0.m3507lambda$new$0$comnothingsystemuiqsNTQSAnimator();
+        this.f$0.m3511lambda$new$0$comnothingsystemuiqsNTQSAnimator();
     }
 }

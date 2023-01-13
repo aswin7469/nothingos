@@ -15,7 +15,7 @@ import android.os.Bundle;
 import android.os.UserHandle;
 import android.os.UserManager;
 import android.widget.ImageView;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import java.util.concurrent.Executor;
 import javax.inject.Inject;
@@ -57,10 +57,10 @@ public class WorkLockActivity extends Activity {
             return;
         }
         setOverlayWithDecorCaptionEnabled(true);
-        setContentView(C1893R.layout.auth_biometric_background);
+        setContentView(C1894R.layout.auth_biometric_background);
         Drawable badgedIcon = getBadgedIcon();
         if (badgedIcon != null) {
-            ((ImageView) findViewById(C1893R.C1897id.icon)).setImageDrawable(badgedIcon);
+            ((ImageView) findViewById(C1894R.C1898id.icon)).setImageDrawable(badgedIcon);
         }
     }
 

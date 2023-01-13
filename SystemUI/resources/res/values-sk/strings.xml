@@ -708,9 +708,15 @@
     <string name="force_rtl_layout_all_locales_summary">Vynútiť pre všetky jazyky rozloženie obrazovky sprava doľava</string>
     <string name="forced_resizable_secondary_display">Aplikácia nemusí fungovať na sekundárnej obrazovke.</string>
     <string name="game_status">Hrám hru</string>
+    <string name="gamemode_description">Herný režim určí, či práve hráte a automaticky sa zapne</string>
+    <string name="gamemode_gamedashboard_title">Herný panel</string>
+    <string name="gamemode_notification_content">Ťuknutím prejdite do nastavení</string>
+    <string name="gamemode_notification_title">Herný režim je zapnutý</string>
     <string name="global_action_lock_message">Ak chcete zobraziť ďalšie možnosti, odomknite telefón</string>
     <string name="global_action_screenshot">Snímka obrazovky</string>
     <string name="global_action_smart_lock_disabled">Funkcia Smart Lock je deaktivovaná</string>
+    <string name="gm_guide_status_on">Zapnuté</string>
+    <string name="gm_notification_title">Herný režim</string>
     <string name="go_to_web">Otvoriť prehliadač</string>
     <string name="got_it">Dobre</string>
     <string name="guest_exit_guest">Odobrať hosťa</string>

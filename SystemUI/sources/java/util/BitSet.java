@@ -525,7 +525,7 @@ public class BitSet implements Cloneable, Serializable {
     }
 
     /* renamed from: or */
-    public void mo61399or(BitSet bitSet) {
+    public void mo61455or(BitSet bitSet) {
         if (this != bitSet) {
             int min = Math.min(this.wordsInUse, bitSet.wordsInUse);
             int i = this.wordsInUse;

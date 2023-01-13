@@ -16,7 +16,7 @@ import android.widget.Filterable;
 import android.widget.ListAdapter;
 import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 import androidx.appcompat.widget.ListPopupWindow;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.internal.ManufacturerUtils;
 import com.google.android.material.internal.ThemeEnforcement;
 import com.google.android.material.theme.overlay.MaterialThemeOverlay;
@@ -34,18 +34,18 @@ public class MaterialAutoCompleteTextView extends AppCompatAutoCompleteTextView 
     }
 
     public MaterialAutoCompleteTextView(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, C3621R.attr.autoCompleteTextViewStyle);
+        this(context, attributeSet, C3631R.attr.autoCompleteTextViewStyle);
     }
 
     public MaterialAutoCompleteTextView(Context context, AttributeSet attributeSet, int i) {
         super(MaterialThemeOverlay.wrap(context, attributeSet, i, 0), attributeSet, i);
         this.tempRect = new Rect();
         Context context2 = getContext();
-        TypedArray obtainStyledAttributes = ThemeEnforcement.obtainStyledAttributes(context2, attributeSet, C3621R.styleable.MaterialAutoCompleteTextView, i, C3621R.style.Widget_AppCompat_AutoCompleteTextView, new int[0]);
-        if (obtainStyledAttributes.hasValue(C3621R.styleable.MaterialAutoCompleteTextView_android_inputType) && obtainStyledAttributes.getInt(C3621R.styleable.MaterialAutoCompleteTextView_android_inputType, 0) == 0) {
+        TypedArray obtainStyledAttributes = ThemeEnforcement.obtainStyledAttributes(context2, attributeSet, C3631R.styleable.MaterialAutoCompleteTextView, i, C3631R.style.Widget_AppCompat_AutoCompleteTextView, new int[0]);
+        if (obtainStyledAttributes.hasValue(C3631R.styleable.MaterialAutoCompleteTextView_android_inputType) && obtainStyledAttributes.getInt(C3631R.styleable.MaterialAutoCompleteTextView_android_inputType, 0) == 0) {
             setKeyListener((KeyListener) null);
         }
-        this.simpleItemLayout = obtainStyledAttributes.getResourceId(C3621R.styleable.MaterialAutoCompleteTextView_simpleItemLayout, C3621R.layout.mtrl_auto_complete_simple_item);
+        this.simpleItemLayout = obtainStyledAttributes.getResourceId(C3631R.styleable.MaterialAutoCompleteTextView_simpleItemLayout, C3631R.layout.mtrl_auto_complete_simple_item);
         this.accessibilityManager = (AccessibilityManager) context2.getSystemService("accessibility");
         ListPopupWindow listPopupWindow = new ListPopupWindow(context2);
         this.modalListPopup = listPopupWindow;
@@ -69,8 +69,8 @@ public class MaterialAutoCompleteTextView extends AppCompatAutoCompleteTextView 
                 MaterialAutoCompleteTextView.this.modalListPopup.dismiss();
             }
         });
-        if (obtainStyledAttributes.hasValue(C3621R.styleable.MaterialAutoCompleteTextView_simpleItems)) {
-            setSimpleItems(obtainStyledAttributes.getResourceId(C3621R.styleable.MaterialAutoCompleteTextView_simpleItems, 0));
+        if (obtainStyledAttributes.hasValue(C3631R.styleable.MaterialAutoCompleteTextView_simpleItems)) {
+            setSimpleItems(obtainStyledAttributes.getResourceId(C3631R.styleable.MaterialAutoCompleteTextView_simpleItems, 0));
         }
         obtainStyledAttributes.recycle();
     }

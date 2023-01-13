@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.CompoundButton;
 import androidx.appcompat.widget.SwitchCompat;
-import com.google.android.setupdesign.C3953R;
+import com.google.android.setupdesign.C3963R;
 
 public class SwitchItem extends Item implements CompoundButton.OnCheckedChangeListener {
     private boolean checked = false;
@@ -21,8 +21,8 @@ public class SwitchItem extends Item implements CompoundButton.OnCheckedChangeLi
 
     public SwitchItem(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C3953R.styleable.SudSwitchItem);
-        this.checked = obtainStyledAttributes.getBoolean(C3953R.styleable.SudSwitchItem_android_checked, false);
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C3963R.styleable.SudSwitchItem);
+        this.checked = obtainStyledAttributes.getBoolean(C3963R.styleable.SudSwitchItem_android_checked, false);
         obtainStyledAttributes.recycle();
     }
 
@@ -43,17 +43,17 @@ public class SwitchItem extends Item implements CompoundButton.OnCheckedChangeLi
 
     /* access modifiers changed from: protected */
     public int getDefaultLayoutResource() {
-        return C3953R.layout.sud_items_switch;
+        return C3963R.layout.sud_items_switch;
     }
 
     public void toggle(View view) {
         this.checked = !this.checked;
-        ((SwitchCompat) view.findViewById(C3953R.C3956id.sud_items_switch)).setChecked(this.checked);
+        ((SwitchCompat) view.findViewById(C3963R.C3966id.sud_items_switch)).setChecked(this.checked);
     }
 
     public void onBindView(View view) {
         super.onBindView(view);
-        SwitchCompat switchCompat = (SwitchCompat) view.findViewById(C3953R.C3956id.sud_items_switch);
+        SwitchCompat switchCompat = (SwitchCompat) view.findViewById(C3963R.C3966id.sud_items_switch);
         switchCompat.setOnCheckedChangeListener((CompoundButton.OnCheckedChangeListener) null);
         switchCompat.setChecked(this.checked);
         switchCompat.setOnCheckedChangeListener(this);

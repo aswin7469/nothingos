@@ -8,7 +8,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import java.util.Objects;
 
 public class UdfpsEnrollView extends UdfpsAnimationView {
@@ -26,9 +26,9 @@ public class UdfpsEnrollView extends UdfpsAnimationView {
 
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
-        this.mFingerprintView = (ImageView) findViewById(C1893R.C1897id.udfps_enroll_animation_fp_view);
-        this.mFingerprintProgressView = (ImageView) findViewById(C1893R.C1897id.udfps_enroll_animation_fp_progress_view);
-        this.mFingerprintView.setImageDrawable(getContext().getDrawable(C1893R.C1895drawable.nt_ic_fingerprint_area_normal));
+        this.mFingerprintView = (ImageView) findViewById(C1894R.C1898id.udfps_enroll_animation_fp_view);
+        this.mFingerprintProgressView = (ImageView) findViewById(C1894R.C1898id.udfps_enroll_animation_fp_progress_view);
+        this.mFingerprintView.setImageDrawable(getContext().getDrawable(C1894R.C1896drawable.nt_ic_fingerprint_area_normal));
         this.mFingerprintProgressView.setImageDrawable(this.mFingerprintProgressDrawable);
         this.mFingerprintProgressView.setVisibility(8);
     }
@@ -39,7 +39,7 @@ public class UdfpsEnrollView extends UdfpsAnimationView {
 
     /* access modifiers changed from: package-private */
     public void updateSensorLocation(Rect rect) {
-        View findViewById = findViewById(C1893R.C1897id.udfps_enroll_accessibility_view);
+        View findViewById = findViewById(C1894R.C1898id.udfps_enroll_accessibility_view);
         ViewGroup.LayoutParams layoutParams = findViewById.getLayoutParams();
         layoutParams.width = rect.width();
         layoutParams.height = rect.height();
@@ -59,14 +59,14 @@ public class UdfpsEnrollView extends UdfpsAnimationView {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onEnrollmentProgress$0$com-android-systemui-biometrics-UdfpsEnrollView */
-    public /* synthetic */ void mo30936xf84df628(int i, int i2) {
+    public /* synthetic */ void mo30946xf84df628(int i, int i2) {
         this.mFingerprintProgressDrawable.onEnrollmentProgress(i, i2);
         this.mFingerprintDrawable.onEnrollmentProgress(i, i2);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onEnrollmentHelp$1$com-android-systemui-biometrics-UdfpsEnrollView */
-    public /* synthetic */ void mo30935x4361c03d(int i, int i2) {
+    public /* synthetic */ void mo30945x4361c03d(int i, int i2) {
         this.mFingerprintProgressDrawable.onEnrollmentHelp(i, i2);
     }
 

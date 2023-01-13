@@ -41,7 +41,7 @@ public abstract class StackScrollerDecorView extends ExpandableView {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-statusbar-notification-row-StackScrollerDecorView */
-    public /* synthetic */ void mo41743x61f35466() {
+    public /* synthetic */ void mo41751x61f35466() {
         this.mContentAnimating = false;
         if (getVisibility() != 8 && !this.mIsVisible) {
             setVisibility(8);
@@ -52,7 +52,7 @@ public abstract class StackScrollerDecorView extends ExpandableView {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$1$com-android-systemui-statusbar-notification-row-StackScrollerDecorView */
-    public /* synthetic */ void mo41744xe43e0945(Boolean bool) {
+    public /* synthetic */ void mo41752xe43e0945(Boolean bool) {
         this.mSecondaryAnimating = false;
         if (this.mSecondaryView != null && getVisibility() != 8 && this.mSecondaryView.getVisibility() != 8 && !this.mIsSecondaryVisible) {
             this.mSecondaryView.setVisibility(8);
@@ -98,7 +98,7 @@ public abstract class StackScrollerDecorView extends ExpandableView {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setContentVisible$2$com-android-systemui-statusbar-notification-row-StackScrollerDecorView */
-    public /* synthetic */ void mo41745x9f0c0a9(Consumer consumer, Boolean bool) {
+    public /* synthetic */ void mo41753x9f0c0a9(Consumer consumer, Boolean bool) {
         this.mContentVisibilityEndRunnable.run();
         if (consumer != null) {
             consumer.accept(bool);

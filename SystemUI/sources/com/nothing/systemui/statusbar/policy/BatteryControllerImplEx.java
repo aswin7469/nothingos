@@ -14,7 +14,7 @@ public class BatteryControllerImplEx {
         this.mBatteryStateEx.status = intExtra;
         this.mBatteryStateEx.temperature = intExtra2;
         this.mBatteryStateEx.voltage = intExtra3;
-        NTLogUtil.m1682i(TAG, "updateBatteryStateEx: " + this.mBatteryStateEx);
+        NTLogUtil.m1688i(TAG, "updateBatteryStateEx: " + this.mBatteryStateEx);
     }
 
     public BatteryStateEx getBatteryStateEx() {

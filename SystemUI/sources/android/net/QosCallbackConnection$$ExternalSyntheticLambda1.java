@@ -11,6 +11,6 @@ public final /* synthetic */ class QosCallbackConnection$$ExternalSyntheticLambd
     }
 
     public final void run() {
-        this.f$0.m1930lambda$onQosSessionLost$2$androidnetQosCallbackConnection(this.f$1);
+        this.f$0.m1936lambda$onQosSessionLost$2$androidnetQosCallbackConnection(this.f$1);
     }
 }

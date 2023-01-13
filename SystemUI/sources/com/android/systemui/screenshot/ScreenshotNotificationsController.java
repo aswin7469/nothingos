@@ -12,7 +12,7 @@ import android.os.UserHandle;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 import androidx.core.app.NotificationCompat;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.SystemUIApplication;
 import com.android.systemui.util.NotificationChannels;
 import javax.inject.Inject;
@@ -34,7 +34,7 @@ public class ScreenshotNotificationsController {
     public void notifyScreenshotError(int i) {
         Resources resources = this.mContext.getResources();
         String string = resources.getString(i);
-        Notification.Builder color = new Notification.Builder(this.mContext, NotificationChannels.ALERTS).setTicker(resources.getString(C1893R.string.screenshot_failed_title)).setContentTitle(resources.getString(C1893R.string.screenshot_failed_title)).setContentText(string).setSmallIcon(C1893R.C1895drawable.stat_notify_image_error).setWhen(System.currentTimeMillis()).setVisibility(1).setCategory(NotificationCompat.CATEGORY_ERROR).setAutoCancel(true).setColor(this.mContext.getColor(17170460));
+        Notification.Builder color = new Notification.Builder(this.mContext, NotificationChannels.ALERTS).setTicker(resources.getString(C1894R.string.screenshot_failed_title)).setContentTitle(resources.getString(C1894R.string.screenshot_failed_title)).setContentText(string).setSmallIcon(C1894R.C1896drawable.stat_notify_image_error).setWhen(System.currentTimeMillis()).setVisibility(1).setCategory(NotificationCompat.CATEGORY_ERROR).setAutoCancel(true).setColor(this.mContext.getColor(17170460));
         Intent createAdminSupportIntent = ((DevicePolicyManager) this.mContext.getSystemService("device_policy")).createAdminSupportIntent("policy_disable_screen_capture");
         if (createAdminSupportIntent != null) {
             color.setContentIntent(PendingIntent.getActivityAsUser(this.mContext, 0, createAdminSupportIntent, 67108864, (Bundle) null, UserHandle.CURRENT));

@@ -38,15 +38,15 @@ public final class JapaneseEra implements Era, Serializable {
     }
 
     static {
-        JapaneseEra japaneseEra = new JapaneseEra(-1, LocalDate.m908of(1868, 1, 1));
+        JapaneseEra japaneseEra = new JapaneseEra(-1, LocalDate.m906of(1868, 1, 1));
         MEIJI = japaneseEra;
-        JapaneseEra japaneseEra2 = new JapaneseEra(0, LocalDate.m908of(1912, 7, 30));
+        JapaneseEra japaneseEra2 = new JapaneseEra(0, LocalDate.m906of(1912, 7, 30));
         TAISHO = japaneseEra2;
-        JapaneseEra japaneseEra3 = new JapaneseEra(1, LocalDate.m908of(1926, 12, 25));
+        JapaneseEra japaneseEra3 = new JapaneseEra(1, LocalDate.m906of(1926, 12, 25));
         SHOWA = japaneseEra3;
-        JapaneseEra japaneseEra4 = new JapaneseEra(2, LocalDate.m908of(1989, 1, 8));
+        JapaneseEra japaneseEra4 = new JapaneseEra(2, LocalDate.m906of(1989, 1, 8));
         HEISEI = japaneseEra4;
-        JapaneseEra japaneseEra5 = new JapaneseEra(3, LocalDate.m908of(2019, 5, 1));
+        JapaneseEra japaneseEra5 = new JapaneseEra(3, LocalDate.m906of(2019, 5, 1));
         REIWA = japaneseEra5;
         int value = japaneseEra5.getValue() + 2;
         N_ERA_CONSTANTS = value;
@@ -63,7 +63,7 @@ public final class JapaneseEra implements Era, Serializable {
             Era[] eraArr = ERA_CONFIG;
             if (value < eraArr.length) {
                 CalendarDate sinceDate = eraArr[value].getSinceDate();
-                KNOWN_ERAS[value] = new JapaneseEra((value - 2) + 1, LocalDate.m908of(sinceDate.getYear(), sinceDate.getMonth(), sinceDate.getDayOfMonth()));
+                KNOWN_ERAS[value] = new JapaneseEra((value - 2) + 1, LocalDate.m906of(sinceDate.getYear(), sinceDate.getMonth(), sinceDate.getDayOfMonth()));
                 value++;
             } else {
                 return;
@@ -82,7 +82,7 @@ public final class JapaneseEra implements Era, Serializable {
     }
 
     /* renamed from: of */
-    public static JapaneseEra m948of(int i) {
+    public static JapaneseEra m946of(int i) {
         int ordinal = ordinal(i);
         if (ordinal >= 0) {
             JapaneseEra[] japaneseEraArr = KNOWN_ERAS;
@@ -186,6 +186,6 @@ public final class JapaneseEra implements Era, Serializable {
     }
 
     static JapaneseEra readExternal(DataInput dataInput) throws IOException {
-        return m948of(dataInput.readByte());
+        return m946of(dataInput.readByte());
     }
 }

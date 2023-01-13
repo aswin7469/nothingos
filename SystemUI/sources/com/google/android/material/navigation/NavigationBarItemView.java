@@ -23,7 +23,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import androidx.core.widget.TextViewCompat;
 import com.android.systemui.navigationbar.NavigationBar;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.animation.AnimationUtils;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.badge.BadgeUtils;
@@ -82,15 +82,15 @@ public abstract class NavigationBarItemView extends FrameLayout implements MenuV
     public NavigationBarItemView(Context context) {
         super(context);
         LayoutInflater.from(context).inflate(getItemLayoutResId(), this, true);
-        this.iconContainer = (FrameLayout) findViewById(C3621R.C3624id.navigation_bar_item_icon_container);
-        this.activeIndicatorView = findViewById(C3621R.C3624id.navigation_bar_item_active_indicator_view);
-        ImageView imageView = (ImageView) findViewById(C3621R.C3624id.navigation_bar_item_icon_view);
+        this.iconContainer = (FrameLayout) findViewById(C3631R.C3634id.navigation_bar_item_icon_container);
+        this.activeIndicatorView = findViewById(C3631R.C3634id.navigation_bar_item_active_indicator_view);
+        ImageView imageView = (ImageView) findViewById(C3631R.C3634id.navigation_bar_item_icon_view);
         this.icon = imageView;
-        ViewGroup viewGroup = (ViewGroup) findViewById(C3621R.C3624id.navigation_bar_item_labels_group);
+        ViewGroup viewGroup = (ViewGroup) findViewById(C3631R.C3634id.navigation_bar_item_labels_group);
         this.labelGroup = viewGroup;
-        TextView textView = (TextView) findViewById(C3621R.C3624id.navigation_bar_item_small_label_view);
+        TextView textView = (TextView) findViewById(C3631R.C3634id.navigation_bar_item_small_label_view);
         this.smallLabel = textView;
-        TextView textView2 = (TextView) findViewById(C3621R.C3624id.navigation_bar_item_large_label_view);
+        TextView textView2 = (TextView) findViewById(C3631R.C3634id.navigation_bar_item_large_label_view);
         this.largeLabel = textView2;
         setBackgroundResource(getItemBackgroundResId());
         this.itemPaddingTop = getResources().getDimensionPixelSize(getItemDefaultMarginResId());
@@ -248,8 +248,8 @@ public abstract class NavigationBarItemView extends FrameLayout implements MenuV
                 NavigationBarItemView.this.setActiveIndicatorProgress(((Float) valueAnimator.getAnimatedValue()).floatValue(), f);
             }
         });
-        this.activeIndicatorAnimator.setInterpolator(MotionUtils.resolveThemeInterpolator(getContext(), C3621R.attr.motionEasingStandard, AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR));
-        this.activeIndicatorAnimator.setDuration((long) MotionUtils.resolveThemeDuration(getContext(), C3621R.attr.motionDurationLong1, getResources().getInteger(C3621R.integer.material_motion_duration_long_1)));
+        this.activeIndicatorAnimator.setInterpolator(MotionUtils.resolveThemeInterpolator(getContext(), C3631R.attr.motionEasingStandard, AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR));
+        this.activeIndicatorAnimator.setDuration((long) MotionUtils.resolveThemeDuration(getContext(), C3631R.attr.motionDurationLong1, getResources().getInteger(C3631R.integer.material_motion_duration_long_1)));
         this.activeIndicatorAnimator.start();
     }
 
@@ -350,7 +350,7 @@ public abstract class NavigationBarItemView extends FrameLayout implements MenuV
             wrap.setClickable(false);
             wrap.removeAction(AccessibilityNodeInfoCompat.AccessibilityActionCompat.ACTION_CLICK);
         }
-        wrap.setRoleDescription(getResources().getString(C3621R.string.item_view_role_description));
+        wrap.setRoleDescription(getResources().getString(C3631R.string.item_view_role_description));
     }
 
     private int getItemVisiblePosition() {
@@ -635,12 +635,12 @@ public abstract class NavigationBarItemView extends FrameLayout implements MenuV
 
     /* access modifiers changed from: protected */
     public int getItemBackgroundResId() {
-        return C3621R.C3623drawable.mtrl_navigation_bar_item_background;
+        return C3631R.C3633drawable.mtrl_navigation_bar_item_background;
     }
 
     /* access modifiers changed from: protected */
     public int getItemDefaultMarginResId() {
-        return C3621R.dimen.mtrl_navigation_bar_item_default_margin;
+        return C3631R.dimen.mtrl_navigation_bar_item_default_margin;
     }
 
     private static class ActiveIndicatorTransform {

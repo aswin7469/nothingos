@@ -9,6 +9,6 @@ public final /* synthetic */ class HingeSensorAngleProvider$$ExternalSyntheticLa
     }
 
     public final void run() {
-        HingeSensorAngleProvider.m3288start$lambda0(this.f$0);
+        HingeSensorAngleProvider.m3293start$lambda0(this.f$0);
     }
 }

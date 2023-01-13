@@ -16,6 +16,6 @@ public final /* synthetic */ class StatusBarRemoteInputCallback$$ExternalSynthet
     }
 
     public final void run() {
-        this.f$0.mo45337xe09f449a(this.f$1, this.f$2);
+        this.f$0.mo45349xe09f449a(this.f$1, this.f$2);
     }
 }

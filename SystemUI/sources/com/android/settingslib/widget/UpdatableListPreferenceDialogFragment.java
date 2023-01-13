@@ -96,7 +96,7 @@ public class UpdatableListPreferenceDialogFragment extends PreferenceDialogFragm
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onPrepareDialogBuilder$0$com-android-settingslib-widget-UpdatableListPreferenceDialogFragment */
-    public /* synthetic */ void mo29295x10c94463(DialogInterface dialogInterface, int i) {
+    public /* synthetic */ void mo29305x10c94463(DialogInterface dialogInterface, int i) {
         this.mClickedDialogEntryIndex = i;
         onClick(dialogInterface, -1);
         dialogInterface.dismiss();

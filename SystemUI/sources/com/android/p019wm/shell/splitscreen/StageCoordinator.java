@@ -16,6 +16,7 @@ import android.graphics.Rect;
 import android.hardware.devicestate.DeviceStateManager;
 import android.os.Bundle;
 import android.os.Debug;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
@@ -60,6 +61,7 @@ import javax.inject.Provider;
 
 /* renamed from: com.android.wm.shell.splitscreen.StageCoordinator */
 class StageCoordinator implements SplitLayout.SplitLayoutHandler, DisplayController.OnDisplaysChangedListener, Transitions.TransitionHandler, ShellTaskOrganizer.TaskListener {
+    private static final long DELAYED_CHECK_DIVIDER_SHOW = 1000;
     /* access modifiers changed from: private */
     public static final String TAG = "StageCoordinator";
     private final Context mContext;
@@ -72,6 +74,8 @@ class StageCoordinator implements SplitLayout.SplitLayoutHandler, DisplayControl
     public ValueAnimator mDividerFadeInAnimator;
     private boolean mDividerVisible;
     private boolean mExitSplitScreenOnHide;
+    /* access modifiers changed from: private */
+    public Handler mHandler;
     private boolean mIsDividerRemoteAnimating;
     private boolean mKeyguardShowing;
     private final List<SplitScreen.SplitScreenListener> mListeners;
@@ -126,6 +130,7 @@ class StageCoordinator implements SplitLayout.SplitLayoutHandler, DisplayControl
         this.mSideStagePosition = 1;
         this.mListeners = new ArrayList();
         this.mTopStageAfterFoldDismiss = -1;
+        this.mHandler = new Handler();
         this.mParentContainerCallbacks = new SplitWindowManager.ParentContainerCallbacks() {
             public void attachToParentSurface(SurfaceControl.Builder builder) {
                 builder.setParent(StageCoordinator.this.mRootTaskLeash);
@@ -133,8 +138,8 @@ class StageCoordinator implements SplitLayout.SplitLayoutHandler, DisplayControl
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onLeashReady$0$com-android-wm-shell-splitscreen-StageCoordinator$1 */
-            public /* synthetic */ void mo50869x19a3c17a(SurfaceControl.Transaction transaction) {
-                StageCoordinator.this.mo50842x3a0e8df7(transaction);
+            public /* synthetic */ void mo50880x19a3c17a(SurfaceControl.Transaction transaction) {
+                StageCoordinator.this.mo50853xb6a44c34(transaction);
             }
 
             public void onLeashReady(SurfaceControl surfaceControl) {
@@ -169,8 +174,8 @@ class StageCoordinator implements SplitLayout.SplitLayoutHandler, DisplayControl
         this.mDisplayImeController = displayImeController;
         this.mDisplayInsetsController = displayInsetsController;
         this.mTransactionPool = transactionPool2;
-        ((DeviceStateManager) context2.getSystemService(DeviceStateManager.class)).registerCallback(shellTaskOrganizer.getExecutor(), new DeviceStateManager.FoldStateListener(context2, new StageCoordinator$$ExternalSyntheticLambda13(this)));
-        this.mSplitTransitions = new SplitScreenTransitions(transactionPool2, transitions2, new StageCoordinator$$ExternalSyntheticLambda11(this), this);
+        ((DeviceStateManager) context2.getSystemService(DeviceStateManager.class)).registerCallback(shellTaskOrganizer.getExecutor(), new DeviceStateManager.FoldStateListener(context2, new StageCoordinator$$ExternalSyntheticLambda1(this)));
+        this.mSplitTransitions = new SplitScreenTransitions(transactionPool2, transitions2, new StageCoordinator$$ExternalSyntheticLambda15(this), this);
         displayController2.addDisplayWindowListener(this);
         this.mDisplayLayout = new DisplayLayout(displayController2.getDisplayLayout(i2));
         transitions2.addHandler(this);
@@ -185,6 +190,7 @@ class StageCoordinator implements SplitLayout.SplitLayoutHandler, DisplayControl
         this.mSideStagePosition = 1;
         this.mListeners = new ArrayList();
         this.mTopStageAfterFoldDismiss = -1;
+        this.mHandler = new Handler();
         this.mParentContainerCallbacks = new SplitWindowManager.ParentContainerCallbacks() {
             public void attachToParentSurface(SurfaceControl.Builder builder) {
                 builder.setParent(StageCoordinator.this.mRootTaskLeash);
@@ -192,8 +198,8 @@ class StageCoordinator implements SplitLayout.SplitLayoutHandler, DisplayControl
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onLeashReady$0$com-android-wm-shell-splitscreen-StageCoordinator$1 */
-            public /* synthetic */ void mo50869x19a3c17a(SurfaceControl.Transaction transaction) {
-                StageCoordinator.this.mo50842x3a0e8df7(transaction);
+            public /* synthetic */ void mo50880x19a3c17a(SurfaceControl.Transaction transaction) {
+                StageCoordinator.this.mo50853xb6a44c34(transaction);
             }
 
             public void onLeashReady(SurfaceControl surfaceControl) {
@@ -211,7 +217,7 @@ class StageCoordinator implements SplitLayout.SplitLayoutHandler, DisplayControl
         this.mDisplayInsetsController = displayInsetsController;
         this.mTransactionPool = transactionPool2;
         this.mSplitLayout = splitLayout;
-        this.mSplitTransitions = new SplitScreenTransitions(transactionPool2, transitions2, new StageCoordinator$$ExternalSyntheticLambda11(this), this);
+        this.mSplitTransitions = new SplitScreenTransitions(transactionPool2, transitions2, new StageCoordinator$$ExternalSyntheticLambda15(this), this);
         this.mMainUnfoldController = (StageTaskUnfoldController) provider.get().orElse(null);
         this.mSideUnfoldController = (StageTaskUnfoldController) provider.get().orElse(null);
         this.mLogger = splitscreenEventLogger;
@@ -314,6 +320,7 @@ class StageCoordinator implements SplitLayout.SplitLayoutHandler, DisplayControl
     private void startWithLegacyTransition(int i, int i2, PendingIntent pendingIntent, Intent intent, Bundle bundle, Bundle bundle2, int i3, float f, RemoteAnimationAdapter remoteAnimationAdapter) {
         Bundle bundle3;
         Bundle bundle4;
+        final int i4 = i2;
         PendingIntent pendingIntent2 = pendingIntent;
         Intent intent2 = intent;
         boolean z = (pendingIntent2 == null || intent2 == null) ? false : true;
@@ -326,68 +333,86 @@ class StageCoordinator implements SplitLayout.SplitLayoutHandler, DisplayControl
         prepareEvictChildTasks(1, windowContainerTransaction2);
         final RemoteAnimationAdapter remoteAnimationAdapter2 = remoteAnimationAdapter;
         RemoteAnimationAdapter remoteAnimationAdapter3 = new RemoteAnimationAdapter(new IRemoteAnimationRunner.Stub() {
-            /* JADX WARNING: Can't wrap try/catch for region: R(10:0|(2:3|1)|12|4|5|6|8|9|10|14) */
-            /* JADX WARNING: Code restructure failed: missing block: B:11:0x0045, code lost:
-                android.util.Slog.e(com.android.p019wm.shell.splitscreen.StageCoordinator.access$400(), "Error starting remote animation", r7);
-             */
-            /* JADX WARNING: Code restructure failed: missing block: B:13:?, code lost:
-                return;
-             */
-            /* JADX WARNING: Code restructure failed: missing block: B:7:0x002d, code lost:
-                r7 = move-exception;
-             */
             /* JADX WARNING: Failed to process nested try/catch */
-            /* JADX WARNING: Missing exception handler attribute for start block: B:8:0x002f */
+            /* JADX WARNING: Missing exception handler attribute for start block: B:16:0x0056 */
             /* Code decompiled incorrectly, please refer to instructions dump. */
-            public void onAnimationStart(int r8, android.view.RemoteAnimationTarget[] r9, android.view.RemoteAnimationTarget[] r10, android.view.RemoteAnimationTarget[] r11, final android.view.IRemoteAnimationFinishedCallback r12) {
+            public void onAnimationStart(int r10, android.view.RemoteAnimationTarget[] r11, android.view.RemoteAnimationTarget[] r12, android.view.RemoteAnimationTarget[] r13, final android.view.IRemoteAnimationFinishedCallback r14) {
                 /*
-                    r7 = this;
-                    int r0 = r11.length
-                    int r0 = r0 + 1
-                    android.view.RemoteAnimationTarget[] r5 = new android.view.RemoteAnimationTarget[r0]
+                    r9 = this;
+                    com.android.wm.shell.splitscreen.StageCoordinator r0 = com.android.p019wm.shell.splitscreen.StageCoordinator.this
+                    android.os.Handler r0 = r0.mHandler
                     r1 = 0
-                L_0x0006:
-                    int r2 = r11.length
-                    if (r1 >= r2) goto L_0x0010
-                    r2 = r11[r1]
-                    r5[r1] = r2
-                    int r1 = r1 + 1
-                    goto L_0x0006
-                L_0x0010:
-                    int r0 = r0 + -1
-                    com.android.wm.shell.splitscreen.StageCoordinator r11 = com.android.p019wm.shell.splitscreen.StageCoordinator.this
-                    android.view.RemoteAnimationTarget r11 = r11.getDividerBarLegacyTarget()
-                    r5[r0] = r11
-                    com.android.wm.shell.splitscreen.StageCoordinator$2$1 r6 = new com.android.wm.shell.splitscreen.StageCoordinator$2$1
-                    r6.<init>(r12)
-                    android.app.IActivityTaskManager r11 = android.app.ActivityTaskManager.getService()     // Catch:{ SecurityException -> 0x002f }
-                    android.view.RemoteAnimationAdapter r12 = r8     // Catch:{ SecurityException -> 0x002f }
-                    android.app.IApplicationThread r12 = r12.getCallingApplication()     // Catch:{ SecurityException -> 0x002f }
-                    r11.setRunningRemoteTransitionDelegate(r12)     // Catch:{ SecurityException -> 0x002f }
-                    goto L_0x0038
+                    r0.removeCallbacksAndMessages(r1)
+                    java.util.ArrayList r0 = new java.util.ArrayList
+                    r0.<init>()
+                    int r1 = r11.length
+                    r2 = 0
+                    r3 = r2
+                L_0x0012:
+                    if (r3 >= r1) goto L_0x0028
+                    r4 = r11[r3]
+                    int r5 = r4.mode
+                    int r6 = r1
+                    int r7 = r4.taskId
+                    if (r6 != r7) goto L_0x0022
+                    r6 = 2
+                    if (r5 != r6) goto L_0x0022
+                    goto L_0x0025
+                L_0x0022:
+                    r0.add(r4)
+                L_0x0025:
+                    int r3 = r3 + 1
+                    goto L_0x0012
+                L_0x0028:
+                    int r11 = r13.length
+                    int r11 = r11 + 1
+                    android.view.RemoteAnimationTarget[] r7 = new android.view.RemoteAnimationTarget[r11]
                 L_0x002d:
-                    r7 = move-exception
-                    goto L_0x0045
-                L_0x002f:
-                    java.lang.String r11 = com.android.p019wm.shell.splitscreen.StageCoordinator.TAG     // Catch:{ RemoteException -> 0x002d }
-                    java.lang.String r12 = "Unable to boost animation thread. This should only happen during unit tests"
-                    android.util.Slog.e(r11, r12)     // Catch:{ RemoteException -> 0x002d }
-                L_0x0038:
-                    android.view.RemoteAnimationAdapter r7 = r8     // Catch:{ RemoteException -> 0x002d }
-                    android.view.IRemoteAnimationRunner r1 = r7.getRunner()     // Catch:{ RemoteException -> 0x002d }
-                    r2 = r8
-                    r3 = r9
+                    int r1 = r13.length
+                    if (r2 >= r1) goto L_0x0037
+                    r1 = r13[r2]
+                    r7[r2] = r1
+                    int r2 = r2 + 1
+                    goto L_0x002d
+                L_0x0037:
+                    int r11 = r11 + -1
+                    com.android.wm.shell.splitscreen.StageCoordinator r13 = com.android.p019wm.shell.splitscreen.StageCoordinator.this
+                    android.view.RemoteAnimationTarget r13 = r13.getDividerBarLegacyTarget()
+                    r7[r11] = r13
+                    com.android.wm.shell.splitscreen.StageCoordinator$2$1 r8 = new com.android.wm.shell.splitscreen.StageCoordinator$2$1
+                    r8.<init>(r14)
+                    android.app.IActivityTaskManager r11 = android.app.ActivityTaskManager.getService()     // Catch:{ SecurityException -> 0x0056 }
+                    android.view.RemoteAnimationAdapter r13 = r9     // Catch:{ SecurityException -> 0x0056 }
+                    android.app.IApplicationThread r13 = r13.getCallingApplication()     // Catch:{ SecurityException -> 0x0056 }
+                    r11.setRunningRemoteTransitionDelegate(r13)     // Catch:{ SecurityException -> 0x0056 }
+                    goto L_0x005f
+                L_0x0054:
+                    r9 = move-exception
+                    goto L_0x0078
+                L_0x0056:
+                    java.lang.String r11 = com.android.p019wm.shell.splitscreen.StageCoordinator.TAG     // Catch:{ RemoteException -> 0x0054 }
+                    java.lang.String r13 = "Unable to boost animation thread. This should only happen during unit tests"
+                    android.util.Slog.e(r11, r13)     // Catch:{ RemoteException -> 0x0054 }
+                L_0x005f:
+                    android.view.RemoteAnimationAdapter r9 = r9     // Catch:{ RemoteException -> 0x0054 }
+                    android.view.IRemoteAnimationRunner r3 = r9.getRunner()     // Catch:{ RemoteException -> 0x0054 }
+                    int r9 = r0.size()     // Catch:{ RemoteException -> 0x0054 }
+                    android.view.RemoteAnimationTarget[] r9 = new android.view.RemoteAnimationTarget[r9]     // Catch:{ RemoteException -> 0x0054 }
+                    java.lang.Object[] r9 = r0.toArray(r9)     // Catch:{ RemoteException -> 0x0054 }
+                    r5 = r9
+                    android.view.RemoteAnimationTarget[] r5 = (android.view.RemoteAnimationTarget[]) r5     // Catch:{ RemoteException -> 0x0054 }
                     r4 = r10
-                    r1.onAnimationStart(r2, r3, r4, r5, r6)     // Catch:{ RemoteException -> 0x002d }
-                    goto L_0x004e
-                L_0x0045:
-                    java.lang.String r8 = com.android.p019wm.shell.splitscreen.StageCoordinator.TAG
-                    java.lang.String r9 = "Error starting remote animation"
-                    android.util.Slog.e(r8, r9, r7)
-                L_0x004e:
+                    r6 = r12
+                    r3.onAnimationStart(r4, r5, r6, r7, r8)     // Catch:{ RemoteException -> 0x0054 }
+                    goto L_0x0081
+                L_0x0078:
+                    java.lang.String r10 = com.android.p019wm.shell.splitscreen.StageCoordinator.TAG
+                    java.lang.String r11 = "Error starting remote animation"
+                    android.util.Slog.e(r10, r11, r9)
+                L_0x0081:
                     return
                 */
-                throw new UnsupportedOperationException("Method not decompiled: com.android.p019wm.shell.splitscreen.StageCoordinator.C35672.onAnimationStart(int, android.view.RemoteAnimationTarget[], android.view.RemoteAnimationTarget[], android.view.RemoteAnimationTarget[], android.view.IRemoteAnimationFinishedCallback):void");
+                throw new UnsupportedOperationException("Method not decompiled: com.android.p019wm.shell.splitscreen.StageCoordinator.C35772.onAnimationStart(int, android.view.RemoteAnimationTarget[], android.view.RemoteAnimationTarget[], android.view.RemoteAnimationTarget[], android.view.IRemoteAnimationFinishedCallback):void");
             }
 
             public void onAnimationCancelled(boolean z) {
@@ -420,38 +445,48 @@ class StageCoordinator implements SplitLayout.SplitLayoutHandler, DisplayControl
         windowContainerTransaction.reorder(this.mRootTaskInfo.token, true);
         addActivityOptions(bundle3, this.mMainStage);
         addActivityOptions(bundle4, this.mSideStage);
-        int i4 = i;
+        this.mHandler.postDelayed(new StageCoordinator$$ExternalSyntheticLambda12(this, windowContainerTransaction2), 1000);
         windowContainerTransaction.startTask(i, bundle3);
         if (z) {
             windowContainerTransaction.sendPendingIntent(pendingIntent2, intent2, bundle4);
         } else {
-            windowContainerTransaction.startTask(i2, bundle4);
+            windowContainerTransaction.startTask(i4, bundle4);
         }
         this.mTaskOrganizer.applyTransaction(windowContainerTransaction);
-        this.mSyncQueue.runInSync(new StageCoordinator$$ExternalSyntheticLambda9(this));
+        this.mSyncQueue.runInSync(new StageCoordinator$$ExternalSyntheticLambda13(this));
     }
 
     /* access modifiers changed from: package-private */
-    /* renamed from: lambda$startWithLegacyTransition$0$com-android-wm-shell-splitscreen-StageCoordinator */
-    public /* synthetic */ void mo50844xb6a44c34(SurfaceControl.Transaction transaction) {
+    /* renamed from: lambda$startWithLegacyTransition$1$com-android-wm-shell-splitscreen-StageCoordinator */
+    public /* synthetic */ void mo50854xfa2f69f5(WindowContainerTransaction windowContainerTransaction) {
+        if (this.mDividerVisible) {
+            onRemoteAnimationFinishedOrCancelled(windowContainerTransaction);
+            this.mSyncQueue.runInSync(new StageCoordinator$$ExternalSyntheticLambda9(this));
+        }
+    }
+
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$startWithLegacyTransition$2$com-android-wm-shell-splitscreen-StageCoordinator */
+    public /* synthetic */ void mo50855x3dba87b6(SurfaceControl.Transaction transaction) {
         setDividerVisibility(true, transaction);
         updateSurfaceBounds(this.mSplitLayout, transaction, false);
     }
 
     /* access modifiers changed from: private */
     public void onRemoteAnimationFinishedOrCancelled(WindowContainerTransaction windowContainerTransaction) {
+        this.mHandler.removeCallbacksAndMessages((Object) null);
         this.mIsDividerRemoteAnimating = false;
         this.mShouldUpdateRecents = true;
         if (this.mMainStage.getChildCount() == 0 || this.mSideStage.getChildCount() == 0) {
-            this.mMainExecutor.execute(new StageCoordinator$$ExternalSyntheticLambda8(this));
+            this.mMainExecutor.execute(new StageCoordinator$$ExternalSyntheticLambda11(this));
         } else {
             this.mSyncQueue.queue(windowContainerTransaction);
         }
     }
 
     /* access modifiers changed from: package-private */
-    /* renamed from: lambda$onRemoteAnimationFinishedOrCancelled$1$com-android-wm-shell-splitscreen-StageCoordinator */
-    public /* synthetic */ void mo50839x25bd48c6() {
+    /* renamed from: lambda$onRemoteAnimationFinishedOrCancelled$3$com-android-wm-shell-splitscreen-StageCoordinator */
+    public /* synthetic */ void mo50848xacd38448() {
         exitSplitScreen(this.mMainStage.getChildCount() == 0 ? this.mSideStage : this.mMainStage, 0);
     }
 
@@ -616,7 +651,7 @@ class StageCoordinator implements SplitLayout.SplitLayoutHandler, DisplayControl
 
     private void applyExitSplitScreen(StageTaskListener stageTaskListener, WindowContainerTransaction windowContainerTransaction, int i) {
         if (this.mMainStage.isActive()) {
-            this.mRecentTasks.ifPresent(new StageCoordinator$$ExternalSyntheticLambda1(this, i));
+            this.mRecentTasks.ifPresent(new StageCoordinator$$ExternalSyntheticLambda3(this, i));
             boolean z = false;
             this.mShouldUpdateRecents = false;
             boolean z2 = i == 9;
@@ -626,7 +661,7 @@ class StageCoordinator implements SplitLayout.SplitLayoutHandler, DisplayControl
             mainStage.deactivate(windowContainerTransaction, !z2 && mainStage == stageTaskListener);
             windowContainerTransaction.reorder(this.mRootTaskInfo.token, false);
             this.mTaskOrganizer.applyTransaction(windowContainerTransaction);
-            this.mSyncQueue.runInSync(new StageCoordinator$$ExternalSyntheticLambda2(this));
+            this.mSyncQueue.runInSync(new StageCoordinator$$ExternalSyntheticLambda4(this));
             this.mSplitLayout.resetDividerPosition();
             this.mSplitLayout.release();
             this.mTopStageAfterFoldDismiss = -1;
@@ -643,8 +678,8 @@ class StageCoordinator implements SplitLayout.SplitLayoutHandler, DisplayControl
     }
 
     /* access modifiers changed from: package-private */
-    /* renamed from: lambda$applyExitSplitScreen$2$com-android-wm-shell-splitscreen-StageCoordinator */
-    public /* synthetic */ void mo50836x5342ac84(int i, RecentTasksController recentTasksController) {
+    /* renamed from: lambda$applyExitSplitScreen$4$com-android-wm-shell-splitscreen-StageCoordinator */
+    public /* synthetic */ void mo50845xda58e806(int i, RecentTasksController recentTasksController) {
         if (shouldBreakPairedTaskInRecents(i) && this.mShouldUpdateRecents) {
             recentTasksController.removeSplitPair(this.mMainStage.getTopVisibleChildTaskId());
             recentTasksController.removeSplitPair(this.mSideStage.getTopVisibleChildTaskId());
@@ -652,8 +687,8 @@ class StageCoordinator implements SplitLayout.SplitLayoutHandler, DisplayControl
     }
 
     /* access modifiers changed from: package-private */
-    /* renamed from: lambda$applyExitSplitScreen$3$com-android-wm-shell-splitscreen-StageCoordinator */
-    public /* synthetic */ void mo50837x96cdca45(SurfaceControl.Transaction transaction) {
+    /* renamed from: lambda$applyExitSplitScreen$5$com-android-wm-shell-splitscreen-StageCoordinator */
+    public /* synthetic */ void mo50846x1de405c7(SurfaceControl.Transaction transaction) {
         setResizingSplits(false);
         transaction.setWindowCrop(this.mMainStage.mRootLeash, (Rect) null).setWindowCrop(this.mSideStage.mRootLeash, (Rect) null);
         setDividerVisibility(false, transaction);
@@ -781,13 +816,13 @@ class StageCoordinator implements SplitLayout.SplitLayoutHandler, DisplayControl
 
     private void updateRecentTasksSplitPair() {
         if (this.mShouldUpdateRecents) {
-            this.mRecentTasks.ifPresent(new StageCoordinator$$ExternalSyntheticLambda14(this));
+            this.mRecentTasks.ifPresent(new StageCoordinator$$ExternalSyntheticLambda2(this));
         }
     }
 
     /* access modifiers changed from: package-private */
-    /* renamed from: lambda$updateRecentTasksSplitPair$4$com-android-wm-shell-splitscreen-StageCoordinator */
-    public /* synthetic */ void mo50845x5cb4a636(RecentTasksController recentTasksController) {
+    /* renamed from: lambda$updateRecentTasksSplitPair$6$com-android-wm-shell-splitscreen-StageCoordinator */
+    public /* synthetic */ void mo50856xe3cae1b8(RecentTasksController recentTasksController) {
         int i;
         int i2;
         Rect bounds1 = this.mSplitLayout.getBounds1();
@@ -850,6 +885,7 @@ class StageCoordinator implements SplitLayout.SplitLayoutHandler, DisplayControl
                 updateUnfoldBounds();
                 return;
             }
+            this.mHandler.removeCallbacksAndMessages((Object) null);
             this.mIsDividerRemoteAnimating = false;
             this.mSplitLayout.update((SurfaceControl.Transaction) null);
             onLayoutSizeChanged(this.mSplitLayout);
@@ -901,13 +937,13 @@ class StageCoordinator implements SplitLayout.SplitLayoutHandler, DisplayControl
             if (!z2 && (this.mExitSplitScreenOnHide || (!this.mMainStage.mRootTaskInfo.isSleeping && !this.mSideStage.mRootTaskInfo.isSleeping))) {
                 exitSplitScreen((StageTaskListener) null, 5);
             }
-            this.mSyncQueue.runInSync(new StageCoordinator$$ExternalSyntheticLambda12(this, z, z2));
+            this.mSyncQueue.runInSync(new StageCoordinator$$ExternalSyntheticLambda16(this, z, z2));
         }
     }
 
     /* access modifiers changed from: package-private */
-    /* renamed from: lambda$onStageVisibilityChanged$5$com-android-wm-shell-splitscreen-StageCoordinator */
-    public /* synthetic */ void mo50841x3d500690(boolean z, boolean z2, SurfaceControl.Transaction transaction) {
+    /* renamed from: lambda$onStageVisibilityChanged$7$com-android-wm-shell-splitscreen-StageCoordinator */
+    public /* synthetic */ void mo50850xc4664212(boolean z, boolean z2, SurfaceControl.Transaction transaction) {
         transaction.setVisibility(this.mSideStage.mRootLeash, z).setVisibility(this.mMainStage.mRootLeash, z2);
         setDividerVisibility(z2, transaction);
     }
@@ -927,7 +963,7 @@ class StageCoordinator implements SplitLayout.SplitLayoutHandler, DisplayControl
                 if (this.mIsDividerRemoteAnimating) {
                     ProtoLog.d(ShellProtoLogGroup.WM_SHELL_SPLIT_SCREEN, "%s:   Skip animating divider bar due to it's remote animating.", new Object[]{str});
                 } else if (transaction != null) {
-                    mo50842x3a0e8df7(transaction);
+                    mo50853xb6a44c34(transaction);
                 } else {
                     this.mSyncQueue.runInSync(new StageCoordinator$$ExternalSyntheticLambda0(this));
                 }
@@ -939,7 +975,7 @@ class StageCoordinator implements SplitLayout.SplitLayoutHandler, DisplayControl
 
     /* access modifiers changed from: private */
     /* renamed from: applyDividerVisibility */
-    public void mo50842x3a0e8df7(SurfaceControl.Transaction transaction) {
+    public void mo50853xb6a44c34(SurfaceControl.Transaction transaction) {
         final SurfaceControl dividerLeash = this.mSplitLayout.getDividerLeash();
         if (dividerLeash == null) {
             ProtoLog.d(ShellProtoLogGroup.WM_SHELL_SPLIT_SCREEN, "%s:   Skip animating divider bar due to divider leash not ready.", new Object[]{TAG});
@@ -954,7 +990,7 @@ class StageCoordinator implements SplitLayout.SplitLayoutHandler, DisplayControl
                 final SurfaceControl.Transaction acquire = this.mTransactionPool.acquire();
                 ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
                 this.mDividerFadeInAnimator = ofFloat;
-                ofFloat.addUpdateListener(new StageCoordinator$$ExternalSyntheticLambda7(this, dividerLeash, acquire));
+                ofFloat.addUpdateListener(new StageCoordinator$$ExternalSyntheticLambda10(this, dividerLeash, acquire));
                 this.mDividerFadeInAnimator.addListener(new AnimatorListenerAdapter() {
                     public void onAnimationStart(Animator animator) {
                         SurfaceControl surfaceControl = dividerLeash;
@@ -982,8 +1018,8 @@ class StageCoordinator implements SplitLayout.SplitLayoutHandler, DisplayControl
     }
 
     /* access modifiers changed from: package-private */
-    /* renamed from: lambda$applyDividerVisibility$7$com-android-wm-shell-splitscreen-StageCoordinator */
-    public /* synthetic */ void mo50835x1885b0ec(SurfaceControl surfaceControl, SurfaceControl.Transaction transaction, ValueAnimator valueAnimator) {
+    /* renamed from: lambda$applyDividerVisibility$9$com-android-wm-shell-splitscreen-StageCoordinator */
+    public /* synthetic */ void mo50844x9f9bec6e(SurfaceControl surfaceControl, SurfaceControl.Transaction transaction, ValueAnimator valueAnimator) {
         if (surfaceControl == null || !surfaceControl.isValid()) {
             this.mDividerFadeInAnimator.cancel();
             return;
@@ -1008,7 +1044,7 @@ class StageCoordinator implements SplitLayout.SplitLayoutHandler, DisplayControl
             this.mSplitLayout.init();
             prepareEnterSplitScreen(windowContainerTransaction);
             this.mSyncQueue.queue(windowContainerTransaction);
-            this.mSyncQueue.runInSync(new StageCoordinator$$ExternalSyntheticLambda10(this));
+            this.mSyncQueue.runInSync(new StageCoordinator$$ExternalSyntheticLambda14(this));
         }
         if (this.mMainStageListener.mHasChildren && this.mSideStageListener.mHasChildren) {
             this.mShouldUpdateRecents = true;
@@ -1020,8 +1056,8 @@ class StageCoordinator implements SplitLayout.SplitLayoutHandler, DisplayControl
     }
 
     /* access modifiers changed from: package-private */
-    /* renamed from: lambda$onStageHasChildrenChanged$8$com-android-wm-shell-splitscreen-StageCoordinator */
-    public /* synthetic */ void mo50840x53a34e50(SurfaceControl.Transaction transaction) {
+    /* renamed from: lambda$onStageHasChildrenChanged$10$com-android-wm-shell-splitscreen-StageCoordinator */
+    public /* synthetic */ void mo50849xab7d7e25(SurfaceControl.Transaction transaction) {
         updateSurfaceBounds(this.mSplitLayout, transaction, false);
     }
 
@@ -1067,13 +1103,13 @@ class StageCoordinator implements SplitLayout.SplitLayoutHandler, DisplayControl
         updateWindowBounds(splitLayout, windowContainerTransaction);
         updateUnfoldBounds();
         this.mSyncQueue.queue(windowContainerTransaction);
-        this.mSyncQueue.runInSync(new StageCoordinator$$ExternalSyntheticLambda5(this, splitLayout));
+        this.mSyncQueue.runInSync(new StageCoordinator$$ExternalSyntheticLambda7(this, splitLayout));
         this.mLogger.logResize(this.mSplitLayout.getDividerPositionAsFraction());
     }
 
     /* access modifiers changed from: package-private */
-    /* renamed from: lambda$onLayoutSizeChanged$9$com-android-wm-shell-splitscreen-StageCoordinator */
-    public /* synthetic */ void mo50838x9c0aa3a1(SplitLayout splitLayout, SurfaceControl.Transaction transaction) {
+    /* renamed from: lambda$onLayoutSizeChanged$11$com-android-wm-shell-splitscreen-StageCoordinator */
+    public /* synthetic */ void mo50847x85b35656(SplitLayout splitLayout, SurfaceControl.Transaction transaction) {
         setResizingSplits(false);
         updateSurfaceBounds(splitLayout, transaction, false);
         this.mMainStage.onResized(transaction);
@@ -1144,7 +1180,7 @@ class StageCoordinator implements SplitLayout.SplitLayoutHandler, DisplayControl
 
     public void onDisplayAdded(int i) {
         if (i == 0) {
-            this.mDisplayController.addDisplayChangingController(new StageCoordinator$$ExternalSyntheticLambda6(this));
+            this.mDisplayController.addDisplayChangingController(new StageCoordinator$$ExternalSyntheticLambda8(this));
         }
     }
 
@@ -1219,7 +1255,7 @@ class StageCoordinator implements SplitLayout.SplitLayoutHandler, DisplayControl
             boolean isOpeningType = Transitions.isOpeningType(type);
             boolean z = triggerTask.getWindowingMode() == 1;
             if (isOpeningType && z) {
-                this.mRecentTasks.ifPresent(new StageCoordinator$$ExternalSyntheticLambda3(triggerTask));
+                this.mRecentTasks.ifPresent(new StageCoordinator$$ExternalSyntheticLambda5(triggerTask));
             }
             if (this.mMainStage.isActive()) {
                 ProtoLog.v(ShellProtoLogGroup.WM_SHELL_TRANSITIONS, "  split is active so using splitTransition to handle request. triggerTask=%d type=%s mainChildren=%d sideChildren=%d", new Object[]{Integer.valueOf(triggerTask.taskId), WindowManager.transitTypeToString(type), Integer.valueOf(this.mMainStage.getChildCount()), Integer.valueOf(this.mSideStage.getChildCount())});
@@ -1501,7 +1537,7 @@ class StageCoordinator implements SplitLayout.SplitLayoutHandler, DisplayControl
             }
             Log.w(TAG, "Expected onTaskVanished on " + this.mSideStage + " to have been called with [" + sb2.toString() + "] before startAnimation().");
         }
-        this.mRecentTasks.ifPresent(new StageCoordinator$$ExternalSyntheticLambda4(this, dismissTransition, transitionInfo));
+        this.mRecentTasks.ifPresent(new StageCoordinator$$ExternalSyntheticLambda6(this, dismissTransition, transitionInfo));
         this.mShouldUpdateRecents = false;
         setSplitsVisible(false);
         transaction.setWindowCrop(this.mMainStage.mRootLeash, (Rect) null);
@@ -1521,8 +1557,8 @@ class StageCoordinator implements SplitLayout.SplitLayoutHandler, DisplayControl
     }
 
     /* access modifiers changed from: package-private */
-    /* renamed from: lambda$startPendingDismissAnimation$11$com-android-wm-shell-splitscreen-StageCoordinator */
-    public /* synthetic */ void mo50843xc118a457(SplitScreenTransitions.DismissTransition dismissTransition, TransitionInfo transitionInfo, RecentTasksController recentTasksController) {
+    /* renamed from: lambda$startPendingDismissAnimation$13$com-android-wm-shell-splitscreen-StageCoordinator */
+    public /* synthetic */ void mo50852x482edfd9(SplitScreenTransitions.DismissTransition dismissTransition, TransitionInfo transitionInfo, RecentTasksController recentTasksController) {
         if (shouldBreakPairedTaskInRecents(dismissTransition.mReason) && this.mShouldUpdateRecents) {
             for (TransitionInfo.Change taskInfo : transitionInfo.getChanges()) {
                 ActivityManager.RunningTaskInfo taskInfo2 = taskInfo.getTaskInfo();

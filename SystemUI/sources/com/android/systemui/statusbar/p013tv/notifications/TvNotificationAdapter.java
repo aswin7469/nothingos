@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.core.app.NotificationCompat;
 import androidx.recyclerview.widget.RecyclerView;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 
 /* renamed from: com.android.systemui.statusbar.tv.notifications.TvNotificationAdapter */
 public class TvNotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -23,7 +23,7 @@ public class TvNotificationAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     public TvNotificationViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        return new TvNotificationViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(C1893R.layout.tv_notification_item, viewGroup, false));
+        return new TvNotificationViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(C1894R.layout.tv_notification_item, viewGroup, false));
     }
 
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int i) {
@@ -64,8 +64,8 @@ public class TvNotificationAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
         protected TvNotificationViewHolder(View view) {
             super(view);
-            this.mTitle = (TextView) view.findViewById(C1893R.C1897id.tv_notification_title);
-            this.mDetails = (TextView) view.findViewById(C1893R.C1897id.tv_notification_details);
+            this.mTitle = (TextView) view.findViewById(C1894R.C1898id.tv_notification_title);
+            this.mDetails = (TextView) view.findViewById(C1894R.C1898id.tv_notification_details);
             view.setOnClickListener(this);
         }
 

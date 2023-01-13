@@ -6,7 +6,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.DrawableWrapper;
 import android.util.AttributeSet;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import java.p026io.IOException;
 import org.xmlpull.p032v1.XmlPullParser;
 import org.xmlpull.p032v1.XmlPullParserException;
@@ -21,9 +21,9 @@ public class CastDrawable extends DrawableWrapper {
 
     public void inflate(Resources resources, XmlPullParser xmlPullParser, AttributeSet attributeSet, Resources.Theme theme) throws XmlPullParserException, IOException {
         super.inflate(resources, xmlPullParser, attributeSet, theme);
-        setDrawable(resources.getDrawable(C1893R.C1895drawable.ic_cast, theme).mutate());
-        this.mFillDrawable = resources.getDrawable(C1893R.C1895drawable.ic_cast_connected_fill, theme).mutate();
-        this.mHorizontalPadding = resources.getDimensionPixelSize(C1893R.dimen.status_bar_horizontal_padding);
+        setDrawable(resources.getDrawable(C1894R.C1896drawable.ic_cast, theme).mutate());
+        this.mFillDrawable = resources.getDrawable(C1894R.C1896drawable.ic_cast_connected_fill, theme).mutate();
+        this.mHorizontalPadding = resources.getDimensionPixelSize(C1894R.dimen.status_bar_horizontal_padding);
     }
 
     public boolean canApplyTheme() {

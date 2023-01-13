@@ -18,7 +18,7 @@ public class PipedOutputStream extends OutputStream {
                     throw new IOException("Already connected");
                 }
                 this.sink = pipedInputStream;
-                pipedInputStream.f528in = -1;
+                pipedInputStream.f526in = -1;
                 pipedInputStream.out = 0;
                 pipedInputStream.connected = true;
             } catch (Throwable th) {

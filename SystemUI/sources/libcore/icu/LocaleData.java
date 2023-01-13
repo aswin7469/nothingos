@@ -37,7 +37,7 @@ public final class LocaleData {
 
     static {
         get(Locale.ROOT);
-        get(Locale.f700US);
+        get(Locale.f698US);
         get(Locale.getDefault());
     }
 

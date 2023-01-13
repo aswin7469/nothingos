@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.util.Log;
-import com.google.android.setupdesign.C3953R;
+import com.google.android.setupdesign.C3963R;
 import com.google.android.setupdesign.items.ItemHierarchy;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -13,24 +13,24 @@ public abstract class AbstractItemHierarchy implements ItemHierarchy {
     private static final String TAG = "AbstractItemHierarchy";
 
     /* renamed from: id */
-    private int f457id = -1;
+    private int f456id = -1;
     private final ArrayList<ItemHierarchy.Observer> observers = new ArrayList<>();
 
     public AbstractItemHierarchy() {
     }
 
     public AbstractItemHierarchy(Context context, AttributeSet attributeSet) {
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C3953R.styleable.SudAbstractItem);
-        this.f457id = obtainStyledAttributes.getResourceId(C3953R.styleable.SudAbstractItem_android_id, -1);
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C3963R.styleable.SudAbstractItem);
+        this.f456id = obtainStyledAttributes.getResourceId(C3963R.styleable.SudAbstractItem_android_id, -1);
         obtainStyledAttributes.recycle();
     }
 
     public void setId(int i) {
-        this.f457id = i;
+        this.f456id = i;
     }
 
     public int getId() {
-        return this.f457id;
+        return this.f456id;
     }
 
     public int getViewId() {

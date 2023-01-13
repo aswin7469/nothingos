@@ -383,7 +383,7 @@ final class SortedOps {
     private static final class IntSortingSink extends AbstractIntSortingSink {
 
         /* renamed from: b */
-        private SpinedBuffer.OfInt f793b;
+        private SpinedBuffer.OfInt f791b;
 
         IntSortingSink(Sink<? super Integer> sink) {
             super(sink);
@@ -391,14 +391,14 @@ final class SortedOps {
 
         public void begin(long j) {
             if (j < 2147483639) {
-                this.f793b = j > 0 ? new SpinedBuffer.OfInt((int) j) : new SpinedBuffer.OfInt();
+                this.f791b = j > 0 ? new SpinedBuffer.OfInt((int) j) : new SpinedBuffer.OfInt();
                 return;
             }
             throw new IllegalArgumentException("Stream size exceeds max array size");
         }
 
         public void end() {
-            int[] iArr = (int[]) this.f793b.asPrimitiveArray();
+            int[] iArr = (int[]) this.f791b.asPrimitiveArray();
             Arrays.sort(iArr);
             this.downstream.begin((long) iArr.length);
             int i = 0;
@@ -423,7 +423,7 @@ final class SortedOps {
         }
 
         public void accept(int i) {
-            this.f793b.accept(i);
+            this.f791b.accept(i);
         }
     }
 
@@ -486,7 +486,7 @@ final class SortedOps {
     private static final class LongSortingSink extends AbstractLongSortingSink {
 
         /* renamed from: b */
-        private SpinedBuffer.OfLong f794b;
+        private SpinedBuffer.OfLong f792b;
 
         LongSortingSink(Sink<? super Long> sink) {
             super(sink);
@@ -494,14 +494,14 @@ final class SortedOps {
 
         public void begin(long j) {
             if (j < 2147483639) {
-                this.f794b = j > 0 ? new SpinedBuffer.OfLong((int) j) : new SpinedBuffer.OfLong();
+                this.f792b = j > 0 ? new SpinedBuffer.OfLong((int) j) : new SpinedBuffer.OfLong();
                 return;
             }
             throw new IllegalArgumentException("Stream size exceeds max array size");
         }
 
         public void end() {
-            long[] jArr = (long[]) this.f794b.asPrimitiveArray();
+            long[] jArr = (long[]) this.f792b.asPrimitiveArray();
             Arrays.sort(jArr);
             this.downstream.begin((long) jArr.length);
             int i = 0;
@@ -526,7 +526,7 @@ final class SortedOps {
         }
 
         public void accept(long j) {
-            this.f794b.accept(j);
+            this.f792b.accept(j);
         }
     }
 
@@ -589,7 +589,7 @@ final class SortedOps {
     private static final class DoubleSortingSink extends AbstractDoubleSortingSink {
 
         /* renamed from: b */
-        private SpinedBuffer.OfDouble f792b;
+        private SpinedBuffer.OfDouble f790b;
 
         DoubleSortingSink(Sink<? super Double> sink) {
             super(sink);
@@ -597,14 +597,14 @@ final class SortedOps {
 
         public void begin(long j) {
             if (j < 2147483639) {
-                this.f792b = j > 0 ? new SpinedBuffer.OfDouble((int) j) : new SpinedBuffer.OfDouble();
+                this.f790b = j > 0 ? new SpinedBuffer.OfDouble((int) j) : new SpinedBuffer.OfDouble();
                 return;
             }
             throw new IllegalArgumentException("Stream size exceeds max array size");
         }
 
         public void end() {
-            double[] dArr = (double[]) this.f792b.asPrimitiveArray();
+            double[] dArr = (double[]) this.f790b.asPrimitiveArray();
             Arrays.sort(dArr);
             this.downstream.begin((long) dArr.length);
             int i = 0;
@@ -629,7 +629,7 @@ final class SortedOps {
         }
 
         public void accept(double d) {
-            this.f792b.accept(d);
+            this.f790b.accept(d);
         }
     }
 }

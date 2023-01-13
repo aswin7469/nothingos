@@ -15,6 +15,6 @@ public final /* synthetic */ class PipTaskOrganizer$$ExternalSyntheticLambda3 im
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        this.f$0.mo50214x5530480d(this.f$1, valueAnimator);
+        this.f$0.mo50223x5530480d(this.f$1, valueAnimator);
     }
 }

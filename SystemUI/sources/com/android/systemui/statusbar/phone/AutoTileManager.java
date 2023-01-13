@@ -7,7 +7,7 @@ import android.hardware.display.NightDisplayListener;
 import android.os.Handler;
 import android.os.UserHandle;
 import android.util.Log;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.p012qs.AutoAddTracker;
 import com.android.systemui.p012qs.QSTileHost;
 import com.android.systemui.p012qs.ReduceBrightColorsController;
@@ -70,7 +70,7 @@ public class AutoTileManager implements UserAwareController {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onCastDevicesChanged$0$com-android-systemui-statusbar-phone-AutoTileManager$7 */
-        public /* synthetic */ void mo43668x68cfcc9e() {
+        public /* synthetic */ void mo43676x68cfcc9e() {
             AutoTileManager.this.mCastController.removeCallback(AutoTileManager.this.mCastCallback);
         }
     };
@@ -92,7 +92,7 @@ public class AutoTileManager implements UserAwareController {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onDataSaverChanged$0$com-android-systemui-statusbar-phone-AutoTileManager$2 */
-        public /* synthetic */ void mo43660x4ab10a06() {
+        public /* synthetic */ void mo43668x4ab10a06() {
             AutoTileManager.this.mDataSaverController.removeCallback(AutoTileManager.this.mDataSaverListener);
         }
     };
@@ -109,7 +109,7 @@ public class AutoTileManager implements UserAwareController {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onControlsUpdate$0$com-android-systemui-statusbar-phone-AutoTileManager$4 */
-        public /* synthetic */ void mo43662x9f20a7d2() {
+        public /* synthetic */ void mo43670x9f20a7d2() {
             AutoTileManager.this.mDeviceControlsController.removeCallback();
         }
     };
@@ -129,7 +129,7 @@ public class AutoTileManager implements UserAwareController {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onHotspotChanged$0$com-android-systemui-statusbar-phone-AutoTileManager$3 */
-        public /* synthetic */ void mo43661x67d7d0cb() {
+        public /* synthetic */ void mo43669x67d7d0cb() {
             AutoTileManager.this.mHotspotController.removeCallback(AutoTileManager.this.mHotspotCallback);
         }
     };
@@ -162,7 +162,7 @@ public class AutoTileManager implements UserAwareController {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$addNightTile$0$com-android-systemui-statusbar-phone-AutoTileManager$5 */
-        public /* synthetic */ void mo43664x8457a6cc() {
+        public /* synthetic */ void mo43672x8457a6cc() {
             AutoTileManager.this.mNightDisplayListener.setCallback((NightDisplayListener.Callback) null);
         }
     };
@@ -196,7 +196,7 @@ public class AutoTileManager implements UserAwareController {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$addReduceBrightColorsTile$0$com-android-systemui-statusbar-phone-AutoTileManager$6 */
-        public /* synthetic */ void mo43667xb324b80d() {
+        public /* synthetic */ void mo43675xb324b80d() {
             AutoTileManager.this.mReduceBrightColorsController.removeCallback((ReduceBrightColorsController.Listener) this);
         }
     };
@@ -294,7 +294,7 @@ public class AutoTileManager implements UserAwareController {
             r0.mSafetyController = r2
             r2 = 0
             android.content.res.Resources r1 = r5.getResources()     // Catch:{ NotFoundException | NullPointerException -> 0x009c }
-            r3 = 2131953202(0x7f130632, float:1.9542868E38)
+            r3 = 2131953210(0x7f13063a, float:1.9542885E38)
             java.lang.String r1 = r1.getString(r3)     // Catch:{ NotFoundException | NullPointerException -> 0x009c }
             int r3 = r1.length()     // Catch:{ NotFoundException | NullPointerException -> 0x009c }
             if (r3 != 0) goto L_0x009d
@@ -396,7 +396,7 @@ public class AutoTileManager implements UserAwareController {
 
     private void populateSettingsList() {
         try {
-            for (String str : this.mContext.getResources().getStringArray(C1893R.array.config_quickSettingsAutoAdd)) {
+            for (String str : this.mContext.getResources().getStringArray(C1894R.array.config_quickSettingsAutoAdd)) {
                 String[] split = str.split(":");
                 if (split.length == 2) {
                     this.mAutoAddSettingList.add(new AutoAddSetting(this.mSecureSettings, this.mHandler, split[0], this.mCurrentUser.getIdentifier(), split[1]));
@@ -410,7 +410,7 @@ public class AutoTileManager implements UserAwareController {
     }
 
     /* renamed from: changeUser */
-    public void mo43656xb844e8a5(UserHandle userHandle) {
+    public void mo43664xb844e8a5(UserHandle userHandle) {
         if (!this.mInitialized) {
             throw new IllegalStateException("AutoTileManager not initialized");
         } else if (!Thread.currentThread().equals(this.mHandler.getLooper().getThread())) {
@@ -490,13 +490,13 @@ public class AutoTileManager implements UserAwareController {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$handleValueChanged$0$com-android-systemui-statusbar-phone-AutoTileManager$AutoAddSetting */
-        public /* synthetic */ void mo43670xad5dd92d() {
+        public /* synthetic */ void mo43678xad5dd92d() {
             setListening(false);
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$handleValueChanged$1$com-android-systemui-statusbar-phone-AutoTileManager$AutoAddSetting */
-        public /* synthetic */ void mo43671x9eaf68ae() {
+        public /* synthetic */ void mo43679x9eaf68ae() {
             setListening(false);
         }
     }

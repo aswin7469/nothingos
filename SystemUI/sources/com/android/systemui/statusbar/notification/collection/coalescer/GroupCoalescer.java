@@ -147,7 +147,7 @@ public class GroupCoalescer implements Dumpable {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$resetShortTimeout$0$com-android-systemui-statusbar-notification-collection-coalescer-GroupCoalescer */
-    public /* synthetic */ void mo40164xba716d66(EventBatch eventBatch) {
+    public /* synthetic */ void mo40166xba716d66(EventBatch eventBatch) {
         eventBatch.mCancelShortTimeout = null;
         emitBatch(eventBatch);
     }

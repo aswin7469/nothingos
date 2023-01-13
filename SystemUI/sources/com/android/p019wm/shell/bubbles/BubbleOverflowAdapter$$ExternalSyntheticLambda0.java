@@ -14,6 +14,6 @@ public final /* synthetic */ class BubbleOverflowAdapter$$ExternalSyntheticLambd
     }
 
     public final void onClick(View view) {
-        this.f$0.mo48599xcdab84df(this.f$1, view);
+        this.f$0.mo48608xcdab84df(this.f$1, view);
     }
 }

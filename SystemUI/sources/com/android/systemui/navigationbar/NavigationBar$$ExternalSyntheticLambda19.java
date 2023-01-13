@@ -9,6 +9,6 @@ public final /* synthetic */ class NavigationBar$$ExternalSyntheticLambda19 impl
     }
 
     public final void run() {
-        this.f$0.m2852lambda$new$2$comandroidsystemuinavigationbarNavigationBar();
+        this.f$0.m2857lambda$new$2$comandroidsystemuinavigationbarNavigationBar();
     }
 }

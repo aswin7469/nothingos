@@ -5,7 +5,7 @@ import com.android.systemui.navigationbar.NavigationBarInflaterView;
 public abstract class IntBuffer extends Buffer implements Comparable<IntBuffer> {
 
     /* renamed from: hb */
-    final int[] f570hb;
+    final int[] f568hb;
     boolean isReadOnly;
     final int offset;
 
@@ -35,7 +35,7 @@ public abstract class IntBuffer extends Buffer implements Comparable<IntBuffer> 
 
     IntBuffer(int i, int i2, int i3, int i4, int[] iArr, int i5) {
         super(i, i2, i3, i4, 2);
-        this.f570hb = iArr;
+        this.f568hb = iArr;
         this.offset = i5;
     }
 
@@ -114,11 +114,11 @@ public abstract class IntBuffer extends Buffer implements Comparable<IntBuffer> 
     }
 
     public final boolean hasArray() {
-        return this.f570hb != null && !this.isReadOnly;
+        return this.f568hb != null && !this.isReadOnly;
     }
 
     public final int[] array() {
-        int[] iArr = this.f570hb;
+        int[] iArr = this.f568hb;
         if (iArr == null) {
             throw new UnsupportedOperationException();
         } else if (!this.isReadOnly) {
@@ -129,7 +129,7 @@ public abstract class IntBuffer extends Buffer implements Comparable<IntBuffer> 
     }
 
     public final int arrayOffset() {
-        if (this.f570hb == null) {
+        if (this.f568hb == null) {
             throw new UnsupportedOperationException();
         } else if (!this.isReadOnly) {
             return this.offset;

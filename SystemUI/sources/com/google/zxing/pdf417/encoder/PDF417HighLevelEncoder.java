@@ -103,7 +103,7 @@ final class PDF417HighLevelEncoder {
         if (z) {
             eCIInput = new MinimalECIInput(str, charset, -1);
         } else {
-            eCIInput = new NoECIInput(str, (C41011) null);
+            eCIInput = new NoECIInput(str, (C41111) null);
             if (charset == null) {
                 charset = DEFAULT_ENCODING;
             } else if (!DEFAULT_ENCODING.equals(charset) && (characterSetECI = CharacterSetECI.getCharacterSetECI(charset)) != null) {
@@ -111,7 +111,7 @@ final class PDF417HighLevelEncoder {
             }
         }
         int length = eCIInput.length();
-        int i2 = C41011.$SwitchMap$com$google$zxing$pdf417$encoder$Compaction[compaction.ordinal()];
+        int i2 = C41111.$SwitchMap$com$google$zxing$pdf417$encoder$Compaction[compaction.ordinal()];
         if (i2 == 1) {
             encodeText(eCIInput, 0, length, sb, 0);
         } else if (i2 != 2) {
@@ -185,7 +185,7 @@ final class PDF417HighLevelEncoder {
     }
 
     /* renamed from: com.google.zxing.pdf417.encoder.PDF417HighLevelEncoder$1 */
-    static /* synthetic */ class C41011 {
+    static /* synthetic */ class C41111 {
         static final /* synthetic */ int[] $SwitchMap$com$google$zxing$pdf417$encoder$Compaction;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(6:0|1|2|3|4|(3:5|6|8)) */
@@ -217,7 +217,7 @@ final class PDF417HighLevelEncoder {
             L_0x0028:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: com.google.zxing.pdf417.encoder.PDF417HighLevelEncoder.C41011.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: com.google.zxing.pdf417.encoder.PDF417HighLevelEncoder.C41111.<clinit>():void");
         }
     }
 
@@ -628,7 +628,7 @@ final class PDF417HighLevelEncoder {
             return false;
         }
 
-        /* synthetic */ NoECIInput(String str, C41011 r2) {
+        /* synthetic */ NoECIInput(String str, C41111 r2) {
             this(str);
         }
 

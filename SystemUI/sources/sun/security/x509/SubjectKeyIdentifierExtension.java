@@ -12,24 +12,24 @@ public class SubjectKeyIdentifierExtension extends Extension implements CertAttr
     public static final String NAME = "SubjectKeyIdentifier";
 
     /* renamed from: id */
-    private KeyIdentifier f934id = null;
+    private KeyIdentifier f932id = null;
 
     public String getName() {
         return NAME;
     }
 
     private void encodeThis() throws IOException {
-        if (this.f934id == null) {
+        if (this.f932id == null) {
             this.extensionValue = null;
             return;
         }
         DerOutputStream derOutputStream = new DerOutputStream();
-        this.f934id.encode(derOutputStream);
+        this.f932id.encode(derOutputStream);
         this.extensionValue = derOutputStream.toByteArray();
     }
 
     public SubjectKeyIdentifierExtension(byte[] bArr) throws IOException {
-        this.f934id = new KeyIdentifier(bArr);
+        this.f932id = new KeyIdentifier(bArr);
         this.extensionId = PKIXExtensions.SubjectKey_Id;
         this.critical = false;
         encodeThis();
@@ -39,11 +39,11 @@ public class SubjectKeyIdentifierExtension extends Extension implements CertAttr
         this.extensionId = PKIXExtensions.SubjectKey_Id;
         this.critical = bool.booleanValue();
         this.extensionValue = (byte[]) obj;
-        this.f934id = new KeyIdentifier(new DerValue(this.extensionValue));
+        this.f932id = new KeyIdentifier(new DerValue(this.extensionValue));
     }
 
     public String toString() {
-        return super.toString() + "SubjectKeyIdentifier [\n" + String.valueOf((Object) this.f934id) + "]\n";
+        return super.toString() + "SubjectKeyIdentifier [\n" + String.valueOf((Object) this.f932id) + "]\n";
     }
 
     public void encode(OutputStream outputStream) throws IOException {
@@ -61,7 +61,7 @@ public class SubjectKeyIdentifierExtension extends Extension implements CertAttr
         if (!str.equalsIgnoreCase("key_id")) {
             throw new IOException("Attribute name not recognized by CertAttrSet:SubjectKeyIdentifierExtension.");
         } else if (obj instanceof KeyIdentifier) {
-            this.f934id = (KeyIdentifier) obj;
+            this.f932id = (KeyIdentifier) obj;
             encodeThis();
         } else {
             throw new IOException("Attribute value should be of type KeyIdentifier.");
@@ -70,14 +70,14 @@ public class SubjectKeyIdentifierExtension extends Extension implements CertAttr
 
     public KeyIdentifier get(String str) throws IOException {
         if (str.equalsIgnoreCase("key_id")) {
-            return this.f934id;
+            return this.f932id;
         }
         throw new IOException("Attribute name not recognized by CertAttrSet:SubjectKeyIdentifierExtension.");
     }
 
     public void delete(String str) throws IOException {
         if (str.equalsIgnoreCase("key_id")) {
-            this.f934id = null;
+            this.f932id = null;
             encodeThis();
             return;
         }

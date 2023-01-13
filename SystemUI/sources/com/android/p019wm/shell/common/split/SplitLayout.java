@@ -20,7 +20,7 @@ import android.window.WindowContainerToken;
 import android.window.WindowContainerTransaction;
 import com.android.internal.policy.DividerSnapAlgorithm;
 import com.android.internal.policy.DockedDividerUtils;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.ShellTaskOrganizer;
 import com.android.p019wm.shell.animation.Interpolators;
 import com.android.p019wm.shell.common.DisplayImeController;
@@ -120,7 +120,7 @@ public final class SplitLayout implements DisplayInsetsController.OnInsetsChange
         this.mImePositionProcessor = new ImePositionProcessor(this.mContext.getDisplayId());
         this.mSurfaceEffectPolicy = new ResizingEffectPolicy(i);
         Resources resources = context.getResources();
-        int dimensionPixelSize = resources.getDimensionPixelSize(C3343R.dimen.split_divider_bar_width);
+        int dimensionPixelSize = resources.getDimensionPixelSize(C3353R.dimen.split_divider_bar_width);
         this.mDividerSize = dimensionPixelSize;
         int dividerInsets = getDividerInsets(resources, context.getDisplay());
         this.mDividerInsets = dividerInsets;
@@ -128,7 +128,7 @@ public final class SplitLayout implements DisplayInsetsController.OnInsetsChange
         rect.set(configuration.windowConfiguration.getBounds());
         this.mDividerSnapAlgorithm = getSnapAlgorithm(this.mContext, rect, (Rect) null);
         resetDividerPosition();
-        this.mDimNonImeSide = resources.getBoolean(C3343R.bool.config_dimNonImeAttachedSide);
+        this.mDimNonImeSide = resources.getBoolean(C3353R.bool.config_dimNonImeAttachedSide);
     }
 
     private int getDividerInsets(Resources resources, Display display) {
@@ -371,19 +371,19 @@ public final class SplitLayout implements DisplayInsetsController.OnInsetsChange
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$snapToTarget$0$com-android-wm-shell-common-split-SplitLayout */
-    public /* synthetic */ void mo49322xbdb1f654() {
+    public /* synthetic */ void mo49331xbdb1f654() {
         this.mSplitLayoutHandler.onSnappedToDismiss(false);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$snapToTarget$1$com-android-wm-shell-common-split-SplitLayout */
-    public /* synthetic */ void mo49323x332c1c95() {
+    public /* synthetic */ void mo49332x332c1c95() {
         this.mSplitLayoutHandler.onSnappedToDismiss(true);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$snapToTarget$2$com-android-wm-shell-common-split-SplitLayout */
-    public /* synthetic */ void mo49324xa8a642d6(DividerSnapAlgorithm.SnapTarget snapTarget) {
+    public /* synthetic */ void mo49333xa8a642d6(DividerSnapAlgorithm.SnapTarget snapTarget) {
         setDividePosition(snapTarget.position, true);
     }
 
@@ -437,7 +437,7 @@ public final class SplitLayout implements DisplayInsetsController.OnInsetsChange
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$flingDividePosition$3$com-android-wm-shell-common-split-SplitLayout */
-    public /* synthetic */ void mo49321xe5a2de65(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo49330xe5a2de65(ValueAnimator valueAnimator) {
         updateDivideBounds(((Integer) valueAnimator.getAnimatedValue()).intValue());
     }
 

@@ -9,7 +9,7 @@ import android.widget.Button;
 import com.android.internal.util.EmergencyAffordanceManager;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.settingslib.Utils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 
 public class EmergencyButton extends Button {
     private int mDownX;
@@ -40,7 +40,7 @@ public class EmergencyButton extends Button {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onFinishInflate$0$com-android-keyguard-EmergencyButton  reason: not valid java name */
-    public /* synthetic */ boolean m2281lambda$onFinishInflate$0$comandroidkeyguardEmergencyButton(View view) {
+    public /* synthetic */ boolean m2287lambda$onFinishInflate$0$comandroidkeyguardEmergencyButton(View view) {
         if (this.mLongPressWasDragged || !this.mEmergencyAffordanceManager.needsEmergencyAffordance()) {
             return false;
         }
@@ -68,7 +68,7 @@ public class EmergencyButton extends Button {
 
     public void reloadColors() {
         setTextColor(Utils.getColorAttrDefaultColor(getContext(), 17957103));
-        setBackground(getContext().getDrawable(C1893R.C1895drawable.kg_emergency_button_background));
+        setBackground(getContext().getDrawable(C1894R.C1896drawable.kg_emergency_button_background));
     }
 
     public boolean performLongClick() {

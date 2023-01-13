@@ -45,7 +45,7 @@ public class GlifListLayout extends GlifLayout {
             registerMixin(ListMixin.class, listMixin2);
             RequireScrollMixin requireScrollMixin = (RequireScrollMixin) getMixin(RequireScrollMixin.class);
             requireScrollMixin.setScrollHandlingDelegate(new ListViewScrollHandlingDelegate(requireScrollMixin, getListView()));
-            View findManagedViewById = findManagedViewById(C3953R.C3956id.sud_landscape_content_area);
+            View findManagedViewById = findManagedViewById(C3963R.C3966id.sud_landscape_content_area);
             if (findManagedViewById != null) {
                 tryApplyPartnerCustomizationContentPaddingTopStyle(findManagedViewById);
             }
@@ -62,7 +62,7 @@ public class GlifListLayout extends GlifLayout {
     /* access modifiers changed from: protected */
     public View onInflateTemplate(LayoutInflater layoutInflater, int i) {
         if (i == 0) {
-            i = C3953R.layout.sud_glif_list_template;
+            i = C3963R.layout.sud_glif_list_template;
         }
         return super.onInflateTemplate(layoutInflater, i);
     }

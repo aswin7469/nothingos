@@ -15,6 +15,6 @@ public final /* synthetic */ class CastTile$$ExternalSyntheticLambda2 implements
     }
 
     public final void onClick(View view) {
-        this.f$0.m2969lambda$showDialog$1$comandroidsystemuiqstilesCastTile(this.f$1, view);
+        this.f$0.m2974lambda$showDialog$1$comandroidsystemuiqstilesCastTile(this.f$1, view);
     }
 }

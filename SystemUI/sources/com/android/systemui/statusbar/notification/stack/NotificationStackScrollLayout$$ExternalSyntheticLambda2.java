@@ -16,6 +16,6 @@ public final /* synthetic */ class NotificationStackScrollLayout$$ExternalSynthe
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo42206x7fec421(this.f$1, this.f$2, (Boolean) obj);
+        this.f$0.mo42214x7fec421(this.f$1, this.f$2, (Boolean) obj);
     }
 }

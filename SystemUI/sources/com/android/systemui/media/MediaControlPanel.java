@@ -15,7 +15,6 @@ import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Animatable;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.graphics.drawable.TransitionDrawable;
@@ -36,7 +35,7 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import com.android.internal.logging.InstanceId;
 import com.android.settingslib.widget.AdaptiveIcon;
 import com.android.systemui.ActivityIntentHelper;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.animation.ActivityLaunchAnimator;
 import com.android.systemui.animation.GhostedViewLaunchAnimatorController;
 import com.android.systemui.animation.Interpolators;
@@ -48,7 +47,6 @@ import com.android.systemui.media.MediaViewController;
 import com.android.systemui.media.SeekBarViewModel;
 import com.android.systemui.media.dialog.MediaOutputDialogFactory;
 import com.android.systemui.monet.ColorScheme;
-import com.android.systemui.monet.Style;
 import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.plugins.FalsingManager;
 import com.android.systemui.statusbar.NotificationLockscreenUserManager;
@@ -124,12 +122,12 @@ public class MediaControlPanel {
     protected int mUid = -1;
 
     static {
-        Integer valueOf = Integer.valueOf((int) C1893R.C1897id.actionPlayPause);
-        Integer valueOf2 = Integer.valueOf((int) C1893R.C1897id.actionPrev);
-        Integer valueOf3 = Integer.valueOf((int) C1893R.C1897id.actionNext);
-        SEMANTIC_ACTIONS_COMPACT = List.m1725of(valueOf, valueOf2, valueOf3);
-        SEMANTIC_ACTIONS_HIDE_WHEN_SCRUBBING = List.m1724of(valueOf2, valueOf3);
-        SEMANTIC_ACTIONS_ALL = List.m1727of(valueOf, valueOf2, valueOf3, Integer.valueOf((int) C1893R.C1897id.action0), Integer.valueOf((int) C1893R.C1897id.action1));
+        Integer valueOf = Integer.valueOf((int) C1894R.C1898id.actionPlayPause);
+        Integer valueOf2 = Integer.valueOf((int) C1894R.C1898id.actionPrev);
+        Integer valueOf3 = Integer.valueOf((int) C1894R.C1898id.actionNext);
+        SEMANTIC_ACTIONS_COMPACT = List.m1731of(valueOf, valueOf2, valueOf3);
+        SEMANTIC_ACTIONS_HIDE_WHEN_SCRUBBING = List.m1730of(valueOf2, valueOf3);
+        SEMANTIC_ACTIONS_ALL = List.m1733of(valueOf, valueOf2, valueOf3, Integer.valueOf((int) C1894R.C1898id.action0), Integer.valueOf((int) C1894R.C1898id.action1));
     }
 
     @Inject
@@ -156,7 +154,7 @@ public class MediaControlPanel {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-media-MediaControlPanel  reason: not valid java name */
-    public /* synthetic */ Unit m2780lambda$new$0$comandroidsystemuimediaMediaControlPanel() {
+    public /* synthetic */ Unit m2785lambda$new$0$comandroidsystemuimediaMediaControlPanel() {
         InstanceId instanceId;
         String str = this.mPackageName;
         if (!(str == null || (instanceId = this.mInstanceId) == null)) {
@@ -203,7 +201,7 @@ public class MediaControlPanel {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setIsScrubbing$1$com-android-systemui-media-MediaControlPanel */
-    public /* synthetic */ void mo33667xbe2f0b99() {
+    public /* synthetic */ void mo33671xbe2f0b99() {
         updateDisplayForScrubbingChange(this.mMediaData.getSemanticActions());
     }
 
@@ -232,15 +230,15 @@ public class MediaControlPanel {
         this.mMediaViewHolder.getAlbumView().setLayerType(2, (Paint) null);
         TextView titleText = this.mMediaViewHolder.getTitleText();
         TextView artistText = this.mMediaViewHolder.getArtistText();
-        AnimatorSet loadAnimator = loadAnimator(C1893R.anim.media_metadata_enter, Interpolators.EMPHASIZED_DECELERATE, titleText, artistText);
-        AnimatorSet loadAnimator2 = loadAnimator(C1893R.anim.media_metadata_exit, Interpolators.EMPHASIZED_ACCELERATE, titleText, artistText);
+        AnimatorSet loadAnimator = loadAnimator(C1894R.anim.media_metadata_enter, Interpolators.EMPHASIZED_DECELERATE, titleText, artistText);
+        AnimatorSet loadAnimator2 = loadAnimator(C1894R.anim.media_metadata_exit, Interpolators.EMPHASIZED_ACCELERATE, titleText, artistText);
         this.mColorSchemeTransition = new ColorSchemeTransition(this.mContext, this.mMediaViewHolder);
         this.mMetadataAnimationHandler = new MetadataAnimationHandler(loadAnimator2, loadAnimator);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$attachPlayer$2$com-android-systemui-media-MediaControlPanel */
-    public /* synthetic */ boolean mo33647xa6105d35(View view) {
+    public /* synthetic */ boolean mo33651xa6105d35(View view) {
         if (!this.mMediaViewController.isGutsVisible()) {
             openGuts();
             return true;
@@ -271,7 +269,7 @@ public class MediaControlPanel {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$attachRecommendation$3$com-android-systemui-media-MediaControlPanel */
-    public /* synthetic */ boolean mo33648xbc201cfc(View view) {
+    public /* synthetic */ boolean mo33652xbc201cfc(View view) {
         if (!this.mMediaViewController.isGutsVisible()) {
             openGuts();
             return true;
@@ -324,7 +322,7 @@ public class MediaControlPanel {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$bindPlayer$4$com-android-systemui-media-MediaControlPanel  reason: not valid java name */
-    public /* synthetic */ void m2778lambda$bindPlayer$4$comandroidsystemuimediaMediaControlPanel(PendingIntent pendingIntent, View view) {
+    public /* synthetic */ void m2783lambda$bindPlayer$4$comandroidsystemuimediaMediaControlPanel(PendingIntent pendingIntent, View view) {
         if (!this.mFalsingManager.isFalseTap(1) && !this.mMediaViewController.isGutsVisible()) {
             this.mLogger.logTapContentView(this.mUid, this.mPackageName, this.mInstanceId);
             logSmartspaceCardReported(SMARTSPACE_CARD_CLICK_EVENT);
@@ -338,7 +336,7 @@ public class MediaControlPanel {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$bindPlayer$5$com-android-systemui-media-MediaControlPanel  reason: not valid java name */
-    public /* synthetic */ void m2779lambda$bindPlayer$5$comandroidsystemuimediaMediaControlPanel(MediaController mediaController) {
+    public /* synthetic */ void m2784lambda$bindPlayer$5$comandroidsystemuimediaMediaControlPanel(MediaController mediaController) {
         this.mSeekBarViewModel.updateController(mediaController);
     }
 
@@ -356,21 +354,21 @@ public class MediaControlPanel {
             if (device != null) {
                 CharSequence name = device.getName();
                 Context context = this.mContext;
-                if (TextUtils.equals(name, MediaDataUtils.getAppLabel(context, this.mPackageName, context.getString(C1893R.string.bt_le_audio_broadcast_dialog_unknown_name)))) {
+                if (TextUtils.equals(name, MediaDataUtils.getAppLabel(context, this.mPackageName, context.getString(C1894R.string.bt_le_audio_broadcast_dialog_unknown_name)))) {
                     z2 = true;
                 }
             }
             this.mIsCurrentBroadcastedApp = z2;
             z2 = !z2;
-            charSequence = this.mContext.getString(C1893R.string.bt_le_audio_broadcast_dialog_unknown_name);
-            i = C1893R.C1895drawable.settings_input_antenna;
+            charSequence = this.mContext.getString(C1894R.string.bt_le_audio_broadcast_dialog_unknown_name);
+            i = C1894R.C1896drawable.settings_input_antenna;
         } else {
             if ((device != null && !device.getEnabled()) || mediaData.getResumption()) {
                 z2 = true;
             }
             z3 = !z2;
-            charSequence = this.mContext.getString(C1893R.string.media_seamless_other_device);
-            i = C1893R.C1895drawable.ic_media_home_devices;
+            charSequence = this.mContext.getString(C1894R.string.media_seamless_other_device);
+            i = C1894R.C1896drawable.ic_media_home_devices;
         }
         this.mMediaViewHolder.getSeamlessButton().setAlpha(z2 ? 0.38f : 1.0f);
         seamless.setEnabled(z3);
@@ -396,7 +394,7 @@ public class MediaControlPanel {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$bindOutputSwitcherAndBroadcastButton$6$com-android-systemui-media-MediaControlPanel */
-    public /* synthetic */ void mo33656x9729501c(boolean z, MediaDeviceData mediaDeviceData, View view) {
+    public /* synthetic */ void mo33660x9729501c(boolean z, MediaDeviceData mediaDeviceData, View view) {
         if (!this.mFalsingManager.isFalseTap(1)) {
             if (!z) {
                 this.mLogger.logOpenOutputSwitcher(this.mUid, this.mPackageName, this.mInstanceId);
@@ -429,7 +427,7 @@ public class MediaControlPanel {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$bindGutsMenuForPlayer$7$com-android-systemui-media-MediaControlPanel */
-    public /* synthetic */ void mo33655x4b2cc6cf(MediaData mediaData) {
+    public /* synthetic */ void mo33659x4b2cc6cf(MediaData mediaData) {
         if (this.mKey != null) {
             closeGuts();
             if (!this.mMediaDataManagerLazy.get().dismissMediaData(this.mKey, MediaViewController.GUTS_ANIMATION_DURATION + 100)) {
@@ -448,7 +446,7 @@ public class MediaControlPanel {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$bindSongMetadata$8$com-android-systemui-media-MediaControlPanel */
-    public /* synthetic */ Unit mo33662x74421d54(TextView textView, MediaData mediaData, TextView textView2) {
+    public /* synthetic */ Unit mo33666x74421d54(TextView textView, MediaData mediaData, TextView textView2) {
         textView.setText(mediaData.getSong());
         textView2.setText(mediaData.getArtist());
         this.mMediaViewController.refreshState();
@@ -457,7 +455,7 @@ public class MediaControlPanel {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$bindSongMetadata$9$com-android-systemui-media-MediaControlPanel */
-    public /* synthetic */ Unit mo33663x2db9aaf3() {
+    public /* synthetic */ Unit mo33667x2db9aaf3() {
         this.mMediaViewController.refreshState();
         return Unit.INSTANCE;
     }
@@ -468,7 +466,7 @@ public class MediaControlPanel {
             if (this.mMediaViewController.isGutsVisible()) {
                 charSequence = this.mMediaViewHolder.getGutsViewHolder().getGutsText().getText();
             } else if (mediaData != null) {
-                charSequence = this.mContext.getString(C1893R.string.controls_media_playing_item_description, new Object[]{mediaData.getSong(), mediaData.getArtist(), mediaData.getApp()});
+                charSequence = this.mContext.getString(C1894R.string.controls_media_playing_item_description, new Object[]{mediaData.getSong(), mediaData.getArtist(), mediaData.getApp()});
             } else {
                 charSequence = null;
             }
@@ -483,7 +481,7 @@ public class MediaControlPanel {
                 charSequence = this.mRecommendationViewHolder.getGutsViewHolder().getGutsText().getText();
             } else if (smartspaceMediaData != null) {
                 Context context = this.mContext;
-                charSequence = context.getString(C1893R.string.controls_media_smartspace_rec_description, new Object[]{smartspaceMediaData.getAppName(context)});
+                charSequence = context.getString(C1894R.string.controls_media_smartspace_rec_description, new Object[]{smartspaceMediaData.getAppName(context)});
             } else {
                 charSequence = null;
             }
@@ -504,46 +502,130 @@ public class MediaControlPanel {
     }
 
     /* access modifiers changed from: package-private */
+    /* JADX WARNING: Removed duplicated region for block: B:13:0x0037  */
+    /* JADX WARNING: Removed duplicated region for block: B:14:0x007f  */
     /* renamed from: lambda$bindArtworkAndColors$11$com-android-systemui-media-MediaControlPanel */
-    public /* synthetic */ void mo33650x8c064b8f(MediaData mediaData, int i, int i2, int i3, String str, int i4, boolean z) {
-        ColorScheme colorScheme;
-        ColorDrawable colorDrawable;
-        boolean z2;
-        Icon artwork = mediaData.getArtwork();
-        if (artwork != null) {
-            ColorScheme colorScheme2 = new ColorScheme(WallpaperColors.fromBitmap(artwork.getBitmap()), true, Style.CONTENT);
-            colorDrawable = getScaledBackground(artwork, i, i2);
-            z2 = true;
-            colorScheme = colorScheme2;
-        } else {
-            int i5 = i;
-            int i6 = i2;
-            ColorDrawable colorDrawable2 = new ColorDrawable(0);
-            try {
-                colorDrawable = colorDrawable2;
-                z2 = false;
-                colorScheme = new ColorScheme(WallpaperColors.fromDrawable(this.mContext.getPackageManager().getApplicationIcon(mediaData.getPackageName())), true, Style.CONTENT);
-            } catch (PackageManager.NameNotFoundException e) {
-                Log.w(TAG, "Cannot find icon for package " + mediaData.getPackageName(), e);
-                colorScheme = null;
-                colorDrawable = colorDrawable2;
-                z2 = false;
-            }
-        }
-        this.mMainExecutor.execute(new MediaControlPanel$$ExternalSyntheticLambda8(this, i3, str, i4, z, z2, colorDrawable, i, i2, colorScheme, mediaData));
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public /* synthetic */ void mo33654x8c064b8f(com.android.systemui.media.MediaData r15, int r16, int r17, int r18, java.lang.String r19, int r20, boolean r21) {
+        /*
+            r14 = this;
+            r2 = r14
+            android.graphics.drawable.Icon r0 = r15.getArtwork()
+            r1 = 1
+            r3 = 0
+            if (r0 == 0) goto L_0x0033
+            int r4 = r0.getType()
+            if (r4 == r1) goto L_0x002a
+            int r4 = r0.getType()
+            r5 = 5
+            if (r4 != r5) goto L_0x0017
+            goto L_0x002a
+        L_0x0017:
+            android.content.Context r4 = r2.mContext
+            android.graphics.drawable.Drawable r4 = r0.loadDrawable(r4)
+            if (r4 == 0) goto L_0x0033
+            android.content.Context r4 = r2.mContext
+            android.graphics.drawable.Drawable r4 = r0.loadDrawable(r4)
+            android.app.WallpaperColors r4 = android.app.WallpaperColors.fromDrawable(r4)
+            goto L_0x0034
+        L_0x002a:
+            android.graphics.Bitmap r4 = r0.getBitmap()
+            android.app.WallpaperColors r4 = android.app.WallpaperColors.fromBitmap(r4)
+            goto L_0x0034
+        L_0x0033:
+            r4 = r3
+        L_0x0034:
+            r5 = 0
+            if (r4 == 0) goto L_0x007f
+            com.android.systemui.monet.ColorScheme r3 = new com.android.systemui.monet.ColorScheme
+            com.android.systemui.monet.Style r6 = com.android.systemui.monet.Style.CONTENT
+            r3.<init>((android.app.WallpaperColors) r4, (boolean) r1, (com.android.systemui.monet.Style) r6)
+            r10 = r16
+            r11 = r17
+            android.graphics.drawable.Drawable r0 = r14.getScaledBackground(r0, r10, r11)
+            android.content.Context r4 = r2.mContext
+            r6 = 2131232764(0x7f0807fc, float:1.8081646E38)
+            android.graphics.drawable.Drawable r4 = r4.getDrawable(r6)
+            android.graphics.drawable.GradientDrawable r4 = (android.graphics.drawable.GradientDrawable) r4
+            r6 = 2
+            int[] r7 = new int[r6]
+            int r8 = com.android.systemui.media.MediaColorSchemesKt.backgroundStartFromScheme(r3)
+            r9 = 1048576000(0x3e800000, float:0.25)
+            int r8 = com.android.systemui.util.ColorUtilKt.getColorWithAlpha(r8, r9)
+            r7[r5] = r8
+            int r8 = com.android.systemui.media.MediaColorSchemesKt.backgroundEndFromScheme(r3)
+            r9 = 1063675494(0x3f666666, float:0.9)
+            int r8 = com.android.systemui.util.ColorUtilKt.getColorWithAlpha(r8, r9)
+            r7[r1] = r8
+            r4.setColors(r7)
+            android.graphics.drawable.LayerDrawable r7 = new android.graphics.drawable.LayerDrawable
+            android.graphics.drawable.Drawable[] r6 = new android.graphics.drawable.Drawable[r6]
+            r6[r5] = r0
+            r6[r1] = r4
+            r7.<init>(r6)
+            r8 = r1
+            r6 = r3
+            r9 = r7
+            goto L_0x00be
+        L_0x007f:
+            r10 = r16
+            r11 = r17
+            android.graphics.drawable.ColorDrawable r4 = new android.graphics.drawable.ColorDrawable
+            r4.<init>(r5)
+            android.content.Context r0 = r2.mContext     // Catch:{ NameNotFoundException -> 0x00a2 }
+            android.content.pm.PackageManager r0 = r0.getPackageManager()     // Catch:{ NameNotFoundException -> 0x00a2 }
+            java.lang.String r6 = r15.getPackageName()     // Catch:{ NameNotFoundException -> 0x00a2 }
+            android.graphics.drawable.Drawable r0 = r0.getApplicationIcon(r6)     // Catch:{ NameNotFoundException -> 0x00a2 }
+            com.android.systemui.monet.ColorScheme r6 = new com.android.systemui.monet.ColorScheme     // Catch:{ NameNotFoundException -> 0x00a2 }
+            android.app.WallpaperColors r0 = android.app.WallpaperColors.fromDrawable(r0)     // Catch:{ NameNotFoundException -> 0x00a2 }
+            com.android.systemui.monet.Style r7 = com.android.systemui.monet.Style.CONTENT     // Catch:{ NameNotFoundException -> 0x00a2 }
+            r6.<init>((android.app.WallpaperColors) r0, (boolean) r1, (com.android.systemui.monet.Style) r7)     // Catch:{ NameNotFoundException -> 0x00a2 }
+            goto L_0x00bc
+        L_0x00a2:
+            r0 = move-exception
+            java.lang.StringBuilder r1 = new java.lang.StringBuilder
+            java.lang.String r6 = "Cannot find icon for package "
+            r1.<init>((java.lang.String) r6)
+            java.lang.String r6 = r15.getPackageName()
+            java.lang.StringBuilder r1 = r1.append((java.lang.String) r6)
+            java.lang.String r1 = r1.toString()
+            java.lang.String r6 = "MediaControlPanel"
+            android.util.Log.w(r6, r1, r0)
+            r6 = r3
+        L_0x00bc:
+            r9 = r4
+            r8 = r5
+        L_0x00be:
+            java.util.concurrent.Executor r0 = r2.mMainExecutor
+            com.android.systemui.media.MediaControlPanel$$ExternalSyntheticLambda8 r13 = new com.android.systemui.media.MediaControlPanel$$ExternalSyntheticLambda8
+            r1 = r13
+            r2 = r14
+            r3 = r18
+            r4 = r19
+            r5 = r20
+            r7 = r21
+            r10 = r16
+            r11 = r17
+            r12 = r15
+            r1.<init>(r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12)
+            r0.execute(r13)
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.media.MediaControlPanel.mo33654x8c064b8f(com.android.systemui.media.MediaData, int, int, int, java.lang.String, int, boolean):void");
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$bindArtworkAndColors$10$com-android-systemui-media-MediaControlPanel */
-    public /* synthetic */ void mo33649xd28ebdf0(int i, String str, int i2, boolean z, boolean z2, Drawable drawable, int i3, int i4, ColorScheme colorScheme, MediaData mediaData) {
+    public /* synthetic */ void mo33653xd28ebdf0(int i, String str, int i2, ColorScheme colorScheme, boolean z, boolean z2, Drawable drawable, int i3, int i4, MediaData mediaData) {
         if (i < this.mArtworkBoundId) {
             Trace.endAsyncSection(str, i2);
             return;
         }
         this.mArtworkBoundId = i;
+        boolean updateColorScheme = this.mColorSchemeTransition.updateColorScheme(colorScheme);
         ImageView albumView = this.mMediaViewHolder.getAlbumView();
         albumView.setPadding(0, 0, 0, 0);
-        if (z || (!this.mIsArtworkBound && z2)) {
+        if (z || updateColorScheme || (!this.mIsArtworkBound && z2)) {
             if (this.mPrevArtwork == null) {
                 albumView.setImageDrawable(drawable);
             } else {
@@ -559,7 +641,6 @@ public class MediaControlPanel {
             this.mPrevArtwork = drawable;
             this.mIsArtworkBound = z2;
         }
-        this.mColorSchemeTransition.updateColorScheme(colorScheme, this.mIsArtworkBound);
         ImageView appIcon = this.mMediaViewHolder.getAppIcon();
         appIcon.clearColorFilter();
         if (mediaData.getAppIcon() == null || mediaData.getResumption()) {
@@ -568,7 +649,7 @@ public class MediaControlPanel {
                 appIcon.setImageDrawable(this.mContext.getPackageManager().getApplicationIcon(mediaData.getPackageName()));
             } catch (PackageManager.NameNotFoundException e) {
                 Log.w(TAG, "Cannot find icon for package " + mediaData.getPackageName(), e);
-                appIcon.setImageResource(C1893R.C1895drawable.ic_music_note);
+                appIcon.setImageResource(C1894R.C1896drawable.ic_music_note);
             }
         } else {
             appIcon.setImageIcon(mediaData.getAppIcon());
@@ -633,8 +714,8 @@ public class MediaControlPanel {
 
     private void updateSeekBarVisibility() {
         ConstraintSet expandedLayout = this.mMediaViewController.getExpandedLayout();
-        expandedLayout.setVisibility(C1893R.C1897id.media_progress_bar, getSeekBarVisibility());
-        expandedLayout.setAlpha(C1893R.C1897id.media_progress_bar, this.mIsSeekBarEnabled ? 1.0f : 0.0f);
+        expandedLayout.setVisibility(C1894R.C1898id.media_progress_bar, getSeekBarVisibility());
+        expandedLayout.setAlpha(C1894R.C1898id.media_progress_bar, this.mIsSeekBarEnabled ? 1.0f : 0.0f);
     }
 
     private int getSeekBarVisibility() {
@@ -679,7 +760,7 @@ public class MediaControlPanel {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setSemanticButton$12$com-android-systemui-media-MediaControlPanel */
-    public /* synthetic */ Unit mo33668xd7690b7e(ImageButton imageButton, MediaAction mediaAction, AnimationBindHandler animationBindHandler, MediaButton mediaButton) {
+    public /* synthetic */ Unit mo33672xd7690b7e(ImageButton imageButton, MediaAction mediaAction, AnimationBindHandler animationBindHandler, MediaButton mediaButton) {
         bindButtonWithAnimations(imageButton, mediaAction, animationBindHandler);
         setSemanticButtonVisibleAndAlpha(imageButton.getId(), mediaAction, mediaButton);
         return Unit.INSTANCE;
@@ -718,7 +799,7 @@ public class MediaControlPanel {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$bindButtonCommon$13$com-android-systemui-media-MediaControlPanel */
-    public /* synthetic */ void mo33651xc7b836f7(ImageButton imageButton, Runnable runnable, Drawable drawable, Drawable drawable2, View view) {
+    public /* synthetic */ void mo33655xc7b836f7(ImageButton imageButton, Runnable runnable, Drawable drawable, Drawable drawable2, View view) {
         if (!this.mFalsingManager.isFalseTap(1)) {
             this.mLogger.logTapAction(imageButton.getId(), this.mUid, this.mPackageName, this.mInstanceId);
             logSmartspaceCardReported(SMARTSPACE_CARD_CLICK_EVENT);
@@ -745,7 +826,7 @@ public class MediaControlPanel {
         boolean contains = SEMANTIC_ACTIONS_COMPACT.contains(Integer.valueOf(i));
         boolean z = true;
         boolean z2 = mediaAction != null && !(scrubbingTimeViewsEnabled(mediaButton) && SEMANTIC_ACTIONS_HIDE_WHEN_SCRUBBING.contains(Integer.valueOf(i)) && this.mIsScrubbing);
-        setVisibleAndAlpha(expandedLayout, i, z2, ((i != C1893R.C1897id.actionPrev || !mediaButton.getReservePrev()) && (i != C1893R.C1897id.actionNext || !mediaButton.getReserveNext())) ? 8 : 4);
+        setVisibleAndAlpha(expandedLayout, i, z2, ((i != C1894R.C1898id.actionPrev || !mediaButton.getReservePrev()) && (i != C1894R.C1898id.actionNext || !mediaButton.getReserveNext())) ? 8 : 4);
         if (!z2 || !contains) {
             z = false;
         }
@@ -762,7 +843,7 @@ public class MediaControlPanel {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateDisplayForScrubbingChange$14$com-android-systemui-media-MediaControlPanel */
-    public /* synthetic */ void mo33670xfbd618f1(MediaButton mediaButton, Integer num) {
+    public /* synthetic */ void mo33674xfbd618f1(MediaButton mediaButton, Integer num) {
         setSemanticButtonVisibleAndAlpha(num.intValue(), mediaButton.getActionById(num.intValue()), mediaButton);
     }
 
@@ -774,6 +855,14 @@ public class MediaControlPanel {
         boolean z = scrubbingTimeViewsEnabled(mediaData.getSemanticActions()) && this.mIsScrubbing;
         setVisibleAndAlpha(expandedLayout, id, z);
         setVisibleAndAlpha(expandedLayout, id2, z);
+        ConstraintSet.Layout layout = expandedLayout.getConstraint(C1894R.C1898id.media_progress_bar).layout;
+        if (z) {
+            layout.leftToRight = C1894R.C1898id.media_scrubbing_elapsed_time;
+            layout.rightToLeft = C1894R.C1898id.media_scrubbing_total_time;
+        } else {
+            layout.leftToRight = C1894R.C1898id.actionPrev;
+            layout.rightToLeft = C1894R.C1898id.actionNext;
+        }
         setVisibleAndAlpha(collapsedLayout, id, false);
         setVisibleAndAlpha(collapsedLayout, id2, false);
     }
@@ -791,7 +880,7 @@ public class MediaControlPanel {
             return new GhostedViewLaunchAnimatorController(transitionLayout, 31) {
                 /* access modifiers changed from: protected */
                 public float getCurrentTopCornerRadius() {
-                    return MediaControlPanel.this.mContext.getResources().getDimension(C1893R.dimen.notification_corner_radius);
+                    return MediaControlPanel.this.mContext.getResources().getDimension(C1894R.dimen.notification_corner_radius);
                 }
 
                 /* access modifiers changed from: protected */
@@ -845,9 +934,9 @@ public class MediaControlPanel {
                     String str = "";
                     String string = smartspaceAction.getExtras().getString(KEY_SMARTSPACE_ARTIST_NAME, str);
                     if (string.isEmpty()) {
-                        imageView.setContentDescription(this.mContext.getString(C1893R.string.controls_media_smartspace_rec_item_no_artist_description, new Object[]{smartspaceAction.getTitle(), appName}));
+                        imageView.setContentDescription(this.mContext.getString(C1894R.string.controls_media_smartspace_rec_item_no_artist_description, new Object[]{smartspaceAction.getTitle(), appName}));
                     } else {
-                        imageView.setContentDescription(this.mContext.getString(C1893R.string.controls_media_smartspace_rec_item_description, new Object[]{smartspaceAction.getTitle(), string, appName}));
+                        imageView.setContentDescription(this.mContext.getString(C1894R.string.controls_media_smartspace_rec_item_description, new Object[]{smartspaceAction.getTitle(), string, appName}));
                     }
                     CharSequence title = smartspaceAction.getTitle();
                     z |= !TextUtils.isEmpty(title);
@@ -885,19 +974,19 @@ public class MediaControlPanel {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$bindRecommendation$17$com-android-systemui-media-MediaControlPanel */
-    public /* synthetic */ void mo33659x711f16ef(ConstraintSet constraintSet, boolean z, TextView textView) {
+    public /* synthetic */ void mo33663x711f16ef(ConstraintSet constraintSet, boolean z, TextView textView) {
         setVisibleAndAlpha(constraintSet, textView.getId(), z);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$bindRecommendation$18$com-android-systemui-media-MediaControlPanel */
-    public /* synthetic */ void mo33660x2a96a48e(ConstraintSet constraintSet, boolean z, TextView textView) {
+    public /* synthetic */ void mo33664x2a96a48e(ConstraintSet constraintSet, boolean z, TextView textView) {
         setVisibleAndAlpha(constraintSet, textView.getId(), z);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$bindRecommendation$19$com-android-systemui-media-MediaControlPanel */
-    public /* synthetic */ void mo33661xe40e322d(SmartspaceMediaData smartspaceMediaData) {
+    public /* synthetic */ void mo33665xe40e322d(SmartspaceMediaData smartspaceMediaData) {
         closeGuts();
         this.mMediaDataManagerLazy.get().dismissSmartspaceRecommendation(smartspaceMediaData.getTargetId(), MediaViewController.GUTS_ANIMATION_DURATION + 100);
         Intent dismissIntent = smartspaceMediaData.getDismissIntent();
@@ -916,13 +1005,13 @@ public class MediaControlPanel {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$fetchAndUpdateRecommendationColors$21$com-android-systemui-media-MediaControlPanel */
-    public /* synthetic */ void mo33665xf09685af(Drawable drawable) {
+    public /* synthetic */ void mo33669xf09685af(Drawable drawable) {
         this.mMainExecutor.execute(new MediaControlPanel$$ExternalSyntheticLambda6(this, new ColorScheme(WallpaperColors.fromDrawable(drawable), true)));
     }
 
     /* access modifiers changed from: private */
     /* renamed from: setRecommendationColors */
-    public void mo33664x371ef810(ColorScheme colorScheme) {
+    public void mo33668x371ef810(ColorScheme colorScheme) {
         if (this.mRecommendationViewHolder != null) {
             int surfaceFromScheme = MediaColorSchemesKt.surfaceFromScheme(colorScheme);
             int textPrimaryFromScheme = MediaColorSchemesKt.textPrimaryFromScheme(colorScheme);
@@ -938,9 +1027,9 @@ public class MediaControlPanel {
         String str2;
         int i = 0;
         if (z) {
-            str2 = this.mContext.getString(C1893R.string.controls_media_close_session, new Object[]{str});
+            str2 = this.mContext.getString(C1894R.string.controls_media_close_session, new Object[]{str});
         } else {
-            str2 = this.mContext.getString(C1893R.string.controls_media_active_session);
+            str2 = this.mContext.getString(C1894R.string.controls_media_active_session);
         }
         gutsViewHolder.getGutsText().setText(str2);
         TextView dismissText = gutsViewHolder.getDismissText();
@@ -952,9 +1041,9 @@ public class MediaControlPanel {
         gutsViewHolder.getDismiss().setOnClickListener(new MediaControlPanel$$ExternalSyntheticLambda3(this, runnable));
         TextView cancelText = gutsViewHolder.getCancelText();
         if (z) {
-            cancelText.setBackground(this.mContext.getDrawable(C1893R.C1895drawable.qs_media_outline_button));
+            cancelText.setBackground(this.mContext.getDrawable(C1894R.C1896drawable.qs_media_outline_button));
         } else {
-            cancelText.setBackground(this.mContext.getDrawable(C1893R.C1895drawable.qs_media_solid_button));
+            cancelText.setBackground(this.mContext.getDrawable(C1894R.C1896drawable.qs_media_solid_button));
         }
         gutsViewHolder.getCancel().setOnClickListener(new MediaControlPanel$$ExternalSyntheticLambda4(this));
         gutsViewHolder.setDismissible(z);
@@ -963,7 +1052,7 @@ public class MediaControlPanel {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$bindGutsMenuCommon$24$com-android-systemui-media-MediaControlPanel */
-    public /* synthetic */ void mo33652x36d43891(Runnable runnable, View view) {
+    public /* synthetic */ void mo33656x36d43891(Runnable runnable, View view) {
         if (!this.mFalsingManager.isFalseTap(1)) {
             logSmartspaceCardReported(SMARTSPACE_CARD_DISMISS_EVENT);
             this.mLogger.logLongPressDismiss(this.mUid, this.mPackageName, this.mInstanceId);
@@ -973,7 +1062,7 @@ public class MediaControlPanel {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$bindGutsMenuCommon$25$com-android-systemui-media-MediaControlPanel */
-    public /* synthetic */ void mo33653xf04bc630(View view) {
+    public /* synthetic */ void mo33657xf04bc630(View view) {
         if (!this.mFalsingManager.isFalseTap(1)) {
             closeGuts();
         }
@@ -981,7 +1070,7 @@ public class MediaControlPanel {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$bindGutsMenuCommon$26$com-android-systemui-media-MediaControlPanel */
-    public /* synthetic */ void mo33654xa9c353cf(View view) {
+    public /* synthetic */ void mo33658xa9c353cf(View view) {
         if (!this.mFalsingManager.isFalseTap(1)) {
             this.mLogger.logLongPressSettings(this.mUid, this.mPackageName, this.mInstanceId);
             this.mActivityStarter.startActivity(SETTINGS_INTENT, true);
@@ -1087,7 +1176,7 @@ public class MediaControlPanel {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setSmartspaceRecItemOnClickListener$27$com-android-systemui-media-MediaControlPanel */
-    public /* synthetic */ void mo33669x34ef25b9(int i, SmartspaceAction smartspaceAction, View view, View view2) {
+    public /* synthetic */ void mo33673x34ef25b9(int i, SmartspaceAction smartspaceAction, View view, View view2) {
         if (!this.mFalsingManager.isFalseTap(1)) {
             if (i == -1) {
                 this.mLogger.logRecommendationCardTap(this.mPackageName, this.mInstanceId);

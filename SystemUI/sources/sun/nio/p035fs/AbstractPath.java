@@ -40,16 +40,16 @@ abstract class AbstractPath implements Path {
         return new Iterator<Path>() {
 
             /* renamed from: i */
-            private int f907i = 0;
+            private int f905i = 0;
 
             public boolean hasNext() {
-                return this.f907i < AbstractPath.this.getNameCount();
+                return this.f905i < AbstractPath.this.getNameCount();
             }
 
             public Path next() {
-                if (this.f907i < AbstractPath.this.getNameCount()) {
-                    Path name = AbstractPath.this.getName(this.f907i);
-                    this.f907i++;
+                if (this.f905i < AbstractPath.this.getNameCount()) {
+                    Path name = AbstractPath.this.getName(this.f905i);
+                    this.f905i++;
                     return name;
                 }
                 throw new NoSuchElementException();

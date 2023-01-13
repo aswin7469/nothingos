@@ -9,6 +9,6 @@ public final /* synthetic */ class NotificationPanelViewController$$ExternalSynt
     }
 
     public final void run() {
-        this.f$0.mo44615x639f1742();
+        this.f$0.mo44630x639f1742();
     }
 }

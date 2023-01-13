@@ -21,7 +21,7 @@ public class DelayedWakeLock implements WakeLock {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$release$0$com-android-systemui-util-wakelock-DelayedWakeLock */
-    public /* synthetic */ void mo47179x7da1638c(String str) {
+    public /* synthetic */ void mo47191x7da1638c(String str) {
         this.mInner.release(str);
     }
 

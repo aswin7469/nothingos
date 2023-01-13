@@ -4,26 +4,26 @@ public class FormatFlagsConversionMismatchException extends IllegalFormatExcepti
     private static final long serialVersionUID = 19120414;
 
     /* renamed from: c */
-    private char f675c;
+    private char f673c;
 
     /* renamed from: f */
-    private String f676f;
+    private String f674f;
 
     public FormatFlagsConversionMismatchException(String str, char c) {
         str.getClass();
-        this.f676f = str;
-        this.f675c = c;
+        this.f674f = str;
+        this.f673c = c;
     }
 
     public String getFlags() {
-        return this.f676f;
+        return this.f674f;
     }
 
     public char getConversion() {
-        return this.f675c;
+        return this.f673c;
     }
 
     public String getMessage() {
-        return "Conversion = " + this.f675c + ", Flags = " + this.f676f;
+        return "Conversion = " + this.f673c + ", Flags = " + this.f674f;
     }
 }

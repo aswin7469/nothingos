@@ -11,6 +11,6 @@ public final /* synthetic */ class SecurityControllerImpl$$ExternalSyntheticLamb
     }
 
     public final void run() {
-        this.f$0.mo46070xc8cf2670(this.f$1);
+        this.f$0.mo46082xc8cf2670(this.f$1);
     }
 }

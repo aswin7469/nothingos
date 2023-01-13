@@ -45,12 +45,12 @@ public class TaskViewFactoryController {
 
         @ExternalThread
         public void create(Context context, Executor executor, Consumer<TaskView> consumer) {
-            TaskViewFactoryController.this.mShellExecutor.execute(new C3350xccf6ffa7(this, context, executor, consumer));
+            TaskViewFactoryController.this.mShellExecutor.execute(new C3360xccf6ffa7(this, context, executor, consumer));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$create$0$com-android-wm-shell-TaskViewFactoryController$TaskViewFactoryImpl */
-        public /* synthetic */ void mo48021x9ee06bad(Context context, Executor executor, Consumer consumer) {
+        public /* synthetic */ void mo48030x9ee06bad(Context context, Executor executor, Consumer consumer) {
             TaskViewFactoryController.this.create(context, executor, consumer);
         }
     }

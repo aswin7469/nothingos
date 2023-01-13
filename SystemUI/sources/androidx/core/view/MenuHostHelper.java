@@ -68,7 +68,7 @@ public class MenuHostHelper {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$addMenuProvider$0$androidx-core-view-MenuHostHelper  reason: not valid java name */
-    public /* synthetic */ void m2243lambda$addMenuProvider$0$androidxcoreviewMenuHostHelper(MenuProvider menuProvider, LifecycleOwner lifecycleOwner, Lifecycle.Event event) {
+    public /* synthetic */ void m2249lambda$addMenuProvider$0$androidxcoreviewMenuHostHelper(MenuProvider menuProvider, LifecycleOwner lifecycleOwner, Lifecycle.Event event) {
         if (event == Lifecycle.Event.ON_DESTROY) {
             removeMenuProvider(menuProvider);
         }
@@ -85,7 +85,7 @@ public class MenuHostHelper {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$addMenuProvider$1$androidx-core-view-MenuHostHelper  reason: not valid java name */
-    public /* synthetic */ void m2244lambda$addMenuProvider$1$androidxcoreviewMenuHostHelper(Lifecycle.State state, MenuProvider menuProvider, LifecycleOwner lifecycleOwner, Lifecycle.Event event) {
+    public /* synthetic */ void m2250lambda$addMenuProvider$1$androidxcoreviewMenuHostHelper(Lifecycle.State state, MenuProvider menuProvider, LifecycleOwner lifecycleOwner, Lifecycle.Event event) {
         if (event == Lifecycle.Event.upTo(state)) {
             addMenuProvider(menuProvider);
         } else if (event == Lifecycle.Event.ON_DESTROY) {

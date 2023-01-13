@@ -9,6 +9,6 @@ public final /* synthetic */ class AuthContainerView$$ExternalSyntheticLambda2 i
     }
 
     public final void run() {
-        this.f$0.mo30561x7e61d1e9();
+        this.f$0.mo30571x7e61d1e9();
     }
 }

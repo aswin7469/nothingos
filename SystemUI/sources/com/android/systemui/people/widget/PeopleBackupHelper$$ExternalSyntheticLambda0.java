@@ -18,6 +18,6 @@ public final /* synthetic */ class PeopleBackupHelper$$ExternalSyntheticLambda0 
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo35157x49d8378(this.f$1, this.f$2, (Map.Entry) obj);
+        this.f$0.mo35161x49d8378(this.f$1, this.f$2, (Map.Entry) obj);
     }
 }

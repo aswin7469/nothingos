@@ -10,6 +10,6 @@ public final /* synthetic */ class HeaderPrivacyIconsController$$ExternalSynthet
     }
 
     public final void run() {
-        HeaderPrivacyIconsController.m2902_init_$lambda0(this.f$0);
+        HeaderPrivacyIconsController.m2907_init_$lambda0(this.f$0);
     }
 }

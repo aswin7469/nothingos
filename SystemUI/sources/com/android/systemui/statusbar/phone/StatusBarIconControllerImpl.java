@@ -9,7 +9,7 @@ import android.util.ArraySet;
 import android.util.Log;
 import android.view.ViewGroup;
 import com.android.internal.statusbar.StatusBarIcon;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dumpable;
 import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.demomode.DemoMode;
@@ -197,7 +197,7 @@ public class StatusBarIconControllerImpl extends StatusBarIconList implements Tu
     }
 
     public void setExternalIcon(String str) {
-        this.mIconGroups.forEach(new StatusBarIconControllerImpl$$ExternalSyntheticLambda2(getViewIndex(getSlotIndex(str), 0), this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.status_bar_icon_drawing_size)));
+        this.mIconGroups.forEach(new StatusBarIconControllerImpl$$ExternalSyntheticLambda2(getViewIndex(getSlotIndex(str), 0), this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.status_bar_icon_drawing_size)));
     }
 
     public void setIcon(String str, StatusBarIcon statusBarIcon) {

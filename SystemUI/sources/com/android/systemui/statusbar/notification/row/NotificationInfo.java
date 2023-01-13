@@ -35,7 +35,7 @@ import androidx.core.app.NotificationChannelCompat;
 import androidx.core.app.NotificationCompat;
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.logging.UiEventLogger;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dependency;
 import com.android.systemui.animation.Interpolators;
 import com.android.systemui.statusbar.notification.AssistantFeedbackController;
@@ -150,14 +150,14 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-statusbar-notification-row-NotificationInfo */
-    public /* synthetic */ void mo41630x36838637(View view) {
+    public /* synthetic */ void mo41638x36838637(View view) {
         this.mIsAutomaticChosen = true;
         applyAlertingBehavior(2, true);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$1$com-android-systemui-statusbar-notification-row-NotificationInfo */
-    public /* synthetic */ void mo41631xa0b30e56(View view) {
+    public /* synthetic */ void mo41639xa0b30e56(View view) {
         this.mChosenImportance = 3;
         this.mIsAutomaticChosen = false;
         applyAlertingBehavior(0, true);
@@ -165,7 +165,7 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$2$com-android-systemui-statusbar-notification-row-NotificationInfo */
-    public /* synthetic */ void mo41632xae29675(View view) {
+    public /* synthetic */ void mo41640xae29675(View view) {
         this.mChosenImportance = 2;
         this.mIsAutomaticChosen = false;
         applyAlertingBehavior(1, true);
@@ -173,7 +173,7 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$3$com-android-systemui-statusbar-notification-row-NotificationInfo */
-    public /* synthetic */ void mo41633x75121e94(View view) {
+    public /* synthetic */ void mo41641x75121e94(View view) {
         this.mPressedApply = true;
         this.mGutsContainer.closeControls(view, true);
     }
@@ -185,9 +185,9 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mPriorityDescriptionView = (TextView) findViewById(C1893R.C1897id.alert_summary);
-        this.mSilentDescriptionView = (TextView) findViewById(C1893R.C1897id.silence_summary);
-        this.mAutomaticDescriptionView = (TextView) findViewById(C1893R.C1897id.automatic_summary);
+        this.mPriorityDescriptionView = (TextView) findViewById(C1894R.C1898id.alert_summary);
+        this.mSilentDescriptionView = (TextView) findViewById(C1894R.C1898id.silence_summary);
+        this.mAutomaticDescriptionView = (TextView) findViewById(C1894R.C1898id.automatic_summary);
     }
 
     public void bindNotification(PackageManager packageManager, INotificationManager iNotificationManager, OnUserInteractionCallback onUserInteractionCallback, ChannelEditorDialogController channelEditorDialogController, String str, NotificationChannel notificationChannel, Set<NotificationChannel> set, NotificationEntry notificationEntry, OnSettingsClickListener onSettingsClickListener, OnAppSettingsClickListener onAppSettingsClickListener, UiEventLogger uiEventLogger, boolean z, boolean z2, boolean z3, AssistantFeedbackController assistantFeedbackController) throws RemoteException {
@@ -236,41 +236,41 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
 
     private void bindInlineControls() {
         if (this.mIsSystemRegisteredCall) {
-            findViewById(C1893R.C1897id.non_configurable_call_text).setVisibility(0);
-            findViewById(C1893R.C1897id.non_configurable_text).setVisibility(8);
-            findViewById(C1893R.C1897id.non_configurable_multichannel_text).setVisibility(8);
-            findViewById(C1893R.C1897id.interruptiveness_settings).setVisibility(8);
-            ((TextView) findViewById(C1893R.C1897id.done)).setText(C1893R.string.inline_done_button);
-            findViewById(C1893R.C1897id.turn_off_notifications).setVisibility(8);
+            findViewById(C1894R.C1898id.non_configurable_call_text).setVisibility(0);
+            findViewById(C1894R.C1898id.non_configurable_text).setVisibility(8);
+            findViewById(C1894R.C1898id.non_configurable_multichannel_text).setVisibility(8);
+            findViewById(C1894R.C1898id.interruptiveness_settings).setVisibility(8);
+            ((TextView) findViewById(C1894R.C1898id.done)).setText(C1894R.string.inline_done_button);
+            findViewById(C1894R.C1898id.turn_off_notifications).setVisibility(8);
         } else if (this.mIsNonblockable) {
-            findViewById(C1893R.C1897id.non_configurable_text).setVisibility(0);
-            findViewById(C1893R.C1897id.non_configurable_call_text).setVisibility(8);
-            findViewById(C1893R.C1897id.non_configurable_multichannel_text).setVisibility(8);
-            findViewById(C1893R.C1897id.interruptiveness_settings).setVisibility(8);
-            ((TextView) findViewById(C1893R.C1897id.done)).setText(C1893R.string.inline_done_button);
-            findViewById(C1893R.C1897id.turn_off_notifications).setVisibility(8);
+            findViewById(C1894R.C1898id.non_configurable_text).setVisibility(0);
+            findViewById(C1894R.C1898id.non_configurable_call_text).setVisibility(8);
+            findViewById(C1894R.C1898id.non_configurable_multichannel_text).setVisibility(8);
+            findViewById(C1894R.C1898id.interruptiveness_settings).setVisibility(8);
+            ((TextView) findViewById(C1894R.C1898id.done)).setText(C1894R.string.inline_done_button);
+            findViewById(C1894R.C1898id.turn_off_notifications).setVisibility(8);
         } else if (this.mNumUniqueChannelsInRow > 1) {
-            findViewById(C1893R.C1897id.non_configurable_call_text).setVisibility(8);
-            findViewById(C1893R.C1897id.non_configurable_text).setVisibility(8);
-            findViewById(C1893R.C1897id.interruptiveness_settings).setVisibility(8);
-            findViewById(C1893R.C1897id.non_configurable_multichannel_text).setVisibility(0);
+            findViewById(C1894R.C1898id.non_configurable_call_text).setVisibility(8);
+            findViewById(C1894R.C1898id.non_configurable_text).setVisibility(8);
+            findViewById(C1894R.C1898id.interruptiveness_settings).setVisibility(8);
+            findViewById(C1894R.C1898id.non_configurable_multichannel_text).setVisibility(0);
         } else {
-            findViewById(C1893R.C1897id.non_configurable_call_text).setVisibility(8);
-            findViewById(C1893R.C1897id.non_configurable_text).setVisibility(8);
-            findViewById(C1893R.C1897id.non_configurable_multichannel_text).setVisibility(8);
-            findViewById(C1893R.C1897id.interruptiveness_settings).setVisibility(0);
+            findViewById(C1894R.C1898id.non_configurable_call_text).setVisibility(8);
+            findViewById(C1894R.C1898id.non_configurable_text).setVisibility(8);
+            findViewById(C1894R.C1898id.non_configurable_multichannel_text).setVisibility(8);
+            findViewById(C1894R.C1898id.interruptiveness_settings).setVisibility(0);
         }
-        View findViewById = findViewById(C1893R.C1897id.turn_off_notifications);
+        View findViewById = findViewById(C1894R.C1898id.turn_off_notifications);
         findViewById.setOnClickListener(getTurnOffNotificationsClickListener());
         findViewById.setVisibility((!findViewById.hasOnClickListeners() || this.mIsNonblockable) ? 8 : 0);
-        View findViewById2 = findViewById(C1893R.C1897id.done);
+        View findViewById2 = findViewById(C1894R.C1898id.done);
         findViewById2.setOnClickListener(this.mOnDismissSettings);
         findViewById2.setAccessibilityDelegate(this.mGutsContainer.getAccessibilityDelegate());
-        View findViewById3 = findViewById(C1893R.C1897id.silence);
-        View findViewById4 = findViewById(C1893R.C1897id.alert);
+        View findViewById3 = findViewById(C1894R.C1898id.silence);
+        View findViewById4 = findViewById(C1894R.C1898id.alert);
         findViewById3.setOnClickListener(this.mOnSilent);
         findViewById4.setOnClickListener(this.mOnAlert);
-        View findViewById5 = findViewById(C1893R.C1897id.automatic);
+        View findViewById5 = findViewById(C1894R.C1898id.automatic);
         if (this.mShowAutomaticSetting) {
             this.mAutomaticDescriptionView.setText(Html.fromHtml(this.mContext.getText(this.mAssistantFeedbackController.getInlineDescriptionResource(this.mEntry)).toString()));
             findViewById5.setVisibility(0);
@@ -292,10 +292,10 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
         } catch (PackageManager.NameNotFoundException unused) {
             this.mPkgIcon = this.mPm.getDefaultActivityIcon();
         }
-        ((ImageView) findViewById(C1893R.C1897id.pkg_icon)).setImageDrawable(this.mPkgIcon);
-        ((TextView) findViewById(C1893R.C1897id.pkg_name)).setText(this.mAppName);
+        ((ImageView) findViewById(C1894R.C1898id.pkg_icon)).setImageDrawable(this.mPkgIcon);
+        ((TextView) findViewById(C1894R.C1898id.pkg_name)).setText(this.mAppName);
         bindDelegate();
-        View findViewById = findViewById(C1893R.C1897id.app_settings);
+        View findViewById = findViewById(C1894R.C1898id.app_settings);
         Intent appSettingsIntent = getAppSettingsIntent(this.mPm, this.mPackageName, this.mSingleNotificationChannel, this.mSbn.getId(), this.mSbn.getTag());
         int i = 0;
         if (appSettingsIntent == null || TextUtils.isEmpty(this.mSbn.getNotification().getSettingsText())) {
@@ -304,7 +304,7 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
             findViewById.setVisibility(0);
             findViewById.setOnClickListener(new NotificationInfo$$ExternalSyntheticLambda3(this, appSettingsIntent));
         }
-        View findViewById2 = findViewById(C1893R.C1897id.info);
+        View findViewById2 = findViewById(C1894R.C1898id.info);
         findViewById2.setOnClickListener(getSettingsOnClickListener());
         if (!findViewById2.hasOnClickListeners()) {
             i = 8;
@@ -314,7 +314,7 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$bindHeader$4$com-android-systemui-statusbar-notification-row-NotificationInfo */
-    public /* synthetic */ void mo41626x23f3d4f(Intent intent, View view) {
+    public /* synthetic */ void mo41634x23f3d4f(Intent intent, View view) {
         this.mAppSettingsClickListener.onClick(view, intent);
     }
 
@@ -328,7 +328,7 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$getSettingsOnClickListener$5$com-android-systemui-statusbar-notification-row-NotificationInfo */
-    public /* synthetic */ void mo41627x3805ca74(int i, View view) {
+    public /* synthetic */ void mo41635x3805ca74(int i, View view) {
         this.mOnSettingsClickListener.onClick(view, this.mNumUniqueChannelsInRow > 1 ? null : this.mSingleNotificationChannel, i);
     }
 
@@ -338,7 +338,7 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$getTurnOffNotificationsClickListener$7$com-android-systemui-statusbar-notification-row-NotificationInfo */
-    public /* synthetic */ void mo41629x6fb61c66(View view) {
+    public /* synthetic */ void mo41637x6fb61c66(View view) {
         ChannelEditorDialogController channelEditorDialogController;
         if (!this.mPresentingChannelEditorDialog && (channelEditorDialogController = this.mChannelEditorDialogController) != null) {
             this.mPresentingChannelEditorDialog = true;
@@ -350,7 +350,7 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$getTurnOffNotificationsClickListener$6$com-android-systemui-statusbar-notification-row-NotificationInfo */
-    public /* synthetic */ void mo41628x5869447() {
+    public /* synthetic */ void mo41636x5869447() {
         this.mPresentingChannelEditorDialog = false;
         this.mGutsContainer.closeControls(this, false);
     }
@@ -361,7 +361,7 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
     }
 
     private void bindName() {
-        TextView textView = (TextView) findViewById(C1893R.C1897id.channel_name);
+        TextView textView = (TextView) findViewById(C1894R.C1898id.channel_name);
         if (this.mIsSingleDefaultChannel || this.mNumUniqueChannelsInRow > 1) {
             textView.setVisibility(8);
         } else {
@@ -370,7 +370,7 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
     }
 
     private void bindDelegate() {
-        TextView textView = (TextView) findViewById(C1893R.C1897id.delegate_name);
+        TextView textView = (TextView) findViewById(C1894R.C1898id.delegate_name);
         if (!TextUtils.equals(this.mPackageName, this.mDelegatePkg)) {
             textView.setVisibility(0);
         } else {
@@ -458,9 +458,9 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
             transitionSet.setInterpolator(Interpolators.FAST_OUT_SLOW_IN);
             TransitionManager.beginDelayedTransition(this, transitionSet);
         }
-        View findViewById = findViewById(C1893R.C1897id.alert);
-        View findViewById2 = findViewById(C1893R.C1897id.silence);
-        View findViewById3 = findViewById(C1893R.C1897id.automatic);
+        View findViewById = findViewById(C1894R.C1898id.alert);
+        View findViewById2 = findViewById(C1894R.C1898id.silence);
+        View findViewById3 = findViewById(C1894R.C1898id.automatic);
         if (i == 0) {
             this.mPriorityDescriptionView.setVisibility(0);
             this.mSilentDescriptionView.setVisibility(8);
@@ -482,7 +482,7 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
         if (getAlertingBehavior() == i) {
             z2 = false;
         }
-        ((TextView) findViewById(C1893R.C1897id.done)).setText(z2 ? C1893R.string.inline_ok_button : C1893R.string.inline_done_button);
+        ((TextView) findViewById(C1894R.C1898id.done)).setText(z2 ? C1894R.string.inline_ok_button : C1894R.string.inline_done_button);
     }
 
     static /* synthetic */ void lambda$applyAlertingBehavior$8(View view, View view2, View view3) {
@@ -517,10 +517,10 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
         super.onInitializeAccessibilityEvent(accessibilityEvent);
         if (this.mGutsContainer != null && accessibilityEvent.getEventType() == 32) {
             if (this.mGutsContainer.isExposed()) {
-                accessibilityEvent.getText().add(this.mContext.getString(C1893R.string.notification_channel_controls_opened_accessibility, new Object[]{this.mAppName}));
+                accessibilityEvent.getText().add(this.mContext.getString(C1894R.string.notification_channel_controls_opened_accessibility, new Object[]{this.mAppName}));
                 return;
             }
-            accessibilityEvent.getText().add(this.mContext.getString(C1893R.string.notification_channel_controls_closed_accessibility, new Object[]{this.mAppName}));
+            accessibilityEvent.getText().add(this.mContext.getString(C1894R.string.notification_channel_controls_closed_accessibility, new Object[]{this.mAppName}));
         }
     }
 

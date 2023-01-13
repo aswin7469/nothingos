@@ -26,7 +26,7 @@ import com.android.internal.logging.UiEventLogger;
 import com.android.internal.util.ArrayUtils;
 import com.android.internal.widget.MessagingMessage;
 import com.android.settingslib.utils.ThreadUtils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.people.widget.PeopleSpaceWidgetManager;
 import com.android.systemui.people.widget.PeopleTileKey;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
@@ -170,7 +170,7 @@ public class PeopleSpaceUtils {
         if (message != null && !TextUtils.isEmpty(message.getText())) {
             z = true;
         }
-        CharSequence text = (!isMissedCall || z) ? message.getText() : context.getString(C1893R.string.missed_call);
+        CharSequence text = (!isMissedCall || z) ? message.getText() : context.getString(C1894R.string.missed_call);
         if (message != null && MessagingMessage.hasImage(message)) {
             uri = message.getDataUri();
         }
@@ -234,7 +234,7 @@ public class PeopleSpaceUtils {
     }
 
     private static boolean hasBirthdayStatus(PeopleSpaceTile peopleSpaceTile, Context context) {
-        return peopleSpaceTile.getBirthdayText() != null && peopleSpaceTile.getBirthdayText().equals(context.getString(C1893R.string.birthday_status));
+        return peopleSpaceTile.getBirthdayText() != null && peopleSpaceTile.getBirthdayText().equals(context.getString(C1894R.string.birthday_status));
     }
 
     public static void getDataFromContactsOnBackgroundThread(Context context, PeopleSpaceWidgetManager peopleSpaceWidgetManager, Map<Integer, PeopleSpaceTile> map, int[] iArr) {
@@ -263,7 +263,7 @@ public class PeopleSpaceUtils {
             z = false;
         }
         if (z) {
-            peopleSpaceWidgetManager.mo35176x9a3cfb8a(i, peopleSpaceTile.toBuilder().setBirthdayText(str).setContactAffinity(f).build());
+            peopleSpaceWidgetManager.mo35180x9a3cfb8a(i, peopleSpaceTile.toBuilder().setBirthdayText(str).setContactAffinity(f).build());
         }
     }
 
@@ -277,7 +277,7 @@ public class PeopleSpaceUtils {
                 if (string.isEmpty() || !list.contains(string)) {
                     updateTileContactFields(peopleSpaceWidgetManager, context, peopleSpaceTile, i, contactAffinity, (String) null);
                 } else {
-                    updateTileContactFields(peopleSpaceWidgetManager, context, peopleSpaceTile, i, contactAffinity, context.getString(C1893R.string.birthday_status));
+                    updateTileContactFields(peopleSpaceWidgetManager, context, peopleSpaceTile, i, contactAffinity, context.getString(C1894R.string.birthday_status));
                 }
             }
             if (cursor == null) {

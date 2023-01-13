@@ -62,7 +62,7 @@ public class AsyncSensorManager extends SensorManager implements PluginListener<
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$registerListenerImpl$0$com-android-systemui-util-sensors-AsyncSensorManager */
-    public /* synthetic */ void mo47045xd8b2ada(Sensor sensor, SensorEventListener sensorEventListener, int i, int i2, Handler handler) {
+    public /* synthetic */ void mo47057xd8b2ada(Sensor sensor, SensorEventListener sensorEventListener, int i, int i2, Handler handler) {
         if (sensor == null) {
             Log.e(TAG, "sensor cannot be null");
         }
@@ -93,7 +93,7 @@ public class AsyncSensorManager extends SensorManager implements PluginListener<
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$registerDynamicSensorCallbackImpl$1$com-android-systemui-util-sensors-AsyncSensorManager */
-    public /* synthetic */ void mo47044x60d4d5af(SensorManager.DynamicSensorCallback dynamicSensorCallback, Handler handler) {
+    public /* synthetic */ void mo47056x60d4d5af(SensorManager.DynamicSensorCallback dynamicSensorCallback, Handler handler) {
         this.mInner.registerDynamicSensorCallback(dynamicSensorCallback, handler);
     }
 
@@ -104,7 +104,7 @@ public class AsyncSensorManager extends SensorManager implements PluginListener<
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$unregisterDynamicSensorCallbackImpl$2$com-android-systemui-util-sensors-AsyncSensorManager */
-    public /* synthetic */ void mo47049xc3ae84a7(SensorManager.DynamicSensorCallback dynamicSensorCallback) {
+    public /* synthetic */ void mo47061xc3ae84a7(SensorManager.DynamicSensorCallback dynamicSensorCallback) {
         this.mInner.unregisterDynamicSensorCallback(dynamicSensorCallback);
     }
 
@@ -127,7 +127,7 @@ public class AsyncSensorManager extends SensorManager implements PluginListener<
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$requestTriggerSensorImpl$3$com-android-systemui-util-sensors-AsyncSensorManager */
-    public /* synthetic */ void mo47047xd630a8eb(Sensor sensor, TriggerEventListener triggerEventListener) {
+    public /* synthetic */ void mo47059xd630a8eb(Sensor sensor, TriggerEventListener triggerEventListener) {
         if (sensor == null) {
             Log.e(TAG, "sensor cannot be null");
         }
@@ -145,7 +145,7 @@ public class AsyncSensorManager extends SensorManager implements PluginListener<
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$cancelTriggerSensorImpl$4$com-android-systemui-util-sensors-AsyncSensorManager */
-    public /* synthetic */ void mo47043x22e43dcf(TriggerEventListener triggerEventListener, Sensor sensor) {
+    public /* synthetic */ void mo47055x22e43dcf(TriggerEventListener triggerEventListener, Sensor sensor) {
         if (!this.mInner.cancelTriggerSensor(triggerEventListener, sensor)) {
             Log.e(TAG, "Canceling " + triggerEventListener + " for " + sensor + " failed.");
         }
@@ -162,7 +162,7 @@ public class AsyncSensorManager extends SensorManager implements PluginListener<
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$registerPluginListener$5$com-android-systemui-util-sensors-AsyncSensorManager */
-    public /* synthetic */ void mo47046xb8e97682(SensorManagerPlugin.Sensor sensor, SensorManagerPlugin.SensorEventListener sensorEventListener) {
+    public /* synthetic */ void mo47058xb8e97682(SensorManagerPlugin.Sensor sensor, SensorManagerPlugin.SensorEventListener sensorEventListener) {
         for (int i = 0; i < this.mPlugins.size(); i++) {
             this.mPlugins.get(i).registerListener(sensor, sensorEventListener);
         }
@@ -174,7 +174,7 @@ public class AsyncSensorManager extends SensorManager implements PluginListener<
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$unregisterPluginListener$6$com-android-systemui-util-sensors-AsyncSensorManager */
-    public /* synthetic */ void mo47051x9b218268(SensorManagerPlugin.Sensor sensor, SensorManagerPlugin.SensorEventListener sensorEventListener) {
+    public /* synthetic */ void mo47063x9b218268(SensorManagerPlugin.Sensor sensor, SensorManagerPlugin.SensorEventListener sensorEventListener) {
         for (int i = 0; i < this.mPlugins.size(); i++) {
             this.mPlugins.get(i).unregisterListener(sensor, sensorEventListener);
         }
@@ -192,7 +192,7 @@ public class AsyncSensorManager extends SensorManager implements PluginListener<
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setOperationParameterImpl$7$com-android-systemui-util-sensors-AsyncSensorManager */
-    public /* synthetic */ void mo47048xae291c20(SensorAdditionalInfo sensorAdditionalInfo) {
+    public /* synthetic */ void mo47060xae291c20(SensorAdditionalInfo sensorAdditionalInfo) {
         this.mInner.setOperationParameter(sensorAdditionalInfo);
     }
 
@@ -209,7 +209,7 @@ public class AsyncSensorManager extends SensorManager implements PluginListener<
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$unregisterListenerImpl$8$com-android-systemui-util-sensors-AsyncSensorManager */
-    public /* synthetic */ void mo47050xd90452d9(Sensor sensor, SensorEventListener sensorEventListener) {
+    public /* synthetic */ void mo47062xd90452d9(Sensor sensor, SensorEventListener sensorEventListener) {
         if (sensor == null) {
             this.mInner.unregisterListener(sensorEventListener);
         } else {

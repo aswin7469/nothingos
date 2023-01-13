@@ -19,7 +19,7 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 import androidx.constraintlayout.helper.widget.Flow;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.plugins.FalsingManager;
 import com.android.systemui.settings.UserTracker;
@@ -36,7 +36,7 @@ import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Ref;
 
-@Metadata(mo64986d1 = {"\u0000w\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010!\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0010\b\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u0004*\u0001\u0010\u0018\u00002\u00020\u0001:\u0001,B7\b\u0007\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\u0006\u0010\u0006\u001a\u00020\u0007\u0012\u0006\u0010\b\u001a\u00020\t\u0012\u0006\u0010\n\u001a\u00020\u000b\u0012\u0006\u0010\f\u001a\u00020\r¢\u0006\u0002\u0010\u000eJ\b\u0010 \u001a\u00020!H\u0002J\u0010\u0010\"\u001a\u00020#2\u0006\u0010$\u001a\u00020#H\u0007J\b\u0010%\u001a\u00020!H\u0002J\b\u0010&\u001a\u00020!H\u0016J\u0012\u0010'\u001a\u00020!2\b\u0010(\u001a\u0004\u0018\u00010)H\u0014J\b\u0010*\u001a\u00020!H\u0014J\b\u0010+\u001a\u00020!H\u0002R\u0010\u0010\u000f\u001a\u00020\u0010X\u0004¢\u0006\u0004\n\u0002\u0010\u0011R\u000e\u0010\u0012\u001a\u00020\u0013X.¢\u0006\u0002\n\u0000R\u0014\u0010\u0014\u001a\b\u0012\u0004\u0012\u00020\u00160\u0015X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0004\u001a\u00020\u0005X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0017\u001a\u00020\u0018X.¢\u0006\u0002\n\u0000R\u000e\u0010\b\u001a\u00020\tX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0006\u001a\u00020\u0007X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0019\u001a\u00020\u0016X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u001a\u001a\u00020\u001bX.¢\u0006\u0002\n\u0000R\u0010\u0010\u001c\u001a\u0004\u0018\u00010\u001dX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\n\u001a\u00020\u000bX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u001e\u001a\u00020\u001fX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0002\u001a\u00020\u0003X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\f\u001a\u00020\rX\u0004¢\u0006\u0002\n\u0000¨\u0006-"}, mo64987d2 = {"Lcom/android/systemui/user/UserSwitcherActivity;", "Lcom/android/systemui/util/LifecycleActivity;", "userSwitcherController", "Lcom/android/systemui/statusbar/policy/UserSwitcherController;", "broadcastDispatcher", "Lcom/android/systemui/broadcast/BroadcastDispatcher;", "layoutInflater", "Landroid/view/LayoutInflater;", "falsingManager", "Lcom/android/systemui/plugins/FalsingManager;", "userManager", "Landroid/os/UserManager;", "userTracker", "Lcom/android/systemui/settings/UserTracker;", "(Lcom/android/systemui/statusbar/policy/UserSwitcherController;Lcom/android/systemui/broadcast/BroadcastDispatcher;Landroid/view/LayoutInflater;Lcom/android/systemui/plugins/FalsingManager;Landroid/os/UserManager;Lcom/android/systemui/settings/UserTracker;)V", "adapter", "com/android/systemui/user/UserSwitcherActivity$adapter$1", "Lcom/android/systemui/user/UserSwitcherActivity$adapter$1;", "addButton", "Landroid/view/View;", "addUserRecords", "", "Lcom/android/systemui/statusbar/policy/UserSwitcherController$UserRecord;", "broadcastReceiver", "Landroid/content/BroadcastReceiver;", "manageUserRecord", "parent", "Landroid/view/ViewGroup;", "popupMenu", "Lcom/android/systemui/user/UserSwitcherPopupMenu;", "userSwitchedCallback", "Lcom/android/systemui/settings/UserTracker$Callback;", "buildUserViews", "", "getMaxColumns", "", "userCount", "initBroadcastReceiver", "onBackPressed", "onCreate", "savedInstanceState", "Landroid/os/Bundle;", "onDestroy", "showPopupMenu", "ItemAdapter", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000w\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010!\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0010\b\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u0004*\u0001\u0010\u0018\u00002\u00020\u0001:\u0001,B7\b\u0007\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\u0006\u0010\u0006\u001a\u00020\u0007\u0012\u0006\u0010\b\u001a\u00020\t\u0012\u0006\u0010\n\u001a\u00020\u000b\u0012\u0006\u0010\f\u001a\u00020\r¢\u0006\u0002\u0010\u000eJ\b\u0010 \u001a\u00020!H\u0002J\u0010\u0010\"\u001a\u00020#2\u0006\u0010$\u001a\u00020#H\u0007J\b\u0010%\u001a\u00020!H\u0002J\b\u0010&\u001a\u00020!H\u0016J\u0012\u0010'\u001a\u00020!2\b\u0010(\u001a\u0004\u0018\u00010)H\u0014J\b\u0010*\u001a\u00020!H\u0014J\b\u0010+\u001a\u00020!H\u0002R\u0010\u0010\u000f\u001a\u00020\u0010X\u0004¢\u0006\u0004\n\u0002\u0010\u0011R\u000e\u0010\u0012\u001a\u00020\u0013X.¢\u0006\u0002\n\u0000R\u0014\u0010\u0014\u001a\b\u0012\u0004\u0012\u00020\u00160\u0015X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0004\u001a\u00020\u0005X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0017\u001a\u00020\u0018X.¢\u0006\u0002\n\u0000R\u000e\u0010\b\u001a\u00020\tX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0006\u001a\u00020\u0007X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0019\u001a\u00020\u0016X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u001a\u001a\u00020\u001bX.¢\u0006\u0002\n\u0000R\u0010\u0010\u001c\u001a\u0004\u0018\u00010\u001dX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\n\u001a\u00020\u000bX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u001e\u001a\u00020\u001fX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0002\u001a\u00020\u0003X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\f\u001a\u00020\rX\u0004¢\u0006\u0002\n\u0000¨\u0006-"}, mo65043d2 = {"Lcom/android/systemui/user/UserSwitcherActivity;", "Lcom/android/systemui/util/LifecycleActivity;", "userSwitcherController", "Lcom/android/systemui/statusbar/policy/UserSwitcherController;", "broadcastDispatcher", "Lcom/android/systemui/broadcast/BroadcastDispatcher;", "layoutInflater", "Landroid/view/LayoutInflater;", "falsingManager", "Lcom/android/systemui/plugins/FalsingManager;", "userManager", "Landroid/os/UserManager;", "userTracker", "Lcom/android/systemui/settings/UserTracker;", "(Lcom/android/systemui/statusbar/policy/UserSwitcherController;Lcom/android/systemui/broadcast/BroadcastDispatcher;Landroid/view/LayoutInflater;Lcom/android/systemui/plugins/FalsingManager;Landroid/os/UserManager;Lcom/android/systemui/settings/UserTracker;)V", "adapter", "com/android/systemui/user/UserSwitcherActivity$adapter$1", "Lcom/android/systemui/user/UserSwitcherActivity$adapter$1;", "addButton", "Landroid/view/View;", "addUserRecords", "", "Lcom/android/systemui/statusbar/policy/UserSwitcherController$UserRecord;", "broadcastReceiver", "Landroid/content/BroadcastReceiver;", "manageUserRecord", "parent", "Landroid/view/ViewGroup;", "popupMenu", "Lcom/android/systemui/user/UserSwitcherPopupMenu;", "userSwitchedCallback", "Lcom/android/systemui/settings/UserTracker$Callback;", "buildUserViews", "", "getMaxColumns", "", "userCount", "initBroadcastReceiver", "onBackPressed", "onCreate", "savedInstanceState", "Landroid/os/Bundle;", "onDestroy", "showPopupMenu", "ItemAdapter", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* compiled from: UserSwitcherActivity.kt */
 public final class UserSwitcherActivity extends LifecycleActivity {
     public Map<Integer, View> _$_findViewCache = new LinkedHashMap();
@@ -101,13 +101,13 @@ public final class UserSwitcherActivity extends LifecycleActivity {
     /* access modifiers changed from: protected */
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        setContentView(C1893R.layout.user_switcher_fullscreen);
+        setContentView(C1894R.layout.user_switcher_fullscreen);
         getWindow().getDecorView().setSystemUiVisibility(770);
-        View requireViewById = requireViewById(C1893R.C1897id.user_switcher_root);
+        View requireViewById = requireViewById(C1894R.C1898id.user_switcher_root);
         Intrinsics.checkNotNullExpressionValue(requireViewById, "requireViewById<ViewGrou…(R.id.user_switcher_root)");
         this.parent = (ViewGroup) requireViewById;
-        requireViewById(C1893R.C1897id.cancel).setOnClickListener(new UserSwitcherActivity$$ExternalSyntheticLambda1(this));
-        View requireViewById2 = requireViewById(C1893R.C1897id.add);
+        requireViewById(C1894R.C1898id.cancel).setOnClickListener(new UserSwitcherActivity$$ExternalSyntheticLambda1(this));
+        View requireViewById2 = requireViewById(C1894R.C1898id.add);
         requireViewById2.setOnClickListener(new UserSwitcherActivity$$ExternalSyntheticLambda2(this));
         Intrinsics.checkNotNullExpressionValue(requireViewById2, "requireViewById<View>(R.…)\n            }\n        }");
         this.addButton = requireViewById2;
@@ -136,21 +136,21 @@ public final class UserSwitcherActivity extends LifecycleActivity {
 
     /* access modifiers changed from: private */
     /* renamed from: onCreate$lambda-1$lambda-0  reason: not valid java name */
-    public static final void m3297onCreate$lambda1$lambda0(UserSwitcherActivity userSwitcherActivity, View view) {
+    public static final void m3302onCreate$lambda1$lambda0(UserSwitcherActivity userSwitcherActivity, View view) {
         Intrinsics.checkNotNullParameter(userSwitcherActivity, "this$0");
         userSwitcherActivity.finish();
     }
 
     /* access modifiers changed from: private */
     /* renamed from: onCreate$lambda-3$lambda-2  reason: not valid java name */
-    public static final void m3298onCreate$lambda3$lambda2(UserSwitcherActivity userSwitcherActivity, View view) {
+    public static final void m3303onCreate$lambda3$lambda2(UserSwitcherActivity userSwitcherActivity, View view) {
         Intrinsics.checkNotNullParameter(userSwitcherActivity, "this$0");
         userSwitcherActivity.showPopupMenu();
     }
 
     /* access modifiers changed from: private */
     /* renamed from: onCreate$lambda-4  reason: not valid java name */
-    public static final void m3299onCreate$lambda4(UserSwitcherActivity userSwitcherActivity) {
+    public static final void m3304onCreate$lambda4(UserSwitcherActivity userSwitcherActivity) {
         Intrinsics.checkNotNullParameter(userSwitcherActivity, "this$0");
         userSwitcherActivity.buildUserViews();
     }
@@ -162,7 +162,7 @@ public final class UserSwitcherActivity extends LifecycleActivity {
         }
         Ref.ObjectRef objectRef = new Ref.ObjectRef();
         Context context = this;
-        objectRef.element = new ItemAdapter(context, C1893R.layout.user_switcher_fullscreen_popup_item, this.layoutInflater, new UserSwitcherActivity$showPopupMenu$popupMenuAdapter$1(this), new UserSwitcherActivity$showPopupMenu$popupMenuAdapter$2(this));
+        objectRef.element = new ItemAdapter(context, C1894R.layout.user_switcher_fullscreen_popup_item, this.layoutInflater, new UserSwitcherActivity$showPopupMenu$popupMenuAdapter$1(this), new UserSwitcherActivity$showPopupMenu$popupMenuAdapter$2(this));
         ((ItemAdapter) objectRef.element).addAll(arrayList);
         UserSwitcherPopupMenu userSwitcherPopupMenu = new UserSwitcherPopupMenu(context, this.falsingManager);
         View view = this.addButton;
@@ -179,7 +179,7 @@ public final class UserSwitcherActivity extends LifecycleActivity {
 
     /* access modifiers changed from: private */
     /* renamed from: showPopupMenu$lambda-7$lambda-6  reason: not valid java name */
-    public static final void m3300showPopupMenu$lambda7$lambda6(UserSwitcherActivity userSwitcherActivity, Ref.ObjectRef objectRef, UserSwitcherPopupMenu userSwitcherPopupMenu, AdapterView adapterView, View view, int i, long j) {
+    public static final void m3305showPopupMenu$lambda7$lambda6(UserSwitcherActivity userSwitcherActivity, Ref.ObjectRef objectRef, UserSwitcherPopupMenu userSwitcherPopupMenu, AdapterView adapterView, View view, int i, long j) {
         Intrinsics.checkNotNullParameter(userSwitcherActivity, "this$0");
         Intrinsics.checkNotNullParameter(objectRef, "$popupMenuAdapter");
         Intrinsics.checkNotNullParameter(userSwitcherPopupMenu, "$this_apply");
@@ -231,7 +231,7 @@ public final class UserSwitcherActivity extends LifecycleActivity {
         }
         viewGroup3.removeViews(i2, i);
         this.addUserRecords.clear();
-        Flow flow = (Flow) requireViewById(C1893R.C1897id.flow);
+        Flow flow = (Flow) requireViewById(C1894R.C1898id.flow);
         ViewGroup viewGroup4 = this.parent;
         if (viewGroup4 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("parent");
@@ -239,7 +239,7 @@ public final class UserSwitcherActivity extends LifecycleActivity {
         }
         int width = viewGroup4.getWidth();
         int maxColumns = getMaxColumns(this.adapter.getTotalUserViews());
-        int dimensionPixelSize = (width - ((maxColumns - 1) * getResources().getDimensionPixelSize(C1893R.dimen.user_switcher_fullscreen_horizontal_gap))) / maxColumns;
+        int dimensionPixelSize = (width - ((maxColumns - 1) * getResources().getDimensionPixelSize(C1894R.dimen.user_switcher_fullscreen_horizontal_gap))) / maxColumns;
         flow.setMaxElementsWrap(maxColumns);
         int count = this.adapter.getCount();
         for (int i4 = 0; i4 < count; i4++) {
@@ -256,7 +256,7 @@ public final class UserSwitcherActivity extends LifecycleActivity {
                     viewGroup5 = null;
                 }
                 View view2 = userSwitcherActivity$adapter$12.getView(i4, (View) null, viewGroup5);
-                ImageView imageView = (ImageView) view2.requireViewById(C1893R.C1897id.user_switcher_icon);
+                ImageView imageView = (ImageView) view2.requireViewById(C1894R.C1898id.user_switcher_icon);
                 ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
                 if (dimensionPixelSize < layoutParams.width) {
                     layoutParams.width = dimensionPixelSize;
@@ -296,7 +296,7 @@ public final class UserSwitcherActivity extends LifecycleActivity {
 
     /* access modifiers changed from: private */
     /* renamed from: buildUserViews$lambda-9  reason: not valid java name */
-    public static final void m3296buildUserViews$lambda9(UserSwitcherActivity userSwitcherActivity, UserSwitcherController.UserRecord userRecord, View view) {
+    public static final void m3301buildUserViews$lambda9(UserSwitcherActivity userSwitcherActivity, UserSwitcherController.UserRecord userRecord, View view) {
         Intrinsics.checkNotNullParameter(userSwitcherActivity, "this$0");
         if (!userSwitcherActivity.falsingManager.isFalseTap(1) && view.isEnabled()) {
             if (!userRecord.isCurrent || userRecord.isGuest) {
@@ -342,7 +342,7 @@ public final class UserSwitcherActivity extends LifecycleActivity {
         return (int) Math.ceil(((double) i) / 2.0d);
     }
 
-    @Metadata(mo64986d1 = {"\u0000@\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\u0010\u000e\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u000b\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0000\b\u0002\u0018\u00002\b\u0012\u0004\u0012\u00020\u00020\u0001BE\u0012\u0006\u0010\u0003\u001a\u00020\u0004\u0012\u0006\u0010\u0005\u001a\u00020\u0006\u0012\u0006\u0010\u0007\u001a\u00020\b\u0012\u0012\u0010\t\u001a\u000e\u0012\u0004\u0012\u00020\u0002\u0012\u0004\u0012\u00020\u000b0\n\u0012\u0012\u0010\f\u001a\u000e\u0012\u0004\u0012\u00020\u0002\u0012\u0004\u0012\u00020\r0\n¢\u0006\u0002\u0010\u000eJ\"\u0010\u0018\u001a\u00020\u00192\u0006\u0010\u001a\u001a\u00020\u00062\b\u0010\u001b\u001a\u0004\u0018\u00010\u00192\u0006\u0010\u001c\u001a\u00020\u001dH\u0016R\u001d\u0010\f\u001a\u000e\u0012\u0004\u0012\u00020\u0002\u0012\u0004\u0012\u00020\r0\n¢\u0006\b\n\u0000\u001a\u0004\b\u000f\u0010\u0010R\u0011\u0010\u0007\u001a\u00020\b¢\u0006\b\n\u0000\u001a\u0004\b\u0011\u0010\u0012R\u0011\u0010\u0003\u001a\u00020\u0004¢\u0006\b\n\u0000\u001a\u0004\b\u0013\u0010\u0014R\u0011\u0010\u0005\u001a\u00020\u0006¢\u0006\b\n\u0000\u001a\u0004\b\u0015\u0010\u0016R\u001d\u0010\t\u001a\u000e\u0012\u0004\u0012\u00020\u0002\u0012\u0004\u0012\u00020\u000b0\n¢\u0006\b\n\u0000\u001a\u0004\b\u0017\u0010\u0010¨\u0006\u001e"}, mo64987d2 = {"Lcom/android/systemui/user/UserSwitcherActivity$ItemAdapter;", "Landroid/widget/ArrayAdapter;", "Lcom/android/systemui/statusbar/policy/UserSwitcherController$UserRecord;", "parentContext", "Landroid/content/Context;", "resource", "", "layoutInflater", "Landroid/view/LayoutInflater;", "textGetter", "Lkotlin/Function1;", "", "iconGetter", "Landroid/graphics/drawable/Drawable;", "(Landroid/content/Context;ILandroid/view/LayoutInflater;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V", "getIconGetter", "()Lkotlin/jvm/functions/Function1;", "getLayoutInflater", "()Landroid/view/LayoutInflater;", "getParentContext", "()Landroid/content/Context;", "getResource", "()I", "getTextGetter", "getView", "Landroid/view/View;", "position", "convertView", "parent", "Landroid/view/ViewGroup;", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u0000@\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\u0010\u000e\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u000b\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0000\b\u0002\u0018\u00002\b\u0012\u0004\u0012\u00020\u00020\u0001BE\u0012\u0006\u0010\u0003\u001a\u00020\u0004\u0012\u0006\u0010\u0005\u001a\u00020\u0006\u0012\u0006\u0010\u0007\u001a\u00020\b\u0012\u0012\u0010\t\u001a\u000e\u0012\u0004\u0012\u00020\u0002\u0012\u0004\u0012\u00020\u000b0\n\u0012\u0012\u0010\f\u001a\u000e\u0012\u0004\u0012\u00020\u0002\u0012\u0004\u0012\u00020\r0\n¢\u0006\u0002\u0010\u000eJ\"\u0010\u0018\u001a\u00020\u00192\u0006\u0010\u001a\u001a\u00020\u00062\b\u0010\u001b\u001a\u0004\u0018\u00010\u00192\u0006\u0010\u001c\u001a\u00020\u001dH\u0016R\u001d\u0010\f\u001a\u000e\u0012\u0004\u0012\u00020\u0002\u0012\u0004\u0012\u00020\r0\n¢\u0006\b\n\u0000\u001a\u0004\b\u000f\u0010\u0010R\u0011\u0010\u0007\u001a\u00020\b¢\u0006\b\n\u0000\u001a\u0004\b\u0011\u0010\u0012R\u0011\u0010\u0003\u001a\u00020\u0004¢\u0006\b\n\u0000\u001a\u0004\b\u0013\u0010\u0014R\u0011\u0010\u0005\u001a\u00020\u0006¢\u0006\b\n\u0000\u001a\u0004\b\u0015\u0010\u0016R\u001d\u0010\t\u001a\u000e\u0012\u0004\u0012\u00020\u0002\u0012\u0004\u0012\u00020\u000b0\n¢\u0006\b\n\u0000\u001a\u0004\b\u0017\u0010\u0010¨\u0006\u001e"}, mo65043d2 = {"Lcom/android/systemui/user/UserSwitcherActivity$ItemAdapter;", "Landroid/widget/ArrayAdapter;", "Lcom/android/systemui/statusbar/policy/UserSwitcherController$UserRecord;", "parentContext", "Landroid/content/Context;", "resource", "", "layoutInflater", "Landroid/view/LayoutInflater;", "textGetter", "Lkotlin/Function1;", "", "iconGetter", "Landroid/graphics/drawable/Drawable;", "(Landroid/content/Context;ILandroid/view/LayoutInflater;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V", "getIconGetter", "()Lkotlin/jvm/functions/Function1;", "getLayoutInflater", "()Landroid/view/LayoutInflater;", "getParentContext", "()Landroid/content/Context;", "getResource", "()I", "getTextGetter", "getView", "Landroid/view/View;", "position", "convertView", "parent", "Landroid/view/ViewGroup;", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* compiled from: UserSwitcherActivity.kt */
     private static final class ItemAdapter extends ArrayAdapter<UserSwitcherController.UserRecord> {
         private final Function1<UserSwitcherController.UserRecord, Drawable> iconGetter;
@@ -393,8 +393,8 @@ public final class UserSwitcherActivity extends LifecycleActivity {
             }
             Function1<UserSwitcherController.UserRecord, Drawable> function1 = this.iconGetter;
             Intrinsics.checkNotNullExpressionValue(userRecord, "item");
-            ((ImageView) view.requireViewById(C1893R.C1897id.icon)).setImageDrawable(function1.invoke(userRecord));
-            ((TextView) view.requireViewById(C1893R.C1897id.text)).setText(this.textGetter.invoke(userRecord));
+            ((ImageView) view.requireViewById(C1894R.C1898id.icon)).setImageDrawable(function1.invoke(userRecord));
+            ((TextView) view.requireViewById(C1894R.C1898id.text)).setText(this.textGetter.invoke(userRecord));
             Intrinsics.checkNotNullExpressionValue(view, "view");
             return view;
         }

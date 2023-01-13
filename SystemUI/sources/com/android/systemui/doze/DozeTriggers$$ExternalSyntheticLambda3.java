@@ -15,6 +15,6 @@ public final /* synthetic */ class DozeTriggers$$ExternalSyntheticLambda3 implem
     }
 
     public final void run() {
-        this.f$0.m2738lambda$onSensor$2$comandroidsystemuidozeDozeTriggers(this.f$1, this.f$2, this.f$3);
+        this.f$0.m2743lambda$onSensor$2$comandroidsystemuidozeDozeTriggers(this.f$1, this.f$2, this.f$3);
     }
 }

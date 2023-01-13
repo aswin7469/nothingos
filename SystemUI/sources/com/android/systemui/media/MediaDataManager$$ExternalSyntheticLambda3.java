@@ -27,6 +27,6 @@ public final /* synthetic */ class MediaDataManager$$ExternalSyntheticLambda3 im
     }
 
     public final void run() {
-        MediaDataManager.m2786addResumptionControls$lambda7(this.f$0, this.f$1, this.f$2, this.f$3, this.f$4, this.f$5, this.f$6, this.f$7);
+        MediaDataManager.m2791addResumptionControls$lambda7(this.f$0, this.f$1, this.f$2, this.f$3, this.f$4, this.f$5, this.f$6, this.f$7);
     }
 }

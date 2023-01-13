@@ -9,6 +9,6 @@ public final /* synthetic */ class KeyguardUserDetailItemView$$ExternalSynthetic
     }
 
     public final void run() {
-        this.f$0.mo45877x89f85ecb();
+        this.f$0.mo45889x89f85ecb();
     }
 }

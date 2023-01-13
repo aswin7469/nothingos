@@ -12,6 +12,6 @@ public final /* synthetic */ class DozeSensors$$ExternalSyntheticLambda1 impleme
     }
 
     public final void onThresholdCrossed(ThresholdSensorEvent thresholdSensorEvent) {
-        this.f$0.m2736lambda$new$0$comandroidsystemuidozeDozeSensors(thresholdSensorEvent);
+        this.f$0.m2741lambda$new$0$comandroidsystemuidozeDozeSensors(thresholdSensorEvent);
     }
 }

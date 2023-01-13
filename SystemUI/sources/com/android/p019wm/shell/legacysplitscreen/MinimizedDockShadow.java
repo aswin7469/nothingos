@@ -9,7 +9,7 @@ import android.graphics.Paint;
 import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.view.View;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 
 /* renamed from: com.android.wm.shell.legacysplitscreen.MinimizedDockShadow */
 public class MinimizedDockShadow extends View {
@@ -34,8 +34,8 @@ public class MinimizedDockShadow extends View {
     }
 
     private void updatePaint(int i, int i2, int i3, int i4) {
-        int color = this.mContext.getResources().getColor(C3343R.C3344color.minimize_dock_shadow_start, (Resources.Theme) null);
-        int color2 = this.mContext.getResources().getColor(C3343R.C3344color.minimize_dock_shadow_end, (Resources.Theme) null);
+        int color = this.mContext.getResources().getColor(C3353R.C3354color.minimize_dock_shadow_start, (Resources.Theme) null);
+        int color2 = this.mContext.getResources().getColor(C3353R.C3354color.minimize_dock_shadow_end, (Resources.Theme) null);
         int argb = Color.argb((Color.alpha(color) + Color.alpha(color2)) / 2, 0, 0, 0);
         int argb2 = Color.argb((int) ((((float) Color.alpha(color)) * 0.25f) + (((float) Color.alpha(color2)) * 0.75f)), 0, 0, 0);
         int i5 = this.mDockSide;

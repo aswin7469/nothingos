@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import java.util.Objects;
 
 public class EditTextActivity extends Activity implements ClipboardManager.OnPrimaryClipChangedListener {
@@ -25,16 +25,16 @@ public class EditTextActivity extends Activity implements ClipboardManager.OnPri
     /* access modifiers changed from: protected */
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        setContentView(C1893R.layout.clipboard_edit_text_activity);
-        findViewById(C1893R.C1897id.done_button).setOnClickListener(new EditTextActivity$$ExternalSyntheticLambda0(this));
-        this.mEditText = (EditText) findViewById(C1893R.C1897id.edit_text);
-        this.mAttribution = (TextView) findViewById(C1893R.C1897id.attribution);
+        setContentView(C1894R.layout.clipboard_edit_text_activity);
+        findViewById(C1894R.C1898id.done_button).setOnClickListener(new EditTextActivity$$ExternalSyntheticLambda0(this));
+        this.mEditText = (EditText) findViewById(C1894R.C1898id.edit_text);
+        this.mAttribution = (TextView) findViewById(C1894R.C1898id.attribution);
         this.mClipboardManager = (ClipboardManager) Objects.requireNonNull((ClipboardManager) getSystemService(ClipboardManager.class));
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onCreate$0$com-android-systemui-clipboardoverlay-EditTextActivity */
-    public /* synthetic */ void mo31343xa3388fd9(View view) {
+    public /* synthetic */ void mo31354xa3388fd9(View view) {
         saveToClipboard();
     }
 
@@ -49,7 +49,7 @@ public class EditTextActivity extends Activity implements ClipboardManager.OnPri
         PackageManager packageManager = getApplicationContext().getPackageManager();
         boolean z = true;
         try {
-            this.mAttribution.setText(getResources().getString(C1893R.string.clipboard_edit_source, new Object[]{packageManager.getApplicationLabel(packageManager.getApplicationInfo(this.mClipboardManager.getPrimaryClipSource(), PackageManager.ApplicationInfoFlags.of(0)))}));
+            this.mAttribution.setText(getResources().getString(C1894R.string.clipboard_edit_source, new Object[]{packageManager.getApplicationLabel(packageManager.getApplicationInfo(this.mClipboardManager.getPrimaryClipSource(), PackageManager.ApplicationInfoFlags.of(0)))}));
         } catch (PackageManager.NameNotFoundException e) {
             Log.w(TAG, "Package not found: " + this.mClipboardManager.getPrimaryClipSource(), e);
         }

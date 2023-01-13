@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 import com.android.keyguard.AlphaOptimizedLinearLayout;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.statusbar.CrossFadeHelper;
 import com.android.systemui.statusbar.TransformableView;
 import com.android.systemui.statusbar.ViewTransformationHelper;
@@ -49,8 +49,8 @@ public class HybridNotificationView extends AlphaOptimizedLinearLayout implement
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mTitleView = (TextView) findViewById(C1893R.C1897id.notification_title);
-        this.mTextView = (TextView) findViewById(C1893R.C1897id.notification_text);
+        this.mTitleView = (TextView) findViewById(C1894R.C1898id.notification_title);
+        this.mTextView = (TextView) findViewById(C1894R.C1898id.notification_text);
         this.mTransformationHelper.setCustomTransformation(new ViewTransformationHelper.CustomTransformation() {
             public boolean transformTo(TransformState transformState, TransformableView transformableView, float f) {
                 TransformState currentState = transformableView.getCurrentState(1);

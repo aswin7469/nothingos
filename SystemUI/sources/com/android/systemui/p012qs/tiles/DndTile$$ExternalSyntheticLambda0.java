@@ -14,6 +14,6 @@ public final /* synthetic */ class DndTile$$ExternalSyntheticLambda0 implements 
     }
 
     public final void run() {
-        this.f$0.m2977lambda$enableZenMode$0$comandroidsystemuiqstilesDndTile(this.f$1);
+        this.f$0.m2981lambda$enableZenMode$0$comandroidsystemuiqstilesDndTile(this.f$1);
     }
 }

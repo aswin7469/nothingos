@@ -79,7 +79,7 @@ public abstract class AbstractPreferenceController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$replaceEnterpriseStringTitle$0$com-android-settingslib-core-AbstractPreferenceController */
-    public /* synthetic */ String mo28461x18600569(int i) {
+    public /* synthetic */ String mo28466x18600569(int i) {
         return this.mContext.getString(i);
     }
 
@@ -97,7 +97,7 @@ public abstract class AbstractPreferenceController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$replaceEnterpriseStringSummary$1$com-android-settingslib-core-AbstractPreferenceController */
-    public /* synthetic */ String mo28460xd7384cb8(int i) {
+    public /* synthetic */ String mo28465xd7384cb8(int i) {
         return this.mContext.getString(i);
     }
 }

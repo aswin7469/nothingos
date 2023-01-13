@@ -16,6 +16,6 @@ public final /* synthetic */ class SystemUIDialog$$ExternalSyntheticLambda0 impl
     }
 
     public final void onClick(View view) {
-        this.f$0.mo45371xcfeb4095(this.f$1, this.f$2, view);
+        this.f$0.mo45383xcfeb4095(this.f$1, this.f$2, view);
     }
 }

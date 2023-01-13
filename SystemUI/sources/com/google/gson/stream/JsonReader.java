@@ -42,7 +42,7 @@ public class JsonReader implements Closeable {
     private final char[] buffer = new char[1024];
 
     /* renamed from: in */
-    private final Reader f460in;
+    private final Reader f459in;
     private boolean lenient = false;
     private int limit = 0;
     private int lineNumber = 0;
@@ -89,7 +89,7 @@ public class JsonReader implements Closeable {
         this.pathNames = new String[32];
         this.pathIndices = new int[32];
         if (reader != null) {
-            this.f460in = reader;
+            this.f459in = reader;
             return;
         }
         throw new NullPointerException("in == null");
@@ -1036,7 +1036,7 @@ public class JsonReader implements Closeable {
         this.peeked = 0;
         this.stack[0] = 8;
         this.stackSize = 1;
-        this.f460in.close();
+        this.f459in.close();
     }
 
     public void skipValue() throws IOException {
@@ -1115,7 +1115,7 @@ public class JsonReader implements Closeable {
         }
         this.pos = 0;
         do {
-            Reader reader = this.f460in;
+            Reader reader = this.f459in;
             int i8 = this.limit;
             int read = reader.read(cArr, i8, cArr.length - i8);
             if (read == -1) {

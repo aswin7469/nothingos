@@ -13,6 +13,6 @@ public final /* synthetic */ class FooterView$$ExternalSyntheticLambda0 implemen
     }
 
     public final void run() {
-        this.f$0.mo41344x433bc4b0(this.f$1);
+        this.f$0.mo41350x433bc4b0(this.f$1);
     }
 }

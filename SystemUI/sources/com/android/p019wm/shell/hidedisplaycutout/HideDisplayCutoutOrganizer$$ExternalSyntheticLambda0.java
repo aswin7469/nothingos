@@ -19,6 +19,6 @@ public final /* synthetic */ class HideDisplayCutoutOrganizer$$ExternalSynthetic
     }
 
     public final void accept(Object obj, Object obj2) {
-        this.f$0.mo49580xaf66d44(this.f$1, this.f$2, (WindowContainerToken) obj, (SurfaceControl) obj2);
+        this.f$0.mo49589xaf66d44(this.f$1, this.f$2, (WindowContainerToken) obj, (SurfaceControl) obj2);
     }
 }

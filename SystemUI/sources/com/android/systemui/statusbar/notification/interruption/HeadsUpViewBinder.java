@@ -43,7 +43,7 @@ public class HeadsUpViewBinder {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$bindHeadsUpView$0$com-android-systemui-statusbar-notification-interruption-HeadsUpViewBinder */
-    public /* synthetic */ void mo40707xea628d4a(NotificationEntry notificationEntry, RowContentBindParams rowContentBindParams, NotifBindPipeline.BindCallback bindCallback, NotificationEntry notificationEntry2) {
+    public /* synthetic */ void mo40710xea628d4a(NotificationEntry notificationEntry, RowContentBindParams rowContentBindParams, NotifBindPipeline.BindCallback bindCallback, NotificationEntry notificationEntry2) {
         this.mLogger.entryBoundSuccessfully(notificationEntry.getKey());
         notificationEntry2.getRow().setUsesIncreasedHeadsUpHeight(rowContentBindParams.useIncreasedHeadsUpHeight());
         this.mOngoingBindCallbacks.remove(notificationEntry);
@@ -69,7 +69,7 @@ public class HeadsUpViewBinder {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$unbindHeadsUpView$1$com-android-systemui-statusbar-notification-interruption-HeadsUpViewBinder */
-    public /* synthetic */ void mo40708x8f861682(NotificationEntry notificationEntry) {
+    public /* synthetic */ void mo40711x8f861682(NotificationEntry notificationEntry) {
         this.mLogger.entryUnbound(notificationEntry.getKey());
     }
 }

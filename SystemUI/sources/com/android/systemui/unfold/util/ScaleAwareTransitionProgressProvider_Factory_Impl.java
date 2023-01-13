@@ -6,9 +6,9 @@ import dagger.internal.InstanceFactory;
 import javax.inject.Provider;
 
 public final class ScaleAwareTransitionProgressProvider_Factory_Impl implements ScaleAwareTransitionProgressProvider.Factory {
-    private final C4830ScaleAwareTransitionProgressProvider_Factory delegateFactory;
+    private final C4842ScaleAwareTransitionProgressProvider_Factory delegateFactory;
 
-    ScaleAwareTransitionProgressProvider_Factory_Impl(C4830ScaleAwareTransitionProgressProvider_Factory scaleAwareTransitionProgressProvider_Factory) {
+    ScaleAwareTransitionProgressProvider_Factory_Impl(C4842ScaleAwareTransitionProgressProvider_Factory scaleAwareTransitionProgressProvider_Factory) {
         this.delegateFactory = scaleAwareTransitionProgressProvider_Factory;
     }
 
@@ -16,7 +16,7 @@ public final class ScaleAwareTransitionProgressProvider_Factory_Impl implements 
         return this.delegateFactory.get(unfoldTransitionProgressProvider);
     }
 
-    public static Provider<ScaleAwareTransitionProgressProvider.Factory> create(C4830ScaleAwareTransitionProgressProvider_Factory scaleAwareTransitionProgressProvider_Factory) {
+    public static Provider<ScaleAwareTransitionProgressProvider.Factory> create(C4842ScaleAwareTransitionProgressProvider_Factory scaleAwareTransitionProgressProvider_Factory) {
         return InstanceFactory.create(new ScaleAwareTransitionProgressProvider_Factory_Impl(scaleAwareTransitionProgressProvider_Factory));
     }
 }

@@ -32,7 +32,7 @@ import android.view.WindowManager;
 import com.android.internal.policy.GestureNavigationSettingsObserver;
 import com.android.internal.util.LatencyTracker;
 import com.android.p019wm.shell.back.BackAnimation;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.SystemUIFactory;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.dagger.qualifiers.Main;
@@ -109,7 +109,7 @@ public class EdgeBackGestureHandler extends CurrentUserTracker implements Plugin
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onSystemGestureExclusionChanged$0$com-android-systemui-navigationbar-gestural-EdgeBackGestureHandler$1 */
-        public /* synthetic */ void mo35062x7bfe7a7e(Region region, Region region2) {
+        public /* synthetic */ void mo35066x7bfe7a7e(Region region, Region region2) {
             EdgeBackGestureHandler.this.mExcludeRegion.set(region);
             Region access$300 = EdgeBackGestureHandler.this.mUnrestrictedExcludeRegion;
             if (region2 != null) {
@@ -446,8 +446,8 @@ public class EdgeBackGestureHandler extends CurrentUserTracker implements Plugin
 
     private WindowManager.LayoutParams createLayoutParams() {
         Resources resources = this.mContext.getResources();
-        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(resources.getDimensionPixelSize(C1893R.dimen.navigation_edge_panel_width), resources.getDimensionPixelSize(C1893R.dimen.navigation_edge_panel_height), 2024, 280, -3);
-        layoutParams.accessibilityTitle = this.mContext.getString(C1893R.string.nav_bar_edge_panel);
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(resources.getDimensionPixelSize(C1894R.dimen.navigation_edge_panel_width), resources.getDimensionPixelSize(C1894R.dimen.navigation_edge_panel_height), 2024, 280, -3);
+        layoutParams.accessibilityTitle = this.mContext.getString(C1894R.string.nav_bar_edge_panel);
         layoutParams.windowAnimations = 0;
         layoutParams.privateFlags |= 2097168;
         layoutParams.setTitle(TAG + this.mContext.getDisplayId());

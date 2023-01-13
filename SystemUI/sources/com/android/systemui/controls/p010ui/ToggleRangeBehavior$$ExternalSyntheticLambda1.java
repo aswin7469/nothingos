@@ -19,6 +19,6 @@ public final /* synthetic */ class ToggleRangeBehavior$$ExternalSyntheticLambda1
     }
 
     public final boolean onTouch(View view, MotionEvent motionEvent) {
-        return ToggleRangeBehavior.m2731initialize$lambda0(this.f$0, this.f$1, this.f$2, view, motionEvent);
+        return ToggleRangeBehavior.m2736initialize$lambda0(this.f$0, this.f$1, this.f$2, view, motionEvent);
     }
 }

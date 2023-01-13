@@ -11,6 +11,6 @@ public final /* synthetic */ class TooltipManager$$ExternalSyntheticLambda2 impl
     }
 
     public final void onClick(View view) {
-        TooltipManager.m2599dismissView$lambda1$lambda0(this.f$0, view);
+        TooltipManager.m2604dismissView$lambda1$lambda0(this.f$0, view);
     }
 }

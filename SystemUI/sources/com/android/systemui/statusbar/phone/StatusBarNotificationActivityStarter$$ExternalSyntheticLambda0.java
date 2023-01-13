@@ -24,6 +24,6 @@ public final /* synthetic */ class StatusBarNotificationActivityStarter$$Externa
     }
 
     public final int startPendingIntent(RemoteAnimationAdapter remoteAnimationAdapter) {
-        return this.f$0.mo45300x41549ef7(this.f$1, this.f$2, this.f$3, this.f$4, remoteAnimationAdapter);
+        return this.f$0.mo45312x41549ef7(this.f$1, this.f$2, this.f$3, this.f$4, remoteAnimationAdapter);
     }
 }

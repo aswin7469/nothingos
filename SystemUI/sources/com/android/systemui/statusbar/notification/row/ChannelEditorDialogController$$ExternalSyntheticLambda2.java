@@ -11,6 +11,6 @@ public final /* synthetic */ class ChannelEditorDialogController$$ExternalSynthe
     }
 
     public final void onClick(View view) {
-        ChannelEditorDialogController.m3136initDialog$lambda9$lambda5(this.f$0, view);
+        ChannelEditorDialogController.m3140initDialog$lambda9$lambda5(this.f$0, view);
     }
 }

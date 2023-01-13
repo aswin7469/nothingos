@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewOverlay;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.HashMap;
@@ -48,11 +48,11 @@ public class DreamOverlayStatusBarView extends ConstraintLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mStatusIcons.put(1, fetchStatusIconForResId(C1893R.C1897id.dream_overlay_wifi_status));
-        this.mStatusIcons.put(2, fetchStatusIconForResId(C1893R.C1897id.dream_overlay_alarm_set));
-        this.mStatusIcons.put(3, fetchStatusIconForResId(C1893R.C1897id.dream_overlay_camera_mic_off));
-        this.mStatusIcons.put(0, fetchStatusIconForResId(C1893R.C1897id.dream_overlay_notification_indicator));
-        this.mStatusIcons.put(4, fetchStatusIconForResId(C1893R.C1897id.dream_overlay_priority_mode));
+        this.mStatusIcons.put(1, fetchStatusIconForResId(C1894R.C1898id.dream_overlay_wifi_status));
+        this.mStatusIcons.put(2, fetchStatusIconForResId(C1894R.C1898id.dream_overlay_alarm_set));
+        this.mStatusIcons.put(3, fetchStatusIconForResId(C1894R.C1898id.dream_overlay_camera_mic_off));
+        this.mStatusIcons.put(0, fetchStatusIconForResId(C1894R.C1898id.dream_overlay_notification_indicator));
+        this.mStatusIcons.put(4, fetchStatusIconForResId(C1894R.C1898id.dream_overlay_priority_mode));
     }
 
     /* access modifiers changed from: package-private */

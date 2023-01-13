@@ -13,6 +13,6 @@ public final /* synthetic */ class ConversationNotificationManager$$ExternalSynt
     }
 
     public final Object apply(Object obj, Object obj2) {
-        return ConversationNotificationManager.m3089onNotificationPanelExpandStateChanged$lambda6(this.f$0, (String) obj, (ConversationNotificationManager.ConversationState) obj2);
+        return ConversationNotificationManager.m3093onNotificationPanelExpandStateChanged$lambda6(this.f$0, (String) obj, (ConversationNotificationManager.ConversationState) obj2);
     }
 }

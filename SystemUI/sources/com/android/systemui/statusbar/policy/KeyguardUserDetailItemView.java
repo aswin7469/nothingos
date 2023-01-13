@@ -6,7 +6,7 @@ import android.util.Log;
 import android.widget.TextView;
 import androidx.core.graphics.ColorUtils;
 import com.android.keyguard.KeyguardConstants;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.animation.Interpolators;
 import com.android.systemui.p012qs.tiles.UserDetailItemView;
 
@@ -19,7 +19,7 @@ public class KeyguardUserDetailItemView extends UserDetailItemView {
 
     /* access modifiers changed from: protected */
     public int getFontSizeDimen() {
-        return C1893R.dimen.kg_user_switcher_text_size;
+        return C1894R.dimen.kg_user_switcher_text_size;
     }
 
     public KeyguardUserDetailItemView(Context context) {
@@ -85,7 +85,7 @@ public class KeyguardUserDetailItemView extends UserDetailItemView {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateVisibilities$0$com-android-systemui-statusbar-policy-KeyguardUserDetailItemView */
-    public /* synthetic */ void mo45877x89f85ecb() {
+    public /* synthetic */ void mo45889x89f85ecb() {
         this.mName.setVisibility(8);
         this.mName.setAlpha(1.0f);
     }

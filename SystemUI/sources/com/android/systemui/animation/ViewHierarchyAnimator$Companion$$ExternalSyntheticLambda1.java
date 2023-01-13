@@ -15,6 +15,6 @@ public final /* synthetic */ class ViewHierarchyAnimator$Companion$$ExternalSynt
     }
 
     public final void run() {
-        ViewHierarchyAnimator.Companion.m2547animateRemoval$lambda1(this.f$0, this.f$1);
+        ViewHierarchyAnimator.Companion.m2553animateRemoval$lambda1(this.f$0, this.f$1);
     }
 }

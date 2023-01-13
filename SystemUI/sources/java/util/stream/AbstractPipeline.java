@@ -189,7 +189,7 @@ public abstract class AbstractPipeline<E_IN, E_OUT, S extends BaseStream<E_OUT, 
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$spliterator$0$java-util-stream-AbstractPipeline  reason: not valid java name */
-    public /* synthetic */ Spliterator m3866lambda$spliterator$0$javautilstreamAbstractPipeline() {
+    public /* synthetic */ Spliterator m3884lambda$spliterator$0$javautilstreamAbstractPipeline() {
         return sourceSpliterator(0);
     }
 

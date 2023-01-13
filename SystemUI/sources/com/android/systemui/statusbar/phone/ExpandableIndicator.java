@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.AnimatedVectorDrawable;
 import android.util.AttributeSet;
 import android.widget.ImageView;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 
 public class ExpandableIndicator extends ImageView {
     private boolean mExpanded;
@@ -38,14 +38,14 @@ public class ExpandableIndicator extends ImageView {
     }
 
     private int getDrawableResourceId(boolean z) {
-        return this.mIsDefaultDirection ? z ? C1893R.C1895drawable.ic_volume_collapse_animation : C1893R.C1895drawable.ic_volume_expand_animation : z ? C1893R.C1895drawable.ic_volume_expand_animation : C1893R.C1895drawable.ic_volume_collapse_animation;
+        return this.mIsDefaultDirection ? z ? C1894R.C1896drawable.ic_volume_collapse_animation : C1894R.C1896drawable.ic_volume_expand_animation : z ? C1894R.C1896drawable.ic_volume_expand_animation : C1894R.C1896drawable.ic_volume_collapse_animation;
     }
 
     private String getContentDescription(boolean z) {
         if (z) {
-            return this.mContext.getString(C1893R.string.accessibility_quick_settings_collapse);
+            return this.mContext.getString(C1894R.string.accessibility_quick_settings_collapse);
         }
-        return this.mContext.getString(C1893R.string.accessibility_quick_settings_expand);
+        return this.mContext.getString(C1894R.string.accessibility_quick_settings_expand);
     }
 
     private void updateIndicatorDrawable() {

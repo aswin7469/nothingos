@@ -10,7 +10,7 @@ import android.view.WindowInsets;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import androidx.dynamicanimation.animation.DynamicAnimation;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.animation.PhysicsAnimator;
 import com.android.p019wm.shell.common.DismissCircleView;
 import java.util.LinkedHashMap;
@@ -20,7 +20,7 @@ import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 import kotlin.jvm.internal.Intrinsics;
 
-@Metadata(mo64986d1 = {"\u0000J\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\t\n\u0000\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0007\n\u0002\u0010\u000b\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0006\u0018\u00002\u00020\u0001B\r\u0012\u0006\u0010\u0002\u001a\u00020\u0003¢\u0006\u0002\u0010\u0004J\u0006\u0010\u001c\u001a\u00020\u001dJ\b\u0010\u001e\u001a\u00020\tH\u0002J\u0006\u0010\u001f\u001a\u00020\u001dJ\u0006\u0010 \u001a\u00020\u001dJ\b\u0010!\u001a\u00020\u001dH\u0002J\u0006\u0010\"\u001a\u00020\u001dR\u000e\u0010\u0005\u001a\u00020\u0006XD¢\u0006\u0002\n\u0000R\u0014\u0010\u0007\u001a\b\u0012\u0004\u0012\u00020\t0\bX\u0004¢\u0006\u0002\n\u0000R\u0014\u0010\n\u001a\b\u0012\u0004\u0012\u00020\f0\u000bX\u0004¢\u0006\u0002\n\u0000R\u001a\u0010\r\u001a\u00020\fX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u000e\u0010\u000f\"\u0004\b\u0010\u0010\u0011R\u000e\u0010\u0012\u001a\u00020\tX\u000e¢\u0006\u0002\n\u0000R\u001a\u0010\u0013\u001a\u00020\u0014X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0013\u0010\u0015\"\u0004\b\u0016\u0010\u0017R\u000e\u0010\u0018\u001a\u00020\u0019X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u001a\u001a\u00020\u001bX\u000e¢\u0006\u0002\n\u0000¨\u0006#"}, mo64987d2 = {"Lcom/android/wm/shell/bubbles/DismissView;", "Landroid/widget/FrameLayout;", "context", "Landroid/content/Context;", "(Landroid/content/Context;)V", "DISMISS_SCRIM_FADE_MS", "", "GRADIENT_ALPHA", "Landroid/util/IntProperty;", "Landroid/graphics/drawable/GradientDrawable;", "animator", "Lcom/android/wm/shell/animation/PhysicsAnimator;", "Lcom/android/wm/shell/common/DismissCircleView;", "circle", "getCircle", "()Lcom/android/wm/shell/common/DismissCircleView;", "setCircle", "(Lcom/android/wm/shell/common/DismissCircleView;)V", "gradientDrawable", "isShowing", "", "()Z", "setShowing", "(Z)V", "spring", "Lcom/android/wm/shell/animation/PhysicsAnimator$SpringConfig;", "wm", "Landroid/view/WindowManager;", "cancelAnimators", "", "createGradient", "hide", "show", "updatePadding", "updateResources", "WMShell_release"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000J\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\t\n\u0000\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0007\n\u0002\u0010\u000b\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0006\u0018\u00002\u00020\u0001B\r\u0012\u0006\u0010\u0002\u001a\u00020\u0003¢\u0006\u0002\u0010\u0004J\u0006\u0010\u001c\u001a\u00020\u001dJ\b\u0010\u001e\u001a\u00020\tH\u0002J\u0006\u0010\u001f\u001a\u00020\u001dJ\u0006\u0010 \u001a\u00020\u001dJ\b\u0010!\u001a\u00020\u001dH\u0002J\u0006\u0010\"\u001a\u00020\u001dR\u000e\u0010\u0005\u001a\u00020\u0006XD¢\u0006\u0002\n\u0000R\u0014\u0010\u0007\u001a\b\u0012\u0004\u0012\u00020\t0\bX\u0004¢\u0006\u0002\n\u0000R\u0014\u0010\n\u001a\b\u0012\u0004\u0012\u00020\f0\u000bX\u0004¢\u0006\u0002\n\u0000R\u001a\u0010\r\u001a\u00020\fX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u000e\u0010\u000f\"\u0004\b\u0010\u0010\u0011R\u000e\u0010\u0012\u001a\u00020\tX\u000e¢\u0006\u0002\n\u0000R\u001a\u0010\u0013\u001a\u00020\u0014X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0013\u0010\u0015\"\u0004\b\u0016\u0010\u0017R\u000e\u0010\u0018\u001a\u00020\u0019X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u001a\u001a\u00020\u001bX\u000e¢\u0006\u0002\n\u0000¨\u0006#"}, mo65043d2 = {"Lcom/android/wm/shell/bubbles/DismissView;", "Landroid/widget/FrameLayout;", "context", "Landroid/content/Context;", "(Landroid/content/Context;)V", "DISMISS_SCRIM_FADE_MS", "", "GRADIENT_ALPHA", "Landroid/util/IntProperty;", "Landroid/graphics/drawable/GradientDrawable;", "animator", "Lcom/android/wm/shell/animation/PhysicsAnimator;", "Lcom/android/wm/shell/common/DismissCircleView;", "circle", "getCircle", "()Lcom/android/wm/shell/common/DismissCircleView;", "setCircle", "(Lcom/android/wm/shell/common/DismissCircleView;)V", "gradientDrawable", "isShowing", "", "()Z", "setShowing", "(Z)V", "spring", "Lcom/android/wm/shell/animation/PhysicsAnimator$SpringConfig;", "wm", "Landroid/view/WindowManager;", "cancelAnimators", "", "createGradient", "hide", "show", "updatePadding", "updateResources", "WMShell_release"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* renamed from: com.android.wm.shell.bubbles.DismissView */
 /* compiled from: DismissView.kt */
 public final class DismissView extends FrameLayout {
@@ -34,7 +34,7 @@ public final class DismissView extends FrameLayout {
     private final PhysicsAnimator.SpringConfig spring;
 
     /* renamed from: wm */
-    private WindowManager f404wm;
+    private WindowManager f403wm;
 
     public void _$_clearFindViewByIdCache() {
         this._$_findViewCache.clear();
@@ -64,18 +64,18 @@ public final class DismissView extends FrameLayout {
         this.DISMISS_SCRIM_FADE_MS = 200;
         Object systemService = context.getSystemService("window");
         if (systemService != null) {
-            this.f404wm = (WindowManager) systemService;
+            this.f403wm = (WindowManager) systemService;
             this.gradientDrawable = createGradient();
             this.GRADIENT_ALPHA = new DismissView$GRADIENT_ALPHA$1();
-            setLayoutParams(new FrameLayout.LayoutParams(-1, getResources().getDimensionPixelSize(C3343R.dimen.floating_dismiss_gradient_height), 80));
+            setLayoutParams(new FrameLayout.LayoutParams(-1, getResources().getDimensionPixelSize(C3353R.dimen.floating_dismiss_gradient_height), 80));
             updatePadding();
             setClipToPadding(false);
             setClipChildren(false);
             setVisibility(4);
             setBackgroundDrawable(this.gradientDrawable);
-            int dimensionPixelSize = getResources().getDimensionPixelSize(C3343R.dimen.dismiss_circle_size);
+            int dimensionPixelSize = getResources().getDimensionPixelSize(C3353R.dimen.dismiss_circle_size);
             addView(this.circle, new FrameLayout.LayoutParams(dimensionPixelSize, dimensionPixelSize, 81));
-            this.circle.setTranslationY((float) getResources().getDimensionPixelSize(C3343R.dimen.floating_dismiss_gradient_height));
+            this.circle.setTranslationY((float) getResources().getDimensionPixelSize(C3353R.dimen.floating_dismiss_gradient_height));
             return;
         }
         throw new NullPointerException("null cannot be cast to non-null type android.view.WindowManager");
@@ -134,8 +134,8 @@ public final class DismissView extends FrameLayout {
 
     public final void updateResources() {
         updatePadding();
-        getLayoutParams().height = getResources().getDimensionPixelSize(C3343R.dimen.floating_dismiss_gradient_height);
-        int dimensionPixelSize = getResources().getDimensionPixelSize(C3343R.dimen.dismiss_circle_size);
+        getLayoutParams().height = getResources().getDimensionPixelSize(C3353R.dimen.floating_dismiss_gradient_height);
+        int dimensionPixelSize = getResources().getDimensionPixelSize(C3353R.dimen.dismiss_circle_size);
         this.circle.getLayoutParams().width = dimensionPixelSize;
         this.circle.getLayoutParams().height = dimensionPixelSize;
         this.circle.requestLayout();
@@ -150,8 +150,8 @@ public final class DismissView extends FrameLayout {
     }
 
     private final void updatePadding() {
-        WindowInsets windowInsets = this.f404wm.getCurrentWindowMetrics().getWindowInsets();
+        WindowInsets windowInsets = this.f403wm.getCurrentWindowMetrics().getWindowInsets();
         Intrinsics.checkNotNullExpressionValue(windowInsets, "wm.getCurrentWindowMetrics().getWindowInsets()");
-        setPadding(0, 0, 0, windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.navigationBars()).bottom + getResources().getDimensionPixelSize(C3343R.dimen.floating_dismiss_bottom_margin));
+        setPadding(0, 0, 0, windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.navigationBars()).bottom + getResources().getDimensionPixelSize(C3353R.dimen.floating_dismiss_bottom_margin));
     }
 }

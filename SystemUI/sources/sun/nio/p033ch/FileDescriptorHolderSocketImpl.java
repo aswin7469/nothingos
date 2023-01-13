@@ -12,7 +12,7 @@ import java.p026io.OutputStream;
 /* renamed from: sun.nio.ch.FileDescriptorHolderSocketImpl */
 class FileDescriptorHolderSocketImpl extends SocketImpl {
     public FileDescriptorHolderSocketImpl(FileDescriptor fileDescriptor) {
-        this.f559fd = fileDescriptor;
+        this.f557fd = fileDescriptor;
     }
 
     public void setOption(int i, Object obj) throws SocketException {

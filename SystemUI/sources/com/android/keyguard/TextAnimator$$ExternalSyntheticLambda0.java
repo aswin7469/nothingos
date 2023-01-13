@@ -11,6 +11,6 @@ public final /* synthetic */ class TextAnimator$$ExternalSyntheticLambda0 implem
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        TextAnimator.m2311animator$lambda1$lambda0(this.f$0, valueAnimator);
+        TextAnimator.m2317animator$lambda1$lambda0(this.f$0, valueAnimator);
     }
 }

@@ -8,7 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
 import com.android.systemui.BuildConfig;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.color.DynamicColorsOptions;
 import java.lang.reflect.Method;
 import java.util.Collections;
@@ -19,7 +19,7 @@ public class DynamicColors {
     private static final DeviceSupportCondition DEFAULT_DEVICE_SUPPORT_CONDITION;
     private static final Map<String, DeviceSupportCondition> DYNAMIC_COLOR_SUPPORTED_BRANDS;
     private static final Map<String, DeviceSupportCondition> DYNAMIC_COLOR_SUPPORTED_MANUFACTURERS;
-    private static final int[] DYNAMIC_COLOR_THEME_OVERLAY_ATTRIBUTE = {C3621R.attr.dynamicColorThemeOverlay};
+    private static final int[] DYNAMIC_COLOR_THEME_OVERLAY_ATTRIBUTE = {C3631R.attr.dynamicColorThemeOverlay};
     private static final DeviceSupportCondition SAMSUNG_DEVICE_SUPPORT_CONDITION;
     private static final int USE_DEFAULT_THEME_OVERLAY = 0;
 
@@ -36,13 +36,13 @@ public class DynamicColors {
     }
 
     static {
-        C36831 r0 = new DeviceSupportCondition() {
+        C36931 r0 = new DeviceSupportCondition() {
             public boolean isSupported() {
                 return true;
             }
         };
         DEFAULT_DEVICE_SUPPORT_CONDITION = r0;
-        C36842 r1 = new DeviceSupportCondition() {
+        C36942 r1 = new DeviceSupportCondition() {
             private Long version;
 
             public boolean isSupported() {

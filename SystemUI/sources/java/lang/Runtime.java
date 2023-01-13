@@ -162,11 +162,11 @@ public class Runtime {
     }
 
     public int availableProcessors() {
-        return (int) Libcore.f857os.sysconf(OsConstants._SC_NPROCESSORS_CONF);
+        return (int) Libcore.f855os.sysconf(OsConstants._SC_NPROCESSORS_CONF);
     }
 
     /* renamed from: gc */
-    public void mo59631gc() {
+    public void mo59687gc() {
         BlockGuard.getThreadPolicy().onExplicitGc();
         nativeGc();
     }

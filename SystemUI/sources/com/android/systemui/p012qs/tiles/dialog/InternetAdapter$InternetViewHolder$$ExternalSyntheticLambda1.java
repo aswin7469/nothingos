@@ -16,6 +16,6 @@ public final /* synthetic */ class InternetAdapter$InternetViewHolder$$ExternalS
     }
 
     public final void onClick(View view) {
-        this.f$0.mo36961x39b0c19c(this.f$1, view);
+        this.f$0.mo36959x39b0c19c(this.f$1, view);
     }
 }

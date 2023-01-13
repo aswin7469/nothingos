@@ -10,6 +10,6 @@ public final /* synthetic */ class QSFooterView$$ExternalSyntheticLambda0 implem
     }
 
     public final void run() {
-        this.f$0.m2908lambda$updateEverything$0$comandroidsystemuiqsQSFooterView();
+        this.f$0.m2913lambda$updateEverything$0$comandroidsystemuiqsQSFooterView();
     }
 }

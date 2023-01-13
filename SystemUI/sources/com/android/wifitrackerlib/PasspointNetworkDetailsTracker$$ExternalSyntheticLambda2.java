@@ -12,6 +12,6 @@ public final /* synthetic */ class PasspointNetworkDetailsTracker$$ExternalSynth
     }
 
     public final boolean test(Object obj) {
-        return this.f$0.mo47819x38068e71((PasspointConfiguration) obj);
+        return this.f$0.mo47828x38068e71((PasspointConfiguration) obj);
     }
 }

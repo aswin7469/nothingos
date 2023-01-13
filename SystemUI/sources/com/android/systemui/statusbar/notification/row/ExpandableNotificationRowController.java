@@ -171,7 +171,7 @@ public class ExpandableNotificationRowController implements NotifViewController 
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$init$0$com-android-systemui-statusbar-notification-row-ExpandableNotificationRowController */
-    public /* synthetic */ boolean mo41255x51dbc3a3(View view, int i, int i2, NotificationMenuRowPlugin.MenuItem menuItem) {
+    public /* synthetic */ boolean mo41261x51dbc3a3(View view, int i, int i2, NotificationMenuRowPlugin.MenuItem menuItem) {
         if (!this.mView.isSummaryWithChildren()) {
             return this.mNotificationGutsManager.openGuts(view, i, i2, menuItem);
         }

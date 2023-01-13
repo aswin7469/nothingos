@@ -12,6 +12,6 @@ public final /* synthetic */ class BouncerSwipeTouchHandler$$ExternalSyntheticLa
     }
 
     public final void onInputEvent(InputEvent inputEvent) {
-        this.f$0.mo32624xb1f2d2d5(inputEvent);
+        this.f$0.mo32635xb1f2d2d5(inputEvent);
     }
 }

@@ -11,6 +11,6 @@ public final /* synthetic */ class KeyguardStatusBarViewController$$ExternalSynt
     }
 
     public final void onUserSwitcherPreferenceChange(boolean z) {
-        this.f$0.mo44299xb4f786e2(z);
+        this.f$0.mo44314xb4f786e2(z);
     }
 }

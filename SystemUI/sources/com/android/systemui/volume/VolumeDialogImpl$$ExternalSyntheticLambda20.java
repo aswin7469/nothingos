@@ -11,6 +11,6 @@ public final /* synthetic */ class VolumeDialogImpl$$ExternalSyntheticLambda20 i
     }
 
     public final void onClick(View view) {
-        this.f$0.mo47345xb4eb2e2b(view);
+        this.f$0.mo47363x6a34d0d(view);
     }
 }

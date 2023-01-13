@@ -9,6 +9,6 @@ public final /* synthetic */ class SensorUseStartedActivity$$ExternalSyntheticLa
     }
 
     public final void run() {
-        SensorUseStartedActivity.m3019onStop$lambda5(this.f$0);
+        SensorUseStartedActivity.m3023onStop$lambda5(this.f$0);
     }
 }

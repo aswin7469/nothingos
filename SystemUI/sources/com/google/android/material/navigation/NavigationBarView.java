@@ -22,7 +22,7 @@ import androidx.appcompat.widget.TintTypedArray;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.view.ViewCompat;
 import androidx.customview.view.AbsSavedState;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.internal.ThemeEnforcement;
 import com.google.android.material.resources.MaterialResources;
@@ -72,7 +72,7 @@ public abstract class NavigationBarView extends FrameLayout {
         NavigationBarPresenter navigationBarPresenter = new NavigationBarPresenter();
         this.presenter = navigationBarPresenter;
         Context context2 = getContext();
-        TintTypedArray obtainTintedStyledAttributes = ThemeEnforcement.obtainTintedStyledAttributes(context2, attributeSet, C3621R.styleable.NavigationBarView, i, i2, C3621R.styleable.NavigationBarView_itemTextAppearanceInactive, C3621R.styleable.NavigationBarView_itemTextAppearanceActive);
+        TintTypedArray obtainTintedStyledAttributes = ThemeEnforcement.obtainTintedStyledAttributes(context2, attributeSet, C3631R.styleable.NavigationBarView, i, i2, C3631R.styleable.NavigationBarView_itemTextAppearanceInactive, C3631R.styleable.NavigationBarView_itemTextAppearanceActive);
         NavigationBarMenu navigationBarMenu = new NavigationBarMenu(context2, getClass(), getMaxItemCount());
         this.menu = navigationBarMenu;
         NavigationBarMenuView createNavigationBarMenuView = createNavigationBarMenuView(context2);
@@ -82,54 +82,54 @@ public abstract class NavigationBarView extends FrameLayout {
         createNavigationBarMenuView.setPresenter(navigationBarPresenter);
         navigationBarMenu.addMenuPresenter(navigationBarPresenter);
         navigationBarPresenter.initForMenu(getContext(), navigationBarMenu);
-        if (obtainTintedStyledAttributes.hasValue(C3621R.styleable.NavigationBarView_itemIconTint)) {
-            createNavigationBarMenuView.setIconTintList(obtainTintedStyledAttributes.getColorStateList(C3621R.styleable.NavigationBarView_itemIconTint));
+        if (obtainTintedStyledAttributes.hasValue(C3631R.styleable.NavigationBarView_itemIconTint)) {
+            createNavigationBarMenuView.setIconTintList(obtainTintedStyledAttributes.getColorStateList(C3631R.styleable.NavigationBarView_itemIconTint));
         } else {
             createNavigationBarMenuView.setIconTintList(createNavigationBarMenuView.createDefaultColorStateList(16842808));
         }
-        setItemIconSize(obtainTintedStyledAttributes.getDimensionPixelSize(C3621R.styleable.NavigationBarView_itemIconSize, getResources().getDimensionPixelSize(C3621R.dimen.mtrl_navigation_bar_item_default_icon_size)));
-        if (obtainTintedStyledAttributes.hasValue(C3621R.styleable.NavigationBarView_itemTextAppearanceInactive)) {
-            setItemTextAppearanceInactive(obtainTintedStyledAttributes.getResourceId(C3621R.styleable.NavigationBarView_itemTextAppearanceInactive, 0));
+        setItemIconSize(obtainTintedStyledAttributes.getDimensionPixelSize(C3631R.styleable.NavigationBarView_itemIconSize, getResources().getDimensionPixelSize(C3631R.dimen.mtrl_navigation_bar_item_default_icon_size)));
+        if (obtainTintedStyledAttributes.hasValue(C3631R.styleable.NavigationBarView_itemTextAppearanceInactive)) {
+            setItemTextAppearanceInactive(obtainTintedStyledAttributes.getResourceId(C3631R.styleable.NavigationBarView_itemTextAppearanceInactive, 0));
         }
-        if (obtainTintedStyledAttributes.hasValue(C3621R.styleable.NavigationBarView_itemTextAppearanceActive)) {
-            setItemTextAppearanceActive(obtainTintedStyledAttributes.getResourceId(C3621R.styleable.NavigationBarView_itemTextAppearanceActive, 0));
+        if (obtainTintedStyledAttributes.hasValue(C3631R.styleable.NavigationBarView_itemTextAppearanceActive)) {
+            setItemTextAppearanceActive(obtainTintedStyledAttributes.getResourceId(C3631R.styleable.NavigationBarView_itemTextAppearanceActive, 0));
         }
-        if (obtainTintedStyledAttributes.hasValue(C3621R.styleable.NavigationBarView_itemTextColor)) {
-            setItemTextColor(obtainTintedStyledAttributes.getColorStateList(C3621R.styleable.NavigationBarView_itemTextColor));
+        if (obtainTintedStyledAttributes.hasValue(C3631R.styleable.NavigationBarView_itemTextColor)) {
+            setItemTextColor(obtainTintedStyledAttributes.getColorStateList(C3631R.styleable.NavigationBarView_itemTextColor));
         }
         if (getBackground() == null || (getBackground() instanceof ColorDrawable)) {
             ViewCompat.setBackground(this, createMaterialShapeDrawableBackground(context2));
         }
-        if (obtainTintedStyledAttributes.hasValue(C3621R.styleable.NavigationBarView_itemPaddingTop)) {
-            setItemPaddingTop(obtainTintedStyledAttributes.getDimensionPixelSize(C3621R.styleable.NavigationBarView_itemPaddingTop, 0));
+        if (obtainTintedStyledAttributes.hasValue(C3631R.styleable.NavigationBarView_itemPaddingTop)) {
+            setItemPaddingTop(obtainTintedStyledAttributes.getDimensionPixelSize(C3631R.styleable.NavigationBarView_itemPaddingTop, 0));
         }
-        if (obtainTintedStyledAttributes.hasValue(C3621R.styleable.NavigationBarView_itemPaddingBottom)) {
-            setItemPaddingBottom(obtainTintedStyledAttributes.getDimensionPixelSize(C3621R.styleable.NavigationBarView_itemPaddingBottom, 0));
+        if (obtainTintedStyledAttributes.hasValue(C3631R.styleable.NavigationBarView_itemPaddingBottom)) {
+            setItemPaddingBottom(obtainTintedStyledAttributes.getDimensionPixelSize(C3631R.styleable.NavigationBarView_itemPaddingBottom, 0));
         }
-        if (obtainTintedStyledAttributes.hasValue(C3621R.styleable.NavigationBarView_elevation)) {
-            setElevation((float) obtainTintedStyledAttributes.getDimensionPixelSize(C3621R.styleable.NavigationBarView_elevation, 0));
+        if (obtainTintedStyledAttributes.hasValue(C3631R.styleable.NavigationBarView_elevation)) {
+            setElevation((float) obtainTintedStyledAttributes.getDimensionPixelSize(C3631R.styleable.NavigationBarView_elevation, 0));
         }
-        DrawableCompat.setTintList(getBackground().mutate(), MaterialResources.getColorStateList(context2, obtainTintedStyledAttributes, C3621R.styleable.NavigationBarView_backgroundTint));
-        setLabelVisibilityMode(obtainTintedStyledAttributes.getInteger(C3621R.styleable.NavigationBarView_labelVisibilityMode, -1));
-        int resourceId = obtainTintedStyledAttributes.getResourceId(C3621R.styleable.NavigationBarView_itemBackground, 0);
+        DrawableCompat.setTintList(getBackground().mutate(), MaterialResources.getColorStateList(context2, obtainTintedStyledAttributes, C3631R.styleable.NavigationBarView_backgroundTint));
+        setLabelVisibilityMode(obtainTintedStyledAttributes.getInteger(C3631R.styleable.NavigationBarView_labelVisibilityMode, -1));
+        int resourceId = obtainTintedStyledAttributes.getResourceId(C3631R.styleable.NavigationBarView_itemBackground, 0);
         if (resourceId != 0) {
             createNavigationBarMenuView.setItemBackgroundRes(resourceId);
         } else {
-            setItemRippleColor(MaterialResources.getColorStateList(context2, obtainTintedStyledAttributes, C3621R.styleable.NavigationBarView_itemRippleColor));
+            setItemRippleColor(MaterialResources.getColorStateList(context2, obtainTintedStyledAttributes, C3631R.styleable.NavigationBarView_itemRippleColor));
         }
-        int resourceId2 = obtainTintedStyledAttributes.getResourceId(C3621R.styleable.NavigationBarView_itemActiveIndicatorStyle, 0);
+        int resourceId2 = obtainTintedStyledAttributes.getResourceId(C3631R.styleable.NavigationBarView_itemActiveIndicatorStyle, 0);
         if (resourceId2 != 0) {
             setItemActiveIndicatorEnabled(true);
-            TypedArray obtainStyledAttributes = context2.obtainStyledAttributes(resourceId2, C3621R.styleable.NavigationBarActiveIndicator);
-            setItemActiveIndicatorWidth(obtainStyledAttributes.getDimensionPixelSize(C3621R.styleable.NavigationBarActiveIndicator_android_width, 0));
-            setItemActiveIndicatorHeight(obtainStyledAttributes.getDimensionPixelSize(C3621R.styleable.NavigationBarActiveIndicator_android_height, 0));
-            setItemActiveIndicatorMarginHorizontal(obtainStyledAttributes.getDimensionPixelOffset(C3621R.styleable.NavigationBarActiveIndicator_marginHorizontal, 0));
-            setItemActiveIndicatorColor(MaterialResources.getColorStateList(context2, obtainStyledAttributes, C3621R.styleable.NavigationBarActiveIndicator_android_color));
-            setItemActiveIndicatorShapeAppearance(ShapeAppearanceModel.builder(context2, obtainStyledAttributes.getResourceId(C3621R.styleable.NavigationBarActiveIndicator_shapeAppearance, 0), 0).build());
+            TypedArray obtainStyledAttributes = context2.obtainStyledAttributes(resourceId2, C3631R.styleable.NavigationBarActiveIndicator);
+            setItemActiveIndicatorWidth(obtainStyledAttributes.getDimensionPixelSize(C3631R.styleable.NavigationBarActiveIndicator_android_width, 0));
+            setItemActiveIndicatorHeight(obtainStyledAttributes.getDimensionPixelSize(C3631R.styleable.NavigationBarActiveIndicator_android_height, 0));
+            setItemActiveIndicatorMarginHorizontal(obtainStyledAttributes.getDimensionPixelOffset(C3631R.styleable.NavigationBarActiveIndicator_marginHorizontal, 0));
+            setItemActiveIndicatorColor(MaterialResources.getColorStateList(context2, obtainStyledAttributes, C3631R.styleable.NavigationBarActiveIndicator_android_color));
+            setItemActiveIndicatorShapeAppearance(ShapeAppearanceModel.builder(context2, obtainStyledAttributes.getResourceId(C3631R.styleable.NavigationBarActiveIndicator_shapeAppearance, 0), 0).build());
             obtainStyledAttributes.recycle();
         }
-        if (obtainTintedStyledAttributes.hasValue(C3621R.styleable.NavigationBarView_menu)) {
-            inflateMenu(obtainTintedStyledAttributes.getResourceId(C3621R.styleable.NavigationBarView_menu, 0));
+        if (obtainTintedStyledAttributes.hasValue(C3631R.styleable.NavigationBarView_menu)) {
+            inflateMenu(obtainTintedStyledAttributes.getResourceId(C3631R.styleable.NavigationBarView_menu, 0));
         }
         obtainTintedStyledAttributes.recycle();
         addView(createNavigationBarMenuView);

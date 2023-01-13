@@ -16,6 +16,6 @@ public final /* synthetic */ class TouchInsetManager$$ExternalSyntheticLambda2 i
     }
 
     public final void run() {
-        this.f$0.mo46336xdb199988(this.f$1, this.f$2);
+        this.f$0.mo46348xdb199988(this.f$1, this.f$2);
     }
 }

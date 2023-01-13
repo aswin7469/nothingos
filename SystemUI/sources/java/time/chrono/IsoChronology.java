@@ -47,7 +47,7 @@ public final class IsoChronology extends AbstractChronology implements Serializa
     }
 
     public LocalDate date(int i, int i2, int i3) {
-        return LocalDate.m908of(i, i2, i3);
+        return LocalDate.m906of(i, i2, i3);
     }
 
     public LocalDate dateYearDay(Era era, int i, int i2) {
@@ -100,7 +100,7 @@ public final class IsoChronology extends AbstractChronology implements Serializa
         } else if (i9 == 29) {
             throw new DateTimeException("Invalid date 'February 29' as '" + i7 + "' is not a leap year");
         } else {
-            throw new DateTimeException("Invalid date '" + Month.m920of(i2).name() + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + i9 + "'");
+            throw new DateTimeException("Invalid date '" + Month.m918of(i2).name() + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + i9 + "'");
         }
     }
 
@@ -145,11 +145,11 @@ public final class IsoChronology extends AbstractChronology implements Serializa
     }
 
     public IsoEra eraOf(int i) {
-        return IsoEra.m945of(i);
+        return IsoEra.m943of(i);
     }
 
     public List<Era> eras() {
-        return List.m1733of((E[]) IsoEra.values());
+        return List.m1739of((E[]) IsoEra.values());
     }
 
     public LocalDate resolveDate(Map<TemporalField, Long> map, ResolverStyle resolverStyle) {
@@ -210,7 +210,7 @@ public final class IsoChronology extends AbstractChronology implements Serializa
         int checkValidIntValue = ChronoField.YEAR.checkValidIntValue(map.remove(ChronoField.YEAR).longValue());
         if (resolverStyle == ResolverStyle.LENIENT) {
             long subtractExact = Math.subtractExact(map.remove(ChronoField.MONTH_OF_YEAR).longValue(), 1);
-            return LocalDate.m908of(checkValidIntValue, 1, 1).plusMonths(subtractExact).plusDays(Math.subtractExact(map.remove(ChronoField.DAY_OF_MONTH).longValue(), 1));
+            return LocalDate.m906of(checkValidIntValue, 1, 1).plusMonths(subtractExact).plusDays(Math.subtractExact(map.remove(ChronoField.DAY_OF_MONTH).longValue(), 1));
         }
         int checkValidIntValue2 = ChronoField.MONTH_OF_YEAR.checkValidIntValue(map.remove(ChronoField.MONTH_OF_YEAR).longValue());
         int checkValidIntValue3 = ChronoField.DAY_OF_MONTH.checkValidIntValue(map.remove(ChronoField.DAY_OF_MONTH).longValue());
@@ -221,7 +221,7 @@ public final class IsoChronology extends AbstractChronology implements Serializa
                 checkValidIntValue3 = Math.min(checkValidIntValue3, Month.FEBRUARY.length(Year.isLeap((long) checkValidIntValue)));
             }
         }
-        return LocalDate.m908of(checkValidIntValue, checkValidIntValue2, checkValidIntValue3);
+        return LocalDate.m906of(checkValidIntValue, checkValidIntValue2, checkValidIntValue3);
     }
 
     public ValueRange range(ChronoField chronoField) {
@@ -229,7 +229,7 @@ public final class IsoChronology extends AbstractChronology implements Serializa
     }
 
     public Period period(int i, int i2, int i3) {
-        return Period.m928of(i, i2, i3);
+        return Period.m926of(i, i2, i3);
     }
 
     /* access modifiers changed from: package-private */

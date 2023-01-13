@@ -28,7 +28,7 @@ public class PipAppOpsListener {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onOpChanged$0$com-android-wm-shell-pip-PipAppOpsListener$1 */
-        public /* synthetic */ void mo50051x1c06c68a() {
+        public /* synthetic */ void mo50060x1c06c68a() {
             PipAppOpsListener.this.mCallback.dismissPip();
         }
     };

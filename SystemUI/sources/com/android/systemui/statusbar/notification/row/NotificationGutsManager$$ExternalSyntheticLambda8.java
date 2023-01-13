@@ -16,6 +16,6 @@ public final /* synthetic */ class NotificationGutsManager$$ExternalSyntheticLam
     }
 
     public final void onGutsClosed(NotificationGuts notificationGuts) {
-        this.f$0.mo41600x8a83fb1b(this.f$1, this.f$2, notificationGuts);
+        this.f$0.mo41608x8a83fb1b(this.f$1, this.f$2, notificationGuts);
     }
 }

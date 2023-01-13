@@ -24,7 +24,7 @@ import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import androidx.customview.widget.ExploreByTouchHelper;
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 import com.android.internal.graphics.ColorUtils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import java.util.List;
 
 public class CropView extends View {
@@ -74,7 +74,7 @@ public class CropView extends View {
         this.mCrop = new RectF(0.0f, 0.0f, 1.0f, 1.0f);
         this.mCurrentDraggingBoundary = CropBoundary.NONE;
         this.mEntranceInterpolation = 1.0f;
-        TypedArray obtainStyledAttributes = context.getTheme().obtainStyledAttributes(attributeSet, C1893R.styleable.CropView, 0, 0);
+        TypedArray obtainStyledAttributes = context.getTheme().obtainStyledAttributes(attributeSet, C1894R.styleable.CropView, 0, 0);
         Paint paint = new Paint();
         this.mShadePaint = paint;
         paint.setColor(ColorUtils.setAlphaComponent(obtainStyledAttributes.getColor(4, 0), obtainStyledAttributes.getInteger(3, 255)));
@@ -199,7 +199,7 @@ public class CropView extends View {
     }
 
     /* renamed from: com.android.systemui.screenshot.CropView$1 */
-    static /* synthetic */ class C24301 {
+    static /* synthetic */ class C24361 {
         static final /* synthetic */ int[] $SwitchMap$com$android$systemui$screenshot$CropView$CropBoundary;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(12:0|1|2|3|4|5|6|7|8|9|10|12) */
@@ -248,13 +248,13 @@ public class CropView extends View {
             L_0x003e:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.screenshot.CropView.C24301.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.screenshot.CropView.C24361.<clinit>():void");
         }
     }
 
     public void setBoundaryPosition(CropBoundary cropBoundary, float f) {
         float floatValue = ((Float) getAllowedValues(cropBoundary).clamp(Float.valueOf(f))).floatValue();
-        int i = C24301.$SwitchMap$com$android$systemui$screenshot$CropView$CropBoundary[cropBoundary.ordinal()];
+        int i = C24361.$SwitchMap$com$android$systemui$screenshot$CropView$CropBoundary[cropBoundary.ordinal()];
         if (i == 1) {
             this.mCrop.top = floatValue;
         } else if (i == 2) {
@@ -271,7 +271,7 @@ public class CropView extends View {
 
     /* access modifiers changed from: private */
     public float getBoundaryPosition(CropBoundary cropBoundary) {
-        int i = C24301.$SwitchMap$com$android$systemui$screenshot$CropView$CropBoundary[cropBoundary.ordinal()];
+        int i = C24361.$SwitchMap$com$android$systemui$screenshot$CropView$CropBoundary[cropBoundary.ordinal()];
         if (i == 1) {
             return this.mCrop.top;
         }
@@ -308,7 +308,7 @@ public class CropView extends View {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$animateBoundaryTo$0$com-android-systemui-screenshot-CropView */
-    public /* synthetic */ void mo37287x648c44ab(CropBoundary cropBoundary, float f, float f2, ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo37288x648c44ab(CropBoundary cropBoundary, float f, float f2, ValueAnimator valueAnimator) {
         setBoundaryPosition(cropBoundary, MathUtils.lerp(f, f2, valueAnimator.getAnimatedFraction()));
         invalidate();
     }
@@ -325,7 +325,7 @@ public class CropView extends View {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$animateEntrance$1$com-android-systemui-screenshot-CropView */
-    public /* synthetic */ void mo37288x765de9b9(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo37289x765de9b9(ValueAnimator valueAnimator) {
         this.mEntranceInterpolation = valueAnimator.getAnimatedFraction();
         invalidate();
     }
@@ -352,7 +352,7 @@ public class CropView extends View {
     }
 
     private Range getAllowedValues(CropBoundary cropBoundary) {
-        int i = C24301.$SwitchMap$com$android$systemui$screenshot$CropView$CropBoundary[cropBoundary.ordinal()];
+        int i = C24361.$SwitchMap$com$android$systemui$screenshot$CropView$CropBoundary[cropBoundary.ordinal()];
         if (i == 1) {
             return new Range(Float.valueOf(0.0f), Float.valueOf(this.mCrop.bottom - pixelDistanceToFraction(this.mCropTouchMargin, CropBoundary.BOTTOM)));
         }
@@ -532,17 +532,17 @@ public class CropView extends View {
 
         private CharSequence getBoundaryContentDescription(CropBoundary cropBoundary) {
             int i;
-            int i2 = C24301.$SwitchMap$com$android$systemui$screenshot$CropView$CropBoundary[cropBoundary.ordinal()];
+            int i2 = C24361.$SwitchMap$com$android$systemui$screenshot$CropView$CropBoundary[cropBoundary.ordinal()];
             if (i2 == 1) {
-                i = C1893R.string.screenshot_top_boundary_pct;
+                i = C1894R.string.screenshot_top_boundary_pct;
             } else if (i2 == 2) {
-                i = C1893R.string.screenshot_bottom_boundary_pct;
+                i = C1894R.string.screenshot_bottom_boundary_pct;
             } else if (i2 == 3) {
-                i = C1893R.string.screenshot_left_boundary_pct;
+                i = C1894R.string.screenshot_left_boundary_pct;
             } else if (i2 != 4) {
                 return "";
             } else {
-                i = C1893R.string.screenshot_right_boundary_pct;
+                i = C1894R.string.screenshot_right_boundary_pct;
             }
             return CropView.this.getResources().getString(i, new Object[]{Integer.valueOf(Math.round(CropView.this.getBoundaryPosition(cropBoundary) * 100.0f))});
         }
@@ -593,7 +593,7 @@ public class CropView extends View {
     static class SavedState extends View.BaseSavedState {
         public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
             public SavedState createFromParcel(Parcel parcel) {
-                return new SavedState(parcel, (C24301) null);
+                return new SavedState(parcel, (C24361) null);
             }
 
             public SavedState[] newArray(int i) {
@@ -602,7 +602,7 @@ public class CropView extends View {
         };
         RectF mCrop;
 
-        /* synthetic */ SavedState(Parcel parcel, C24301 r2) {
+        /* synthetic */ SavedState(Parcel parcel, C24361 r2) {
             this(parcel);
         }
 

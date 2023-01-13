@@ -24,7 +24,7 @@ public interface IntPredicate {
     }
 
     /* renamed from: or */
-    IntPredicate mo63117or(IntPredicate intPredicate) {
+    IntPredicate mo63173or(IntPredicate intPredicate) {
         Objects.requireNonNull(intPredicate);
         return new IntPredicate$$ExternalSyntheticLambda1(this, intPredicate);
     }

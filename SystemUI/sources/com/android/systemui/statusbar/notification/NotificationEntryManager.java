@@ -247,7 +247,7 @@ public class NotificationEntryManager implements CommonNotifCollection, Dumpable
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$addNotificationLifetimeExtender$0$com-android-systemui-statusbar-notification-NotificationEntryManager */
-    public /* synthetic */ void mo39776x7c538075(String str) {
+    public /* synthetic */ void mo39778x7c538075(String str) {
         removeNotification(str, this.mLatestRankingMap, 0);
     }
 

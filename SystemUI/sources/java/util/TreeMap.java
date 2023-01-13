@@ -638,14 +638,14 @@ public class TreeMap<K, V> extends AbstractMap<K, V> implements NavigableMap<K, 
     static final class KeySet<E> extends AbstractSet<E> implements NavigableSet<E> {
 
         /* renamed from: m */
-        private final NavigableMap<E, ?> f711m;
+        private final NavigableMap<E, ?> f709m;
 
         KeySet(NavigableMap<E, ?> navigableMap) {
-            this.f711m = navigableMap;
+            this.f709m = navigableMap;
         }
 
         public Iterator<E> iterator() {
-            NavigableMap<E, ?> navigableMap = this.f711m;
+            NavigableMap<E, ?> navigableMap = this.f709m;
             if (navigableMap instanceof TreeMap) {
                 return ((TreeMap) navigableMap).keyIterator();
             }
@@ -653,7 +653,7 @@ public class TreeMap<K, V> extends AbstractMap<K, V> implements NavigableMap<K, 
         }
 
         public Iterator<E> descendingIterator() {
-            NavigableMap<E, ?> navigableMap = this.f711m;
+            NavigableMap<E, ?> navigableMap = this.f709m;
             if (navigableMap instanceof TreeMap) {
                 return ((TreeMap) navigableMap).descendingKeyIterator();
             }
@@ -661,51 +661,51 @@ public class TreeMap<K, V> extends AbstractMap<K, V> implements NavigableMap<K, 
         }
 
         public int size() {
-            return this.f711m.size();
+            return this.f709m.size();
         }
 
         public boolean isEmpty() {
-            return this.f711m.isEmpty();
+            return this.f709m.isEmpty();
         }
 
         public boolean contains(Object obj) {
-            return this.f711m.containsKey(obj);
+            return this.f709m.containsKey(obj);
         }
 
         public void clear() {
-            this.f711m.clear();
+            this.f709m.clear();
         }
 
         public E lower(E e) {
-            return this.f711m.lowerKey(e);
+            return this.f709m.lowerKey(e);
         }
 
         public E floor(E e) {
-            return this.f711m.floorKey(e);
+            return this.f709m.floorKey(e);
         }
 
         public E ceiling(E e) {
-            return this.f711m.ceilingKey(e);
+            return this.f709m.ceilingKey(e);
         }
 
         public E higher(E e) {
-            return this.f711m.higherKey(e);
+            return this.f709m.higherKey(e);
         }
 
         public E first() {
-            return this.f711m.firstKey();
+            return this.f709m.firstKey();
         }
 
         public E last() {
-            return this.f711m.lastKey();
+            return this.f709m.lastKey();
         }
 
         public Comparator<? super E> comparator() {
-            return this.f711m.comparator();
+            return this.f709m.comparator();
         }
 
         public E pollFirst() {
-            Map.Entry<E, ?> pollFirstEntry = this.f711m.pollFirstEntry();
+            Map.Entry<E, ?> pollFirstEntry = this.f709m.pollFirstEntry();
             if (pollFirstEntry == null) {
                 return null;
             }
@@ -713,7 +713,7 @@ public class TreeMap<K, V> extends AbstractMap<K, V> implements NavigableMap<K, 
         }
 
         public E pollLast() {
-            Map.Entry<E, ?> pollLastEntry = this.f711m.pollLastEntry();
+            Map.Entry<E, ?> pollLastEntry = this.f709m.pollLastEntry();
             if (pollLastEntry == null) {
                 return null;
             }
@@ -722,20 +722,20 @@ public class TreeMap<K, V> extends AbstractMap<K, V> implements NavigableMap<K, 
 
         public boolean remove(Object obj) {
             int size = size();
-            this.f711m.remove(obj);
+            this.f709m.remove(obj);
             return size() != size;
         }
 
         public NavigableSet<E> subSet(E e, boolean z, E e2, boolean z2) {
-            return new KeySet(this.f711m.subMap(e, z, e2, z2));
+            return new KeySet(this.f709m.subMap(e, z, e2, z2));
         }
 
         public NavigableSet<E> headSet(E e, boolean z) {
-            return new KeySet(this.f711m.headMap(e, z));
+            return new KeySet(this.f709m.headMap(e, z));
         }
 
         public NavigableSet<E> tailSet(E e, boolean z) {
-            return new KeySet(this.f711m.tailMap(e, z));
+            return new KeySet(this.f709m.tailMap(e, z));
         }
 
         public SortedSet<E> subSet(E e, E e2) {
@@ -751,11 +751,11 @@ public class TreeMap<K, V> extends AbstractMap<K, V> implements NavigableMap<K, 
         }
 
         public NavigableSet<E> descendingSet() {
-            return new KeySet(this.f711m.descendingMap());
+            return new KeySet(this.f709m.descendingMap());
         }
 
         public Spliterator<E> spliterator() {
-            return TreeMap.keySpliteratorFor(this.f711m);
+            return TreeMap.keySpliteratorFor(this.f709m);
         }
     }
 
@@ -913,15 +913,15 @@ public class TreeMap<K, V> extends AbstractMap<K, V> implements NavigableMap<K, 
         final boolean fromStart;
 
         /* renamed from: hi */
-        final K f712hi;
+        final K f710hi;
         final boolean hiInclusive;
 
         /* renamed from: lo */
-        final K f713lo;
+        final K f711lo;
         final boolean loInclusive;
 
         /* renamed from: m */
-        final TreeMap<K, V> f714m;
+        final TreeMap<K, V> f712m;
         transient KeySet<K> navigableKeySetView;
         final boolean toEnd;
 
@@ -963,12 +963,12 @@ public class TreeMap<K, V> extends AbstractMap<K, V> implements NavigableMap<K, 
             } else if (treeMap.compare(k, k2) > 0) {
                 throw new IllegalArgumentException("fromKey > toKey");
             }
-            this.f714m = treeMap;
+            this.f712m = treeMap;
             this.fromStart = z;
-            this.f713lo = k;
+            this.f711lo = k;
             this.loInclusive = z2;
             this.toEnd = z3;
-            this.f712hi = k2;
+            this.f710hi = k2;
             this.hiInclusive = z4;
         }
 
@@ -977,7 +977,7 @@ public class TreeMap<K, V> extends AbstractMap<K, V> implements NavigableMap<K, 
             if (this.fromStart) {
                 return false;
             }
-            int compare = this.f714m.compare(obj, this.f713lo);
+            int compare = this.f712m.compare(obj, this.f711lo);
             if (compare >= 0) {
                 return compare == 0 && !this.loInclusive;
             }
@@ -989,7 +989,7 @@ public class TreeMap<K, V> extends AbstractMap<K, V> implements NavigableMap<K, 
             if (this.toEnd) {
                 return false;
             }
-            int compare = this.f714m.compare(obj, this.f712hi);
+            int compare = this.f712m.compare(obj, this.f710hi);
             if (compare <= 0) {
                 return compare == 0 && !this.hiInclusive;
             }
@@ -1003,7 +1003,7 @@ public class TreeMap<K, V> extends AbstractMap<K, V> implements NavigableMap<K, 
 
         /* access modifiers changed from: package-private */
         public final boolean inClosedRange(Object obj) {
-            return (this.fromStart || this.f714m.compare(obj, this.f713lo) >= 0) && (this.toEnd || this.f714m.compare(this.f712hi, obj) >= 0);
+            return (this.fromStart || this.f712m.compare(obj, this.f711lo) >= 0) && (this.toEnd || this.f712m.compare(this.f710hi, obj) >= 0);
         }
 
         /* access modifiers changed from: package-private */
@@ -1015,11 +1015,11 @@ public class TreeMap<K, V> extends AbstractMap<K, V> implements NavigableMap<K, 
         public final TreeMapEntry<K, V> absLowest() {
             TreeMapEntry<K, V> treeMapEntry;
             if (this.fromStart) {
-                treeMapEntry = this.f714m.getFirstEntry();
+                treeMapEntry = this.f712m.getFirstEntry();
             } else if (this.loInclusive) {
-                treeMapEntry = this.f714m.getCeilingEntry(this.f713lo);
+                treeMapEntry = this.f712m.getCeilingEntry(this.f711lo);
             } else {
-                treeMapEntry = this.f714m.getHigherEntry(this.f713lo);
+                treeMapEntry = this.f712m.getHigherEntry(this.f711lo);
             }
             if (treeMapEntry == null || tooHigh(treeMapEntry.key)) {
                 return null;
@@ -1031,11 +1031,11 @@ public class TreeMap<K, V> extends AbstractMap<K, V> implements NavigableMap<K, 
         public final TreeMapEntry<K, V> absHighest() {
             TreeMapEntry<K, V> treeMapEntry;
             if (this.toEnd) {
-                treeMapEntry = this.f714m.getLastEntry();
+                treeMapEntry = this.f712m.getLastEntry();
             } else if (this.hiInclusive) {
-                treeMapEntry = this.f714m.getFloorEntry(this.f712hi);
+                treeMapEntry = this.f712m.getFloorEntry(this.f710hi);
             } else {
-                treeMapEntry = this.f714m.getLowerEntry(this.f712hi);
+                treeMapEntry = this.f712m.getLowerEntry(this.f710hi);
             }
             if (treeMapEntry == null || tooLow(treeMapEntry.key)) {
                 return null;
@@ -1048,7 +1048,7 @@ public class TreeMap<K, V> extends AbstractMap<K, V> implements NavigableMap<K, 
             if (tooLow(k)) {
                 return absLowest();
             }
-            TreeMapEntry<K, V> ceilingEntry = this.f714m.getCeilingEntry(k);
+            TreeMapEntry<K, V> ceilingEntry = this.f712m.getCeilingEntry(k);
             if (ceilingEntry == null || tooHigh(ceilingEntry.key)) {
                 return null;
             }
@@ -1060,7 +1060,7 @@ public class TreeMap<K, V> extends AbstractMap<K, V> implements NavigableMap<K, 
             if (tooLow(k)) {
                 return absLowest();
             }
-            TreeMapEntry<K, V> higherEntry = this.f714m.getHigherEntry(k);
+            TreeMapEntry<K, V> higherEntry = this.f712m.getHigherEntry(k);
             if (higherEntry == null || tooHigh(higherEntry.key)) {
                 return null;
             }
@@ -1072,7 +1072,7 @@ public class TreeMap<K, V> extends AbstractMap<K, V> implements NavigableMap<K, 
             if (tooHigh(k)) {
                 return absHighest();
             }
-            TreeMapEntry<K, V> floorEntry = this.f714m.getFloorEntry(k);
+            TreeMapEntry<K, V> floorEntry = this.f712m.getFloorEntry(k);
             if (floorEntry == null || tooLow(floorEntry.key)) {
                 return null;
             }
@@ -1084,7 +1084,7 @@ public class TreeMap<K, V> extends AbstractMap<K, V> implements NavigableMap<K, 
             if (tooHigh(k)) {
                 return absHighest();
             }
-            TreeMapEntry<K, V> lowerEntry = this.f714m.getLowerEntry(k);
+            TreeMapEntry<K, V> lowerEntry = this.f712m.getLowerEntry(k);
             if (lowerEntry == null || tooLow(lowerEntry.key)) {
                 return null;
             }
@@ -1097,9 +1097,9 @@ public class TreeMap<K, V> extends AbstractMap<K, V> implements NavigableMap<K, 
                 return null;
             }
             if (this.hiInclusive) {
-                return this.f714m.getHigherEntry(this.f712hi);
+                return this.f712m.getHigherEntry(this.f710hi);
             }
-            return this.f714m.getCeilingEntry(this.f712hi);
+            return this.f712m.getCeilingEntry(this.f710hi);
         }
 
         /* access modifiers changed from: package-private */
@@ -1108,26 +1108,26 @@ public class TreeMap<K, V> extends AbstractMap<K, V> implements NavigableMap<K, 
                 return null;
             }
             if (this.loInclusive) {
-                return this.f714m.getLowerEntry(this.f713lo);
+                return this.f712m.getLowerEntry(this.f711lo);
             }
-            return this.f714m.getFloorEntry(this.f713lo);
+            return this.f712m.getFloorEntry(this.f711lo);
         }
 
         public boolean isEmpty() {
-            return (!this.fromStart || !this.toEnd) ? entrySet().isEmpty() : this.f714m.isEmpty();
+            return (!this.fromStart || !this.toEnd) ? entrySet().isEmpty() : this.f712m.isEmpty();
         }
 
         public int size() {
-            return (!this.fromStart || !this.toEnd) ? entrySet().size() : this.f714m.size();
+            return (!this.fromStart || !this.toEnd) ? entrySet().size() : this.f712m.size();
         }
 
         public final boolean containsKey(Object obj) {
-            return inRange(obj) && this.f714m.containsKey(obj);
+            return inRange(obj) && this.f712m.containsKey(obj);
         }
 
         public final V put(K k, V v) {
             if (inRange(k)) {
-                return this.f714m.put(k, v);
+                return this.f712m.put(k, v);
             }
             throw new IllegalArgumentException("key out of range");
         }
@@ -1136,14 +1136,14 @@ public class TreeMap<K, V> extends AbstractMap<K, V> implements NavigableMap<K, 
             if (!inRange(obj)) {
                 return null;
             }
-            return this.f714m.get(obj);
+            return this.f712m.get(obj);
         }
 
         public final V remove(Object obj) {
             if (!inRange(obj)) {
                 return null;
             }
-            return this.f714m.remove(obj);
+            return this.f712m.remove(obj);
         }
 
         public final Map.Entry<K, V> ceilingEntry(K k) {
@@ -1198,7 +1198,7 @@ public class TreeMap<K, V> extends AbstractMap<K, V> implements NavigableMap<K, 
             TreeMapEntry subLowest = subLowest();
             Map.Entry<K, V> exportEntry = TreeMap.exportEntry(subLowest);
             if (subLowest != null) {
-                this.f714m.deleteEntry(subLowest);
+                this.f712m.deleteEntry(subLowest);
             }
             return exportEntry;
         }
@@ -1207,7 +1207,7 @@ public class TreeMap<K, V> extends AbstractMap<K, V> implements NavigableMap<K, 
             TreeMapEntry subHighest = subHighest();
             Map.Entry<K, V> exportEntry = TreeMap.exportEntry(subHighest);
             if (subHighest != null) {
-                this.f714m.deleteEntry(subHighest);
+                this.f712m.deleteEntry(subHighest);
             }
             return exportEntry;
         }
@@ -1251,10 +1251,10 @@ public class TreeMap<K, V> extends AbstractMap<K, V> implements NavigableMap<K, 
 
             public int size() {
                 if (NavigableSubMap.this.fromStart && NavigableSubMap.this.toEnd) {
-                    return NavigableSubMap.this.f714m.size();
+                    return NavigableSubMap.this.f712m.size();
                 }
-                if (this.size == -1 || this.sizeModCount != NavigableSubMap.this.f714m.modCount) {
-                    this.sizeModCount = NavigableSubMap.this.f714m.modCount;
+                if (this.size == -1 || this.sizeModCount != NavigableSubMap.this.f712m.modCount) {
+                    this.sizeModCount = NavigableSubMap.this.f712m.modCount;
                     this.size = 0;
                     Iterator it = iterator();
                     while (it.hasNext()) {
@@ -1277,7 +1277,7 @@ public class TreeMap<K, V> extends AbstractMap<K, V> implements NavigableMap<K, 
                 }
                 Map.Entry entry2 = (Map.Entry) obj;
                 Object key = entry2.getKey();
-                if (NavigableSubMap.this.inRange(key) && (entry = NavigableSubMap.this.f714m.getEntry(key)) != null && TreeMap.valEquals(entry.getValue(), entry2.getValue())) {
+                if (NavigableSubMap.this.inRange(key) && (entry = NavigableSubMap.this.f712m.getEntry(key)) != null && TreeMap.valEquals(entry.getValue(), entry2.getValue())) {
                     return true;
                 }
                 return false;
@@ -1290,10 +1290,10 @@ public class TreeMap<K, V> extends AbstractMap<K, V> implements NavigableMap<K, 
                 }
                 Map.Entry entry2 = (Map.Entry) obj;
                 Object key = entry2.getKey();
-                if (!NavigableSubMap.this.inRange(key) || (entry = NavigableSubMap.this.f714m.getEntry(key)) == null || !TreeMap.valEquals(entry.getValue(), entry2.getValue())) {
+                if (!NavigableSubMap.this.inRange(key) || (entry = NavigableSubMap.this.f712m.getEntry(key)) == null || !TreeMap.valEquals(entry.getValue(), entry2.getValue())) {
                     return false;
                 }
-                NavigableSubMap.this.f714m.deleteEntry(entry);
+                NavigableSubMap.this.f712m.deleteEntry(entry);
                 return true;
             }
         }
@@ -1305,7 +1305,7 @@ public class TreeMap<K, V> extends AbstractMap<K, V> implements NavigableMap<K, 
             TreeMapEntry<K, V> next;
 
             SubMapIterator(TreeMapEntry<K, V> treeMapEntry, TreeMapEntry<K, V> treeMapEntry2) {
-                this.expectedModCount = NavigableSubMap.this.f714m.modCount;
+                this.expectedModCount = NavigableSubMap.this.f712m.modCount;
                 this.next = treeMapEntry;
                 this.fenceKey = treeMapEntry2 == null ? TreeMap.UNBOUNDED : treeMapEntry2.key;
             }
@@ -1320,7 +1320,7 @@ public class TreeMap<K, V> extends AbstractMap<K, V> implements NavigableMap<K, 
                 TreeMapEntry<K, V> treeMapEntry = this.next;
                 if (treeMapEntry == null || treeMapEntry.key == this.fenceKey) {
                     throw new NoSuchElementException();
-                } else if (NavigableSubMap.this.f714m.modCount == this.expectedModCount) {
+                } else if (NavigableSubMap.this.f712m.modCount == this.expectedModCount) {
                     this.next = TreeMap.successor(treeMapEntry);
                     this.lastReturned = treeMapEntry;
                     return treeMapEntry;
@@ -1334,7 +1334,7 @@ public class TreeMap<K, V> extends AbstractMap<K, V> implements NavigableMap<K, 
                 TreeMapEntry<K, V> treeMapEntry = this.next;
                 if (treeMapEntry == null || treeMapEntry.key == this.fenceKey) {
                     throw new NoSuchElementException();
-                } else if (NavigableSubMap.this.f714m.modCount == this.expectedModCount) {
+                } else if (NavigableSubMap.this.f712m.modCount == this.expectedModCount) {
                     this.next = TreeMap.predecessor(treeMapEntry);
                     this.lastReturned = treeMapEntry;
                     return treeMapEntry;
@@ -1347,13 +1347,13 @@ public class TreeMap<K, V> extends AbstractMap<K, V> implements NavigableMap<K, 
             public final void removeAscending() {
                 if (this.lastReturned == null) {
                     throw new IllegalStateException();
-                } else if (NavigableSubMap.this.f714m.modCount == this.expectedModCount) {
+                } else if (NavigableSubMap.this.f712m.modCount == this.expectedModCount) {
                     if (!(this.lastReturned.left == null || this.lastReturned.right == null)) {
                         this.next = this.lastReturned;
                     }
-                    NavigableSubMap.this.f714m.deleteEntry(this.lastReturned);
+                    NavigableSubMap.this.f712m.deleteEntry(this.lastReturned);
                     this.lastReturned = null;
-                    this.expectedModCount = NavigableSubMap.this.f714m.modCount;
+                    this.expectedModCount = NavigableSubMap.this.f712m.modCount;
                 } else {
                     throw new ConcurrentModificationException();
                 }
@@ -1363,10 +1363,10 @@ public class TreeMap<K, V> extends AbstractMap<K, V> implements NavigableMap<K, 
             public final void removeDescending() {
                 if (this.lastReturned == null) {
                     throw new IllegalStateException();
-                } else if (NavigableSubMap.this.f714m.modCount == this.expectedModCount) {
-                    NavigableSubMap.this.f714m.deleteEntry(this.lastReturned);
+                } else if (NavigableSubMap.this.f712m.modCount == this.expectedModCount) {
+                    NavigableSubMap.this.f712m.deleteEntry(this.lastReturned);
                     this.lastReturned = null;
-                    this.expectedModCount = NavigableSubMap.this.f714m.modCount;
+                    this.expectedModCount = NavigableSubMap.this.f712m.modCount;
                 } else {
                     throw new ConcurrentModificationException();
                 }
@@ -1494,29 +1494,29 @@ public class TreeMap<K, V> extends AbstractMap<K, V> implements NavigableMap<K, 
         }
 
         public Comparator<? super K> comparator() {
-            return this.f714m.comparator();
+            return this.f712m.comparator();
         }
 
         public NavigableMap<K, V> subMap(K k, boolean z, K k2, boolean z2) {
             if (!inRange(k, z)) {
                 throw new IllegalArgumentException("fromKey out of range");
             } else if (inRange(k2, z2)) {
-                return new AscendingSubMap(this.f714m, false, k, z, false, k2, z2);
+                return new AscendingSubMap(this.f712m, false, k, z, false, k2, z2);
             } else {
                 throw new IllegalArgumentException("toKey out of range");
             }
         }
 
         public NavigableMap<K, V> headMap(K k, boolean z) {
-            if (inRange(k) || (!this.toEnd && this.f714m.compare(k, this.f712hi) == 0 && !this.hiInclusive && !z)) {
-                return new AscendingSubMap(this.f714m, this.fromStart, this.f713lo, this.loInclusive, false, k, z);
+            if (inRange(k) || (!this.toEnd && this.f712m.compare(k, this.f710hi) == 0 && !this.hiInclusive && !z)) {
+                return new AscendingSubMap(this.f712m, this.fromStart, this.f711lo, this.loInclusive, false, k, z);
             }
             throw new IllegalArgumentException("toKey out of range");
         }
 
         public NavigableMap<K, V> tailMap(K k, boolean z) {
-            if (inRange(k) || (!this.fromStart && this.f714m.compare(k, this.f713lo) == 0 && !this.loInclusive && !z)) {
-                return new AscendingSubMap(this.f714m, false, k, z, this.toEnd, this.f712hi, this.hiInclusive);
+            if (inRange(k) || (!this.fromStart && this.f712m.compare(k, this.f711lo) == 0 && !this.loInclusive && !z)) {
+                return new AscendingSubMap(this.f712m, false, k, z, this.toEnd, this.f710hi, this.hiInclusive);
             }
             throw new IllegalArgumentException("fromKey out of range");
         }
@@ -1526,7 +1526,7 @@ public class TreeMap<K, V> extends AbstractMap<K, V> implements NavigableMap<K, 
             if (navigableMap != null) {
                 return navigableMap;
             }
-            DescendingSubMap descendingSubMap = new DescendingSubMap(this.f714m, this.fromStart, this.f713lo, this.loInclusive, this.toEnd, this.f712hi, this.hiInclusive);
+            DescendingSubMap descendingSubMap = new DescendingSubMap(this.f712m, this.fromStart, this.f711lo, this.loInclusive, this.toEnd, this.f710hi, this.hiInclusive);
             this.descendingMapView = descendingSubMap;
             return descendingSubMap;
         }
@@ -1600,7 +1600,7 @@ public class TreeMap<K, V> extends AbstractMap<K, V> implements NavigableMap<K, 
 
     static final class DescendingSubMap<K, V> extends NavigableSubMap<K, V> {
         private static final long serialVersionUID = 912986545866120460L;
-        private final Comparator<? super K> reverseComparator = Collections.reverseOrder(this.f714m.comparator);
+        private final Comparator<? super K> reverseComparator = Collections.reverseOrder(this.f712m.comparator);
 
         DescendingSubMap(TreeMap<K, V> treeMap, boolean z, K k, boolean z2, boolean z3, K k2, boolean z4) {
             super(treeMap, z, k, z2, z3, k2, z4);
@@ -1614,22 +1614,22 @@ public class TreeMap<K, V> extends AbstractMap<K, V> implements NavigableMap<K, 
             if (!inRange(k, z)) {
                 throw new IllegalArgumentException("fromKey out of range");
             } else if (inRange(k2, z2)) {
-                return new DescendingSubMap(this.f714m, false, k2, z2, false, k, z);
+                return new DescendingSubMap(this.f712m, false, k2, z2, false, k, z);
             } else {
                 throw new IllegalArgumentException("toKey out of range");
             }
         }
 
         public NavigableMap<K, V> headMap(K k, boolean z) {
-            if (inRange(k) || (!this.fromStart && this.f714m.compare(k, this.f713lo) == 0 && !this.loInclusive && !z)) {
-                return new DescendingSubMap(this.f714m, false, k, z, this.toEnd, this.f712hi, this.hiInclusive);
+            if (inRange(k) || (!this.fromStart && this.f712m.compare(k, this.f711lo) == 0 && !this.loInclusive && !z)) {
+                return new DescendingSubMap(this.f712m, false, k, z, this.toEnd, this.f710hi, this.hiInclusive);
             }
             throw new IllegalArgumentException("toKey out of range");
         }
 
         public NavigableMap<K, V> tailMap(K k, boolean z) {
-            if (inRange(k) || (!this.toEnd && this.f714m.compare(k, this.f712hi) == 0 && !this.hiInclusive && !z)) {
-                return new DescendingSubMap(this.f714m, this.fromStart, this.f713lo, this.loInclusive, false, k, z);
+            if (inRange(k) || (!this.toEnd && this.f712m.compare(k, this.f710hi) == 0 && !this.hiInclusive && !z)) {
+                return new DescendingSubMap(this.f712m, this.fromStart, this.f711lo, this.loInclusive, false, k, z);
             }
             throw new IllegalArgumentException("fromKey out of range");
         }
@@ -1639,7 +1639,7 @@ public class TreeMap<K, V> extends AbstractMap<K, V> implements NavigableMap<K, 
             if (navigableMap != null) {
                 return navigableMap;
             }
-            AscendingSubMap ascendingSubMap = new AscendingSubMap(this.f714m, this.fromStart, this.f713lo, this.loInclusive, this.toEnd, this.f712hi, this.hiInclusive);
+            AscendingSubMap ascendingSubMap = new AscendingSubMap(this.f712m, this.fromStart, this.f711lo, this.loInclusive, this.toEnd, this.f710hi, this.hiInclusive);
             this.descendingMapView = ascendingSubMap;
             return ascendingSubMap;
         }
@@ -2211,7 +2211,7 @@ public class TreeMap<K, V> extends AbstractMap<K, V> implements NavigableMap<K, 
         }
         if (navigableMap instanceof DescendingSubMap) {
             DescendingSubMap descendingSubMap = (DescendingSubMap) navigableMap;
-            TreeMap treeMap = descendingSubMap.f714m;
+            TreeMap treeMap = descendingSubMap.f712m;
             if (descendingSubMap == treeMap.descendingMap) {
                 return treeMap.descendingKeySpliterator();
             }

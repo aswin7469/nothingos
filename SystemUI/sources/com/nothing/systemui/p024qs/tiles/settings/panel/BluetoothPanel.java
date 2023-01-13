@@ -2,7 +2,7 @@ package com.nothing.systemui.p024qs.tiles.settings.panel;
 
 import android.content.Context;
 import androidx.core.graphics.drawable.IconCompat;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +38,7 @@ public class BluetoothPanel extends SettingsLifecycleObserver implements PanelCo
     }
 
     public CharSequence getTitle() {
-        return this.mContext.getText(C1893R.string.bluetooth_device_context_connect);
+        return this.mContext.getText(C1894R.string.bluetooth_device_context_connect);
     }
 
     public void onStart() {

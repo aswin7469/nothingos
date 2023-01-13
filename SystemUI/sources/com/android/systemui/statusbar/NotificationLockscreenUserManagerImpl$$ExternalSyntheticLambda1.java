@@ -13,6 +13,6 @@ public final /* synthetic */ class NotificationLockscreenUserManagerImpl$$Extern
     }
 
     public final Object get() {
-        return this.f$0.mo38762x300b5c19(this.f$1);
+        return this.f$0.mo38763x300b5c19(this.f$1);
     }
 }

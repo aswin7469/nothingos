@@ -20,7 +20,7 @@ import kotlinx.coroutines.Dispatchers;
 import kotlinx.coroutines.GlobalScope;
 import kotlinx.coroutines.Job;
 
-@Metadata(mo64986d1 = {"\u0000X\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0007\n\u0002\u0010\u000b\n\u0002\b\u000e\n\u0002\u0010\u0002\n\u0000\n\u0002\u0010\u0007\n\u0000\n\u0002\u0010\b\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u000e\n\u0002\b\u0007\u0018\u0000 22\u00020\u0001:\u000223B\u001d\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\u0006\u0010\u0006\u001a\u00020\u0007¢\u0006\u0002\u0010\bJ\b\u0010 \u001a\u00020!H\u0002J\u0006\u0010\"\u001a\u00020#J\b\u0010$\u001a\u00020%H\u0002J\u000e\u0010&\u001a\u00020!2\u0006\u0010'\u001a\u00020(J\u0016\u0010)\u001a\u00020!2\u0006\u0010\u0002\u001a\u00020\u00032\u0006\u0010*\u001a\u00020+J\u0012\u0010,\u001a\u0004\u0018\u00010-2\u0006\u0010.\u001a\u00020-H\u0002J\u0018\u0010/\u001a\u00020!2\u0006\u0010\t\u001a\u00020\n2\u0006\u00100\u001a\u00020\u0012H\u0002J\u0018\u00101\u001a\u00020!2\u0006\u0010\t\u001a\u00020\n2\u0006\u00100\u001a\u00020\u0012H\u0002R\u0011\u0010\t\u001a\u00020\n¢\u0006\b\n\u0000\u001a\u0004\b\u000b\u0010\fR\u0011\u0010\u0002\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\r\u0010\u000eR\u0011\u0010\u0006\u001a\u00020\u0007¢\u0006\b\n\u0000\u001a\u0004\b\u000f\u0010\u0010R\u001a\u0010\u0011\u001a\u00020\u0012X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0011\u0010\u0013\"\u0004\b\u0014\u0010\u0015R\u001a\u0010\u0016\u001a\u00020\u0012X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0016\u0010\u0013\"\u0004\b\u0017\u0010\u0015R\u001a\u0010\u0018\u001a\u00020\u0012X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0019\u0010\u0013\"\u0004\b\u001a\u0010\u0015R\u001a\u0010\u001b\u001a\u00020\u0012X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u001c\u0010\u0013\"\u0004\b\u001d\u0010\u0015R\u0011\u0010\u0004\u001a\u00020\u0005¢\u0006\b\n\u0000\u001a\u0004\b\u001e\u0010\u001f¨\u00064"}, mo64987d2 = {"Lcom/nothing/systemui/power/PowerUIEx;", "", "context", "Landroid/content/Context;", "warnings", "Lcom/android/systemui/power/PowerUI$WarningsUI;", "handler", "Landroid/os/Handler;", "(Landroid/content/Context;Lcom/android/systemui/power/PowerUI$WarningsUI;Landroid/os/Handler;)V", "contentResolver", "Landroid/content/ContentResolver;", "getContentResolver", "()Landroid/content/ContentResolver;", "getContext", "()Landroid/content/Context;", "getHandler", "()Landroid/os/Handler;", "isCloseRx", "", "()Z", "setCloseRx", "(Z)V", "isCloseTx", "setCloseTx", "mIsTheLastValue", "getMIsTheLastValue", "setMIsTheLastValue", "mPluggedInWireless", "getMPluggedInWireless", "setMPluggedInWireless", "getWarnings", "()Lcom/android/systemui/power/PowerUI$WarningsUI;", "determineTemperatureAndHandleRxTX", "", "flashTemperature", "", "getSettingsValue", "", "notifyThrottling", "temp", "Landroid/os/Temperature;", "onReceive", "intent", "Landroid/content/Intent;", "readFile", "", "path", "setWirelessForwardCharge", "flag", "setWirelessReverseCharge", "Companion", "WarningsUI", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000X\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0007\n\u0002\u0010\u000b\n\u0002\b\u000e\n\u0002\u0010\u0002\n\u0000\n\u0002\u0010\u0007\n\u0000\n\u0002\u0010\b\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u000e\n\u0002\b\u0007\u0018\u0000 22\u00020\u0001:\u000223B\u001d\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\u0006\u0010\u0006\u001a\u00020\u0007¢\u0006\u0002\u0010\bJ\b\u0010 \u001a\u00020!H\u0002J\u0006\u0010\"\u001a\u00020#J\b\u0010$\u001a\u00020%H\u0002J\u000e\u0010&\u001a\u00020!2\u0006\u0010'\u001a\u00020(J\u0016\u0010)\u001a\u00020!2\u0006\u0010\u0002\u001a\u00020\u00032\u0006\u0010*\u001a\u00020+J\u0012\u0010,\u001a\u0004\u0018\u00010-2\u0006\u0010.\u001a\u00020-H\u0002J\u0018\u0010/\u001a\u00020!2\u0006\u0010\t\u001a\u00020\n2\u0006\u00100\u001a\u00020\u0012H\u0002J\u0018\u00101\u001a\u00020!2\u0006\u0010\t\u001a\u00020\n2\u0006\u00100\u001a\u00020\u0012H\u0002R\u0011\u0010\t\u001a\u00020\n¢\u0006\b\n\u0000\u001a\u0004\b\u000b\u0010\fR\u0011\u0010\u0002\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\r\u0010\u000eR\u0011\u0010\u0006\u001a\u00020\u0007¢\u0006\b\n\u0000\u001a\u0004\b\u000f\u0010\u0010R\u001a\u0010\u0011\u001a\u00020\u0012X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0011\u0010\u0013\"\u0004\b\u0014\u0010\u0015R\u001a\u0010\u0016\u001a\u00020\u0012X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0016\u0010\u0013\"\u0004\b\u0017\u0010\u0015R\u001a\u0010\u0018\u001a\u00020\u0012X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0019\u0010\u0013\"\u0004\b\u001a\u0010\u0015R\u001a\u0010\u001b\u001a\u00020\u0012X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u001c\u0010\u0013\"\u0004\b\u001d\u0010\u0015R\u0011\u0010\u0004\u001a\u00020\u0005¢\u0006\b\n\u0000\u001a\u0004\b\u001e\u0010\u001f¨\u00064"}, mo65043d2 = {"Lcom/nothing/systemui/power/PowerUIEx;", "", "context", "Landroid/content/Context;", "warnings", "Lcom/android/systemui/power/PowerUI$WarningsUI;", "handler", "Landroid/os/Handler;", "(Landroid/content/Context;Lcom/android/systemui/power/PowerUI$WarningsUI;Landroid/os/Handler;)V", "contentResolver", "Landroid/content/ContentResolver;", "getContentResolver", "()Landroid/content/ContentResolver;", "getContext", "()Landroid/content/Context;", "getHandler", "()Landroid/os/Handler;", "isCloseRx", "", "()Z", "setCloseRx", "(Z)V", "isCloseTx", "setCloseTx", "mIsTheLastValue", "getMIsTheLastValue", "setMIsTheLastValue", "mPluggedInWireless", "getMPluggedInWireless", "setMPluggedInWireless", "getWarnings", "()Lcom/android/systemui/power/PowerUI$WarningsUI;", "determineTemperatureAndHandleRxTX", "", "flashTemperature", "", "getSettingsValue", "", "notifyThrottling", "temp", "Landroid/os/Temperature;", "onReceive", "intent", "Landroid/content/Intent;", "readFile", "", "path", "setWirelessForwardCharge", "flag", "setWirelessReverseCharge", "Companion", "WarningsUI", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* compiled from: PowerUIEx.kt */
 public final class PowerUIEx {
     public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
@@ -41,7 +41,7 @@ public final class PowerUIEx {
     private boolean mPluggedInWireless;
     private final PowerUI.WarningsUI warnings;
 
-    @Metadata(mo64986d1 = {"\u0000\u0012\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0002\bf\u0018\u00002\u00020\u0001J\b\u0010\u0002\u001a\u00020\u0003H&J\b\u0010\u0004\u001a\u00020\u0003H&ø\u0001\u0000\u0002\u0006\n\u0004\b!0\u0001¨\u0006\u0005À\u0006\u0001"}, mo64987d2 = {"Lcom/nothing/systemui/power/PowerUIEx$WarningsUI;", "", "dismissCriticaTemperatureWarning", "", "showCriticalTemperatureWarning", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u0000\u0012\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0002\bf\u0018\u00002\u00020\u0001J\b\u0010\u0002\u001a\u00020\u0003H&J\b\u0010\u0004\u001a\u00020\u0003H&ø\u0001\u0000\u0002\u0006\n\u0004\b!0\u0001¨\u0006\u0005À\u0006\u0001"}, mo65043d2 = {"Lcom/nothing/systemui/power/PowerUIEx$WarningsUI;", "", "dismissCriticaTemperatureWarning", "", "showCriticalTemperatureWarning", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* compiled from: PowerUIEx.kt */
     public interface WarningsUI {
         void dismissCriticaTemperatureWarning();
@@ -109,7 +109,7 @@ public final class PowerUIEx {
         this.mPluggedInWireless = z;
     }
 
-    @Metadata(mo64986d1 = {"\u0000\u001a\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\u000b\n\u0000\n\u0002\u0010\u000e\n\u0002\b\u0007\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u000e\u0010\u0003\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0005\u001a\u00020\u0006XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0007\u001a\u00020\u0006XT¢\u0006\u0002\n\u0000R\u000e\u0010\b\u001a\u00020\u0006XT¢\u0006\u0002\n\u0000R\u000e\u0010\t\u001a\u00020\u0006XT¢\u0006\u0002\n\u0000R\u000e\u0010\n\u001a\u00020\u0006XT¢\u0006\u0002\n\u0000R\u000e\u0010\u000b\u001a\u00020\u0006XT¢\u0006\u0002\n\u0000R\u000e\u0010\f\u001a\u00020\u0006XT¢\u0006\u0002\n\u0000¨\u0006\r"}, mo64987d2 = {"Lcom/nothing/systemui/power/PowerUIEx$Companion;", "", "()V", "DEBUG", "", "NT_WIRELESS_FORWARD_CHARGE", "", "SETTINGS_KEY", "TAG", "THERMALZONE89", "WIRELESS_BOOST_STATUS_PATH", "WIRELESS_REVERSE_STATUS", "WIRELESS_WLS_PATH", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u0000\u001a\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\u000b\n\u0000\n\u0002\u0010\u000e\n\u0002\b\u0007\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u000e\u0010\u0003\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0005\u001a\u00020\u0006XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0007\u001a\u00020\u0006XT¢\u0006\u0002\n\u0000R\u000e\u0010\b\u001a\u00020\u0006XT¢\u0006\u0002\n\u0000R\u000e\u0010\t\u001a\u00020\u0006XT¢\u0006\u0002\n\u0000R\u000e\u0010\n\u001a\u00020\u0006XT¢\u0006\u0002\n\u0000R\u000e\u0010\u000b\u001a\u00020\u0006XT¢\u0006\u0002\n\u0000R\u000e\u0010\f\u001a\u00020\u0006XT¢\u0006\u0002\n\u0000¨\u0006\r"}, mo65043d2 = {"Lcom/nothing/systemui/power/PowerUIEx$Companion;", "", "()V", "DEBUG", "", "NT_WIRELESS_FORWARD_CHARGE", "", "SETTINGS_KEY", "TAG", "THERMALZONE89", "WIRELESS_BOOST_STATUS_PATH", "WIRELESS_REVERSE_STATUS", "WIRELESS_WLS_PATH", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* compiled from: PowerUIEx.kt */
     public static final class Companion {
         public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
@@ -149,13 +149,13 @@ public final class PowerUIEx {
 
     /* access modifiers changed from: private */
     public final void setWirelessReverseCharge(ContentResolver contentResolver2, boolean z) {
-        NTLogUtil.m1680d(TAG, "setWirelessReverseCharge ( " + z + ')');
+        NTLogUtil.m1686d(TAG, "setWirelessReverseCharge ( " + z + ')');
         Settings.Global.putInt(contentResolver2, SETTINGS_KEY, z ? 1 : 0);
     }
 
     /* access modifiers changed from: private */
     public final void setWirelessForwardCharge(ContentResolver contentResolver2, boolean z) {
-        NTLogUtil.m1680d(TAG, "setWirelessForwardCharge ( " + z + ')');
+        NTLogUtil.m1686d(TAG, "setWirelessForwardCharge ( " + z + ')');
         Settings.Global.putInt(contentResolver2, NT_WIRELESS_FORWARD_CHARGE, z ? 1 : 0);
     }
 
@@ -222,7 +222,7 @@ public final class PowerUIEx {
         L_0x0030:
             r6 = move-exception
             java.lang.String r6 = r6.toString()
-            com.nothing.systemui.util.NTLogUtil.m1680d(r5, r6)
+            com.nothing.systemui.util.NTLogUtil.m1686d(r5, r6)
             goto L_0x0052
         L_0x0039:
             r2 = move-exception
@@ -243,7 +243,7 @@ public final class PowerUIEx {
             r1 = r6
         L_0x0046:
             java.lang.String r2 = r2.toString()     // Catch:{ all -> 0x0059 }
-            com.nothing.systemui.util.NTLogUtil.m1680d(r5, r2)     // Catch:{ all -> 0x0059 }
+            com.nothing.systemui.util.NTLogUtil.m1686d(r5, r2)     // Catch:{ all -> 0x0059 }
             if (r6 == 0) goto L_0x0052
             r6.close()     // Catch:{ IOException -> 0x0030 }
         L_0x0052:
@@ -260,7 +260,7 @@ public final class PowerUIEx {
         L_0x0060:
             r6 = move-exception
             java.lang.String r6 = r6.toString()
-            com.nothing.systemui.util.NTLogUtil.m1680d(r5, r6)
+            com.nothing.systemui.util.NTLogUtil.m1686d(r5, r6)
         L_0x0068:
             throw r0
         */

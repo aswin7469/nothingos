@@ -76,7 +76,7 @@ public class ScreenInternalAudioRecorder {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setupSimple$0$com-android-systemui-screenrecord-ScreenInternalAudioRecorder */
-    public /* synthetic */ void mo37264x3197a335(int i) {
+    public /* synthetic */ void mo37265x3197a335(int i) {
         short[] sArr;
         short[] sArr2;
         int i2;

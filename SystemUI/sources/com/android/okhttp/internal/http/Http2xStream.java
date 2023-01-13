@@ -125,7 +125,7 @@ public final class Http2xStream implements HttpStream {
         LinkedHashSet linkedHashSet = new LinkedHashSet();
         int size = headers.size();
         for (int i = 0; i < size; i++) {
-            ByteString encodeUtf8 = ByteString.encodeUtf8(headers.name(i).toLowerCase(Locale.f700US));
+            ByteString encodeUtf8 = ByteString.encodeUtf8(headers.name(i).toLowerCase(Locale.f698US));
             if (!SPDY_3_SKIPPED_REQUEST_HEADERS.contains(encodeUtf8)) {
                 String value = headers.value(i);
                 if (linkedHashSet.add(encodeUtf8)) {
@@ -161,7 +161,7 @@ public final class Http2xStream implements HttpStream {
         arrayList.add(new Header(Header.TARGET_SCHEME, request.httpUrl().scheme()));
         int size = headers.size();
         for (int i = 0; i < size; i++) {
-            ByteString encodeUtf8 = ByteString.encodeUtf8(headers.name(i).toLowerCase(Locale.f700US));
+            ByteString encodeUtf8 = ByteString.encodeUtf8(headers.name(i).toLowerCase(Locale.f698US));
             if (!HTTP_2_SKIPPED_REQUEST_HEADERS.contains(encodeUtf8)) {
                 arrayList.add(new Header(encodeUtf8, headers.value(i)));
             }

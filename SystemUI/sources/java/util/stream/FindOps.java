@@ -87,7 +87,7 @@ final class FindOps {
 
             public Optional<T> get() {
                 if (this.hasValue) {
-                    return Optional.m1745of(this.value);
+                    return Optional.m1751of(this.value);
                 }
                 return null;
             }
@@ -107,7 +107,7 @@ final class FindOps {
 
             public OptionalInt get() {
                 if (this.hasValue) {
-                    return OptionalInt.m1748of(((Integer) this.value).intValue());
+                    return OptionalInt.m1754of(((Integer) this.value).intValue());
                 }
                 return null;
             }
@@ -127,7 +127,7 @@ final class FindOps {
 
             public OptionalLong get() {
                 if (this.hasValue) {
-                    return OptionalLong.m1749of(((Long) this.value).longValue());
+                    return OptionalLong.m1755of(((Long) this.value).longValue());
                 }
                 return null;
             }
@@ -147,7 +147,7 @@ final class FindOps {
 
             public OptionalDouble get() {
                 if (this.hasValue) {
-                    return OptionalDouble.m1747of(((Double) this.value).doubleValue());
+                    return OptionalDouble.m1753of(((Double) this.value).doubleValue());
                 }
                 return null;
             }
@@ -157,16 +157,16 @@ final class FindOps {
     private static final class FindTask<P_IN, P_OUT, O> extends AbstractShortCircuitTask<P_IN, P_OUT, O, FindTask<P_IN, P_OUT, O>> {
 
         /* renamed from: op */
-        private final FindOp<P_OUT, O> f777op;
+        private final FindOp<P_OUT, O> f775op;
 
         FindTask(FindOp<P_OUT, O> findOp, PipelineHelper<P_OUT> pipelineHelper, Spliterator<P_IN> spliterator) {
             super(pipelineHelper, spliterator);
-            this.f777op = findOp;
+            this.f775op = findOp;
         }
 
         FindTask(FindTask<P_IN, P_OUT, O> findTask, Spliterator<P_IN> spliterator) {
             super(findTask, spliterator);
-            this.f777op = findTask.f777op;
+            this.f775op = findTask.f775op;
         }
 
         /* access modifiers changed from: protected */
@@ -176,7 +176,7 @@ final class FindOps {
 
         /* access modifiers changed from: protected */
         public O getEmptyResult() {
-            return this.f777op.emptyValue;
+            return this.f775op.emptyValue;
         }
 
         private void foundResult(O o) {
@@ -189,8 +189,8 @@ final class FindOps {
 
         /* access modifiers changed from: protected */
         public O doLeaf() {
-            O o = ((TerminalSink) this.helper.wrapAndCopyInto(this.f777op.sinkSupplier.get(), this.spliterator)).get();
-            if (!this.f777op.mustFindFirst) {
+            O o = ((TerminalSink) this.helper.wrapAndCopyInto(this.f775op.sinkSupplier.get(), this.spliterator)).get();
+            if (!this.f775op.mustFindFirst) {
                 if (o != null) {
                     shortCircuit(o);
                 }
@@ -204,13 +204,13 @@ final class FindOps {
         }
 
         public void onCompletion(CountedCompleter<?> countedCompleter) {
-            if (this.f777op.mustFindFirst) {
+            if (this.f775op.mustFindFirst) {
                 FindTask findTask = (FindTask) this.leftChild;
                 FindTask findTask2 = null;
                 while (true) {
                     if (findTask != findTask2) {
                         Object localResult = findTask.getLocalResult();
-                        if (localResult != null && this.f777op.presentPredicate.test(localResult)) {
+                        if (localResult != null && this.f775op.presentPredicate.test(localResult)) {
                             setLocalResult(localResult);
                             foundResult(localResult);
                             break;

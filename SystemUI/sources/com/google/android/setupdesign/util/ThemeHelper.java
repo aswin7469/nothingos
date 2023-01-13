@@ -8,7 +8,7 @@ import com.google.android.setupcompat.partnerconfig.PartnerConfigHelper;
 import com.google.android.setupcompat.util.BuildCompatUtils;
 import com.google.android.setupcompat.util.Logger;
 import com.google.android.setupcompat.util.WizardManagerHelper;
-import com.google.android.setupdesign.C3953R;
+import com.google.android.setupdesign.C3963R;
 import java.util.Objects;
 
 public final class ThemeHelper {
@@ -67,36 +67,36 @@ public final class ThemeHelper {
             boolean isSetupWizardDayNightEnabled = isSetupWizardDayNightEnabled(context);
             if (!isAnySetupWizard) {
                 if (isSetupWizardDayNightEnabled) {
-                    i = C3953R.style.SudFullDynamicColorTheme_DayNight;
+                    i = C3963R.style.SudFullDynamicColorTheme_DayNight;
                 } else {
-                    i = C3953R.style.SudFullDynamicColorTheme_Light;
+                    i = C3963R.style.SudFullDynamicColorTheme_Light;
                 }
                 LOG.atInfo("Return " + (isSetupWizardDayNightEnabled ? "SudFullDynamicColorTheme_DayNight" : "SudFullDynamicColorTheme_Light"));
             } else if (isSetupWizardDayNightEnabled) {
-                i = C3953R.style.SudDynamicColorTheme_DayNight;
+                i = C3963R.style.SudDynamicColorTheme_DayNight;
             } else {
-                i = C3953R.style.SudDynamicColorTheme_Light;
+                i = C3963R.style.SudDynamicColorTheme_Light;
             }
             Logger logger = LOG;
             String str = "n/a";
-            StringBuilder append = new StringBuilder("Gets the dynamic accentColor: [Light] ").append(colorIntToHex(context, C3953R.C3954color.sud_dynamic_color_accent_glif_v3_light)).append(", ").append(BuildCompatUtils.isAtLeastS() ? colorIntToHex(context, 17170495) : str).append(", [Dark] ").append(colorIntToHex(context, C3953R.C3954color.sud_dynamic_color_accent_glif_v3_dark)).append(", ");
+            StringBuilder append = new StringBuilder("Gets the dynamic accentColor: [Light] ").append(colorIntToHex(context, C3963R.C3964color.sud_dynamic_color_accent_glif_v3_light)).append(", ").append(BuildCompatUtils.isAtLeastS() ? colorIntToHex(context, 17170495) : str).append(", [Dark] ").append(colorIntToHex(context, C3963R.C3964color.sud_dynamic_color_accent_glif_v3_dark)).append(", ");
             if (BuildCompatUtils.isAtLeastS()) {
                 str = colorIntToHex(context, 17170490);
             }
             logger.atDebug(append.append(str).toString());
             return i;
         } catch (IllegalArgumentException e) {
-            LOG.mo55159e((String) Objects.requireNonNull(e.getMessage()));
+            LOG.mo55170e((String) Objects.requireNonNull(e.getMessage()));
             return 0;
         }
     }
 
     public static boolean trySetDynamicColor(Context context) {
         if (!BuildCompatUtils.isAtLeastS()) {
-            LOG.mo55164w("Dynamic color require platform version at least S.");
+            LOG.mo55175w("Dynamic color require platform version at least S.");
             return false;
         } else if (!shouldApplyDynamicColor(context)) {
-            LOG.mo55164w("SetupWizard does not support the dynamic color or supporting status unknown.");
+            LOG.mo55175w("SetupWizard does not support the dynamic color or supporting status unknown.");
             return false;
         } else {
             try {
@@ -106,10 +106,10 @@ public final class ThemeHelper {
                     lookupActivityFromContext.setTheme(dynamicColorTheme);
                     return true;
                 }
-                LOG.mo55164w("Error occurred on getting dynamic color theme.");
+                LOG.mo55175w("Error occurred on getting dynamic color theme.");
                 return false;
             } catch (IllegalArgumentException e) {
-                LOG.mo55159e((String) Objects.requireNonNull(e.getMessage()));
+                LOG.mo55170e((String) Objects.requireNonNull(e.getMessage()));
                 return false;
             }
         }

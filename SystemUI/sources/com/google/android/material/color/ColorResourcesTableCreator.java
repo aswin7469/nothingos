@@ -291,7 +291,7 @@ final class ColorResourcesTableCreator {
         /* access modifiers changed from: package-private */
         public void writeTo(ByteArrayOutputStream byteArrayOutputStream) throws IOException {
             this.header.writeTo(byteArrayOutputStream);
-            byteArrayOutputStream.write(ColorResourcesTableCreator.intToByteArray(this.packageInfo.f436id));
+            byteArrayOutputStream.write(ColorResourcesTableCreator.intToByteArray(this.packageInfo.f435id));
             char[] charArray = this.packageInfo.name.toCharArray();
             for (int i = 0; i < 128; i++) {
                 if (i < charArray.length) {
@@ -451,12 +451,12 @@ final class ColorResourcesTableCreator {
         /* access modifiers changed from: private */
 
         /* renamed from: id */
-        public final int f436id;
+        public final int f435id;
         /* access modifiers changed from: private */
         public final String name;
 
         PackageInfo(int i, String str) {
-            this.f436id = i;
+            this.f435id = i;
             this.name = str;
         }
     }

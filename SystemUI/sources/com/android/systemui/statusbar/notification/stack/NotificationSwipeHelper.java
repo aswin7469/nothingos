@@ -54,7 +54,7 @@ class NotificationSwipeHelper extends SwipeHelper implements NotificationSwipeAc
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-statusbar-notification-stack-NotificationSwipeHelper */
-    public /* synthetic */ void mo42574x9fcf074d() {
+    public /* synthetic */ void mo42582x9fcf074d() {
         resetExposedMenuView(true, true);
     }
 

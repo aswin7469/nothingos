@@ -708,9 +708,15 @@
     <string name="force_rtl_layout_all_locales_summary">Прымусовая раскладка экрана справа налева для ўсіх рэгіянальных налад</string>
     <string name="forced_resizable_secondary_display">Праграма можа не працаваць на дадатковых экранах.</string>
     <string name="game_status">Ідзе гульня</string>
+    <string name="gamemode_description">Гульнявы рэжым вызначыць, ці знаходзіцеся вы ў гэтым рэжыме, і ўключыцца для вас аўтаматычна</string>
+    <string name="gamemode_gamedashboard_title">Гульнявая панэль</string>
+    <string name="gamemode_notification_content">Націсніце, каб перайсці ў Налады</string>
+    <string name="gamemode_notification_title">Гульнявы рэжым зараз уключаны</string>
     <string name="global_action_lock_message">Каб адкрыць іншыя параметры, разблакіруйце тэлефон</string>
     <string name="global_action_screenshot">Здымак экрана</string>
     <string name="global_action_smart_lock_disabled">Функцыя \"Smart Lock\" адключана</string>
+    <string name="gm_guide_status_on">УКЛЮЧЫЦЬ</string>
+    <string name="gm_notification_title">Гульнявы рэжым</string>
     <string name="go_to_web">Перайсці ў браўзер</string>
     <string name="got_it">Зразумела</string>
     <string name="guest_exit_guest">Выдаліць госця</string>

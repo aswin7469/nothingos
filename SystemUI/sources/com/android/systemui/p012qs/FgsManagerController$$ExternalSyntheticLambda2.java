@@ -17,6 +17,6 @@ public final /* synthetic */ class FgsManagerController$$ExternalSyntheticLambda
     }
 
     public final void run() {
-        FgsManagerController.m2889showDialog$lambda22$lambda19(this.f$0, this.f$1, this.f$2);
+        FgsManagerController.m2894showDialog$lambda22$lambda19(this.f$0, this.f$1, this.f$2);
     }
 }

@@ -11,6 +11,6 @@ public final /* synthetic */ class NotificationClickNotifier$$ExternalSyntheticL
     }
 
     public final void run() {
-        NotificationClickNotifier.m3034onNotificationActionClick$lambda0(this.f$0, this.f$1);
+        NotificationClickNotifier.m3038onNotificationActionClick$lambda0(this.f$0, this.f$1);
     }
 }

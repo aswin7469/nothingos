@@ -11,6 +11,6 @@ public final /* synthetic */ class RestrictedPreferenceHelper$$ExternalSynthetic
     }
 
     public final Object get() {
-        return this.f$0.mo27890xdbabbded();
+        return this.f$0.mo27891xdbabbded();
     }
 }

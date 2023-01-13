@@ -708,9 +708,15 @@
     <string name="force_rtl_layout_all_locales_summary">Ipilit ang RTL na direksyon ng screen layout sa lahat ng lokal</string>
     <string name="forced_resizable_secondary_display">Maaaring hindi gumana ang app sa pangalawang display.</string>
     <string name="game_status">Nagpe-play</string>
+    <string name="gamemode_description">Aalamin ng Game Mode kung nasa isang laro ka at awtomatikong gagana para sa iyo</string>
+    <string name="gamemode_gamedashboard_title">Dashboard ng Game</string>
+    <string name="gamemode_notification_content">Pindutin para pumunta sa mga Setting</string>
+    <string name="gamemode_notification_title">Kasalukuyang gumagana ang Game Mode</string>
     <string name="global_action_lock_message">I-unlock ang iyong telepono para sa higit pang opsyon</string>
     <string name="global_action_screenshot">Screenshot</string>
     <string name="global_action_smart_lock_disabled">Naka-disable ang Smart Lock</string>
+    <string name="gm_guide_status_on">Nakabukas</string>
+    <string name="gm_notification_title">Game Mode</string>
     <string name="go_to_web">Pumunta sa browser</string>
     <string name="got_it">Naintindihan ko</string>
     <string name="guest_exit_guest">Alisin ang bisita</string>

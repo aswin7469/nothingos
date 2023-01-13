@@ -59,7 +59,7 @@ public class ActivatableNotificationViewController extends ViewController<Activa
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-statusbar-notification-row-ActivatableNotificationViewController */
-    public /* synthetic */ void mo40937x68f3f9da(boolean z) {
+    public /* synthetic */ void mo40940x68f3f9da(boolean z) {
         if (z) {
             ((ActivatableNotificationView) this.mView).makeActive();
             this.mFalsingCollector.onNotificationActive();

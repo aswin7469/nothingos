@@ -11,6 +11,6 @@ public final /* synthetic */ class AnimatedDialog$$ExternalSyntheticLambda0 impl
     }
 
     public final void onClick(View view) {
-        AnimatedDialog.m2539start$lambda0(this.f$0, view);
+        AnimatedDialog.m2545start$lambda0(this.f$0, view);
     }
 }

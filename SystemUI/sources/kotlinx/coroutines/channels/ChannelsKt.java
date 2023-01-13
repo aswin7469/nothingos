@@ -17,7 +17,7 @@ import kotlin.jvm.functions.Function2;
 import kotlin.jvm.functions.Function3;
 import kotlinx.coroutines.selects.SelectClause1;
 
-@Metadata(mo64986d1 = {"kotlinx/coroutines/channels/ChannelsKt__ChannelsKt", "kotlinx/coroutines/channels/ChannelsKt__Channels_commonKt", "kotlinx/coroutines/channels/ChannelsKt__DeprecatedKt"}, mo64988k = 4, mo64989mv = {1, 5, 1}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"kotlinx/coroutines/channels/ChannelsKt__ChannelsKt", "kotlinx/coroutines/channels/ChannelsKt__Channels_commonKt", "kotlinx/coroutines/channels/ChannelsKt__DeprecatedKt"}, mo65044k = 4, mo65045mv = {1, 5, 1}, mo65047xi = 48)
 public final class ChannelsKt {
     public static final String DEFAULT_CLOSE_MESSAGE = "Channel was closed";
 

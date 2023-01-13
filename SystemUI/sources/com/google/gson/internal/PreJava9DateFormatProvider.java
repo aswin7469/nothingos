@@ -7,11 +7,11 @@ import java.util.Locale;
 
 public class PreJava9DateFormatProvider {
     public static DateFormat getUSDateFormat(int i) {
-        return new SimpleDateFormat(getDateFormatPattern(i), Locale.f700US);
+        return new SimpleDateFormat(getDateFormatPattern(i), Locale.f698US);
     }
 
     public static DateFormat getUSDateTimeFormat(int i, int i2) {
-        return new SimpleDateFormat(getDatePartOfDateTimePattern(i) + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + getTimePartOfDateTimePattern(i2), Locale.f700US);
+        return new SimpleDateFormat(getDatePartOfDateTimePattern(i) + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + getTimePartOfDateTimePattern(i2), Locale.f698US);
     }
 
     private static String getDateFormatPattern(int i) {

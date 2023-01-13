@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.android.internal.policy.SystemBarUtils;
 import com.android.settingslib.Utils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import java.lang.ref.WeakReference;
 
 public class KeyguardMessageArea extends TextView implements SecurityMessageDisplay {
@@ -40,7 +40,7 @@ public class KeyguardMessageArea extends TextView implements SecurityMessageDisp
     /* access modifiers changed from: protected */
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        this.mContainer = (ViewGroup) getRootView().findViewById(C1893R.C1897id.keyguard_message_area_container);
+        this.mContainer = (ViewGroup) getRootView().findViewById(C1894R.C1898id.keyguard_message_area_container);
     }
 
     /* access modifiers changed from: package-private */
@@ -75,7 +75,7 @@ public class KeyguardMessageArea extends TextView implements SecurityMessageDisp
 
     /* access modifiers changed from: package-private */
     public void onDensityOrFontScaleChanged() {
-        TypedArray obtainStyledAttributes = this.mContext.obtainStyledAttributes(C1893R.style.Keyguard_TextView, new int[]{16842901});
+        TypedArray obtainStyledAttributes = this.mContext.obtainStyledAttributes(C1894R.style.Keyguard_TextView, new int[]{16842901});
         setTextSize(0, (float) obtainStyledAttributes.getDimensionPixelSize(0, 0));
         obtainStyledAttributes.recycle();
     }

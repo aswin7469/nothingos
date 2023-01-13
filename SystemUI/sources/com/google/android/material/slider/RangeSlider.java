@@ -10,7 +10,7 @@ import android.util.AttributeSet;
 import android.view.AbsSavedState;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.internal.ThemeEnforcement;
 import java.util.ArrayList;
 import java.util.List;
@@ -286,16 +286,16 @@ public class RangeSlider extends BaseSlider<RangeSlider, OnChangeListener, OnSli
     }
 
     public RangeSlider(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, C3621R.attr.sliderStyle);
+        this(context, attributeSet, C3631R.attr.sliderStyle);
     }
 
     public RangeSlider(Context context, AttributeSet attributeSet, int i) {
         super(context, attributeSet, i);
-        TypedArray obtainStyledAttributes = ThemeEnforcement.obtainStyledAttributes(context, attributeSet, C3621R.styleable.RangeSlider, i, DEF_STYLE_RES, new int[0]);
-        if (obtainStyledAttributes.hasValue(C3621R.styleable.RangeSlider_values)) {
-            setValues(convertToFloat(obtainStyledAttributes.getResources().obtainTypedArray(obtainStyledAttributes.getResourceId(C3621R.styleable.RangeSlider_values, 0))));
+        TypedArray obtainStyledAttributes = ThemeEnforcement.obtainStyledAttributes(context, attributeSet, C3631R.styleable.RangeSlider, i, DEF_STYLE_RES, new int[0]);
+        if (obtainStyledAttributes.hasValue(C3631R.styleable.RangeSlider_values)) {
+            setValues(convertToFloat(obtainStyledAttributes.getResources().obtainTypedArray(obtainStyledAttributes.getResourceId(C3631R.styleable.RangeSlider_values, 0))));
         }
-        this.minSeparation = obtainStyledAttributes.getDimension(C3621R.styleable.RangeSlider_minSeparation, 0.0f);
+        this.minSeparation = obtainStyledAttributes.getDimension(C3631R.styleable.RangeSlider_minSeparation, 0.0f);
         obtainStyledAttributes.recycle();
     }
 

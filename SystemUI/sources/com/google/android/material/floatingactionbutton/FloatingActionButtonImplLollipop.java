@@ -15,7 +15,7 @@ import android.view.View;
 import androidx.constraintlayout.motion.widget.Key;
 import androidx.core.content.ContextCompat;
 import androidx.core.util.Preconditions;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.ripple.RippleUtils;
 import com.google.android.material.shadow.ShadowViewDelegate;
 import com.google.android.material.shape.MaterialShapeDrawable;
@@ -119,7 +119,7 @@ class FloatingActionButtonImplLollipop extends FloatingActionButtonImpl {
     public BorderDrawable createBorderDrawable(int i, ColorStateList colorStateList) {
         Context context = this.view.getContext();
         BorderDrawable borderDrawable = new BorderDrawable((ShapeAppearanceModel) Preconditions.checkNotNull(this.shapeAppearance));
-        borderDrawable.setGradientColors(ContextCompat.getColor(context, C3621R.C3622color.design_fab_stroke_top_outer_color), ContextCompat.getColor(context, C3621R.C3622color.design_fab_stroke_top_inner_color), ContextCompat.getColor(context, C3621R.C3622color.design_fab_stroke_end_inner_color), ContextCompat.getColor(context, C3621R.C3622color.design_fab_stroke_end_outer_color));
+        borderDrawable.setGradientColors(ContextCompat.getColor(context, C3631R.C3632color.design_fab_stroke_top_outer_color), ContextCompat.getColor(context, C3631R.C3632color.design_fab_stroke_top_inner_color), ContextCompat.getColor(context, C3631R.C3632color.design_fab_stroke_end_inner_color), ContextCompat.getColor(context, C3631R.C3632color.design_fab_stroke_end_outer_color));
         borderDrawable.setBorderWidth((float) i);
         borderDrawable.setBorderTint(colorStateList);
         return borderDrawable;

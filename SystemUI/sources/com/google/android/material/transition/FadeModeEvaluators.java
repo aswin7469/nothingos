@@ -8,7 +8,7 @@ class FadeModeEvaluators {
     };
 
     /* renamed from: IN */
-    private static final FadeModeEvaluator f448IN = new FadeModeEvaluator() {
+    private static final FadeModeEvaluator f447IN = new FadeModeEvaluator() {
         public FadeModeResult evaluate(float f, float f2, float f3, float f4) {
             return FadeModeResult.endOnTop(255, TransitionUtils.lerp(0, 255, f2, f3, f));
         }
@@ -27,10 +27,10 @@ class FadeModeEvaluators {
 
     static FadeModeEvaluator get(int i, boolean z) {
         if (i == 0) {
-            return z ? f448IN : OUT;
+            return z ? f447IN : OUT;
         }
         if (i == 1) {
-            return z ? OUT : f448IN;
+            return z ? OUT : f447IN;
         }
         if (i == 2) {
             return CROSS;

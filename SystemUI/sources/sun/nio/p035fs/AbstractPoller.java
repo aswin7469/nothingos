@@ -165,7 +165,7 @@ abstract class AbstractPoller implements Runnable {
                     if (this.shutdown) {
                         poll.release(new ClosedWatchServiceException());
                     }
-                    int i = C47832.$SwitchMap$sun$nio$fs$AbstractPoller$RequestType[poll.type().ordinal()];
+                    int i = C47952.$SwitchMap$sun$nio$fs$AbstractPoller$RequestType[poll.type().ordinal()];
                     if (i == 1) {
                         Object[] parameters = poll.parameters();
                         poll.release(implRegister((Path) parameters[0], (Set) parameters[1], (WatchEvent.Modifier[]) parameters[2]));
@@ -188,7 +188,7 @@ abstract class AbstractPoller implements Runnable {
     }
 
     /* renamed from: sun.nio.fs.AbstractPoller$2 */
-    static /* synthetic */ class C47832 {
+    static /* synthetic */ class C47952 {
         static final /* synthetic */ int[] $SwitchMap$sun$nio$fs$AbstractPoller$RequestType;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(6:0|1|2|3|4|(3:5|6|8)) */
@@ -220,7 +220,7 @@ abstract class AbstractPoller implements Runnable {
             L_0x0028:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: sun.nio.p035fs.AbstractPoller.C47832.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: sun.nio.p035fs.AbstractPoller.C47952.<clinit>():void");
         }
     }
 }

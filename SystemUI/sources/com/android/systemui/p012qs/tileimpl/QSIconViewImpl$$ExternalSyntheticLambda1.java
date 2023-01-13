@@ -19,6 +19,6 @@ public final /* synthetic */ class QSIconViewImpl$$ExternalSyntheticLambda1 impl
     }
 
     public final void run() {
-        this.f$0.m2957lambda$setIcon$0$comandroidsystemuiqstileimplQSIconViewImpl(this.f$1, this.f$2, this.f$3);
+        this.f$0.m2962lambda$setIcon$0$comandroidsystemuiqstileimplQSIconViewImpl(this.f$1, this.f$2, this.f$3);
     }
 }

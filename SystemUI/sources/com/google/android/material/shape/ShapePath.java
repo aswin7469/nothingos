@@ -59,8 +59,8 @@ public class ShapePath {
 
     public void lineTo(float f, float f2) {
         PathLineOperation pathLineOperation = new PathLineOperation();
-        float unused = pathLineOperation.f445x = f;
-        float unused2 = pathLineOperation.f446y = f2;
+        float unused = pathLineOperation.f444x = f;
+        float unused2 = pathLineOperation.f445y = f2;
         this.operations.add(pathLineOperation);
         LineShadowOperation lineShadowOperation = new LineShadowOperation(pathLineOperation, getEndX(), getEndY());
         addShadowCompatOperation(lineShadowOperation, lineShadowOperation.getAngle() + ANGLE_UP, lineShadowOperation.getAngle() + ANGLE_UP);
@@ -226,7 +226,7 @@ public class ShapePath {
         }
 
         public void draw(Matrix matrix, ShadowRenderer shadowRenderer, int i, Canvas canvas) {
-            RectF rectF = new RectF(0.0f, 0.0f, (float) Math.hypot((double) (this.operation.f446y - this.startY), (double) (this.operation.f445x - this.startX)), 0.0f);
+            RectF rectF = new RectF(0.0f, 0.0f, (float) Math.hypot((double) (this.operation.f445y - this.startY), (double) (this.operation.f444x - this.startX)), 0.0f);
             Matrix matrix2 = new Matrix(matrix);
             matrix2.preTranslate(this.startX, this.startY);
             matrix2.preRotate(getAngle());
@@ -235,7 +235,7 @@ public class ShapePath {
 
         /* access modifiers changed from: package-private */
         public float getAngle() {
-            return (float) Math.toDegrees(Math.atan((double) ((this.operation.f446y - this.startY) / (this.operation.f445x - this.startX))));
+            return (float) Math.toDegrees(Math.atan((double) ((this.operation.f445y - this.startY) / (this.operation.f444x - this.startX))));
         }
     }
 
@@ -257,17 +257,17 @@ public class ShapePath {
         /* access modifiers changed from: private */
 
         /* renamed from: x */
-        public float f445x;
+        public float f444x;
         /* access modifiers changed from: private */
 
         /* renamed from: y */
-        public float f446y;
+        public float f445y;
 
         public void applyToPath(Matrix matrix, Path path) {
             Matrix matrix2 = this.matrix;
             matrix.invert(matrix2);
             path.transform(matrix2);
-            path.lineTo(this.f445x, this.f446y);
+            path.lineTo(this.f444x, this.f445y);
             path.transform(matrix);
         }
     }

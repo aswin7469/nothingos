@@ -11,6 +11,6 @@ public final /* synthetic */ class AuthPanelController$$ExternalSyntheticLambda0
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        this.f$0.mo30692x56827c91(valueAnimator);
+        this.f$0.mo30703x56827c91(valueAnimator);
     }
 }

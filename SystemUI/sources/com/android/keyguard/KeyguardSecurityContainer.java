@@ -46,7 +46,7 @@ import com.android.internal.util.UserIcons;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.keyguard.KeyguardSecurityModel;
 import com.android.settingslib.Utils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Gefingerpoken;
 import com.android.systemui.animation.Interpolators;
 import com.android.systemui.plugins.FalsingManager;
@@ -575,12 +575,12 @@ public class KeyguardSecurityContainer extends FrameLayout {
 
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mSecurityViewFlipper = (KeyguardSecurityViewFlipper) findViewById(C1893R.C1897id.view_flipper);
+        this.mSecurityViewFlipper = (KeyguardSecurityViewFlipper) findViewById(C1894R.C1898id.view_flipper);
     }
 
     public WindowInsets onApplyWindowInsets(WindowInsets windowInsets) {
         int max = Integer.max(windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.systemBars()).bottom, windowInsets.getInsets(WindowInsets.Type.ime()).bottom);
-        setPadding(getPaddingLeft(), getPaddingTop(), getPaddingRight(), Integer.max(max, getContext().getResources().getDimensionPixelSize(C1893R.dimen.keyguard_security_view_bottom_margin)));
+        setPadding(getPaddingLeft(), getPaddingTop(), getPaddingRight(), Integer.max(max, getContext().getResources().getDimensionPixelSize(C1894R.dimen.keyguard_security_view_bottom_margin)));
         return windowInsets.inset(0, 0, 0, max);
     }
 
@@ -589,7 +589,7 @@ public class KeyguardSecurityContainer extends FrameLayout {
         if (alertDialog != null) {
             alertDialog.dismiss();
         }
-        this.mAlertDialog = new AlertDialog.Builder(this.mContext).setTitle(str).setMessage(str2).setCancelable(false).setNeutralButton(C1893R.string.f262ok, (DialogInterface.OnClickListener) null).create();
+        this.mAlertDialog = new AlertDialog.Builder(this.mContext).setTitle(str).setMessage(str2).setCancelable(false).setNeutralButton(C1894R.string.f262ok, (DialogInterface.OnClickListener) null).create();
         if (!(this.mContext instanceof Activity)) {
             this.mAlertDialog.getWindow().setType(Types.SQLXML);
         }
@@ -600,7 +600,7 @@ public class KeyguardSecurityContainer extends FrameLayout {
     public void showTimeoutDialog(int i, int i2, LockPatternUtils lockPatternUtils, KeyguardSecurityModel.SecurityMode securityMode) {
         int i3 = i2 / 1000;
         int i4 = C16192.f231xdc0e830a[securityMode.ordinal()];
-        int i5 = i4 != 1 ? i4 != 2 ? i4 != 3 ? 0 : C1893R.string.kg_too_many_failed_password_attempts_dialog_message : C1893R.string.kg_too_many_failed_pin_attempts_dialog_message : C1893R.string.kg_too_many_failed_pattern_attempts_dialog_message;
+        int i5 = i4 != 1 ? i4 != 2 ? i4 != 3 ? 0 : C1894R.string.kg_too_many_failed_password_attempts_dialog_message : C1894R.string.kg_too_many_failed_pin_attempts_dialog_message : C1894R.string.kg_too_many_failed_pattern_attempts_dialog_message;
         if (i5 != 0) {
             showDialog((String) null, this.mContext.getString(i5, new Object[]{Integer.valueOf(lockPatternUtils.getCurrentFailedPasswordAttempts(i)), Integer.valueOf(i3)}));
         }
@@ -714,13 +714,13 @@ public class KeyguardSecurityContainer extends FrameLayout {
     public void showAlmostAtWipeDialog(int i, int i2, int i3) {
         String str;
         if (i3 == 1) {
-            str = this.mContext.getString(C1893R.string.kg_failed_attempts_almost_at_wipe, new Object[]{Integer.valueOf(i), Integer.valueOf(i2)});
+            str = this.mContext.getString(C1894R.string.kg_failed_attempts_almost_at_wipe, new Object[]{Integer.valueOf(i), Integer.valueOf(i2)});
         } else if (i3 == 2) {
             str = ((DevicePolicyManager) this.mContext.getSystemService(DevicePolicyManager.class)).getResources().getString("SystemUi.KEYGUARD_DIALOG_FAILED_ATTEMPTS_ALMOST_ERASING_PROFILE", new KeyguardSecurityContainer$$ExternalSyntheticLambda2(this, i, i2), new Object[]{Integer.valueOf(i), Integer.valueOf(i2)});
         } else if (i3 != 3) {
             str = null;
         } else {
-            str = this.mContext.getString(C1893R.string.kg_failed_attempts_almost_at_erase_user, new Object[]{Integer.valueOf(i), Integer.valueOf(i2)});
+            str = this.mContext.getString(C1894R.string.kg_failed_attempts_almost_at_erase_user, new Object[]{Integer.valueOf(i), Integer.valueOf(i2)});
         }
         showDialog((String) null, str);
     }
@@ -728,20 +728,20 @@ public class KeyguardSecurityContainer extends FrameLayout {
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$showAlmostAtWipeDialog$2$com-android-keyguard-KeyguardSecurityContainer */
     public /* synthetic */ String mo26012x355c4cea(int i, int i2) {
-        return this.mContext.getString(C1893R.string.kg_failed_attempts_almost_at_erase_profile, new Object[]{Integer.valueOf(i), Integer.valueOf(i2)});
+        return this.mContext.getString(C1894R.string.kg_failed_attempts_almost_at_erase_profile, new Object[]{Integer.valueOf(i), Integer.valueOf(i2)});
     }
 
     /* access modifiers changed from: package-private */
     public void showWipeDialog(int i, int i2) {
         String str;
         if (i2 == 1) {
-            str = this.mContext.getString(C1893R.string.kg_failed_attempts_now_wiping, new Object[]{Integer.valueOf(i)});
+            str = this.mContext.getString(C1894R.string.kg_failed_attempts_now_wiping, new Object[]{Integer.valueOf(i)});
         } else if (i2 == 2) {
             str = ((DevicePolicyManager) this.mContext.getSystemService(DevicePolicyManager.class)).getResources().getString("SystemUi.KEYGUARD_DIALOG_FAILED_ATTEMPTS_ERASING_PROFILE", new KeyguardSecurityContainer$$ExternalSyntheticLambda1(this, i), new Object[]{Integer.valueOf(i)});
         } else if (i2 != 3) {
             str = null;
         } else {
-            str = this.mContext.getString(C1893R.string.kg_failed_attempts_now_erasing_user, new Object[]{Integer.valueOf(i)});
+            str = this.mContext.getString(C1894R.string.kg_failed_attempts_now_erasing_user, new Object[]{Integer.valueOf(i)});
         }
         showDialog((String) null, str);
     }
@@ -749,7 +749,7 @@ public class KeyguardSecurityContainer extends FrameLayout {
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$showWipeDialog$3$com-android-keyguard-KeyguardSecurityContainer */
     public /* synthetic */ String mo26013x1518d08a(int i) {
-        return this.mContext.getString(C1893R.string.kg_failed_attempts_now_erasing_profile, new Object[]{Integer.valueOf(i)});
+        return this.mContext.getString(C1894R.string.kg_failed_attempts_now_erasing_profile, new Object[]{Integer.valueOf(i)});
     }
 
     public void reset() {
@@ -806,11 +806,11 @@ public class KeyguardSecurityContainer extends FrameLayout {
             this.mUserSwitcherController = userSwitcherController;
             this.mResources = viewGroup.getContext().getResources();
             if (this.mUserSwitcherViewGroup == null) {
-                LayoutInflater.from(viewGroup.getContext()).inflate(C1893R.layout.keyguard_bouncer_user_switcher, this.mView, true);
-                this.mUserSwitcherViewGroup = (ViewGroup) this.mView.findViewById(C1893R.C1897id.keyguard_bouncer_user_switcher);
+                LayoutInflater.from(viewGroup.getContext()).inflate(C1894R.layout.keyguard_bouncer_user_switcher, this.mView, true);
+                this.mUserSwitcherViewGroup = (ViewGroup) this.mView.findViewById(C1894R.C1898id.keyguard_bouncer_user_switcher);
             }
             updateSecurityViewLocation();
-            this.mUserSwitcher = (TextView) this.mView.findViewById(C1893R.C1897id.user_switcher_header);
+            this.mUserSwitcher = (TextView) this.mView.findViewById(C1894R.C1898id.user_switcher_header);
             setupUserSwitcher();
             this.mUserSwitcherController.addUserSwitchCallback(this.mUserSwitchCallback);
         }
@@ -824,10 +824,10 @@ public class KeyguardSecurityContainer extends FrameLayout {
         }
 
         public void reloadColors() {
-            TextView textView = (TextView) this.mView.findViewById(C1893R.C1897id.user_switcher_header);
+            TextView textView = (TextView) this.mView.findViewById(C1894R.C1898id.user_switcher_header);
             if (textView != null) {
                 textView.setTextColor(Utils.getColorAttrDefaultColor(this.mView.getContext(), 16842806));
-                textView.setBackground(this.mView.getContext().getDrawable(C1893R.C1895drawable.bouncer_user_switcher_header_bg));
+                textView.setBackground(this.mView.getContext().getDrawable(C1894R.C1896drawable.bouncer_user_switcher_header_bg));
             }
         }
 
@@ -855,7 +855,7 @@ public class KeyguardSecurityContainer extends FrameLayout {
 
         public void startDisappearAnimation(KeyguardSecurityModel.SecurityMode securityMode) {
             if (securityMode != KeyguardSecurityModel.SecurityMode.Password) {
-                int dimensionPixelSize = this.mResources.getDimensionPixelSize(C1893R.dimen.disappear_y_translation);
+                int dimensionPixelSize = this.mResources.getDimensionPixelSize(C1894R.dimen.disappear_y_translation);
                 AnimatorSet animatorSet = new AnimatorSet();
                 ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this.mView, View.TRANSLATION_Y, new float[]{(float) dimensionPixelSize});
                 ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(this.mView, View.ALPHA, new float[]{0.0f});
@@ -872,9 +872,9 @@ public class KeyguardSecurityContainer extends FrameLayout {
                 Log.e(KeyguardSecurityContainer.TAG, "Current user in user switcher is null.");
                 return;
             }
-            ((ImageView) this.mView.findViewById(C1893R.C1897id.user_icon)).setImageDrawable(findUserIcon(currentUserRecord.info.id));
+            ((ImageView) this.mView.findViewById(C1894R.C1898id.user_icon)).setImageDrawable(findUserIcon(currentUserRecord.info.id));
             this.mUserSwitcher.setText(this.mUserSwitcherController.getCurrentUserName());
-            ViewGroup viewGroup = (ViewGroup) this.mView.findViewById(C1893R.C1897id.user_switcher_anchor);
+            ViewGroup viewGroup = (ViewGroup) this.mView.findViewById(C1894R.C1898id.user_switcher_anchor);
             C16211 r2 = new UserSwitcherController.BaseUserAdapter(this.mUserSwitcherController) {
                 public View getView(int i, View view, ViewGroup viewGroup) {
                     Drawable drawable;
@@ -882,7 +882,7 @@ public class KeyguardSecurityContainer extends FrameLayout {
                     FrameLayout frameLayout = (FrameLayout) view;
                     boolean z = false;
                     if (frameLayout == null) {
-                        frameLayout = (FrameLayout) LayoutInflater.from(viewGroup.getContext()).inflate(C1893R.layout.keyguard_bouncer_user_switcher_item, viewGroup, false);
+                        frameLayout = (FrameLayout) LayoutInflater.from(viewGroup.getContext()).inflate(C1894R.layout.keyguard_bouncer_user_switcher_item, viewGroup, false);
                     }
                     TextView textView = (TextView) frameLayout.getChildAt(0);
                     textView.setText(getName(viewGroup.getContext(), item));
@@ -891,13 +891,13 @@ public class KeyguardSecurityContainer extends FrameLayout {
                     } else {
                         drawable = getDrawable(item, frameLayout.getContext());
                     }
-                    int dimensionPixelSize = frameLayout.getResources().getDimensionPixelSize(C1893R.dimen.bouncer_user_switcher_item_icon_size);
-                    int dimensionPixelSize2 = frameLayout.getResources().getDimensionPixelSize(C1893R.dimen.bouncer_user_switcher_item_icon_padding);
+                    int dimensionPixelSize = frameLayout.getResources().getDimensionPixelSize(C1894R.dimen.bouncer_user_switcher_item_icon_size);
+                    int dimensionPixelSize2 = frameLayout.getResources().getDimensionPixelSize(C1894R.dimen.bouncer_user_switcher_item_icon_padding);
                     drawable.setBounds(0, 0, dimensionPixelSize, dimensionPixelSize);
                     textView.setCompoundDrawablePadding(dimensionPixelSize2);
                     textView.setCompoundDrawablesRelative(drawable, (Drawable) null, (Drawable) null, (Drawable) null);
                     if (item == currentUserRecord) {
-                        textView.setBackground(frameLayout.getContext().getDrawable(C1893R.C1895drawable.bouncer_user_switcher_item_selected_bg));
+                        textView.setBackground(frameLayout.getContext().getDrawable(C1894R.C1896drawable.bouncer_user_switcher_item_selected_bg));
                     } else {
                         textView.setBackground((Drawable) null);
                     }
@@ -916,15 +916,15 @@ public class KeyguardSecurityContainer extends FrameLayout {
                     if (!userRecord.isCurrent || !userRecord.isGuest) {
                         drawable = getIconDrawable(context, userRecord);
                     } else {
-                        drawable = context.getDrawable(C1893R.C1895drawable.ic_avatar_guest_user);
+                        drawable = context.getDrawable(C1894R.C1896drawable.ic_avatar_guest_user);
                     }
                     if (userRecord.isSwitchToEnabled) {
                         i = Utils.getColorAttrDefaultColor(context, 17956901);
                     } else {
-                        i = context.getResources().getColor(C1893R.C1894color.kg_user_switcher_restricted_avatar_icon_color, context.getTheme());
+                        i = context.getResources().getColor(C1894R.C1895color.kg_user_switcher_restricted_avatar_icon_color, context.getTheme());
                     }
                     drawable.setTint(i);
-                    Drawable drawable2 = context.getDrawable(C1893R.C1895drawable.user_avatar_bg);
+                    Drawable drawable2 = context.getDrawable(C1894R.C1896drawable.user_avatar_bg);
                     drawable2.setTintBlendMode(BlendMode.DST);
                     drawable2.setTint(Utils.getColorAttrDefaultColor(context, 17956912));
                     return new LayerDrawable(new Drawable[]{drawable2, drawable});
@@ -968,7 +968,7 @@ public class KeyguardSecurityContainer extends FrameLayout {
         }
 
         public void updateSecurityViewLocation() {
-            int dimensionPixelSize = this.mResources.getDimensionPixelSize(C1893R.dimen.bouncer_user_switcher_y_trans);
+            int dimensionPixelSize = this.mResources.getDimensionPixelSize(C1894R.dimen.bouncer_user_switcher_y_trans);
             if (this.mResources.getConfiguration().orientation == 1) {
                 updateViewGravity(this.mViewFlipper, 1);
                 updateViewGravity(this.mUserSwitcherViewGroup, 1);
@@ -1069,7 +1069,7 @@ public class KeyguardSecurityContainer extends FrameLayout {
                 ofFloat.setDuration(500);
                 this.mRunningOneHandedAnimator.setInterpolator(Interpolators.LINEAR);
                 int translationX = (int) this.mViewFlipper.getTranslationX();
-                int dimension = (int) this.mView.getResources().getDimension(C1893R.dimen.one_handed_bouncer_move_animation_translation);
+                int dimension = (int) this.mView.getResources().getDimension(C1894R.dimen.one_handed_bouncer_move_animation_translation);
                 if (this.mViewFlipper.hasOverlappingRendering() && this.mViewFlipper.getLayerType() != 2) {
                     z3 = true;
                 }

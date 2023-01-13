@@ -36,7 +36,7 @@ public class LightsOutNotifController extends ViewController<View> {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-statusbar-phone-LightsOutNotifController */
-    public /* synthetic */ void mo44394xc5976051(Boolean bool) {
+    public /* synthetic */ void mo44409xc5976051(Boolean bool) {
         updateLightsOutView();
     }
 

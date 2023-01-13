@@ -64,7 +64,7 @@ public class ReduceBrightColorsController implements CallbackController<Listener
                 }
             }
         };
-        C23502 r4 = new UserTracker.Callback() {
+        C23532 r4 = new UserTracker.Callback() {
             public void onUserChanged(int i, Context context) {
                 synchronized (ReduceBrightColorsController.this.mListeners) {
                     if (ReduceBrightColorsController.this.mListeners.size() > 0) {

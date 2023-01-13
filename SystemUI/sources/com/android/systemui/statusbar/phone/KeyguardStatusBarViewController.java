@@ -18,7 +18,7 @@ import android.view.WindowInsets;
 import com.android.keyguard.CarrierTextController;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardUpdateMonitorCallback;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.animation.Interpolators;
 import com.android.systemui.battery.BatteryMeterViewController;
 import com.android.systemui.dagger.qualifiers.Main;
@@ -98,7 +98,7 @@ public class KeyguardStatusBarViewController extends ViewController<KeyguardStat
     private final StatusBarUserSwitcherFeatureController mFeatureController;
     /* access modifiers changed from: private */
     public boolean mFirstBypassAttempt;
-    private final AnimatableProperty mHeadsUpShowingAmountAnimation = AnimatableProperty.from("KEYGUARD_HEADS_UP_SHOWING_AMOUNT", new KeyguardStatusBarViewController$$ExternalSyntheticLambda2(this), new KeyguardStatusBarViewController$$ExternalSyntheticLambda3(this), C1893R.C1897id.keyguard_hun_animator_tag, C1893R.C1897id.keyguard_hun_animator_end_tag, C1893R.C1897id.keyguard_hun_animator_start_tag);
+    private final AnimatableProperty mHeadsUpShowingAmountAnimation = AnimatableProperty.from("KEYGUARD_HEADS_UP_SHOWING_AMOUNT", new KeyguardStatusBarViewController$$ExternalSyntheticLambda2(this), new KeyguardStatusBarViewController$$ExternalSyntheticLambda3(this), C1894R.C1898id.keyguard_hun_animator_tag, C1894R.C1898id.keyguard_hun_animator_end_tag, C1894R.C1898id.keyguard_hun_animator_start_tag);
     private final StatusBarContentInsetsProvider mInsetsProvider;
     /* access modifiers changed from: private */
     public final KeyguardBypassController mKeyguardBypassController;
@@ -171,26 +171,26 @@ public class KeyguardStatusBarViewController extends ViewController<KeyguardStat
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-statusbar-phone-KeyguardStatusBarViewController */
-    public /* synthetic */ void mo44295xd1760466(View view, Float f) {
+    public /* synthetic */ void mo44310xd1760466(View view, Float f) {
         this.mKeyguardHeadsUpShowingAmount = f.floatValue();
         updateViewState();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$1$com-android-systemui-statusbar-phone-KeyguardStatusBarViewController */
-    public /* synthetic */ Float mo44296xa566505(View view) {
+    public /* synthetic */ Float mo44311xa566505(View view) {
         return Float.valueOf(this.mKeyguardHeadsUpShowingAmount);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$2$com-android-systemui-statusbar-phone-KeyguardStatusBarViewController */
-    public /* synthetic */ void mo44297x4336c5a4(String str, Drawable drawable, String str2) {
+    public /* synthetic */ void mo44312x4336c5a4(String str, Drawable drawable, String str2) {
         ((KeyguardStatusBarView) this.mView).onUserInfoChanged(drawable);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$3$com-android-systemui-statusbar-phone-KeyguardStatusBarViewController */
-    public /* synthetic */ void mo44298x7c172643(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo44313x7c172643(ValueAnimator valueAnimator) {
         this.mKeyguardStatusBarAnimateAlpha = ((Float) valueAnimator.getAnimatedValue()).floatValue();
         updateViewState();
     }
@@ -233,7 +233,7 @@ public class KeyguardStatusBarViewController extends ViewController<KeyguardStat
         });
         Resources resources = getResources();
         updateBlockedIcons();
-        this.mNotificationsHeaderCollideDistance = resources.getDimensionPixelSize(C1893R.dimen.header_notifications_collide_distance);
+        this.mNotificationsHeaderCollideDistance = resources.getDimensionPixelSize(C1894R.dimen.header_notifications_collide_distance);
         ((KeyguardStatusBarView) this.mView).setKeyguardUserAvatarEnabled(!statusBarUserSwitcherFeatureController.isStatusBarUserSwitcherFeatureEnabled());
         statusBarUserSwitcherFeatureController2.addCallback((OnUserSwitcherPreferenceChangeListener) new KeyguardStatusBarViewController$$ExternalSyntheticLambda6(this));
         this.mSystemEventAnimator = new StatusBarSystemEventAnimator(this.mView, resources);
@@ -241,7 +241,7 @@ public class KeyguardStatusBarViewController extends ViewController<KeyguardStat
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$4$com-android-systemui-statusbar-phone-KeyguardStatusBarViewController */
-    public /* synthetic */ void mo44299xb4f786e2(boolean z) {
+    public /* synthetic */ void mo44314xb4f786e2(boolean z) {
         ((KeyguardStatusBarView) this.mView).setKeyguardUserAvatarEnabled(!z);
     }
 
@@ -261,7 +261,7 @@ public class KeyguardStatusBarViewController extends ViewController<KeyguardStat
         this.mStatusBarStateController.addCallback(this.mStatusBarStateListener);
         this.mKeyguardUpdateMonitor.registerCallback(this.mKeyguardUpdateMonitorCallback);
         if (this.mTintedIconManager == null) {
-            StatusBarIconController.TintedIconManager create = this.mTintedIconManagerFactory.create((ViewGroup) ((KeyguardStatusBarView) this.mView).findViewById(C1893R.C1897id.statusIcons));
+            StatusBarIconController.TintedIconManager create = this.mTintedIconManagerFactory.create((ViewGroup) ((KeyguardStatusBarView) this.mView).findViewById(C1894R.C1898id.statusIcons));
             this.mTintedIconManager = create;
             create.setBlockList(getBlockedIcons());
             this.mStatusBarIconController.addIconGroup(this.mTintedIconManager);
@@ -274,7 +274,7 @@ public class KeyguardStatusBarViewController extends ViewController<KeyguardStat
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onViewAttached$5$com-android-systemui-statusbar-phone-KeyguardStatusBarViewController */
-    public /* synthetic */ WindowInsets mo44300xd10be31f(View view, WindowInsets windowInsets) {
+    public /* synthetic */ WindowInsets mo44315xd10be31f(View view, WindowInsets windowInsets) {
         return ((KeyguardStatusBarView) this.mView).updateWindowInsets(windowInsets, this.mInsetsProvider);
     }
 
@@ -386,7 +386,7 @@ public class KeyguardStatusBarViewController extends ViewController<KeyguardStat
 
     /* access modifiers changed from: private */
     public void updateUserSwitcher() {
-        ((KeyguardStatusBarView) this.mView).setUserSwitcherEnabled(this.mUserManager.isUserSwitcherEnabled(getResources().getBoolean(C1893R.bool.qs_show_user_switcher_for_single_user)));
+        ((KeyguardStatusBarView) this.mView).setUserSwitcherEnabled(this.mUserManager.isUserSwitcherEnabled(getResources().getBoolean(C1894R.bool.qs_show_user_switcher_for_single_user)));
     }
 
     /* access modifiers changed from: package-private */
@@ -401,7 +401,7 @@ public class KeyguardStatusBarViewController extends ViewController<KeyguardStat
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateBlockedIcons$6$com-android-systemui-statusbar-phone-KeyguardStatusBarViewController */
-    public /* synthetic */ void mo44301x6e64a4f() {
+    public /* synthetic */ void mo44316x6e64a4f() {
         StatusBarIconController.TintedIconManager tintedIconManager = this.mTintedIconManager;
         if (tintedIconManager != null) {
             tintedIconManager.setBlockList(getBlockedIcons());

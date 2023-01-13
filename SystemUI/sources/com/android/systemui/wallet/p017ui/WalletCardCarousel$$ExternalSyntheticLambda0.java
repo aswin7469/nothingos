@@ -14,6 +14,6 @@ public final /* synthetic */ class WalletCardCarousel$$ExternalSyntheticLambda0 
     }
 
     public final void onLayoutChange(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
-        this.f$0.mo47438x1d4e5df5(this.f$1, view, i, i2, i3, i4, i5, i6, i7, i8);
+        this.f$0.mo47447x1d4e5df5(this.f$1, view, i, i2, i3, i4, i5, i6, i7, i8);
     }
 }

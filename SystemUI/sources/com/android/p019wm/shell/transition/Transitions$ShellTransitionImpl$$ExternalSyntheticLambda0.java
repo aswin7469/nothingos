@@ -18,6 +18,6 @@ public final /* synthetic */ class Transitions$ShellTransitionImpl$$ExternalSynt
     }
 
     public final void run() {
-        this.f$0.mo51298x153a0b9f(this.f$1, this.f$2);
+        this.f$0.mo51309x153a0b9f(this.f$1, this.f$2);
     }
 }

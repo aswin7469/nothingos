@@ -9,6 +9,6 @@ public final /* synthetic */ class NTLightweightHeadsupManager$$ExternalSyntheti
     }
 
     public final void run() {
-        NTLightweightHeadsupManager.m3526setPopViewVisibilityWithAnimation$lambda2(this.f$0);
+        NTLightweightHeadsupManager.m3544setPopViewVisibilityWithAnimation$lambda4(this.f$0);
     }
 }

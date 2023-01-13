@@ -22,6 +22,6 @@ public final /* synthetic */ class SmartActionInflaterImpl$$ExternalSyntheticLam
     }
 
     public final void onClick(View view) {
-        SmartActionInflaterImpl.m3241inflateActionButton$lambda2$lambda1(this.f$0, this.f$1, this.f$2, this.f$3, this.f$4, view);
+        SmartActionInflaterImpl.m3246inflateActionButton$lambda2$lambda1(this.f$0, this.f$1, this.f$2, this.f$3, this.f$4, view);
     }
 }

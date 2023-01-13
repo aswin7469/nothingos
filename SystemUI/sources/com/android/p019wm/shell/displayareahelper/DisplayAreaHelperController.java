@@ -21,7 +21,7 @@ public class DisplayAreaHelperController implements DisplayAreaHelper {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$attachToRootDisplayArea$0$com-android-wm-shell-displayareahelper-DisplayAreaHelperController */
-    public /* synthetic */ void mo49473x5024e067(int i, SurfaceControl.Builder builder, Consumer consumer) {
+    public /* synthetic */ void mo49482x5024e067(int i, SurfaceControl.Builder builder, Consumer consumer) {
         this.mRootDisplayAreaOrganizer.attachToDisplayArea(i, builder);
         consumer.accept(builder);
     }

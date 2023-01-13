@@ -277,62 +277,62 @@ public class DisplayController {
         }
 
         public void onDisplayAdded(int i) {
-            DisplayController.this.mMainExecutor.execute(new C3421xd1ef1ed1(this, i));
+            DisplayController.this.mMainExecutor.execute(new C3431xd1ef1ed1(this, i));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onDisplayAdded$0$com-android-wm-shell-common-DisplayController$DisplayWindowListenerImpl */
-        public /* synthetic */ void mo49024xe415290a(int i) {
+        public /* synthetic */ void mo49033xe415290a(int i) {
             DisplayController.this.onDisplayAdded(i);
         }
 
         public void onDisplayConfigurationChanged(int i, Configuration configuration) {
-            DisplayController.this.mMainExecutor.execute(new C3424xd1ef1ed4(this, i, configuration));
+            DisplayController.this.mMainExecutor.execute(new C3434xd1ef1ed4(this, i, configuration));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onDisplayConfigurationChanged$1$com-android-wm-shell-common-DisplayController$DisplayWindowListenerImpl */
-        public /* synthetic */ void mo49025xae15a375(int i, Configuration configuration) {
+        public /* synthetic */ void mo49034xae15a375(int i, Configuration configuration) {
             DisplayController.this.onDisplayConfigurationChanged(i, configuration);
         }
 
         public void onDisplayRemoved(int i) {
-            DisplayController.this.mMainExecutor.execute(new C3422xd1ef1ed2(this, i));
+            DisplayController.this.mMainExecutor.execute(new C3432xd1ef1ed2(this, i));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onDisplayRemoved$2$com-android-wm-shell-common-DisplayController$DisplayWindowListenerImpl */
-        public /* synthetic */ void mo49026x2a767ec(int i) {
+        public /* synthetic */ void mo49035x2a767ec(int i) {
             DisplayController.this.onDisplayRemoved(i);
         }
 
         public void onFixedRotationStarted(int i, int i2) {
-            DisplayController.this.mMainExecutor.execute(new C3419xd1ef1ecf(this, i, i2));
+            DisplayController.this.mMainExecutor.execute(new C3429xd1ef1ecf(this, i, i2));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onFixedRotationStarted$3$com-android-wm-shell-common-DisplayController$DisplayWindowListenerImpl */
-        public /* synthetic */ void mo49028xb203687e(int i, int i2) {
+        public /* synthetic */ void mo49037xb203687e(int i, int i2) {
             DisplayController.this.onFixedRotationStarted(i, i2);
         }
 
         public void onFixedRotationFinished(int i) {
-            DisplayController.this.mMainExecutor.execute(new C3423xd1ef1ed3(this, i));
+            DisplayController.this.mMainExecutor.execute(new C3433xd1ef1ed3(this, i));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onFixedRotationFinished$4$com-android-wm-shell-common-DisplayController$DisplayWindowListenerImpl */
-        public /* synthetic */ void mo49027xbefafb5c(int i) {
+        public /* synthetic */ void mo49036xbefafb5c(int i) {
             DisplayController.this.onFixedRotationFinished(i);
         }
 
         public void onKeepClearAreasChanged(int i, List<Rect> list, List<Rect> list2) {
-            DisplayController.this.mMainExecutor.execute(new C3420xd1ef1ed0(this, i, list, list2));
+            DisplayController.this.mMainExecutor.execute(new C3430xd1ef1ed0(this, i, list, list2));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onKeepClearAreasChanged$5$com-android-wm-shell-common-DisplayController$DisplayWindowListenerImpl */
-        public /* synthetic */ void mo49029x4d802e6f(int i, List list, List list2) {
+        public /* synthetic */ void mo49038x4d802e6f(int i, List list, List list2) {
             DisplayController.this.onKeepClearAreasChanged(i, new ArraySet(list), new ArraySet(list2));
         }
     }

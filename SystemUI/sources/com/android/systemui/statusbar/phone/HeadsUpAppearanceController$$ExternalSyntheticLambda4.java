@@ -12,6 +12,6 @@ public final /* synthetic */ class HeadsUpAppearanceController$$ExternalSyntheti
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo44046x1d186c59((NotificationEntry) obj);
+        this.f$0.mo44056x1d186c59((NotificationEntry) obj);
     }
 }

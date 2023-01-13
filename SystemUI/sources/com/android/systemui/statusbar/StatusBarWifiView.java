@@ -12,7 +12,7 @@ import android.view.ViewOverlay;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.navigationbar.NavigationBarInflaterView;
 import com.android.systemui.plugins.DarkIconDispatcher;
 import com.android.systemui.statusbar.phone.StatusBarSignalPolicy;
@@ -46,7 +46,7 @@ public class StatusBarWifiView extends FrameLayout implements DarkIconDispatcher
     }
 
     public static StatusBarWifiView fromContext(Context context, String str) {
-        StatusBarWifiView statusBarWifiView = (StatusBarWifiView) LayoutInflater.from(context).inflate(C1893R.layout.status_bar_wifi_group, (ViewGroup) null);
+        StatusBarWifiView statusBarWifiView = (StatusBarWifiView) LayoutInflater.from(context).inflate(C1894R.layout.status_bar_wifi_group, (ViewGroup) null);
         statusBarWifiView.setSlot(str);
         statusBarWifiView.init();
         statusBarWifiView.setVisibleState(0);
@@ -125,13 +125,13 @@ public class StatusBarWifiView extends FrameLayout implements DarkIconDispatcher
     }
 
     private void init() {
-        this.mWifiGroup = (LinearLayout) findViewById(C1893R.C1897id.wifi_group);
-        this.mWifiIcon = (ImageView) findViewById(C1893R.C1897id.wifi_signal);
-        this.mIn = (ImageView) findViewById(C1893R.C1897id.wifi_in);
-        this.mOut = (ImageView) findViewById(C1893R.C1897id.wifi_out);
-        this.mSignalSpacer = findViewById(C1893R.C1897id.wifi_signal_spacer);
-        this.mAirplaneSpacer = findViewById(C1893R.C1897id.wifi_airplane_spacer);
-        this.mInoutContainer = findViewById(C1893R.C1897id.inout_container);
+        this.mWifiGroup = (LinearLayout) findViewById(C1894R.C1898id.wifi_group);
+        this.mWifiIcon = (ImageView) findViewById(C1894R.C1898id.wifi_signal);
+        this.mIn = (ImageView) findViewById(C1894R.C1898id.wifi_in);
+        this.mOut = (ImageView) findViewById(C1894R.C1898id.wifi_out);
+        this.mSignalSpacer = findViewById(C1894R.C1898id.wifi_signal_spacer);
+        this.mAirplaneSpacer = findViewById(C1894R.C1898id.wifi_airplane_spacer);
+        this.mInoutContainer = findViewById(C1894R.C1898id.inout_container);
         initDotView();
     }
 
@@ -139,7 +139,7 @@ public class StatusBarWifiView extends FrameLayout implements DarkIconDispatcher
         StatusBarIconView statusBarIconView = new StatusBarIconView(this.mContext, this.mSlot, (StatusBarNotification) null);
         this.mDotView = statusBarIconView;
         statusBarIconView.setVisibleState(1);
-        int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.status_bar_icon_size);
+        int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.status_bar_icon_size);
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(dimensionPixelSize, dimensionPixelSize);
         layoutParams.gravity = 8388627;
         addView(this.mDotView, layoutParams);

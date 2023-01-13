@@ -15,6 +15,6 @@ public final /* synthetic */ class SetupCompatServiceInvoker$$ExternalSyntheticL
     }
 
     public final void run() {
-        this.f$0.mo54928xcb05bb98(this.f$1, this.f$2);
+        this.f$0.mo54939xcb05bb98(this.f$1, this.f$2);
     }
 }

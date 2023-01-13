@@ -14,6 +14,6 @@ public final /* synthetic */ class MediaDataManager$$ExternalSyntheticLambda4 im
     }
 
     public final void run() {
-        MediaDataManager.m2793getCustomAction$lambda32(this.f$0, this.f$1);
+        MediaDataManager.m2798getCustomAction$lambda32(this.f$0, this.f$1);
     }
 }

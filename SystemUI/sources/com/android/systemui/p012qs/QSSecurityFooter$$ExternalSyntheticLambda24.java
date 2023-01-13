@@ -16,6 +16,6 @@ public final /* synthetic */ class QSSecurityFooter$$ExternalSyntheticLambda24 i
     }
 
     public final void run() {
-        this.f$0.m2916lambda$createDialog$23$comandroidsystemuiqsQSSecurityFooter(this.f$1, this.f$2);
+        this.f$0.m2921lambda$createDialog$23$comandroidsystemuiqsQSSecurityFooter(this.f$1, this.f$2);
     }
 }

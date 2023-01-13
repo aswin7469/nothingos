@@ -11,6 +11,6 @@ public final /* synthetic */ class UnfoldProgressProvider$addListener$1$$Externa
     }
 
     public final void run() {
-        UnfoldProgressProvider$addListener$1.m3281onTransitionStarted$lambda0(this.f$0);
+        UnfoldProgressProvider$addListener$1.m3286onTransitionStarted$lambda0(this.f$0);
     }
 }

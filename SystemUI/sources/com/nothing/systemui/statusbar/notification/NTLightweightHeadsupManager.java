@@ -8,7 +8,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
@@ -26,10 +26,11 @@ import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 
 @SysUISingleton
-@Metadata(mo64986d1 = {"\u0000t\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u000b\n\u0000\n\u0002\u0010\b\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0007\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0007\n\u0002\u0010\u000e\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0002\b\f\n\u0002\u0018\u0002\n\u0002\b\u0003\b\u0007\u0018\u0000 92\u00020\u0001:\u00019B\u000f\b\u0007\u0012\u0006\u0010\u0002\u001a\u00020\u0003¢\u0006\u0002\u0010\u0004J\u0006\u0010\u001c\u001a\u00020\u001dJ\b\u0010\u001e\u001a\u00020\u001dH\u0016J\u0006\u0010\u001f\u001a\u00020\u001dJ\b\u0010 \u001a\u00020\u001dH\u0002J\b\u0010!\u001a\u00020\u001dH\u0002J\b\u0010\"\u001a\u00020\u001dH\u0002J\u0010\u0010#\u001a\u00020\u00062\b\u0010$\u001a\u0004\u0018\u00010%J\u0006\u0010\u0014\u001a\u00020\u0006J\u0006\u0010&\u001a\u00020\u0006J\u0006\u0010'\u001a\u00020\u001dJ\u0006\u0010(\u001a\u00020\u001dJ\u0012\u0010(\u001a\u00020\u001d2\b\u0010)\u001a\u0004\u0018\u00010*H\u0002J\u0006\u0010+\u001a\u00020\u001dJ\u0010\u0010,\u001a\u00020\u001d2\b\u0010-\u001a\u0004\u0018\u00010\u0013J\u0010\u0010.\u001a\u00020\u001d2\u0006\u0010/\u001a\u00020\u0006H\u0002J\u0018\u00100\u001a\u00020\u001d2\u0006\u00101\u001a\u00020\u00062\b\u00102\u001a\u0004\u0018\u00010\u000bJ\u0006\u00103\u001a\u00020\u0006J\b\u00104\u001a\u00020\u001dH\u0016J\u000e\u00105\u001a\u00020\u001d2\u0006\u00106\u001a\u000207J\u0010\u00108\u001a\u00020\u001d2\b\u0010$\u001a\u0004\u0018\u00010%R\u000e\u0010\u0005\u001a\u00020\u0006X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0007\u001a\u00020\bX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0002\u001a\u00020\u0003X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\t\u001a\u00020\bX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\n\u001a\u00020\u000bX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\f\u001a\u00020\rX\u000e¢\u0006\u0002\n\u0000R\u0010\u0010\u000e\u001a\u0004\u0018\u00010\u000fX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0010\u001a\u00020\u0011X\u0004¢\u0006\u0002\n\u0000R\u0010\u0010\u0012\u001a\u0004\u0018\u00010\u0013X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0014\u001a\u00020\u0006X\u000e¢\u0006\u0002\n\u0000R\u0010\u0010\u0015\u001a\u0004\u0018\u00010\u0016X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0017\u001a\u00020\u0006X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0018\u001a\u00020\u0019X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u001a\u001a\u00020\u001bX\u0004¢\u0006\u0002\n\u0000¨\u0006:"}, mo64987d2 = {"Lcom/nothing/systemui/statusbar/notification/NTLightweightHeadsupManager;", "", "context", "Landroid/content/Context;", "(Landroid/content/Context;)V", "DEBUG", "", "autoDismissNotificationDecay", "", "densityDpi", "dissmissPopView", "Ljava/lang/Runnable;", "fontScale", "", "gameModeToast", "Lcom/nothing/systemui/statusbar/notification/NTLightweightHeadsupNotificationToast;", "handler", "Landroid/os/Handler;", "headsUpManager", "Lcom/android/systemui/statusbar/policy/HeadsUpManager;", "isForceQuickReply", "popNotificationView", "Lcom/nothing/systemui/statusbar/notification/NTLightweightHeadsupNotificationView;", "showPopNotification", "windowLayoutParams", "Landroid/view/WindowManager$LayoutParams;", "windowManager", "Landroid/view/WindowManager;", "addToWindow", "", "hideGameModeToast", "hidePopNotificationView", "initContentResolver", "initViews", "initWindowLayoutParams", "isDisturbForPop", "pkg", "", "isShowPopNotification", "onPanelTrackingStarted", "removeFromWindow", "view", "Landroid/view/View;", "removeGameModeToastFromWindow", "setHeadsUpManager", "manager", "setPopViewVisibilityWithAnimation", "vis", "setPopWithAnimation", "show", "runnable", "shouldShowLightweightHeadsup", "showGameModeToast", "showPopNotificationView", "entry", "Lcom/android/systemui/statusbar/notification/collection/NotificationEntry;", "snooze", "Companion", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000t\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u000b\n\u0000\n\u0002\u0010\b\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0007\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0007\n\u0002\u0010\u000e\n\u0002\b\u0006\n\u0002\u0018\u0002\n\u0002\b\f\n\u0002\u0018\u0002\n\u0002\b\u0003\b\u0007\u0018\u0000 =2\u00020\u0001:\u0001=B\u000f\b\u0007\u0012\u0006\u0010\u0002\u001a\u00020\u0003¢\u0006\u0002\u0010\u0004J\u0006\u0010\u001e\u001a\u00020\u001fJ\u0006\u0010 \u001a\u00020\u001fJ\u0006\u0010!\u001a\u00020\u001fJ\b\u0010\"\u001a\u00020\u001fH\u0002J\b\u0010#\u001a\u00020\u001fH\u0002J\b\u0010$\u001a\u00020\u001fH\u0002J\u0010\u0010%\u001a\u00020\u00062\b\u0010&\u001a\u0004\u0018\u00010'J\u0006\u0010\u0015\u001a\u00020\u0006J\u0006\u0010(\u001a\u00020\u0006J\u0010\u0010)\u001a\u00020\u001f2\u0006\u0010*\u001a\u00020\u0006H\u0016J\u0006\u0010+\u001a\u00020\u001fJ\u0006\u0010,\u001a\u00020\u001fJ\u0012\u0010,\u001a\u00020\u001f2\b\u0010-\u001a\u0004\u0018\u00010.H\u0002J\u0006\u0010/\u001a\u00020\u001fJ\u0010\u00100\u001a\u00020\u001f2\b\u00101\u001a\u0004\u0018\u00010\u0013J\u0010\u00102\u001a\u00020\u001f2\u0006\u00103\u001a\u00020\u0006H\u0002J\u0018\u00104\u001a\u00020\u001f2\u0006\u00105\u001a\u00020\u00062\b\u00106\u001a\u0004\u0018\u00010\u000bJ\u0006\u00107\u001a\u00020\u0006J\u0006\u00108\u001a\u00020\u001fJ\u000e\u00109\u001a\u00020\u001f2\u0006\u0010:\u001a\u00020;J\u0010\u0010<\u001a\u00020\u001f2\b\u0010&\u001a\u0004\u0018\u00010'R\u000e\u0010\u0005\u001a\u00020\u0006X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0007\u001a\u00020\bX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0002\u001a\u00020\u0003X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\t\u001a\u00020\bX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\n\u001a\u00020\u000bX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\f\u001a\u00020\rX\u000e¢\u0006\u0002\n\u0000R\u0010\u0010\u000e\u001a\u0004\u0018\u00010\u000fX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0010\u001a\u00020\u0011X\u0004¢\u0006\u0002\n\u0000R\u0010\u0010\u0012\u001a\u0004\u0018\u00010\u0013X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0014\u001a\u00020\u000bX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0015\u001a\u00020\u0006X\u000e¢\u0006\u0002\n\u0000R\u0010\u0010\u0016\u001a\u0004\u0018\u00010\u0017X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0018\u001a\u00020\u000bX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0019\u001a\u00020\u0006X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u001a\u001a\u00020\u001bX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u001c\u001a\u00020\u001dX\u0004¢\u0006\u0002\n\u0000¨\u0006>"}, mo65043d2 = {"Lcom/nothing/systemui/statusbar/notification/NTLightweightHeadsupManager;", "", "context", "Landroid/content/Context;", "(Landroid/content/Context;)V", "DEBUG", "", "autoDismissNotificationDecay", "", "densityDpi", "dissmissPopView", "Ljava/lang/Runnable;", "fontScale", "", "gameModeToast", "Lcom/nothing/systemui/statusbar/notification/NTLightweightHeadsupNotificationToast;", "handler", "Landroid/os/Handler;", "headsUpManager", "Lcom/android/systemui/statusbar/policy/HeadsUpManager;", "hideGameToastRunnable", "isForceQuickReply", "popNotificationView", "Lcom/nothing/systemui/statusbar/notification/NTLightweightHeadsupNotificationView;", "showGameToastRunnable", "showPopNotification", "windowLayoutParams", "Landroid/view/WindowManager$LayoutParams;", "windowManager", "Landroid/view/WindowManager;", "addToWindow", "", "hideGameModeToast", "hidePopNotificationView", "initContentResolver", "initViews", "initWindowLayoutParams", "isDisturbForPop", "pkg", "", "isShowPopNotification", "onGameModeStatusChanged", "enable", "onPanelTrackingStarted", "removeFromWindow", "view", "Landroid/view/View;", "removeGameModeToastFromWindow", "setHeadsUpManager", "manager", "setPopViewVisibilityWithAnimation", "vis", "setPopWithAnimation", "show", "runnable", "shouldShowLightweightHeadsup", "showGameModeToast", "showPopNotificationView", "entry", "Lcom/android/systemui/statusbar/notification/collection/NotificationEntry;", "snooze", "Companion", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* compiled from: NTLightweightHeadsupManager.kt */
 public final class NTLightweightHeadsupManager {
     public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
+    private static final long SHOW_GAME_TOAST_DELAY = 500;
     private static final long SHOW_GAME_TOAST_DURATION = 3500;
     private static final String TAG = "NTLightweightHeadsupManager";
     private static final ArrayList<String> disturbPKgForPop;
@@ -38,14 +39,16 @@ public final class NTLightweightHeadsupManager {
     private final Context context;
     /* access modifiers changed from: private */
     public int densityDpi;
-    private final Runnable dissmissPopView = new NTLightweightHeadsupManager$dissmissPopView$1(this);
+    private final Runnable dissmissPopView = new NTLightweightHeadsupManager$$ExternalSyntheticLambda2(this);
     /* access modifiers changed from: private */
     public float fontScale;
     private NTLightweightHeadsupNotificationToast gameModeToast;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private HeadsUpManager headsUpManager;
+    private Runnable hideGameToastRunnable = new NTLightweightHeadsupManager$$ExternalSyntheticLambda3(this);
     private boolean isForceQuickReply = true;
     private NTLightweightHeadsupNotificationView popNotificationView;
+    private Runnable showGameToastRunnable = new NTLightweightHeadsupManager$$ExternalSyntheticLambda4(this);
     private boolean showPopNotification = true;
     private final WindowManager.LayoutParams windowLayoutParams;
     private final WindowManager windowManager;
@@ -57,7 +60,7 @@ public final class NTLightweightHeadsupManager {
         Object systemService = context2.getSystemService("window");
         if (systemService != null) {
             this.windowManager = (WindowManager) systemService;
-            this.autoDismissNotificationDecay = context2.getResources().getInteger(C1893R.integer.heads_up_notification_decay);
+            this.autoDismissNotificationDecay = context2.getResources().getInteger(C1894R.integer.heads_up_notification_decay);
             initViews();
             initContentResolver();
             WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(2038, 8782632, -3);
@@ -69,6 +72,27 @@ public final class NTLightweightHeadsupManager {
             return;
         }
         throw new NullPointerException("null cannot be cast to non-null type android.view.WindowManager");
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: dissmissPopView$lambda-0  reason: not valid java name */
+    public static final void m3541dissmissPopView$lambda0(NTLightweightHeadsupManager nTLightweightHeadsupManager) {
+        Intrinsics.checkNotNullParameter(nTLightweightHeadsupManager, "this$0");
+        nTLightweightHeadsupManager.hidePopNotificationView();
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: hideGameToastRunnable$lambda-1  reason: not valid java name */
+    public static final void m3543hideGameToastRunnable$lambda1(NTLightweightHeadsupManager nTLightweightHeadsupManager) {
+        Intrinsics.checkNotNullParameter(nTLightweightHeadsupManager, "this$0");
+        nTLightweightHeadsupManager.hideGameModeToast();
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: showGameToastRunnable$lambda-2  reason: not valid java name */
+    public static final void m3545showGameToastRunnable$lambda2(NTLightweightHeadsupManager nTLightweightHeadsupManager) {
+        Intrinsics.checkNotNullParameter(nTLightweightHeadsupManager, "this$0");
+        nTLightweightHeadsupManager.showGameModeToast();
     }
 
     /* access modifiers changed from: private */
@@ -132,7 +156,7 @@ public final class NTLightweightHeadsupManager {
         this.windowLayoutParams.packageName = this.context.getPackageName();
         this.windowLayoutParams.width = -2;
         Resources resources = this.context.getResources();
-        this.windowLayoutParams.height = ((int) resources.getDimension(C1893R.dimen.nt_pop_view_height)) + ((int) resources.getDimension(C1893R.dimen.nt_game_mode_toast_height));
+        this.windowLayoutParams.height = ((int) resources.getDimension(C1894R.dimen.nt_pop_view_height)) + ((int) resources.getDimension(C1894R.dimen.nt_game_mode_toast_height));
     }
 
     public final void removeFromWindow() {
@@ -172,11 +196,23 @@ public final class NTLightweightHeadsupManager {
         setPopViewVisibilityWithAnimation(false);
     }
 
-    public void showGameModeToast() {
+    public void onGameModeStatusChanged(boolean z) {
+        NTLogUtil.m1686d(TAG, "onGameModeStatusChanged enable = " + z);
+        Handler.getMain().removeCallbacks(this.hideGameToastRunnable);
+        Handler.getMain().removeCallbacks(this.showGameToastRunnable);
+        if (z) {
+            Handler.getMain().postDelayed(this.showGameToastRunnable, 500);
+        } else {
+            hideGameModeToast();
+        }
+    }
+
+    public final void showGameModeToast() {
         StringBuilder sb = new StringBuilder("showGameModeToast isAttach = ");
         NTLightweightHeadsupNotificationToast nTLightweightHeadsupNotificationToast = this.gameModeToast;
         Intrinsics.checkNotNull(nTLightweightHeadsupNotificationToast);
-        NTLogUtil.m1680d(TAG, sb.append(nTLightweightHeadsupNotificationToast.isAttachedToWindow()).toString());
+        NTLogUtil.m1686d(TAG, sb.append(nTLightweightHeadsupNotificationToast.isAttachedToWindow()).toString());
+        Handler.getMain().removeCallbacks(this.hideGameToastRunnable);
         NTLightweightHeadsupNotificationToast nTLightweightHeadsupNotificationToast2 = this.gameModeToast;
         Intrinsics.checkNotNull(nTLightweightHeadsupNotificationToast2);
         if (!nTLightweightHeadsupNotificationToast2.isAttachedToWindow()) {
@@ -190,23 +226,16 @@ public final class NTLightweightHeadsupManager {
             if (nTLightweightHeadsupNotificationToast4 != null) {
                 nTLightweightHeadsupNotificationToast4.releasePopWithAnimation(true, (Runnable) null);
             }
-            Handler.getMain().postDelayed(new NTLightweightHeadsupManager$$ExternalSyntheticLambda2(this), SHOW_GAME_TOAST_DURATION);
+            Handler.getMain().postDelayed(this.hideGameToastRunnable, SHOW_GAME_TOAST_DURATION);
         }
     }
 
-    /* access modifiers changed from: private */
-    /* renamed from: showGameModeToast$lambda-0  reason: not valid java name */
-    public static final void m3527showGameModeToast$lambda0(NTLightweightHeadsupManager nTLightweightHeadsupManager) {
-        Intrinsics.checkNotNullParameter(nTLightweightHeadsupManager, "this$0");
-        nTLightweightHeadsupManager.hideGameModeToast();
-    }
-
-    public void hideGameModeToast() {
+    public final void hideGameModeToast() {
         NTLightweightHeadsupNotificationToast nTLightweightHeadsupNotificationToast;
         StringBuilder sb = new StringBuilder("hideGameModeToast isAttach = ");
         NTLightweightHeadsupNotificationToast nTLightweightHeadsupNotificationToast2 = this.gameModeToast;
         Intrinsics.checkNotNull(nTLightweightHeadsupNotificationToast2);
-        NTLogUtil.m1680d(TAG, sb.append(nTLightweightHeadsupNotificationToast2.isAttachedToWindow()).toString());
+        NTLogUtil.m1686d(TAG, sb.append(nTLightweightHeadsupNotificationToast2.isAttachedToWindow()).toString());
         NTLightweightHeadsupNotificationToast nTLightweightHeadsupNotificationToast3 = this.gameModeToast;
         Intrinsics.checkNotNull(nTLightweightHeadsupNotificationToast3);
         if (nTLightweightHeadsupNotificationToast3.isAttachedToWindow() && (nTLightweightHeadsupNotificationToast = this.gameModeToast) != null) {
@@ -215,10 +244,10 @@ public final class NTLightweightHeadsupManager {
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: hideGameModeToast$lambda-1  reason: not valid java name */
-    public static final void m3525hideGameModeToast$lambda1(NTLightweightHeadsupManager nTLightweightHeadsupManager) {
+    /* renamed from: hideGameModeToast$lambda-3  reason: not valid java name */
+    public static final void m3542hideGameModeToast$lambda3(NTLightweightHeadsupManager nTLightweightHeadsupManager) {
         Intrinsics.checkNotNullParameter(nTLightweightHeadsupManager, "this$0");
-        NTLogUtil.m1680d(TAG, "removeGameModeToastFromWindow");
+        NTLogUtil.m1686d(TAG, "removeGameModeToastFromWindow");
         nTLightweightHeadsupManager.removeGameModeToastFromWindow();
     }
 
@@ -245,8 +274,8 @@ public final class NTLightweightHeadsupManager {
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: setPopViewVisibilityWithAnimation$lambda-2  reason: not valid java name */
-    public static final void m3526setPopViewVisibilityWithAnimation$lambda2(NTLightweightHeadsupManager nTLightweightHeadsupManager) {
+    /* renamed from: setPopViewVisibilityWithAnimation$lambda-4  reason: not valid java name */
+    public static final void m3544setPopViewVisibilityWithAnimation$lambda4(NTLightweightHeadsupManager nTLightweightHeadsupManager) {
         Intrinsics.checkNotNullParameter(nTLightweightHeadsupManager, "this$0");
         NTLightweightHeadsupNotificationView nTLightweightHeadsupNotificationView = nTLightweightHeadsupManager.popNotificationView;
         if (nTLightweightHeadsupNotificationView != null) {
@@ -276,7 +305,7 @@ public final class NTLightweightHeadsupManager {
         removeFromWindow(this.popNotificationView);
     }
 
-    @Metadata(mo64986d1 = {"\u0000\"\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\t\n\u0000\n\u0002\u0010\u000e\n\u0000\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u000e\u0010\u0003\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0005\u001a\u00020\u0006XT¢\u0006\u0002\n\u0000R\u001e\u0010\u0007\u001a\u0012\u0012\u0004\u0012\u00020\u00060\bj\b\u0012\u0004\u0012\u00020\u0006`\tX\u0004¢\u0006\u0002\n\u0000¨\u0006\n"}, mo64987d2 = {"Lcom/nothing/systemui/statusbar/notification/NTLightweightHeadsupManager$Companion;", "", "()V", "SHOW_GAME_TOAST_DURATION", "", "TAG", "", "disturbPKgForPop", "Ljava/util/ArrayList;", "Lkotlin/collections/ArrayList;", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u0000$\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\t\n\u0002\b\u0002\n\u0002\u0010\u000e\n\u0000\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u000e\u0010\u0003\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0005\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0006\u001a\u00020\u0007XT¢\u0006\u0002\n\u0000R\u001e\u0010\b\u001a\u0012\u0012\u0004\u0012\u00020\u00070\tj\b\u0012\u0004\u0012\u00020\u0007`\nX\u0004¢\u0006\u0002\n\u0000¨\u0006\u000b"}, mo65043d2 = {"Lcom/nothing/systemui/statusbar/notification/NTLightweightHeadsupManager$Companion;", "", "()V", "SHOW_GAME_TOAST_DELAY", "", "SHOW_GAME_TOAST_DURATION", "TAG", "", "disturbPKgForPop", "Ljava/util/ArrayList;", "Lkotlin/collections/ArrayList;", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* compiled from: NTLightweightHeadsupManager.kt */
     public static final class Companion {
         public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {

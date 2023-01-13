@@ -10,6 +10,6 @@ public final /* synthetic */ class FgsManagerController$$ExternalSyntheticLambda
     }
 
     public final void run() {
-        FgsManagerController.m2891updateAppItemsLocked$lambda29(this.f$0);
+        FgsManagerController.m2896updateAppItemsLocked$lambda29(this.f$0);
     }
 }

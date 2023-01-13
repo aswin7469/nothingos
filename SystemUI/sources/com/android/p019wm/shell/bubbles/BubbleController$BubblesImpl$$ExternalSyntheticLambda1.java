@@ -15,6 +15,6 @@ public final /* synthetic */ class BubbleController$BubblesImpl$$ExternalSynthet
     }
 
     public final void run() {
-        this.f$0.mo48408x7a7c810f(this.f$1);
+        this.f$0.mo48417x7a7c810f(this.f$1);
     }
 }

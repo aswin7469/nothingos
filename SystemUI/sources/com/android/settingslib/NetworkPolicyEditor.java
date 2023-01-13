@@ -117,7 +117,7 @@ public class NetworkPolicyEditor {
     @Deprecated
     public void setPolicyCycleDay(NetworkTemplate networkTemplate, int i, String str) {
         NetworkPolicy orCreatePolicy = getOrCreatePolicy(networkTemplate);
-        orCreatePolicy.cycleRule = NetworkPolicy.buildRule(i, ZoneId.m932of(str));
+        orCreatePolicy.cycleRule = NetworkPolicy.buildRule(i, ZoneId.m930of(str));
         orCreatePolicy.inferred = false;
         orCreatePolicy.clearSnooze();
         writeAsync();

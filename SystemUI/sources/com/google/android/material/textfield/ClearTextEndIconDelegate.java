@@ -8,7 +8,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.animation.AnimationUtils;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -76,8 +76,8 @@ class ClearTextEndIconDelegate extends EndIconDelegate {
 
     /* access modifiers changed from: package-private */
     public void initialize() {
-        this.textInputLayout.setEndIconDrawable(this.customEndIcon == 0 ? C3621R.C3623drawable.mtrl_ic_cancel : this.customEndIcon);
-        this.textInputLayout.setEndIconContentDescription(this.textInputLayout.getResources().getText(C3621R.string.clear_text_end_icon_content_description));
+        this.textInputLayout.setEndIconDrawable(this.customEndIcon == 0 ? C3631R.C3633drawable.mtrl_ic_cancel : this.customEndIcon);
+        this.textInputLayout.setEndIconContentDescription(this.textInputLayout.getResources().getText(C3631R.string.clear_text_end_icon_content_description));
         this.textInputLayout.setEndIconCheckable(false);
         this.textInputLayout.setEndIconOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {

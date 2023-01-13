@@ -10,8 +10,8 @@ import kotlin.coroutines.jvm.internal.RestrictedSuspendLambda;
 import kotlin.jvm.functions.Function2;
 import kotlin.sequences.SequenceScope;
 
-@Metadata(mo64986d1 = {"\u0000\u0010\n\u0000\n\u0002\u0010\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\u0010\u0000\u001a\u00020\u0001*\u0010\u0012\f\u0012\n \u0004*\u0004\u0018\u00010\u00030\u00030\u0002H@"}, mo64987d2 = {"<anonymous>", "", "Lkotlin/sequences/SequenceScope;", "Landroid/view/View;", "kotlin.jvm.PlatformType"}, mo64988k = 3, mo64989mv = {1, 6, 0}, mo64991xi = 48)
-@DebugMetadata(mo65240c = "com.android.systemui.util.ConvenienceExtensionsKt$children$1", mo65241f = "ConvenienceExtensions.kt", mo65242i = {0, 0}, mo65243l = {26}, mo65244m = "invokeSuspend", mo65245n = {"$this$sequence", "i"}, mo65246s = {"L$0", "I$0"})
+@Metadata(mo65042d1 = {"\u0000\u0010\n\u0000\n\u0002\u0010\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\u0010\u0000\u001a\u00020\u0001*\u0010\u0012\f\u0012\n \u0004*\u0004\u0018\u00010\u00030\u00030\u0002H@"}, mo65043d2 = {"<anonymous>", "", "Lkotlin/sequences/SequenceScope;", "Landroid/view/View;", "kotlin.jvm.PlatformType"}, mo65044k = 3, mo65045mv = {1, 6, 0}, mo65047xi = 48)
+@DebugMetadata(mo65296c = "com.android.systemui.util.ConvenienceExtensionsKt$children$1", mo65297f = "ConvenienceExtensions.kt", mo65298i = {0, 0}, mo65299l = {26}, mo65300m = "invokeSuspend", mo65301n = {"$this$sequence", "i"}, mo65302s = {"L$0", "I$0"})
 /* compiled from: ConvenienceExtensions.kt */
 final class ConvenienceExtensionsKt$children$1 extends RestrictedSuspendLambda implements Function2<SequenceScope<? super View>, Continuation<? super Unit>, Object> {
     final /* synthetic */ ViewGroup $this_children;

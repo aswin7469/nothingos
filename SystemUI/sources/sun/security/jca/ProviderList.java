@@ -24,7 +24,7 @@ public final class ProviderList {
     };
 
     /* renamed from: P0 */
-    private static final Provider[] f914P0 = new Provider[0];
+    private static final Provider[] f912P0 = new Provider[0];
     private static final ProviderConfig[] PC0;
     static final Debug debug = Debug.getInstance("jca", "ProviderList");
     private volatile boolean allLoaded;
@@ -257,7 +257,7 @@ public final class ProviderList {
     }
 
     public Provider[] toArray() {
-        return (Provider[]) providers().toArray(f914P0);
+        return (Provider[]) providers().toArray(f912P0);
     }
 
     public String toString() {

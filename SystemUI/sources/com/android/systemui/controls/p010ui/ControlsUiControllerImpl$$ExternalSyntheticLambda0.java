@@ -12,6 +12,6 @@ public final /* synthetic */ class ControlsUiControllerImpl$$ExternalSyntheticLa
     }
 
     public final void onClick(View view) {
-        ControlsUiControllerImpl.m2705createListView$lambda12$lambda11(this.f$0, view);
+        ControlsUiControllerImpl.m2710createListView$lambda12$lambda11(this.f$0, view);
     }
 }

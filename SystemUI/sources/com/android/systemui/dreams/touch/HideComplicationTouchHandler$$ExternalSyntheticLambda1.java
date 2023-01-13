@@ -15,6 +15,6 @@ public final /* synthetic */ class HideComplicationTouchHandler$$ExternalSynthet
     }
 
     public final void onInputEvent(InputEvent inputEvent) {
-        this.f$0.mo32655x8bd2f205(this.f$1, inputEvent);
+        this.f$0.mo32666x8bd2f205(this.f$1, inputEvent);
     }
 }

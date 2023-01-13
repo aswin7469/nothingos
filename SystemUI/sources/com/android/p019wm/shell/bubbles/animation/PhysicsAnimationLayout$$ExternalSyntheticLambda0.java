@@ -17,6 +17,6 @@ public final /* synthetic */ class PhysicsAnimationLayout$$ExternalSyntheticLamb
     }
 
     public final void onAnimationUpdate(DynamicAnimation dynamicAnimation, float f, float f2) {
-        this.f$0.mo48885x19036060(this.f$1, this.f$2, dynamicAnimation, f, f2);
+        this.f$0.mo48894x19036060(this.f$1, this.f$2, dynamicAnimation, f, f2);
     }
 }

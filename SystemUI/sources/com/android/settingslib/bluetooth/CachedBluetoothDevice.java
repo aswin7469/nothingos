@@ -454,7 +454,7 @@ public class CachedBluetoothDevice implements Comparable<CachedBluetoothDevice> 
         migratePhonebookPermissionChoice();
         migrateMessagePermissionChoice();
         setLeAudioEnabled();
-        mo28165xa3ba5194();
+        mo28170xa3ba5194();
     }
 
     public BluetoothDevice getDevice() {
@@ -478,7 +478,7 @@ public class CachedBluetoothDevice implements Comparable<CachedBluetoothDevice> 
     public void setName(String str) {
         if (str != null && !TextUtils.equals(str, getName())) {
             this.mDevice.setAlias(str);
-            mo28165xa3ba5194();
+            mo28170xa3ba5194();
         }
     }
 
@@ -512,7 +512,7 @@ public class CachedBluetoothDevice implements Comparable<CachedBluetoothDevice> 
     /* access modifiers changed from: package-private */
     public void refreshName() {
         Log.d(TAG, "Device name: " + getName());
-        mo28165xa3ba5194();
+        mo28170xa3ba5194();
     }
 
     public boolean hasHumanReadableName() {
@@ -530,7 +530,7 @@ public class CachedBluetoothDevice implements Comparable<CachedBluetoothDevice> 
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$refresh$1$com-android-settingslib-bluetooth-CachedBluetoothDevice */
-    public /* synthetic */ void mo28166xc94e5a95() {
+    public /* synthetic */ void mo28171xc94e5a95() {
         Uri uriMetaData;
         if (BluetoothUtils.isAdvancedDetailsHeader(this.mDevice) && (uriMetaData = BluetoothUtils.getUriMetaData(getDevice(), 5)) != null && this.mDrawableCache.get(uriMetaData.toString()) == null) {
             this.mDrawableCache.put(uriMetaData.toString(), (BitmapDrawable) BluetoothUtils.getBtDrawableWithDescription(this.mContext, this).first);
@@ -541,7 +541,7 @@ public class CachedBluetoothDevice implements Comparable<CachedBluetoothDevice> 
     public void setJustDiscovered(boolean z) {
         if (this.mJustDiscovered != z) {
             this.mJustDiscovered = z;
-            mo28165xa3ba5194();
+            mo28170xa3ba5194();
         }
     }
 
@@ -614,7 +614,7 @@ public class CachedBluetoothDevice implements Comparable<CachedBluetoothDevice> 
             r1 = r0
         L_0x0053:
             if (r1 == 0) goto L_0x0058
-            r3.mo28165xa3ba5194()
+            r3.mo28170xa3ba5194()
         L_0x0058:
             return
         */
@@ -623,7 +623,7 @@ public class CachedBluetoothDevice implements Comparable<CachedBluetoothDevice> 
 
     /* access modifiers changed from: package-private */
     public void onAudioModeChanged() {
-        mo28165xa3ba5194();
+        mo28170xa3ba5194();
     }
 
     public boolean isActiveDevice(int i) {
@@ -647,7 +647,7 @@ public class CachedBluetoothDevice implements Comparable<CachedBluetoothDevice> 
     public void setRssi(short s) {
         if (this.mRssi != s) {
             this.mRssi = s;
-            mo28165xa3ba5194();
+            mo28170xa3ba5194();
         }
     }
 
@@ -775,7 +775,7 @@ public class CachedBluetoothDevice implements Comparable<CachedBluetoothDevice> 
             Log.d(TAG, "onUuidChanged: triggering connectDevice");
             connectDevice();
         }
-        mo28165xa3ba5194();
+        mo28170xa3ba5194();
     }
 
     /* access modifiers changed from: package-private */
@@ -858,7 +858,7 @@ public class CachedBluetoothDevice implements Comparable<CachedBluetoothDevice> 
 
     /* access modifiers changed from: package-private */
     /* renamed from: dispatchAttributesChanged */
-    public void mo28165xa3ba5194() {
+    public void mo28170xa3ba5194() {
         for (Callback onDeviceAttributesChanged : this.mCallbacks) {
             onDeviceAttributesChanged.onDeviceAttributesChanged();
         }

@@ -10,6 +10,6 @@ public final /* synthetic */ class OneHandedController$$ExternalSyntheticLambda8
     }
 
     public final void run() {
-        this.f$0.mo49857x5cea96b9();
+        this.f$0.mo49866x5cea96b9();
     }
 }

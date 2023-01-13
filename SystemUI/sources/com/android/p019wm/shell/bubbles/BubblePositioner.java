@@ -11,7 +11,7 @@ import android.view.WindowInsets;
 import android.view.WindowManager;
 import android.view.WindowMetrics;
 import com.android.launcher3.icons.IconNormalizer;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.bubbles.BubbleStackView;
 
 /* renamed from: com.android.wm.shell.bubbles.BubblePositioner */
@@ -114,13 +114,13 @@ public class BubblePositioner {
         this.mPositionRect.right -= this.mInsets.right;
         this.mPositionRect.bottom -= this.mInsets.bottom;
         Resources resources = this.mContext.getResources();
-        this.mBubbleSize = resources.getDimensionPixelSize(C3343R.dimen.bubble_size);
-        this.mSpacingBetweenBubbles = resources.getDimensionPixelSize(C3343R.dimen.bubble_spacing);
-        this.mDefaultMaxBubbles = resources.getInteger(C3343R.integer.bubbles_max_rendered);
-        this.mExpandedViewPadding = resources.getDimensionPixelSize(C3343R.dimen.bubble_expanded_view_padding);
-        this.mBubblePaddingTop = resources.getDimensionPixelSize(C3343R.dimen.bubble_padding_top);
-        this.mBubbleOffscreenAmount = resources.getDimensionPixelSize(C3343R.dimen.bubble_stack_offscreen);
-        this.mStackOffset = resources.getDimensionPixelSize(C3343R.dimen.bubble_stack_offset);
+        this.mBubbleSize = resources.getDimensionPixelSize(C3353R.dimen.bubble_size);
+        this.mSpacingBetweenBubbles = resources.getDimensionPixelSize(C3353R.dimen.bubble_spacing);
+        this.mDefaultMaxBubbles = resources.getInteger(C3353R.integer.bubbles_max_rendered);
+        this.mExpandedViewPadding = resources.getDimensionPixelSize(C3353R.dimen.bubble_expanded_view_padding);
+        this.mBubblePaddingTop = resources.getDimensionPixelSize(C3353R.dimen.bubble_padding_top);
+        this.mBubbleOffscreenAmount = resources.getDimensionPixelSize(C3353R.dimen.bubble_stack_offscreen);
+        this.mStackOffset = resources.getDimensionPixelSize(C3353R.dimen.bubble_stack_offset);
         if (this.mIsSmallTablet) {
             this.mExpandedViewLargeScreenWidth = (int) (((float) rect.width()) * EXPANDED_VIEW_SMALL_TABLET_WIDTH_PERCENT);
         } else {
@@ -142,18 +142,18 @@ public class BubblePositioner {
             this.mExpandedViewLargeScreenInsetClosestEdge = width;
             this.mExpandedViewLargeScreenInsetFurthestEdge = width;
         } else {
-            this.mExpandedViewLargeScreenInsetClosestEdge = resources.getDimensionPixelSize(C3343R.dimen.bubble_expanded_view_largescreen_landscape_padding);
+            this.mExpandedViewLargeScreenInsetClosestEdge = resources.getDimensionPixelSize(C3353R.dimen.bubble_expanded_view_largescreen_landscape_padding);
             this.mExpandedViewLargeScreenInsetFurthestEdge = (rect.width() - this.mExpandedViewLargeScreenInsetClosestEdge) - this.mExpandedViewLargeScreenWidth;
         }
-        this.mOverflowWidth = resources.getDimensionPixelSize(C3343R.dimen.bubble_expanded_view_overflow_width);
-        this.mPointerWidth = resources.getDimensionPixelSize(C3343R.dimen.bubble_pointer_width);
-        this.mPointerHeight = resources.getDimensionPixelSize(C3343R.dimen.bubble_pointer_height);
-        this.mPointerMargin = resources.getDimensionPixelSize(C3343R.dimen.bubble_pointer_margin);
-        this.mPointerOverlap = resources.getDimensionPixelSize(C3343R.dimen.bubble_pointer_overlap);
-        this.mManageButtonHeight = resources.getDimensionPixelSize(C3343R.dimen.bubble_manage_button_total_height);
-        this.mExpandedViewMinHeight = resources.getDimensionPixelSize(C3343R.dimen.bubble_expanded_default_height);
-        this.mOverflowHeight = resources.getDimensionPixelSize(C3343R.dimen.bubble_overflow_height);
-        this.mMinimumFlyoutWidthLargeScreen = resources.getDimensionPixelSize(C3343R.dimen.bubbles_flyout_min_width_large_screen);
+        this.mOverflowWidth = resources.getDimensionPixelSize(C3353R.dimen.bubble_expanded_view_overflow_width);
+        this.mPointerWidth = resources.getDimensionPixelSize(C3353R.dimen.bubble_pointer_width);
+        this.mPointerHeight = resources.getDimensionPixelSize(C3353R.dimen.bubble_pointer_height);
+        this.mPointerMargin = resources.getDimensionPixelSize(C3353R.dimen.bubble_pointer_margin);
+        this.mPointerOverlap = resources.getDimensionPixelSize(C3353R.dimen.bubble_pointer_overlap);
+        this.mManageButtonHeight = resources.getDimensionPixelSize(C3353R.dimen.bubble_manage_button_total_height);
+        this.mExpandedViewMinHeight = resources.getDimensionPixelSize(C3353R.dimen.bubble_expanded_default_height);
+        this.mOverflowHeight = resources.getDimensionPixelSize(C3353R.dimen.bubble_overflow_height);
+        this.mMinimumFlyoutWidthLargeScreen = resources.getDimensionPixelSize(C3353R.dimen.bubbles_flyout_min_width_large_screen);
         this.mMaxBubbles = calculateMaxBubbles();
         if (this.mShowingInTaskbar) {
             adjustForTaskbar();
@@ -512,7 +512,7 @@ public class BubblePositioner {
     }
 
     public PointF getDefaultStartPosition() {
-        return new BubbleStackView.RelativeStackPosition(this.mContext.getResources().getConfiguration().getLayoutDirection() != 1, ((float) this.mContext.getResources().getDimensionPixelOffset(C3343R.dimen.bubble_stack_starting_offset_y)) / ((float) this.mPositionRect.height())).getAbsolutePositionInRegion(getAllowableStackPositionRegion(1));
+        return new BubbleStackView.RelativeStackPosition(this.mContext.getResources().getConfiguration().getLayoutDirection() != 1, ((float) this.mContext.getResources().getDimensionPixelOffset(C3353R.dimen.bubble_stack_starting_offset_y)) / ((float) this.mPositionRect.height())).getAbsolutePositionInRegion(getAllowableStackPositionRegion(1));
     }
 
     public RectF getAllowableStackPositionRegion(int i) {

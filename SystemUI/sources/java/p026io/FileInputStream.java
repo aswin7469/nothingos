@@ -16,7 +16,7 @@ public class FileInputStream extends InputStream {
     private volatile boolean closed;
 
     /* renamed from: fd */
-    private final FileDescriptor f519fd;
+    private final FileDescriptor f517fd;
     private final CloseGuard guard;
     private final boolean isFdOwner;
     private final String path;
@@ -48,7 +48,7 @@ public class FileInputStream extends InputStream {
             throw new NullPointerException();
         } else if (!file.isInvalid()) {
             FileDescriptor open = IoBridge.open(str, OsConstants.O_RDONLY);
-            this.f519fd = open;
+            this.f517fd = open;
             this.isFdOwner = true;
             this.path = str;
             IoUtils.setFdOwner(open, this);
@@ -69,7 +69,7 @@ public class FileInputStream extends InputStream {
         this.guard = CloseGuard.get();
         this.tracker = new IoTracker();
         if (fdObj != null) {
-            this.f519fd = fdObj;
+            this.f517fd = fdObj;
             this.path = null;
             this.isFdOwner = isFdOwner2;
             if (isFdOwner2) {
@@ -96,7 +96,7 @@ public class FileInputStream extends InputStream {
     public int read(byte[] b, int off, int len) throws IOException {
         if (!this.closed || len <= 0) {
             this.tracker.trackIo(len, IoTracker.Mode.READ);
-            return IoBridge.read(this.f519fd, b, off, len);
+            return IoBridge.read(this.f517fd, b, off, len);
         }
         throw new IOException("Stream Closed");
     }
@@ -137,7 +137,7 @@ public class FileInputStream extends InputStream {
         if (r2.isFdOwner == false) goto L_?;
      */
     /* JADX WARNING: Code restructure failed: missing block: B:14:0x001d, code lost:
-        libcore.p030io.IoBridge.closeAndSignalBlockedThreads(r2.f519fd);
+        libcore.p030io.IoBridge.closeAndSignalBlockedThreads(r2.f517fd);
      */
     /* JADX WARNING: Code restructure failed: missing block: B:22:?, code lost:
         return;
@@ -171,7 +171,7 @@ public class FileInputStream extends InputStream {
         L_0x0019:
             boolean r0 = r2.isFdOwner
             if (r0 == 0) goto L_0x0022
-            java.io.FileDescriptor r0 = r2.f519fd
+            java.io.FileDescriptor r0 = r2.f517fd
             libcore.p030io.IoBridge.closeAndSignalBlockedThreads(r0)
         L_0x0022:
             return
@@ -184,7 +184,7 @@ public class FileInputStream extends InputStream {
     }
 
     public final FileDescriptor getFD() throws IOException {
-        FileDescriptor fileDescriptor = this.f519fd;
+        FileDescriptor fileDescriptor = this.f517fd;
         if (fileDescriptor != null) {
             return fileDescriptor;
         }
@@ -195,7 +195,7 @@ public class FileInputStream extends InputStream {
         FileChannel fileChannel;
         synchronized (this) {
             if (this.channel == null) {
-                this.channel = FileChannelImpl.open(this.f519fd, this.path, true, false, this);
+                this.channel = FileChannelImpl.open(this.f517fd, this.path, true, false, this);
             }
             fileChannel = this.channel;
         }
@@ -208,8 +208,8 @@ public class FileInputStream extends InputStream {
         if (closeGuard != null) {
             closeGuard.warnIfOpen();
         }
-        FileDescriptor fileDescriptor = this.f519fd;
-        if (fileDescriptor != null && fileDescriptor != FileDescriptor.f518in) {
+        FileDescriptor fileDescriptor = this.f517fd;
+        if (fileDescriptor != null && fileDescriptor != FileDescriptor.f516in) {
             close();
         }
     }

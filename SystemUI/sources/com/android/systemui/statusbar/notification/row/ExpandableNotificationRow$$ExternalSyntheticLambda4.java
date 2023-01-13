@@ -12,6 +12,6 @@ public final /* synthetic */ class ExpandableNotificationRow$$ExternalSyntheticL
     }
 
     public final void onInflate(ViewStub viewStub, View view) {
-        this.f$0.mo41131xcb38b997(viewStub, view);
+        this.f$0.mo41134xcb38b997(viewStub, view);
     }
 }

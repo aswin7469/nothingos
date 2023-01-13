@@ -32,7 +32,7 @@ public class DataUsageUtils {
 
     private static NetworkTemplate getNormalizedMobileTemplate(TelephonyManager telephonyManager, int i) {
         NetworkTemplate mobileTemplateForSubId = getMobileTemplateForSubId(telephonyManager, i);
-        Set of = Set.m1761of((E[]) telephonyManager.createForSubscriptionId(i).getMergedImsisFromGroup());
+        Set of = Set.m1767of((E[]) telephonyManager.createForSubscriptionId(i).getMergedImsisFromGroup());
         if (!ArrayUtils.isEmpty(of)) {
             return normalizeMobileTemplate(mobileTemplateForSubId, of);
         }
@@ -47,7 +47,7 @@ public class DataUsageUtils {
     private static NetworkTemplate getMobileTemplateForSubId(TelephonyManager telephonyManager, int i) {
         String subscriberId = telephonyManager.getSubscriberId(i);
         if (subscriberId != null) {
-            return new NetworkTemplate.Builder(10).setSubscriberIds(Set.m1751of(subscriberId)).setMeteredness(1).build();
+            return new NetworkTemplate.Builder(10).setSubscriberIds(Set.m1757of(subscriberId)).setMeteredness(1).build();
         }
         return new NetworkTemplate.Builder(1).setMeteredness(1).build();
     }

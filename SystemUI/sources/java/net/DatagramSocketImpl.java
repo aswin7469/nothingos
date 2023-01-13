@@ -5,11 +5,11 @@ import java.p026io.IOException;
 import java.util.Set;
 
 public abstract class DatagramSocketImpl implements SocketOptions {
-    private static final Set<SocketOption<?>> dgSocketOptions = Set.m1754of(StandardSocketOptions.SO_SNDBUF, StandardSocketOptions.SO_RCVBUF, StandardSocketOptions.SO_REUSEADDR, StandardSocketOptions.IP_TOS);
-    private static final Set<SocketOption<?>> mcSocketOptions = Set.m1757of(StandardSocketOptions.SO_SNDBUF, StandardSocketOptions.SO_RCVBUF, StandardSocketOptions.SO_REUSEADDR, StandardSocketOptions.IP_TOS, StandardSocketOptions.IP_MULTICAST_IF, StandardSocketOptions.IP_MULTICAST_TTL, StandardSocketOptions.IP_MULTICAST_LOOP);
+    private static final Set<SocketOption<?>> dgSocketOptions = Set.m1760of(StandardSocketOptions.SO_SNDBUF, StandardSocketOptions.SO_RCVBUF, StandardSocketOptions.SO_REUSEADDR, StandardSocketOptions.IP_TOS);
+    private static final Set<SocketOption<?>> mcSocketOptions = Set.m1763of(StandardSocketOptions.SO_SNDBUF, StandardSocketOptions.SO_RCVBUF, StandardSocketOptions.SO_REUSEADDR, StandardSocketOptions.IP_TOS, StandardSocketOptions.IP_MULTICAST_IF, StandardSocketOptions.IP_MULTICAST_TTL, StandardSocketOptions.IP_MULTICAST_LOOP);
 
     /* renamed from: fd */
-    protected FileDescriptor f556fd;
+    protected FileDescriptor f554fd;
     protected int localPort;
     DatagramSocket socket;
 
@@ -90,7 +90,7 @@ public abstract class DatagramSocketImpl implements SocketOptions {
 
     /* access modifiers changed from: protected */
     public FileDescriptor getFileDescriptor() {
-        return this.f556fd;
+        return this.f554fd;
     }
 
     /* access modifiers changed from: protected */

@@ -10,7 +10,7 @@ import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
 import android.view.View;
 import com.android.settingslib.Utils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.navigationbar.buttons.ButtonInterface;
 
 public class NavigationHandle extends View implements ButtonInterface {
@@ -42,13 +42,13 @@ public class NavigationHandle extends View implements ButtonInterface {
         Paint paint = new Paint();
         this.mPaint = paint;
         Resources resources = context.getResources();
-        this.mRadius = resources.getDimension(C1893R.dimen.navigation_handle_radius);
-        this.mBottom = resources.getDimension(C1893R.dimen.navigation_handle_bottom);
-        int themeAttr = Utils.getThemeAttr(context, C1893R.attr.darkIconTheme);
-        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(context, Utils.getThemeAttr(context, C1893R.attr.lightIconTheme));
+        this.mRadius = resources.getDimension(C1894R.dimen.navigation_handle_radius);
+        this.mBottom = resources.getDimension(C1894R.dimen.navigation_handle_bottom);
+        int themeAttr = Utils.getThemeAttr(context, C1894R.attr.darkIconTheme);
+        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(context, Utils.getThemeAttr(context, C1894R.attr.lightIconTheme));
         ContextThemeWrapper contextThemeWrapper2 = new ContextThemeWrapper(context, themeAttr);
-        this.mLightColor = Utils.getColorAttrDefaultColor(contextThemeWrapper, C1893R.attr.homeHandleColor);
-        this.mDarkColor = Utils.getColorAttrDefaultColor(contextThemeWrapper2, C1893R.attr.homeHandleColor);
+        this.mLightColor = Utils.getColorAttrDefaultColor(contextThemeWrapper, C1894R.attr.homeHandleColor);
+        this.mDarkColor = Utils.getColorAttrDefaultColor(contextThemeWrapper2, C1894R.attr.homeHandleColor);
         paint.setAntiAlias(true);
         setFocusable(false);
     }

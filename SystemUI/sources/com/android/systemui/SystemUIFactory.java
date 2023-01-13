@@ -45,7 +45,7 @@ public class SystemUIFactory {
 
     public static void createFromConfig(Context context, boolean z) {
         if (mFactory == null) {
-            String string = context.getString(C1893R.string.config_systemUIFactoryComponent);
+            String string = context.getString(C1894R.string.config_systemUIFactoryComponent);
             if (string == null || string.length() == 0) {
                 throw new RuntimeException("No SystemUIFactory component configured");
             }
@@ -104,7 +104,7 @@ public class SystemUIFactory {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setupWmComponent$0$com-android-systemui-SystemUIFactory  reason: not valid java name */
-    public /* synthetic */ void m2530lambda$setupWmComponent$0$comandroidsystemuiSystemUIFactory(WMComponent.Builder builder, HandlerThread handlerThread) {
+    public /* synthetic */ void m2536lambda$setupWmComponent$0$comandroidsystemuiSystemUIFactory(WMComponent.Builder builder, HandlerThread handlerThread) {
         builder.setShellMainThread(handlerThread);
         this.mWMComponent = builder.build();
     }
@@ -136,7 +136,7 @@ public class SystemUIFactory {
     }
 
     public String getVendorComponent(Resources resources) {
-        return resources.getString(C1893R.string.config_systemUIVendorServiceComponent);
+        return resources.getString(C1894R.string.config_systemUIVendorServiceComponent);
     }
 
     public Map<Class<?>, Provider<CoreStartable>> getStartableComponentsPerUser() {

@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.Switch;
 import androidx.lifecycle.LifecycleOwner;
 import com.android.internal.logging.MetricsLogger;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.qualifiers.Background;
 import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.p012qs.QSHost;
@@ -43,7 +43,7 @@ public class RotationLockTile extends QSTileImpl<QSTile.BooleanState> implements
     @Inject
     public RotationLockTile(QSHost qSHost, @Background Looper looper, @Main Handler handler, FalsingManager falsingManager, MetricsLogger metricsLogger, StatusBarStateController statusBarStateController, ActivityStarter activityStarter, QSLogger qSLogger, RotationLockController rotationLockController, SensorPrivacyManager sensorPrivacyManager, BatteryController batteryController, SecureSettings secureSettings) {
         super(qSHost, looper, handler, falsingManager, metricsLogger, statusBarStateController, activityStarter, qSLogger);
-        C24072 r2 = new RotationLockController.RotationLockControllerCallback() {
+        C24122 r2 = new RotationLockController.RotationLockControllerCallback() {
             public void onRotationLockStateChanged(boolean z, boolean z2) {
                 RotationLockTile.this.refreshState(Boolean.valueOf(z));
             }
@@ -98,13 +98,13 @@ public class RotationLockTile extends QSTileImpl<QSTile.BooleanState> implements
         int i = 2;
         boolean z = !this.mBatteryController.isPowerSave() && !this.mPrivacyManager.isSensorPrivacyEnabled(2) && RotationLockControllerImpl.hasSufficientPermission(this.mContext) && this.mController.isCameraRotationEnabled();
         booleanState.value = !isRotationLocked;
-        booleanState.label = this.mContext.getString(C1893R.string.quick_settings_rotation_unlocked_label);
+        booleanState.label = this.mContext.getString(C1894R.string.quick_settings_rotation_unlocked_label);
         booleanState.icon = this.mIcon;
         booleanState.contentDescription = getAccessibilityString(isRotationLocked);
         if (isRotationLocked || !z) {
             booleanState.secondaryLabel = "";
         } else {
-            booleanState.secondaryLabel = this.mContext.getResources().getString(C1893R.string.rotation_lock_camera_rotation_on);
+            booleanState.secondaryLabel = this.mContext.getResources().getString(C1894R.string.rotation_lock_camera_rotation_on);
         }
         booleanState.stateDescription = booleanState.secondaryLabel;
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
@@ -147,12 +147,12 @@ public class RotationLockTile extends QSTileImpl<QSTile.BooleanState> implements
     }
 
     private String getAccessibilityString(boolean z) {
-        return this.mContext.getString(C1893R.string.accessibility_quick_settings_rotation);
+        return this.mContext.getString(C1894R.string.accessibility_quick_settings_rotation);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-qs-tiles-RotationLockTile  reason: not valid java name */
-    public /* synthetic */ void m2981lambda$new$0$comandroidsystemuiqstilesRotationLockTile(int i, boolean z) {
+    public /* synthetic */ void m2985lambda$new$0$comandroidsystemuiqstilesRotationLockTile(int i, boolean z) {
         refreshState();
     }
 }

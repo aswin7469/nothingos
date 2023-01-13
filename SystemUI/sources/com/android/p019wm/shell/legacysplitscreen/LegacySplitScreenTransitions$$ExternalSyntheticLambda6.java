@@ -14,6 +14,6 @@ public final /* synthetic */ class LegacySplitScreenTransitions$$ExternalSynthet
     }
 
     public final void run() {
-        this.f$0.mo49751xdc169212(this.f$1);
+        this.f$0.mo49760xdc169212(this.f$1);
     }
 }

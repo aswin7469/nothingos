@@ -21,7 +21,7 @@ import com.android.keyguard.KeyguardUpdateMonitorCallback;
 import com.android.keyguard.KeyguardVisibilityHelper;
 import com.android.keyguard.dagger.KeyguardUserSwitcherScope;
 import com.android.settingslib.drawable.CircleFramedDrawable;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.animation.Interpolators;
 import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.keyguard.ScreenLifecycle;
@@ -137,13 +137,13 @@ public class KeyguardUserSwitcherController extends ViewController<KeyguardUserS
         if (DEBUG) {
             Log.d(TAG, "onInit");
         }
-        this.mListView = (KeyguardUserSwitcherListView) ((KeyguardUserSwitcherView) this.mView).findViewById(C1893R.C1897id.keyguard_user_switcher_list);
+        this.mListView = (KeyguardUserSwitcherListView) ((KeyguardUserSwitcherView) this.mView).findViewById(C1894R.C1898id.keyguard_user_switcher_list);
         ((KeyguardUserSwitcherView) this.mView).setOnTouchListener(new KeyguardUserSwitcherController$$ExternalSyntheticLambda0(this));
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onInit$0$com-android-systemui-statusbar-policy-KeyguardUserSwitcherController */
-    public /* synthetic */ boolean mo45883xe534b629(View view, MotionEvent motionEvent) {
+    public /* synthetic */ boolean mo45895xe534b629(View view, MotionEvent motionEvent) {
         if (!isListAnimating()) {
             return closeSwitcherIfOpenAndNotSimple(true);
         }
@@ -248,7 +248,7 @@ public class KeyguardUserSwitcherController extends ViewController<KeyguardUserS
 
     public void updatePosition(int i, int i2, boolean z) {
         AnimationProperties animationProperties = ANIMATION_PROPERTIES;
-        PropertyAnimator.setProperty(this.mListView, AnimatableProperty.f376Y, (float) i2, animationProperties, z);
+        PropertyAnimator.setProperty(this.mListView, AnimatableProperty.f375Y, (float) i2, animationProperties, z);
         PropertyAnimator.setProperty(this.mListView, AnimatableProperty.TRANSLATION_X, (float) (-Math.abs(i)), animationProperties, z);
         Rect rect = new Rect();
         this.mListView.getDrawingRect(rect);
@@ -374,7 +374,7 @@ public class KeyguardUserSwitcherController extends ViewController<KeyguardUserS
         /* access modifiers changed from: package-private */
         public KeyguardUserDetailItemView convertOrInflate(View view, ViewGroup viewGroup) {
             if (!(view instanceof KeyguardUserDetailItemView) || !(view.getTag() instanceof UserSwitcherController.UserRecord)) {
-                view = this.mLayoutInflater.inflate(C1893R.layout.keyguard_user_switcher_item, viewGroup, false);
+                view = this.mLayoutInflater.inflate(C1894R.layout.keyguard_user_switcher_item, viewGroup, false);
             }
             return (KeyguardUserDetailItemView) view;
         }
@@ -387,7 +387,7 @@ public class KeyguardUserSwitcherController extends ViewController<KeyguardUserS
             if (userRecord.picture == null) {
                 convertOrInflate.bind(name, getDrawable(userRecord).mutate(), userRecord.resolveId());
             } else {
-                CircleFramedDrawable circleFramedDrawable = new CircleFramedDrawable(userRecord.picture, (int) this.mResources.getDimension(C1893R.dimen.kg_framed_avatar_size));
+                CircleFramedDrawable circleFramedDrawable = new CircleFramedDrawable(userRecord.picture, (int) this.mResources.getDimension(C1894R.dimen.kg_framed_avatar_size));
                 circleFramedDrawable.setColorFilter(userRecord.isSwitchToEnabled ? null : getDisabledUserAvatarColorFilter());
                 convertOrInflate.bind(name, (Drawable) circleFramedDrawable, userRecord.info.id);
             }
@@ -407,10 +407,10 @@ public class KeyguardUserSwitcherController extends ViewController<KeyguardUserS
             if (!userRecord.isCurrent || !userRecord.isGuest) {
                 drawable = getIconDrawable(this.mContext, userRecord);
             } else {
-                drawable = this.mContext.getDrawable(C1893R.C1895drawable.ic_avatar_guest_user);
+                drawable = this.mContext.getDrawable(C1894R.C1896drawable.ic_avatar_guest_user);
             }
-            drawable.setTint(this.mResources.getColor(userRecord.isSwitchToEnabled ? C1893R.C1894color.kg_user_switcher_avatar_icon_color : C1893R.C1894color.kg_user_switcher_restricted_avatar_icon_color, this.mContext.getTheme()));
-            return new LayerDrawable(new Drawable[]{this.mContext.getDrawable(C1893R.C1895drawable.user_avatar_bg), drawable});
+            drawable.setTint(this.mResources.getColor(userRecord.isSwitchToEnabled ? C1894R.C1895color.kg_user_switcher_avatar_icon_color : C1894R.C1895color.kg_user_switcher_restricted_avatar_icon_color, this.mContext.getTheme()));
+            return new LayerDrawable(new Drawable[]{this.mContext.getDrawable(C1894R.C1896drawable.user_avatar_bg), drawable});
         }
 
         public void onClick(View view) {

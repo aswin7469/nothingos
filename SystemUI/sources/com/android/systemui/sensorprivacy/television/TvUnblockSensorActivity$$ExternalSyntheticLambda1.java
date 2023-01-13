@@ -11,6 +11,6 @@ public final /* synthetic */ class TvUnblockSensorActivity$$ExternalSyntheticLam
     }
 
     public final void onSensorBlockedChanged(int i, boolean z) {
-        this.f$0.mo37693x11c64b3f(i, z);
+        this.f$0.mo37694x11c64b3f(i, z);
     }
 }

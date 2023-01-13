@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.TaskView;
 import com.android.p019wm.shell.animation.Interpolators;
 import java.util.LinkedHashMap;
@@ -19,7 +19,7 @@ import kotlin.LazyKt;
 import kotlin.Metadata;
 import kotlin.jvm.internal.Intrinsics;
 
-@Metadata(mo64986d1 = {"\u0000X\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\t\n\u0000\n\u0002\u0010\u000e\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0006\n\u0002\u0010\u000b\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0005\n\u0002\u0010\b\n\u0002\b\u0005\u0018\u00002\u00020\u0001B\u0015\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005¢\u0006\u0002\u0010\u0006J\u0006\u0010 \u001a\u00020!J\b\u0010\"\u001a\u00020!H\u0014J\b\u0010#\u001a\u00020!H\u0002J\b\u0010$\u001a\u00020!H\u0002J\u0010\u0010%\u001a\u00020!2\u0006\u0010&\u001a\u00020'H\u0016J\u0010\u0010(\u001a\u00020!2\u0006\u0010)\u001a\u00020\u0015H\u0002J\u000e\u0010*\u001a\u00020!2\u0006\u0010+\u001a\u00020\fR\u000e\u0010\u0007\u001a\u00020\bXD¢\u0006\u0002\n\u0000R\u000e\u0010\t\u001a\u00020\nX\u0004¢\u0006\u0002\n\u0000R\u0010\u0010\u000b\u001a\u0004\u0018\u00010\fX\u000e¢\u0006\u0002\n\u0000R#\u0010\r\u001a\n \u000f*\u0004\u0018\u00010\u000e0\u000e8BX\u0002¢\u0006\f\n\u0004\b\u0012\u0010\u0013\u001a\u0004\b\u0010\u0010\u0011R\u000e\u0010\u0014\u001a\u00020\u0015X\u000e¢\u0006\u0002\n\u0000R#\u0010\u0016\u001a\n \u000f*\u0004\u0018\u00010\u000e0\u000e8BX\u0002¢\u0006\f\n\u0004\b\u0018\u0010\u0013\u001a\u0004\b\u0017\u0010\u0011R#\u0010\u0019\u001a\n \u000f*\u0004\u0018\u00010\u001a0\u001a8BX\u0002¢\u0006\f\n\u0004\b\u001d\u0010\u0013\u001a\u0004\b\u001b\u0010\u001cR\u000e\u0010\u0004\u001a\u00020\u0005X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u001e\u001a\u00020\u001fX\u000e¢\u0006\u0002\n\u0000¨\u0006,"}, mo64987d2 = {"Lcom/android/wm/shell/bubbles/ManageEducationView;", "Landroid/widget/LinearLayout;", "context", "Landroid/content/Context;", "positioner", "Lcom/android/wm/shell/bubbles/BubblePositioner;", "(Landroid/content/Context;Lcom/android/wm/shell/bubbles/BubblePositioner;)V", "ANIMATE_DURATION", "", "TAG", "", "bubbleExpandedView", "Lcom/android/wm/shell/bubbles/BubbleExpandedView;", "gotItButton", "Landroid/widget/Button;", "kotlin.jvm.PlatformType", "getGotItButton", "()Landroid/widget/Button;", "gotItButton$delegate", "Lkotlin/Lazy;", "isHiding", "", "manageButton", "getManageButton", "manageButton$delegate", "manageView", "Landroid/view/ViewGroup;", "getManageView", "()Landroid/view/ViewGroup;", "manageView$delegate", "realManageButtonRect", "Landroid/graphics/Rect;", "hide", "", "onFinishInflate", "setButtonColor", "setDrawableDirection", "setLayoutDirection", "layoutDirection", "", "setShouldShow", "shouldShow", "show", "expandedView", "WMShell_release"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000X\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\t\n\u0000\n\u0002\u0010\u000e\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0006\n\u0002\u0010\u000b\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0005\n\u0002\u0010\b\n\u0002\b\u0005\u0018\u00002\u00020\u0001B\u0015\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005¢\u0006\u0002\u0010\u0006J\u0006\u0010 \u001a\u00020!J\b\u0010\"\u001a\u00020!H\u0014J\b\u0010#\u001a\u00020!H\u0002J\b\u0010$\u001a\u00020!H\u0002J\u0010\u0010%\u001a\u00020!2\u0006\u0010&\u001a\u00020'H\u0016J\u0010\u0010(\u001a\u00020!2\u0006\u0010)\u001a\u00020\u0015H\u0002J\u000e\u0010*\u001a\u00020!2\u0006\u0010+\u001a\u00020\fR\u000e\u0010\u0007\u001a\u00020\bXD¢\u0006\u0002\n\u0000R\u000e\u0010\t\u001a\u00020\nX\u0004¢\u0006\u0002\n\u0000R\u0010\u0010\u000b\u001a\u0004\u0018\u00010\fX\u000e¢\u0006\u0002\n\u0000R#\u0010\r\u001a\n \u000f*\u0004\u0018\u00010\u000e0\u000e8BX\u0002¢\u0006\f\n\u0004\b\u0012\u0010\u0013\u001a\u0004\b\u0010\u0010\u0011R\u000e\u0010\u0014\u001a\u00020\u0015X\u000e¢\u0006\u0002\n\u0000R#\u0010\u0016\u001a\n \u000f*\u0004\u0018\u00010\u000e0\u000e8BX\u0002¢\u0006\f\n\u0004\b\u0018\u0010\u0013\u001a\u0004\b\u0017\u0010\u0011R#\u0010\u0019\u001a\n \u000f*\u0004\u0018\u00010\u001a0\u001a8BX\u0002¢\u0006\f\n\u0004\b\u001d\u0010\u0013\u001a\u0004\b\u001b\u0010\u001cR\u000e\u0010\u0004\u001a\u00020\u0005X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u001e\u001a\u00020\u001fX\u000e¢\u0006\u0002\n\u0000¨\u0006,"}, mo65043d2 = {"Lcom/android/wm/shell/bubbles/ManageEducationView;", "Landroid/widget/LinearLayout;", "context", "Landroid/content/Context;", "positioner", "Lcom/android/wm/shell/bubbles/BubblePositioner;", "(Landroid/content/Context;Lcom/android/wm/shell/bubbles/BubblePositioner;)V", "ANIMATE_DURATION", "", "TAG", "", "bubbleExpandedView", "Lcom/android/wm/shell/bubbles/BubbleExpandedView;", "gotItButton", "Landroid/widget/Button;", "kotlin.jvm.PlatformType", "getGotItButton", "()Landroid/widget/Button;", "gotItButton$delegate", "Lkotlin/Lazy;", "isHiding", "", "manageButton", "getManageButton", "manageButton$delegate", "manageView", "Landroid/view/ViewGroup;", "getManageView", "()Landroid/view/ViewGroup;", "manageView$delegate", "realManageButtonRect", "Landroid/graphics/Rect;", "hide", "", "onFinishInflate", "setButtonColor", "setDrawableDirection", "setLayoutDirection", "layoutDirection", "", "setShouldShow", "shouldShow", "show", "expandedView", "WMShell_release"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* renamed from: com.android.wm.shell.bubbles.ManageEducationView */
 /* compiled from: ManageEducationView.kt */
 public final class ManageEducationView extends LinearLayout {
@@ -64,9 +64,9 @@ public final class ManageEducationView extends LinearLayout {
         this.manageButton$delegate = LazyKt.lazy(new ManageEducationView$manageButton$2(this));
         this.gotItButton$delegate = LazyKt.lazy(new ManageEducationView$gotItButton$2(this));
         this.realManageButtonRect = new Rect();
-        LayoutInflater.from(context).inflate(C3343R.layout.bubbles_manage_button_education, this);
+        LayoutInflater.from(context).inflate(C3353R.layout.bubbles_manage_button_education, this);
         setVisibility(8);
-        setElevation((float) getResources().getDimensionPixelSize(C3343R.dimen.bubble_elevation));
+        setElevation((float) getResources().getDimensionPixelSize(C3353R.dimen.bubble_elevation));
         setLayoutDirection(3);
     }
 
@@ -106,9 +106,9 @@ public final class ManageEducationView extends LinearLayout {
         int i;
         ViewGroup manageView = getManageView();
         if (getResources().getConfiguration().getLayoutDirection() == 1) {
-            i = C3343R.C3345drawable.bubble_stack_user_education_bg_rtl;
+            i = C3353R.C3355drawable.bubble_stack_user_education_bg_rtl;
         } else {
-            i = C3343R.C3345drawable.bubble_stack_user_education_bg;
+            i = C3353R.C3355drawable.bubble_stack_user_education_bg;
         }
         manageView.setBackgroundResource(i);
     }
@@ -125,7 +125,7 @@ public final class ManageEducationView extends LinearLayout {
             }
             ViewGroup.LayoutParams layoutParams = getLayoutParams();
             if (this.positioner.isLargeScreen() || this.positioner.isLandscape()) {
-                i = getContext().getResources().getDimensionPixelSize(C3343R.dimen.bubbles_user_education_width);
+                i = getContext().getResources().getDimensionPixelSize(C3353R.dimen.bubbles_user_education_width);
             } else {
                 i = -1;
             }
@@ -149,7 +149,7 @@ public final class ManageEducationView extends LinearLayout {
 
     /* access modifiers changed from: private */
     /* renamed from: show$lambda-3  reason: not valid java name */
-    public static final void m3432show$lambda3(ManageEducationView manageEducationView, boolean z, BubbleExpandedView bubbleExpandedView2) {
+    public static final void m3436show$lambda3(ManageEducationView manageEducationView, boolean z, BubbleExpandedView bubbleExpandedView2) {
         Intrinsics.checkNotNullParameter(manageEducationView, "this$0");
         Intrinsics.checkNotNullParameter(bubbleExpandedView2, "$expandedView");
         manageEducationView.getManageButton().setOnClickListener(new ManageEducationView$$ExternalSyntheticLambda0(manageEducationView, bubbleExpandedView2));
@@ -170,23 +170,23 @@ public final class ManageEducationView extends LinearLayout {
 
     /* access modifiers changed from: private */
     /* renamed from: show$lambda-3$lambda-0  reason: not valid java name */
-    public static final void m3433show$lambda3$lambda0(ManageEducationView manageEducationView, BubbleExpandedView bubbleExpandedView2, View view) {
+    public static final void m3437show$lambda3$lambda0(ManageEducationView manageEducationView, BubbleExpandedView bubbleExpandedView2, View view) {
         Intrinsics.checkNotNullParameter(manageEducationView, "this$0");
         Intrinsics.checkNotNullParameter(bubbleExpandedView2, "$expandedView");
         manageEducationView.hide();
-        bubbleExpandedView2.findViewById(C3343R.C3346id.manage_button).performClick();
+        bubbleExpandedView2.findViewById(C3353R.C3356id.manage_button).performClick();
     }
 
     /* access modifiers changed from: private */
     /* renamed from: show$lambda-3$lambda-1  reason: not valid java name */
-    public static final void m3434show$lambda3$lambda1(ManageEducationView manageEducationView, View view) {
+    public static final void m3438show$lambda3$lambda1(ManageEducationView manageEducationView, View view) {
         Intrinsics.checkNotNullParameter(manageEducationView, "this$0");
         manageEducationView.hide();
     }
 
     /* access modifiers changed from: private */
     /* renamed from: show$lambda-3$lambda-2  reason: not valid java name */
-    public static final void m3435show$lambda3$lambda2(ManageEducationView manageEducationView, View view) {
+    public static final void m3439show$lambda3$lambda2(ManageEducationView manageEducationView, View view) {
         Intrinsics.checkNotNullParameter(manageEducationView, "this$0");
         manageEducationView.hide();
     }
@@ -204,14 +204,14 @@ public final class ManageEducationView extends LinearLayout {
 
     /* access modifiers changed from: private */
     /* renamed from: hide$lambda-4  reason: not valid java name */
-    public static final void m3430hide$lambda4(ManageEducationView manageEducationView) {
+    public static final void m3434hide$lambda4(ManageEducationView manageEducationView) {
         Intrinsics.checkNotNullParameter(manageEducationView, "this$0");
         manageEducationView.isHiding = true;
     }
 
     /* access modifiers changed from: private */
     /* renamed from: hide$lambda-5  reason: not valid java name */
-    public static final void m3431hide$lambda5(ManageEducationView manageEducationView) {
+    public static final void m3435hide$lambda5(ManageEducationView manageEducationView) {
         Intrinsics.checkNotNullParameter(manageEducationView, "this$0");
         manageEducationView.isHiding = false;
         manageEducationView.setVisibility(8);

@@ -77,7 +77,7 @@ public class PeopleSpaceWidgetManager {
     protected final BroadcastReceiver mBaseBroadcastReceiver = new BroadcastReceiver() {
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onReceive$0$com-android-systemui-people-widget-PeopleSpaceWidgetManager$2 */
-        public /* synthetic */ void mo35197x8227a59a(Intent intent) {
+        public /* synthetic */ void mo35201x8227a59a(Intent intent) {
             PeopleSpaceWidgetManager.this.updateWidgetsFromBroadcastInBackground(intent.getAction());
         }
 
@@ -186,12 +186,12 @@ public class PeopleSpaceWidgetManager {
         }
 
         public void onConversationUpdate(ConversationChannel conversationChannel) {
-            PeopleSpaceWidgetManager.this.mBgExecutor.execute(new C2297x16303646(this, conversationChannel));
+            PeopleSpaceWidgetManager.this.mBgExecutor.execute(new C2300x16303646(this, conversationChannel));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onConversationUpdate$0$com-android-systemui-people-widget-PeopleSpaceWidgetManager$TileConversationListener */
-        public /* synthetic */ void mo35199x9b1799fc(ConversationChannel conversationChannel) {
+        public /* synthetic */ void mo35203x9b1799fc(ConversationChannel conversationChannel) {
             PeopleSpaceWidgetManager.this.updateWidgetsWithConversationChanged(conversationChannel);
         }
     }
@@ -221,7 +221,7 @@ public class PeopleSpaceWidgetManager {
 
     /* access modifiers changed from: private */
     /* renamed from: updateWidgetsInBackground */
-    public void mo35180x4693b0ae(int[] iArr) {
+    public void mo35184x4693b0ae(int[] iArr) {
         try {
             if (iArr.length != 0) {
                 synchronized (this.mLock) {
@@ -240,7 +240,7 @@ public class PeopleSpaceWidgetManager {
             if (tileForExistingWidget == null) {
                 Log.e(TAG, "Matching conversation not found for shortcut ID");
             }
-            mo35176x9a3cfb8a(i, tileForExistingWidget);
+            mo35180x9a3cfb8a(i, tileForExistingWidget);
             hashMap.put(Integer.valueOf(i), tileForExistingWidget);
             if (tileForExistingWidget != null) {
                 registerConversationListenerIfNeeded(i, new PeopleTileKey(tileForExistingWidget));
@@ -260,12 +260,12 @@ public class PeopleSpaceWidgetManager {
 
     public void updateAppWidgetOptionsAndViewOptional(int i, Optional<PeopleSpaceTile> optional) {
         if (optional.isPresent()) {
-            mo35176x9a3cfb8a(i, optional.get());
+            mo35180x9a3cfb8a(i, optional.get());
         }
     }
 
     /* renamed from: updateAppWidgetOptionsAndView */
-    public void mo35176x9a3cfb8a(int i, PeopleSpaceTile peopleSpaceTile) {
+    public void mo35180x9a3cfb8a(int i, PeopleSpaceTile peopleSpaceTile) {
         synchronized (mTiles) {
             mTiles.put(Integer.valueOf(i), peopleSpaceTile);
         }
@@ -326,7 +326,7 @@ public class PeopleSpaceWidgetManager {
 
     /* access modifiers changed from: private */
     /* renamed from: updateWidgetsWithNotificationChangedInBackground */
-    public void mo35181xc690c0c0(StatusBarNotification statusBarNotification, PeopleSpaceUtils.NotificationAction notificationAction, Collection<NotificationEntry> collection) {
+    public void mo35185xc690c0c0(StatusBarNotification statusBarNotification, PeopleSpaceUtils.NotificationAction notificationAction, Collection<NotificationEntry> collection) {
         try {
             PeopleTileKey peopleTileKey = new PeopleTileKey(statusBarNotification.getShortcutId(), statusBarNotification.getUser().getIdentifier(), statusBarNotification.getPackageName());
             if (PeopleTileKey.isValid(peopleTileKey)) {
@@ -357,13 +357,13 @@ public class PeopleSpaceWidgetManager {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateWidgetIdsBasedOnNotifications$2$com-android-systemui-people-widget-PeopleSpaceWidgetManager */
-    public /* synthetic */ Optional mo35178xafd3b74b(Map map, Integer num) {
+    public /* synthetic */ Optional mo35182xafd3b74b(Map map, Integer num) {
         return getAugmentedTileForExistingWidget(num.intValue(), map);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateWidgetIdsBasedOnNotifications$3$com-android-systemui-people-widget-PeopleSpaceWidgetManager */
-    public /* synthetic */ void mo35179x6a4957cc(Integer num, Optional optional) {
+    public /* synthetic */ void mo35183x6a4957cc(Integer num, Optional optional) {
         updateAppWidgetOptionsAndViewOptional(num.intValue(), optional);
     }
 
@@ -377,7 +377,7 @@ public class PeopleSpaceWidgetManager {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$groupConversationNotifications$4$com-android-systemui-people-widget-PeopleSpaceWidgetManager */
-    public /* synthetic */ boolean mo35177x6a1f398c(NotificationEntry notificationEntry) {
+    public /* synthetic */ boolean mo35181x6a1f398c(NotificationEntry notificationEntry) {
         return NotificationHelper.isValid(notificationEntry) && NotificationHelper.isMissedCallOrHasContent(notificationEntry) && !NotificationHelper.shouldFilterOut(this.mBubblesOptional, notificationEntry);
     }
 
@@ -404,7 +404,7 @@ public class PeopleSpaceWidgetManager {
         if (tileForExistingWidget == null) {
             return Optional.empty();
         }
-        return Optional.ofNullable(augmentTileFromNotifications(tileForExistingWidget, new PeopleTileKey(tileForExistingWidget), this.mSharedPrefs.getString(String.valueOf(i), (String) null), map, Optional.m1745of(Integer.valueOf(i))));
+        return Optional.ofNullable(augmentTileFromNotifications(tileForExistingWidget, new PeopleTileKey(tileForExistingWidget), this.mSharedPrefs.getString(String.valueOf(i), (String) null), map, Optional.m1751of(Integer.valueOf(i))));
     }
 
     public Set<String> getMatchingKeyWidgetIds(PeopleTileKey peopleTileKey) {
@@ -476,7 +476,7 @@ public class PeopleSpaceWidgetManager {
                 builder.setIsImportantConversation(notificationChannel.isImportantConversation());
             }
             builder.setContactUri(uri).setStatuses(conversationChannel.getStatuses()).setLastInteractionTimestamp(conversationChannel.getLastEventTimestamp());
-            mo35176x9a3cfb8a(i, builder.build());
+            mo35180x9a3cfb8a(i, builder.build());
         }
     }
 
@@ -498,7 +498,7 @@ public class PeopleSpaceWidgetManager {
         try {
             PeopleSpaceTile tileFromPersistentStorage = getTileFromPersistentStorage(peopleTileKey, i, false);
             if (tileFromPersistentStorage != null) {
-                PeopleSpaceTile augmentTileFromNotificationEntryManager = augmentTileFromNotificationEntryManager(tileFromPersistentStorage, Optional.m1745of(Integer.valueOf(i)));
+                PeopleSpaceTile augmentTileFromNotificationEntryManager = augmentTileFromNotificationEntryManager(tileFromPersistentStorage, Optional.m1751of(Integer.valueOf(i)));
                 synchronized (this.mLock) {
                     keyFromStorageByWidgetId = getKeyFromStorageByWidgetId(i);
                 }
@@ -764,7 +764,7 @@ public class PeopleSpaceWidgetManager {
             goto L_0x0066
         L_0x002c:
             android.app.people.PeopleSpaceTile r5 = r9.getTileWithCurrentState(r7, r10)     // Catch:{ all -> 0x0035 }
-            r9.mo35176x9a3cfb8a(r4, r5)     // Catch:{ all -> 0x0035 }
+            r9.mo35180x9a3cfb8a(r4, r5)     // Catch:{ all -> 0x0035 }
             monitor-exit(r6)     // Catch:{ all -> 0x0035 }
             goto L_0x0066
         L_0x0035:
@@ -788,7 +788,7 @@ public class PeopleSpaceWidgetManager {
         L_0x0057:
             java.lang.Object r6 = r9.mLock
             monitor-enter(r6)
-            r9.mo35176x9a3cfb8a(r4, r5)     // Catch:{ all -> 0x0069 }
+            r9.mo35180x9a3cfb8a(r4, r5)     // Catch:{ all -> 0x0069 }
             monitor-exit(r6)     // Catch:{ all -> 0x0069 }
             r5 = 1
             int[] r5 = new int[r5]
@@ -1022,7 +1022,7 @@ public class PeopleSpaceWidgetManager {
         SharedPreferences.Editor edit = defaultSharedPreferences.edit();
         for (Map.Entry next : defaultSharedPreferences.getAll().entrySet()) {
             String str = (String) next.getKey();
-            int i = C22963.f326xd18c5f3a[PeopleBackupHelper.getEntryType(next).ordinal()];
+            int i = C22993.f325xd18c5f3a[PeopleBackupHelper.getEntryType(next).ordinal()];
             if (i == 1) {
                 String str2 = map.get(str);
                 if (TextUtils.isEmpty(str2)) {
@@ -1050,10 +1050,10 @@ public class PeopleSpaceWidgetManager {
     }
 
     /* renamed from: com.android.systemui.people.widget.PeopleSpaceWidgetManager$3 */
-    static /* synthetic */ class C22963 {
+    static /* synthetic */ class C22993 {
 
         /* renamed from: $SwitchMap$com$android$systemui$people$widget$PeopleBackupHelper$SharedFileEntryType */
-        static final /* synthetic */ int[] f326xd18c5f3a;
+        static final /* synthetic */ int[] f325xd18c5f3a;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(8:0|1|2|3|4|5|6|(3:7|8|10)) */
         /* JADX WARNING: Failed to process nested try/catch */
@@ -1065,25 +1065,25 @@ public class PeopleSpaceWidgetManager {
                 com.android.systemui.people.widget.PeopleBackupHelper$SharedFileEntryType[] r0 = com.android.systemui.people.widget.PeopleBackupHelper.SharedFileEntryType.values()
                 int r0 = r0.length
                 int[] r0 = new int[r0]
-                f326xd18c5f3a = r0
+                f325xd18c5f3a = r0
                 com.android.systemui.people.widget.PeopleBackupHelper$SharedFileEntryType r1 = com.android.systemui.people.widget.PeopleBackupHelper.SharedFileEntryType.WIDGET_ID     // Catch:{ NoSuchFieldError -> 0x0012 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
                 r2 = 1
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0012 }
             L_0x0012:
-                int[] r0 = f326xd18c5f3a     // Catch:{ NoSuchFieldError -> 0x001d }
+                int[] r0 = f325xd18c5f3a     // Catch:{ NoSuchFieldError -> 0x001d }
                 com.android.systemui.people.widget.PeopleBackupHelper$SharedFileEntryType r1 = com.android.systemui.people.widget.PeopleBackupHelper.SharedFileEntryType.PEOPLE_TILE_KEY     // Catch:{ NoSuchFieldError -> 0x001d }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
                 r2 = 2
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x001d }
             L_0x001d:
-                int[] r0 = f326xd18c5f3a     // Catch:{ NoSuchFieldError -> 0x0028 }
+                int[] r0 = f325xd18c5f3a     // Catch:{ NoSuchFieldError -> 0x0028 }
                 com.android.systemui.people.widget.PeopleBackupHelper$SharedFileEntryType r1 = com.android.systemui.people.widget.PeopleBackupHelper.SharedFileEntryType.CONTACT_URI     // Catch:{ NoSuchFieldError -> 0x0028 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0028 }
                 r2 = 3
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0028 }
             L_0x0028:
-                int[] r0 = f326xd18c5f3a     // Catch:{ NoSuchFieldError -> 0x0033 }
+                int[] r0 = f325xd18c5f3a     // Catch:{ NoSuchFieldError -> 0x0033 }
                 com.android.systemui.people.widget.PeopleBackupHelper$SharedFileEntryType r1 = com.android.systemui.people.widget.PeopleBackupHelper.SharedFileEntryType.UNKNOWN     // Catch:{ NoSuchFieldError -> 0x0033 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0033 }
                 r2 = 4
@@ -1091,7 +1091,7 @@ public class PeopleSpaceWidgetManager {
             L_0x0033:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.people.widget.PeopleSpaceWidgetManager.C22963.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.people.widget.PeopleSpaceWidgetManager.C22993.<clinit>():void");
         }
     }
 

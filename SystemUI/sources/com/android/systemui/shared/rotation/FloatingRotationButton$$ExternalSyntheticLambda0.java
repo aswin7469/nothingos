@@ -9,6 +9,6 @@ public final /* synthetic */ class FloatingRotationButton$$ExternalSyntheticLamb
     }
 
     public final void run() {
-        this.f$0.mo37950xd22dc85f();
+        this.f$0.mo37951xd22dc85f();
     }
 }

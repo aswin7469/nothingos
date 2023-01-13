@@ -11,6 +11,6 @@ public final /* synthetic */ class NotificationEntryManager$$ExternalSyntheticLa
     }
 
     public final void onSafeToRemove(String str) {
-        this.f$0.mo39776x7c538075(str);
+        this.f$0.mo39778x7c538075(str);
     }
 }

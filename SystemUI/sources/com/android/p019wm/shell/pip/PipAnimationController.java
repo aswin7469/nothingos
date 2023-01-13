@@ -190,7 +190,7 @@ public class PipAnimationController {
             this.mEndValue = t3;
             addListener(this);
             addUpdateListener(this);
-            this.mSurfaceControlTransactionFactory = new C3508xe6db84e7();
+            this.mSurfaceControlTransactionFactory = new C3518xe6db84e7();
             this.mTransitionDirection = 0;
         }
 

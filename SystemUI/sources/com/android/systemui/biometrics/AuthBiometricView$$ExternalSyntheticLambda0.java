@@ -11,6 +11,6 @@ public final /* synthetic */ class AuthBiometricView$$ExternalSyntheticLambda0 i
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        this.f$0.mo30514xd6d3b775(valueAnimator);
+        this.f$0.mo30524xd6d3b775(valueAnimator);
     }
 }

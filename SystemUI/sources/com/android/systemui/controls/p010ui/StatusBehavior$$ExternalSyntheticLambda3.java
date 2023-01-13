@@ -14,6 +14,6 @@ public final /* synthetic */ class StatusBehavior$$ExternalSyntheticLambda3 impl
     }
 
     public final boolean onLongClick(View view) {
-        return StatusBehavior.m2719bind$lambda1(this.f$0, this.f$1, view);
+        return StatusBehavior.m2724bind$lambda1(this.f$0, this.f$1, view);
     }
 }

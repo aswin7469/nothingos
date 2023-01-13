@@ -708,9 +708,15 @@
     <string name="force_rtl_layout_all_locales_summary">ಎಲ್ಲ ಭಾಷೆಗಳಿಗಾಗಿ, RTL ಗೆ ಸ್ಕ್ರೀನ್‌ ಲೇಔಟ್‌ ಡೈರೆಕ್ಷನ್ ಅನ್ನು ಫೋರ್ಸ್ ಮಾಡಿ</string>
     <string name="forced_resizable_secondary_display">ಸೆಕೆಂಡರಿ ಡಿಸ್‌ಪ್ಲೇಗಳಲ್ಲಿ ಅಪ್ಲಿಕೇಶನ್‌ ಕಾರ್ಯ ನಿರ್ವಹಿಸದೇ ಇರಬಹುದು.</string>
     <string name="game_status">ಪ್ಲೇ ಮಾಡಲಾಗುತ್ತಿದೆ</string>
+    <string name="gamemode_description">ನೀವು ಗೇಮ್‌ನಲ್ಲಿದ್ದೀರಾ ಎನ್ನುವುದನ್ನು ಗೇಮ್ ಮೋಡ್ ನಿರ್ಧರಿಸುತ್ತದೆ ಮತ್ತು ಸ್ವಯಂಚಾಲಿತವಾಗಿ ನಿಮಗಾಗಿ ಆನ್ ಮಾಡುತ್ತದೆ</string>
+    <string name="gamemode_gamedashboard_title">ಗೇಮ್ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್</string>
+    <string name="gamemode_notification_content">ಸೆಟ್ಟಿಂಗ್‌ಗಳಿಗೆ ಹೋಗಿ</string>
+    <string name="gamemode_notification_title">ಗೇಮ್ ಮೋಡ್ ಪ್ರಸ್ತುತ ಆನ್ ಆಗಿದೆ</string>
     <string name="global_action_lock_message">ಹೆಚ್ಚಿನ ಆಯ್ಕೆಗಳಿಗಾಗಿ ನಿಮ್ಮ ಫೋನ್ ಅನ್ನು ಅನ್‌ಲಾಕ್ ಮಾಡಿ</string>
     <string name="global_action_screenshot">ಸ್ಕ್ರೀನ್‌ಶಾಟ್</string>
     <string name="global_action_smart_lock_disabled">Smart Lock ಅನ್ನು ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಲಾಗಿದೆ</string>
+    <string name="gm_guide_status_on">ಆನ್</string>
+    <string name="gm_notification_title">ಗೇಮ್ ಮೋಡ್</string>
     <string name="go_to_web">ಬ್ರೌಸರ್‌ಗೆ ಹೋಗಿ</string>
     <string name="got_it">ಅರ್ಥವಾಯಿತು</string>
     <string name="guest_exit_guest">ಅತಿಥಿಯನ್ನು ತೆಗೆದುಹಾಕಿ</string>

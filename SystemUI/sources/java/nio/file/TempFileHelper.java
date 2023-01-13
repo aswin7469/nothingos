@@ -35,8 +35,8 @@ class TempFileHelper {
     }
 
     private static class PosixPermissions {
-        static final FileAttribute<Set<PosixFilePermission>> dirPermissions = PosixFilePermissions.asFileAttribute(EnumSet.m1718of(PosixFilePermission.OWNER_READ, PosixFilePermission.OWNER_WRITE, PosixFilePermission.OWNER_EXECUTE));
-        static final FileAttribute<Set<PosixFilePermission>> filePermissions = PosixFilePermissions.asFileAttribute(EnumSet.m1717of(PosixFilePermission.OWNER_READ, PosixFilePermission.OWNER_WRITE));
+        static final FileAttribute<Set<PosixFilePermission>> dirPermissions = PosixFilePermissions.asFileAttribute(EnumSet.m1724of(PosixFilePermission.OWNER_READ, PosixFilePermission.OWNER_WRITE, PosixFilePermission.OWNER_EXECUTE));
+        static final FileAttribute<Set<PosixFilePermission>> filePermissions = PosixFilePermissions.asFileAttribute(EnumSet.m1723of(PosixFilePermission.OWNER_READ, PosixFilePermission.OWNER_WRITE));
 
         private PosixPermissions() {
         }

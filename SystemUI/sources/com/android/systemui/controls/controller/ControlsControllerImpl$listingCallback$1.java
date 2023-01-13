@@ -15,7 +15,7 @@ import kotlin.Metadata;
 import kotlin.collections.CollectionsKt;
 import kotlin.jvm.internal.Intrinsics;
 
-@Metadata(mo64986d1 = {"\u0000\u001b\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0010 \n\u0002\u0018\u0002\n\u0000*\u0001\u0000\b\n\u0018\u00002\u00020\u0001J\u0016\u0010\u0002\u001a\u00020\u00032\f\u0010\u0004\u001a\b\u0012\u0004\u0012\u00020\u00060\u0005H\u0016¨\u0006\u0007"}, mo64987d2 = {"com/android/systemui/controls/controller/ControlsControllerImpl$listingCallback$1", "Lcom/android/systemui/controls/management/ControlsListingController$ControlsListingCallback;", "onServicesUpdated", "", "serviceInfos", "", "Lcom/android/systemui/controls/ControlsServiceInfo;", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000\u001b\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0010 \n\u0002\u0018\u0002\n\u0000*\u0001\u0000\b\n\u0018\u00002\u00020\u0001J\u0016\u0010\u0002\u001a\u00020\u00032\f\u0010\u0004\u001a\b\u0012\u0004\u0012\u00020\u00060\u0005H\u0016¨\u0006\u0007"}, mo65043d2 = {"com/android/systemui/controls/controller/ControlsControllerImpl$listingCallback$1", "Lcom/android/systemui/controls/management/ControlsListingController$ControlsListingCallback;", "onServicesUpdated", "", "serviceInfos", "", "Lcom/android/systemui/controls/ControlsServiceInfo;", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* compiled from: ControlsControllerImpl.kt */
 public final class ControlsControllerImpl$listingCallback$1 implements ControlsListingController.ControlsListingCallback {
     final /* synthetic */ ControlsControllerImpl this$0;
@@ -26,12 +26,12 @@ public final class ControlsControllerImpl$listingCallback$1 implements ControlsL
 
     public void onServicesUpdated(List<ControlsServiceInfo> list) {
         Intrinsics.checkNotNullParameter(list, "serviceInfos");
-        this.this$0.executor.execute(new C2026xacc0d33(list, this.this$0));
+        this.this$0.executor.execute(new C2028xacc0d33(list, this.this$0));
     }
 
     /* access modifiers changed from: private */
     /* renamed from: onServicesUpdated$lambda-6  reason: not valid java name */
-    public static final void m2618onServicesUpdated$lambda6(List list, ControlsControllerImpl controlsControllerImpl) {
+    public static final void m2623onServicesUpdated$lambda6(List list, ControlsControllerImpl controlsControllerImpl) {
         Intrinsics.checkNotNullParameter(list, "$serviceInfos");
         Intrinsics.checkNotNullParameter(controlsControllerImpl, "this$0");
         Iterable<ControlsServiceInfo> iterable = list;

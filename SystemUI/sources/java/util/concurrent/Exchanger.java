@@ -6,7 +6,7 @@ import java.lang.invoke.VarHandle;
 public class Exchanger<V> {
 
     /* renamed from: AA */
-    private static final VarHandle f752AA;
+    private static final VarHandle f750AA;
     private static final int ASHIFT = 5;
     private static final VarHandle BOUND;
     static final int FULL;
@@ -73,7 +73,7 @@ public class Exchanger<V> {
             BOUND = lookup.findVarHandle(cls, "bound", Integer.TYPE);
             SLOT = lookup.findVarHandle(cls, "slot", Node.class);
             MATCH = lookup.findVarHandle(Node.class, "match", Object.class);
-            f752AA = MethodHandles.arrayElementVarHandle(Node[].class);
+            f750AA = MethodHandles.arrayElementVarHandle(Node[].class);
         } catch (ReflectiveOperationException e) {
             throw new ExceptionInInitializerError((Throwable) e);
         }

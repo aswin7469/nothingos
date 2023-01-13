@@ -11,6 +11,6 @@ public final /* synthetic */ class PowerNotificationWarnings$$ExternalSyntheticL
     }
 
     public final void onClick(DialogInterface dialogInterface, int i) {
-        this.f$0.mo35557x8d2778ac(dialogInterface, i);
+        this.f$0.mo35561x8d2778ac(dialogInterface, i);
     }
 }

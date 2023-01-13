@@ -14,7 +14,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Space;
 import androidx.core.view.GravityCompat;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dependency;
 import com.android.systemui.navigationbar.NavigationModeController;
 import com.android.systemui.navigationbar.buttons.ButtonDispatcher;
@@ -107,10 +107,10 @@ public class NavigationBarInflaterView extends FrameLayout implements Navigation
 
     private void inflateChildren() {
         removeAllViews();
-        FrameLayout frameLayout = (FrameLayout) this.mLayoutInflater.inflate(C1893R.layout.navigation_layout, this, false);
+        FrameLayout frameLayout = (FrameLayout) this.mLayoutInflater.inflate(C1894R.layout.navigation_layout, this, false);
         this.mHorizontal = frameLayout;
         addView(frameLayout);
-        FrameLayout frameLayout2 = (FrameLayout) this.mLayoutInflater.inflate(C1893R.layout.navigation_layout_vertical, this, false);
+        FrameLayout frameLayout2 = (FrameLayout) this.mLayoutInflater.inflate(C1894R.layout.navigation_layout_vertical, this, false);
         this.mVertical = frameLayout2;
         addView(frameLayout2);
         updateAlternativeOrder();
@@ -123,9 +123,9 @@ public class NavigationBarInflaterView extends FrameLayout implements Navigation
             return ((NavigationBarInflaterViewEx) NTDependencyEx.get(NavigationBarInflaterViewEx.class)).getDefaultLayout(getContext(), QuickStepContract.isGesturalMode(this.mNavBarMode), this.mOverviewProxyService.shouldShowSwipeUpUI());
         }
         if (QuickStepContract.isGesturalMode(this.mNavBarMode)) {
-            i = C1893R.string.config_navBarLayoutHandle;
+            i = C1894R.string.config_navBarLayoutHandle;
         } else {
-            i = this.mOverviewProxyService.shouldShowSwipeUpUI() ? C1893R.string.config_navBarLayoutQuickstep : C1893R.string.config_navBarLayout;
+            i = this.mOverviewProxyService.shouldShowSwipeUpUI() ? C1894R.string.config_navBarLayoutQuickstep : C1894R.string.config_navBarLayout;
         }
         return getContext().getString(i);
     }
@@ -182,10 +182,10 @@ public class NavigationBarInflaterView extends FrameLayout implements Navigation
     }
 
     private void updateAlternativeOrder() {
-        updateAlternativeOrder(this.mHorizontal.findViewById(C1893R.C1897id.ends_group));
-        updateAlternativeOrder(this.mHorizontal.findViewById(C1893R.C1897id.center_group));
-        updateAlternativeOrder(this.mVertical.findViewById(C1893R.C1897id.ends_group));
-        updateAlternativeOrder(this.mVertical.findViewById(C1893R.C1897id.center_group));
+        updateAlternativeOrder(this.mHorizontal.findViewById(C1894R.C1898id.ends_group));
+        updateAlternativeOrder(this.mHorizontal.findViewById(C1894R.C1898id.center_group));
+        updateAlternativeOrder(this.mVertical.findViewById(C1894R.C1898id.ends_group));
+        updateAlternativeOrder(this.mVertical.findViewById(C1894R.C1898id.center_group));
     }
 
     private void updateAlternativeOrder(View view) {
@@ -195,10 +195,10 @@ public class NavigationBarInflaterView extends FrameLayout implements Navigation
     }
 
     private void initiallyFill(ButtonDispatcher buttonDispatcher) {
-        addAll(buttonDispatcher, (ViewGroup) this.mHorizontal.findViewById(C1893R.C1897id.ends_group));
-        addAll(buttonDispatcher, (ViewGroup) this.mHorizontal.findViewById(C1893R.C1897id.center_group));
-        addAll(buttonDispatcher, (ViewGroup) this.mVertical.findViewById(C1893R.C1897id.ends_group));
-        addAll(buttonDispatcher, (ViewGroup) this.mVertical.findViewById(C1893R.C1897id.center_group));
+        addAll(buttonDispatcher, (ViewGroup) this.mHorizontal.findViewById(C1894R.C1898id.ends_group));
+        addAll(buttonDispatcher, (ViewGroup) this.mHorizontal.findViewById(C1894R.C1898id.center_group));
+        addAll(buttonDispatcher, (ViewGroup) this.mVertical.findViewById(C1894R.C1898id.ends_group));
+        addAll(buttonDispatcher, (ViewGroup) this.mVertical.findViewById(C1894R.C1898id.center_group));
     }
 
     private void addAll(ButtonDispatcher buttonDispatcher, ViewGroup viewGroup) {
@@ -226,14 +226,14 @@ public class NavigationBarInflaterView extends FrameLayout implements Navigation
         String[] split2 = split[0].split(BUTTON_SEPARATOR);
         String[] split3 = split[1].split(BUTTON_SEPARATOR);
         String[] split4 = split[2].split(BUTTON_SEPARATOR);
-        inflateButtons(split2, (ViewGroup) this.mHorizontal.findViewById(C1893R.C1897id.ends_group), false, true);
-        inflateButtons(split2, (ViewGroup) this.mVertical.findViewById(C1893R.C1897id.ends_group), true, true);
-        inflateButtons(split3, (ViewGroup) this.mHorizontal.findViewById(C1893R.C1897id.center_group), false, false);
-        inflateButtons(split3, (ViewGroup) this.mVertical.findViewById(C1893R.C1897id.center_group), true, false);
-        addGravitySpacer((LinearLayout) this.mHorizontal.findViewById(C1893R.C1897id.ends_group));
-        addGravitySpacer((LinearLayout) this.mVertical.findViewById(C1893R.C1897id.ends_group));
-        inflateButtons(split4, (ViewGroup) this.mHorizontal.findViewById(C1893R.C1897id.ends_group), false, false);
-        inflateButtons(split4, (ViewGroup) this.mVertical.findViewById(C1893R.C1897id.ends_group), true, false);
+        inflateButtons(split2, (ViewGroup) this.mHorizontal.findViewById(C1894R.C1898id.ends_group), false, true);
+        inflateButtons(split2, (ViewGroup) this.mVertical.findViewById(C1894R.C1898id.ends_group), true, true);
+        inflateButtons(split3, (ViewGroup) this.mHorizontal.findViewById(C1894R.C1898id.center_group), false, false);
+        inflateButtons(split3, (ViewGroup) this.mVertical.findViewById(C1894R.C1898id.center_group), true, false);
+        addGravitySpacer((LinearLayout) this.mHorizontal.findViewById(C1894R.C1898id.ends_group));
+        addGravitySpacer((LinearLayout) this.mVertical.findViewById(C1894R.C1898id.ends_group));
+        inflateButtons(split4, (ViewGroup) this.mHorizontal.findViewById(C1894R.C1898id.ends_group), false, false);
+        inflateButtons(split4, (ViewGroup) this.mVertical.findViewById(C1894R.C1898id.ends_group), true, false);
         updateButtonDispatchersCurrentView();
     }
 
@@ -317,38 +317,38 @@ public class NavigationBarInflaterView extends FrameLayout implements Navigation
             extractButton = extractButton(MENU_IME_ROTATE);
         }
         if (HOME.equals(extractButton)) {
-            return layoutInflater.inflate(C1893R.layout.home, viewGroup, false);
+            return layoutInflater.inflate(C1894R.layout.home, viewGroup, false);
         }
         if (BACK.equals(extractButton)) {
-            return layoutInflater.inflate(C1893R.layout.back, viewGroup, false);
+            return layoutInflater.inflate(C1894R.layout.back, viewGroup, false);
         }
         if (RECENT.equals(extractButton)) {
-            return layoutInflater.inflate(C1893R.layout.recent_apps, viewGroup, false);
+            return layoutInflater.inflate(C1894R.layout.recent_apps, viewGroup, false);
         }
         if (MENU_IME_ROTATE.equals(extractButton)) {
-            return layoutInflater.inflate(C1893R.layout.menu_ime, viewGroup, false);
+            return layoutInflater.inflate(C1894R.layout.menu_ime, viewGroup, false);
         }
         if (NAVSPACE.equals(extractButton)) {
-            return layoutInflater.inflate(C1893R.layout.nav_key_space, viewGroup, false);
+            return layoutInflater.inflate(C1894R.layout.nav_key_space, viewGroup, false);
         }
         if (CLIPBOARD.equals(extractButton)) {
-            return layoutInflater.inflate(C1893R.layout.clipboard, viewGroup, false);
+            return layoutInflater.inflate(C1894R.layout.clipboard, viewGroup, false);
         }
         if (CONTEXTUAL.equals(extractButton)) {
-            return layoutInflater.inflate(C1893R.layout.contextual, viewGroup, false);
+            return layoutInflater.inflate(C1894R.layout.contextual, viewGroup, false);
         }
         if (HOME_HANDLE.equals(extractButton)) {
-            return layoutInflater.inflate(C1893R.layout.home_handle, viewGroup, false);
+            return layoutInflater.inflate(C1894R.layout.home_handle, viewGroup, false);
         }
         if (IME_SWITCHER.equals(extractButton)) {
-            return layoutInflater.inflate(C1893R.layout.ime_switcher, viewGroup, false);
+            return layoutInflater.inflate(C1894R.layout.ime_switcher, viewGroup, false);
         }
         if (!extractButton.startsWith("key")) {
             return null;
         }
         String extractImage = extractImage(extractButton);
         int extractKeycode = extractKeycode(extractButton);
-        View inflate = layoutInflater.inflate(C1893R.layout.custom_key, viewGroup, false);
+        View inflate = layoutInflater.inflate(C1894R.layout.custom_key, viewGroup, false);
         KeyButtonView keyButtonView = (KeyButtonView) inflate;
         keyButtonView.setCode(extractKeycode);
         if (extractImage != null) {
@@ -417,8 +417,8 @@ public class NavigationBarInflaterView extends FrameLayout implements Navigation
 
     private void clearViews() {
         clearDispatcherViews();
-        clearAllChildren((ViewGroup) this.mHorizontal.findViewById(C1893R.C1897id.nav_buttons));
-        clearAllChildren((ViewGroup) this.mVertical.findViewById(C1893R.C1897id.nav_buttons));
+        clearAllChildren((ViewGroup) this.mHorizontal.findViewById(C1894R.C1898id.nav_buttons));
+        clearAllChildren((ViewGroup) this.mVertical.findViewById(C1894R.C1898id.nav_buttons));
     }
 
     private void clearAllChildren(ViewGroup viewGroup) {

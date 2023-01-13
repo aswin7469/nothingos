@@ -10,10 +10,10 @@ public class PathInterpolatorBuilder {
     private float[] mDist;
 
     /* renamed from: mX */
-    private float[] f327mX;
+    private float[] f326mX;
 
     /* renamed from: mY */
-    private float[] f328mY;
+    private float[] f327mY;
 
     public PathInterpolatorBuilder(Path path) {
         initPath(path);
@@ -46,8 +46,8 @@ public class PathInterpolatorBuilder {
         int length = approximate.length / 3;
         float f = 0.0f;
         if (approximate[1] == 0.0f && approximate[2] == 0.0f && approximate[approximate.length - 2] == 1.0f && approximate[approximate.length - 1] == 1.0f) {
-            this.f327mX = new float[length];
-            this.f328mY = new float[length];
+            this.f326mX = new float[length];
+            this.f327mY = new float[length];
             this.mDist = new float[length];
             int i = 0;
             int i2 = 0;
@@ -62,9 +62,9 @@ public class PathInterpolatorBuilder {
                 if (f3 == f && f4 != f2) {
                     throw new IllegalArgumentException("The Path cannot have discontinuity in the X axis.");
                 } else if (f4 >= f2) {
-                    float[] fArr = this.f327mX;
+                    float[] fArr = this.f326mX;
                     fArr[i] = f4;
-                    float[] fArr2 = this.f328mY;
+                    float[] fArr2 = this.f327mY;
                     fArr2[i] = f5;
                     if (i > 0) {
                         int i6 = i - 1;
@@ -93,25 +93,25 @@ public class PathInterpolatorBuilder {
     }
 
     public Interpolator getXInterpolator() {
-        return new PathInterpolator(this.mDist, this.f327mX);
+        return new PathInterpolator(this.mDist, this.f326mX);
     }
 
     public Interpolator getYInterpolator() {
-        return new PathInterpolator(this.mDist, this.f328mY);
+        return new PathInterpolator(this.mDist, this.f327mY);
     }
 
     /* renamed from: com.android.systemui.qs.PathInterpolatorBuilder$PathInterpolator */
     private static class PathInterpolator extends BaseInterpolator {
 
         /* renamed from: mX */
-        private final float[] f329mX;
+        private final float[] f328mX;
 
         /* renamed from: mY */
-        private final float[] f330mY;
+        private final float[] f329mY;
 
         private PathInterpolator(float[] fArr, float[] fArr2) {
-            this.f329mX = fArr;
-            this.f330mY = fArr2;
+            this.f328mX = fArr;
+            this.f329mY = fArr2;
         }
 
         public float getInterpolation(float f) {
@@ -121,24 +121,24 @@ public class PathInterpolatorBuilder {
             if (f >= 1.0f) {
                 return 1.0f;
             }
-            int length = this.f329mX.length - 1;
+            int length = this.f328mX.length - 1;
             int i = 0;
             while (length - i > 1) {
                 int i2 = (i + length) / 2;
-                if (f < this.f329mX[i2]) {
+                if (f < this.f328mX[i2]) {
                     length = i2;
                 } else {
                     i = i2;
                 }
             }
-            float[] fArr = this.f329mX;
+            float[] fArr = this.f328mX;
             float f2 = fArr[length];
             float f3 = fArr[i];
             float f4 = f2 - f3;
             if (f4 == 0.0f) {
-                return this.f330mY[i];
+                return this.f329mY[i];
             }
-            float[] fArr2 = this.f330mY;
+            float[] fArr2 = this.f329mY;
             float f5 = fArr2[i];
             return f5 + (((f - f3) / f4) * (fArr2[length] - f5));
         }

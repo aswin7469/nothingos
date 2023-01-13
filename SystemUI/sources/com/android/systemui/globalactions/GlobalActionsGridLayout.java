@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 
 public class GlobalActionsGridLayout extends GlobalActionsLayout {
     public GlobalActionsGridLayout(Context context, AttributeSet attributeSet) {
@@ -92,7 +92,7 @@ public class GlobalActionsGridLayout extends GlobalActionsLayout {
 
     /* access modifiers changed from: protected */
     public float getAnimationDistance() {
-        return (((float) getListView().getRowCount()) * getContext().getResources().getDimension(C1893R.dimen.global_actions_grid_item_height)) / 2.0f;
+        return (((float) getListView().getRowCount()) * getContext().getResources().getDimension(C1894R.dimen.global_actions_grid_item_height)) / 2.0f;
     }
 
     public float getAnimationOffsetX() {

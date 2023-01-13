@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.view.ViewOverlay;
 import android.view.ViewParent;
 import android.widget.FrameLayout;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dumpable;
 import com.android.systemui.animation.Interpolators;
 import com.android.systemui.statusbar.StatusBarIconView;
@@ -208,7 +208,7 @@ public abstract class ExpandableView extends FrameLayout implements Dumpable {
     }
 
     private void initDimens() {
-        this.mContentShift = getResources().getDimensionPixelSize(C1893R.dimen.shelf_transform_content_shift);
+        this.mContentShift = getResources().getDimensionPixelSize(C1894R.dimen.shelf_transform_content_shift);
     }
 
     /* access modifiers changed from: protected */
@@ -592,7 +592,7 @@ public abstract class ExpandableView extends FrameLayout implements Dumpable {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$dump$0$com-android-systemui-statusbar-notification-row-ExpandableView */
-    public /* synthetic */ void mo41303x734e989(IndentingPrintWriter indentingPrintWriter, String[] strArr) {
+    public /* synthetic */ void mo41309x734e989(IndentingPrintWriter indentingPrintWriter, String[] strArr) {
         ExpandableViewState viewState = getViewState();
         if (viewState == null) {
             indentingPrintWriter.println("no viewState!!!");

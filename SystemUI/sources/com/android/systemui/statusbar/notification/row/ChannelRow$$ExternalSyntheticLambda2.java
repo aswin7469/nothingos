@@ -11,6 +11,6 @@ public final /* synthetic */ class ChannelRow$$ExternalSyntheticLambda2 implemen
     }
 
     public final void onClick(View view) {
-        ChannelRow.m3143onFinishInflate$lambda2(this.f$0, view);
+        ChannelRow.m3147onFinishInflate$lambda2(this.f$0, view);
     }
 }

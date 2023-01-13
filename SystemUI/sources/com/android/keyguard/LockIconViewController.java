@@ -16,7 +16,7 @@ import android.view.VelocityTracker;
 import android.view.View;
 import android.view.accessibility.AccessibilityManager;
 import android.view.accessibility.AccessibilityNodeInfo;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dumpable;
 import com.android.systemui.biometrics.AuthController;
 import com.android.systemui.biometrics.AuthRippleController;
@@ -52,8 +52,8 @@ public class LockIconViewController extends ViewController<LockIconView> impleme
         private final AccessibilityNodeInfo.AccessibilityAction mAccessibilityEnterHint;
 
         {
-            this.mAccessibilityAuthenticateHint = new AccessibilityNodeInfo.AccessibilityAction(16, LockIconViewController.this.getResources().getString(C1893R.string.accessibility_authenticate_hint));
-            this.mAccessibilityEnterHint = new AccessibilityNodeInfo.AccessibilityAction(16, LockIconViewController.this.getResources().getString(C1893R.string.accessibility_enter_hint));
+            this.mAccessibilityAuthenticateHint = new AccessibilityNodeInfo.AccessibilityAction(16, LockIconViewController.this.getResources().getString(C1894R.string.accessibility_authenticate_hint));
+            this.mAccessibilityEnterHint = new AccessibilityNodeInfo.AccessibilityAction(16, LockIconViewController.this.getResources().getString(C1894R.string.accessibility_enter_hint));
         }
 
         public void onInitializeAccessibilityNodeInfo(View view, AccessibilityNodeInfo accessibilityNodeInfo) {
@@ -188,7 +188,7 @@ public class LockIconViewController extends ViewController<LockIconView> impleme
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onBiometricRunningStateChanged$0$com-android-keyguard-LockIconViewController$3 */
-        public /* synthetic */ void mo26437x8e76945f() {
+        public /* synthetic */ void mo26438x8e76945f() {
             LockIconViewController.this.updateVisibility();
         }
     };
@@ -261,14 +261,14 @@ public class LockIconViewController extends ViewController<LockIconView> impleme
         this.mExecutor = delayableExecutor;
         this.mVibrator = vibratorHelper;
         this.mAuthRippleController = authRippleController;
-        this.mMaxBurnInOffsetX = resources2.getDimensionPixelSize(C1893R.dimen.udfps_burn_in_offset_x);
-        this.mMaxBurnInOffsetY = resources2.getDimensionPixelSize(C1893R.dimen.udfps_burn_in_offset_y);
-        AnimatedStateListDrawable animatedStateListDrawable = (AnimatedStateListDrawable) resources2.getDrawable(C1893R.C1895drawable.super_lock_icon, ((LockIconView) this.mView).getContext().getTheme());
+        this.mMaxBurnInOffsetX = resources2.getDimensionPixelSize(C1894R.dimen.udfps_burn_in_offset_x);
+        this.mMaxBurnInOffsetY = resources2.getDimensionPixelSize(C1894R.dimen.udfps_burn_in_offset_y);
+        AnimatedStateListDrawable animatedStateListDrawable = (AnimatedStateListDrawable) resources2.getDrawable(C1894R.C1896drawable.super_lock_icon, ((LockIconView) this.mView).getContext().getTheme());
         this.mIcon = animatedStateListDrawable;
         ((LockIconView) this.mView).setImageDrawable(animatedStateListDrawable);
         ((LockIconViewControllerEx) NTDependencyEx.get(LockIconViewControllerEx.class)).init(getContext(), (LockIconView) this.mView, resources, keyguardUpdateMonitor2, this);
-        this.mUnlockedLabel = resources2.getString(C1893R.string.accessibility_unlock_button);
-        this.mLockedLabel = resources2.getString(C1893R.string.accessibility_lock_icon);
+        this.mUnlockedLabel = resources2.getString(C1894R.string.accessibility_unlock_button);
+        this.mLockedLabel = resources2.getString(C1894R.string.accessibility_lock_icon);
         dumpManager.registerDumpable(TAG, this);
     }
 
@@ -374,8 +374,8 @@ public class LockIconViewController extends ViewController<LockIconView> impleme
     /* access modifiers changed from: private */
     public void updateConfiguration() {
         ((LockIconViewControllerEx) NTDependencyEx.get(LockIconViewControllerEx.class)).updateConfiguration();
-        this.mUnlockedLabel = ((LockIconView) this.mView).getContext().getResources().getString(C1893R.string.accessibility_unlock_button);
-        this.mLockedLabel = ((LockIconView) this.mView).getContext().getResources().getString(C1893R.string.accessibility_lock_icon);
+        this.mUnlockedLabel = ((LockIconView) this.mView).getContext().getResources().getString(C1894R.string.accessibility_unlock_button);
+        this.mLockedLabel = ((LockIconView) this.mView).getContext().getResources().getString(C1894R.string.accessibility_lock_icon);
         updateLockIconLocation();
     }
 
@@ -605,20 +605,20 @@ public class LockIconViewController extends ViewController<LockIconView> impleme
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateUdfpsConfig$0$com-android-keyguard-LockIconViewController */
-    public /* synthetic */ void mo26430x13946920() {
+    public /* synthetic */ void mo26431x13946920() {
         updateIsUdfpsEnrolled();
         updateConfiguration();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$1$com-android-keyguard-LockIconViewController  reason: not valid java name */
-    public /* synthetic */ void m2302lambda$new$1$comandroidkeyguardLockIconViewController(View view) {
+    public /* synthetic */ void m2308lambda$new$1$comandroidkeyguardLockIconViewController(View view) {
         onLongPress();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$2$com-android-keyguard-LockIconViewController  reason: not valid java name */
-    public /* synthetic */ void m2303lambda$new$2$comandroidkeyguardLockIconViewController(boolean z) {
+    public /* synthetic */ void m2309lambda$new$2$comandroidkeyguardLockIconViewController(boolean z) {
         updateAccessibility();
     }
 }

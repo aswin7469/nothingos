@@ -9,7 +9,7 @@ import android.widget.AdapterView;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.settings.UserContextProvider;
 import com.android.systemui.statusbar.phone.SystemUIDialog;
 import java.util.Arrays;
@@ -38,13 +38,13 @@ public class ScreenRecordDialog extends SystemUIDialog {
         Window window = getWindow();
         window.addPrivateFlags(16);
         window.setGravity(17);
-        setTitle(C1893R.string.screenrecord_name);
-        setContentView(C1893R.layout.screen_record_dialog);
-        ((TextView) findViewById(C1893R.C1897id.button_cancel)).setOnClickListener(new ScreenRecordDialog$$ExternalSyntheticLambda0(this));
-        ((TextView) findViewById(C1893R.C1897id.button_start)).setOnClickListener(new ScreenRecordDialog$$ExternalSyntheticLambda1(this));
-        this.mAudioSwitch = (Switch) findViewById(C1893R.C1897id.screenrecord_audio_switch);
-        this.mTapsSwitch = (Switch) findViewById(C1893R.C1897id.screenrecord_taps_switch);
-        this.mOptions = (Spinner) findViewById(C1893R.C1897id.screen_recording_options);
+        setTitle(C1894R.string.screenrecord_name);
+        setContentView(C1894R.layout.screen_record_dialog);
+        ((TextView) findViewById(C1894R.C1898id.button_cancel)).setOnClickListener(new ScreenRecordDialog$$ExternalSyntheticLambda0(this));
+        ((TextView) findViewById(C1894R.C1898id.button_start)).setOnClickListener(new ScreenRecordDialog$$ExternalSyntheticLambda1(this));
+        this.mAudioSwitch = (Switch) findViewById(C1894R.C1898id.screenrecord_audio_switch);
+        this.mTapsSwitch = (Switch) findViewById(C1894R.C1898id.screenrecord_taps_switch);
+        this.mOptions = (Spinner) findViewById(C1894R.C1898id.screen_recording_options);
         ScreenRecordingAdapter screenRecordingAdapter = new ScreenRecordingAdapter(getContext().getApplicationContext(), 17367049, MODES);
         screenRecordingAdapter.setDropDownViewResource(17367049);
         this.mOptions.setAdapter(screenRecordingAdapter);
@@ -53,13 +53,13 @@ public class ScreenRecordDialog extends SystemUIDialog {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onCreate$0$com-android-systemui-screenrecord-ScreenRecordDialog */
-    public /* synthetic */ void mo37271x1b01bd75(View view) {
+    public /* synthetic */ void mo37272x1b01bd75(View view) {
         dismiss();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onCreate$1$com-android-systemui-screenrecord-ScreenRecordDialog */
-    public /* synthetic */ void mo37272x351d3c14(View view) {
+    public /* synthetic */ void mo37273x351d3c14(View view) {
         Runnable runnable = this.mOnStartRecordingClicked;
         if (runnable != null) {
             runnable.run();
@@ -70,7 +70,7 @@ public class ScreenRecordDialog extends SystemUIDialog {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onCreate$2$com-android-systemui-screenrecord-ScreenRecordDialog */
-    public /* synthetic */ void mo37273x4f38bab3(AdapterView adapterView, View view, int i, long j) {
+    public /* synthetic */ void mo37274x4f38bab3(AdapterView adapterView, View view, int i, long j) {
         this.mAudioSwitch.setChecked(true);
     }
 

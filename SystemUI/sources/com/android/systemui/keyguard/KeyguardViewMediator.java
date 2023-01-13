@@ -66,7 +66,7 @@ import com.android.keyguard.KeyguardUpdateMonitorCallback;
 import com.android.keyguard.KeyguardViewController;
 import com.android.keyguard.ViewMediatorCallback;
 import com.android.keyguard.mediator.ScreenOnCoordinator;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.CoreStartable;
 import com.android.systemui.DejankUtils;
 import com.android.systemui.Dependency;
@@ -282,7 +282,7 @@ public class KeyguardViewMediator extends CoreStartable implements Dumpable, Sta
         DeviceConfigProxy deviceConfigProxy2 = deviceConfigProxy;
         SysuiStatusBarStateController sysuiStatusBarStateController2 = sysuiStatusBarStateController;
         KeyguardStateController keyguardStateController2 = keyguardStateController;
-        C21601 r5 = new DeviceConfig.OnPropertiesChangedListener() {
+        C21631 r5 = new DeviceConfig.OnPropertiesChangedListener() {
             public void onPropertiesChanged(DeviceConfig.Properties properties) {
                 if (properties.getKeyset().contains("nav_bar_handle_show_over_lockscreen")) {
                     boolean unused = KeyguardViewMediator.this.mShowHomeOverLockscreen = properties.getBoolean("nav_bar_handle_show_over_lockscreen", true);
@@ -718,7 +718,7 @@ public class KeyguardViewMediator extends CoreStartable implements Dumpable, Sta
                     monitor-exit(r9)     // Catch:{ all -> 0x01d6 }
                     throw r8
                 */
-                throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.keyguard.KeyguardViewMediator.C21663.onSimStateChanged(int, int, int):void");
+                throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.keyguard.KeyguardViewMediator.C21693.onSimStateChanged(int, int, int):void");
             }
 
             public void onBiometricAuthFailed(BiometricSourceType biometricSourceType) {
@@ -849,7 +849,7 @@ public class KeyguardViewMediator extends CoreStartable implements Dumpable, Sta
                 return access$2600;
             }
         };
-        C21685 r6 = new ActivityLaunchAnimator.Controller() {
+        C21715 r6 = new ActivityLaunchAnimator.Controller() {
             public void onLaunchAnimationStart(boolean z) {
             }
 
@@ -916,7 +916,7 @@ public class KeyguardViewMediator extends CoreStartable implements Dumpable, Sta
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onAnimationStart$1$com-android-systemui-keyguard-KeyguardViewMediator$6 */
-            public /* synthetic */ void mo33290x31a5aa94(RemoteAnimationTarget remoteAnimationTarget, SyncRtSurfaceTransactionApplier syncRtSurfaceTransactionApplier, final IRemoteAnimationFinishedCallback iRemoteAnimationFinishedCallback) {
+            public /* synthetic */ void mo33301x31a5aa94(RemoteAnimationTarget remoteAnimationTarget, SyncRtSurfaceTransactionApplier syncRtSurfaceTransactionApplier, final IRemoteAnimationFinishedCallback iRemoteAnimationFinishedCallback) {
                 ValueAnimator valueAnimator = this.mUnoccludeAnimator;
                 if (valueAnimator != null) {
                     valueAnimator.cancel();
@@ -930,7 +930,7 @@ public class KeyguardViewMediator extends CoreStartable implements Dumpable, Sta
                     public void onAnimationEnd(Animator animator) {
                         try {
                             iRemoteAnimationFinishedCallback.onAnimationFinished();
-                            ValueAnimator unused = C21696.this.mUnoccludeAnimator = null;
+                            ValueAnimator unused = C21726.this.mUnoccludeAnimator = null;
                         } catch (RemoteException e) {
                             e.printStackTrace();
                         }
@@ -941,13 +941,13 @@ public class KeyguardViewMediator extends CoreStartable implements Dumpable, Sta
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onAnimationStart$0$com-android-systemui-keyguard-KeyguardViewMediator$6 */
-            public /* synthetic */ void mo33289x178a2bf5(RemoteAnimationTarget remoteAnimationTarget, SyncRtSurfaceTransactionApplier syncRtSurfaceTransactionApplier, ValueAnimator valueAnimator) {
+            public /* synthetic */ void mo33300x178a2bf5(RemoteAnimationTarget remoteAnimationTarget, SyncRtSurfaceTransactionApplier syncRtSurfaceTransactionApplier, ValueAnimator valueAnimator) {
                 float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
                 this.mUnoccludeMatrix.setTranslate(0.0f, (1.0f - floatValue) * ((float) remoteAnimationTarget.screenSpaceBounds.height()) * 0.1f);
                 syncRtSurfaceTransactionApplier.scheduleApply(new SyncRtSurfaceTransactionApplier.SurfaceParams[]{new SyncRtSurfaceTransactionApplier.SurfaceParams.Builder(remoteAnimationTarget.leash).withMatrix(this.mUnoccludeMatrix).withCornerRadius(KeyguardViewMediator.this.mWindowCornerRadius).withAlpha(floatValue).build()});
             }
         };
-        C21717 r62 = new KeyguardStateController.Callback() {
+        C21747 r62 = new KeyguardStateController.Callback() {
             public void onBouncerShowingChanged() {
                 synchronized (KeyguardViewMediator.this) {
                     KeyguardViewMediator keyguardViewMediator = KeyguardViewMediator.this;
@@ -990,7 +990,7 @@ public class KeyguardViewMediator extends CoreStartable implements Dumpable, Sta
         };
         this.mHandler = new Handler(Looper.myLooper(), (Handler.Callback) null, true) {
             public void handleMessage(Message message) {
-                NTLogUtil.m1680d(KeyguardViewMediator.TAG, "handleMessage " + message.what);
+                NTLogUtil.m1686d(KeyguardViewMediator.TAG, "handleMessage " + message.what);
                 int i = message.what;
                 boolean z = true;
                 if (i == 1) {
@@ -1076,7 +1076,7 @@ public class KeyguardViewMediator extends CoreStartable implements Dumpable, Sta
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$handleMessage$0$com-android-systemui-keyguard-KeyguardViewMediator$10 */
-            public /* synthetic */ void mo33284x7a4b6ea8(StartKeyguardExitAnimParams startKeyguardExitAnimParams) {
+            public /* synthetic */ void mo33295x7a4b6ea8(StartKeyguardExitAnimParams startKeyguardExitAnimParams) {
                 KeyguardViewMediator.this.handleStartKeyguardExitAnimation(startKeyguardExitAnimParams.startTime, startKeyguardExitAnimParams.fadeoutDuration, startKeyguardExitAnimParams.mApps, startKeyguardExitAnimParams.mWallpapers, startKeyguardExitAnimParams.mNonApps, startKeyguardExitAnimParams.mFinishedCallback);
                 KeyguardViewMediator.this.mFalsingCollector.onSuccessfulUnlock();
             }
@@ -1146,14 +1146,14 @@ public class KeyguardViewMediator extends CoreStartable implements Dumpable, Sta
         this.mInteractionJankMonitor = interactionJankMonitor;
         this.mDreamOverlayStateController = dreamOverlayStateController;
         this.mActivityLaunchAnimator = lazy5;
-        this.mPowerButtonY = (float) context.getResources().getDimensionPixelSize(C1893R.dimen.physical_power_button_center_screen_location_y);
+        this.mPowerButtonY = (float) context.getResources().getDimensionPixelSize(C1894R.dimen.physical_power_button_center_screen_location_y);
         this.mWindowCornerRadius = ScreenDecorationsUtils.getWindowCornerRadius(context);
         ((KeyguardViewMediatorEx) NTDependencyEx.get(KeyguardViewMediatorEx.class)).init(this.mHandler, this);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-keyguard-KeyguardViewMediator  reason: not valid java name */
-    public /* synthetic */ void m2759lambda$new$0$comandroidsystemuikeyguardKeyguardViewMediator(int i) {
+    public /* synthetic */ void m2764lambda$new$0$comandroidsystemuikeyguardKeyguardViewMediator(int i) {
         this.mInGestureNavigationMode = QuickStepContract.isGesturalMode(i);
     }
 
@@ -1958,7 +1958,7 @@ public class KeyguardViewMediator extends CoreStartable implements Dumpable, Sta
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$handleKeyguardDone$1$com-android-systemui-keyguard-KeyguardViewMediator */
-    public /* synthetic */ void mo33245x2f385c0f(int i) {
+    public /* synthetic */ void mo33256x2f385c0f(int i) {
         if (this.mLockPatternUtils.isSecure(i)) {
             this.mLockPatternUtils.getDevicePolicyManager().reportKeyguardDismissed(i);
         }
@@ -1978,7 +1978,7 @@ public class KeyguardViewMediator extends CoreStartable implements Dumpable, Sta
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$sendUserPresentBroadcast$2$com-android-systemui-keyguard-KeyguardViewMediator */
-    public /* synthetic */ void mo33253xe185ae85(UserManager userManager, UserHandle userHandle, int i) {
+    public /* synthetic */ void mo33264xe185ae85(UserManager userManager, UserHandle userHandle, int i) {
         for (int of : userManager.getProfileIdsWithDisabled(userHandle.getIdentifier())) {
             this.mContext.sendBroadcastAsUser(USER_PRESENT_INTENT, UserHandle.of(of));
         }
@@ -2022,7 +2022,7 @@ public class KeyguardViewMediator extends CoreStartable implements Dumpable, Sta
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$playSound$3$com-android-systemui-keyguard-KeyguardViewMediator */
-    public /* synthetic */ void mo33252x7dc6aa5c(int i) {
+    public /* synthetic */ void mo33263x7dc6aa5c(int i) {
         if (!this.mAudioManager.isStreamMute(this.mUiSoundsStreamType)) {
             SoundPool soundPool = this.mLockSounds;
             float f = this.mLockSoundVolume;
@@ -2085,7 +2085,7 @@ public class KeyguardViewMediator extends CoreStartable implements Dumpable, Sta
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$5$com-android-systemui-keyguard-KeyguardViewMediator  reason: not valid java name */
-    public /* synthetic */ void m2760lambda$new$5$comandroidsystemuikeyguardKeyguardViewMediator() {
+    public /* synthetic */ void m2765lambda$new$5$comandroidsystemuikeyguardKeyguardViewMediator() {
         Log.e(TAG, "mHideAnimationFinishedRunnable#run");
         this.mHideAnimationRunning = false;
         tryKeyguardDone();
@@ -2162,7 +2162,7 @@ public class KeyguardViewMediator extends CoreStartable implements Dumpable, Sta
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$handleHide$6$com-android-systemui-keyguard-KeyguardViewMediator */
-    public /* synthetic */ void mo33244xa6e6ae30() {
+    public /* synthetic */ void mo33255xa6e6ae30() {
         handleStartKeyguardExitAnimation(SystemClock.uptimeMillis() + this.mHideAnimation.getStartOffset(), this.mHideAnimation.getDuration(), (RemoteAnimationTarget[]) null, (RemoteAnimationTarget[]) null, (RemoteAnimationTarget[]) null, (IRemoteAnimationFinishedCallback) null);
     }
 
@@ -2186,7 +2186,7 @@ public class KeyguardViewMediator extends CoreStartable implements Dumpable, Sta
                 this.mKeyguardExitAnimationRunner = null;
                 LatencyTracker.getInstance(this.mContext).onActionEnd(11);
                 if (KeyguardService.sEnableRemoteKeyguardGoingAwayAnimation && iRemoteAnimationRunner != null && iRemoteAnimationFinishedCallback2 != null) {
-                    C216312 r7 = new IRemoteAnimationFinishedCallback() {
+                    C216612 r7 = new IRemoteAnimationFinishedCallback() {
                         public void onAnimationFinished() throws RemoteException {
                             try {
                                 iRemoteAnimationFinishedCallback2.onAnimationFinished();
@@ -2236,7 +2236,7 @@ public class KeyguardViewMediator extends CoreStartable implements Dumpable, Sta
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$handleStartKeyguardExitAnimation$8$com-android-systemui-keyguard-KeyguardViewMediator */
-    public /* synthetic */ void mo33246x5fb004b2(final IRemoteAnimationFinishedCallback iRemoteAnimationFinishedCallback, RemoteAnimationTarget[] remoteAnimationTargetArr) {
+    public /* synthetic */ void mo33257x5fb004b2(final IRemoteAnimationFinishedCallback iRemoteAnimationFinishedCallback, RemoteAnimationTarget[] remoteAnimationTargetArr) {
         if (iRemoteAnimationFinishedCallback == null) {
             this.mKeyguardUnlockAnimationControllerLazy.get().notifyFinishedKeyguardExitAnimation(false);
             this.mInteractionJankMonitor.end(29);
@@ -2316,7 +2316,7 @@ public class KeyguardViewMediator extends CoreStartable implements Dumpable, Sta
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onKeyguardExitRemoteAnimationFinished$9$com-android-systemui-keyguard-KeyguardViewMediator */
-    public /* synthetic */ void mo33251xa210c104(boolean z, boolean z2) {
+    public /* synthetic */ void mo33262xa210c104(boolean z, boolean z2) {
         onKeyguardExitFinished();
         if (this.mKeyguardStateController.isDismissingFromSwipe() || z) {
             this.mKeyguardUnlockAnimationControllerLazy.get().hideKeyguardViewAfterRemoteAnimation();
@@ -2566,6 +2566,7 @@ public class KeyguardViewMediator extends CoreStartable implements Dumpable, Sta
     }
 
     public void setDozing(boolean z) {
+        ((KeyguardViewMediatorEx) NTDependencyEx.get(KeyguardViewMediatorEx.class)).setDozing(z);
         if (z != this.mDozing) {
             this.mDozing = z;
             if (!z) {
@@ -2639,7 +2640,7 @@ public class KeyguardViewMediator extends CoreStartable implements Dumpable, Sta
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$notifyDefaultDisplayCallbacks$10$com-android-systemui-keyguard-KeyguardViewMediator */
-    public /* synthetic */ void mo33249x502711ad(boolean z) {
+    public /* synthetic */ void mo33260x502711ad(boolean z) {
         for (int size = this.mKeyguardStateCallbacks.size() - 1; size >= 0; size--) {
             IKeyguardStateCallback iKeyguardStateCallback = this.mKeyguardStateCallbacks.get(size);
             try {
@@ -2655,7 +2656,7 @@ public class KeyguardViewMediator extends CoreStartable implements Dumpable, Sta
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$notifyDefaultDisplayCallbacks$11$com-android-systemui-keyguard-KeyguardViewMediator */
-    public /* synthetic */ void mo33250x7dffac0c() {
+    public /* synthetic */ void mo33261x7dffac0c() {
         this.mTrustManager.reportKeyguardShowingChanged();
     }
 

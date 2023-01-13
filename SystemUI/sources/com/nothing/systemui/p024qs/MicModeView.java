@@ -13,7 +13,7 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.navigationbar.NavigationBarInflaterView;
 import com.android.systemui.privacy.PrivacyDialog;
 
@@ -91,9 +91,9 @@ public class MicModeView extends LinearLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mStandardButton = (RadioButton) findViewById(C1893R.C1897id.mic_standard_radio);
-        this.mVoiceFocusButton = (RadioButton) findViewById(C1893R.C1897id.voice_focus_radio);
-        this.mAmbientSoundButton = (RadioButton) findViewById(C1893R.C1897id.ambient_sound_radio);
+        this.mStandardButton = (RadioButton) findViewById(C1894R.C1898id.mic_standard_radio);
+        this.mVoiceFocusButton = (RadioButton) findViewById(C1894R.C1898id.voice_focus_radio);
+        this.mAmbientSoundButton = (RadioButton) findViewById(C1894R.C1898id.ambient_sound_radio);
     }
 
     public void setPrivacyElement(PrivacyDialog.PrivacyElement privacyElement) {

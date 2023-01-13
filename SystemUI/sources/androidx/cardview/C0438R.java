@@ -1,6 +1,6 @@
 package androidx.cardview;
 
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 
 /* renamed from: androidx.cardview.R */
 public final class C0438R {
@@ -58,7 +58,7 @@ public final class C0438R {
 
     /* renamed from: androidx.cardview.R$styleable */
     public static final class styleable {
-        public static final int[] CardView = {16843071, 16843072, C1893R.attr.cardBackgroundColor, C1893R.attr.cardCornerRadius, C1893R.attr.cardElevation, C1893R.attr.cardMaxElevation, C1893R.attr.cardPreventCornerOverlap, C1893R.attr.cardUseCompatPadding, C1893R.attr.contentPadding, C1893R.attr.contentPaddingBottom, C1893R.attr.contentPaddingLeft, C1893R.attr.contentPaddingRight, C1893R.attr.contentPaddingTop};
+        public static final int[] CardView = {16843071, 16843072, C1894R.attr.cardBackgroundColor, C1894R.attr.cardCornerRadius, C1894R.attr.cardElevation, C1894R.attr.cardMaxElevation, C1894R.attr.cardPreventCornerOverlap, C1894R.attr.cardUseCompatPadding, C1894R.attr.contentPadding, C1894R.attr.contentPaddingBottom, C1894R.attr.contentPaddingLeft, C1894R.attr.contentPaddingRight, C1894R.attr.contentPaddingTop};
         public static final int CardView_android_minHeight = 1;
         public static final int CardView_android_minWidth = 0;
         public static final int CardView_cardBackgroundColor = 2;

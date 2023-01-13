@@ -21,6 +21,6 @@ public final /* synthetic */ class BubbleController$BubblesImpl$$ExternalSynthet
     }
 
     public final Object get() {
-        return this.f$0.mo48406x17cb9c45(this.f$1, this.f$2, this.f$3);
+        return this.f$0.mo48415x17cb9c45(this.f$1, this.f$2, this.f$3);
     }
 }

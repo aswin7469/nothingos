@@ -75,7 +75,7 @@ public class RotationButtonController {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onRotationChanged$0$com-android-systemui-shared-rotation-RotationButtonController$1 */
-        public /* synthetic */ void mo38001x536c93a2(int i) {
+        public /* synthetic */ void mo38002x536c93a2(int i) {
             if (RotationButtonController.this.isRotationLocked()) {
                 if (RotationButtonController.this.shouldOverrideUserLockPrefs(i)) {
                     RotationButtonController.this.setRotationLockedAtAngle(i);
@@ -99,13 +99,13 @@ public class RotationButtonController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-shared-rotation-RotationButtonController */
-    public /* synthetic */ void mo37982xb155d9be() {
+    public /* synthetic */ void mo37983xb155d9be() {
         setRotateSuggestionButtonState(false);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$1$com-android-systemui-shared-rotation-RotationButtonController */
-    public /* synthetic */ void mo37983xa4e55dff() {
+    public /* synthetic */ void mo37984xa4e55dff() {
         this.mPendingRotationSuggestion = false;
     }
 
@@ -445,12 +445,12 @@ public class RotationButtonController {
         }
 
         public void onActivityRequestedOrientationChanged(int i, int i2) {
-            Optional.ofNullable(ActivityManagerWrapper.getInstance()).map(new C2503x8e6fda0e()).ifPresent(new C2504x8e6fda0f(this, i));
+            Optional.ofNullable(ActivityManagerWrapper.getInstance()).map(new C2509x8e6fda0e()).ifPresent(new C2510x8e6fda0f(this, i));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onActivityRequestedOrientationChanged$0$com-android-systemui-shared-rotation-RotationButtonController$TaskStackListenerImpl */
-        public /* synthetic */ void mo38005xe6bb7095(int i, ActivityManager.RunningTaskInfo runningTaskInfo) {
+        public /* synthetic */ void mo38006xe6bb7095(int i, ActivityManager.RunningTaskInfo runningTaskInfo) {
             if (runningTaskInfo.id == i) {
                 RotationButtonController.this.setRotateSuggestionButtonState(false);
             }

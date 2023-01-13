@@ -16,7 +16,7 @@ import android.view.accessibility.AccessibilityManager;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.ImageView;
 import com.android.internal.graphics.SfVsyncFrameCallbackProvider;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.accessibility.MagnificationGestureDetector;
 import java.util.Collections;
 
@@ -50,7 +50,7 @@ class MagnificationModeSwitch implements MagnificationGestureDetector.OnGestureL
     }
 
     static int getIconResId(int i) {
-        return i == 1 ? C1893R.C1895drawable.ic_open_in_new_window : C1893R.C1895drawable.ic_open_in_new_fullscreen;
+        return i == 1 ? C1894R.C1896drawable.ic_open_in_new_window : C1894R.C1896drawable.ic_open_in_new_fullscreen;
     }
 
     public void onLowMemory() {
@@ -80,13 +80,13 @@ class MagnificationModeSwitch implements MagnificationGestureDetector.OnGestureL
             public void onInitializeAccessibilityNodeInfo(View view, AccessibilityNodeInfo accessibilityNodeInfo) {
                 super.onInitializeAccessibilityNodeInfo(view, accessibilityNodeInfo);
                 accessibilityNodeInfo.setStateDescription(MagnificationModeSwitch.this.formatStateDescription());
-                accessibilityNodeInfo.setContentDescription(MagnificationModeSwitch.this.mContext.getResources().getString(C1893R.string.magnification_mode_switch_description));
-                accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_CLICK.getId(), MagnificationModeSwitch.this.mContext.getResources().getString(C1893R.string.magnification_mode_switch_click_label)));
+                accessibilityNodeInfo.setContentDescription(MagnificationModeSwitch.this.mContext.getResources().getString(C1894R.string.magnification_mode_switch_description));
+                accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_CLICK.getId(), MagnificationModeSwitch.this.mContext.getResources().getString(C1894R.string.magnification_mode_switch_click_label)));
                 accessibilityNodeInfo.setClickable(true);
-                accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C1893R.C1897id.accessibility_action_move_up, MagnificationModeSwitch.this.mContext.getString(C1893R.string.accessibility_control_move_up)));
-                accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C1893R.C1897id.accessibility_action_move_down, MagnificationModeSwitch.this.mContext.getString(C1893R.string.accessibility_control_move_down)));
-                accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C1893R.C1897id.accessibility_action_move_left, MagnificationModeSwitch.this.mContext.getString(C1893R.string.accessibility_control_move_left)));
-                accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C1893R.C1897id.accessibility_action_move_right, MagnificationModeSwitch.this.mContext.getString(C1893R.string.accessibility_control_move_right)));
+                accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C1894R.C1898id.accessibility_action_move_up, MagnificationModeSwitch.this.mContext.getString(C1894R.string.accessibility_control_move_up)));
+                accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C1894R.C1898id.accessibility_action_move_down, MagnificationModeSwitch.this.mContext.getString(C1894R.string.accessibility_control_move_down)));
+                accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C1894R.C1898id.accessibility_action_move_left, MagnificationModeSwitch.this.mContext.getString(C1894R.string.accessibility_control_move_left)));
+                accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C1894R.C1898id.accessibility_action_move_right, MagnificationModeSwitch.this.mContext.getString(C1894R.string.accessibility_control_move_right)));
             }
 
             public boolean performAccessibilityAction(View view, int i, Bundle bundle) {
@@ -101,16 +101,16 @@ class MagnificationModeSwitch implements MagnificationGestureDetector.OnGestureL
                 if (i == AccessibilityNodeInfo.AccessibilityAction.ACTION_CLICK.getId()) {
                     MagnificationModeSwitch.this.handleSingleTap();
                     return true;
-                } else if (i == C1893R.C1897id.accessibility_action_move_up) {
+                } else if (i == C1894R.C1898id.accessibility_action_move_up) {
                     MagnificationModeSwitch.this.moveButton(0.0f, (float) (-bounds.height()));
                     return true;
-                } else if (i == C1893R.C1897id.accessibility_action_move_down) {
+                } else if (i == C1894R.C1898id.accessibility_action_move_down) {
                     MagnificationModeSwitch.this.moveButton(0.0f, (float) bounds.height());
                     return true;
-                } else if (i == C1893R.C1897id.accessibility_action_move_left) {
+                } else if (i == C1894R.C1898id.accessibility_action_move_left) {
                     MagnificationModeSwitch.this.moveButton((float) (-bounds.width()), 0.0f);
                     return true;
-                } else if (i != C1893R.C1897id.accessibility_action_move_right) {
+                } else if (i != C1894R.C1898id.accessibility_action_move_right) {
                     return false;
                 } else {
                     MagnificationModeSwitch.this.moveButton((float) bounds.width(), 0.0f);
@@ -127,7 +127,7 @@ class MagnificationModeSwitch implements MagnificationGestureDetector.OnGestureL
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-accessibility-MagnificationModeSwitch */
-    public /* synthetic */ WindowInsets mo29907xb290f910(View view, WindowInsets windowInsets) {
+    public /* synthetic */ WindowInsets mo29917xb290f910(View view, WindowInsets windowInsets) {
         if (!this.mImageView.getHandler().hasCallbacks(this.mWindowInsetChangeRunnable)) {
             this.mImageView.getHandler().post(this.mWindowInsetChangeRunnable);
         }
@@ -136,29 +136,29 @@ class MagnificationModeSwitch implements MagnificationGestureDetector.OnGestureL
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$1$com-android-systemui-accessibility-MagnificationModeSwitch */
-    public /* synthetic */ void mo29908xb894c46f() {
+    public /* synthetic */ void mo29918xb894c46f() {
         this.mImageView.animate().alpha(1.0f).setDuration(300).start();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$3$com-android-systemui-accessibility-MagnificationModeSwitch */
-    public /* synthetic */ void mo29910xc49c5b2d() {
+    public /* synthetic */ void mo29920xc49c5b2d() {
         this.mImageView.animate().alpha(0.0f).setDuration(300).withEndAction(new MagnificationModeSwitch$$ExternalSyntheticLambda6(this)).start();
         this.mIsFadeOutAnimating = true;
     }
 
     /* access modifiers changed from: private */
     public CharSequence formatStateDescription() {
-        return this.mContext.getResources().getString(this.mMagnificationMode == 2 ? C1893R.string.magnification_mode_switch_state_window : C1893R.string.magnification_mode_switch_state_full_screen);
+        return this.mContext.getResources().getString(this.mMagnificationMode == 2 ? C1894R.string.magnification_mode_switch_state_window : C1894R.string.magnification_mode_switch_state_full_screen);
     }
 
     private void applyResourcesValuesWithDensityChanged() {
-        int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.magnification_switch_button_size);
+        int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.magnification_switch_button_size);
         this.mParams.height = dimensionPixelSize;
         this.mParams.width = dimensionPixelSize;
         if (this.mIsVisible) {
             stickToScreenEdge(this.mToLeftScreenEdge);
-            mo29909xbe988fce();
+            mo29919xbe988fce();
             showButton(this.mMagnificationMode, false);
         }
     }
@@ -212,7 +212,7 @@ class MagnificationModeSwitch implements MagnificationGestureDetector.OnGestureL
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$moveButton$4$com-android-systemui-accessibility-MagnificationModeSwitch */
-    public /* synthetic */ void mo29906xa03e7f8f(float f, float f2, long j) {
+    public /* synthetic */ void mo29916xa03e7f8f(float f, float f2, long j) {
         WindowManager.LayoutParams layoutParams = this.mParams;
         layoutParams.x = (int) (((float) layoutParams.x) + f);
         WindowManager.LayoutParams layoutParams2 = this.mParams;
@@ -222,7 +222,7 @@ class MagnificationModeSwitch implements MagnificationGestureDetector.OnGestureL
 
     /* access modifiers changed from: package-private */
     /* renamed from: removeButton */
-    public void mo29909xbe988fce() {
+    public void mo29919xbe988fce() {
         if (this.mIsVisible) {
             this.mImageView.removeCallbacks(this.mFadeInAnimationTask);
             this.mImageView.removeCallbacks(this.mFadeOutAnimationTask);
@@ -331,7 +331,7 @@ class MagnificationModeSwitch implements MagnificationGestureDetector.OnGestureL
 
     /* access modifiers changed from: private */
     public void handleSingleTap() {
-        mo29909xbe988fce();
+        mo29919xbe988fce();
         toggleMagnificationMode();
     }
 
@@ -344,7 +344,7 @@ class MagnificationModeSwitch implements MagnificationGestureDetector.OnGestureL
     }
 
     private static WindowManager.LayoutParams createLayoutParams(Context context) {
-        int dimensionPixelSize = context.getResources().getDimensionPixelSize(C1893R.dimen.magnification_switch_button_size);
+        int dimensionPixelSize = context.getResources().getDimensionPixelSize(C1894R.dimen.magnification_switch_button_size);
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(dimensionPixelSize, dimensionPixelSize, 2039, 8, -2);
         layoutParams.gravity = 51;
         layoutParams.accessibilityTitle = getAccessibilityWindowTitle(context);
@@ -353,7 +353,7 @@ class MagnificationModeSwitch implements MagnificationGestureDetector.OnGestureL
     }
 
     private Rect getDraggableWindowBounds() {
-        int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.magnification_switch_button_margin);
+        int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.magnification_switch_button_margin);
         WindowMetrics currentWindowMetrics = this.mWindowManager.getCurrentWindowMetrics();
         Insets insetsIgnoringVisibility = currentWindowMetrics.getWindowInsets().getInsetsIgnoringVisibility(WindowInsets.Type.systemBars() | WindowInsets.Type.displayCutout());
         Rect rect = new Rect(currentWindowMetrics.getBounds());
@@ -374,7 +374,7 @@ class MagnificationModeSwitch implements MagnificationGestureDetector.OnGestureL
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setSystemGestureExclusion$5$com-android-systemui-accessibility-MagnificationModeSwitch */
-    public /* synthetic */ void mo29911xc1717db5() {
+    public /* synthetic */ void mo29921xc1717db5() {
         this.mImageView.setSystemGestureExclusionRects(Collections.singletonList(new Rect(0, 0, this.mImageView.getWidth(), this.mImageView.getHeight())));
     }
 }

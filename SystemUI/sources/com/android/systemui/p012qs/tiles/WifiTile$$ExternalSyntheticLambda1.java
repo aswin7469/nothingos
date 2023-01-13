@@ -12,6 +12,6 @@ public final /* synthetic */ class WifiTile$$ExternalSyntheticLambda1 implements
     }
 
     public final void onClick(View view) {
-        this.f$0.m2983lambda$createTileView$1$comandroidsystemuiqstilesWifiTile(view);
+        this.f$0.m2987lambda$createTileView$1$comandroidsystemuiqstilesWifiTile(view);
     }
 }

@@ -9,7 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewOutlineProvider;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
@@ -92,12 +92,12 @@ public class AuthPanelController extends ViewOutlineProvider {
         if (this.mUseFullScreen) {
             i4 = 0;
         } else {
-            i4 = (int) this.mContext.getResources().getDimension(C1893R.dimen.biometric_dialog_border_padding);
+            i4 = (int) this.mContext.getResources().getDimension(C1894R.dimen.biometric_dialog_border_padding);
         }
         if (this.mUseFullScreen) {
             f = 0.0f;
         } else {
-            f = this.mContext.getResources().getDimension(C1893R.dimen.biometric_dialog_corner_size);
+            f = this.mContext.getResources().getDimension(C1894R.dimen.biometric_dialog_corner_size);
         }
         if (i3 > 0) {
             ValueAnimator ofInt = ValueAnimator.ofInt(new int[]{this.mMargin, i4});
@@ -124,26 +124,26 @@ public class AuthPanelController extends ViewOutlineProvider {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateForContentDimensions$0$com-android-systemui-biometrics-AuthPanelController */
-    public /* synthetic */ void mo30692x56827c91(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo30703x56827c91(ValueAnimator valueAnimator) {
         this.mMargin = ((Integer) valueAnimator.getAnimatedValue()).intValue();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateForContentDimensions$1$com-android-systemui-biometrics-AuthPanelController */
-    public /* synthetic */ void mo30693xe3bd2e12(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo30704xe3bd2e12(ValueAnimator valueAnimator) {
         this.mCornerRadius = ((Float) valueAnimator.getAnimatedValue()).floatValue();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateForContentDimensions$2$com-android-systemui-biometrics-AuthPanelController */
-    public /* synthetic */ void mo30694x70f7df93(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo30705x70f7df93(ValueAnimator valueAnimator) {
         this.mContentHeight = ((Integer) valueAnimator.getAnimatedValue()).intValue();
         this.mPanelView.invalidateOutline();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateForContentDimensions$3$com-android-systemui-biometrics-AuthPanelController */
-    public /* synthetic */ void mo30695xfe329114(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo30706xfe329114(ValueAnimator valueAnimator) {
         this.mContentWidth = ((Integer) valueAnimator.getAnimatedValue()).intValue();
     }
 
@@ -160,8 +160,8 @@ public class AuthPanelController extends ViewOutlineProvider {
     AuthPanelController(Context context, View view) {
         this.mContext = context;
         this.mPanelView = view;
-        this.mCornerRadius = context.getResources().getDimension(C1893R.dimen.biometric_dialog_corner_size);
-        this.mMargin = (int) context.getResources().getDimension(C1893R.dimen.biometric_dialog_border_padding);
+        this.mCornerRadius = context.getResources().getDimension(C1894R.dimen.biometric_dialog_corner_size);
+        this.mMargin = (int) context.getResources().getDimension(C1894R.dimen.biometric_dialog_border_padding);
         view.setOutlineProvider(this);
         view.setClipToOutline(true);
     }

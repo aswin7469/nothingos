@@ -17,7 +17,7 @@ import android.view.animation.Interpolator;
 import android.widget.TextView;
 import com.android.internal.widget.LockscreenCredential;
 import com.android.internal.widget.TextViewInputDisabler;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.DejankUtils;
 import com.android.systemui.animation.Interpolators;
 
@@ -31,19 +31,19 @@ public class KeyguardPasswordView extends KeyguardAbsKeyInputView {
 
     /* access modifiers changed from: protected */
     public int getPasswordTextViewId() {
-        return C1893R.C1897id.passwordEntry;
+        return C1894R.C1898id.passwordEntry;
     }
 
     /* access modifiers changed from: protected */
     public int getPromptReasonStringRes(int i) {
         if (i != 0) {
-            return i != 1 ? i != 3 ? i != 4 ? C1893R.string.kg_prompt_reason_timeout_password : C1893R.string.kg_prompt_reason_user_request : C1893R.string.kg_prompt_reason_device_admin : C1893R.string.kg_prompt_reason_restart_password;
+            return i != 1 ? i != 3 ? i != 4 ? C1894R.string.kg_prompt_reason_timeout_password : C1894R.string.kg_prompt_reason_user_request : C1894R.string.kg_prompt_reason_device_admin : C1894R.string.kg_prompt_reason_restart_password;
         }
         return 0;
     }
 
     public int getWrongPasswordStringId() {
-        return C1893R.string.kg_wrong_password;
+        return C1894R.string.kg_wrong_password;
     }
 
     /* access modifiers changed from: protected */
@@ -56,7 +56,7 @@ public class KeyguardPasswordView extends KeyguardAbsKeyInputView {
 
     public KeyguardPasswordView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        this.mDisappearYTranslation = getResources().getDimensionPixelSize(C1893R.dimen.disappear_y_translation);
+        this.mDisappearYTranslation = getResources().getDimensionPixelSize(C1894R.dimen.disappear_y_translation);
         this.mLinearOutSlowInInterpolator = AnimationUtils.loadInterpolator(context, AndroidResources.LINEAR_OUT_SLOW_IN);
         this.mFastOutLinearInInterpolator = AnimationUtils.loadInterpolator(context, AndroidResources.FAST_OUT_LINEAR_IN);
     }

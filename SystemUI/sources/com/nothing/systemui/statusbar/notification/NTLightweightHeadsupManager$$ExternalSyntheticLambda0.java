@@ -9,6 +9,6 @@ public final /* synthetic */ class NTLightweightHeadsupManager$$ExternalSyntheti
     }
 
     public final void run() {
-        NTLightweightHeadsupManager.m3525hideGameModeToast$lambda1(this.f$0);
+        NTLightweightHeadsupManager.m3542hideGameModeToast$lambda3(this.f$0);
     }
 }

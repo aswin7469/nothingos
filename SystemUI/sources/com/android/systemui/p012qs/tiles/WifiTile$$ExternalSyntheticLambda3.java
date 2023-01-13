@@ -10,6 +10,6 @@ public final /* synthetic */ class WifiTile$$ExternalSyntheticLambda3 implements
     }
 
     public final void run() {
-        this.f$0.m2985lambda$handleClick$3$comandroidsystemuiqstilesWifiTile();
+        this.f$0.m2989lambda$handleClick$3$comandroidsystemuiqstilesWifiTile();
     }
 }

@@ -23,7 +23,7 @@ import androidx.core.view.AccessibilityDelegateCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import androidx.core.widget.TextViewCompat;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 
 public class NavigationMenuItemView extends ForegroundLinearLayout implements MenuView.ItemView {
     private static final int[] CHECKED_STATE_SET = {16842912};
@@ -59,7 +59,7 @@ public class NavigationMenuItemView extends ForegroundLinearLayout implements Me
 
     public NavigationMenuItemView(Context context, AttributeSet attributeSet, int i) {
         super(context, attributeSet, i);
-        C37431 r4 = new AccessibilityDelegateCompat() {
+        C37531 r4 = new AccessibilityDelegateCompat() {
             public void onInitializeAccessibilityNodeInfo(View view, AccessibilityNodeInfoCompat accessibilityNodeInfoCompat) {
                 super.onInitializeAccessibilityNodeInfo(view, accessibilityNodeInfoCompat);
                 accessibilityNodeInfoCompat.setCheckable(NavigationMenuItemView.this.checkable);
@@ -67,9 +67,9 @@ public class NavigationMenuItemView extends ForegroundLinearLayout implements Me
         };
         this.accessibilityDelegate = r4;
         setOrientation(0);
-        LayoutInflater.from(context).inflate(C3621R.layout.design_navigation_menu_item, this, true);
-        setIconSize(context.getResources().getDimensionPixelSize(C3621R.dimen.design_navigation_icon_size));
-        CheckedTextView checkedTextView = (CheckedTextView) findViewById(C3621R.C3624id.design_menu_item_text);
+        LayoutInflater.from(context).inflate(C3631R.layout.design_navigation_menu_item, this, true);
+        setIconSize(context.getResources().getDimensionPixelSize(C3631R.dimen.design_navigation_icon_size));
+        CheckedTextView checkedTextView = (CheckedTextView) findViewById(C3631R.C3634id.design_menu_item_text);
         this.textView = checkedTextView;
         checkedTextView.setDuplicateParentStateEnabled(true);
         ViewCompat.setAccessibilityDelegate(checkedTextView, r4);
@@ -131,7 +131,7 @@ public class NavigationMenuItemView extends ForegroundLinearLayout implements Me
     private void setActionView(View view) {
         if (view != null) {
             if (this.actionArea == null) {
-                this.actionArea = (FrameLayout) ((ViewStub) findViewById(C3621R.C3624id.design_menu_item_action_area_stub)).inflate();
+                this.actionArea = (FrameLayout) ((ViewStub) findViewById(C3631R.C3634id.design_menu_item_action_area_stub)).inflate();
             }
             this.actionArea.removeAllViews();
             this.actionArea.addView(view);
@@ -184,7 +184,7 @@ public class NavigationMenuItemView extends ForegroundLinearLayout implements Me
             drawable.setBounds(0, 0, i, i);
         } else if (this.needsEmptyIcon) {
             if (this.emptyDrawable == null) {
-                Drawable drawable2 = ResourcesCompat.getDrawable(getResources(), C3621R.C3623drawable.navigation_empty_icon, getContext().getTheme());
+                Drawable drawable2 = ResourcesCompat.getDrawable(getResources(), C3631R.C3633drawable.navigation_empty_icon, getContext().getTheme());
                 this.emptyDrawable = drawable2;
                 if (drawable2 != null) {
                     int i2 = this.iconSize;

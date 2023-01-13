@@ -12,6 +12,6 @@ public final /* synthetic */ class NotificationInlineImageResolver$$ExternalSynt
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo41658xbdc71a00((Uri) obj);
+        this.f$0.mo41666xbdc71a00((Uri) obj);
     }
 }

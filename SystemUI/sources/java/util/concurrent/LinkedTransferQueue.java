@@ -35,7 +35,7 @@ public class LinkedTransferQueue<E> extends AbstractQueue<E> implements Transfer
     private static final int MAX_HOPS = 8;
 
     /* renamed from: MP */
-    private static final boolean f758MP = false;
+    private static final boolean f756MP = false;
     static final VarHandle NEXT = null;
     private static final int NOW = 0;
     private static final VarHandle SWEEPVOTES = null;
@@ -123,7 +123,7 @@ public class LinkedTransferQueue<E> extends AbstractQueue<E> implements Transfer
         if (Runtime.getRuntime().availableProcessors() <= 1) {
             z = false;
         }
-        f758MP = z;
+        f756MP = z;
         try {
             MethodHandles.Lookup lookup = MethodHandles.lookup();
             HEAD = lookup.findVarHandle(cls, "head", Node.class);
@@ -446,7 +446,7 @@ public class LinkedTransferQueue<E> extends AbstractQueue<E> implements Transfer
     }
 
     private static int spinsFor(Node node, boolean z) {
-        if (!f758MP || node == null) {
+        if (!f756MP || node == null) {
             return 0;
         }
         if (node.isData != z) {

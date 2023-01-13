@@ -16,6 +16,6 @@ public final /* synthetic */ class LongScreenshotActivity$$ExternalSyntheticLamb
     }
 
     public final void run() {
-        this.f$0.mo37375x107eeeb4(this.f$1, this.f$2);
+        this.f$0.mo37376x107eeeb4(this.f$1, this.f$2);
     }
 }

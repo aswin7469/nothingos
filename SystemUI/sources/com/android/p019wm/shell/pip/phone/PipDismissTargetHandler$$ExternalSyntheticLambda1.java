@@ -14,6 +14,6 @@ public final /* synthetic */ class PipDismissTargetHandler$$ExternalSyntheticLam
     }
 
     public final Object invoke(Object obj, Object obj2, Object obj3, Object obj4, Object obj5) {
-        return this.f$0.mo50353x4e5e0571((MagnetizedObject.MagneticTarget) obj, (Float) obj2, (Float) obj3, (Boolean) obj4, (Function0) obj5);
+        return this.f$0.mo50362x4e5e0571((MagnetizedObject.MagneticTarget) obj, (Float) obj2, (Float) obj3, (Boolean) obj4, (Function0) obj5);
     }
 }

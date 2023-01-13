@@ -61,7 +61,7 @@ public final class ClockManager {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-keyguard-clock-ClockManager  reason: not valid java name */
-    public /* synthetic */ void m2314lambda$new$0$comandroidkeyguardclockClockManager(Integer num) {
+    public /* synthetic */ void m2320lambda$new$0$comandroidkeyguardclockClockManager(Integer num) {
         reload();
     }
 
@@ -187,7 +187,7 @@ public final class ClockManager {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$reload$3$com-android-keyguard-clock-ClockManager  reason: not valid java name */
-    public /* synthetic */ void m2315lambda$reload$3$comandroidkeyguardclockClockManager(ClockChangedListener clockChangedListener, AvailableClocks availableClocks) {
+    public /* synthetic */ void m2321lambda$reload$3$comandroidkeyguardclockClockManager(ClockChangedListener clockChangedListener, AvailableClocks availableClocks) {
         availableClocks.reloadCurrentClock();
         ClockPlugin currentClock = availableClocks.getCurrentClock();
         if (Looper.myLooper() == Looper.getMainLooper()) {
@@ -251,7 +251,7 @@ public final class ClockManager {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$addClockPlugin$0$com-android-keyguard-clock-ClockManager$AvailableClocks */
-        public /* synthetic */ Bitmap mo26607xc832a94a(ClockPlugin clockPlugin) {
+        public /* synthetic */ Bitmap mo26608xc832a94a(ClockPlugin clockPlugin) {
             return clockPlugin.getPreview(ClockManager.this.mWidth, ClockManager.this.mHeight);
         }
 

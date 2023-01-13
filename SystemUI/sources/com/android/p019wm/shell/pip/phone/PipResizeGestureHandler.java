@@ -18,7 +18,7 @@ import android.view.InputMonitor;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 import com.android.internal.policy.TaskResizingAlgorithm;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.common.ShellExecutor;
 import com.android.p019wm.shell.pip.PipBoundsAlgorithm;
 import com.android.p019wm.shell.pip.PipBoundsState;
@@ -120,8 +120,8 @@ public class PipResizeGestureHandler {
 
     private void reloadResources() {
         Resources resources = this.mContext.getResources();
-        this.mDelta = resources.getDimensionPixelSize(C3343R.dimen.pip_resize_edge_size);
-        this.mEnableDragCornerResize = resources.getBoolean(C3343R.bool.config_pipEnableDragCornerResize);
+        this.mDelta = resources.getDimensionPixelSize(C3353R.dimen.pip_resize_edge_size);
+        this.mEnableDragCornerResize = resources.getBoolean(C3353R.bool.config_pipEnableDragCornerResize);
         this.mTouchSlop = (float) ViewConfiguration.get(this.mContext).getScaledTouchSlop();
     }
 
@@ -179,7 +179,7 @@ public class PipResizeGestureHandler {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateIsEnabled$0$com-android-wm-shell-pip-phone-PipResizeGestureHandler */
-    public /* synthetic */ void mo50457xbc679b54() {
+    public /* synthetic */ void mo50466xbc679b54() {
         this.mInputEventReceiver = new PipResizeInputEventReceiver(this.mInputMonitor.getInputChannel(), Looper.myLooper());
     }
 
@@ -393,7 +393,7 @@ public class PipResizeGestureHandler {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$finishResize$1$com-android-wm-shell-pip-phone-PipResizeGestureHandler */
-    public /* synthetic */ void mo50456x522235c0(Rect rect) {
+    public /* synthetic */ void mo50465x522235c0(Rect rect) {
         this.mUserResizeBounds.set(this.mLastResizeBounds);
         this.mMotionHelper.synchronizePinnedStackBounds();
         this.mUpdateMovementBoundsRunnable.run();

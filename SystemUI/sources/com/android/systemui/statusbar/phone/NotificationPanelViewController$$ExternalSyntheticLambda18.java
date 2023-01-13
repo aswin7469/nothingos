@@ -12,6 +12,6 @@ public final /* synthetic */ class NotificationPanelViewController$$ExternalSynt
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo44614x2abeb6a3((Property) obj);
+        this.f$0.mo44629x2abeb6a3((Property) obj);
     }
 }

@@ -68,7 +68,7 @@ final class DecodedBitStreamParser {
             com.google.zxing.datamatrix.decoder.DecodedBitStreamParser$Mode r8 = decodeAsciiSegment(r0, r1, r2, r9)
             goto L_0x005a
         L_0x0030:
-            int[] r10 = com.google.zxing.datamatrix.decoder.DecodedBitStreamParser.C40941.f466xb73eb560
+            int[] r10 = com.google.zxing.datamatrix.decoder.DecodedBitStreamParser.C41041.f465xb73eb560
             int r8 = r8.ordinal()
             r8 = r10[r8]
             switch(r8) {
@@ -176,10 +176,10 @@ final class DecodedBitStreamParser {
     }
 
     /* renamed from: com.google.zxing.datamatrix.decoder.DecodedBitStreamParser$1 */
-    static /* synthetic */ class C40941 {
+    static /* synthetic */ class C41041 {
 
         /* renamed from: $SwitchMap$com$google$zxing$datamatrix$decoder$DecodedBitStreamParser$Mode */
-        static final /* synthetic */ int[] f466xb73eb560;
+        static final /* synthetic */ int[] f465xb73eb560;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(14:0|1|2|3|4|5|6|7|8|9|10|11|12|14) */
         /* JADX WARNING: Failed to process nested try/catch */
@@ -193,37 +193,37 @@ final class DecodedBitStreamParser {
                 com.google.zxing.datamatrix.decoder.DecodedBitStreamParser$Mode[] r0 = com.google.zxing.datamatrix.decoder.DecodedBitStreamParser.Mode.values()
                 int r0 = r0.length
                 int[] r0 = new int[r0]
-                f466xb73eb560 = r0
+                f465xb73eb560 = r0
                 com.google.zxing.datamatrix.decoder.DecodedBitStreamParser$Mode r1 = com.google.zxing.datamatrix.decoder.DecodedBitStreamParser.Mode.C40_ENCODE     // Catch:{ NoSuchFieldError -> 0x0012 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
                 r2 = 1
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0012 }
             L_0x0012:
-                int[] r0 = f466xb73eb560     // Catch:{ NoSuchFieldError -> 0x001d }
+                int[] r0 = f465xb73eb560     // Catch:{ NoSuchFieldError -> 0x001d }
                 com.google.zxing.datamatrix.decoder.DecodedBitStreamParser$Mode r1 = com.google.zxing.datamatrix.decoder.DecodedBitStreamParser.Mode.TEXT_ENCODE     // Catch:{ NoSuchFieldError -> 0x001d }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
                 r2 = 2
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x001d }
             L_0x001d:
-                int[] r0 = f466xb73eb560     // Catch:{ NoSuchFieldError -> 0x0028 }
+                int[] r0 = f465xb73eb560     // Catch:{ NoSuchFieldError -> 0x0028 }
                 com.google.zxing.datamatrix.decoder.DecodedBitStreamParser$Mode r1 = com.google.zxing.datamatrix.decoder.DecodedBitStreamParser.Mode.ANSIX12_ENCODE     // Catch:{ NoSuchFieldError -> 0x0028 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0028 }
                 r2 = 3
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0028 }
             L_0x0028:
-                int[] r0 = f466xb73eb560     // Catch:{ NoSuchFieldError -> 0x0033 }
+                int[] r0 = f465xb73eb560     // Catch:{ NoSuchFieldError -> 0x0033 }
                 com.google.zxing.datamatrix.decoder.DecodedBitStreamParser$Mode r1 = com.google.zxing.datamatrix.decoder.DecodedBitStreamParser.Mode.EDIFACT_ENCODE     // Catch:{ NoSuchFieldError -> 0x0033 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0033 }
                 r2 = 4
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0033 }
             L_0x0033:
-                int[] r0 = f466xb73eb560     // Catch:{ NoSuchFieldError -> 0x003e }
+                int[] r0 = f465xb73eb560     // Catch:{ NoSuchFieldError -> 0x003e }
                 com.google.zxing.datamatrix.decoder.DecodedBitStreamParser$Mode r1 = com.google.zxing.datamatrix.decoder.DecodedBitStreamParser.Mode.BASE256_ENCODE     // Catch:{ NoSuchFieldError -> 0x003e }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x003e }
                 r2 = 5
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x003e }
             L_0x003e:
-                int[] r0 = f466xb73eb560     // Catch:{ NoSuchFieldError -> 0x0049 }
+                int[] r0 = f465xb73eb560     // Catch:{ NoSuchFieldError -> 0x0049 }
                 com.google.zxing.datamatrix.decoder.DecodedBitStreamParser$Mode r1 = com.google.zxing.datamatrix.decoder.DecodedBitStreamParser.Mode.ECI_ENCODE     // Catch:{ NoSuchFieldError -> 0x0049 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0049 }
                 r2 = 6
@@ -231,7 +231,7 @@ final class DecodedBitStreamParser {
             L_0x0049:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: com.google.zxing.datamatrix.decoder.DecodedBitStreamParser.C40941.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: com.google.zxing.datamatrix.decoder.DecodedBitStreamParser.C41041.<clinit>():void");
         }
     }
 

@@ -15,6 +15,6 @@ public final /* synthetic */ class KeyguardSliceProvider$$ExternalSyntheticLambd
     }
 
     public final void run() {
-        this.f$0.mo33174x500fc039(this.f$1, this.f$2);
+        this.f$0.mo33185x500fc039(this.f$1, this.f$2);
     }
 }

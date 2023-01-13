@@ -29,6 +29,6 @@ public final /* synthetic */ class DozeTriggers$$ExternalSyntheticLambda5 implem
     }
 
     public final void accept(Object obj) {
-        this.f$0.m2739lambda$onSensor$3$comandroidsystemuidozeDozeTriggers(this.f$1, this.f$2, this.f$3, this.f$4, this.f$5, this.f$6, this.f$7, this.f$8, this.f$9, (Boolean) obj);
+        this.f$0.m2744lambda$onSensor$3$comandroidsystemuidozeDozeTriggers(this.f$1, this.f$2, this.f$3, this.f$4, this.f$5, this.f$6, this.f$7, this.f$8, this.f$9, (Boolean) obj);
     }
 }

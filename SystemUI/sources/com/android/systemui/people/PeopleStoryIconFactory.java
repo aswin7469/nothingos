@@ -11,7 +11,7 @@ import android.util.IconDrawableFactory;
 import android.util.Log;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import com.android.settingslib.Utils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 
 class PeopleStoryIconFactory implements AutoCloseable {
     private static final int MAX_BADGE_SIZE = 40;
@@ -38,7 +38,7 @@ class PeopleStoryIconFactory implements AutoCloseable {
         this.mIconSize = f2 * f;
         this.mPackageManager = packageManager;
         this.mIconDrawableFactory = iconDrawableFactory;
-        this.mImportantConversationColor = context.getColor(C1893R.C1894color.important_conversation);
+        this.mImportantConversationColor = context.getColor(C1894R.C1895color.important_conversation);
         this.mAccentColor = Utils.getColorAttr(context, 17956901).getDefaultColor();
         this.mContext = context;
     }

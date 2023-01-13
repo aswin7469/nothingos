@@ -5,7 +5,7 @@ import java.util.Iterator;
 import kotlin.Metadata;
 import kotlin.jvm.internal.Intrinsics;
 
-@Metadata(mo64986d1 = {"\u0000\u000e\n\u0000\n\u0002\u0010(\n\u0000\n\u0002\u0018\u0002\n\u0000\u001a\u001f\u0010\u0000\u001a\b\u0012\u0004\u0012\u0002H\u00020\u0001\"\u0004\b\u0000\u0010\u0002*\b\u0012\u0004\u0012\u0002H\u00020\u0003H\u0002¨\u0006\u0004"}, mo64987d2 = {"iterator", "", "T", "Ljava/util/Enumeration;", "kotlin-stdlib"}, mo64988k = 5, mo64989mv = {1, 7, 1}, mo64991xi = 49, mo64992xs = "kotlin/collections/CollectionsKt")
+@Metadata(mo65042d1 = {"\u0000\u000e\n\u0000\n\u0002\u0010(\n\u0000\n\u0002\u0018\u0002\n\u0000\u001a\u001f\u0010\u0000\u001a\b\u0012\u0004\u0012\u0002H\u00020\u0001\"\u0004\b\u0000\u0010\u0002*\b\u0012\u0004\u0012\u0002H\u00020\u0003H\u0002¨\u0006\u0004"}, mo65043d2 = {"iterator", "", "T", "Ljava/util/Enumeration;", "kotlin-stdlib"}, mo65044k = 5, mo65045mv = {1, 7, 1}, mo65047xi = 49, mo65048xs = "kotlin/collections/CollectionsKt")
 /* compiled from: IteratorsJVM.kt */
 class CollectionsKt__IteratorsJVMKt extends CollectionsKt__IterablesKt {
     public static final <T> Iterator<T> iterator(Enumeration<T> enumeration) {

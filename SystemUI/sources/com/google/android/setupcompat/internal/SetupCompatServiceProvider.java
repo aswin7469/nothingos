@@ -27,7 +27,7 @@ public class SetupCompatServiceProvider {
             State state = State.CONNECTED;
             if (iBinder == null) {
                 state = State.DISCONNECTED;
-                SetupCompatServiceProvider.LOG.mo55164w("Binder is null when onServiceConnected was called!");
+                SetupCompatServiceProvider.LOG.mo55175w("Binder is null when onServiceConnected was called!");
             }
             SetupCompatServiceProvider.this.swapServiceContextAndNotify(new ServiceContext(state, ISetupCompatService.Stub.asInterface(iBinder)));
         }
@@ -63,7 +63,7 @@ public class SetupCompatServiceProvider {
     public ISetupCompatService getService(long j, TimeUnit timeUnit) throws TimeoutException, InterruptedException {
         Preconditions.checkState(disableLooperCheckForTesting || Looper.getMainLooper() != Looper.myLooper(), "getService blocks and should not be called from the main thread.");
         ServiceContext currentServiceState = getCurrentServiceState();
-        switch (C39362.f456x90ac3479[currentServiceState.state.ordinal()]) {
+        switch (C39462.f455x90ac3479[currentServiceState.state.ordinal()]) {
             case 1:
                 return currentServiceState.compatService;
             case 2:
@@ -76,7 +76,7 @@ public class SetupCompatServiceProvider {
                 requestServiceBind();
                 return waitForConnection(j, timeUnit);
             case 7:
-                LOG.mo55164w("NOT_STARTED state only possible before instance is created.");
+                LOG.mo55175w("NOT_STARTED state only possible before instance is created.");
                 return null;
             default:
                 throw new IllegalStateException("Unknown state = " + currentServiceState.state);
@@ -84,10 +84,10 @@ public class SetupCompatServiceProvider {
     }
 
     /* renamed from: com.google.android.setupcompat.internal.SetupCompatServiceProvider$2 */
-    static /* synthetic */ class C39362 {
+    static /* synthetic */ class C39462 {
 
         /* renamed from: $SwitchMap$com$google$android$setupcompat$internal$SetupCompatServiceProvider$State */
-        static final /* synthetic */ int[] f456x90ac3479;
+        static final /* synthetic */ int[] f455x90ac3479;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(14:0|1|2|3|4|5|6|7|8|9|10|11|12|(3:13|14|16)) */
         /* JADX WARNING: Can't wrap try/catch for region: R(16:0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|16) */
@@ -103,43 +103,43 @@ public class SetupCompatServiceProvider {
                 com.google.android.setupcompat.internal.SetupCompatServiceProvider$State[] r0 = com.google.android.setupcompat.internal.SetupCompatServiceProvider.State.values()
                 int r0 = r0.length
                 int[] r0 = new int[r0]
-                f456x90ac3479 = r0
+                f455x90ac3479 = r0
                 com.google.android.setupcompat.internal.SetupCompatServiceProvider$State r1 = com.google.android.setupcompat.internal.SetupCompatServiceProvider.State.CONNECTED     // Catch:{ NoSuchFieldError -> 0x0012 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
                 r2 = 1
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0012 }
             L_0x0012:
-                int[] r0 = f456x90ac3479     // Catch:{ NoSuchFieldError -> 0x001d }
+                int[] r0 = f455x90ac3479     // Catch:{ NoSuchFieldError -> 0x001d }
                 com.google.android.setupcompat.internal.SetupCompatServiceProvider$State r1 = com.google.android.setupcompat.internal.SetupCompatServiceProvider.State.SERVICE_NOT_USABLE     // Catch:{ NoSuchFieldError -> 0x001d }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
                 r2 = 2
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x001d }
             L_0x001d:
-                int[] r0 = f456x90ac3479     // Catch:{ NoSuchFieldError -> 0x0028 }
+                int[] r0 = f455x90ac3479     // Catch:{ NoSuchFieldError -> 0x0028 }
                 com.google.android.setupcompat.internal.SetupCompatServiceProvider$State r1 = com.google.android.setupcompat.internal.SetupCompatServiceProvider.State.BIND_FAILED     // Catch:{ NoSuchFieldError -> 0x0028 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0028 }
                 r2 = 3
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0028 }
             L_0x0028:
-                int[] r0 = f456x90ac3479     // Catch:{ NoSuchFieldError -> 0x0033 }
+                int[] r0 = f455x90ac3479     // Catch:{ NoSuchFieldError -> 0x0033 }
                 com.google.android.setupcompat.internal.SetupCompatServiceProvider$State r1 = com.google.android.setupcompat.internal.SetupCompatServiceProvider.State.DISCONNECTED     // Catch:{ NoSuchFieldError -> 0x0033 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0033 }
                 r2 = 4
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0033 }
             L_0x0033:
-                int[] r0 = f456x90ac3479     // Catch:{ NoSuchFieldError -> 0x003e }
+                int[] r0 = f455x90ac3479     // Catch:{ NoSuchFieldError -> 0x003e }
                 com.google.android.setupcompat.internal.SetupCompatServiceProvider$State r1 = com.google.android.setupcompat.internal.SetupCompatServiceProvider.State.BINDING     // Catch:{ NoSuchFieldError -> 0x003e }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x003e }
                 r2 = 5
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x003e }
             L_0x003e:
-                int[] r0 = f456x90ac3479     // Catch:{ NoSuchFieldError -> 0x0049 }
+                int[] r0 = f455x90ac3479     // Catch:{ NoSuchFieldError -> 0x0049 }
                 com.google.android.setupcompat.internal.SetupCompatServiceProvider$State r1 = com.google.android.setupcompat.internal.SetupCompatServiceProvider.State.REBIND_REQUIRED     // Catch:{ NoSuchFieldError -> 0x0049 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0049 }
                 r2 = 6
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0049 }
             L_0x0049:
-                int[] r0 = f456x90ac3479     // Catch:{ NoSuchFieldError -> 0x0054 }
+                int[] r0 = f455x90ac3479     // Catch:{ NoSuchFieldError -> 0x0054 }
                 com.google.android.setupcompat.internal.SetupCompatServiceProvider$State r1 = com.google.android.setupcompat.internal.SetupCompatServiceProvider.State.NOT_STARTED     // Catch:{ NoSuchFieldError -> 0x0054 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0054 }
                 r2 = 7
@@ -147,7 +147,7 @@ public class SetupCompatServiceProvider {
             L_0x0054:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: com.google.android.setupcompat.internal.SetupCompatServiceProvider.C39362.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: com.google.android.setupcompat.internal.SetupCompatServiceProvider.C39462.<clinit>():void");
         }
     }
 
@@ -215,7 +215,7 @@ public class SetupCompatServiceProvider {
             r3.<init>((java.lang.String) r0)     // Catch:{ all -> 0x0079 }
             java.lang.StringBuilder r0 = r3.append((java.lang.Object) r1)     // Catch:{ all -> 0x0079 }
             java.lang.String r0 = r0.toString()     // Catch:{ all -> 0x0079 }
-            r2.mo55159e(r0)     // Catch:{ all -> 0x0079 }
+            r2.mo55170e(r0)     // Catch:{ all -> 0x0079 }
             r0 = 0
         L_0x004a:
             if (r0 == 0) goto L_0x0066
@@ -237,7 +237,7 @@ public class SetupCompatServiceProvider {
             r5.swapServiceContextAndNotify(r0)     // Catch:{ all -> 0x0079 }
             com.google.android.setupcompat.util.Logger r0 = LOG     // Catch:{ all -> 0x0079 }
             java.lang.String r1 = "Context#bindService did not succeed."
-            r0.mo55159e(r1)     // Catch:{ all -> 0x0079 }
+            r0.mo55170e(r1)     // Catch:{ all -> 0x0079 }
         L_0x0077:
             monitor-exit(r5)
             return

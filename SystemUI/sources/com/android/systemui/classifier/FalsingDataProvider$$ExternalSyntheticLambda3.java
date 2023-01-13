@@ -12,6 +12,6 @@ public final /* synthetic */ class FalsingDataProvider$$ExternalSyntheticLambda3
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo31248x8cafd2ed((FalsingDataProvider.GestureFinalizedListener) obj);
+        this.f$0.mo31259x8cafd2ed((FalsingDataProvider.GestureFinalizedListener) obj);
     }
 }

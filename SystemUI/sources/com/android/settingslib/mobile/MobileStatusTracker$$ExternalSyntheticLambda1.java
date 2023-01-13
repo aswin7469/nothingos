@@ -9,6 +9,6 @@ public final /* synthetic */ class MobileStatusTracker$$ExternalSyntheticLambda1
     }
 
     public final void run() {
-        this.f$0.m2505lambda$new$0$comandroidsettingslibmobileMobileStatusTracker();
+        this.f$0.m2511lambda$new$0$comandroidsettingslibmobileMobileStatusTracker();
     }
 }

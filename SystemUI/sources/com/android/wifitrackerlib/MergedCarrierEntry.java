@@ -29,7 +29,7 @@ public class MergedCarrierEntry extends WifiEntry {
     }
 
     public String getSummary(boolean z) {
-        StringJoiner stringJoiner = new StringJoiner(this.mContext.getString(C3341R.string.wifitrackerlib_summary_separator));
+        StringJoiner stringJoiner = new StringJoiner(this.mContext.getString(C3351R.string.wifitrackerlib_summary_separator));
         if (!z) {
             String verboseLoggingDescription = Utils.getVerboseLoggingDescription(this);
             if (!TextUtils.isEmpty(verboseLoggingDescription)) {
@@ -89,7 +89,7 @@ public class MergedCarrierEntry extends WifiEntry {
         this.mConnectCallback = connectCallback;
         this.mWifiManager.startRestrictingAutoJoinToSubscriptionId(this.mSubscriptionId);
         if (z) {
-            Toast.makeText(this.mContext, C3341R.string.wifitrackerlib_wifi_wont_autoconnect_for_now, 0).show();
+            Toast.makeText(this.mContext, C3351R.string.wifitrackerlib_wifi_wont_autoconnect_for_now, 0).show();
         }
         if (this.mConnectCallback != null) {
             this.mCallbackHandler.post(new MergedCarrierEntry$$ExternalSyntheticLambda1(this));
@@ -98,7 +98,7 @@ public class MergedCarrierEntry extends WifiEntry {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$connect$0$com-android-wifitrackerlib-MergedCarrierEntry  reason: not valid java name */
-    public /* synthetic */ void m3371lambda$connect$0$comandroidwifitrackerlibMergedCarrierEntry() {
+    public /* synthetic */ void m3375lambda$connect$0$comandroidwifitrackerlibMergedCarrierEntry() {
         WifiEntry.ConnectCallback connectCallback = this.mConnectCallback;
         if (connectCallback != null) {
             connectCallback.onConnectResult(0);
@@ -120,7 +120,7 @@ public class MergedCarrierEntry extends WifiEntry {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$disconnect$1$com-android-wifitrackerlib-MergedCarrierEntry */
-    public /* synthetic */ void mo47790xf1158ee9() {
+    public /* synthetic */ void mo47799xf1158ee9() {
         WifiEntry.DisconnectCallback disconnectCallback = this.mDisconnectCallback;
         if (disconnectCallback != null) {
             disconnectCallback.onDisconnectResult(0);

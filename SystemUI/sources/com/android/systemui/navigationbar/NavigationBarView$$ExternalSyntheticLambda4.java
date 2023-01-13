@@ -13,6 +13,6 @@ public final /* synthetic */ class NavigationBarView$$ExternalSyntheticLambda4 i
     }
 
     public final void run() {
-        this.f$0.mo34788xa7fec5a8(this.f$1);
+        this.f$0.mo34792xa7fec5a8(this.f$1);
     }
 }

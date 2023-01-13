@@ -12,6 +12,6 @@ public final /* synthetic */ class QSFooterViewController$$ExternalSyntheticLamb
     }
 
     public final boolean onLongClick(View view) {
-        return this.f$0.mo36077xb48f3fdc(view);
+        return this.f$0.mo36081xb48f3fdc(view);
     }
 }

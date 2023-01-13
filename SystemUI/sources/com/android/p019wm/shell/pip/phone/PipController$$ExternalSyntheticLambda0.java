@@ -14,6 +14,6 @@ public final /* synthetic */ class PipController$$ExternalSyntheticLambda0 imple
     }
 
     public final void run() {
-        this.f$0.mo50322xd33eb319(this.f$1);
+        this.f$0.mo50331xd33eb319(this.f$1);
     }
 }

@@ -12,6 +12,6 @@ public final /* synthetic */ class BubblesManager$$ExternalSyntheticLambda0 impl
     }
 
     public final boolean onNotificationRemoveRequested(String str, NotificationEntry notificationEntry, int i) {
-        return this.f$0.m3325lambda$setupNEM$0$comandroidsystemuiwmshellBubblesManager(str, notificationEntry, i);
+        return this.f$0.m3329lambda$setupNEM$0$comandroidsystemuiwmshellBubblesManager(str, notificationEntry, i);
     }
 }

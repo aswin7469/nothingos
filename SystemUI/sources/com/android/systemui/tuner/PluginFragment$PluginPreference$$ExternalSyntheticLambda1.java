@@ -12,6 +12,6 @@ public final /* synthetic */ class PluginFragment$PluginPreference$$ExternalSynt
     }
 
     public final boolean onLongClick(View view) {
-        return this.f$0.mo46425x7d295089(view);
+        return this.f$0.mo46437x7d295089(view);
     }
 }

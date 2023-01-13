@@ -12,6 +12,6 @@ public final /* synthetic */ class SmartspaceDedupingCoordinator$$ExternalSynthe
     }
 
     public final boolean shouldSuppressOnKeyguard(NotificationEntry notificationEntry) {
-        return SmartspaceDedupingCoordinator.m3113attach$lambda0(this.f$0, notificationEntry);
+        return SmartspaceDedupingCoordinator.m3117attach$lambda0(this.f$0, notificationEntry);
     }
 }

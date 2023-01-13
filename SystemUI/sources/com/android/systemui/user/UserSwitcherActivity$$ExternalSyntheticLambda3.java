@@ -9,6 +9,6 @@ public final /* synthetic */ class UserSwitcherActivity$$ExternalSyntheticLambda
     }
 
     public final void run() {
-        UserSwitcherActivity.m3299onCreate$lambda4(this.f$0);
+        UserSwitcherActivity.m3304onCreate$lambda4(this.f$0);
     }
 }

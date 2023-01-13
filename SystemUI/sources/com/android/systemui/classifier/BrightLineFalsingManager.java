@@ -85,7 +85,7 @@ public class BrightLineFalsingManager implements FalsingManager {
 
     @Inject
     public BrightLineFalsingManager(FalsingDataProvider falsingDataProvider, MetricsLogger metricsLogger, @Named("bright_line_gesture_classifiers") Set<FalsingClassifier> set, SingleTapClassifier singleTapClassifier, DoubleTapClassifier doubleTapClassifier, HistoryTracker historyTracker, KeyguardStateController keyguardStateController, AccessibilityManager accessibilityManager, @TestHarness boolean z) {
-        C20051 r0 = new FalsingDataProvider.SessionListener() {
+        C20071 r0 = new FalsingDataProvider.SessionListener() {
             public void onSessionEnded() {
                 BrightLineFalsingManager.this.mClassifiers.forEach(new BrightLineFalsingManager$1$$ExternalSyntheticLambda0());
             }
@@ -95,7 +95,7 @@ public class BrightLineFalsingManager implements FalsingManager {
             }
         };
         this.mSessionListener = r0;
-        C20062 r1 = new HistoryTracker.BeliefListener() {
+        C20082 r1 = new HistoryTracker.BeliefListener() {
             public void onBeliefChanged(double d) {
                 BrightLineFalsingManager.logInfo(String.format("{belief=%s confidence=%s}", Double.valueOf(BrightLineFalsingManager.this.mHistoryTracker.falseBelief()), Double.valueOf(BrightLineFalsingManager.this.mHistoryTracker.falseConfidence())));
                 if (d > BrightLineFalsingManager.FALSE_BELIEF_THRESHOLD) {
@@ -105,7 +105,7 @@ public class BrightLineFalsingManager implements FalsingManager {
             }
         };
         this.mBeliefListener = r1;
-        C20073 r2 = new FalsingDataProvider.GestureFinalizedListener() {
+        C20093 r2 = new FalsingDataProvider.GestureFinalizedListener() {
             public void onGestureFinalized(long j) {
                 if (BrightLineFalsingManager.this.mPriorResults != null) {
                     boolean anyMatch = BrightLineFalsingManager.this.mPriorResults.stream().anyMatch(new BrightLineFalsingManager$3$$ExternalSyntheticLambda0());
@@ -167,7 +167,7 @@ public class BrightLineFalsingManager implements FalsingManager {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$isFalseTouch$0$com-android-systemui-classifier-BrightLineFalsingManager */
-    public /* synthetic */ FalsingClassifier.Result mo31147xf12d76dc(int i, boolean[] zArr, FalsingClassifier falsingClassifier) {
+    public /* synthetic */ FalsingClassifier.Result mo31158xf12d76dc(int i, boolean[] zArr, FalsingClassifier falsingClassifier) {
         FalsingClassifier.Result classifyGesture = falsingClassifier.classifyGesture(i, this.mHistoryTracker.falseBelief(), this.mHistoryTracker.falseConfidence());
         zArr[0] = zArr[0] | classifyGesture.isFalse();
         return classifyGesture;
@@ -446,19 +446,19 @@ public class BrightLineFalsingManager implements FalsingManager {
         private final int mDT;
 
         /* renamed from: mX */
-        private final int f296mX;
+        private final int f295mX;
 
         /* renamed from: mY */
-        private final int f297mY;
+        private final int f296mY;
 
         XYDt(int i, int i2, int i3) {
-            this.f296mX = i;
-            this.f297mY = i2;
+            this.f295mX = i;
+            this.f296mY = i2;
             this.mDT = i3;
         }
 
         public String toString() {
-            return this.f296mX + NavigationBarInflaterView.BUTTON_SEPARATOR + this.f297mY + NavigationBarInflaterView.BUTTON_SEPARATOR + this.mDT;
+            return this.f295mX + NavigationBarInflaterView.BUTTON_SEPARATOR + this.f296mY + NavigationBarInflaterView.BUTTON_SEPARATOR + this.mDT;
         }
     }
 }

@@ -13,6 +13,6 @@ public final /* synthetic */ class PrivacyItemController$$ExternalSyntheticLambd
     }
 
     public final void run() {
-        PrivacyItemController.m2879updateListAndNotifyChanges$lambda2(this.f$0, this.f$1);
+        PrivacyItemController.m2884updateListAndNotifyChanges$lambda2(this.f$0, this.f$1);
     }
 }

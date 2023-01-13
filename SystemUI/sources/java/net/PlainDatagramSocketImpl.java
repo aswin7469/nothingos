@@ -56,9 +56,9 @@ class PlainDatagramSocketImpl extends AbstractPlainDatagramSocketImpl {
     /* access modifiers changed from: protected */
     public synchronized void bind0(int i, InetAddress inetAddress) throws SocketException {
         if (!isClosed()) {
-            IoBridge.bind(this.f556fd, inetAddress, i);
+            IoBridge.bind(this.f554fd, inetAddress, i);
             if (i == 0) {
-                this.localPort = IoBridge.getLocalInetSocketAddress(this.f556fd).getPort();
+                this.localPort = IoBridge.getLocalInetSocketAddress(this.f554fd).getPort();
             } else {
                 this.localPort = i;
             }
@@ -74,7 +74,7 @@ class PlainDatagramSocketImpl extends AbstractPlainDatagramSocketImpl {
         } else if (datagramPacket.getData() == null || datagramPacket.getAddress() == null) {
             throw new NullPointerException("null buffer || null address");
         } else {
-            IoBridge.sendto(this.f556fd, datagramPacket.getData(), datagramPacket.getOffset(), datagramPacket.getLength(), 0, this.connected ? null : datagramPacket.getAddress(), this.connected ? 0 : datagramPacket.getPort());
+            IoBridge.sendto(this.f554fd, datagramPacket.getData(), datagramPacket.getOffset(), datagramPacket.getLength(), 0, this.connected ? null : datagramPacket.getAddress(), this.connected ? 0 : datagramPacket.getPort());
         }
     }
 
@@ -101,9 +101,9 @@ class PlainDatagramSocketImpl extends AbstractPlainDatagramSocketImpl {
     private void doRecv(DatagramPacket datagramPacket, int i) throws IOException {
         if (!isClosed()) {
             if (this.timeout != 0) {
-                IoBridge.poll(this.f556fd, OsConstants.POLLIN | OsConstants.POLLERR, this.timeout);
+                IoBridge.poll(this.f554fd, OsConstants.POLLIN | OsConstants.POLLERR, this.timeout);
             }
-            IoBridge.recvfrom(false, this.f556fd, datagramPacket.getData(), datagramPacket.getOffset(), datagramPacket.bufLength, i, datagramPacket, this.connected);
+            IoBridge.recvfrom(false, this.f554fd, datagramPacket.getData(), datagramPacket.getOffset(), datagramPacket.bufLength, i, datagramPacket, this.connected);
             return;
         }
         throw new SocketException("Socket closed");
@@ -111,12 +111,12 @@ class PlainDatagramSocketImpl extends AbstractPlainDatagramSocketImpl {
 
     /* access modifiers changed from: protected */
     public void setTimeToLive(int i) throws IOException {
-        IoBridge.setSocketOption(this.f556fd, 17, Integer.valueOf(i));
+        IoBridge.setSocketOption(this.f554fd, 17, Integer.valueOf(i));
     }
 
     /* access modifiers changed from: protected */
     public int getTimeToLive() throws IOException {
-        return ((Integer) IoBridge.getSocketOption(this.f556fd, 17)).intValue();
+        return ((Integer) IoBridge.getSocketOption(this.f554fd, 17)).intValue();
     }
 
     /* access modifiers changed from: protected */
@@ -136,7 +136,7 @@ class PlainDatagramSocketImpl extends AbstractPlainDatagramSocketImpl {
     /* access modifiers changed from: protected */
     public void join(InetAddress inetAddress, NetworkInterface networkInterface) throws IOException {
         if (!isClosed()) {
-            IoBridge.setSocketOption(this.f556fd, 19, makeGroupReq(inetAddress, networkInterface));
+            IoBridge.setSocketOption(this.f554fd, 19, makeGroupReq(inetAddress, networkInterface));
             return;
         }
         throw new SocketException("Socket closed");
@@ -145,7 +145,7 @@ class PlainDatagramSocketImpl extends AbstractPlainDatagramSocketImpl {
     /* access modifiers changed from: protected */
     public void leave(InetAddress inetAddress, NetworkInterface networkInterface) throws IOException {
         if (!isClosed()) {
-            IoBridge.setSocketOption(this.f556fd, 20, makeGroupReq(inetAddress, networkInterface));
+            IoBridge.setSocketOption(this.f554fd, 20, makeGroupReq(inetAddress, networkInterface));
             return;
         }
         throw new SocketException("Socket closed");
@@ -153,10 +153,10 @@ class PlainDatagramSocketImpl extends AbstractPlainDatagramSocketImpl {
 
     /* access modifiers changed from: protected */
     public void datagramSocketCreate() throws SocketException {
-        this.f556fd = IoBridge.socket(OsConstants.AF_INET6, OsConstants.SOCK_DGRAM, 0);
-        IoBridge.setSocketOption(this.f556fd, 32, true);
+        this.f554fd = IoBridge.socket(OsConstants.AF_INET6, OsConstants.SOCK_DGRAM, 0);
+        IoBridge.setSocketOption(this.f554fd, 32, true);
         try {
-            Libcore.f857os.setsockoptInt(this.f556fd, OsConstants.IPPROTO_IP, OsConstants.IP_MULTICAST_ALL, 0);
+            Libcore.f855os.setsockoptInt(this.f554fd, OsConstants.IPPROTO_IP, OsConstants.IP_MULTICAST_ALL, 0);
         } catch (ErrnoException e) {
             throw e.rethrowAsSocketException();
         }
@@ -165,7 +165,7 @@ class PlainDatagramSocketImpl extends AbstractPlainDatagramSocketImpl {
     /* access modifiers changed from: protected */
     public void datagramSocketClose() {
         try {
-            IoBridge.closeAndSignalBlockedThreads(this.f556fd);
+            IoBridge.closeAndSignalBlockedThreads(this.f554fd);
         } catch (IOException unused) {
         }
     }
@@ -173,7 +173,7 @@ class PlainDatagramSocketImpl extends AbstractPlainDatagramSocketImpl {
     /* access modifiers changed from: protected */
     public void socketSetOption0(int i, Object obj) throws SocketException {
         if (!isClosed()) {
-            IoBridge.setSocketOption(this.f556fd, i, obj);
+            IoBridge.setSocketOption(this.f554fd, i, obj);
             return;
         }
         throw new SocketException("Socket closed");
@@ -182,7 +182,7 @@ class PlainDatagramSocketImpl extends AbstractPlainDatagramSocketImpl {
     /* access modifiers changed from: protected */
     public Object socketGetOption(int i) throws SocketException {
         if (!isClosed()) {
-            return IoBridge.getSocketOption(this.f556fd, i);
+            return IoBridge.getSocketOption(this.f554fd, i);
         }
         throw new SocketException("Socket closed");
     }
@@ -190,7 +190,7 @@ class PlainDatagramSocketImpl extends AbstractPlainDatagramSocketImpl {
     /* access modifiers changed from: protected */
     public void connect0(InetAddress inetAddress, int i) throws SocketException {
         if (!isClosed()) {
-            IoBridge.connect(this.f556fd, inetAddress, i);
+            IoBridge.connect(this.f554fd, inetAddress, i);
             return;
         }
         throw new SocketException("Socket closed");
@@ -202,7 +202,7 @@ class PlainDatagramSocketImpl extends AbstractPlainDatagramSocketImpl {
             InetAddress inetAddress = new InetAddress();
             inetAddress.holder().family = OsConstants.AF_UNSPEC;
             try {
-                IoBridge.connect(this.f556fd, inetAddress, 0);
+                IoBridge.connect(this.f554fd, inetAddress, 0);
             } catch (SocketException unused) {
             }
         }

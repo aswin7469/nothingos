@@ -708,9 +708,15 @@
     <string name="force_rtl_layout_all_locales_summary">Direcție obligatorie aspect ecran dreapta - stânga</string>
     <string name="forced_resizable_secondary_display">Este posibil ca aplicația să nu funcționeze pe un ecran secundar.</string>
     <string name="game_status">Mă joc</string>
+    <string name="gamemode_description">Mod Joc va determina dacă vă aflați într-un joc și se va activa automat</string>
+    <string name="gamemode_gamedashboard_title">Panou de jocuri</string>
+    <string name="gamemode_notification_content">Atingeți pentru a accesa Setări</string>
+    <string name="gamemode_notification_title">Mod Joc este activat momentan</string>
     <string name="global_action_lock_message">Deblocați telefonul pentru mai multe opțiuni</string>
     <string name="global_action_screenshot">Captură de ecran</string>
     <string name="global_action_smart_lock_disabled">Smart Lock dezactivat</string>
+    <string name="gm_guide_status_on">ACTIVAT</string>
+    <string name="gm_notification_title">Mod Joc</string>
     <string name="go_to_web">Accesați browserul</string>
     <string name="got_it">Am înțeles</string>
     <string name="guest_exit_guest">Ștergeți invitatul</string>

@@ -11,6 +11,6 @@ public final /* synthetic */ class KeyguardViewMediator$$ExternalSyntheticLambda
     }
 
     public final void onNavigationModeChanged(int i) {
-        this.f$0.m2759lambda$new$0$comandroidsystemuikeyguardKeyguardViewMediator(i);
+        this.f$0.m2764lambda$new$0$comandroidsystemuikeyguardKeyguardViewMediator(i);
     }
 }

@@ -11,6 +11,6 @@ public final /* synthetic */ class ScrimView$$ExternalSyntheticLambda5 implement
     }
 
     public final void run() {
-        this.f$0.m3006lambda$setClickable$2$comandroidsystemuiscrimScrimView(this.f$1);
+        this.f$0.m3010lambda$setClickable$2$comandroidsystemuiscrimScrimView(this.f$1);
     }
 }

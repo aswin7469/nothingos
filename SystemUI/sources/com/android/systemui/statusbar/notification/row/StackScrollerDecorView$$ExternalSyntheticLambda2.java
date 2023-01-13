@@ -13,6 +13,6 @@ public final /* synthetic */ class StackScrollerDecorView$$ExternalSyntheticLamb
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo41745x9f0c0a9(this.f$1, (Boolean) obj);
+        this.f$0.mo41753x9f0c0a9(this.f$1, (Boolean) obj);
     }
 }

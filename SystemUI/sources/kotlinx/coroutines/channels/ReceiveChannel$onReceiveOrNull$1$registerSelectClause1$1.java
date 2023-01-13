@@ -9,8 +9,8 @@ import kotlin.coroutines.jvm.internal.DebugMetadata;
 import kotlin.coroutines.jvm.internal.SuspendLambda;
 import kotlin.jvm.functions.Function2;
 
-@Metadata(mo64986d1 = {"\u0000\b\n\u0002\b\u0004\n\u0002\u0018\u0002\u0010\u0000\u001a\u0002H\u0001\"\u0004\b\u0000\u0010\u0001\"\u0006\b\u0001\u0010\u0002 \u00012\f\u0010\u0003\u001a\b\u0012\u0004\u0012\u0002H\u00020\u0004H@"}, mo64987d2 = {"<anonymous>", "R", "E", "it", "Lkotlinx/coroutines/channels/ChannelResult;"}, mo64988k = 3, mo64989mv = {1, 5, 1}, mo64991xi = 48)
-@DebugMetadata(mo65240c = "kotlinx.coroutines.channels.ReceiveChannel$onReceiveOrNull$1$registerSelectClause1$1", mo65241f = "Channel.kt", mo65242i = {}, mo65243l = {370}, mo65244m = "invokeSuspend", mo65245n = {}, mo65246s = {})
+@Metadata(mo65042d1 = {"\u0000\b\n\u0002\b\u0004\n\u0002\u0018\u0002\u0010\u0000\u001a\u0002H\u0001\"\u0004\b\u0000\u0010\u0001\"\u0006\b\u0001\u0010\u0002 \u00012\f\u0010\u0003\u001a\b\u0012\u0004\u0012\u0002H\u00020\u0004H@"}, mo65043d2 = {"<anonymous>", "R", "E", "it", "Lkotlinx/coroutines/channels/ChannelResult;"}, mo65044k = 3, mo65045mv = {1, 5, 1}, mo65047xi = 48)
+@DebugMetadata(mo65296c = "kotlinx.coroutines.channels.ReceiveChannel$onReceiveOrNull$1$registerSelectClause1$1", mo65297f = "Channel.kt", mo65298i = {}, mo65299l = {370}, mo65300m = "invokeSuspend", mo65301n = {}, mo65302s = {})
 /* compiled from: Channel.kt */
 final class ReceiveChannel$onReceiveOrNull$1$registerSelectClause1$1 extends SuspendLambda implements Function2<ChannelResult<? extends E>, Continuation<? super R>, Object> {
     final /* synthetic */ Function2<E, Continuation<? super R>, Object> $block;
@@ -30,12 +30,12 @@ final class ReceiveChannel$onReceiveOrNull$1$registerSelectClause1$1 extends Sus
     }
 
     public /* bridge */ /* synthetic */ Object invoke(Object obj, Object obj2) {
-        return m5456invokeWpGqRn0(((ChannelResult) obj).m5447unboximpl(), (Continuation) obj2);
+        return m5474invokeWpGqRn0(((ChannelResult) obj).m5465unboximpl(), (Continuation) obj2);
     }
 
     /* renamed from: invoke-WpGqRn0  reason: not valid java name */
-    public final Object m5456invokeWpGqRn0(Object obj, Continuation<? super R> continuation) {
-        return ((ReceiveChannel$onReceiveOrNull$1$registerSelectClause1$1) create(ChannelResult.m5435boximpl(obj), continuation)).invokeSuspend(Unit.INSTANCE);
+    public final Object m5474invokeWpGqRn0(Object obj, Continuation<? super R> continuation) {
+        return ((ReceiveChannel$onReceiveOrNull$1$registerSelectClause1$1) create(ChannelResult.m5453boximpl(obj), continuation)).invokeSuspend(Unit.INSTANCE);
     }
 
     public final Object invokeSuspend(Object obj) {
@@ -43,11 +43,11 @@ final class ReceiveChannel$onReceiveOrNull$1$registerSelectClause1$1 extends Sus
         int i = this.label;
         if (i == 0) {
             ResultKt.throwOnFailure(obj);
-            Object r4 = ((ChannelResult) this.L$0).m5447unboximpl();
-            Throwable r1 = ChannelResult.m5439exceptionOrNullimpl(r4);
+            Object r4 = ((ChannelResult) this.L$0).m5465unboximpl();
+            Throwable r1 = ChannelResult.m5457exceptionOrNullimpl(r4);
             if (r1 == null) {
                 Function2<E, Continuation<? super R>, Object> function2 = this.$block;
-                Object r42 = ChannelResult.m5440getOrNullimpl(r4);
+                Object r42 = ChannelResult.m5458getOrNullimpl(r4);
                 this.label = 1;
                 obj = function2.invoke(r42, this);
                 if (obj == coroutine_suspended) {

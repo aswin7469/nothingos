@@ -32,7 +32,7 @@ public class RowContentBindStage extends BindStage<RowContentBindParams> {
         bindParams.usesIncreasedHeight = rowContentBindParams.useIncreasedHeight();
         bindParams.usesIncreasedHeadsUpHeight = rowContentBindParams.useIncreasedHeadsUpHeight();
         boolean needsReinflation = rowContentBindParams.needsReinflation();
-        C27691 r9 = new NotificationRowContentBinder.InflationCallback() {
+        C27751 r9 = new NotificationRowContentBinder.InflationCallback() {
             public void handleInflationException(NotificationEntry notificationEntry, Exception exc) {
                 RowContentBindStage.this.mNotifInflationErrorManager.setInflationError(notificationEntry, exc);
             }

@@ -1121,12 +1121,12 @@ public final class Character implements Serializable, Comparable<Character> {
         }
 
         /* renamed from: of */
-        public static UnicodeBlock m1688of(char c) {
-            return m1689of((int) c);
+        public static UnicodeBlock m1694of(char c) {
+            return m1695of((int) c);
         }
 
         /* renamed from: of */
-        public static UnicodeBlock m1689of(int i) {
+        public static UnicodeBlock m1695of(int i) {
             if (Character.isValidCodePoint(i)) {
                 int length = blockStarts.length;
                 int i2 = length / 2;
@@ -1145,7 +1145,7 @@ public final class Character implements Serializable, Comparable<Character> {
         }
 
         public static final UnicodeBlock forName(String str) {
-            UnicodeBlock unicodeBlock = map.get(str.toUpperCase(Locale.f700US));
+            UnicodeBlock unicodeBlock = map.get(str.toUpperCase(Locale.f698US));
             if (unicodeBlock != null) {
                 return unicodeBlock;
             }
@@ -2113,7 +2113,7 @@ public final class Character implements Serializable, Comparable<Character> {
         }
 
         /* renamed from: of */
-        public static UnicodeScript m1690of(int i) {
+        public static UnicodeScript m1696of(int i) {
             if (!Character.isValidCodePoint(i)) {
                 throw new IllegalArgumentException();
             } else if (Character.getType(i) == 0) {
@@ -2694,7 +2694,7 @@ public final class Character implements Serializable, Comparable<Character> {
             if (getType(i) == 0) {
                 return null;
             }
-            UnicodeBlock of = UnicodeBlock.m1689of(i);
+            UnicodeBlock of = UnicodeBlock.m1695of(i);
             if (of == null) {
                 return Integer.toHexString(i).toUpperCase(Locale.ENGLISH);
             }

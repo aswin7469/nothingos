@@ -22,6 +22,8 @@ import com.android.systemui.model.SysUiState;
 import com.android.systemui.recents.OverviewProxyService;
 import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.policy.DeviceProvisionedController;
+import com.nothing.systemui.NTDependencyEx;
+import com.nothing.systemui.assist.AssistManagerEx;
 import dagger.Lazy;
 import javax.inject.Inject;
 
@@ -97,15 +99,16 @@ public class AssistManager {
     /* access modifiers changed from: protected */
     public void registerVoiceInteractionSessionListener() {
         this.mAssistUtils.registerVoiceInteractionSessionListener(new IVoiceInteractionSessionListener.Stub() {
-            public void onVoiceSessionWindowVisibilityChanged(boolean z) throws RemoteException {
-            }
-
             public void onVoiceSessionShown() throws RemoteException {
                 AssistManager.this.mAssistLogger.reportAssistantSessionEvent(AssistantSessionEvent.ASSISTANT_SESSION_UPDATE);
             }
 
             public void onVoiceSessionHidden() throws RemoteException {
                 AssistManager.this.mAssistLogger.reportAssistantSessionEvent(AssistantSessionEvent.ASSISTANT_SESSION_CLOSE);
+            }
+
+            public void onVoiceSessionWindowVisibilityChanged(boolean z) throws RemoteException {
+                ((AssistManagerEx) NTDependencyEx.get(AssistManagerEx.class)).onVoiceSessionWindowVisibilityChanged(z);
             }
 
             public void onSetUiHints(Bundle bundle) {
@@ -236,7 +239,7 @@ public class AssistManager {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$canVoiceAssistBeLaunchedFromKeyguard$0$com-android-systemui-assist-AssistManager */
-    public /* synthetic */ Boolean mo30358xbc9ad335() {
+    public /* synthetic */ Boolean mo30368xbc9ad335() {
         return Boolean.valueOf(this.mAssistUtils.activeServiceSupportsLaunchFromKeyguard());
     }
 

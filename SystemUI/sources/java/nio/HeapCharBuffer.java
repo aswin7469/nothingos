@@ -33,40 +33,40 @@ class HeapCharBuffer extends CharBuffer {
     }
 
     public CharBuffer slice() {
-        return new HeapCharBuffer(this.f567hb, -1, 0, remaining(), remaining(), this.offset + position(), this.isReadOnly);
+        return new HeapCharBuffer(this.f565hb, -1, 0, remaining(), remaining(), this.offset + position(), this.isReadOnly);
     }
 
     public CharBuffer duplicate() {
-        return new HeapCharBuffer(this.f567hb, markValue(), position(), limit(), capacity(), this.offset, this.isReadOnly);
+        return new HeapCharBuffer(this.f565hb, markValue(), position(), limit(), capacity(), this.offset, this.isReadOnly);
     }
 
     public CharBuffer asReadOnlyBuffer() {
-        return new HeapCharBuffer(this.f567hb, markValue(), position(), limit(), capacity(), this.offset, true);
+        return new HeapCharBuffer(this.f565hb, markValue(), position(), limit(), capacity(), this.offset, true);
     }
 
     /* access modifiers changed from: protected */
     /* renamed from: ix */
-    public int mo60909ix(int i) {
+    public int mo60965ix(int i) {
         return i + this.offset;
     }
 
     public char get() {
-        return this.f567hb[mo60909ix(nextGetIndex())];
+        return this.f565hb[mo60965ix(nextGetIndex())];
     }
 
     public char get(int i) {
-        return this.f567hb[mo60909ix(checkIndex(i))];
+        return this.f565hb[mo60965ix(checkIndex(i))];
     }
 
     /* access modifiers changed from: package-private */
     public char getUnchecked(int i) {
-        return this.f567hb[mo60909ix(i)];
+        return this.f565hb[mo60965ix(i)];
     }
 
     public CharBuffer get(char[] cArr, int i, int i2) {
         checkBounds(i, i2, cArr.length);
         if (i2 <= remaining()) {
-            System.arraycopy((Object) this.f567hb, mo60909ix(position()), (Object) cArr, i, i2);
+            System.arraycopy((Object) this.f565hb, mo60965ix(position()), (Object) cArr, i, i2);
             position(position() + i2);
             return this;
         }
@@ -79,7 +79,7 @@ class HeapCharBuffer extends CharBuffer {
 
     public CharBuffer put(char c) {
         if (!this.isReadOnly) {
-            this.f567hb[mo60909ix(nextPutIndex())] = c;
+            this.f565hb[mo60965ix(nextPutIndex())] = c;
             return this;
         }
         throw new ReadOnlyBufferException();
@@ -87,7 +87,7 @@ class HeapCharBuffer extends CharBuffer {
 
     public CharBuffer put(int i, char c) {
         if (!this.isReadOnly) {
-            this.f567hb[mo60909ix(checkIndex(i))] = c;
+            this.f565hb[mo60965ix(checkIndex(i))] = c;
             return this;
         }
         throw new ReadOnlyBufferException();
@@ -97,7 +97,7 @@ class HeapCharBuffer extends CharBuffer {
         if (!this.isReadOnly) {
             checkBounds(i, i2, cArr.length);
             if (i2 <= remaining()) {
-                System.arraycopy((Object) cArr, i, (Object) this.f567hb, mo60909ix(position()), i2);
+                System.arraycopy((Object) cArr, i, (Object) this.f565hb, mo60965ix(position()), i2);
                 position(position() + i2);
                 return this;
             }
@@ -114,7 +114,7 @@ class HeapCharBuffer extends CharBuffer {
                 HeapCharBuffer heapCharBuffer = (HeapCharBuffer) charBuffer;
                 int remaining = heapCharBuffer.remaining();
                 if (remaining <= remaining()) {
-                    System.arraycopy((Object) heapCharBuffer.f567hb, heapCharBuffer.mo60909ix(heapCharBuffer.position()), (Object) this.f567hb, mo60909ix(position()), remaining);
+                    System.arraycopy((Object) heapCharBuffer.f565hb, heapCharBuffer.mo60965ix(heapCharBuffer.position()), (Object) this.f565hb, mo60965ix(position()), remaining);
                     heapCharBuffer.position(heapCharBuffer.position() + remaining);
                     position(position() + remaining);
                 } else {
@@ -123,7 +123,7 @@ class HeapCharBuffer extends CharBuffer {
             } else if (charBuffer.isDirect()) {
                 int remaining2 = charBuffer.remaining();
                 if (remaining2 <= remaining()) {
-                    charBuffer.get(this.f567hb, mo60909ix(position()), remaining2);
+                    charBuffer.get(this.f565hb, mo60965ix(position()), remaining2);
                     position(position() + remaining2);
                 } else {
                     throw new BufferOverflowException();
@@ -139,7 +139,7 @@ class HeapCharBuffer extends CharBuffer {
 
     public CharBuffer compact() {
         if (!this.isReadOnly) {
-            System.arraycopy((Object) this.f567hb, mo60909ix(position()), (Object) this.f567hb, mo60909ix(0), remaining());
+            System.arraycopy((Object) this.f565hb, mo60965ix(position()), (Object) this.f565hb, mo60965ix(0), remaining());
             position(remaining());
             limit(capacity());
             discardMark();
@@ -151,7 +151,7 @@ class HeapCharBuffer extends CharBuffer {
     /* access modifiers changed from: package-private */
     public String toString(int i, int i2) {
         try {
-            return new String(this.f567hb, this.offset + i, i2 - i);
+            return new String(this.f565hb, this.offset + i, i2 - i);
         } catch (StringIndexOutOfBoundsException unused) {
             throw new IndexOutOfBoundsException();
         }
@@ -162,7 +162,7 @@ class HeapCharBuffer extends CharBuffer {
             throw new IndexOutOfBoundsException();
         }
         int position = position();
-        return new HeapCharBuffer(this.f567hb, -1, position + i, position + i2, capacity(), this.offset, this.isReadOnly);
+        return new HeapCharBuffer(this.f565hb, -1, position + i, position + i2, capacity(), this.offset, this.isReadOnly);
     }
 
     public ByteOrder order() {

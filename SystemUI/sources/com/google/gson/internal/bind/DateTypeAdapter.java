@@ -34,8 +34,8 @@ public final class DateTypeAdapter extends TypeAdapter<Date> {
     public DateTypeAdapter() {
         ArrayList arrayList = new ArrayList();
         this.dateFormats = arrayList;
-        arrayList.add(DateFormat.getDateTimeInstance(2, 2, Locale.f700US));
-        if (!Locale.getDefault().equals(Locale.f700US)) {
+        arrayList.add(DateFormat.getDateTimeInstance(2, 2, Locale.f698US));
+        if (!Locale.getDefault().equals(Locale.f698US)) {
             arrayList.add(DateFormat.getDateTimeInstance(2, 2));
         }
         if (JavaVersion.isJava9OrLater()) {

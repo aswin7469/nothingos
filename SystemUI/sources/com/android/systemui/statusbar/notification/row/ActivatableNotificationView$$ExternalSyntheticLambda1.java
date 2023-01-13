@@ -11,6 +11,6 @@ public final /* synthetic */ class ActivatableNotificationView$$ExternalSyntheti
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        this.f$0.mo40897x484fec06(valueAnimator);
+        this.f$0.mo40900x484fec06(valueAnimator);
     }
 }

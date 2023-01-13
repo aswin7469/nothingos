@@ -5,7 +5,7 @@ import android.graphics.Rect;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.animation.Interpolators;
 import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.dagger.qualifiers.Main;
@@ -28,16 +28,16 @@ import kotlin.sequences.Sequence;
 import kotlin.sequences.SequencesKt;
 
 @SysUISingleton
-@Metadata(mo64986d1 = {"\u0000\u0001\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0010\b\n\u0002\b\u0002\n\u0002\u0010\u000b\n\u0002\b\u0003\n\u0002\u0010 \n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b+\b\u0007\u0018\u00002\u00020\u0001:\u0001[B1\b\u0007\u0012\b\b\u0001\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\u0006\u0010\u0006\u001a\u00020\u0007\u0012\u0006\u0010\b\u001a\u00020\t\u0012\u0006\u0010\n\u001a\u00020\u000b¢\u0006\u0002\u0010\fJ\u0018\u0010&\u001a\u00020'2\u0006\u0010(\u001a\u00020\u000e2\u0006\u0010)\u001a\u00020*H\u0002J\u0010\u0010+\u001a\u00020'2\u0006\u0010,\u001a\u00020\u000eH\u0002J\u000e\u0010-\u001a\b\u0012\u0004\u0012\u00020/0.H\u0002J\u0018\u00100\u001a\u0002012\u0006\u00102\u001a\u00020\u000e2\u0006\u00103\u001a\u00020*H\u0002J&\u00104\u001a\u0002012\u0006\u00105\u001a\u00020\u000e2\u0006\u00106\u001a\u00020\u000e2\u0006\u00107\u001a\u00020\u000e2\u0006\u00108\u001a\u00020\u000eJ\b\u00109\u001a\u00020*H\u0003J\b\u0010:\u001a\u000201H\u0002J\u0010\u0010;\u001a\u0002012\u0006\u0010<\u001a\u00020\u0013H\u0002J\u0018\u0010=\u001a\u00020'2\u0006\u0010(\u001a\u00020'2\u0006\u0010>\u001a\u00020'H\u0002J\b\u0010?\u001a\u000201H\u0002J\u001a\u0010@\u001a\u0004\u0018\u00010\u000e2\u0006\u0010A\u001a\u00020'2\u0006\u0010B\u001a\u00020*H\u0002J\u0010\u0010C\u001a\u0002012\u0006\u0010<\u001a\u00020\u0013H\u0002J\u0010\u0010D\u001a\u0002012\u0006\u0010E\u001a\u00020'H\u0002J\b\u0010F\u001a\u000201H\u0002J\u000e\u0010G\u001a\u0002012\u0006\u0010H\u001a\u00020'J\u000e\u0010I\u001a\u0002012\u0006\u0010J\u001a\u00020*J\u0010\u0010K\u001a\u0002012\b\u0010L\u001a\u0004\u0018\u00010\u001bJ\u000e\u0010M\u001a\u0002012\u0006\u0010N\u001a\u00020!J\u0018\u0010O\u001a\u0002012\u0006\u00102\u001a\u00020\u000e2\u0006\u00103\u001a\u00020*H\u0002J \u0010P\u001a\u0002012\u0006\u0010L\u001a\u00020'2\u0006\u0010A\u001a\u00020'2\u0006\u0010>\u001a\u00020'H\u0002J\u001a\u0010Q\u001a\u0002012\b\u0010R\u001a\u0004\u0018\u00010\u000e2\u0006\u0010S\u001a\u00020*H\u0002J\u0018\u0010T\u001a\u0002012\u0006\u0010>\u001a\u00020'2\u0006\u0010U\u001a\u00020'H\u0002J\b\u0010V\u001a\u000201H\u0002J \u0010W\u001a\u00020'2\u0006\u0010(\u001a\u00020'2\u0006\u0010X\u001a\u00020'2\u0006\u0010Y\u001a\u00020'H\u0002J\u000e\u0010Z\u001a\u00020'*\u0004\u0018\u00010\u000eH\u0002R\u000e\u0010\n\u001a\u00020\u000bX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\r\u001a\u00020\u000eX.¢\u0006\u0002\n\u0000R\u000e\u0010\u000f\u001a\u00020\u000eX.¢\u0006\u0002\n\u0000R\u0010\u0010\u0010\u001a\u0004\u0018\u00010\u0011X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0006\u001a\u00020\u0007X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\b\u001a\u00020\tX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0012\u001a\u00020\u0013X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0014\u001a\u00020\u0015X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0002\u001a\u00020\u0003X\u0004¢\u0006\u0002\n\u0000R \u0010\u0017\u001a\u00020\u00132\u0006\u0010\u0016\u001a\u00020\u00138\u0002@BX\u000e¢\u0006\b\n\u0000\"\u0004\b\u0018\u0010\u0019R\u0010\u0010\u001a\u001a\u0004\u0018\u00010\u001bX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0004\u001a\u00020\u0005X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u001c\u001a\u00020\u001dX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u001e\u001a\u00020\u000eX.¢\u0006\u0002\n\u0000R\u000e\u0010\u001f\u001a\u00020\u000eX.¢\u0006\u0002\n\u0000R\u0010\u0010 \u001a\u0004\u0018\u00010!X\u000e¢\u0006\u0002\n\u0000R\u001a\u0010\"\u001a\b\u0012\u0004\u0012\u00020\u000e0#8BX\u0004¢\u0006\u0006\u001a\u0004\b$\u0010%¨\u0006\\"}, mo64987d2 = {"Lcom/android/systemui/statusbar/events/PrivacyDotViewController;", "", "mainExecutor", "Ljava/util/concurrent/Executor;", "stateController", "Lcom/android/systemui/plugins/statusbar/StatusBarStateController;", "configurationController", "Lcom/android/systemui/statusbar/policy/ConfigurationController;", "contentInsetsProvider", "Lcom/android/systemui/statusbar/phone/StatusBarContentInsetsProvider;", "animationScheduler", "Lcom/android/systemui/statusbar/events/SystemStatusAnimationScheduler;", "(Ljava/util/concurrent/Executor;Lcom/android/systemui/plugins/statusbar/StatusBarStateController;Lcom/android/systemui/statusbar/policy/ConfigurationController;Lcom/android/systemui/statusbar/phone/StatusBarContentInsetsProvider;Lcom/android/systemui/statusbar/events/SystemStatusAnimationScheduler;)V", "bl", "Landroid/view/View;", "br", "cancelRunnable", "Ljava/lang/Runnable;", "currentViewState", "Lcom/android/systemui/statusbar/events/ViewState;", "lock", "Ljava/lang/Object;", "value", "nextViewState", "setNextViewState", "(Lcom/android/systemui/statusbar/events/ViewState;)V", "showingListener", "Lcom/android/systemui/statusbar/events/PrivacyDotViewController$ShowingListener;", "systemStatusAnimationCallback", "Lcom/android/systemui/statusbar/events/SystemStatusAnimationCallback;", "tl", "tr", "uiExecutor", "Lcom/android/systemui/util/concurrency/DelayableExecutor;", "views", "Lkotlin/sequences/Sequence;", "getViews", "()Lkotlin/sequences/Sequence;", "activeRotationForCorner", "", "corner", "rtl", "", "cornerForView", "v", "getLayoutRects", "", "Landroid/graphics/Rect;", "hideDotView", "", "dot", "animate", "initialize", "topLeft", "topRight", "bottomLeft", "bottomRight", "isShadeInQs", "processNextViewState", "resolveState", "state", "rotatedCorner", "rotation", "scheduleUpdate", "selectDesignatedCorner", "r", "isRtl", "setCornerSizes", "setCornerVisibilities", "vis", "setNewLayoutRects", "setNewRotation", "rot", "setQsExpanded", "expanded", "setShowingListener", "l", "setUiExecutor", "e", "showDotView", "updateCornerSizes", "updateDesignatedCorner", "newCorner", "shouldShowDot", "updateRotations", "paddingTop", "updateStatusBarState", "widthForCorner", "left", "right", "cornerIndex", "ShowingListener", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000\u0001\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0010\b\n\u0002\b\u0002\n\u0002\u0010\u000b\n\u0002\b\u0003\n\u0002\u0010 \n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b+\b\u0007\u0018\u00002\u00020\u0001:\u0001[B1\b\u0007\u0012\b\b\u0001\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\u0006\u0010\u0006\u001a\u00020\u0007\u0012\u0006\u0010\b\u001a\u00020\t\u0012\u0006\u0010\n\u001a\u00020\u000b¢\u0006\u0002\u0010\fJ\u0018\u0010&\u001a\u00020'2\u0006\u0010(\u001a\u00020\u000e2\u0006\u0010)\u001a\u00020*H\u0002J\u0010\u0010+\u001a\u00020'2\u0006\u0010,\u001a\u00020\u000eH\u0002J\u000e\u0010-\u001a\b\u0012\u0004\u0012\u00020/0.H\u0002J\u0018\u00100\u001a\u0002012\u0006\u00102\u001a\u00020\u000e2\u0006\u00103\u001a\u00020*H\u0002J&\u00104\u001a\u0002012\u0006\u00105\u001a\u00020\u000e2\u0006\u00106\u001a\u00020\u000e2\u0006\u00107\u001a\u00020\u000e2\u0006\u00108\u001a\u00020\u000eJ\b\u00109\u001a\u00020*H\u0003J\b\u0010:\u001a\u000201H\u0002J\u0010\u0010;\u001a\u0002012\u0006\u0010<\u001a\u00020\u0013H\u0002J\u0018\u0010=\u001a\u00020'2\u0006\u0010(\u001a\u00020'2\u0006\u0010>\u001a\u00020'H\u0002J\b\u0010?\u001a\u000201H\u0002J\u001a\u0010@\u001a\u0004\u0018\u00010\u000e2\u0006\u0010A\u001a\u00020'2\u0006\u0010B\u001a\u00020*H\u0002J\u0010\u0010C\u001a\u0002012\u0006\u0010<\u001a\u00020\u0013H\u0002J\u0010\u0010D\u001a\u0002012\u0006\u0010E\u001a\u00020'H\u0002J\b\u0010F\u001a\u000201H\u0002J\u000e\u0010G\u001a\u0002012\u0006\u0010H\u001a\u00020'J\u000e\u0010I\u001a\u0002012\u0006\u0010J\u001a\u00020*J\u0010\u0010K\u001a\u0002012\b\u0010L\u001a\u0004\u0018\u00010\u001bJ\u000e\u0010M\u001a\u0002012\u0006\u0010N\u001a\u00020!J\u0018\u0010O\u001a\u0002012\u0006\u00102\u001a\u00020\u000e2\u0006\u00103\u001a\u00020*H\u0002J \u0010P\u001a\u0002012\u0006\u0010L\u001a\u00020'2\u0006\u0010A\u001a\u00020'2\u0006\u0010>\u001a\u00020'H\u0002J\u001a\u0010Q\u001a\u0002012\b\u0010R\u001a\u0004\u0018\u00010\u000e2\u0006\u0010S\u001a\u00020*H\u0002J\u0018\u0010T\u001a\u0002012\u0006\u0010>\u001a\u00020'2\u0006\u0010U\u001a\u00020'H\u0002J\b\u0010V\u001a\u000201H\u0002J \u0010W\u001a\u00020'2\u0006\u0010(\u001a\u00020'2\u0006\u0010X\u001a\u00020'2\u0006\u0010Y\u001a\u00020'H\u0002J\u000e\u0010Z\u001a\u00020'*\u0004\u0018\u00010\u000eH\u0002R\u000e\u0010\n\u001a\u00020\u000bX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\r\u001a\u00020\u000eX.¢\u0006\u0002\n\u0000R\u000e\u0010\u000f\u001a\u00020\u000eX.¢\u0006\u0002\n\u0000R\u0010\u0010\u0010\u001a\u0004\u0018\u00010\u0011X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0006\u001a\u00020\u0007X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\b\u001a\u00020\tX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0012\u001a\u00020\u0013X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0014\u001a\u00020\u0015X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0002\u001a\u00020\u0003X\u0004¢\u0006\u0002\n\u0000R \u0010\u0017\u001a\u00020\u00132\u0006\u0010\u0016\u001a\u00020\u00138\u0002@BX\u000e¢\u0006\b\n\u0000\"\u0004\b\u0018\u0010\u0019R\u0010\u0010\u001a\u001a\u0004\u0018\u00010\u001bX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0004\u001a\u00020\u0005X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u001c\u001a\u00020\u001dX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u001e\u001a\u00020\u000eX.¢\u0006\u0002\n\u0000R\u000e\u0010\u001f\u001a\u00020\u000eX.¢\u0006\u0002\n\u0000R\u0010\u0010 \u001a\u0004\u0018\u00010!X\u000e¢\u0006\u0002\n\u0000R\u001a\u0010\"\u001a\b\u0012\u0004\u0012\u00020\u000e0#8BX\u0004¢\u0006\u0006\u001a\u0004\b$\u0010%¨\u0006\\"}, mo65043d2 = {"Lcom/android/systemui/statusbar/events/PrivacyDotViewController;", "", "mainExecutor", "Ljava/util/concurrent/Executor;", "stateController", "Lcom/android/systemui/plugins/statusbar/StatusBarStateController;", "configurationController", "Lcom/android/systemui/statusbar/policy/ConfigurationController;", "contentInsetsProvider", "Lcom/android/systemui/statusbar/phone/StatusBarContentInsetsProvider;", "animationScheduler", "Lcom/android/systemui/statusbar/events/SystemStatusAnimationScheduler;", "(Ljava/util/concurrent/Executor;Lcom/android/systemui/plugins/statusbar/StatusBarStateController;Lcom/android/systemui/statusbar/policy/ConfigurationController;Lcom/android/systemui/statusbar/phone/StatusBarContentInsetsProvider;Lcom/android/systemui/statusbar/events/SystemStatusAnimationScheduler;)V", "bl", "Landroid/view/View;", "br", "cancelRunnable", "Ljava/lang/Runnable;", "currentViewState", "Lcom/android/systemui/statusbar/events/ViewState;", "lock", "Ljava/lang/Object;", "value", "nextViewState", "setNextViewState", "(Lcom/android/systemui/statusbar/events/ViewState;)V", "showingListener", "Lcom/android/systemui/statusbar/events/PrivacyDotViewController$ShowingListener;", "systemStatusAnimationCallback", "Lcom/android/systemui/statusbar/events/SystemStatusAnimationCallback;", "tl", "tr", "uiExecutor", "Lcom/android/systemui/util/concurrency/DelayableExecutor;", "views", "Lkotlin/sequences/Sequence;", "getViews", "()Lkotlin/sequences/Sequence;", "activeRotationForCorner", "", "corner", "rtl", "", "cornerForView", "v", "getLayoutRects", "", "Landroid/graphics/Rect;", "hideDotView", "", "dot", "animate", "initialize", "topLeft", "topRight", "bottomLeft", "bottomRight", "isShadeInQs", "processNextViewState", "resolveState", "state", "rotatedCorner", "rotation", "scheduleUpdate", "selectDesignatedCorner", "r", "isRtl", "setCornerSizes", "setCornerVisibilities", "vis", "setNewLayoutRects", "setNewRotation", "rot", "setQsExpanded", "expanded", "setShowingListener", "l", "setUiExecutor", "e", "showDotView", "updateCornerSizes", "updateDesignatedCorner", "newCorner", "shouldShowDot", "updateRotations", "paddingTop", "updateStatusBarState", "widthForCorner", "left", "right", "cornerIndex", "ShowingListener", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* compiled from: PrivacyDotViewController.kt */
 public final class PrivacyDotViewController {
     private final SystemStatusAnimationScheduler animationScheduler;
 
     /* renamed from: bl */
-    private View f371bl;
+    private View f370bl;
 
     /* renamed from: br */
-    private View f372br;
+    private View f371br;
     private Runnable cancelRunnable;
     private final ConfigurationController configurationController;
     private final StatusBarContentInsetsProvider contentInsetsProvider;
@@ -52,14 +52,14 @@ public final class PrivacyDotViewController {
     private final SystemStatusAnimationCallback systemStatusAnimationCallback;
 
     /* renamed from: tl */
-    private View f373tl;
+    private View f372tl;
 
     /* renamed from: tr */
-    private View f374tr;
+    private View f373tr;
     /* access modifiers changed from: private */
     public DelayableExecutor uiExecutor;
 
-    @Metadata(mo64986d1 = {"\u0000\u0018\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\bf\u0018\u00002\u00020\u0001J\u0012\u0010\u0002\u001a\u00020\u00032\b\u0010\u0004\u001a\u0004\u0018\u00010\u0005H&J\u0012\u0010\u0006\u001a\u00020\u00032\b\u0010\u0004\u001a\u0004\u0018\u00010\u0005H&ø\u0001\u0000\u0002\u0006\n\u0004\b!0\u0001¨\u0006\u0007À\u0006\u0001"}, mo64987d2 = {"Lcom/android/systemui/statusbar/events/PrivacyDotViewController$ShowingListener;", "", "onPrivacyDotHidden", "", "v", "Landroid/view/View;", "onPrivacyDotShown", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u0000\u0018\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\bf\u0018\u00002\u00020\u0001J\u0012\u0010\u0002\u001a\u00020\u00032\b\u0010\u0004\u001a\u0004\u0018\u00010\u0005H&J\u0012\u0010\u0006\u001a\u00020\u00032\b\u0010\u0004\u001a\u0004\u0018\u00010\u0005H&ø\u0001\u0000\u0002\u0006\n\u0004\b!0\u0001¨\u0006\u0007À\u0006\u0001"}, mo65043d2 = {"Lcom/android/systemui/statusbar/events/PrivacyDotViewController$ShowingListener;", "", "onPrivacyDotHidden", "", "v", "Landroid/view/View;", "onPrivacyDotShown", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* compiled from: PrivacyDotViewController.kt */
     public interface ShowingListener {
         void onPrivacyDotHidden(View view);
@@ -120,7 +120,7 @@ public final class PrivacyDotViewController {
 
             /* access modifiers changed from: private */
             /* renamed from: onLayoutDirectionChanged$lambda-1  reason: not valid java name */
-            public static final void m3061onLayoutDirectionChanged$lambda1(PrivacyDotViewController privacyDotViewController, C26332 r20, boolean z) {
+            public static final void m3065onLayoutDirectionChanged$lambda1(PrivacyDotViewController privacyDotViewController, C26392 r20, boolean z) {
                 PrivacyDotViewController privacyDotViewController2 = privacyDotViewController;
                 Intrinsics.checkNotNullParameter(privacyDotViewController2, "this$0");
                 Intrinsics.checkNotNullParameter(r20, "this$1");
@@ -156,7 +156,7 @@ public final class PrivacyDotViewController {
     }
 
     private final Sequence<View> getViews() {
-        View view = this.f373tl;
+        View view = this.f372tl;
         if (view == null) {
             return SequencesKt.sequenceOf(new View[0]);
         }
@@ -167,19 +167,19 @@ public final class PrivacyDotViewController {
             view = null;
         }
         viewArr[0] = view;
-        View view3 = this.f374tr;
+        View view3 = this.f373tr;
         if (view3 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("tr");
             view3 = null;
         }
         viewArr[1] = view3;
-        View view4 = this.f372br;
+        View view4 = this.f371br;
         if (view4 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("br");
             view4 = null;
         }
         viewArr[2] = view4;
-        View view5 = this.f371bl;
+        View view5 = this.f370bl;
         if (view5 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("bl");
         } else {
@@ -254,7 +254,7 @@ public final class PrivacyDotViewController {
 
     /* access modifiers changed from: private */
     /* renamed from: hideDotView$lambda-3  reason: not valid java name */
-    public static final void m3058hideDotView$lambda3(View view, PrivacyDotViewController privacyDotViewController) {
+    public static final void m3062hideDotView$lambda3(View view, PrivacyDotViewController privacyDotViewController) {
         Intrinsics.checkNotNullParameter(view, "$dot");
         Intrinsics.checkNotNullParameter(privacyDotViewController, "this$0");
         view.setVisibility(4);
@@ -287,7 +287,7 @@ public final class PrivacyDotViewController {
             ViewGroup.LayoutParams layoutParams = next.getLayoutParams();
             if (layoutParams != null) {
                 ((FrameLayout.LayoutParams) layoutParams).gravity = PrivacyDotViewControllerKt.toGravity(rotatedCorner);
-                ViewGroup.LayoutParams layoutParams2 = next.findViewById(C1893R.C1897id.privacy_dot).getLayoutParams();
+                ViewGroup.LayoutParams layoutParams2 = next.findViewById(C1894R.C1898id.privacy_dot).getLayoutParams();
                 if (layoutParams2 != null) {
                     ((FrameLayout.LayoutParams) layoutParams2).gravity = PrivacyDotViewControllerKt.innerGravity(rotatedCorner);
                 } else {
@@ -316,14 +316,14 @@ public final class PrivacyDotViewController {
         int i2;
         boolean layoutRtl = viewState.getLayoutRtl();
         Point point = new Point();
-        View view = this.f373tl;
+        View view = this.f372tl;
         View view2 = null;
         if (view == null) {
             Intrinsics.throwUninitializedPropertyAccessException("tl");
             view = null;
         }
         view.getContext().getDisplay().getRealSize(point);
-        View view3 = this.f373tl;
+        View view3 = this.f372tl;
         if (view3 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("tl");
             view3 = null;
@@ -336,19 +336,19 @@ public final class PrivacyDotViewController {
             i = point.x;
             i2 = point.y;
         }
-        View view4 = this.f373tl;
+        View view4 = this.f372tl;
         if (view4 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("tl");
             view4 = null;
         }
         Rect contentRectForRotation = viewState.contentRectForRotation(activeRotationForCorner(view4, layoutRtl));
-        View view5 = this.f373tl;
+        View view5 = this.f372tl;
         if (view5 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("tl");
             view5 = null;
         }
         view5.setPadding(0, viewState.getPaddingTop(), 0, 0);
-        View view6 = this.f373tl;
+        View view6 = this.f372tl;
         if (view6 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("tl");
             view6 = null;
@@ -362,19 +362,19 @@ public final class PrivacyDotViewController {
             } else {
                 layoutParams2.width = i2 - contentRectForRotation.right;
             }
-            View view7 = this.f374tr;
+            View view7 = this.f373tr;
             if (view7 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("tr");
                 view7 = null;
             }
             Rect contentRectForRotation2 = viewState.contentRectForRotation(activeRotationForCorner(view7, layoutRtl));
-            View view8 = this.f374tr;
+            View view8 = this.f373tr;
             if (view8 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("tr");
                 view8 = null;
             }
             view8.setPadding(0, viewState.getPaddingTop(), 0, 0);
-            View view9 = this.f374tr;
+            View view9 = this.f373tr;
             if (view9 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("tr");
                 view9 = null;
@@ -388,19 +388,19 @@ public final class PrivacyDotViewController {
                 } else {
                     layoutParams4.width = i - contentRectForRotation2.right;
                 }
-                View view10 = this.f372br;
+                View view10 = this.f371br;
                 if (view10 == null) {
                     Intrinsics.throwUninitializedPropertyAccessException("br");
                     view10 = null;
                 }
                 Rect contentRectForRotation3 = viewState.contentRectForRotation(activeRotationForCorner(view10, layoutRtl));
-                View view11 = this.f372br;
+                View view11 = this.f371br;
                 if (view11 == null) {
                     Intrinsics.throwUninitializedPropertyAccessException("br");
                     view11 = null;
                 }
                 view11.setPadding(0, viewState.getPaddingTop(), 0, 0);
-                View view12 = this.f372br;
+                View view12 = this.f371br;
                 if (view12 == null) {
                     Intrinsics.throwUninitializedPropertyAccessException("br");
                     view12 = null;
@@ -414,19 +414,19 @@ public final class PrivacyDotViewController {
                     } else {
                         layoutParams6.width = i2 - contentRectForRotation3.right;
                     }
-                    View view13 = this.f371bl;
+                    View view13 = this.f370bl;
                     if (view13 == null) {
                         Intrinsics.throwUninitializedPropertyAccessException("bl");
                         view13 = null;
                     }
                     Rect contentRectForRotation4 = viewState.contentRectForRotation(activeRotationForCorner(view13, layoutRtl));
-                    View view14 = this.f371bl;
+                    View view14 = this.f370bl;
                     if (view14 == null) {
                         Intrinsics.throwUninitializedPropertyAccessException("bl");
                         view14 = null;
                     }
                     view14.setPadding(0, viewState.getPaddingTop(), 0, 0);
-                    View view15 = this.f371bl;
+                    View view15 = this.f370bl;
                     if (view15 == null) {
                         Intrinsics.throwUninitializedPropertyAccessException("bl");
                     } else {
@@ -457,7 +457,7 @@ public final class PrivacyDotViewController {
 
     /* access modifiers changed from: private */
     public final View selectDesignatedCorner(int i, boolean z) {
-        View view = this.f373tl;
+        View view = this.f372tl;
         if (view == null) {
             return null;
         }
@@ -467,7 +467,7 @@ public final class PrivacyDotViewController {
                     if (i != 3) {
                         throw new IllegalStateException("unknown rotation");
                     } else if (z) {
-                        View view2 = this.f371bl;
+                        View view2 = this.f370bl;
                         if (view2 != null) {
                             return view2;
                         }
@@ -478,33 +478,33 @@ public final class PrivacyDotViewController {
                         Intrinsics.throwUninitializedPropertyAccessException("tl");
                     }
                 } else if (z) {
-                    View view3 = this.f372br;
+                    View view3 = this.f371br;
                     if (view3 != null) {
                         return view3;
                     }
                     Intrinsics.throwUninitializedPropertyAccessException("br");
                 } else {
-                    View view4 = this.f371bl;
+                    View view4 = this.f370bl;
                     if (view4 != null) {
                         return view4;
                     }
                     Intrinsics.throwUninitializedPropertyAccessException("bl");
                 }
             } else if (z) {
-                View view5 = this.f374tr;
+                View view5 = this.f373tr;
                 if (view5 != null) {
                     return view5;
                 }
                 Intrinsics.throwUninitializedPropertyAccessException("tr");
             } else {
-                View view6 = this.f372br;
+                View view6 = this.f371br;
                 if (view6 != null) {
                     return view6;
                 }
                 Intrinsics.throwUninitializedPropertyAccessException("br");
             }
         } else if (!z) {
-            View view7 = this.f374tr;
+            View view7 = this.f373tr;
             if (view7 != null) {
                 return view7;
             }
@@ -551,7 +551,7 @@ public final class PrivacyDotViewController {
     }
 
     private final int cornerForView(View view) {
-        View view2 = this.f373tl;
+        View view2 = this.f372tl;
         View view3 = null;
         if (view2 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("tl");
@@ -560,7 +560,7 @@ public final class PrivacyDotViewController {
         if (Intrinsics.areEqual((Object) view, (Object) view2)) {
             return 0;
         }
-        View view4 = this.f374tr;
+        View view4 = this.f373tr;
         if (view4 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("tr");
             view4 = null;
@@ -568,7 +568,7 @@ public final class PrivacyDotViewController {
         if (Intrinsics.areEqual((Object) view, (Object) view4)) {
             return 1;
         }
-        View view5 = this.f371bl;
+        View view5 = this.f370bl;
         if (view5 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("bl");
             view5 = null;
@@ -576,7 +576,7 @@ public final class PrivacyDotViewController {
         if (Intrinsics.areEqual((Object) view, (Object) view5)) {
             return 3;
         }
-        View view6 = this.f372br;
+        View view6 = this.f371br;
         if (view6 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("br");
         } else {
@@ -598,7 +598,7 @@ public final class PrivacyDotViewController {
     private final int activeRotationForCorner(android.view.View r6, boolean r7) {
         /*
             r5 = this;
-            android.view.View r0 = r5.f374tr
+            android.view.View r0 = r5.f373tr
             r1 = 0
             if (r0 != 0) goto L_0x000c
             java.lang.String r0 = "tr"
@@ -615,7 +615,7 @@ public final class PrivacyDotViewController {
             r2 = r3
             goto L_0x0049
         L_0x0019:
-            android.view.View r0 = r5.f373tl
+            android.view.View r0 = r5.f372tl
             if (r0 != 0) goto L_0x0024
             java.lang.String r0 = "tl"
             kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r0)
@@ -630,7 +630,7 @@ public final class PrivacyDotViewController {
             r2 = r4
             goto L_0x0049
         L_0x0030:
-            android.view.View r5 = r5.f372br
+            android.view.View r5 = r5.f371br
             if (r5 != 0) goto L_0x003a
             java.lang.String r5 = "br"
             kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r5)
@@ -676,26 +676,26 @@ public final class PrivacyDotViewController {
         Intrinsics.checkNotNullParameter(view6, "topRight");
         Intrinsics.checkNotNullParameter(view7, "bottomLeft");
         Intrinsics.checkNotNullParameter(view8, "bottomRight");
-        View view9 = this.f373tl;
-        if (!(view9 == null || this.f374tr == null || this.f371bl == null || this.f372br == null)) {
+        View view9 = this.f372tl;
+        if (!(view9 == null || this.f373tr == null || this.f370bl == null || this.f371br == null)) {
             if (view9 == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("tl");
                 view9 = null;
             }
             if (Intrinsics.areEqual((Object) view9, (Object) view5)) {
-                View view10 = this.f374tr;
+                View view10 = this.f373tr;
                 if (view10 == null) {
                     Intrinsics.throwUninitializedPropertyAccessException("tr");
                     view10 = null;
                 }
                 if (Intrinsics.areEqual((Object) view10, (Object) view6)) {
-                    View view11 = this.f371bl;
+                    View view11 = this.f370bl;
                     if (view11 == null) {
                         Intrinsics.throwUninitializedPropertyAccessException("bl");
                         view11 = null;
                     }
                     if (Intrinsics.areEqual((Object) view11, (Object) view7)) {
-                        View view12 = this.f372br;
+                        View view12 = this.f371br;
                         if (view12 == null) {
                             Intrinsics.throwUninitializedPropertyAccessException("br");
                             view12 = null;
@@ -707,10 +707,10 @@ public final class PrivacyDotViewController {
                 }
             }
         }
-        this.f373tl = view5;
-        this.f374tr = view6;
-        this.f371bl = view7;
-        this.f372br = view8;
+        this.f372tl = view5;
+        this.f373tr = view6;
+        this.f370bl = view7;
+        this.f371br = view8;
         boolean isLayoutRtl = this.configurationController.isLayoutRtl();
         View selectDesignatedCorner = selectDesignatedCorner(0, isLayoutRtl);
         int cornerIndex = cornerIndex(selectDesignatedCorner);
@@ -728,7 +728,7 @@ public final class PrivacyDotViewController {
 
     /* access modifiers changed from: private */
     /* renamed from: initialize$lambda-13  reason: not valid java name */
-    public static final void m3059initialize$lambda13(PrivacyDotViewController privacyDotViewController) {
+    public static final void m3063initialize$lambda13(PrivacyDotViewController privacyDotViewController) {
         Intrinsics.checkNotNullParameter(privacyDotViewController, "this$0");
         privacyDotViewController.animationScheduler.addCallback(privacyDotViewController.systemStatusAnimationCallback);
     }
@@ -757,7 +757,7 @@ public final class PrivacyDotViewController {
 
     /* access modifiers changed from: private */
     /* renamed from: scheduleUpdate$lambda-16  reason: not valid java name */
-    public static final void m3060scheduleUpdate$lambda16(PrivacyDotViewController privacyDotViewController) {
+    public static final void m3064scheduleUpdate$lambda16(PrivacyDotViewController privacyDotViewController) {
         Intrinsics.checkNotNullParameter(privacyDotViewController, "this$0");
         privacyDotViewController.processNextViewState();
     }

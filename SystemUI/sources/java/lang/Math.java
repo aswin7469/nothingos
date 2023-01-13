@@ -13,10 +13,10 @@ public final class Math {
     private static final double DEGREES_TO_RADIANS = 0.017453292519943295d;
 
     /* renamed from: E */
-    public static final double f536E = 2.718281828459045d;
+    public static final double f534E = 2.718281828459045d;
 
     /* renamed from: PI */
-    public static final double f537PI = 3.141592653589793d;
+    public static final double f535PI = 3.141592653589793d;
     private static final double RADIANS_TO_DEGREES = 57.29577951308232d;
     private static final long negativeZeroDoubleBits = Double.doubleToRawLongBits(-0.0d);
     private static final long negativeZeroFloatBits = ((long) Float.floatToRawIntBits(-0.0f));

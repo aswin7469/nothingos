@@ -19,6 +19,6 @@ public final /* synthetic */ class DisplayAreaHelperController$$ExternalSyntheti
     }
 
     public final void run() {
-        this.f$0.mo49473x5024e067(this.f$1, this.f$2, this.f$3);
+        this.f$0.mo49482x5024e067(this.f$1, this.f$2, this.f$3);
     }
 }

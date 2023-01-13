@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.p014tv.TvBottomSheetActivity;
 import com.android.systemui.statusbar.policy.IndividualSensorPrivacyController;
 import javax.inject.Inject;
@@ -56,7 +56,7 @@ public class TvUnblockSensorActivity extends TvBottomSheetActivity {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onCreate$0$com-android-systemui-sensorprivacy-television-TvUnblockSensorActivity */
-    public /* synthetic */ void mo37693x11c64b3f(int i, boolean z) {
+    public /* synthetic */ void mo37694x11c64b3f(int i, boolean z) {
         if (this.mSensor == Integer.MAX_VALUE && !this.mSensorPrivacyController.isSensorBlocked(2) && !this.mSensorPrivacyController.isSensorBlocked(1)) {
             showToastAndFinish();
         } else if (this.mSensor != i || z) {
@@ -68,7 +68,7 @@ public class TvUnblockSensorActivity extends TvBottomSheetActivity {
 
     private void showToastAndFinish() {
         int i = this.mSensor;
-        Toast.makeText(this, i != 1 ? i != 2 ? C1893R.string.sensor_privacy_mic_camera_unblocked_toast_content : C1893R.string.sensor_privacy_camera_unblocked_toast_content : C1893R.string.sensor_privacy_mic_unblocked_toast_content, 0).show();
+        Toast.makeText(this, i != 1 ? i != 2 ? C1894R.string.sensor_privacy_mic_camera_unblocked_toast_content : C1894R.string.sensor_privacy_camera_unblocked_toast_content : C1894R.string.sensor_privacy_mic_unblocked_toast_content, 0).show();
         finish();
     }
 
@@ -84,12 +84,12 @@ public class TvUnblockSensorActivity extends TvBottomSheetActivity {
     }
 
     private void initUI() {
-        this.mTitle = (TextView) findViewById(C1893R.C1897id.bottom_sheet_title);
-        this.mContent = (TextView) findViewById(C1893R.C1897id.bottom_sheet_body);
-        this.mIcon = (ImageView) findViewById(C1893R.C1897id.bottom_sheet_icon);
-        this.mSecondIcon = (ImageView) findViewById(C1893R.C1897id.bottom_sheet_second_icon);
-        this.mPositiveButton = (Button) findViewById(C1893R.C1897id.bottom_sheet_positive_button);
-        Button button = (Button) findViewById(C1893R.C1897id.bottom_sheet_negative_button);
+        this.mTitle = (TextView) findViewById(C1894R.C1898id.bottom_sheet_title);
+        this.mContent = (TextView) findViewById(C1894R.C1898id.bottom_sheet_body);
+        this.mIcon = (ImageView) findViewById(C1894R.C1898id.bottom_sheet_icon);
+        this.mSecondIcon = (ImageView) findViewById(C1894R.C1898id.bottom_sheet_second_icon);
+        this.mPositiveButton = (Button) findViewById(C1894R.C1898id.bottom_sheet_positive_button);
+        Button button = (Button) findViewById(C1894R.C1898id.bottom_sheet_negative_button);
         this.mCancelButton = button;
         button.setText(17039360);
         this.mCancelButton.setOnClickListener(new TvUnblockSensorActivity$$ExternalSyntheticLambda2(this));
@@ -98,7 +98,7 @@ public class TvUnblockSensorActivity extends TvBottomSheetActivity {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$initUI$1$com-android-systemui-sensorprivacy-television-TvUnblockSensorActivity */
-    public /* synthetic */ void mo37692x8577dca9(View view) {
+    public /* synthetic */ void mo37693x8577dca9(View view) {
         finish();
     }
 
@@ -119,27 +119,27 @@ public class TvUnblockSensorActivity extends TvBottomSheetActivity {
         if ((i2 == 2 || i2 == Integer.MAX_VALUE) && this.mSensorPrivacyController.isSensorBlockedByHardwareToggle(2)) {
             z = true;
         }
-        setIconTint(resources.getBoolean(C1893R.bool.config_unblockHwSensorIconEnableTint));
-        setIconSize(C1893R.dimen.unblock_hw_sensor_icon_width, C1893R.dimen.unblock_hw_sensor_icon_height);
+        setIconTint(resources.getBoolean(C1894R.bool.config_unblockHwSensorIconEnableTint));
+        setIconSize(C1894R.dimen.unblock_hw_sensor_icon_width, C1894R.dimen.unblock_hw_sensor_icon_height);
         if (z2 && z) {
-            this.mTitle.setText(C1893R.string.sensor_privacy_start_use_mic_camera_blocked_dialog_title);
-            this.mContent.setText(C1893R.string.sensor_privacy_start_use_mic_camera_blocked_dialog_content);
-            this.mIcon.setImageResource(C1893R.C1895drawable.unblock_hw_sensor_all);
-            Drawable drawable = resources.getDrawable(C1893R.C1895drawable.unblock_hw_sensor_all_second, getTheme());
+            this.mTitle.setText(C1894R.string.sensor_privacy_start_use_mic_camera_blocked_dialog_title);
+            this.mContent.setText(C1894R.string.sensor_privacy_start_use_mic_camera_blocked_dialog_content);
+            this.mIcon.setImageResource(C1894R.C1896drawable.unblock_hw_sensor_all);
+            Drawable drawable = resources.getDrawable(C1894R.C1896drawable.unblock_hw_sensor_all_second, getTheme());
             if (drawable == null) {
                 this.mSecondIcon.setVisibility(8);
             } else {
                 this.mSecondIcon.setImageDrawable(drawable);
             }
         } else if (z) {
-            this.mTitle.setText(C1893R.string.sensor_privacy_start_use_camera_blocked_dialog_title);
-            this.mContent.setText(C1893R.string.sensor_privacy_start_use_camera_blocked_dialog_content);
-            this.mIcon.setImageResource(C1893R.C1895drawable.unblock_hw_sensor_camera);
+            this.mTitle.setText(C1894R.string.sensor_privacy_start_use_camera_blocked_dialog_title);
+            this.mContent.setText(C1894R.string.sensor_privacy_start_use_camera_blocked_dialog_content);
+            this.mIcon.setImageResource(C1894R.C1896drawable.unblock_hw_sensor_camera);
             this.mSecondIcon.setVisibility(8);
         } else if (z2) {
-            this.mTitle.setText(C1893R.string.sensor_privacy_start_use_mic_blocked_dialog_title);
-            this.mContent.setText(C1893R.string.sensor_privacy_start_use_mic_blocked_dialog_content);
-            this.mIcon.setImageResource(C1893R.C1895drawable.unblock_hw_sensor_microphone);
+            this.mTitle.setText(C1894R.string.sensor_privacy_start_use_mic_blocked_dialog_title);
+            this.mContent.setText(C1894R.string.sensor_privacy_start_use_mic_blocked_dialog_content);
+            this.mIcon.setImageResource(C1894R.C1896drawable.unblock_hw_sensor_microphone);
             this.mSecondIcon.setVisibility(8);
         }
         Drawable drawable2 = this.mIcon.getDrawable();
@@ -152,21 +152,21 @@ public class TvUnblockSensorActivity extends TvBottomSheetActivity {
 
     private void updateUiForSoftwareToggle() {
         setIconTint(true);
-        setIconSize(C1893R.dimen.bottom_sheet_icon_size, C1893R.dimen.bottom_sheet_icon_size);
+        setIconSize(C1894R.dimen.bottom_sheet_icon_size, C1894R.dimen.bottom_sheet_icon_size);
         int i = this.mSensor;
         if (i == 1) {
-            this.mTitle.setText(C1893R.string.sensor_privacy_start_use_mic_dialog_title);
-            this.mContent.setText(C1893R.string.sensor_privacy_start_use_mic_dialog_content);
+            this.mTitle.setText(C1894R.string.sensor_privacy_start_use_mic_dialog_title);
+            this.mContent.setText(C1894R.string.sensor_privacy_start_use_mic_dialog_content);
             this.mIcon.setImageResource(17303177);
             this.mSecondIcon.setVisibility(8);
         } else if (i != 2) {
-            this.mTitle.setText(C1893R.string.sensor_privacy_start_use_mic_camera_dialog_title);
-            this.mContent.setText(C1893R.string.sensor_privacy_start_use_mic_camera_dialog_content);
+            this.mTitle.setText(C1894R.string.sensor_privacy_start_use_mic_camera_dialog_title);
+            this.mContent.setText(C1894R.string.sensor_privacy_start_use_mic_camera_dialog_content);
             this.mIcon.setImageResource(17303172);
             this.mSecondIcon.setImageResource(17303177);
         } else {
-            this.mTitle.setText(C1893R.string.sensor_privacy_start_use_camera_dialog_title);
-            this.mContent.setText(C1893R.string.sensor_privacy_start_use_camera_dialog_content);
+            this.mTitle.setText(C1894R.string.sensor_privacy_start_use_camera_dialog_title);
+            this.mContent.setText(C1894R.string.sensor_privacy_start_use_camera_dialog_content);
             this.mIcon.setImageResource(17303172);
             this.mSecondIcon.setVisibility(8);
         }
@@ -176,7 +176,7 @@ public class TvUnblockSensorActivity extends TvBottomSheetActivity {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateUiForSoftwareToggle$2$com-android-systemui-sensorprivacy-television-TvUnblockSensorActivity */
-    public /* synthetic */ void mo37694x873fca73(View view) {
+    public /* synthetic */ void mo37695x873fca73(View view) {
         int i = this.mSensor;
         if (i == Integer.MAX_VALUE) {
             this.mSensorPrivacyController.setSensorBlocked(5, 2, false);
@@ -189,7 +189,7 @@ public class TvUnblockSensorActivity extends TvBottomSheetActivity {
     private void setIconTint(boolean z) {
         Resources resources = getResources();
         if (z) {
-            ColorStateList colorStateList = resources.getColorStateList(C1893R.C1894color.bottom_sheet_icon_color, getTheme());
+            ColorStateList colorStateList = resources.getColorStateList(C1894R.C1895color.bottom_sheet_icon_color, getTheme());
             this.mIcon.setImageTintList(colorStateList);
             this.mSecondIcon.setImageTintList(colorStateList);
         } else {

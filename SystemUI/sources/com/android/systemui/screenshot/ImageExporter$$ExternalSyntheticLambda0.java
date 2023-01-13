@@ -17,6 +17,6 @@ public final /* synthetic */ class ImageExporter$$ExternalSyntheticLambda0 imple
     }
 
     public final Object attachCompleter(CallbackToFutureAdapter.Completer completer) {
-        return this.f$0.m2996lambda$delete$5$comandroidsystemuiscreenshotImageExporter(this.f$1, this.f$2, completer);
+        return this.f$0.m3000lambda$delete$5$comandroidsystemuiscreenshotImageExporter(this.f$1, this.f$2, completer);
     }
 }

@@ -5,7 +5,7 @@ public class BufferedWriter extends Writer {
     private static int defaultCharBufferSize = 8192;
 
     /* renamed from: cb */
-    private char[] f512cb;
+    private char[] f510cb;
     private int nChars;
     private int nextChar;
     private Writer out;
@@ -22,7 +22,7 @@ public class BufferedWriter extends Writer {
         super(writer);
         if (i > 0) {
             this.out = writer;
-            this.f512cb = new char[i];
+            this.f510cb = new char[i];
             this.nChars = i;
             this.nextChar = 0;
             return;
@@ -42,7 +42,7 @@ public class BufferedWriter extends Writer {
             ensureOpen();
             int i = this.nextChar;
             if (i != 0) {
-                this.out.write(this.f512cb, 0, i);
+                this.out.write(this.f510cb, 0, i);
                 this.nextChar = 0;
             }
         }
@@ -54,7 +54,7 @@ public class BufferedWriter extends Writer {
             if (this.nextChar >= this.nChars) {
                 flushBuffer();
             }
-            char[] cArr = this.f512cb;
+            char[] cArr = this.f510cb;
             int i2 = this.nextChar;
             this.nextChar = i2 + 1;
             cArr[i2] = (char) i;
@@ -75,7 +75,7 @@ public class BufferedWriter extends Writer {
                 }
                 while (i < i3) {
                     int min = min(this.nChars - this.nextChar, i3 - i);
-                    System.arraycopy((Object) cArr, i, (Object) this.f512cb, this.nextChar, min);
+                    System.arraycopy((Object) cArr, i, (Object) this.f510cb, this.nextChar, min);
                     i += min;
                     int i4 = this.nextChar + min;
                     this.nextChar = i4;
@@ -94,7 +94,7 @@ public class BufferedWriter extends Writer {
             while (i < i3) {
                 int min = min(this.nChars - this.nextChar, i3 - i);
                 int i4 = i + min;
-                str.getChars(i, i4, this.f512cb, this.nextChar);
+                str.getChars(i, i4, this.f510cb, this.nextChar);
                 int i5 = this.nextChar + min;
                 this.nextChar = i5;
                 if (i5 >= this.nChars) {
@@ -126,11 +126,11 @@ public class BufferedWriter extends Writer {
                         writer.close();
                     }
                     this.out = null;
-                    this.f512cb = null;
+                    this.f510cb = null;
                     return;
                 } catch (Throwable th) {
                     this.out = null;
-                    this.f512cb = null;
+                    this.f510cb = null;
                     throw th;
                 }
             } else {

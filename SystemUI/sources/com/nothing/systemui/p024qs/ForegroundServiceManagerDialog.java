@@ -3,7 +3,7 @@ package com.nothing.systemui.p024qs;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.statusbar.phone.SystemUIDialog;
 import com.nothing.systemui.util.NTLogUtil;
 import java.util.concurrent.Executor;
@@ -23,28 +23,28 @@ public class ForegroundServiceManagerDialog extends SystemUIDialog {
         this.mMainExecutor = executor;
         this.mAppsCount = i;
         this.mLastOrientation = context.getResources().getConfiguration().orientation;
-        getWindow().setBackgroundDrawable(this.mContext.getResources().getDrawable(C1893R.C1895drawable.nt_fgs_dialog_background));
-        NTLogUtil.m1680d(TAG, "Init ForegroundServiceManagerDialog appsCount: " + this.mAppsCount);
+        getWindow().setBackgroundDrawable(this.mContext.getResources().getDrawable(C1894R.C1896drawable.nt_fgs_dialog_background));
+        NTLogUtil.m1686d(TAG, "Init ForegroundServiceManagerDialog appsCount: " + this.mAppsCount);
     }
 
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        NTLogUtil.m1680d(TAG, "onCreate");
-        mo57608x400f6ae();
+        NTLogUtil.m1686d(TAG, "onCreate");
+        mo57629x400f6ae();
     }
 
     public void onStart() {
         super.onStart();
-        NTLogUtil.m1680d(TAG, "onStart");
+        NTLogUtil.m1686d(TAG, "onStart");
     }
 
     public void onStop() {
         super.onStop();
-        NTLogUtil.m1680d(TAG, "onStop");
+        NTLogUtil.m1686d(TAG, "onStop");
     }
 
     public void onConfigurationChanged(Configuration configuration) {
-        NTLogUtil.m1680d(TAG, "onConfigurationChanged");
+        NTLogUtil.m1686d(TAG, "onConfigurationChanged");
         int i = this.mContext.getResources().getConfiguration().orientation;
         if (this.mLastOrientation != i) {
             this.mMainExecutor.execute(new ForegroundServiceManagerDialog$$ExternalSyntheticLambda0(this));
@@ -54,9 +54,9 @@ public class ForegroundServiceManagerDialog extends SystemUIDialog {
 
     /* access modifiers changed from: private */
     /* renamed from: updateWindowSize */
-    public void mo57608x400f6ae() {
-        int integer = this.mContext.getResources().getInteger(C1893R.integer.fgs_scroll_enabled_apps_count);
-        getWindow().setLayout(this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.settings_panel_width), this.mAppsCount > integer ? this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.fgs_dialog_height) : -2);
-        NTLogUtil.m1680d(TAG, "updateWindowSize scrollEnabledCount: " + integer);
+    public void mo57629x400f6ae() {
+        int integer = this.mContext.getResources().getInteger(C1894R.integer.fgs_scroll_enabled_apps_count);
+        getWindow().setLayout(this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.settings_panel_width), this.mAppsCount > integer ? this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.fgs_dialog_height) : -2);
+        NTLogUtil.m1686d(TAG, "updateWindowSize scrollEnabledCount: " + integer);
     }
 }

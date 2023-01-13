@@ -11,6 +11,6 @@ public final /* synthetic */ class KeyguardBottomAreaView$$ExternalSyntheticLamb
     }
 
     public final Object get() {
-        return this.f$0.mo44130x8a9a7c2();
+        return this.f$0.mo44140x8a9a7c2();
     }
 }

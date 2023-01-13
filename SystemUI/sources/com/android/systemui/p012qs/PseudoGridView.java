@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewOverlay;
 import android.widget.BaseAdapter;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import java.lang.ref.WeakReference;
 
 /* renamed from: com.android.systemui.qs.PseudoGridView */
@@ -24,7 +24,7 @@ public class PseudoGridView extends ViewGroup {
 
     public PseudoGridView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C1893R.styleable.PseudoGridView);
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C1894R.styleable.PseudoGridView);
         int indexCount = obtainStyledAttributes.getIndexCount();
         for (int i = 0; i < indexCount; i++) {
             int index = obtainStyledAttributes.getIndex(i);

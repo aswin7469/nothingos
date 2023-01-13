@@ -12,6 +12,6 @@ public final /* synthetic */ class KeyguardUserSwitcherController$$ExternalSynth
     }
 
     public final boolean onTouch(View view, MotionEvent motionEvent) {
-        return this.f$0.mo45883xe534b629(view, motionEvent);
+        return this.f$0.mo45895xe534b629(view, motionEvent);
     }
 }

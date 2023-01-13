@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.view.ViewOverlay;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.FontSizeUtils;
 
 /* renamed from: com.android.systemui.qs.carrier.QSCarrierGroup */
@@ -36,32 +36,32 @@ public class QSCarrierGroup extends LinearLayout {
 
     /* access modifiers changed from: package-private */
     public TextView getNoSimTextView() {
-        return (TextView) findViewById(C1893R.C1897id.no_carrier_text);
+        return (TextView) findViewById(C1894R.C1898id.no_carrier_text);
     }
 
     /* access modifiers changed from: package-private */
     public QSCarrier getCarrier1View() {
-        return (QSCarrier) findViewById(C1893R.C1897id.carrier1);
+        return (QSCarrier) findViewById(C1894R.C1898id.carrier1);
     }
 
     /* access modifiers changed from: package-private */
     public QSCarrier getCarrier2View() {
-        return (QSCarrier) findViewById(C1893R.C1897id.carrier2);
+        return (QSCarrier) findViewById(C1894R.C1898id.carrier2);
     }
 
     /* access modifiers changed from: package-private */
     public QSCarrier getCarrier3View() {
-        return (QSCarrier) findViewById(C1893R.C1897id.carrier3);
+        return (QSCarrier) findViewById(C1894R.C1898id.carrier3);
     }
 
     /* access modifiers changed from: package-private */
     public View getCarrierDivider1() {
-        return findViewById(C1893R.C1897id.qs_carrier_divider1);
+        return findViewById(C1894R.C1898id.qs_carrier_divider1);
     }
 
     /* access modifiers changed from: package-private */
     public View getCarrierDivider2() {
-        return findViewById(C1893R.C1897id.qs_carrier_divider2);
+        return findViewById(C1894R.C1898id.qs_carrier_divider2);
     }
 
     public void updateTextAppearance(int i) {

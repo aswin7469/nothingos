@@ -15,6 +15,6 @@ public final /* synthetic */ class LocalDate$$ExternalSyntheticLambda2 implement
     }
 
     public final Object apply(long j) {
-        return this.f$0.m3160lambda$datesUntil$1$javatimeLocalDate(this.f$1, this.f$2, j);
+        return this.f$0.m3164lambda$datesUntil$1$javatimeLocalDate(this.f$1, this.f$2, j);
     }
 }

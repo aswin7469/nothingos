@@ -12,6 +12,6 @@ public final /* synthetic */ class PrivacyConfig$$ExternalSyntheticLambda3 imple
     }
 
     public final boolean test(Object obj) {
-        return PrivacyConfig.m2869removeCallback$lambda6$lambda5(this.f$0, (WeakReference) obj);
+        return PrivacyConfig.m2874removeCallback$lambda6$lambda5(this.f$0, (WeakReference) obj);
     }
 }

@@ -13,6 +13,6 @@ public final /* synthetic */ class ControlsBindingControllerImpl$$ExternalSynthe
     }
 
     public final void run() {
-        ControlsBindingControllerImpl.m2602onComponentRemoved$lambda2(this.f$0, this.f$1);
+        ControlsBindingControllerImpl.m2607onComponentRemoved$lambda2(this.f$0, this.f$1);
     }
 }

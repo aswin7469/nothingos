@@ -11,6 +11,6 @@ public final /* synthetic */ class AuthContainerView$BiometricCallback$$External
     }
 
     public final void run() {
-        this.f$0.mo30579x4d57019f();
+        this.f$0.mo30589x4d57019f();
     }
 }

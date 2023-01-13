@@ -66,7 +66,7 @@ import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import androidx.core.view.accessibility.AccessibilityViewCommand;
 import com.android.internal.logging.UiEventLogger;
 import com.android.internal.policy.PhoneWindow;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.broadcast.BroadcastSender;
 import com.android.systemui.screenshot.DraggableConstraintLayout;
@@ -156,26 +156,26 @@ public class ClipboardOverlayController {
         this.mWindow = floatingWindow;
         floatingWindow.setWindowManager(windowManager, (IBinder) null, (String) null);
         setWindowFocusable(false);
-        DraggableConstraintLayout draggableConstraintLayout = (DraggableConstraintLayout) LayoutInflater.from(createWindowContext).inflate(C1893R.layout.clipboard_overlay, (ViewGroup) null);
+        DraggableConstraintLayout draggableConstraintLayout = (DraggableConstraintLayout) LayoutInflater.from(createWindowContext).inflate(C1894R.layout.clipboard_overlay, (ViewGroup) null);
         this.mView = draggableConstraintLayout;
-        this.mActionContainerBackground = (View) Objects.requireNonNull(draggableConstraintLayout.findViewById(C1893R.C1897id.actions_container_background));
-        this.mActionContainer = (LinearLayout) Objects.requireNonNull((LinearLayout) draggableConstraintLayout.findViewById(C1893R.C1897id.actions));
-        this.mClipboardPreview = (View) Objects.requireNonNull(draggableConstraintLayout.findViewById(C1893R.C1897id.clipboard_preview));
-        this.mImagePreview = (ImageView) Objects.requireNonNull((ImageView) draggableConstraintLayout.findViewById(C1893R.C1897id.image_preview));
-        TextView textView = (TextView) Objects.requireNonNull((TextView) draggableConstraintLayout.findViewById(C1893R.C1897id.text_preview));
+        this.mActionContainerBackground = (View) Objects.requireNonNull(draggableConstraintLayout.findViewById(C1894R.C1898id.actions_container_background));
+        this.mActionContainer = (LinearLayout) Objects.requireNonNull((LinearLayout) draggableConstraintLayout.findViewById(C1894R.C1898id.actions));
+        this.mClipboardPreview = (View) Objects.requireNonNull(draggableConstraintLayout.findViewById(C1894R.C1898id.clipboard_preview));
+        this.mImagePreview = (ImageView) Objects.requireNonNull((ImageView) draggableConstraintLayout.findViewById(C1894R.C1898id.image_preview));
+        TextView textView = (TextView) Objects.requireNonNull((TextView) draggableConstraintLayout.findViewById(C1894R.C1898id.text_preview));
         this.mTextPreview = textView;
-        this.mHiddenPreview = (TextView) Objects.requireNonNull((TextView) draggableConstraintLayout.findViewById(C1893R.C1897id.hidden_preview));
-        this.mPreviewBorder = (View) Objects.requireNonNull(draggableConstraintLayout.findViewById(C1893R.C1897id.preview_border));
-        OverlayActionChip overlayActionChip = (OverlayActionChip) Objects.requireNonNull((OverlayActionChip) draggableConstraintLayout.findViewById(C1893R.C1897id.edit_chip));
+        this.mHiddenPreview = (TextView) Objects.requireNonNull((TextView) draggableConstraintLayout.findViewById(C1894R.C1898id.hidden_preview));
+        this.mPreviewBorder = (View) Objects.requireNonNull(draggableConstraintLayout.findViewById(C1894R.C1898id.preview_border));
+        OverlayActionChip overlayActionChip = (OverlayActionChip) Objects.requireNonNull((OverlayActionChip) draggableConstraintLayout.findViewById(C1894R.C1898id.edit_chip));
         this.mEditChip = overlayActionChip;
-        OverlayActionChip overlayActionChip2 = (OverlayActionChip) Objects.requireNonNull((OverlayActionChip) draggableConstraintLayout.findViewById(C1893R.C1897id.share_chip));
+        OverlayActionChip overlayActionChip2 = (OverlayActionChip) Objects.requireNonNull((OverlayActionChip) draggableConstraintLayout.findViewById(C1894R.C1898id.share_chip));
         this.mShareChip = overlayActionChip2;
-        OverlayActionChip overlayActionChip3 = (OverlayActionChip) Objects.requireNonNull((OverlayActionChip) draggableConstraintLayout.findViewById(C1893R.C1897id.remote_copy_chip));
+        OverlayActionChip overlayActionChip3 = (OverlayActionChip) Objects.requireNonNull((OverlayActionChip) draggableConstraintLayout.findViewById(C1894R.C1898id.remote_copy_chip));
         this.mRemoteCopyChip = overlayActionChip3;
         overlayActionChip.setAlpha(1.0f);
         overlayActionChip2.setAlpha(1.0f);
         overlayActionChip3.setAlpha(1.0f);
-        View view = (View) Objects.requireNonNull(draggableConstraintLayout.findViewById(C1893R.C1897id.dismiss_button));
+        View view = (View) Objects.requireNonNull(draggableConstraintLayout.findViewById(C1894R.C1898id.dismiss_button));
         this.mDismissButton = view;
         overlayActionChip2.setContentDescription(createWindowContext.getString(17041496));
         draggableConstraintLayout.setCallbacks(new DraggableConstraintLayout.SwipeDismissCallbacks() {
@@ -194,14 +194,14 @@ public class ClipboardOverlayController {
         });
         textView.getViewTreeObserver().addOnPreDrawListener(new ClipboardOverlayController$$ExternalSyntheticLambda12(this));
         view.setOnClickListener(new ClipboardOverlayController$$ExternalSyntheticLambda13(this));
-        overlayActionChip.setIcon(Icon.createWithResource(createWindowContext, C1893R.C1895drawable.ic_screenshot_edit), true);
-        overlayActionChip3.setIcon(Icon.createWithResource(createWindowContext, C1893R.C1895drawable.ic_baseline_devices_24), true);
-        overlayActionChip2.setIcon(Icon.createWithResource(createWindowContext, C1893R.C1895drawable.ic_screenshot_share), true);
+        overlayActionChip.setIcon(Icon.createWithResource(createWindowContext, C1894R.C1896drawable.ic_screenshot_edit), true);
+        overlayActionChip3.setIcon(Icon.createWithResource(createWindowContext, C1894R.C1896drawable.ic_baseline_devices_24), true);
+        overlayActionChip2.setIcon(Icon.createWithResource(createWindowContext, C1894R.C1896drawable.ic_screenshot_share), true);
         this.mOrientation = createWindowContext.getResources().getConfiguration().orientation;
         attachWindow();
         withWindowAttached(new ClipboardOverlayController$$ExternalSyntheticLambda14(this));
         timeoutHandler.setOnTimeoutRunnable(new ClipboardOverlayController$$ExternalSyntheticLambda15(this));
-        C20153 r10 = new BroadcastReceiver() {
+        C20173 r10 = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
                 if ("android.intent.action.CLOSE_SYSTEM_DIALOGS".equals(intent.getAction())) {
                     ClipboardOverlayController.this.mUiEventLogger.log(ClipboardOverlayEvent.CLIPBOARD_OVERLAY_DISMISSED_OTHER);
@@ -211,7 +211,7 @@ public class ClipboardOverlayController {
         };
         this.mCloseDialogsReceiver = r10;
         broadcastDispatcher.registerReceiver(r10, new IntentFilter("android.intent.action.CLOSE_SYSTEM_DIALOGS"));
-        C20164 r3 = new BroadcastReceiver() {
+        C20184 r3 = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
                 if (ClipboardOverlayController.SCREENSHOT_ACTION.equals(intent.getAction())) {
                     ClipboardOverlayController.this.mUiEventLogger.log(ClipboardOverlayEvent.CLIPBOARD_OVERLAY_DISMISSED_OTHER);
@@ -229,7 +229,7 @@ public class ClipboardOverlayController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-clipboardoverlay-ClipboardOverlayController */
-    public /* synthetic */ boolean mo31300x668837e() {
+    public /* synthetic */ boolean mo31311x668837e() {
         TextView textView = this.mTextPreview;
         textView.setMaxLines((this.mTextPreview.getHeight() - (this.mTextPreview.getPaddingTop() + this.mTextPreview.getPaddingBottom())) / textView.getLineHeight());
         return true;
@@ -237,14 +237,14 @@ public class ClipboardOverlayController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$1$com-android-systemui-clipboardoverlay-ClipboardOverlayController */
-    public /* synthetic */ void mo31301x70980b9d(View view) {
+    public /* synthetic */ void mo31312x70980b9d(View view) {
         this.mUiEventLogger.log(ClipboardOverlayEvent.CLIPBOARD_OVERLAY_DISMISS_TAPPED);
         animateOut();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$2$com-android-systemui-clipboardoverlay-ClipboardOverlayController */
-    public /* synthetic */ void mo31302xdac793bc() {
+    public /* synthetic */ void mo31313xdac793bc() {
         this.mWindow.setContentView(this.mView);
         updateInsets(this.mWindowManager.getCurrentWindowMetrics().getWindowInsets());
         this.mView.requestLayout();
@@ -264,7 +264,7 @@ public class ClipboardOverlayController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$3$com-android-systemui-clipboardoverlay-ClipboardOverlayController */
-    public /* synthetic */ void mo31303x44f71bdb() {
+    public /* synthetic */ void mo31314x44f71bdb() {
         this.mUiEventLogger.log(ClipboardOverlayEvent.CLIPBOARD_OVERLAY_TIMED_OUT);
         animateOut();
     }
@@ -279,32 +279,32 @@ public class ClipboardOverlayController {
         reset();
         boolean z = (clipData == null || clipData.getDescription().getExtras() == null || !clipData.getDescription().getExtras().getBoolean("android.content.extra.IS_SENSITIVE")) ? false : true;
         if (clipData == null || clipData.getItemCount() == 0) {
-            showTextPreview(this.mContext.getResources().getString(C1893R.string.clipboard_overlay_text_copied), this.mTextPreview);
-            str2 = this.mContext.getString(C1893R.string.clipboard_content_copied);
+            showTextPreview(this.mContext.getResources().getString(C1894R.string.clipboard_overlay_text_copied), this.mTextPreview);
+            str2 = this.mContext.getString(C1894R.string.clipboard_content_copied);
         } else if (!TextUtils.isEmpty(clipData.getItemAt(0).getText())) {
             ClipData.Item itemAt = clipData.getItemAt(0);
             if (DeviceConfig.getBoolean("systemui", "clipboard_overlay_show_actions", false) && itemAt.getTextLinks() != null) {
                 AsyncTask.execute(new ClipboardOverlayController$$ExternalSyntheticLambda8(this, clipData, str));
             }
             if (z) {
-                showEditableText(this.mContext.getResources().getString(C1893R.string.clipboard_asterisks), true);
+                showEditableText(this.mContext.getResources().getString(C1894R.string.clipboard_asterisks), true);
             } else {
                 showEditableText(itemAt.getText(), false);
             }
             showShareChip(clipData);
-            str2 = this.mContext.getString(C1893R.string.clipboard_text_copied);
+            str2 = this.mContext.getString(C1894R.string.clipboard_text_copied);
         } else if (clipData.getItemAt(0).getUri() == null) {
-            showTextPreview(this.mContext.getResources().getString(C1893R.string.clipboard_overlay_text_copied), this.mTextPreview);
-            str2 = this.mContext.getString(C1893R.string.clipboard_content_copied);
+            showTextPreview(this.mContext.getResources().getString(C1894R.string.clipboard_overlay_text_copied), this.mTextPreview);
+            str2 = this.mContext.getString(C1894R.string.clipboard_content_copied);
         } else if (tryShowEditableImage(clipData.getItemAt(0).getUri(), z)) {
             showShareChip(clipData);
-            str2 = this.mContext.getString(C1893R.string.clipboard_image_copied);
+            str2 = this.mContext.getString(C1894R.string.clipboard_image_copied);
         } else {
-            str2 = this.mContext.getString(C1893R.string.clipboard_content_copied);
+            str2 = this.mContext.getString(C1894R.string.clipboard_content_copied);
         }
         Intent remoteCopyIntent = getRemoteCopyIntent(clipData);
         if (this.mContext.getPackageManager().resolveActivity(remoteCopyIntent, PackageManager.ResolveInfoFlags.of(0)) != null) {
-            this.mRemoteCopyChip.setContentDescription(this.mContext.getString(C1893R.string.clipboard_send_nearby_description));
+            this.mRemoteCopyChip.setContentDescription(this.mContext.getString(C1894R.string.clipboard_send_nearby_description));
             this.mRemoteCopyChip.setVisibility(0);
             this.mRemoteCopyChip.setOnClickListener(new ClipboardOverlayController$$ExternalSyntheticLambda9(this, remoteCopyIntent));
             this.mActionContainerBackground.setVisibility(0);
@@ -317,13 +317,13 @@ public class ClipboardOverlayController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setClipData$4$com-android-systemui-clipboardoverlay-ClipboardOverlayController */
-    public /* synthetic */ void mo31304xee2f917e(ClipData clipData, String str) {
+    public /* synthetic */ void mo31315xee2f917e(ClipData clipData, String str) {
         classifyText(clipData.getItemAt(0), str);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setClipData$5$com-android-systemui-clipboardoverlay-ClipboardOverlayController */
-    public /* synthetic */ void mo31305x585f199d(Intent intent, View view) {
+    public /* synthetic */ void mo31316x585f199d(Intent intent, View view) {
         this.mUiEventLogger.log(ClipboardOverlayEvent.CLIPBOARD_OVERLAY_REMOTE_COPY_TAPPED);
         this.mContext.startActivity(intent);
         animateOut();
@@ -331,7 +331,7 @@ public class ClipboardOverlayController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setClipData$6$com-android-systemui-clipboardoverlay-ClipboardOverlayController */
-    public /* synthetic */ void mo31306xc28ea1bc(String str) {
+    public /* synthetic */ void mo31317xc28ea1bc(String str) {
         updateInsets(this.mWindowManager.getCurrentWindowMetrics().getWindowInsets());
         Animator animator = this.mEnterAnimator;
         if (animator == null || !animator.isRunning()) {
@@ -355,7 +355,7 @@ public class ClipboardOverlayController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$classifyText$7$com-android-systemui-clipboardoverlay-ClipboardOverlayController */
-    public /* synthetic */ void mo31292x936ee82c(ArrayList arrayList, String str) {
+    public /* synthetic */ void mo31303x936ee82c(ArrayList arrayList, String str) {
         resetActionChips();
         if (arrayList.size() > 0) {
             this.mActionContainerBackground.setVisibility(0);
@@ -381,12 +381,12 @@ public class ClipboardOverlayController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$showShareChip$8$com-android-systemui-clipboardoverlay-ClipboardOverlayController */
-    public /* synthetic */ void mo31308x4377dcc8(ClipData clipData, View view) {
+    public /* synthetic */ void mo31319x4377dcc8(ClipData clipData, View view) {
         shareContent(clipData);
     }
 
     private OverlayActionChip constructActionChip(RemoteAction remoteAction) {
-        OverlayActionChip overlayActionChip = (OverlayActionChip) LayoutInflater.from(this.mContext).inflate(C1893R.layout.overlay_action_chip, this.mActionContainer, false);
+        OverlayActionChip overlayActionChip = (OverlayActionChip) LayoutInflater.from(this.mContext).inflate(C1894R.layout.overlay_action_chip, this.mActionContainer, false);
         overlayActionChip.setText(remoteAction.getTitle());
         overlayActionChip.setContentDescription(remoteAction.getTitle());
         overlayActionChip.setIcon(remoteAction.getIcon(), false);
@@ -397,7 +397,7 @@ public class ClipboardOverlayController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$constructActionChip$9$com-android-systemui-clipboardoverlay-ClipboardOverlayController */
-    public /* synthetic */ void mo31293xd11ad2bc() {
+    public /* synthetic */ void mo31304xd11ad2bc() {
         this.mUiEventLogger.log(ClipboardOverlayEvent.CLIPBOARD_OVERLAY_ACTION_TAPPED);
         animateOut();
     }
@@ -432,7 +432,7 @@ public class ClipboardOverlayController {
 
     private void editImage(Uri uri) {
         this.mUiEventLogger.log(ClipboardOverlayEvent.CLIPBOARD_OVERLAY_EDIT_TAPPED);
-        String string = this.mContext.getString(C1893R.string.config_screenshotEditor);
+        String string = this.mContext.getString(C1894R.string.config_screenshotEditor);
         Intent intent = new Intent("android.intent.action.EDIT");
         if (!TextUtils.isEmpty(string)) {
             intent.setComponent(ComponentName.unflattenFromString(string));
@@ -482,7 +482,7 @@ public class ClipboardOverlayController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$showTextPreview$10$com-android-systemui-clipboardoverlay-ClipboardOverlayController */
-    public /* synthetic */ void mo31309xe508fb0b(CharSequence charSequence, TextView textView, View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
+    public /* synthetic */ void mo31320xe508fb0b(CharSequence charSequence, TextView textView, View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
         if (i3 - i != i7 - i5) {
             updateTextSize(charSequence, textView);
         }
@@ -491,8 +491,8 @@ public class ClipboardOverlayController {
     private void updateTextSize(CharSequence charSequence, TextView textView) {
         Paint paint = new Paint(textView.getPaint());
         Resources resources = textView.getResources();
-        float dimensionPixelSize = (float) resources.getDimensionPixelSize(C1893R.dimen.clipboard_overlay_min_font);
-        float dimensionPixelSize2 = (float) resources.getDimensionPixelSize(C1893R.dimen.clipboard_overlay_max_font);
+        float dimensionPixelSize = (float) resources.getDimensionPixelSize(C1894R.dimen.clipboard_overlay_min_font);
+        float dimensionPixelSize2 = (float) resources.getDimensionPixelSize(C1894R.dimen.clipboard_overlay_max_font);
         if (!isOneWord(charSequence) || !fitsInView(charSequence, textView, paint, dimensionPixelSize)) {
             textView.setAutoSizeTextTypeUniformWithConfiguration((int) dimensionPixelSize, (int) dimensionPixelSize2, 4, 0);
             textView.setGravity(8388627);
@@ -530,7 +530,7 @@ public class ClipboardOverlayController {
         if (DeviceConfig.getBoolean("systemui", "clipboard_overlay_show_edit_button", false)) {
             this.mEditChip.setVisibility(0);
             this.mActionContainerBackground.setVisibility(0);
-            this.mEditChip.setContentDescription(this.mContext.getString(C1893R.string.clipboard_edit_text_description));
+            this.mEditChip.setContentDescription(this.mContext.getString(C1894R.string.clipboard_edit_text_description));
             this.mEditChip.setOnClickListener(clipboardOverlayController$$ExternalSyntheticLambda7);
         }
         textView.setOnClickListener(clipboardOverlayController$$ExternalSyntheticLambda7);
@@ -538,7 +538,7 @@ public class ClipboardOverlayController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$showEditableText$11$com-android-systemui-clipboardoverlay-ClipboardOverlayController */
-    public /* synthetic */ void mo31307xdd00aaf4(View view) {
+    public /* synthetic */ void mo31318xdd00aaf4(View view) {
         editText();
     }
 
@@ -548,7 +548,7 @@ public class ClipboardOverlayController {
         String type = contentResolver.getType(uri);
         boolean z2 = type != null && type.startsWith("image");
         if (z) {
-            this.mHiddenPreview.setText(this.mContext.getString(C1893R.string.clipboard_text_hidden));
+            this.mHiddenPreview.setText(this.mContext.getString(C1894R.string.clipboard_text_hidden));
             showSinglePreview(this.mHiddenPreview);
             if (z2) {
                 this.mHiddenPreview.setOnClickListener(clipboardOverlayController$$ExternalSyntheticLambda0);
@@ -556,7 +556,7 @@ public class ClipboardOverlayController {
             }
         } else if (z2) {
             try {
-                int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.overlay_x_scale);
+                int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.overlay_x_scale);
                 Bitmap loadThumbnail = contentResolver.loadThumbnail(uri, new Size(dimensionPixelSize, dimensionPixelSize * 4), (CancellationSignal) null);
                 showSinglePreview(this.mImagePreview);
                 this.mImagePreview.setImageBitmap(loadThumbnail);
@@ -564,34 +564,34 @@ public class ClipboardOverlayController {
                 setAccessibilityActionToEdit(this.mImagePreview);
             } catch (IOException e) {
                 Log.e(TAG, "Thumbnail loading failed", e);
-                showTextPreview(this.mContext.getResources().getString(C1893R.string.clipboard_overlay_text_copied), this.mTextPreview);
+                showTextPreview(this.mContext.getResources().getString(C1894R.string.clipboard_overlay_text_copied), this.mTextPreview);
                 z2 = false;
             }
         } else {
-            showTextPreview(this.mContext.getResources().getString(C1893R.string.clipboard_overlay_text_copied), this.mTextPreview);
+            showTextPreview(this.mContext.getResources().getString(C1894R.string.clipboard_overlay_text_copied), this.mTextPreview);
         }
         if (z2 && DeviceConfig.getBoolean("systemui", "clipboard_overlay_show_edit_button", false)) {
             this.mEditChip.setVisibility(0);
             this.mActionContainerBackground.setVisibility(0);
             this.mEditChip.setOnClickListener(clipboardOverlayController$$ExternalSyntheticLambda0);
-            this.mEditChip.setContentDescription(this.mContext.getString(C1893R.string.clipboard_edit_image_description));
+            this.mEditChip.setContentDescription(this.mContext.getString(C1894R.string.clipboard_edit_image_description));
         }
         return z2;
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$tryShowEditableImage$12$com-android-systemui-clipboardoverlay-ClipboardOverlayController */
-    public /* synthetic */ void mo31310x3cd8afa4(Uri uri, View view) {
+    public /* synthetic */ void mo31321x3cd8afa4(Uri uri, View view) {
         editImage(uri);
     }
 
     private void setAccessibilityActionToEdit(View view) {
-        ViewCompat.replaceAccessibilityAction(view, AccessibilityNodeInfoCompat.AccessibilityActionCompat.ACTION_CLICK, this.mContext.getString(C1893R.string.clipboard_edit), (AccessibilityViewCommand) null);
+        ViewCompat.replaceAccessibilityAction(view, AccessibilityNodeInfoCompat.AccessibilityActionCompat.ACTION_CLICK, this.mContext.getString(C1894R.string.clipboard_edit), (AccessibilityViewCommand) null);
     }
 
     private Intent getRemoteCopyIntent(ClipData clipData) {
         Intent intent = new Intent(REMOTE_COPY_ACTION);
-        String string = this.mContext.getString(C1893R.string.config_remoteCopyPackage);
+        String string = this.mContext.getString(C1894R.string.config_remoteCopyPackage);
         if (!TextUtils.isEmpty(string)) {
             intent.setComponent(ComponentName.unflattenFromString(string));
         }
@@ -669,13 +669,13 @@ public class ClipboardOverlayController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$getEnterAnimation$13$com-android-systemui-clipboardoverlay-ClipboardOverlayController */
-    public /* synthetic */ void mo31294x3efd428c(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo31305x3efd428c(ValueAnimator valueAnimator) {
         this.mView.setAlpha(valueAnimator.getAnimatedFraction());
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$getEnterAnimation$14$com-android-systemui-clipboardoverlay-ClipboardOverlayController */
-    public /* synthetic */ void mo31295xa92ccaab(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo31306xa92ccaab(ValueAnimator valueAnimator) {
         float lerp = MathUtils.lerp(0.9f, 1.0f, valueAnimator.getAnimatedFraction());
         this.mClipboardPreview.setScaleX(lerp);
         this.mClipboardPreview.setScaleY(lerp);
@@ -696,7 +696,7 @@ public class ClipboardOverlayController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$getEnterAnimation$15$com-android-systemui-clipboardoverlay-ClipboardOverlayController */
-    public /* synthetic */ void mo31296x135c52ca(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo31307x135c52ca(ValueAnimator valueAnimator) {
         float animatedFraction = valueAnimator.getAnimatedFraction();
         this.mClipboardPreview.setAlpha(animatedFraction);
         this.mPreviewBorder.setAlpha(animatedFraction);
@@ -727,13 +727,13 @@ public class ClipboardOverlayController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$getExitAnimation$16$com-android-systemui-clipboardoverlay-ClipboardOverlayController */
-    public /* synthetic */ void mo31297xe1e62191(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo31308xe1e62191(ValueAnimator valueAnimator) {
         this.mView.setAlpha(1.0f - valueAnimator.getAnimatedFraction());
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$getExitAnimation$17$com-android-systemui-clipboardoverlay-ClipboardOverlayController */
-    public /* synthetic */ void mo31298x4c15a9b0(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo31309x4c15a9b0(ValueAnimator valueAnimator) {
         float lerp = MathUtils.lerp(1.0f, 0.9f, valueAnimator.getAnimatedFraction());
         this.mClipboardPreview.setScaleX(lerp);
         this.mClipboardPreview.setScaleY(lerp);
@@ -754,7 +754,7 @@ public class ClipboardOverlayController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$getExitAnimation$18$com-android-systemui-clipboardoverlay-ClipboardOverlayController */
-    public /* synthetic */ void mo31299xb64531cf(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo31310xb64531cf(ValueAnimator valueAnimator) {
         float animatedFraction = 1.0f - valueAnimator.getAnimatedFraction();
         this.mClipboardPreview.setAlpha(animatedFraction);
         this.mPreviewBorder.setAlpha(animatedFraction);

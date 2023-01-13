@@ -140,7 +140,7 @@ public class CompatUIController implements DisplayController.OnDisplaysChangedLi
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onImeVisibilityChanged$2$com-android-wm-shell-compatui-CompatUIController */
-    public /* synthetic */ void mo49361x825f2458(int i, CompatUIWindowManagerAbstract compatUIWindowManagerAbstract) {
+    public /* synthetic */ void mo49370x825f2458(int i, CompatUIWindowManagerAbstract compatUIWindowManagerAbstract) {
         compatUIWindowManagerAbstract.updateVisibility(showOnDisplay(i));
     }
 
@@ -152,7 +152,7 @@ public class CompatUIController implements DisplayController.OnDisplaysChangedLi
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onKeyguardShowingChanged$3$com-android-wm-shell-compatui-CompatUIController */
-    public /* synthetic */ void mo49362x34f84603(CompatUIWindowManagerAbstract compatUIWindowManagerAbstract) {
+    public /* synthetic */ void mo49371x34f84603(CompatUIWindowManagerAbstract compatUIWindowManagerAbstract) {
         compatUIWindowManagerAbstract.updateVisibility(showOnDisplay(compatUIWindowManagerAbstract.getDisplayId()));
     }
 
@@ -287,7 +287,7 @@ public class CompatUIController implements DisplayController.OnDisplaysChangedLi
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onKeyguardShowingChanged$0$com-android-wm-shell-compatui-CompatUIController$CompatUIImpl */
-        public /* synthetic */ void mo49366xf6370934(boolean z) {
+        public /* synthetic */ void mo49375xf6370934(boolean z) {
             CompatUIController.this.onKeyguardShowingChanged(z);
         }
     }

@@ -39,6 +39,6 @@ public final /* synthetic */ class MediaDataManager$$ExternalSyntheticLambda11 i
     }
 
     public final void run() {
-        MediaDataManager.m2802loadMediaDataInBgForResumption$lambda21(this.f$0, this.f$1, this.f$2, this.f$3, this.f$4, this.f$5, this.f$6, this.f$7, this.f$8, this.f$9, this.f$10, this.f$11, this.f$12);
+        MediaDataManager.m2807loadMediaDataInBgForResumption$lambda21(this.f$0, this.f$1, this.f$2, this.f$3, this.f$4, this.f$5, this.f$6, this.f$7, this.f$8, this.f$9, this.f$10, this.f$11, this.f$12);
     }
 }

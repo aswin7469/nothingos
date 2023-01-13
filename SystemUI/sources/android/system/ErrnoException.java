@@ -25,7 +25,7 @@ public final class ErrnoException extends Exception {
         if (errnoName == null) {
             errnoName = "errno " + this.errno;
         }
-        return this.functionName + " failed: " + errnoName + " (" + Libcore.f857os.strerror(this.errno) + NavigationBarInflaterView.KEY_CODE_END;
+        return this.functionName + " failed: " + errnoName + " (" + Libcore.f855os.strerror(this.errno) + NavigationBarInflaterView.KEY_CODE_END;
     }
 
     public IOException rethrowAsIOException() throws IOException {

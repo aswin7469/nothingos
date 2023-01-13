@@ -16,7 +16,7 @@ public class ContentLoadingProgressBar extends ProgressBar {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$androidx-core-widget-ContentLoadingProgressBar  reason: not valid java name */
-    public /* synthetic */ void m2246lambda$new$0$androidxcorewidgetContentLoadingProgressBar() {
+    public /* synthetic */ void m2252lambda$new$0$androidxcorewidgetContentLoadingProgressBar() {
         this.mPostedHide = false;
         this.mStartTime = -1;
         setVisibility(8);
@@ -24,7 +24,7 @@ public class ContentLoadingProgressBar extends ProgressBar {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$1$androidx-core-widget-ContentLoadingProgressBar  reason: not valid java name */
-    public /* synthetic */ void m2247lambda$new$1$androidxcorewidgetContentLoadingProgressBar() {
+    public /* synthetic */ void m2253lambda$new$1$androidxcorewidgetContentLoadingProgressBar() {
         this.mPostedShow = false;
         if (!this.mDismissed) {
             this.mStartTime = System.currentTimeMillis();

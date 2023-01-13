@@ -17,6 +17,6 @@ public final /* synthetic */ class MediaControlPanel$$ExternalSyntheticLambda11 
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo33659x711f16ef(this.f$1, this.f$2, (TextView) obj);
+        this.f$0.mo33663x711f16ef(this.f$1, this.f$2, (TextView) obj);
     }
 }

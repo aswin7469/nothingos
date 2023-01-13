@@ -12,6 +12,6 @@ public final /* synthetic */ class CellularTile$$ExternalSyntheticLambda0 implem
     }
 
     public final void onClick(View view) {
-        this.f$0.mo36859xa5811257(view);
+        this.f$0.mo36856xa5811257(view);
     }
 }

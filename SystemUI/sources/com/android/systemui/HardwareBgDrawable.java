@@ -37,13 +37,13 @@ public class HardwareBgDrawable extends LayerDrawable {
 
     private static Drawable[] getLayers(Context context, boolean z, boolean z2) {
         Drawable[] drawableArr;
-        int i = z2 ? C1893R.C1895drawable.rounded_bg_full : C1893R.C1895drawable.rounded_bg;
+        int i = z2 ? C1894R.C1896drawable.rounded_bg_full : C1894R.C1896drawable.rounded_bg;
         if (z) {
             drawableArr = new Drawable[]{context.getDrawable(i).mutate(), context.getDrawable(i).mutate()};
         } else {
             drawableArr = new Drawable[2];
             drawableArr[0] = context.getDrawable(i).mutate();
-            drawableArr[1] = context.getDrawable(z2 ? C1893R.C1895drawable.rounded_full_bg_bottom : C1893R.C1895drawable.rounded_bg_bottom).mutate();
+            drawableArr[1] = context.getDrawable(z2 ? C1894R.C1896drawable.rounded_full_bg_bottom : C1894R.C1896drawable.rounded_bg_bottom).mutate();
         }
         drawableArr[1].setTintList(Utils.getColorAttr(context, 16843827));
         return drawableArr;

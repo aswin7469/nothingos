@@ -11,6 +11,6 @@ public final /* synthetic */ class CentralSurfacesImpl$$ExternalSyntheticLambda4
     }
 
     public final void onBubbleExpandChanged(boolean z, String str) {
-        this.f$0.mo43891x58b11a3(z, str);
+        this.f$0.mo43900x58b11a3(z, str);
     }
 }

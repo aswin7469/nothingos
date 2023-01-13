@@ -12,6 +12,6 @@ public final /* synthetic */ class PipTouchHandler$$ExternalSyntheticLambda7 imp
     }
 
     public final void onPropertiesChanged(DeviceConfig.Properties properties) {
-        this.f$0.m3475lambda$init$2$comandroidwmshellpipphonePipTouchHandler(properties);
+        this.f$0.m3479lambda$init$2$comandroidwmshellpipphonePipTouchHandler(properties);
     }
 }

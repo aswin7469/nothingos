@@ -8,7 +8,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.core.view.ViewCompat;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
@@ -58,7 +58,7 @@ public final class SlideDistanceProvider implements VisibilityAnimatorProvider {
         if (i != -1) {
             return i;
         }
-        return context.getResources().getDimensionPixelSize(C3621R.dimen.mtrl_transition_shared_axis_slide_distance);
+        return context.getResources().getDimensionPixelSize(C3631R.dimen.mtrl_transition_shared_axis_slide_distance);
     }
 
     private static Animator createTranslationAppearAnimator(View view, View view2, int i, int i2) {

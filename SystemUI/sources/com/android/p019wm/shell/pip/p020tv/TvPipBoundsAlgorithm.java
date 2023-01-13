@@ -8,7 +8,7 @@ import android.util.ArraySet;
 import android.util.Size;
 import android.view.Gravity;
 import com.android.internal.protolog.common.ProtoLog;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.common.DisplayLayout;
 import com.android.p019wm.shell.pip.PipBoundsAlgorithm;
 import com.android.p019wm.shell.pip.PipSnapAlgorithm;
@@ -35,8 +35,8 @@ public class TvPipBoundsAlgorithm extends PipBoundsAlgorithm {
         Resources resources = context.getResources();
         this.mFixedExpandedHeightInPx = resources.getDimensionPixelSize(17105090);
         this.mFixedExpandedWidthInPx = resources.getDimensionPixelSize(17105091);
-        this.mKeepClearAlgorithm.setPipAreaPadding(resources.getDimensionPixelSize(C3343R.dimen.pip_keep_clear_area_padding));
-        this.mKeepClearAlgorithm.setMaxRestrictedDistanceFraction((double) resources.getFraction(C3343R.fraction.config_pipMaxRestrictedMoveDistance, 1, 1));
+        this.mKeepClearAlgorithm.setPipAreaPadding(resources.getDimensionPixelSize(C3353R.dimen.pip_keep_clear_area_padding));
+        this.mKeepClearAlgorithm.setMaxRestrictedDistanceFraction((double) resources.getFraction(C3353R.fraction.config_pipMaxRestrictedMoveDistance, 1, 1));
     }
 
     public void onConfigurationChanged(Context context) {

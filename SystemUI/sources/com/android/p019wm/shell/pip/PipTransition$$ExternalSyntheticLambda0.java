@@ -19,6 +19,6 @@ public final /* synthetic */ class PipTransition$$ExternalSyntheticLambda0 imple
     }
 
     public final void onTransitionFinished(WindowContainerTransaction windowContainerTransaction, WindowContainerTransactionCallback windowContainerTransactionCallback) {
-        this.f$0.mo50245x5c78a783(this.f$1, this.f$2, windowContainerTransaction, windowContainerTransactionCallback);
+        this.f$0.mo50254x5c78a783(this.f$1, this.f$2, windowContainerTransaction, windowContainerTransactionCallback);
     }
 }

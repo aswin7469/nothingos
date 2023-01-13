@@ -58,13 +58,13 @@ public class DreamOverlayService extends android.service.dreams.DreamOverlayServ
 
     @Inject
     public DreamOverlayService(Context context, @Main Executor executor, DreamOverlayComponent.Factory factory, DreamOverlayStateController dreamOverlayStateController, KeyguardUpdateMonitor keyguardUpdateMonitor, UiEventLogger uiEventLogger) {
-        C20771 r0 = new Complication.Host() {
+        C20791 r0 = new Complication.Host() {
             public void requestExitDream() {
                 DreamOverlayService.this.mExecutor.execute(new DreamOverlayService$1$$ExternalSyntheticLambda0(DreamOverlayService.this));
             }
         };
         this.mHost = r0;
-        C20782 r1 = new KeyguardUpdateMonitorCallback() {
+        C20802 r1 = new KeyguardUpdateMonitorCallback() {
             public void onShadeExpandedChanged(boolean z) {
                 if (DreamOverlayService.this.mLifecycleRegistry.getCurrentState() == Lifecycle.State.RESUMED || DreamOverlayService.this.mLifecycleRegistry.getCurrentState() == Lifecycle.State.STARTED) {
                     DreamOverlayService.this.mLifecycleRegistry.setCurrentState(z ? Lifecycle.State.STARTED : Lifecycle.State.RESUMED);
@@ -93,7 +93,7 @@ public class DreamOverlayService extends android.service.dreams.DreamOverlayServ
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setCurrentState$0$com-android-systemui-dreams-DreamOverlayService */
-    public /* synthetic */ void mo32510xe087c6d0(Lifecycle.State state) {
+    public /* synthetic */ void mo32521xe087c6d0(Lifecycle.State state) {
         this.mLifecycleRegistry.setCurrentState(state);
     }
 
@@ -118,7 +118,7 @@ public class DreamOverlayService extends android.service.dreams.DreamOverlayServ
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onStartDream$1$com-android-systemui-dreams-DreamOverlayService */
-    public /* synthetic */ void mo32509xa77d151(WindowManager.LayoutParams layoutParams) {
+    public /* synthetic */ void mo32520xa77d151(WindowManager.LayoutParams layoutParams) {
         if (!this.mDestroyed) {
             this.mStateController.setShouldShowComplications(shouldShowComplications());
             addOverlayWindowLocked(layoutParams);

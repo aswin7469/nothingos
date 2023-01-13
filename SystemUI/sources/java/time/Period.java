@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
 
 public final class Period implements ChronoPeriod, Serializable {
     private static final Pattern PATTERN = Pattern.compile("([-+]?)P(?:([-+]?[0-9]+)Y)?(?:([-+]?[0-9]+)M)?(?:([-+]?[0-9]+)W)?(?:([-+]?[0-9]+)D)?", 2);
-    private static final List<TemporalUnit> SUPPORTED_UNITS = List.m1725of(ChronoUnit.YEARS, ChronoUnit.MONTHS, ChronoUnit.DAYS);
+    private static final List<TemporalUnit> SUPPORTED_UNITS = List.m1731of(ChronoUnit.YEARS, ChronoUnit.MONTHS, ChronoUnit.DAYS);
     public static final Period ZERO = new Period(0, 0, 0);
     private static final long serialVersionUID = -3587258372562876L;
     private final int days;
@@ -49,7 +49,7 @@ public final class Period implements ChronoPeriod, Serializable {
     }
 
     /* renamed from: of */
-    public static Period m928of(int i, int i2, int i3) {
+    public static Period m926of(int i, int i2, int i3) {
         return create(i, i2, i3);
     }
 
@@ -377,6 +377,6 @@ public final class Period implements ChronoPeriod, Serializable {
     }
 
     static Period readExternal(DataInput dataInput) throws IOException {
-        return m928of(dataInput.readInt(), dataInput.readInt(), dataInput.readInt());
+        return m926of(dataInput.readInt(), dataInput.readInt(), dataInput.readInt());
     }
 }

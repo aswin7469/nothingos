@@ -22,7 +22,7 @@ public class AODGestureHelper {
         StringBuilder sb;
         OutputStream outputStream = null;
         try {
-            NTLogUtil.m1680d(TAG, "writeGestureNode:" + str + ", data:" + i);
+            NTLogUtil.m1686d(TAG, "writeGestureNode:" + str + ", data:" + i);
             outputStream = Files.newOutputStream(Paths.get(str, new String[0]), new OpenOption[0]);
             outputStream.write(String.valueOf(i).getBytes("US-ASCII"));
             outputStream.flush();
@@ -37,16 +37,16 @@ public class AODGestureHelper {
             } else {
                 return;
             }
-            NTLogUtil.m1681e(TAG, sb.append(str).append(e.getMessage()).toString());
+            NTLogUtil.m1687e(TAG, sb.append(str).append(e.getMessage()).toString());
         } catch (IOException e2) {
-            NTLogUtil.m1681e(TAG, "Unable to write " + e2.getMessage());
+            NTLogUtil.m1687e(TAG, "Unable to write " + e2.getMessage());
             e2.printStackTrace();
             if (outputStream == null) {
                 if (outputStream != null) {
                     try {
                         outputStream.close();
                     } catch (IOException e3) {
-                        NTLogUtil.m1681e(TAG, "Unable to close file: " + str + e3.getMessage());
+                        NTLogUtil.m1687e(TAG, "Unable to close file: " + str + e3.getMessage());
                     }
                 }
             } else if (outputStream != null) {
@@ -62,7 +62,7 @@ public class AODGestureHelper {
                 try {
                     outputStream.close();
                 } catch (IOException e5) {
-                    NTLogUtil.m1681e(TAG, "Unable to close file: " + str + e5.getMessage());
+                    NTLogUtil.m1687e(TAG, "Unable to close file: " + str + e5.getMessage());
                 }
             }
             throw th;

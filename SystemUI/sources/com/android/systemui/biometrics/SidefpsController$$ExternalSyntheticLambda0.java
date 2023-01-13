@@ -18,6 +18,6 @@ public final /* synthetic */ class SidefpsController$$ExternalSyntheticLambda0 i
     }
 
     public final void onCompositionLoaded(LottieComposition lottieComposition) {
-        SidefpsController.m2572createOverlayForDisplay$lambda5(this.f$0, this.f$1, this.f$2, lottieComposition);
+        SidefpsController.m2578createOverlayForDisplay$lambda5(this.f$0, this.f$1, this.f$2, lottieComposition);
     }
 }

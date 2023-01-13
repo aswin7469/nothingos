@@ -72,7 +72,7 @@ public class ToastUI extends CoreStartable implements CommandQueue.Callbacks {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$showToast$0$com-android-systemui-toast-ToastUI  reason: not valid java name */
-    public /* synthetic */ void m3251lambda$showToast$0$comandroidsystemuitoastToastUI(int i, int i2, CharSequence charSequence, String str, ITransientNotificationCallback iTransientNotificationCallback, IBinder iBinder, IBinder iBinder2, int i3) {
+    public /* synthetic */ void m3256lambda$showToast$0$comandroidsystemuitoastToastUI(int i, int i2, CharSequence charSequence, String str, ITransientNotificationCallback iTransientNotificationCallback, IBinder iBinder, IBinder iBinder2, int i3) {
         String str2 = str;
         UserHandle userHandleForUid = UserHandle.getUserHandleForUid(i);
         Context createDisplayContext = this.mContext.createContextAsUser(userHandleForUid, 0).createDisplayContext(((DisplayManager) this.mContext.getSystemService(DisplayManager.class)).getDisplay(i2));

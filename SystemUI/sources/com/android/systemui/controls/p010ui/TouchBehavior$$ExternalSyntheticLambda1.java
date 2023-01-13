@@ -12,6 +12,6 @@ public final /* synthetic */ class TouchBehavior$$ExternalSyntheticLambda1 imple
     }
 
     public final void run() {
-        TouchBehavior.m2734initialize$lambda1$lambda0(this.f$0, this.f$1);
+        TouchBehavior.m2739initialize$lambda1$lambda0(this.f$0, this.f$1);
     }
 }

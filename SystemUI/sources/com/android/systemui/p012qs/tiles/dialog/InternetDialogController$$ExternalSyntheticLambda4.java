@@ -14,6 +14,6 @@ public final /* synthetic */ class InternetDialogController$$ExternalSyntheticLa
     }
 
     public final void run() {
-        this.f$0.mo37061x5ec60448(this.f$1, this.f$2);
+        this.f$0.mo37060x5ec60448(this.f$1, this.f$2);
     }
 }

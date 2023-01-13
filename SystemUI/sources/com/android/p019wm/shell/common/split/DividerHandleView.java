@@ -12,7 +12,7 @@ import android.util.AttributeSet;
 import android.util.Property;
 import android.view.View;
 import android.view.animation.Interpolator;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.animation.Interpolators;
 
 /* renamed from: com.android.wm.shell.common.split.DividerHandleView */
@@ -58,11 +58,11 @@ public class DividerHandleView extends View {
         super(context, attributeSet);
         Paint paint = new Paint();
         this.mPaint = paint;
-        paint.setColor(getResources().getColor(C3343R.C3344color.docked_divider_handle, (Resources.Theme) null));
+        paint.setColor(getResources().getColor(C3353R.C3354color.docked_divider_handle, (Resources.Theme) null));
         paint.setAntiAlias(true);
-        int dimensionPixelSize = getResources().getDimensionPixelSize(C3343R.dimen.split_divider_handle_width);
+        int dimensionPixelSize = getResources().getDimensionPixelSize(C3353R.dimen.split_divider_handle_width);
         this.mWidth = dimensionPixelSize;
-        int dimensionPixelSize2 = getResources().getDimensionPixelSize(C3343R.dimen.split_divider_handle_height);
+        int dimensionPixelSize2 = getResources().getDimensionPixelSize(C3353R.dimen.split_divider_handle_height);
         this.mHeight = dimensionPixelSize2;
         this.mCurrentWidth = dimensionPixelSize;
         this.mCurrentHeight = dimensionPixelSize2;

@@ -14,6 +14,6 @@ public final /* synthetic */ class QSSecurityFooter$$ExternalSyntheticLambda28 i
     }
 
     public final Object get() {
-        return this.f$0.mo36260x10b55e98(this.f$1);
+        return this.f$0.mo36264x10b55e98(this.f$1);
     }
 }

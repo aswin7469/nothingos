@@ -11,6 +11,6 @@ public final /* synthetic */ class StatusBarNotificationActivityStarter$$Externa
     }
 
     public final void run() {
-        this.f$0.mo45298x4097d2ff(this.f$1);
+        this.f$0.mo45310x4097d2ff(this.f$1);
     }
 }

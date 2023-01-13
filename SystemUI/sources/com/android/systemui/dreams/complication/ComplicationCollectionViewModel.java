@@ -19,13 +19,13 @@ public class ComplicationCollectionViewModel extends ViewModel {
 
     /* access modifiers changed from: private */
     /* renamed from: convert */
-    public Collection<ComplicationViewModel> mo32558xc354972b(Collection<Complication> collection) {
+    public Collection<ComplicationViewModel> mo32569xc354972b(Collection<Complication> collection) {
         return (Collection) collection.stream().map(new ComplicationCollectionViewModel$$ExternalSyntheticLambda0(this)).collect(Collectors.toSet());
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$convert$1$com-android-systemui-dreams-complication-ComplicationCollectionViewModel */
-    public /* synthetic */ ComplicationViewModel mo32557x6ea173d7(Complication complication) {
+    public /* synthetic */ ComplicationViewModel mo32568x6ea173d7(Complication complication) {
         return this.mTransformer.getViewModel(complication);
     }
 

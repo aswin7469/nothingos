@@ -12,7 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import com.android.keyguard.LockIconViewController;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.classifier.FalsingCollector;
 import com.android.systemui.dock.DockManager;
 import com.android.systemui.keyguard.KeyguardUnlockAnimationController;
@@ -114,15 +114,15 @@ public class NotificationShadeWindowViewController {
         this.mNotificationShadeWindowController = notificationShadeWindowController;
         this.mKeyguardUnlockAnimationController = keyguardUnlockAnimationController;
         this.mAmbientState = ambientState;
-        this.mBrightnessMirror = notificationShadeWindowView.findViewById(C1893R.C1897id.brightness_mirror_container);
+        this.mBrightnessMirror = notificationShadeWindowView.findViewById(C1894R.C1898id.brightness_mirror_container);
     }
 
     public ViewGroup getBouncerContainer() {
-        return (ViewGroup) this.mView.findViewById(C1893R.C1897id.keyguard_bouncer_container);
+        return (ViewGroup) this.mView.findViewById(C1894R.C1898id.keyguard_bouncer_container);
     }
 
     public void setupExpandedStatusBar() {
-        this.mStackScrollLayout = (NotificationStackScrollLayout) this.mView.findViewById(C1893R.C1897id.notification_stack_scroller);
+        this.mStackScrollLayout = (NotificationStackScrollLayout) this.mView.findViewById(C1894R.C1898id.notification_stack_scroller);
         this.mTunerService.addTunable(new NotificationShadeWindowViewController$$ExternalSyntheticLambda0(this), "doze_pulse_on_double_tap", "doze_tap_gesture");
         this.mGestureDetector = new GestureDetector(this.mView.getContext(), new GestureDetector.SimpleOnGestureListener() {
             public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
@@ -183,7 +183,7 @@ public class NotificationShadeWindowViewController {
                 if (NotificationShadeWindowViewController.this.mStatusBarStateController.isDozing()) {
                     NotificationShadeWindowViewController.this.mService.extendDozePulse();
                 }
-                NotificationShadeWindowViewController.this.mLockIconViewController.onTouchEvent(motionEvent, new C3041x9f535090(this));
+                NotificationShadeWindowViewController.this.mLockIconViewController.onTouchEvent(motionEvent, new C3051x9f535090(this));
                 if (z && motionEvent.getY() >= ((float) NotificationShadeWindowViewController.this.mView.getBottom())) {
                     boolean unused5 = NotificationShadeWindowViewController.this.mExpandingBelowNotch = true;
                     access$600 = true;
@@ -213,7 +213,7 @@ public class NotificationShadeWindowViewController {
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$handleDispatchTouchEvent$0$com-android-systemui-statusbar-phone-NotificationShadeWindowViewController$2 */
-            public /* synthetic */ void mo44845xc9d08bf4() {
+            public /* synthetic */ void mo44860xc9d08bf4() {
                 NotificationShadeWindowViewController.this.mService.wakeUpIfDozing(SystemClock.uptimeMillis(), NotificationShadeWindowViewController.this.mView, "LOCK_ICON_TOUCH");
             }
 
@@ -299,7 +299,7 @@ public class NotificationShadeWindowViewController {
             }
 
             public void onChildViewAdded(View view, View view2) {
-                if (view2.getId() == C1893R.C1897id.brightness_mirror_container) {
+                if (view2.getId() == C1894R.C1898id.brightness_mirror_container) {
                     View unused = NotificationShadeWindowViewController.this.mBrightnessMirror = view2;
                 }
             }
@@ -311,7 +311,7 @@ public class NotificationShadeWindowViewController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setupExpandedStatusBar$0$com-android-systemui-statusbar-phone-NotificationShadeWindowViewController */
-    public /* synthetic */ void mo44836xbef39658(String str, String str2) {
+    public /* synthetic */ void mo44851xbef39658(String str, String str2) {
         AmbientDisplayConfiguration ambientDisplayConfiguration = new AmbientDisplayConfiguration(this.mView.getContext());
         str.hashCode();
         if (str.equals("doze_tap_gesture")) {
@@ -323,7 +323,7 @@ public class NotificationShadeWindowViewController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setupExpandedStatusBar$1$com-android-systemui-statusbar-phone-NotificationShadeWindowViewController */
-    public /* synthetic */ void mo44837x10ac3b7(LowLightClockController lowLightClockController) {
+    public /* synthetic */ void mo44852x10ac3b7(LowLightClockController lowLightClockController) {
         lowLightClockController.attachLowLightClockView(this.mView);
     }
 

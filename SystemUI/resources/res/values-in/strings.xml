@@ -708,9 +708,15 @@
     <string name="force_rtl_layout_all_locales_summary">Memaksa arah tata letak layar RTL untuk semua lokalitas</string>
     <string name="forced_resizable_secondary_display">Aplikasi mungkin tidak berfungsi pada layar sekunder.</string>
     <string name="game_status">Bermain</string>
+    <string name="gamemode_description">Mode Game akan menentukan apakah Anda berada di dalam game dan akan otomatis aktif untuk Anda</string>
+    <string name="gamemode_gamedashboard_title">Dasbor game</string>
+    <string name="gamemode_notification_content">Ketuk untuk membuka Pengaturan</string>
+    <string name="gamemode_notification_title">Mode Game sedang aktif</string>
     <string name="global_action_lock_message">Buka kunci ponsel untuk melihat opsi lainnya</string>
     <string name="global_action_screenshot">Screenshot</string>
     <string name="global_action_smart_lock_disabled">Smart Lock dinonaktifkan</string>
+    <string name="gm_guide_status_on">AKTIF</string>
+    <string name="gm_notification_title">Mode Game</string>
     <string name="go_to_web">Buka browser</string>
     <string name="got_it">Oke</string>
     <string name="guest_exit_guest">Hapus tamu</string>

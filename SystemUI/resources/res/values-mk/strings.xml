@@ -708,9 +708,15 @@
     <string name="force_rtl_layout_all_locales_summary">Принудно постави насока на распоред на екранот во RTL за сите локални стандарди</string>
     <string name="forced_resizable_secondary_display">Апликацијата може да не функционира на друг екран.</string>
     <string name="game_status">Играње игра</string>
+    <string name="gamemode_description">Режим на игри ќе одреди дали играте игра и автоматски ќе се вклучи</string>
+    <string name="gamemode_gamedashboard_title">Контролна табла за игри</string>
+    <string name="gamemode_notification_content">Допрете за да одите во Поставки</string>
+    <string name="gamemode_notification_title">Режим на игри е тековно вклучено</string>
     <string name="global_action_lock_message">Отклучето го вашиот телефон за повеќе опции</string>
     <string name="global_action_screenshot">Слика од екранот</string>
     <string name="global_action_smart_lock_disabled">Оневозможено е Smart Lock</string>
+    <string name="gm_guide_status_on">ВКЛУЧЕНО</string>
+    <string name="gm_notification_title">Режим на игри</string>
     <string name="go_to_web">Одете на прелистувач</string>
     <string name="got_it">Сфатив</string>
     <string name="guest_exit_guest">Отстрани гостин</string>

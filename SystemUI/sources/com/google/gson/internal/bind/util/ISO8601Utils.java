@@ -20,7 +20,7 @@ public class ISO8601Utils {
     }
 
     public static String format(Date date, boolean z, TimeZone timeZone) {
-        GregorianCalendar gregorianCalendar = new GregorianCalendar(timeZone, Locale.f700US);
+        GregorianCalendar gregorianCalendar = new GregorianCalendar(timeZone, Locale.f698US);
         gregorianCalendar.setTime(date);
         StringBuilder sb = new StringBuilder(19 + (z ? 4 : 0) + (timeZone.getRawOffset() == 0 ? 1 : 6));
         padInt(sb, gregorianCalendar.get(1), 4);

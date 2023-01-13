@@ -9,7 +9,7 @@ import android.util.SparseArray;
 import android.view.View;
 import androidx.core.view.GravityCompat;
 import androidx.leanback.widget.VerticalGridView;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.statusbar.p013tv.notifications.TvNotificationHandler;
 import java.util.function.Consumer;
 import javax.inject.Inject;
@@ -33,13 +33,13 @@ public class TvNotificationPanelActivity extends Activity implements TvNotificat
         super.onCreate(bundle);
         if (!maybeClosePanel(getIntent())) {
             this.mPanelAlreadyOpen = true;
-            setContentView(C1893R.layout.tv_notification_panel);
-            this.mNotificationPlaceholder = findViewById(C1893R.C1897id.no_tv_notifications);
+            setContentView(C1894R.layout.tv_notification_panel);
+            this.mNotificationPlaceholder = findViewById(C1894R.C1898id.no_tv_notifications);
             this.mTvNotificationAdapter = new TvNotificationAdapter();
-            VerticalGridView verticalGridView = (VerticalGridView) findViewById(C1893R.C1897id.notifications_list);
+            VerticalGridView verticalGridView = (VerticalGridView) findViewById(C1894R.C1898id.notifications_list);
             this.mNotificationListView = verticalGridView;
             verticalGridView.setAdapter(this.mTvNotificationAdapter);
-            this.mNotificationListView.setColumnWidth((int) C1893R.dimen.tv_notification_panel_width);
+            this.mNotificationListView.setColumnWidth((int) C1894R.dimen.tv_notification_panel_width);
             this.mTvNotificationHandler.setTvNotificationListener(this);
             notificationsUpdated(this.mTvNotificationHandler.getCurrentNotifications());
         }
@@ -79,12 +79,12 @@ public class TvNotificationPanelActivity extends Activity implements TvNotificat
     /* access modifiers changed from: private */
     public void enableBlur(boolean z) {
         if (z) {
-            int dimensionPixelSize = getResources().getDimensionPixelSize(C1893R.dimen.tv_notification_blur_radius);
-            getWindow().setBackgroundDrawable(new ColorDrawable(getColor(C1893R.C1894color.tv_notification_blur_background_color)));
+            int dimensionPixelSize = getResources().getDimensionPixelSize(C1894R.dimen.tv_notification_blur_radius);
+            getWindow().setBackgroundDrawable(new ColorDrawable(getColor(C1894R.C1895color.tv_notification_blur_background_color)));
             getWindow().setBackgroundBlurRadius(dimensionPixelSize);
             return;
         }
-        getWindow().setBackgroundDrawable(new ColorDrawable(getColor(C1893R.C1894color.tv_notification_default_background_color)));
+        getWindow().setBackgroundDrawable(new ColorDrawable(getColor(C1894R.C1895color.tv_notification_default_background_color)));
         getWindow().setBackgroundBlurRadius(0);
     }
 

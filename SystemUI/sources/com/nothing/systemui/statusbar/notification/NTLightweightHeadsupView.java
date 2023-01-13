@@ -16,13 +16,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import java.util.Map;
 import kotlin.Metadata;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 
-@Metadata(mo64986d1 = {"\u0000\u0001\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u000b\n\u0002\b\u0003\n\u0002\u0010\u0007\n\u0002\b\b\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0010\b\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\b\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0010\n\u0002\u0018\u0002\n\u0002\b\u0006\n\u0002\u0018\u0002\n\u0002\b\b\n\u0002\u0018\u0002\n\u0002\b\u0016\n\u0002\u0010\u0002\n\u0002\b\u0006\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0002\b\u0006\b\u0016\u0018\u0000 \u00012\u00020\u0001:\u0002\u0001B\u001d\b\u0016\u0012\b\u0010\u0002\u001a\u0004\u0018\u00010\u0003\u0012\n\b\u0002\u0010\u0004\u001a\u0004\u0018\u00010\u0005¢\u0006\u0002\u0010\u0006J\b\u0010l\u001a\u00020!H\u0014J\b\u0010m\u001a\u00020!H\u0014J\b\u0010n\u001a\u00020!H\u0004J\b\u0010o\u001a\u00020!H\u0014J\b\u0010p\u001a\u00020!H\u0014J\b\u0010q\u001a\u00020rH\u0014J\b\u0010s\u001a\u00020rH\u0014J\b\u0010t\u001a\u00020rH\u0014J\b\u0010u\u001a\u00020\bH\u0016J\b\u0010v\u001a\u00020rH\u0014J\u0012\u0010w\u001a\u00020r2\b\u0010x\u001a\u0004\u0018\u00010yH\u0014J\u001a\u0010z\u001a\u00020r2\b\u0010{\u001a\u0004\u0018\u00010|2\u0006\u0010}\u001a\u00020!H\u0014J\u001c\u0010~\u001a\u00020r2\u0006\u0010\u001a\u00020\b2\n\u0010\u0001\u001a\u0005\u0018\u00010\u0001H\u0016J\u0012\u0010\u0001\u001a\u00020r2\u0007\u0010\u0001\u001a\u00020\fH\u0004J\u0007\u0010\u0001\u001a\u00020rJ\u0007\u0010\u0001\u001a\u00020rR\u0014\u0010\u0007\u001a\u00020\bX\u0004¢\u0006\b\n\u0000\u001a\u0004\b\t\u0010\nR\u001a\u0010\u000b\u001a\u00020\fX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\r\u0010\u000e\"\u0004\b\u000f\u0010\u0010R\u001a\u0010\u0011\u001a\u00020\fX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0012\u0010\u000e\"\u0004\b\u0013\u0010\u0010R\u001a\u0010\u0014\u001a\u00020\u0015X.¢\u0006\u000e\n\u0000\u001a\u0004\b\u0016\u0010\u0017\"\u0004\b\u0018\u0010\u0019R\u001a\u0010\u001a\u001a\u00020\u001bX.¢\u0006\u000e\n\u0000\u001a\u0004\b\u001c\u0010\u001d\"\u0004\b\u001e\u0010\u001fR\u001a\u0010 \u001a\u00020!X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\"\u0010#\"\u0004\b$\u0010%R\u001a\u0010&\u001a\u00020'X.¢\u0006\u000e\n\u0000\u001a\u0004\b(\u0010)\"\u0004\b*\u0010+R\u001a\u0010,\u001a\u00020-X.¢\u0006\u000e\n\u0000\u001a\u0004\b.\u0010/\"\u0004\b0\u00101R\u001a\u00102\u001a\u00020!X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b3\u0010#\"\u0004\b4\u0010%R\u0014\u00105\u001a\u000206X\u0004¢\u0006\b\n\u0000\u001a\u0004\b7\u00108R\u001a\u00109\u001a\u00020:X.¢\u0006\u000e\n\u0000\u001a\u0004\b;\u0010<\"\u0004\b=\u0010>R\u001a\u0010?\u001a\u00020\bX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b?\u0010\n\"\u0004\b@\u0010AR\u001a\u0010B\u001a\u00020\bX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\bB\u0010\n\"\u0004\bC\u0010AR\u001a\u0010D\u001a\u00020'X.¢\u0006\u000e\n\u0000\u001a\u0004\bE\u0010)\"\u0004\bF\u0010+R\u001a\u0010G\u001a\u00020!X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\bH\u0010#\"\u0004\bI\u0010%R\u0014\u0010J\u001a\u00020KX\u0004¢\u0006\b\n\u0000\u001a\u0004\bL\u0010MR\u001a\u0010N\u001a\u00020:X.¢\u0006\u000e\n\u0000\u001a\u0004\bO\u0010<\"\u0004\bP\u0010>R\u001a\u0010Q\u001a\u00020RX.¢\u0006\u000e\n\u0000\u001a\u0004\bS\u0010T\"\u0004\bU\u0010VR\u001a\u0010W\u001a\u00020!X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\bX\u0010#\"\u0004\bY\u0010%R\u001a\u0010Z\u001a\u00020[X.¢\u0006\u000e\n\u0000\u001a\u0004\b\\\u0010]\"\u0004\b^\u0010_R\u001a\u0010`\u001a\u00020-X.¢\u0006\u000e\n\u0000\u001a\u0004\ba\u0010/\"\u0004\bb\u00101R\u001a\u0010c\u001a\u00020\u0015X.¢\u0006\u000e\n\u0000\u001a\u0004\bd\u0010\u0017\"\u0004\be\u0010\u0019R\u001a\u0010f\u001a\u00020\u0015X.¢\u0006\u000e\n\u0000\u001a\u0004\bg\u0010\u0017\"\u0004\bh\u0010\u0019R\u001a\u0010i\u001a\u00020\u0015X.¢\u0006\u000e\n\u0000\u001a\u0004\bj\u0010\u0017\"\u0004\bk\u0010\u0019¨\u0006\u0001"}, mo64987d2 = {"Lcom/nothing/systemui/statusbar/notification/NTLightweightHeadsupView;", "Landroid/widget/FrameLayout;", "context", "Landroid/content/Context;", "attrs", "Landroid/util/AttributeSet;", "(Landroid/content/Context;Landroid/util/AttributeSet;)V", "DEBUG", "", "getDEBUG", "()Z", "OFFSET_Y", "", "getOFFSET_Y", "()F", "setOFFSET_Y", "(F)V", "OFFSET_Y_OUT_SCREEN", "getOFFSET_Y_OUT_SCREEN", "setOFFSET_Y_OUT_SCREEN", "allOutAnimator", "Landroid/animation/ObjectAnimator;", "getAllOutAnimator", "()Landroid/animation/ObjectAnimator;", "setAllOutAnimator", "(Landroid/animation/ObjectAnimator;)V", "appIconView", "Landroid/widget/ImageView;", "getAppIconView", "()Landroid/widget/ImageView;", "setAppIconView", "(Landroid/widget/ImageView;)V", "centerY", "", "getCenterY", "()I", "setCenterY", "(I)V", "container", "Landroid/widget/LinearLayout;", "getContainer", "()Landroid/widget/LinearLayout;", "setContainer", "(Landroid/widget/LinearLayout;)V", "contentView", "Landroid/widget/TextView;", "getContentView", "()Landroid/widget/TextView;", "setContentView", "(Landroid/widget/TextView;)V", "diameter", "getDiameter", "setDiameter", "displayMetrics", "Landroid/util/DisplayMetrics;", "getDisplayMetrics", "()Landroid/util/DisplayMetrics;", "inAnimatorSet", "Landroid/animation/AnimatorSet;", "getInAnimatorSet", "()Landroid/animation/AnimatorSet;", "setInAnimatorSet", "(Landroid/animation/AnimatorSet;)V", "isPopShowing", "setPopShowing", "(Z)V", "isReleased", "setReleased", "linearLayout", "getLinearLayout", "setLinearLayout", "messagePaddingEnd", "getMessagePaddingEnd", "setMessagePaddingEnd", "myDisplay", "Landroid/view/Display;", "getMyDisplay", "()Landroid/view/Display;", "outAnimatorSet", "getOutAnimatorSet", "setOutAnimatorSet", "popMessageLayout", "Landroid/widget/RelativeLayout;", "getPopMessageLayout", "()Landroid/widget/RelativeLayout;", "setPopMessageLayout", "(Landroid/widget/RelativeLayout;)V", "screenWidth", "getScreenWidth", "setScreenWidth", "textPaint", "Landroid/text/TextPaint;", "getTextPaint", "()Landroid/text/TextPaint;", "setTextPaint", "(Landroid/text/TextPaint;)V", "titleView", "getTitleView", "setTitleView", "translationYInAnimator", "getTranslationYInAnimator", "setTranslationYInAnimator", "translationYOutAnimator", "getTranslationYOutAnimator", "setTranslationYOutAnimator", "zoomInAnimator", "getZoomInAnimator", "setZoomInAnimator", "calculateTextLayoutWidth", "getInflateLayoutId", "getLargerTextViewWidth", "getLayoutHeight", "getLayoutWidth", "init", "", "initAnimator", "initView", "isShowing", "onAttachedToWindow", "onConfigurationChanged", "newConfig", "Landroid/content/res/Configuration;", "onVisibilityChanged", "changedView", "Landroid/view/View;", "visibility", "releasePopWithAnimation", "show", "runnable", "Ljava/lang/Runnable;", "setScale", "scale", "updateLayoutOffset", "updateQuickOpenVisibility", "Companion", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000\u0001\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u000b\n\u0002\b\u0003\n\u0002\u0010\u0007\n\u0002\b\b\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0010\b\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\b\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0010\n\u0002\u0018\u0002\n\u0002\b\u0006\n\u0002\u0018\u0002\n\u0002\b\b\n\u0002\u0018\u0002\n\u0002\b\u0016\n\u0002\u0010\u0002\n\u0002\b\u0006\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0002\b\u0006\b\u0016\u0018\u0000 \u00012\u00020\u0001:\u0002\u0001B\u001d\b\u0016\u0012\b\u0010\u0002\u001a\u0004\u0018\u00010\u0003\u0012\n\b\u0002\u0010\u0004\u001a\u0004\u0018\u00010\u0005¢\u0006\u0002\u0010\u0006J\b\u0010l\u001a\u00020!H\u0014J\b\u0010m\u001a\u00020!H\u0014J\b\u0010n\u001a\u00020!H\u0004J\b\u0010o\u001a\u00020!H\u0014J\b\u0010p\u001a\u00020!H\u0014J\b\u0010q\u001a\u00020rH\u0014J\b\u0010s\u001a\u00020rH\u0014J\b\u0010t\u001a\u00020rH\u0014J\b\u0010u\u001a\u00020\bH\u0016J\b\u0010v\u001a\u00020rH\u0014J\u0012\u0010w\u001a\u00020r2\b\u0010x\u001a\u0004\u0018\u00010yH\u0014J\u001a\u0010z\u001a\u00020r2\b\u0010{\u001a\u0004\u0018\u00010|2\u0006\u0010}\u001a\u00020!H\u0014J\u001c\u0010~\u001a\u00020r2\u0006\u0010\u001a\u00020\b2\n\u0010\u0001\u001a\u0005\u0018\u00010\u0001H\u0016J\u0012\u0010\u0001\u001a\u00020r2\u0007\u0010\u0001\u001a\u00020\fH\u0004J\u0007\u0010\u0001\u001a\u00020rJ\u0007\u0010\u0001\u001a\u00020rR\u0014\u0010\u0007\u001a\u00020\bX\u0004¢\u0006\b\n\u0000\u001a\u0004\b\t\u0010\nR\u001a\u0010\u000b\u001a\u00020\fX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\r\u0010\u000e\"\u0004\b\u000f\u0010\u0010R\u001a\u0010\u0011\u001a\u00020\fX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0012\u0010\u000e\"\u0004\b\u0013\u0010\u0010R\u001a\u0010\u0014\u001a\u00020\u0015X.¢\u0006\u000e\n\u0000\u001a\u0004\b\u0016\u0010\u0017\"\u0004\b\u0018\u0010\u0019R\u001a\u0010\u001a\u001a\u00020\u001bX.¢\u0006\u000e\n\u0000\u001a\u0004\b\u001c\u0010\u001d\"\u0004\b\u001e\u0010\u001fR\u001a\u0010 \u001a\u00020!X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\"\u0010#\"\u0004\b$\u0010%R\u001a\u0010&\u001a\u00020'X.¢\u0006\u000e\n\u0000\u001a\u0004\b(\u0010)\"\u0004\b*\u0010+R\u001a\u0010,\u001a\u00020-X.¢\u0006\u000e\n\u0000\u001a\u0004\b.\u0010/\"\u0004\b0\u00101R\u001a\u00102\u001a\u00020!X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b3\u0010#\"\u0004\b4\u0010%R\u0014\u00105\u001a\u000206X\u0004¢\u0006\b\n\u0000\u001a\u0004\b7\u00108R\u001a\u00109\u001a\u00020:X.¢\u0006\u000e\n\u0000\u001a\u0004\b;\u0010<\"\u0004\b=\u0010>R\u001a\u0010?\u001a\u00020\bX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b?\u0010\n\"\u0004\b@\u0010AR\u001a\u0010B\u001a\u00020\bX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\bB\u0010\n\"\u0004\bC\u0010AR\u001a\u0010D\u001a\u00020'X.¢\u0006\u000e\n\u0000\u001a\u0004\bE\u0010)\"\u0004\bF\u0010+R\u001a\u0010G\u001a\u00020!X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\bH\u0010#\"\u0004\bI\u0010%R\u0014\u0010J\u001a\u00020KX\u0004¢\u0006\b\n\u0000\u001a\u0004\bL\u0010MR\u001a\u0010N\u001a\u00020:X.¢\u0006\u000e\n\u0000\u001a\u0004\bO\u0010<\"\u0004\bP\u0010>R\u001a\u0010Q\u001a\u00020RX.¢\u0006\u000e\n\u0000\u001a\u0004\bS\u0010T\"\u0004\bU\u0010VR\u001a\u0010W\u001a\u00020!X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\bX\u0010#\"\u0004\bY\u0010%R\u001a\u0010Z\u001a\u00020[X.¢\u0006\u000e\n\u0000\u001a\u0004\b\\\u0010]\"\u0004\b^\u0010_R\u001a\u0010`\u001a\u00020-X.¢\u0006\u000e\n\u0000\u001a\u0004\ba\u0010/\"\u0004\bb\u00101R\u001a\u0010c\u001a\u00020\u0015X.¢\u0006\u000e\n\u0000\u001a\u0004\bd\u0010\u0017\"\u0004\be\u0010\u0019R\u001a\u0010f\u001a\u00020\u0015X.¢\u0006\u000e\n\u0000\u001a\u0004\bg\u0010\u0017\"\u0004\bh\u0010\u0019R\u001a\u0010i\u001a\u00020\u0015X.¢\u0006\u000e\n\u0000\u001a\u0004\bj\u0010\u0017\"\u0004\bk\u0010\u0019¨\u0006\u0001"}, mo65043d2 = {"Lcom/nothing/systemui/statusbar/notification/NTLightweightHeadsupView;", "Landroid/widget/FrameLayout;", "context", "Landroid/content/Context;", "attrs", "Landroid/util/AttributeSet;", "(Landroid/content/Context;Landroid/util/AttributeSet;)V", "DEBUG", "", "getDEBUG", "()Z", "OFFSET_Y", "", "getOFFSET_Y", "()F", "setOFFSET_Y", "(F)V", "OFFSET_Y_OUT_SCREEN", "getOFFSET_Y_OUT_SCREEN", "setOFFSET_Y_OUT_SCREEN", "allOutAnimator", "Landroid/animation/ObjectAnimator;", "getAllOutAnimator", "()Landroid/animation/ObjectAnimator;", "setAllOutAnimator", "(Landroid/animation/ObjectAnimator;)V", "appIconView", "Landroid/widget/ImageView;", "getAppIconView", "()Landroid/widget/ImageView;", "setAppIconView", "(Landroid/widget/ImageView;)V", "centerY", "", "getCenterY", "()I", "setCenterY", "(I)V", "container", "Landroid/widget/LinearLayout;", "getContainer", "()Landroid/widget/LinearLayout;", "setContainer", "(Landroid/widget/LinearLayout;)V", "contentView", "Landroid/widget/TextView;", "getContentView", "()Landroid/widget/TextView;", "setContentView", "(Landroid/widget/TextView;)V", "diameter", "getDiameter", "setDiameter", "displayMetrics", "Landroid/util/DisplayMetrics;", "getDisplayMetrics", "()Landroid/util/DisplayMetrics;", "inAnimatorSet", "Landroid/animation/AnimatorSet;", "getInAnimatorSet", "()Landroid/animation/AnimatorSet;", "setInAnimatorSet", "(Landroid/animation/AnimatorSet;)V", "isPopShowing", "setPopShowing", "(Z)V", "isReleased", "setReleased", "linearLayout", "getLinearLayout", "setLinearLayout", "messagePaddingEnd", "getMessagePaddingEnd", "setMessagePaddingEnd", "myDisplay", "Landroid/view/Display;", "getMyDisplay", "()Landroid/view/Display;", "outAnimatorSet", "getOutAnimatorSet", "setOutAnimatorSet", "popMessageLayout", "Landroid/widget/RelativeLayout;", "getPopMessageLayout", "()Landroid/widget/RelativeLayout;", "setPopMessageLayout", "(Landroid/widget/RelativeLayout;)V", "screenWidth", "getScreenWidth", "setScreenWidth", "textPaint", "Landroid/text/TextPaint;", "getTextPaint", "()Landroid/text/TextPaint;", "setTextPaint", "(Landroid/text/TextPaint;)V", "titleView", "getTitleView", "setTitleView", "translationYInAnimator", "getTranslationYInAnimator", "setTranslationYInAnimator", "translationYOutAnimator", "getTranslationYOutAnimator", "setTranslationYOutAnimator", "zoomInAnimator", "getZoomInAnimator", "setZoomInAnimator", "calculateTextLayoutWidth", "getInflateLayoutId", "getLargerTextViewWidth", "getLayoutHeight", "getLayoutWidth", "init", "", "initAnimator", "initView", "isShowing", "onAttachedToWindow", "onConfigurationChanged", "newConfig", "Landroid/content/res/Configuration;", "onVisibilityChanged", "changedView", "Landroid/view/View;", "visibility", "releasePopWithAnimation", "show", "runnable", "Ljava/lang/Runnable;", "setScale", "scale", "updateLayoutOffset", "updateQuickOpenVisibility", "Companion", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* compiled from: NTLightweightHeadsupView.kt */
 public class NTLightweightHeadsupView extends FrameLayout {
     public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
@@ -74,7 +74,7 @@ public class NTLightweightHeadsupView extends FrameLayout {
 
     /* access modifiers changed from: protected */
     public int getInflateLayoutId() {
-        return C1893R.layout.game_mode_toast;
+        return C1894R.layout.game_mode_toast;
     }
 
     /* access modifiers changed from: protected */
@@ -429,7 +429,7 @@ public class NTLightweightHeadsupView extends FrameLayout {
             java.lang.String r3 = r3.toString()
             android.util.Log.d(r2, r3)
             android.content.res.Resources r2 = r1.getResources()
-            r3 = 2131166686(0x7f0705de, float:1.7947624E38)
+            r3 = 2131166692(0x7f0705e4, float:1.7947637E38)
             int r2 = r2.getDimensionPixelSize(r3)
             r1.messagePaddingEnd = r2
             int r2 = r1.diameter
@@ -440,7 +440,7 @@ public class NTLightweightHeadsupView extends FrameLayout {
             if (r2 == 0) goto L_0x0088
             android.content.res.Resources r2 = r2.getResources()
             if (r2 == 0) goto L_0x0088
-            r0 = 2131166677(0x7f0705d5, float:1.7947606E38)
+            r0 = 2131166683(0x7f0705db, float:1.7947618E38)
             float r2 = r2.getDimension(r0)
             java.lang.Float r2 = java.lang.Float.valueOf((float) r2)
             goto L_0x0089
@@ -455,7 +455,7 @@ public class NTLightweightHeadsupView extends FrameLayout {
             android.content.res.Resources r3 = r2.getResources()
         L_0x009c:
             kotlin.jvm.internal.Intrinsics.checkNotNull(r3)
-            r2 = 2131166646(0x7f0705b6, float:1.7947543E38)
+            r2 = 2131166652(0x7f0705bc, float:1.7947555E38)
             float r2 = r3.getDimension(r2)
             float r2 = -r2
             float r3 = r1.OFFSET_Y
@@ -491,19 +491,19 @@ public class NTLightweightHeadsupView extends FrameLayout {
         View inflate = LayoutInflater.from(getContext()).inflate(getInflateLayoutId(), this, false);
         if (inflate != null) {
             setLinearLayout((LinearLayout) inflate);
-            View findViewById = getLinearLayout().findViewById(C1893R.C1897id.icon);
+            View findViewById = getLinearLayout().findViewById(C1894R.C1898id.icon);
             if (findViewById != null) {
                 setAppIconView((ImageView) findViewById);
-                View findViewById2 = getLinearLayout().findViewById(C1893R.C1897id.pop_message);
+                View findViewById2 = getLinearLayout().findViewById(C1894R.C1898id.pop_message);
                 if (findViewById2 != null) {
                     setPopMessageLayout((RelativeLayout) findViewById2);
-                    View findViewById3 = getPopMessageLayout().findViewById(C1893R.C1897id.title);
+                    View findViewById3 = getPopMessageLayout().findViewById(C1894R.C1898id.title);
                     if (findViewById3 != null) {
                         setTitleView((TextView) findViewById3);
-                        View findViewById4 = getPopMessageLayout().findViewById(C1893R.C1897id.content);
+                        View findViewById4 = getPopMessageLayout().findViewById(C1894R.C1898id.content);
                         if (findViewById4 != null) {
                             setContentView((TextView) findViewById4);
-                            View findViewById5 = getLinearLayout().findViewById(C1893R.C1897id.container);
+                            View findViewById5 = getLinearLayout().findViewById(C1894R.C1898id.container);
                             Intrinsics.checkNotNullExpressionValue(findViewById5, "linearLayout.findViewByI…arLayout>(R.id.container)");
                             setContainer((LinearLayout) findViewById5);
                             TextPaint paint = getTitleView().getPaint();
@@ -527,12 +527,12 @@ public class NTLightweightHeadsupView extends FrameLayout {
 
     /* access modifiers changed from: protected */
     public int getLayoutWidth() {
-        return getResources().getDimensionPixelSize(C1893R.dimen.nt_game_mode_toast_max_width);
+        return getResources().getDimensionPixelSize(C1894R.dimen.nt_game_mode_toast_max_width);
     }
 
     /* access modifiers changed from: protected */
     public int calculateTextLayoutWidth() {
-        return getResources().getDimensionPixelSize(C1893R.dimen.nt_game_mode_toast_max_width);
+        return getResources().getDimensionPixelSize(C1894R.dimen.nt_game_mode_toast_max_width);
     }
 
     /* access modifiers changed from: protected */
@@ -545,7 +545,7 @@ public class NTLightweightHeadsupView extends FrameLayout {
 
     /* access modifiers changed from: protected */
     public int getLayoutHeight() {
-        return getResources().getDimensionPixelSize(C1893R.dimen.nt_pop_view_height);
+        return getResources().getDimensionPixelSize(C1894R.dimen.nt_pop_view_height);
     }
 
     /* access modifiers changed from: protected */
@@ -610,11 +610,11 @@ public class NTLightweightHeadsupView extends FrameLayout {
     }
 
     public final void updateQuickOpenVisibility() {
-        this.messagePaddingEnd = getResources().getDimensionPixelSize(C1893R.dimen.nt_pop_view_message_margin_end);
+        this.messagePaddingEnd = getResources().getDimensionPixelSize(C1894R.dimen.nt_pop_view_message_margin_end);
         getPopMessageLayout().post(new NTLightweightHeadsupView$updateQuickOpenVisibility$1(this));
     }
 
-    @Metadata(mo64986d1 = {"\u0000\u0012\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\u000e\n\u0000\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u000e\u0010\u0003\u001a\u00020\u0004X\u0004¢\u0006\u0002\n\u0000¨\u0006\u0005"}, mo64987d2 = {"Lcom/nothing/systemui/statusbar/notification/NTLightweightHeadsupView$Companion;", "", "()V", "TAG", "", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u0000\u0012\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\u000e\n\u0000\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u000e\u0010\u0003\u001a\u00020\u0004X\u0004¢\u0006\u0002\n\u0000¨\u0006\u0005"}, mo65043d2 = {"Lcom/nothing/systemui/statusbar/notification/NTLightweightHeadsupView$Companion;", "", "()V", "TAG", "", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* compiled from: NTLightweightHeadsupView.kt */
     public static final class Companion {
         public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {

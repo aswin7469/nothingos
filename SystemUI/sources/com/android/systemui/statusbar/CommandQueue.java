@@ -33,6 +33,7 @@ import com.android.systemui.statusbar.phone.CentralSurfacesImpl;
 import com.android.systemui.statusbar.policy.CallbackController;
 import com.android.systemui.tracing.ProtoTracer;
 import com.nothing.systemui.NTDependencyEx;
+import com.nothing.systemui.p024qs.QSFragmentEx;
 import com.nothing.systemui.statusbar.CommandQueueEx;
 import java.p026io.FileOutputStream;
 import java.p026io.OutputStream;
@@ -350,7 +351,7 @@ public class CommandQueue extends IStatusBar.Stub implements CallbackController<
     public CommandQueue(Context context, ProtoTracer protoTracer, CommandRegistry commandRegistry) {
         this.mLock = new Object();
         this.mCallbacks = new ArrayList<>();
-        this.mHandler = new C2532H(Looper.getMainLooper());
+        this.mHandler = new C2538H(Looper.getMainLooper());
         this.mDisplayDisabled = new SparseArray<>();
         this.mLastUpdatedImeDisplayId = -1;
         this.mProtoTracer = protoTracer;
@@ -372,10 +373,10 @@ public class CommandQueue extends IStatusBar.Stub implements CallbackController<
     public boolean panelsEnabled() {
         int disabled1 = getDisabled1(0);
         int disabled2 = getDisabled2(0);
-        if ((disabled1 & 65536) == 0 && (disabled2 & 4) == 0 && !CentralSurfacesImpl.ONLY_CORE_APPS) {
-            return true;
+        if ((disabled1 & 65536) != 0 || (disabled2 & 4) != 0 || ((QSFragmentEx) NTDependencyEx.get(QSFragmentEx.class)).isTilesReloading() || CentralSurfacesImpl.ONLY_CORE_APPS) {
+            return false;
         }
-        return false;
+        return true;
     }
 
     public void addCallback(Callbacks callbacks) {
@@ -991,8 +992,8 @@ public class CommandQueue extends IStatusBar.Stub implements CallbackController<
     }
 
     /* renamed from: com.android.systemui.statusbar.CommandQueue$H */
-    private final class C2532H extends Handler {
-        private C2532H(Looper looper) {
+    private final class C2538H extends Handler {
+        private C2538H(Looper looper) {
             super(looper);
         }
 
@@ -2637,7 +2638,7 @@ public class CommandQueue extends IStatusBar.Stub implements CallbackController<
             L_0x0a62:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.CommandQueue.C2532H.handleMessage(android.os.Message):void");
+            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.CommandQueue.C2538H.handleMessage(android.os.Message):void");
         }
     }
 }

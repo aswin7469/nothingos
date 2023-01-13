@@ -87,7 +87,7 @@ import com.android.p019wm.shell.startingsurface.SplashscreenContentDrawer;
 import com.android.p019wm.shell.startingsurface.StartingSurface;
 import com.android.systemui.ActivityIntentHelper;
 import com.android.systemui.AutoReinflateContainer;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.CoreStartable;
 import com.android.systemui.DejankUtils;
 import com.android.systemui.EventLogTags;
@@ -130,7 +130,7 @@ import com.android.systemui.plugins.FalsingManager;
 import com.android.systemui.plugins.OverlayPlugin;
 import com.android.systemui.plugins.PluginDependencyProvider;
 import com.android.systemui.plugins.PluginListener;
-import com.android.systemui.plugins.p011qs.C2301QS;
+import com.android.systemui.plugins.p011qs.C2304QS;
 import com.android.systemui.plugins.statusbar.NotificationSwipeActionHelper;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.recents.ScreenPinningRequest;
@@ -203,6 +203,7 @@ import com.android.systemui.wmshell.BubblesManager;
 import com.nothing.systemui.NTDependencyEx;
 import com.nothing.systemui.facerecognition.FaceRecognitionController;
 import com.nothing.systemui.facerecognition.IFaceRecognitionAnimationCallback;
+import com.nothing.systemui.p024qs.QSFragmentEx;
 import com.nothing.systemui.p024qs.QSTileHostEx;
 import com.nothing.systemui.statusbar.CommandQueueEx;
 import com.nothing.systemui.statusbar.phone.CentralSurfacesImplEx;
@@ -244,7 +245,7 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$hideKeyguardWithAnimation$0$com-android-systemui-statusbar-phone-CentralSurfacesImpl$24 */
-        public /* synthetic */ void mo43935xd03a6eb7(IRemoteAnimationRunner iRemoteAnimationRunner) {
+        public /* synthetic */ void mo43944xd03a6eb7(IRemoteAnimationRunner iRemoteAnimationRunner) {
             CentralSurfacesImpl.this.mKeyguardViewMediator.hideWithAnimation(iRemoteAnimationRunner);
         }
 
@@ -322,8 +323,16 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
                         if (stringExtra.equals("dream") && CentralSurfacesImpl.this.mScreenOffAnimationController.shouldExpandNotifications()) {
                             i |= 4;
                         }
+                        if (stringExtra.equals("dream")) {
+                            NTLogUtil.m1686d(CentralSurfaces.TAG, "collapsed panel by dream");
+                            ((CentralSurfacesImplEx) NTDependencyEx.get(CentralSurfacesImplEx.class)).setPanelCollapsedByDream(true);
+                        }
                     }
-                    CentralSurfacesImpl.this.mShadeController.animateCollapsePanels(i);
+                    if (((CentralSurfacesImplEx) NTDependencyEx.get(CentralSurfacesImplEx.class)).shouldInstantCollapsePanel(stringExtra)) {
+                        CentralSurfacesImpl.this.instantCollapseNotificationPanel();
+                    } else {
+                        CentralSurfacesImpl.this.mShadeController.animateCollapsePanels(i);
+                    }
                 }
             } else if ("android.intent.action.SCREEN_OFF".equals(action)) {
                 if (CentralSurfacesImpl.this.mNotificationShadeWindowController != null) {
@@ -442,7 +451,7 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
         public void startFailureAnimation() {
             CentralSurfacesImpl.this.mMainHandler.post(new Runnable() {
                 public void run() {
-                    CentralSurfacesImpl.this.mKeyguardIndicationController.showTransientIndication((int) C1893R.string.nt_face_recognition_fail);
+                    CentralSurfacesImpl.this.mKeyguardIndicationController.showTransientIndication((int) C1894R.string.nt_face_recognition_fail);
                     CentralSurfacesImpl.this.mKeyguardIndicationController.hideTransientIndication();
                 }
             });
@@ -451,7 +460,7 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
         public void startFreezeAnimation() {
             CentralSurfacesImpl.this.mMainHandler.post(new Runnable() {
                 public void run() {
-                    CentralSurfacesImpl.this.mKeyguardIndicationController.showTransientIndication((int) C1893R.string.nt_face_recognition_error);
+                    CentralSurfacesImpl.this.mKeyguardIndicationController.showTransientIndication((int) C1894R.string.nt_face_recognition_error);
                     CentralSurfacesImpl.this.mKeyguardIndicationController.hideTransientIndication();
                 }
             });
@@ -468,7 +477,7 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
         public void onFaceAuthenticationTimeout() {
             CentralSurfacesImpl.this.mMainHandler.post(new Runnable() {
                 public void run() {
-                    CentralSurfacesImpl.this.mKeyguardIndicationController.showTransientIndication((int) C1893R.string.nt_face_recognition_timeout);
+                    CentralSurfacesImpl.this.mKeyguardIndicationController.showTransientIndication((int) C1894R.string.nt_face_recognition_timeout);
                     CentralSurfacesImpl.this.mKeyguardIndicationController.hideTransientIndication();
                 }
             });
@@ -590,6 +599,7 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
         public void onScreenTurningOn(Runnable runnable) {
             CentralSurfacesImpl.this.mFalsingCollector.onScreenTurningOn();
             CentralSurfacesImpl.this.mNotificationPanelViewController.onScreenTurningOn();
+            ((CentralSurfacesImplEx) NTDependencyEx.get(CentralSurfacesImplEx.class)).onScreenTurningOn();
         }
 
         public void onScreenTurnedOn() {
@@ -656,7 +666,7 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
         }
 
         public void onDozeAmountChanged(float f, float f2) {
-            if (CentralSurfacesImpl.this.mFeatureFlags.isEnabled(Flags.LOCKSCREEN_ANIMATIONS)) {
+            if ((!CentralSurfacesImpl.this.mFeatureFlags.isEnabled(Flags.LOCKSCREEN_ANIMATIONS) || CentralSurfacesImpl.this.mDozing || !CentralSurfacesImpl.this.mBiometricUnlockController.isWakeAndUnlock()) && CentralSurfacesImpl.this.mFeatureFlags.isEnabled(Flags.LOCKSCREEN_ANIMATIONS)) {
                 CentralSurfacesImpl.this.mLightRevealScrim.setRevealAmount(1.0f - f);
             }
         }
@@ -674,8 +684,8 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
             if (CentralSurfacesImpl.this.mBiometricUnlockController.isWakeAndUnlock()) {
                 CentralSurfacesImpl.this.updateIsKeyguard();
             }
-            CentralSurfacesImpl.this.updateReportRejectedTouchVisibility();
             ((CentralSurfacesImplEx) NTDependencyEx.get(CentralSurfacesImplEx.class)).onDozingChanged(z, CentralSurfacesImpl.this.mState);
+            CentralSurfacesImpl.this.updateReportRejectedTouchVisibility();
             Trace.endSection();
         }
 
@@ -795,13 +805,13 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onFinishedGoingToSleep$0$com-android-systemui-statusbar-phone-CentralSurfacesImpl$11 */
-        public /* synthetic */ void mo43928x2663190c() {
+        public /* synthetic */ void mo43937x2663190c() {
             CentralSurfacesImpl.this.mCommandQueueCallbacks.onCameraLaunchGestureDetected(CentralSurfacesImpl.this.mLastCameraLaunchSource);
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onFinishedGoingToSleep$1$com-android-systemui-statusbar-phone-CentralSurfacesImpl$11 */
-        public /* synthetic */ void mo43929xe0d8b98d() {
+        public /* synthetic */ void mo43938xe0d8b98d() {
             CentralSurfacesImpl.this.mCommandQueueCallbacks.onEmergencyActionLaunchGestureDetected();
         }
 
@@ -830,7 +840,7 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onStartedWakingUp$2$com-android-systemui-statusbar-phone-CentralSurfacesImpl$11 */
-        public /* synthetic */ void mo43930x71be48ff() {
+        public /* synthetic */ void mo43939x71be48ff() {
             CentralSurfacesImpl.this.mDeviceInteractive = true;
             CentralSurfacesImpl.this.mWakeUpCoordinator.setWakingUp(true);
             if (!CentralSurfacesImpl.this.mKeyguardBypassController.getBypassEnabled()) {
@@ -1027,7 +1037,7 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-statusbar-phone-CentralSurfacesImpl */
-    public /* synthetic */ void mo43889xebb0e365(ColorExtractor colorExtractor, int i) {
+    public /* synthetic */ void mo43898xebb0e365(ColorExtractor colorExtractor, int i) {
         updateTheme();
     }
 
@@ -1151,44 +1161,44 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$2$com-android-systemui-statusbar-phone-CentralSurfacesImpl */
-    public /* synthetic */ void mo43891x58b11a3(boolean z, String str) {
+    public /* synthetic */ void mo43900x58b11a3(boolean z, String str) {
         this.mContext.getMainExecutor().execute(new CentralSurfacesImpl$$ExternalSyntheticLambda11(this));
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$1$com-android-systemui-statusbar-phone-CentralSurfacesImpl */
-    public /* synthetic */ void mo43890x789dfa84() {
+    public /* synthetic */ void mo43899x789dfa84() {
         this.mNotificationsController.requestNotificationUpdate("onBubbleExpandChanged");
         updateScrimController();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$3$com-android-systemui-statusbar-phone-CentralSurfacesImpl */
-    public /* synthetic */ void mo43892x927828c2(boolean z) {
+    public /* synthetic */ void mo43901x927828c2(boolean z) {
         maybeUpdateBarMode();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$4$com-android-systemui-statusbar-phone-CentralSurfacesImpl */
-    public /* synthetic */ void mo43893x1f653fe1(CentralSurfaces.KeyboardShortcutsMessage keyboardShortcutsMessage) {
+    public /* synthetic */ void mo43902x1f653fe1(CentralSurfaces.KeyboardShortcutsMessage keyboardShortcutsMessage) {
         toggleKeyboardShortcuts(keyboardShortcutsMessage.mDeviceId);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$5$com-android-systemui-statusbar-phone-CentralSurfacesImpl */
-    public /* synthetic */ void mo43894xac525700(int i) {
+    public /* synthetic */ void mo43903xac525700(int i) {
         dismissKeyboardShortcuts();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$6$com-android-systemui-statusbar-phone-CentralSurfacesImpl */
-    public /* synthetic */ void mo43895x393f6e1f(AnimateExpandSettingsPanelMessage animateExpandSettingsPanelMessage) {
+    public /* synthetic */ void mo43904x393f6e1f(AnimateExpandSettingsPanelMessage animateExpandSettingsPanelMessage) {
         this.mCommandQueueCallbacks.animateExpandSettingsPanel(animateExpandSettingsPanelMessage.mSubpanel);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$7$com-android-systemui-statusbar-phone-CentralSurfacesImpl */
-    public /* synthetic */ void mo43896xc62c853e(int i) {
+    public /* synthetic */ void mo43905xc62c853e(int i) {
         onLaunchTransitionTimeout();
     }
 
@@ -1285,7 +1295,7 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onPluginConnected$0$com-android-systemui-statusbar-phone-CentralSurfacesImpl$3 */
-            public /* synthetic */ void mo43944x878737bd(OverlayPlugin overlayPlugin) {
+            public /* synthetic */ void mo43953x878737bd(OverlayPlugin overlayPlugin) {
                 overlayPlugin.setup(CentralSurfacesImpl.this.getNotificationShadeWindowView(), CentralSurfacesImpl.this.getNavigationBarView(), new Callback(overlayPlugin), CentralSurfacesImpl.this.mDozeParameters);
             }
 
@@ -1295,7 +1305,7 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onPluginDisconnected$1$com-android-systemui-statusbar-phone-CentralSurfacesImpl$3 */
-            public /* synthetic */ void mo43945xe44080ac(OverlayPlugin overlayPlugin) {
+            public /* synthetic */ void mo43954xe44080ac(OverlayPlugin overlayPlugin) {
                 this.mOverlays.remove(overlayPlugin);
                 CentralSurfacesImpl.this.mNotificationShadeWindowController.setForcePluginOpen(this.mOverlays.size() != 0, this);
             }
@@ -1310,24 +1320,24 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
 
                 public void onHoldStatusBarOpenChange() {
                     if (this.mPlugin.holdStatusBarOpen()) {
-                        C29363.this.mOverlays.add(this.mPlugin);
+                        C29423.this.mOverlays.add(this.mPlugin);
                     } else {
-                        C29363.this.mOverlays.remove(this.mPlugin);
+                        C29423.this.mOverlays.remove(this.mPlugin);
                     }
                     CentralSurfacesImpl.this.mMainExecutor.execute(new CentralSurfacesImpl$3$Callback$$ExternalSyntheticLambda1(this));
                 }
 
                 /* access modifiers changed from: package-private */
                 /* renamed from: lambda$onHoldStatusBarOpenChange$2$com-android-systemui-statusbar-phone-CentralSurfacesImpl$3$Callback */
-                public /* synthetic */ void mo43949xceb067d4() {
+                public /* synthetic */ void mo43958xceb067d4() {
                     CentralSurfacesImpl.this.mNotificationShadeWindowController.setStateListener(new CentralSurfacesImpl$3$Callback$$ExternalSyntheticLambda0(this));
-                    CentralSurfacesImpl.this.mNotificationShadeWindowController.setForcePluginOpen(C29363.this.mOverlays.size() != 0, this);
+                    CentralSurfacesImpl.this.mNotificationShadeWindowController.setForcePluginOpen(C29423.this.mOverlays.size() != 0, this);
                 }
 
                 /* access modifiers changed from: package-private */
                 /* renamed from: lambda$onHoldStatusBarOpenChange$1$com-android-systemui-statusbar-phone-CentralSurfacesImpl$3$Callback */
-                public /* synthetic */ void mo43948xdd5ed853(boolean z) {
-                    C29363.this.mOverlays.forEach(new CentralSurfacesImpl$3$Callback$$ExternalSyntheticLambda2(z));
+                public /* synthetic */ void mo43957xdd5ed853(boolean z) {
+                    C29423.this.mOverlays.forEach(new CentralSurfacesImpl$3$Callback$$ExternalSyntheticLambda2(z));
                 }
             }
         }, OverlayPlugin.class, true);
@@ -1336,19 +1346,19 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$start$11$com-android-systemui-statusbar-phone-CentralSurfacesImpl */
-    public /* synthetic */ void mo43903x3b3c5e95(StartingSurface startingSurface) {
+    public /* synthetic */ void mo43912x3b3c5e95(StartingSurface startingSurface) {
         startingSurface.setSysuiProxy(new CentralSurfacesImpl$$ExternalSyntheticLambda6(this));
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$start$10$com-android-systemui-statusbar-phone-CentralSurfacesImpl */
-    public /* synthetic */ void mo43902xae4f4776(boolean z, String str) {
+    public /* synthetic */ void mo43911xae4f4776(boolean z, String str) {
         this.mMainExecutor.execute(new CentralSurfacesImpl$$ExternalSyntheticLambda34(this, z, str));
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$start$9$com-android-systemui-statusbar-phone-CentralSurfacesImpl */
-    public /* synthetic */ void mo43905x1bcd4c3a(boolean z, String str) {
+    public /* synthetic */ void mo43914x1bcd4c3a(boolean z, String str) {
         this.mNotificationShadeWindowController.setRequestTopUi(z, str);
     }
 
@@ -1396,7 +1406,7 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
             this.mLockscreenWallpaper = this.mLockscreenWallpaperLazy.get();
         }
         this.mNotificationPanelViewController.setKeyguardIndicationController(this.mKeyguardIndicationController);
-        this.mAmbientIndicationContainer = this.mNotificationShadeWindowView.findViewById(C1893R.C1897id.ambient_indication_container);
+        this.mAmbientIndicationContainer = this.mNotificationShadeWindowView.findViewById(C1894R.C1898id.ambient_indication_container);
         this.mAutoHideController.setStatusBar(new AutoHideUiElement() {
             public void synchronizeState() {
                 CentralSurfacesImpl.this.checkBarModes();
@@ -1415,25 +1425,25 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
             }
         });
         this.mScrimController.setScrimVisibleListener(new CentralSurfacesImpl$$ExternalSyntheticLambda25(this));
-        this.mScrimController.attachViews((ScrimView) this.mNotificationShadeWindowView.findViewById(C1893R.C1897id.scrim_behind), (ScrimView) this.mNotificationShadeWindowView.findViewById(C1893R.C1897id.scrim_notifications), (ScrimView) this.mNotificationShadeWindowView.findViewById(C1893R.C1897id.scrim_in_front));
-        LightRevealScrim lightRevealScrim = (LightRevealScrim) this.mNotificationShadeWindowView.findViewById(C1893R.C1897id.light_reveal_scrim);
+        this.mScrimController.attachViews((ScrimView) this.mNotificationShadeWindowView.findViewById(C1894R.C1898id.scrim_behind), (ScrimView) this.mNotificationShadeWindowView.findViewById(C1894R.C1898id.scrim_notifications), (ScrimView) this.mNotificationShadeWindowView.findViewById(C1894R.C1898id.scrim_in_front));
+        LightRevealScrim lightRevealScrim = (LightRevealScrim) this.mNotificationShadeWindowView.findViewById(C1894R.C1898id.light_reveal_scrim);
         this.mLightRevealScrim = lightRevealScrim;
         lightRevealScrim.setScrimOpaqueChangedListener(new CentralSurfacesImpl$$ExternalSyntheticLambda26(this));
         this.mScreenOffAnimationController.initialize(this, this.mLightRevealScrim);
         updateLightRevealScrimVisibility();
         this.mNotificationPanelViewController.initDependencies(this, new CentralSurfacesImpl$$ExternalSyntheticLambda27(this), this.mNotificationShelfController);
-        BackDropView backDropView = (BackDropView) this.mNotificationShadeWindowView.findViewById(C1893R.C1897id.backdrop);
-        this.mMediaManager.setup(backDropView, (ImageView) backDropView.findViewById(C1893R.C1897id.backdrop_front), (ImageView) backDropView.findViewById(C1893R.C1897id.backdrop_back), this.mScrimController, this.mLockscreenWallpaper);
+        BackDropView backDropView = (BackDropView) this.mNotificationShadeWindowView.findViewById(C1894R.C1898id.backdrop);
+        this.mMediaManager.setup(backDropView, (ImageView) backDropView.findViewById(C1894R.C1898id.backdrop_front), (ImageView) backDropView.findViewById(C1894R.C1898id.backdrop_back), this.mScrimController, this.mLockscreenWallpaper);
         this.mNotificationShadeDepthControllerLazy.get().addListener(new CentralSurfacesImpl$$ExternalSyntheticLambda28(this.mContext.getResources().getFloat(17105119), backDropView));
         this.mNotificationPanelViewController.setUserSetupComplete(this.mUserSetup);
-        View findViewById = this.mNotificationShadeWindowView.findViewById(C1893R.C1897id.qs_frame);
+        View findViewById = this.mNotificationShadeWindowView.findViewById(C1894R.C1898id.qs_frame);
         if (findViewById != null) {
             FragmentHostManager fragmentHostManager = FragmentHostManager.get(findViewById);
-            ExtensionFragmentListener.attachExtensonToFragment(findViewById, C2301QS.TAG, C1893R.C1897id.qs_frame, this.mExtensionController.newExtension(C2301QS.class).withPlugin(C2301QS.class).withDefault(new CentralSurfacesImpl$$ExternalSyntheticLambda29(this)).build());
+            ExtensionFragmentListener.attachExtensonToFragment(findViewById, C2304QS.TAG, C1894R.C1898id.qs_frame, this.mExtensionController.newExtension(C2304QS.class).withPlugin(C2304QS.class).withDefault(new CentralSurfacesImpl$$ExternalSyntheticLambda29(this)).build());
             this.mBrightnessMirrorController = new BrightnessMirrorController(this.mNotificationShadeWindowView, this.mNotificationPanelViewController, this.mNotificationShadeDepthControllerLazy.get(), this.mBrightnessSliderFactory, new CentralSurfacesImpl$$ExternalSyntheticLambda30(this));
-            fragmentHostManager.addTagListener(C2301QS.TAG, new CentralSurfacesImpl$$ExternalSyntheticLambda31(this));
+            fragmentHostManager.addTagListener(C2304QS.TAG, new CentralSurfacesImpl$$ExternalSyntheticLambda31(this));
         }
-        View findViewById2 = this.mNotificationShadeWindowView.findViewById(C1893R.C1897id.report_rejected_touch);
+        View findViewById2 = this.mNotificationShadeWindowView.findViewById(C1894R.C1898id.report_rejected_touch);
         this.mReportRejectedTouch = findViewById2;
         if (findViewById2 != null) {
             updateReportRejectedTouchVisibility();
@@ -1453,7 +1463,7 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$makeStatusBarView$12$com-android-systemui-statusbar-phone-CentralSurfacesImpl */
-    public /* synthetic */ void mo43881xdbef998a(PhoneStatusBarView phoneStatusBarView, PhoneStatusBarViewController phoneStatusBarViewController, PhoneStatusBarTransitions phoneStatusBarTransitions) {
+    public /* synthetic */ void mo43890xdbef998a(PhoneStatusBarView phoneStatusBarView, PhoneStatusBarViewController phoneStatusBarViewController, PhoneStatusBarTransitions phoneStatusBarTransitions) {
         this.mStatusBarView = phoneStatusBarView;
         this.mPhoneStatusBarViewController = phoneStatusBarViewController;
         this.mStatusBarTransitions = phoneStatusBarTransitions;
@@ -1465,13 +1475,13 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$makeStatusBarView$13$com-android-systemui-statusbar-phone-CentralSurfacesImpl */
-    public /* synthetic */ void mo43882x68dcb0a9(Integer num) {
+    public /* synthetic */ void mo43891x68dcb0a9(Integer num) {
         this.mNotificationShadeWindowController.setScrimsVisibility(num.intValue());
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$makeStatusBarView$15$com-android-systemui-statusbar-phone-CentralSurfacesImpl */
-    public /* synthetic */ void mo43884x82b6dee7(Boolean bool) {
+    public /* synthetic */ void mo43893x82b6dee7(Boolean bool) {
         CentralSurfacesImpl$$ExternalSyntheticLambda8 centralSurfacesImpl$$ExternalSyntheticLambda8 = new CentralSurfacesImpl$$ExternalSyntheticLambda8(this);
         if (bool.booleanValue()) {
             this.mLightRevealScrim.post(centralSurfacesImpl$$ExternalSyntheticLambda8);
@@ -1482,7 +1492,7 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$makeStatusBarView$14$com-android-systemui-statusbar-phone-CentralSurfacesImpl */
-    public /* synthetic */ void mo43883xf5c9c7c8() {
+    public /* synthetic */ void mo43892xf5c9c7c8() {
         this.mNotificationShadeWindowController.setLightRevealScrimOpaque(this.mLightRevealScrim.isScrimOpaque());
         this.mScreenOffAnimationController.onScrimOpaqueChanged(this.mLightRevealScrim.isScrimOpaque());
     }
@@ -1497,15 +1507,15 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$makeStatusBarView$17$com-android-systemui-statusbar-phone-CentralSurfacesImpl */
-    public /* synthetic */ void mo43885x9c910d25(Boolean bool) {
+    public /* synthetic */ void mo43894x9c910d25(Boolean bool) {
         this.mBrightnessMirrorVisible = bool.booleanValue();
         updateScrimController();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$makeStatusBarView$18$com-android-systemui-statusbar-phone-CentralSurfacesImpl */
-    public /* synthetic */ void mo43886x297e2444(String str, Fragment fragment) {
-        C2301QS qs = (C2301QS) fragment;
+    public /* synthetic */ void mo43895x297e2444(String str, Fragment fragment) {
+        C2304QS qs = (C2304QS) fragment;
         if (qs instanceof QSFragment) {
             QSFragment qSFragment = (QSFragment) qs;
             this.mQSPanelController = qSFragment.getQSPanelController();
@@ -1517,7 +1527,7 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$makeStatusBarView$19$com-android-systemui-statusbar-phone-CentralSurfacesImpl */
-    public /* synthetic */ void mo43887xb66b3b63(View view) {
+    public /* synthetic */ void mo43896xb66b3b63(View view) {
         Uri reportRejectedTouch = this.mFalsingManager.reportRejectedTouch();
         if (reportRejectedTouch != null) {
             StringWriter stringWriter = new StringWriter();
@@ -1568,8 +1578,8 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
     }
 
     /* access modifiers changed from: protected */
-    public C2301QS createDefaultQSFragment() {
-        return (C2301QS) FragmentHostManager.get(this.mNotificationShadeWindowView).create(QSFragment.class);
+    public C2304QS createDefaultQSFragment() {
+        return (C2304QS) FragmentHostManager.get(this.mNotificationShadeWindowView).create(QSFragment.class);
     }
 
     private void setUpPresenter() {
@@ -1585,7 +1595,7 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
 
     /* access modifiers changed from: protected */
     /* renamed from: setUpDisableFlags */
-    public void mo43904x8ee0351b(int i, int i2) {
+    public void mo43913x8ee0351b(int i, int i2) {
         ((CommandQueueEx) NTDependencyEx.get(CommandQueueEx.class)).setDisableFlagsForSetup(this.mDisplayId, i, i2);
     }
 
@@ -1611,11 +1621,14 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$getStatusBarWindowTouchListener$20$com-android-systemui-statusbar-phone-CentralSurfacesImpl */
-    public /* synthetic */ boolean mo43878xe84e9e0d(View view, MotionEvent motionEvent) {
+    public /* synthetic */ boolean mo43887xe84e9e0d(View view, MotionEvent motionEvent) {
         this.mAutoHideController.checkUserAutoHide(motionEvent);
         this.mRemoteInputManager.checkRemoteInputOutside(motionEvent);
-        if (motionEvent.getAction() == 1 && this.mExpandedVisible) {
-            this.mShadeController.animateCollapsePanels();
+        if (motionEvent.getAction() == 1) {
+            boolean isTilesReloading = ((QSFragmentEx) NTDependencyEx.get(QSFragmentEx.class)).isTilesReloading();
+            if (this.mExpandedVisible && !isTilesReloading) {
+                this.mShadeController.animateCollapsePanels();
+            }
         }
         return this.mNotificationShadeWindowView.onTouchEvent(motionEvent);
     }
@@ -1869,7 +1882,7 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startActivity$21$com-android-systemui-statusbar-phone-CentralSurfacesImpl */
-    public /* synthetic */ Integer mo43906x2856e505(Intent intent, UserHandle userHandle, RemoteAnimationAdapter remoteAnimationAdapter) {
+    public /* synthetic */ Integer mo43915x2856e505(Intent intent, UserHandle userHandle, RemoteAnimationAdapter remoteAnimationAdapter) {
         return Integer.valueOf(TaskStackBuilder.create(this.mContext).addNextIntent(intent).startActivities(CentralSurfaces.getActivityOptions(getDisplayId(), remoteAnimationAdapter), userHandle));
     }
 
@@ -1996,7 +2009,7 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$maybeEscalateHeadsUp$22$com-android-systemui-statusbar-phone-CentralSurfacesImpl */
-    public /* synthetic */ void mo43888x3e6d1861(NotificationEntry notificationEntry) {
+    public /* synthetic */ void mo43897x3e6d1861(NotificationEntry notificationEntry) {
         StatusBarNotification sbn = notificationEntry.getSbn();
         Notification notification = sbn.getNotification();
         if (notification.fullScreenIntent != null) {
@@ -2041,7 +2054,7 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$postAnimateForceCollapsePanels$23$com-android-systemui-statusbar-phone-CentralSurfacesImpl */
-    public /* synthetic */ void mo43897x7c89c4b2() {
+    public /* synthetic */ void mo43906x7c89c4b2() {
         this.mShadeController.animateCollapsePanels(0, true);
     }
 
@@ -2075,6 +2088,7 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
 
     /* access modifiers changed from: package-private */
     public void makeExpandedInvisible() {
+        NTLogUtil.m1686d(CentralSurfaces.TAG, "makeExpandedInvisible: mExpandedVisible=" + this.mExpandedVisible + " mExpandedVisible=" + this.mExpandedVisible);
         if (this.mExpandedVisible && this.mNotificationShadeWindowView != null) {
             this.mNotificationPanelViewController.collapsePanel(false, false, 1.0f);
             this.mNotificationPanelViewController.closeQs();
@@ -2097,7 +2111,7 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
 
     public void onTouchEvent(MotionEvent motionEvent) {
         if (motionEvent.getId() == this.mLastMotionEventId) {
-            NTLogUtil.m1680d(CentralSurfaces.TAG, "ignore same MotionEvent = " + motionEvent);
+            NTLogUtil.m1686d(CentralSurfaces.TAG, "ignore same MotionEvent = " + motionEvent);
             return;
         }
         this.mLastMotionEventId = motionEvent.getId();
@@ -2202,7 +2216,7 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateBubblesVisibility$24$com-android-systemui-statusbar-phone-CentralSurfacesImpl */
-    public /* synthetic */ void mo43911x47c7eaa1(Bubbles bubbles) {
+    public /* synthetic */ void mo43920x47c7eaa1(Bubbles bubbles) {
         int i = this.mStatusBarMode;
         bubbles.onStatusBarVisibilityChanged((i == 3 || i == 6 || this.mStatusBarWindowHidden) ? false : true);
     }
@@ -2396,7 +2410,7 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startActivityDismissingKeyguard$26$com-android-systemui-statusbar-phone-CentralSurfacesImpl */
-    public /* synthetic */ void mo43908x93d22f9e(Intent intent, int i, ActivityLaunchAnimator.Controller controller, boolean z, boolean z2, UserHandle userHandle, ActivityStarter.Callback callback) {
+    public /* synthetic */ void mo43917x93d22f9e(Intent intent, int i, ActivityLaunchAnimator.Controller controller, boolean z, boolean z2, UserHandle userHandle, ActivityStarter.Callback callback) {
         ActivityStarter.Callback callback2 = callback;
         this.mAssistManagerLazy.get().hideAssist();
         intent.setFlags(335544320);
@@ -2411,7 +2425,7 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startActivityDismissingKeyguard$25$com-android-systemui-statusbar-phone-CentralSurfacesImpl */
-    public /* synthetic */ Integer mo43907x6e5187f(boolean z, Intent intent, int[] iArr, UserHandle userHandle, RemoteAnimationAdapter remoteAnimationAdapter) {
+    public /* synthetic */ Integer mo43916x6e5187f(boolean z, Intent intent, int[] iArr, UserHandle userHandle, RemoteAnimationAdapter remoteAnimationAdapter) {
         ActivityOptions activityOptions = new ActivityOptions(CentralSurfaces.getActivityOptions(this.mDisplayId, remoteAnimationAdapter));
         activityOptions.setDisallowEnterPictureInPictureWhileLaunching(z);
         if (CameraIntents.isInsecureCameraIntent(intent)) {
@@ -2553,7 +2567,7 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
         if (statusBarKeyguardViewManager != null) {
             statusBarKeyguardViewManager.updateResources();
         }
-        this.mPowerButtonReveal = new PowerButtonReveal((float) this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.physical_power_button_center_screen_location_y));
+        this.mPowerButtonReveal = new PowerButtonReveal((float) this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.physical_power_button_center_screen_location_y));
     }
 
     /* access modifiers changed from: protected */
@@ -2620,7 +2634,7 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$handleVisibleToUserChangedImpl$28$com-android-systemui-statusbar-phone-CentralSurfacesImpl */
-    public /* synthetic */ void mo43879x32dd988b(boolean z, int i) {
+    public /* synthetic */ void mo43888x32dd988b(boolean z, int i) {
         try {
             this.mBarService.onPanelRevealed(z, i);
         } catch (RemoteException unused) {
@@ -2629,7 +2643,7 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$handleVisibleToUserChangedImpl$29$com-android-systemui-statusbar-phone-CentralSurfacesImpl */
-    public /* synthetic */ void mo43880xbfcaafaa() {
+    public /* synthetic */ void mo43889xbfcaafaa() {
         try {
             this.mBarService.onPanelHidden();
         } catch (RemoteException unused) {
@@ -2665,14 +2679,14 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$postQSRunnableDismissingKeyguard$31$com-android-systemui-statusbar-phone-CentralSurfacesImpl */
-    public /* synthetic */ void mo43899x8443c1cc(Runnable runnable) {
+    public /* synthetic */ void mo43908x8443c1cc(Runnable runnable) {
         this.mStatusBarStateController.setLeaveOpenOnKeyguardHide(true);
         executeRunnableDismissingKeyguard(new CentralSurfacesImpl$$ExternalSyntheticLambda5(this, runnable), (Runnable) null, false, false, false);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$postQSRunnableDismissingKeyguard$30$com-android-systemui-statusbar-phone-CentralSurfacesImpl */
-    public /* synthetic */ void mo43898xf756aaad(Runnable runnable) {
+    public /* synthetic */ void mo43907xf756aaad(Runnable runnable) {
         this.mMainExecutor.execute(runnable);
     }
 
@@ -2682,7 +2696,7 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$postStartActivityDismissingKeyguard$32$com-android-systemui-statusbar-phone-CentralSurfacesImpl */
-    public /* synthetic */ void mo43900xc6f81a3(PendingIntent pendingIntent, ActivityLaunchAnimator.Controller controller) {
+    public /* synthetic */ void mo43909xc6f81a3(PendingIntent pendingIntent, ActivityLaunchAnimator.Controller controller) {
         startPendingIntentDismissingKeyguard(pendingIntent, (Runnable) null, controller);
     }
 
@@ -2700,7 +2714,7 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$postStartActivityDismissingKeyguard$33$com-android-systemui-statusbar-phone-CentralSurfacesImpl */
-    public /* synthetic */ void mo43901x995c98c2(Intent intent, ActivityLaunchAnimator.Controller controller) {
+    public /* synthetic */ void mo43910x995c98c2(Intent intent, ActivityLaunchAnimator.Controller controller) {
         startActivityDismissingKeyguard(intent, true, true, false, (ActivityStarter.Callback) null, 0, controller, getActivityUserHandle(intent));
     }
 
@@ -2790,7 +2804,7 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$fadeKeyguardAfterLaunchTransition$34$com-android-systemui-statusbar-phone-CentralSurfacesImpl */
-    public /* synthetic */ void mo43876x5a9a8cd4(Runnable runnable) {
+    public /* synthetic */ void mo43885x5a9a8cd4(Runnable runnable) {
         this.mKeyguardStateController.setLaunchTransitionFadingAway(true);
         if (runnable != null) {
             runnable.run();
@@ -2819,7 +2833,7 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$fadeKeyguardWhilePulsing$35$com-android-systemui-statusbar-phone-CentralSurfacesImpl */
-    public /* synthetic */ void mo43877xcbae3212() {
+    public /* synthetic */ void mo43886xcbae3212() {
         hideKeyguard();
         this.mStatusBarKeyguardViewManager.onKeyguardFadedAway();
     }
@@ -2912,7 +2926,7 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
     /* access modifiers changed from: protected */
     public void updateTheme() {
         this.mUiBgExecutor.execute(new CentralSurfacesImpl$$ExternalSyntheticLambda40(this));
-        int i = this.mColorExtractor.getNeutralColors().supportsDarkText() ? C1893R.style.Theme_SystemUI_LightWallpaper : C1893R.style.Theme_SystemUI;
+        int i = this.mColorExtractor.getNeutralColors().supportsDarkText() ? C1894R.style.Theme_SystemUI_LightWallpaper : C1894R.style.Theme_SystemUI;
         if (this.mContext.getThemeResId() != i) {
             this.mContext.setTheme(i);
             this.mConfigurationController.notifyThemeChanged();
@@ -2921,13 +2935,13 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateTheme$37$com-android-systemui-statusbar-phone-CentralSurfacesImpl */
-    public /* synthetic */ void mo43913xee6659af() {
+    public /* synthetic */ void mo43922xee6659af() {
         this.mMainExecutor.execute(new CentralSurfacesImpl$$ExternalSyntheticLambda19(this, this.mWallpaperManager.lockScreenWallpaperExists() ? this.mWallpaperManager.getWallpaperDimAmount() : 0.0f));
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateTheme$36$com-android-systemui-statusbar-phone-CentralSurfacesImpl */
-    public /* synthetic */ void mo43912x61794290(float f) {
+    public /* synthetic */ void mo43921x61794290(float f) {
         this.mScrimController.setAdditionalScrimBehindAlphaKeyguard(f);
         this.mScrimController.applyCompositeAlphaOnScrimBehindKeyguard();
     }
@@ -2939,7 +2953,7 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
         boolean z = false;
         boolean z2 = (this.mStatusBarKeyguardViewManager.isShowing() && !this.mStatusBarKeyguardViewManager.isOccluded()) || (this.mDozing && this.mDozeParameters.shouldDelayKeyguardShow());
         boolean z3 = this.mBiometricUnlockController.getMode() == 1;
-        if ((!this.mDozing && ((this.mDozeServiceHost.shouldAnimateWakeup() || ((CentralSurfacesImplEx) NTDependencyEx.get(CentralSurfacesImplEx.class)).shouldPlayOnOffAnimation()) && !z3)) || (this.mDozing && this.mDozeParameters.shouldControlScreenOff() && z2)) {
+        if (((!this.mDozing && ((this.mDozeServiceHost.shouldAnimateWakeup() || ((CentralSurfacesImplEx) NTDependencyEx.get(CentralSurfacesImplEx.class)).shouldPlayOnOffAnimation()) && !z3)) || (this.mDozing && this.mDozeParameters.shouldControlScreenOff() && z2)) && this.mNotificationPanelViewController.isPanelFullyCollapsed()) {
             z = true;
         }
         this.mNotificationPanelViewController.setDozing(this.mDozing, z, this.mWakeUpTouchLocation);
@@ -3098,17 +3112,17 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
 
     public void onCameraHintStarted() {
         this.mFalsingCollector.onCameraHintStarted();
-        this.mKeyguardIndicationController.showTransientIndication((int) C1893R.string.camera_hint);
+        this.mKeyguardIndicationController.showTransientIndication((int) C1894R.string.camera_hint);
     }
 
     public void onVoiceAssistHintStarted() {
         this.mFalsingCollector.onLeftAffordanceHintStarted();
-        this.mKeyguardIndicationController.showTransientIndication((int) C1893R.string.voice_hint);
+        this.mKeyguardIndicationController.showTransientIndication((int) C1894R.string.voice_hint);
     }
 
     public void onPhoneHintStarted() {
         this.mFalsingCollector.onLeftAffordanceHintStarted();
-        this.mKeyguardIndicationController.showTransientIndication((int) C1893R.string.phone_hint);
+        this.mKeyguardIndicationController.showTransientIndication((int) C1894R.string.phone_hint);
     }
 
     public NavigationBarView getNavigationBarView() {
@@ -3202,7 +3216,7 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
         if (list == null || list.isEmpty()) {
             return null;
         }
-        String string = this.mContext.getString(C1893R.string.config_preferredEmergencySosPackage);
+        String string = this.mContext.getString(C1894R.string.config_preferredEmergencySosPackage);
         if (TextUtils.isEmpty(string)) {
             return list.get(0);
         }
@@ -3321,7 +3335,7 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$awakenDreams$38$com-android-systemui-statusbar-phone-CentralSurfacesImpl */
-    public /* synthetic */ void mo43875x12cb8a1() {
+    public /* synthetic */ void mo43884x12cb8a1() {
         try {
             this.mDreamManager.awaken();
         } catch (RemoteException e) {
@@ -3387,7 +3401,7 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startPendingIntentDismissingKeyguard$40$com-android-systemui-statusbar-phone-CentralSurfacesImpl */
-    public /* synthetic */ void mo43910x73efd340(ActivityLaunchAnimator.Controller controller, PendingIntent pendingIntent, boolean z, boolean z2, Runnable runnable) {
+    public /* synthetic */ void mo43919x73efd340(ActivityLaunchAnimator.Controller controller, PendingIntent pendingIntent, boolean z, boolean z2, Runnable runnable) {
         StatusBarLaunchAnimatorController statusBarLaunchAnimatorController;
         if (controller != null) {
             try {
@@ -3412,7 +3426,7 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startPendingIntentDismissingKeyguard$39$com-android-systemui-statusbar-phone-CentralSurfacesImpl */
-    public /* synthetic */ int mo43909x578fd696(PendingIntent pendingIntent, RemoteAnimationAdapter remoteAnimationAdapter) throws PendingIntent.CanceledException {
+    public /* synthetic */ int mo43918x578fd696(PendingIntent pendingIntent, RemoteAnimationAdapter remoteAnimationAdapter) throws PendingIntent.CanceledException {
         ActivityOptions activityOptions = new ActivityOptions(CentralSurfaces.getActivityOptions(this.mDisplayId, remoteAnimationAdapter));
         activityOptions.setEligibleForLegacyPermissionPrompt(true);
         return pendingIntent.sendAndReturnResult((Context) null, 0, (Intent) null, (PendingIntent.OnFinished) null, (Handler) null, (String) null, activityOptions.toBundle());
@@ -3500,7 +3514,7 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
 
     /* access modifiers changed from: private */
     public UserHandle getActivityUserHandle(Intent intent) {
-        String[] stringArray = this.mContext.getResources().getStringArray(C1893R.array.system_ui_packages);
+        String[] stringArray = this.mContext.getResources().getStringArray(C1894R.array.system_ui_packages);
         int length = stringArray.length;
         int i = 0;
         while (i < length) {
@@ -3523,6 +3537,12 @@ public class CentralSurfacesImpl extends CoreStartable implements CentralSurface
             view.getLocationInWindow(this.mTmpInt2);
             this.mWakeUpTouchLocation = pointF;
             this.mFalsingCollector.onScreenOnFromTouch();
+        }
+    }
+
+    public void unlockedScreenOffAnimationCancel() {
+        if (this.mState == 1) {
+            this.mNotificationPanelViewController.cancelPendingPanelCollapse();
         }
     }
 }

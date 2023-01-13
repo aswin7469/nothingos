@@ -11,6 +11,6 @@ public final /* synthetic */ class StatusBarTouchableRegionManager$$ExternalSynt
     }
 
     public final void onChange(boolean z) {
-        this.f$0.mo45350x3ee4734b(z);
+        this.f$0.mo45362x3ee4734b(z);
     }
 }

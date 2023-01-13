@@ -31,7 +31,7 @@ import androidx.constraintlayout.motion.widget.Key;
 import com.android.p019wm.shell.back.BackAnimation;
 import com.android.p019wm.shell.pip.Pip;
 import com.android.settingslib.Utils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Gefingerpoken;
 import com.android.systemui.accessibility.SystemActions$$ExternalSyntheticLambda5;
 import com.android.systemui.animation.Interpolators;
@@ -154,9 +154,9 @@ public class NavigationBarView extends FrameLayout {
         }
 
         public void startTransition(LayoutTransition layoutTransition, ViewGroup viewGroup, View view, int i) {
-            if (view.getId() == C1893R.C1897id.back) {
+            if (view.getId() == C1894R.C1898id.back) {
                 this.mBackTransitioning = true;
-            } else if (view.getId() == C1893R.C1897id.home && i == 2) {
+            } else if (view.getId() == C1894R.C1898id.home && i == 2) {
                 this.mHomeAppearing = true;
                 this.mStartDelay = layoutTransition.getStartDelay(i);
                 this.mDuration = layoutTransition.getDuration(i);
@@ -165,9 +165,9 @@ public class NavigationBarView extends FrameLayout {
         }
 
         public void endTransition(LayoutTransition layoutTransition, ViewGroup viewGroup, View view, int i) {
-            if (view.getId() == C1893R.C1897id.back) {
+            if (view.getId() == C1894R.C1898id.back) {
                 this.mBackTransitioning = false;
-            } else if (view.getId() == C1893R.C1897id.home && i == 2) {
+            } else if (view.getId() == C1894R.C1898id.home && i == 2) {
                 this.mHomeAppearing = false;
             }
         }
@@ -199,13 +199,13 @@ public class NavigationBarView extends FrameLayout {
             public void onInitializeAccessibilityNodeInfo(View view, AccessibilityNodeInfo accessibilityNodeInfo) {
                 super.onInitializeAccessibilityNodeInfo(view, accessibilityNodeInfo);
                 if (this.mToggleOverviewAction == null) {
-                    this.mToggleOverviewAction = new AccessibilityNodeInfo.AccessibilityAction(C1893R.C1897id.action_toggle_overview, NavigationBarView.this.getContext().getString(C1893R.string.quick_step_accessibility_toggle_overview));
+                    this.mToggleOverviewAction = new AccessibilityNodeInfo.AccessibilityAction(C1894R.C1898id.action_toggle_overview, NavigationBarView.this.getContext().getString(C1894R.string.quick_step_accessibility_toggle_overview));
                 }
                 accessibilityNodeInfo.addAction(this.mToggleOverviewAction);
             }
 
             public boolean performAccessibilityAction(View view, int i, Bundle bundle) {
-                if (i != C1893R.C1897id.action_toggle_overview) {
+                if (i != C1894R.C1898id.action_toggle_overview) {
                     return super.performAccessibilityAction(view, i, bundle);
                 }
                 NavigationBarView.this.mRecentsOptional.ifPresent(new SystemActions$$ExternalSyntheticLambda5());
@@ -226,39 +226,39 @@ public class NavigationBarView extends FrameLayout {
         };
         this.mDockedListener = new NavigationBarView$$ExternalSyntheticLambda0(this);
         this.mPipListener = new NavigationBarView$$ExternalSyntheticLambda1(this);
-        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(context2, Utils.getThemeAttr(context2, C1893R.attr.darkIconTheme));
-        ContextThemeWrapper contextThemeWrapper2 = new ContextThemeWrapper(context2, Utils.getThemeAttr(context2, C1893R.attr.lightIconTheme));
+        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(context2, Utils.getThemeAttr(context2, C1894R.attr.darkIconTheme));
+        ContextThemeWrapper contextThemeWrapper2 = new ContextThemeWrapper(context2, Utils.getThemeAttr(context2, C1894R.attr.lightIconTheme));
         this.mLightContext = contextThemeWrapper2;
-        this.mLightIconColor = Utils.getColorAttrDefaultColor(contextThemeWrapper2, C1893R.attr.singleToneColor);
-        this.mDarkIconColor = Utils.getColorAttrDefaultColor(contextThemeWrapper, C1893R.attr.singleToneColor);
+        this.mLightIconColor = Utils.getColorAttrDefaultColor(contextThemeWrapper2, C1894R.attr.singleToneColor);
+        this.mDarkIconColor = Utils.getColorAttrDefaultColor(contextThemeWrapper, C1894R.attr.singleToneColor);
         this.mIsVertical = false;
         this.mLongClickableAccessibilityButton = false;
-        ContextualButtonGroup contextualButtonGroup = new ContextualButtonGroup(C1893R.C1897id.menu_container);
+        ContextualButtonGroup contextualButtonGroup = new ContextualButtonGroup(C1894R.C1898id.menu_container);
         this.mContextualButtonGroup = contextualButtonGroup;
-        ContextualButton contextualButton = new ContextualButton(C1893R.C1897id.ime_switcher, this.mLightContext, C1893R.C1895drawable.ic_ime_switcher_default);
-        ContextualButton contextualButton2 = new ContextualButton(C1893R.C1897id.accessibility_button, this.mLightContext, C1893R.C1895drawable.ic_sysbar_accessibility_button);
+        ContextualButton contextualButton = new ContextualButton(C1894R.C1898id.ime_switcher, this.mLightContext, C1894R.C1896drawable.ic_ime_switcher_default);
+        ContextualButton contextualButton2 = new ContextualButton(C1894R.C1898id.accessibility_button, this.mLightContext, C1894R.C1896drawable.ic_sysbar_accessibility_button);
         contextualButtonGroup.addButton(contextualButton);
         contextualButtonGroup.addButton(contextualButton2);
-        this.mRotationContextButton = new RotationContextButton(C1893R.C1897id.rotate_suggestion, this.mLightContext, C1893R.C1895drawable.ic_sysbar_rotate_button_ccw_start_0);
-        this.mFloatingRotationButton = new FloatingRotationButton(this.mContext, C1893R.string.accessibility_rotate_button, C1893R.layout.rotate_suggestion, C1893R.C1897id.rotate_suggestion, C1893R.dimen.floating_rotation_button_min_margin, C1893R.dimen.rounded_corner_content_padding, C1893R.dimen.floating_rotation_button_taskbar_left_margin, C1893R.dimen.floating_rotation_button_taskbar_bottom_margin, C1893R.dimen.floating_rotation_button_diameter, C1893R.dimen.key_button_ripple_max_width);
-        this.mRotationButtonController = new RotationButtonController(this.mLightContext, this.mLightIconColor, this.mDarkIconColor, C1893R.C1895drawable.ic_sysbar_rotate_button_ccw_start_0, C1893R.C1895drawable.ic_sysbar_rotate_button_ccw_start_90, C1893R.C1895drawable.ic_sysbar_rotate_button_cw_start_0, C1893R.C1895drawable.ic_sysbar_rotate_button_cw_start_90, new NavigationBarView$$ExternalSyntheticLambda2(this));
+        this.mRotationContextButton = new RotationContextButton(C1894R.C1898id.rotate_suggestion, this.mLightContext, C1894R.C1896drawable.ic_sysbar_rotate_button_ccw_start_0);
+        this.mFloatingRotationButton = new FloatingRotationButton(this.mContext, C1894R.string.accessibility_rotate_button, C1894R.layout.rotate_suggestion, C1894R.C1898id.rotate_suggestion, C1894R.dimen.floating_rotation_button_min_margin, C1894R.dimen.rounded_corner_content_padding, C1894R.dimen.floating_rotation_button_taskbar_left_margin, C1894R.dimen.floating_rotation_button_taskbar_bottom_margin, C1894R.dimen.floating_rotation_button_diameter, C1894R.dimen.key_button_ripple_max_width);
+        this.mRotationButtonController = new RotationButtonController(this.mLightContext, this.mLightIconColor, this.mDarkIconColor, C1894R.C1896drawable.ic_sysbar_rotate_button_ccw_start_0, C1894R.C1896drawable.ic_sysbar_rotate_button_ccw_start_90, C1894R.C1896drawable.ic_sysbar_rotate_button_cw_start_0, C1894R.C1896drawable.ic_sysbar_rotate_button_cw_start_90, new NavigationBarView$$ExternalSyntheticLambda2(this));
         this.mConfiguration = new Configuration();
         this.mTmpLastConfiguration = new Configuration();
         this.mConfiguration.updateFrom(context.getResources().getConfiguration());
         this.mScreenPinningNotify = new ScreenPinningNotify(this.mContext);
-        sparseArray.put(C1893R.C1897id.back, new ButtonDispatcher(C1893R.C1897id.back));
-        sparseArray.put(C1893R.C1897id.home, new ButtonDispatcher(C1893R.C1897id.home));
-        sparseArray.put(C1893R.C1897id.home_handle, new ButtonDispatcher(C1893R.C1897id.home_handle));
-        sparseArray.put(C1893R.C1897id.recent_apps, new ButtonDispatcher(C1893R.C1897id.recent_apps));
-        sparseArray.put(C1893R.C1897id.ime_switcher, contextualButton);
-        sparseArray.put(C1893R.C1897id.accessibility_button, contextualButton2);
-        sparseArray.put(C1893R.C1897id.menu_container, contextualButtonGroup);
+        sparseArray.put(C1894R.C1898id.back, new ButtonDispatcher(C1894R.C1898id.back));
+        sparseArray.put(C1894R.C1898id.home, new ButtonDispatcher(C1894R.C1898id.home));
+        sparseArray.put(C1894R.C1898id.home_handle, new ButtonDispatcher(C1894R.C1898id.home_handle));
+        sparseArray.put(C1894R.C1898id.recent_apps, new ButtonDispatcher(C1894R.C1898id.recent_apps));
+        sparseArray.put(C1894R.C1898id.ime_switcher, contextualButton);
+        sparseArray.put(C1894R.C1898id.accessibility_button, contextualButton2);
+        sparseArray.put(C1894R.C1898id.menu_container, contextualButtonGroup);
         this.mDeadZone = new DeadZone(this);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-navigationbar-NavigationBarView */
-    public /* synthetic */ Integer mo34785x59ac49cb() {
+    public /* synthetic */ Integer mo34789x59ac49cb() {
         return Integer.valueOf(this.mCurrentRotation);
     }
 
@@ -334,31 +334,31 @@ public class NavigationBarView extends FrameLayout {
     }
 
     public ButtonDispatcher getRecentsButton() {
-        return this.mButtonDispatchers.get(C1893R.C1897id.recent_apps);
+        return this.mButtonDispatchers.get(C1894R.C1898id.recent_apps);
     }
 
     public ButtonDispatcher getBackButton() {
-        return this.mButtonDispatchers.get(C1893R.C1897id.back);
+        return this.mButtonDispatchers.get(C1894R.C1898id.back);
     }
 
     public ButtonDispatcher getHomeButton() {
-        return this.mButtonDispatchers.get(C1893R.C1897id.home);
+        return this.mButtonDispatchers.get(C1894R.C1898id.home);
     }
 
     public ButtonDispatcher getImeSwitchButton() {
-        return this.mButtonDispatchers.get(C1893R.C1897id.ime_switcher);
+        return this.mButtonDispatchers.get(C1894R.C1898id.ime_switcher);
     }
 
     public ButtonDispatcher getAccessibilityButton() {
-        return this.mButtonDispatchers.get(C1893R.C1897id.accessibility_button);
+        return this.mButtonDispatchers.get(C1894R.C1898id.accessibility_button);
     }
 
     public RotationContextButton getRotateSuggestionButton() {
-        return (RotationContextButton) this.mButtonDispatchers.get(C1893R.C1897id.rotate_suggestion);
+        return (RotationContextButton) this.mButtonDispatchers.get(C1894R.C1898id.rotate_suggestion);
     }
 
     public ButtonDispatcher getHomeHandle() {
-        return this.mButtonDispatchers.get(C1893R.C1897id.home_handle);
+        return this.mButtonDispatchers.get(C1894R.C1898id.home_handle);
     }
 
     public SparseArray<ButtonDispatcher> getButtonDispatchers() {
@@ -389,11 +389,11 @@ public class NavigationBarView extends FrameLayout {
             z = false;
         }
         if (z2 || z3) {
-            this.mDockedIcon = getDrawable(C1893R.C1895drawable.ic_sysbar_docked);
+            this.mDockedIcon = getDrawable(C1894R.C1896drawable.ic_sysbar_docked);
             this.mHomeDefaultIcon = getHomeDrawable();
         }
         if (z3 || z) {
-            this.mRecentIcon = getDrawable(C1893R.C1895drawable.ic_sysbar_recent);
+            this.mRecentIcon = getDrawable(C1894R.C1896drawable.ic_sysbar_recent);
             this.mContextualButtonGroup.updateIcons(this.mLightIconColor, this.mDarkIconColor);
         }
         if (z2 || z3 || z) {
@@ -404,12 +404,12 @@ public class NavigationBarView extends FrameLayout {
     /* access modifiers changed from: package-private */
     public void updateRotationButton() {
         if (QuickStepContract.isGesturalMode(this.mNavBarMode)) {
-            this.mContextualButtonGroup.removeButton(C1893R.C1897id.rotate_suggestion);
-            this.mButtonDispatchers.remove(C1893R.C1897id.rotate_suggestion);
+            this.mContextualButtonGroup.removeButton(C1894R.C1898id.rotate_suggestion);
+            this.mButtonDispatchers.remove(C1894R.C1898id.rotate_suggestion);
             this.mRotationButtonController.setRotationButton(this.mFloatingRotationButton, this.mRotationButtonListener);
-        } else if (this.mContextualButtonGroup.getContextButton(C1893R.C1897id.rotate_suggestion) == null) {
+        } else if (this.mContextualButtonGroup.getContextButton(C1894R.C1898id.rotate_suggestion) == null) {
             this.mContextualButtonGroup.addButton(this.mRotationContextButton);
-            this.mButtonDispatchers.put(C1893R.C1897id.rotate_suggestion, this.mRotationContextButton);
+            this.mButtonDispatchers.put(C1894R.C1898id.rotate_suggestion, this.mRotationContextButton);
             this.mRotationButtonController.setRotationButton(this.mRotationContextButton, this.mRotationButtonListener);
         }
         this.mNavigationInflaterView.setButtonDispatchers(this.mButtonDispatchers);
@@ -422,15 +422,15 @@ public class NavigationBarView extends FrameLayout {
     }
 
     public int getBackDrawableRes() {
-        return chooseNavigationIconDrawableRes(C1893R.C1895drawable.ic_sysbar_back, C1893R.C1895drawable.ic_sysbar_back_quick_step);
+        return chooseNavigationIconDrawableRes(C1894R.C1896drawable.ic_sysbar_back, C1894R.C1896drawable.ic_sysbar_back_quick_step);
     }
 
     public KeyButtonDrawable getHomeDrawable() {
         KeyButtonDrawable keyButtonDrawable;
         if (this.mShowSwipeUpUi) {
-            keyButtonDrawable = getDrawable(C1893R.C1895drawable.ic_sysbar_home_quick_step);
+            keyButtonDrawable = getDrawable(C1894R.C1896drawable.ic_sysbar_home_quick_step);
         } else {
-            keyButtonDrawable = getDrawable(C1893R.C1895drawable.ic_sysbar_home);
+            keyButtonDrawable = getDrawable(C1894R.C1896drawable.ic_sysbar_home);
         }
         orientHomeButton(keyButtonDrawable);
         return keyButtonDrawable;
@@ -452,7 +452,7 @@ public class NavigationBarView extends FrameLayout {
                 return;
             }
             if (!this.mShowSwipeUpUi && !this.mIsVertical && z) {
-                f2 = -getResources().getDimension(C1893R.dimen.navbar_back_button_ime_offset);
+                f2 = -getResources().getDimension(C1894R.dimen.navbar_back_button_ime_offset);
             }
             ObjectAnimator ofPropertyValuesHolder = ObjectAnimator.ofPropertyValuesHolder(keyButtonDrawable, new PropertyValuesHolder[]{PropertyValuesHolder.ofFloat(KeyButtonDrawable.KEY_DRAWABLE_ROTATE, new float[]{f}), PropertyValuesHolder.ofFloat(KeyButtonDrawable.KEY_DRAWABLE_TRANSLATE_Y, new float[]{f2})});
             ofPropertyValuesHolder.setInterpolator(Interpolators.FAST_OUT_SLOW_IN);
@@ -533,7 +533,7 @@ public class NavigationBarView extends FrameLayout {
         getHomeButton().setImageDrawable(keyButtonDrawable2);
         getBackButton().setImageDrawable(keyButtonDrawable);
         updateRecentsIcon();
-        this.mContextualButtonGroup.setButtonVisibility(C1893R.C1897id.ime_switcher, !((this.mNavigationIconHints & 4) == 0 || isImeRenderingNavButtons()));
+        this.mContextualButtonGroup.setButtonVisibility(C1894R.C1898id.ime_switcher, !((this.mNavigationIconHints & 4) == 0 || isImeRenderingNavButtons()));
         this.mBarTransitions.reapplyDarkIntensity();
         boolean z2 = QuickStepContract.isGesturalMode(this.mNavBarMode) || (this.mDisabledFlags & 2097152) != 0;
         boolean isRecentsButtonDisabled = isRecentsButtonDisabled();
@@ -550,7 +550,7 @@ public class NavigationBarView extends FrameLayout {
             z4 = false;
             isRecentsButtonDisabled = false;
         }
-        ViewGroup viewGroup = (ViewGroup) getCurrentView().findViewById(C1893R.C1897id.nav_buttons);
+        ViewGroup viewGroup = (ViewGroup) getCurrentView().findViewById(C1894R.C1898id.nav_buttons);
         if (!(viewGroup == null || (layoutTransition = viewGroup.getLayoutTransition()) == null || layoutTransition.getTransitionListeners().contains(this.mTransitionListener))) {
             layoutTransition.addTransitionListener(this.mTransitionListener);
         }
@@ -592,7 +592,7 @@ public class NavigationBarView extends FrameLayout {
 
     private void updateLayoutTransitionsEnabled() {
         boolean z = !this.mWakeAndUnlocking && this.mLayoutTransitionsEnabled;
-        LayoutTransition layoutTransition = ((ViewGroup) getCurrentView().findViewById(C1893R.C1897id.nav_buttons)).getLayoutTransition();
+        LayoutTransition layoutTransition = ((ViewGroup) getCurrentView().findViewById(C1894R.C1898id.nav_buttons)).getLayoutTransition();
         if (layoutTransition == null) {
             return;
         }
@@ -614,7 +614,7 @@ public class NavigationBarView extends FrameLayout {
         if (layoutParams != null) {
             boolean z2 = layoutParams.windowAnimations != 0;
             if (!z2 && z) {
-                layoutParams.windowAnimations = C1893R.style.Animation_NavigationBarFadeIn;
+                layoutParams.windowAnimations = C1894R.style.Animation_NavigationBarFadeIn;
             } else if (z2 && !z) {
                 layoutParams.windowAnimations = 0;
             } else {
@@ -730,12 +730,12 @@ public class NavigationBarView extends FrameLayout {
     public void setAccessibilityButtonState(boolean z, boolean z2) {
         this.mLongClickableAccessibilityButton = z2;
         getAccessibilityButton().setLongClickable(z2);
-        this.mContextualButtonGroup.setButtonVisibility(C1893R.C1897id.accessibility_button, z);
+        this.mContextualButtonGroup.setButtonVisibility(C1894R.C1898id.accessibility_button, z);
     }
 
     public void onFinishInflate() {
         super.onFinishInflate();
-        NavigationBarInflaterView navigationBarInflaterView = (NavigationBarInflaterView) findViewById(C1893R.C1897id.navigation_inflater);
+        NavigationBarInflaterView navigationBarInflaterView = (NavigationBarInflaterView) findViewById(C1894R.C1898id.navigation_inflater);
         this.mNavigationInflaterView = navigationBarInflaterView;
         navigationBarInflaterView.setButtonDispatchers(this.mButtonDispatchers);
         updateOrientationViews();
@@ -775,12 +775,12 @@ public class NavigationBarView extends FrameLayout {
         } else {
             frameLayout = this.mNavigationInflaterView.mHorizontal;
         }
-        return ((NearestTouchFrame) frameLayout.findViewById(C1893R.C1897id.nav_buttons)).getFullTouchableChildRegions();
+        return ((NearestTouchFrame) frameLayout.findViewById(C1894R.C1898id.nav_buttons)).getFullTouchableChildRegions();
     }
 
     private void updateOrientationViews() {
-        this.mHorizontal = findViewById(C1893R.C1897id.horizontal);
-        this.mVertical = findViewById(C1893R.C1897id.vertical);
+        this.mHorizontal = findViewById(C1894R.C1898id.horizontal);
+        this.mVertical = findViewById(C1894R.C1898id.vertical);
         updateCurrentView();
     }
 
@@ -1025,26 +1025,26 @@ public class NavigationBarView extends FrameLayout {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$2$com-android-systemui-navigationbar-NavigationBarView */
-    public /* synthetic */ void mo34787x8de34709(Boolean bool) {
+    public /* synthetic */ void mo34791x8de34709(Boolean bool) {
         post(new NavigationBarView$$ExternalSyntheticLambda3(this, bool));
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$1$com-android-systemui-navigationbar-NavigationBarView */
-    public /* synthetic */ void mo34786x73c7c86a(Boolean bool) {
+    public /* synthetic */ void mo34790x73c7c86a(Boolean bool) {
         this.mDockedStackExists = bool.booleanValue();
         updateRecentsIcon();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$4$com-android-systemui-navigationbar-NavigationBarView */
-    public /* synthetic */ void mo34789xc21a4447(Rect rect) {
+    public /* synthetic */ void mo34793xc21a4447(Rect rect) {
         post(new NavigationBarView$$ExternalSyntheticLambda4(this, rect));
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$3$com-android-systemui-navigationbar-NavigationBarView */
-    public /* synthetic */ void mo34788xa7fec5a8(Rect rect) {
+    public /* synthetic */ void mo34792xa7fec5a8(Rect rect) {
         this.mEdgeBackGestureHandler.setPipStashExclusionBounds(rect);
     }
 

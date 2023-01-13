@@ -9,7 +9,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import com.android.settingslib.Utils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.statusbar.events.BackgroundAnimatableView;
 import com.nothing.systemui.NTDependencyEx;
 import com.nothing.systemui.privacy.OngoingPrivacyChipEx;
@@ -21,7 +21,7 @@ import kotlin.collections.CollectionsKt;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 
-@Metadata(mo64986d1 = {"\u0000H\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0002\b\u0006\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010 \n\u0002\u0018\u0002\n\u0002\b\u0006\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\t\u0018\u00002\u00020\u00012\u00020\u0002B/\b\u0007\u0012\u0006\u0010\u0003\u001a\u00020\u0004\u0012\n\b\u0002\u0010\u0005\u001a\u0004\u0018\u00010\u0006\u0012\b\b\u0002\u0010\u0007\u001a\u00020\b\u0012\b\b\u0002\u0010\t\u001a\u00020\b¢\u0006\u0002\u0010\nJ\u0010\u0010\u001a\u001a\u00020\u001b2\u0006\u0010\u001c\u001a\u00020\u001dH\u0002J\b\u0010\u001e\u001a\u00020\u001bH\u0014J(\u0010\u001f\u001a\u00020\u001b2\u0006\u0010 \u001a\u00020\b2\u0006\u0010!\u001a\u00020\b2\u0006\u0010\"\u001a\u00020\b2\u0006\u0010#\u001a\u00020\bH\u0016J\b\u0010$\u001a\u00020\u001bH\u0002J\u0010\u0010%\u001a\u00020\u001b2\u0006\u0010\u001c\u001a\u00020\u001dH\u0002R\u000e\u0010\u000b\u001a\u00020\bX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\f\u001a\u00020\bX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\r\u001a\u00020\bX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u000e\u001a\u00020\u000fX.¢\u0006\u0002\n\u0000R\u000e\u0010\u0010\u001a\u00020\u0011X\u000e¢\u0006\u0002\n\u0000R0\u0010\u0015\u001a\b\u0012\u0004\u0012\u00020\u00140\u00132\f\u0010\u0012\u001a\b\u0012\u0004\u0012\u00020\u00140\u0013@FX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0016\u0010\u0017\"\u0004\b\u0018\u0010\u0019¨\u0006&"}, mo64987d2 = {"Lcom/android/systemui/privacy/OngoingPrivacyChip;", "Landroid/widget/FrameLayout;", "Lcom/android/systemui/statusbar/events/BackgroundAnimatableView;", "context", "Landroid/content/Context;", "attrs", "Landroid/util/AttributeSet;", "defStyleAttrs", "", "defStyleRes", "(Landroid/content/Context;Landroid/util/AttributeSet;II)V", "iconColor", "iconMargin", "iconSize", "iconsContainer", "Landroid/widget/LinearLayout;", "mEx", "Lcom/nothing/systemui/privacy/OngoingPrivacyChipEx;", "value", "", "Lcom/android/systemui/privacy/PrivacyItem;", "privacyList", "getPrivacyList", "()Ljava/util/List;", "setPrivacyList", "(Ljava/util/List;)V", "generateContentDescription", "", "builder", "Lcom/android/systemui/privacy/PrivacyChipBuilder;", "onFinishInflate", "setBoundsForAnimation", "l", "t", "r", "b", "updateResources", "updateView", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000H\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0002\b\u0006\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010 \n\u0002\u0018\u0002\n\u0002\b\u0006\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\t\u0018\u00002\u00020\u00012\u00020\u0002B/\b\u0007\u0012\u0006\u0010\u0003\u001a\u00020\u0004\u0012\n\b\u0002\u0010\u0005\u001a\u0004\u0018\u00010\u0006\u0012\b\b\u0002\u0010\u0007\u001a\u00020\b\u0012\b\b\u0002\u0010\t\u001a\u00020\b¢\u0006\u0002\u0010\nJ\u0010\u0010\u001a\u001a\u00020\u001b2\u0006\u0010\u001c\u001a\u00020\u001dH\u0002J\b\u0010\u001e\u001a\u00020\u001bH\u0014J(\u0010\u001f\u001a\u00020\u001b2\u0006\u0010 \u001a\u00020\b2\u0006\u0010!\u001a\u00020\b2\u0006\u0010\"\u001a\u00020\b2\u0006\u0010#\u001a\u00020\bH\u0016J\b\u0010$\u001a\u00020\u001bH\u0002J\u0010\u0010%\u001a\u00020\u001b2\u0006\u0010\u001c\u001a\u00020\u001dH\u0002R\u000e\u0010\u000b\u001a\u00020\bX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\f\u001a\u00020\bX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\r\u001a\u00020\bX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u000e\u001a\u00020\u000fX.¢\u0006\u0002\n\u0000R\u000e\u0010\u0010\u001a\u00020\u0011X\u000e¢\u0006\u0002\n\u0000R0\u0010\u0015\u001a\b\u0012\u0004\u0012\u00020\u00140\u00132\f\u0010\u0012\u001a\b\u0012\u0004\u0012\u00020\u00140\u0013@FX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0016\u0010\u0017\"\u0004\b\u0018\u0010\u0019¨\u0006&"}, mo65043d2 = {"Lcom/android/systemui/privacy/OngoingPrivacyChip;", "Landroid/widget/FrameLayout;", "Lcom/android/systemui/statusbar/events/BackgroundAnimatableView;", "context", "Landroid/content/Context;", "attrs", "Landroid/util/AttributeSet;", "defStyleAttrs", "", "defStyleRes", "(Landroid/content/Context;Landroid/util/AttributeSet;II)V", "iconColor", "iconMargin", "iconSize", "iconsContainer", "Landroid/widget/LinearLayout;", "mEx", "Lcom/nothing/systemui/privacy/OngoingPrivacyChipEx;", "value", "", "Lcom/android/systemui/privacy/PrivacyItem;", "privacyList", "getPrivacyList", "()Ljava/util/List;", "setPrivacyList", "(Ljava/util/List;)V", "generateContentDescription", "", "builder", "Lcom/android/systemui/privacy/PrivacyChipBuilder;", "onFinishInflate", "setBoundsForAnimation", "l", "t", "r", "b", "updateResources", "updateView", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* compiled from: OngoingPrivacyChip.kt */
 public final class OngoingPrivacyChip extends FrameLayout implements BackgroundAnimatableView {
     public Map<Integer, View> _$_findViewCache;
@@ -99,7 +99,7 @@ public final class OngoingPrivacyChip extends FrameLayout implements BackgroundA
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        View requireViewById = requireViewById(C1893R.C1897id.icons_container);
+        View requireViewById = requireViewById(C1894R.C1898id.icons_container);
         Intrinsics.checkNotNullExpressionValue(requireViewById, "requireViewById(R.id.icons_container)");
         this.iconsContainer = (LinearLayout) requireViewById;
         updateResources();
@@ -115,7 +115,7 @@ public final class OngoingPrivacyChip extends FrameLayout implements BackgroundA
     }
 
     private static final void updateView$setIcons(OngoingPrivacyChip ongoingPrivacyChip, PrivacyChipBuilder privacyChipBuilder, ViewGroup viewGroup) {
-        if (ongoingPrivacyChip.getTag() != null && ongoingPrivacyChip.getTag().equals(ongoingPrivacyChip.getContext().getString(C1893R.string.nt_qs_header_privacy_icons))) {
+        if (ongoingPrivacyChip.getTag() != null && ongoingPrivacyChip.getTag().equals(ongoingPrivacyChip.getContext().getString(C1894R.string.nt_qs_header_privacy_icons))) {
             ongoingPrivacyChip.iconColor = ongoingPrivacyChip.mEx.updateIconColor();
         }
         viewGroup.removeAllViews();
@@ -172,14 +172,14 @@ public final class OngoingPrivacyChip extends FrameLayout implements BackgroundA
 
     private final void generateContentDescription(PrivacyChipBuilder privacyChipBuilder) {
         String joinTypes = privacyChipBuilder.joinTypes();
-        setContentDescription(getContext().getString(C1893R.string.ongoing_privacy_chip_content_multiple_apps, new Object[]{joinTypes}));
+        setContentDescription(getContext().getString(C1894R.string.ongoing_privacy_chip_content_multiple_apps, new Object[]{joinTypes}));
     }
 
     private final void updateResources() {
-        this.iconMargin = getContext().getResources().getDimensionPixelSize(C1893R.dimen.ongoing_appops_chip_icon_margin);
-        this.iconSize = getContext().getResources().getDimensionPixelSize(C1893R.dimen.ongoing_appops_chip_icon_size);
+        this.iconMargin = getContext().getResources().getDimensionPixelSize(C1894R.dimen.ongoing_appops_chip_icon_margin);
+        this.iconSize = getContext().getResources().getDimensionPixelSize(C1894R.dimen.ongoing_appops_chip_icon_size);
         this.iconColor = Utils.getColorAttrDefaultColor(getContext(), 16843827);
-        int dimensionPixelSize = getContext().getResources().getDimensionPixelSize(C1893R.dimen.ongoing_appops_chip_side_padding);
+        int dimensionPixelSize = getContext().getResources().getDimensionPixelSize(C1894R.dimen.ongoing_appops_chip_side_padding);
         LinearLayout linearLayout = this.iconsContainer;
         LinearLayout linearLayout2 = null;
         if (linearLayout == null) {
@@ -193,6 +193,6 @@ public final class OngoingPrivacyChip extends FrameLayout implements BackgroundA
         } else {
             linearLayout2 = linearLayout3;
         }
-        linearLayout2.setBackground(getContext().getDrawable(C1893R.C1895drawable.privacy_chip_bg));
+        linearLayout2.setBackground(getContext().getDrawable(C1894R.C1896drawable.privacy_chip_bg));
     }
 }

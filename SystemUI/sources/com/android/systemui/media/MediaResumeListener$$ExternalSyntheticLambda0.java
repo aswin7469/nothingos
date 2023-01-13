@@ -15,6 +15,6 @@ public final /* synthetic */ class MediaResumeListener$$ExternalSyntheticLambda0
     }
 
     public final void run() {
-        MediaResumeListener.m2813onMediaDataLoaded$lambda4(this.f$0, this.f$1, this.f$2);
+        MediaResumeListener.m2818onMediaDataLoaded$lambda4(this.f$0, this.f$1, this.f$2);
     }
 }

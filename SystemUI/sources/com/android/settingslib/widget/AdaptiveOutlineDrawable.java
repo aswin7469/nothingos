@@ -43,7 +43,7 @@ public class AdaptiveOutlineDrawable extends DrawableWrapper {
         this.mType = i;
         getDrawable().setTint(-1);
         this.mPath = new Path(PathParser.createPathFromPathData(resources.getString(17039987)));
-        this.mStrokeWidth = resources.getDimensionPixelSize(C1860R.dimen.adaptive_outline_stroke);
+        this.mStrokeWidth = resources.getDimensionPixelSize(C1861R.dimen.adaptive_outline_stroke);
         Paint paint = new Paint();
         this.mOutlinePaint = paint;
         paint.setColor(getColor(resources, i));
@@ -57,9 +57,9 @@ public class AdaptiveOutlineDrawable extends DrawableWrapper {
     private int getColor(Resources resources, int i) {
         int i2;
         if (i != 1) {
-            i2 = C1860R.C1861color.bt_outline_color;
+            i2 = C1861R.C1862color.bt_outline_color;
         } else {
-            i2 = C1860R.C1861color.advanced_outline_color;
+            i2 = C1861R.C1862color.advanced_outline_color;
         }
         return resources.getColor(i2, (Resources.Theme) null);
     }
@@ -67,9 +67,9 @@ public class AdaptiveOutlineDrawable extends DrawableWrapper {
     private int getDimensionPixelSize(Resources resources, int i) {
         int i2;
         if (i != 1) {
-            i2 = C1860R.dimen.dashboard_tile_foreground_image_inset;
+            i2 = C1861R.dimen.dashboard_tile_foreground_image_inset;
         } else {
-            i2 = C1860R.dimen.advanced_dashboard_tile_foreground_image_inset;
+            i2 = C1861R.dimen.advanced_dashboard_tile_foreground_image_inset;
         }
         return resources.getDimensionPixelSize(i2);
     }

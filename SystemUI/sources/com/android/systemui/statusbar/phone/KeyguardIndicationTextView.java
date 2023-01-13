@@ -11,7 +11,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.animation.Interpolators;
 import com.android.systemui.keyguard.KeyguardIndication;
 
@@ -203,6 +203,6 @@ public class KeyguardIndicationTextView extends TextView {
     }
 
     private int getYTranslationPixels() {
-        return this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.keyguard_indication_y_translation);
+        return this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.keyguard_indication_y_translation);
     }
 }

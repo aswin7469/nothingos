@@ -13,7 +13,7 @@ import android.widget.TextView;
 import androidx.core.view.AccessibilityDelegateCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
-import com.google.android.setupdesign.C3953R;
+import com.google.android.setupdesign.C3963R;
 import com.google.android.setupdesign.util.LayoutStyler;
 import com.google.android.setupdesign.view.CheckableLinearLayout;
 
@@ -49,16 +49,16 @@ public class ExpandableSwitchItem extends SwitchItem implements CompoundButton.O
 
     public ExpandableSwitchItem(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C3953R.styleable.SudExpandableSwitchItem);
-        this.collapsedSummary = obtainStyledAttributes.getText(C3953R.styleable.SudExpandableSwitchItem_sudCollapsedSummary);
-        this.expandedSummary = obtainStyledAttributes.getText(C3953R.styleable.SudExpandableSwitchItem_sudExpandedSummary);
-        setIconGravity(obtainStyledAttributes.getInt(C3953R.styleable.SudItem_sudIconGravity, 48));
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C3963R.styleable.SudExpandableSwitchItem);
+        this.collapsedSummary = obtainStyledAttributes.getText(C3963R.styleable.SudExpandableSwitchItem_sudCollapsedSummary);
+        this.expandedSummary = obtainStyledAttributes.getText(C3963R.styleable.SudExpandableSwitchItem_sudExpandedSummary);
+        setIconGravity(obtainStyledAttributes.getInt(C3963R.styleable.SudItem_sudIconGravity, 48));
         obtainStyledAttributes.recycle();
     }
 
     /* access modifiers changed from: protected */
     public int getDefaultLayoutResource() {
-        return C3953R.layout.sud_items_expandable_switch;
+        return C3963R.layout.sud_items_expandable_switch;
     }
 
     public CharSequence getSummary() {
@@ -100,7 +100,7 @@ public class ExpandableSwitchItem extends SwitchItem implements CompoundButton.O
 
     public void onBindView(View view) {
         super.onBindView(view);
-        View findViewById = view.findViewById(C3953R.C3956id.sud_items_expandable_switch_content);
+        View findViewById = view.findViewById(C3963R.C3966id.sud_items_expandable_switch_content);
         findViewById.setOnClickListener(this);
         if (findViewById instanceof CheckableLinearLayout) {
             CheckableLinearLayout checkableLinearLayout = (CheckableLinearLayout) findViewById;
@@ -122,7 +122,7 @@ public class ExpandableSwitchItem extends SwitchItem implements CompoundButton.O
         ColorStateList colorStateList = obtainStyledAttributes.getColorStateList(0);
         obtainStyledAttributes.recycle();
         if (colorStateList != null) {
-            TextView textView = (TextView) view.findViewById(C3953R.C3956id.sud_items_title);
+            TextView textView = (TextView) view.findViewById(C3963R.C3966id.sud_items_title);
             for (Drawable drawable : textView.getCompoundDrawables()) {
                 if (drawable != null) {
                     drawable.setColorFilter(colorStateList.getDefaultColor(), PorterDuff.Mode.SRC_IN);

@@ -13,6 +13,6 @@ public final /* synthetic */ class BubbleVolatileRepository$$ExternalSyntheticLa
     }
 
     public final boolean test(Object obj) {
-        return BubbleVolatileRepository.m3442sanitizeBubbles$lambda6(this.f$0, (BubbleEntity) obj);
+        return BubbleVolatileRepository.m3446sanitizeBubbles$lambda6(this.f$0, (BubbleEntity) obj);
     }
 }

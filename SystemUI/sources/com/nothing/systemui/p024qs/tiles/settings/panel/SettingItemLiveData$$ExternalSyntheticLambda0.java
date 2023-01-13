@@ -14,6 +14,6 @@ public final /* synthetic */ class SettingItemLiveData$$ExternalSyntheticLambda0
     }
 
     public final void run() {
-        this.f$0.mo57924x80eaff34(this.f$1);
+        this.f$0.mo57967x80eaff34(this.f$1);
     }
 }

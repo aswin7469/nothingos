@@ -13,5 +13,5 @@ public @interface NullFromTypeParam {
     int from() default Integer.MIN_VALUE;
 
     /* renamed from: to */
-    int mo66771to() default Integer.MAX_VALUE;
+    int mo66827to() default Integer.MAX_VALUE;
 }

@@ -12,6 +12,6 @@ public final /* synthetic */ class ScreenshotView$$ExternalSyntheticLambda12 imp
     }
 
     public final void onInputEvent(InputEvent inputEvent) {
-        this.f$0.mo37511x393f333(inputEvent);
+        this.f$0.mo37512x393f333(inputEvent);
     }
 }

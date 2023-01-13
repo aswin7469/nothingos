@@ -37,13 +37,13 @@ public class AtomicMarkableReference<V> {
         }
 
         /* renamed from: of */
-        static <T> Pair<T> m1764of(T t, boolean z) {
+        static <T> Pair<T> m1770of(T t, boolean z) {
             return new Pair<>(t, z);
         }
     }
 
     public AtomicMarkableReference(V v, boolean z) {
-        this.pair = Pair.m1764of(v, z);
+        this.pair = Pair.m1770of(v, z);
     }
 
     public V getReference() {
@@ -66,19 +66,19 @@ public class AtomicMarkableReference<V> {
 
     public boolean compareAndSet(V v, V v2, boolean z, boolean z2) {
         Pair<V> pair2 = this.pair;
-        return v == pair2.reference && z == pair2.mark && ((v2 == pair2.reference && z2 == pair2.mark) || casPair(pair2, Pair.m1764of(v2, z2)));
+        return v == pair2.reference && z == pair2.mark && ((v2 == pair2.reference && z2 == pair2.mark) || casPair(pair2, Pair.m1770of(v2, z2)));
     }
 
     public void set(V v, boolean z) {
         Pair<V> pair2 = this.pair;
         if (v != pair2.reference || z != pair2.mark) {
-            this.pair = Pair.m1764of(v, z);
+            this.pair = Pair.m1770of(v, z);
         }
     }
 
     public boolean attemptMark(V v, boolean z) {
         Pair<V> pair2 = this.pair;
-        return v == pair2.reference && (z == pair2.mark || casPair(pair2, Pair.m1764of(v, z)));
+        return v == pair2.reference && (z == pair2.mark || casPair(pair2, Pair.m1770of(v, z)));
     }
 
     static {

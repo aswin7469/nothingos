@@ -15,6 +15,6 @@ public final /* synthetic */ class ScrollCaptureClient$$ExternalSyntheticLambda0
     }
 
     public final Object attachCompleter(CallbackToFutureAdapter.Completer completer) {
-        return this.f$0.mo37563xf116bb57(this.f$1, this.f$2, completer);
+        return this.f$0.mo37564xf116bb57(this.f$1, this.f$2, completer);
     }
 }

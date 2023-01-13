@@ -708,9 +708,15 @@
     <string name="force_rtl_layout_all_locales_summary">Pakota kaikkien kielten näytön ulkoasun suunnaksi RTL</string>
     <string name="forced_resizable_secondary_display">Sovellus ei ehkä toimi toissijaisella näytöllä.</string>
     <string name="game_status">Toistetaan</string>
+    <string name="gamemode_description">Pelitila määrittää, oletko pelissä, ja ottaa sen automaattisesti käyttöön puolestasi</string>
+    <string name="gamemode_gamedashboard_title">Pelin koontinäyttö</string>
+    <string name="gamemode_notification_content">Siirry asetuksiin napauttamalla</string>
+    <string name="gamemode_notification_title">Pelitila on tällä hetkellä päällä</string>
     <string name="global_action_lock_message">Avaa puhelimen lukitus, niin näet enemmän vaihtoehtoja</string>
     <string name="global_action_screenshot">Kuvakaappaus</string>
     <string name="global_action_smart_lock_disabled">Smart Lock poistettu käytöstä</string>
+    <string name="gm_guide_status_on">KÄYTÖSSÄ</string>
+    <string name="gm_notification_title">Pelitila</string>
     <string name="go_to_web">Siirry selaimeen</string>
     <string name="got_it">Selvä</string>
     <string name="guest_exit_guest">Poista vieras</string>

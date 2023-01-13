@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import com.android.keyguard.BouncerPanelExpansionCalculator;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dumpable;
 import com.android.systemui.animation.Interpolators;
 import com.android.systemui.animation.ShadeInterpolation;
@@ -21,7 +21,7 @@ import com.android.systemui.media.MediaHost;
 import com.android.systemui.p012qs.customize.QSCustomizerController;
 import com.android.systemui.p012qs.dagger.QSFragmentComponent;
 import com.android.systemui.plugins.FalsingManager;
-import com.android.systemui.plugins.p011qs.C2301QS;
+import com.android.systemui.plugins.p011qs.C2304QS;
 import com.android.systemui.plugins.p011qs.QSContainerController;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.CommandQueue;
@@ -43,7 +43,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 /* renamed from: com.android.systemui.qs.QSFragment */
-public class QSFragment extends LifecycleFragment implements C2301QS, CommandQueue.Callbacks, StatusBarStateController.StateListener, Dumpable {
+public class QSFragment extends LifecycleFragment implements C2304QS, CommandQueue.Callbacks, StatusBarStateController.StateListener, Dumpable {
     private static final boolean DEBUG = false;
     private static final String EXTRA_EXPANDED = "expanded";
     private static final String EXTRA_LISTENING = "listening";
@@ -81,7 +81,7 @@ public class QSFragment extends LifecycleFragment implements C2301QS, CommandQue
     private boolean mListening;
     private int[] mLocationTemp = new int[2];
     private boolean mOverScrolling;
-    private C2301QS.HeightListener mPanelView;
+    private C2304QS.HeightListener mPanelView;
     private NTQSAnimator mQSAnimator;
     private QSContainerImplController mQSContainerImplController;
     private QSCustomizerController mQSCustomizerController;
@@ -99,7 +99,7 @@ public class QSFragment extends LifecycleFragment implements C2301QS, CommandQue
     private boolean mQsVisible;
     private QuickQSPanelController mQuickQSPanelController;
     private final RemoteInputQuickSettingsDisabler mRemoteInputQuickSettingsDisabler;
-    private C2301QS.ScrollListener mScrollListener;
+    private C2304QS.ScrollListener mScrollListener;
     private boolean mShowCollapsedOnKeyguard;
     private float mSquishinessFraction = 1.0f;
     private boolean mStackScrollerOverscrolling;
@@ -143,7 +143,7 @@ public class QSFragment extends LifecycleFragment implements C2301QS, CommandQue
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
         try {
             Trace.beginSection("QSFragment#onCreateView");
-            return this.mEx.createQSInflater(getContext().getResources(), getContext().getResources().getDisplayMetrics(), layoutInflater, getContext()).inflate(C1893R.layout.qs_panel, viewGroup, false);
+            return this.mEx.createQSInflater(getContext().getResources(), getContext().getResources().getDisplayMetrics(), layoutInflater, getContext()).inflate(C1894R.layout.qs_panel, viewGroup, false);
         } finally {
             Trace.endSection();
         }
@@ -157,11 +157,11 @@ public class QSFragment extends LifecycleFragment implements C2301QS, CommandQue
         this.mQSPanelController.init();
         this.mQuickQSPanelController.init();
         this.mQSFooterActionController.init();
-        NonInterceptingScrollView nonInterceptingScrollView = (NonInterceptingScrollView) view.findViewById(C1893R.C1897id.expanded_qs_scroll_view);
+        NonInterceptingScrollView nonInterceptingScrollView = (NonInterceptingScrollView) view.findViewById(C1894R.C1898id.expanded_qs_scroll_view);
         this.mQSPanelScrollView = nonInterceptingScrollView;
         nonInterceptingScrollView.addOnLayoutChangeListener(new QSFragment$$ExternalSyntheticLambda0(this));
         this.mQSPanelScrollView.setOnScrollChangeListener(new QSFragment$$ExternalSyntheticLambda1(this));
-        this.mHeader = (QuickStatusBarHeader) view.findViewById(C1893R.C1897id.header);
+        this.mHeader = (QuickStatusBarHeader) view.findViewById(C1894R.C1898id.header);
         this.mFooter = create.getQSFooter();
         QSContainerImplController qSContainerImplController = create.getQSContainerImplController();
         this.mQSContainerImplController = qSContainerImplController;
@@ -196,16 +196,16 @@ public class QSFragment extends LifecycleFragment implements C2301QS, CommandQue
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onViewCreated$0$com-android-systemui-qs-QSFragment  reason: not valid java name */
-    public /* synthetic */ void m2909lambda$onViewCreated$0$comandroidsystemuiqsQSFragment(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
+    public /* synthetic */ void m2914lambda$onViewCreated$0$comandroidsystemuiqsQSFragment(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
         updateQsBounds();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onViewCreated$1$com-android-systemui-qs-QSFragment  reason: not valid java name */
-    public /* synthetic */ void m2910lambda$onViewCreated$1$comandroidsystemuiqsQSFragment(View view, int i, int i2, int i3, int i4) {
+    public /* synthetic */ void m2915lambda$onViewCreated$1$comandroidsystemuiqsQSFragment(View view, int i, int i2, int i3, int i4) {
         this.mQSAnimator.requestAnimatorUpdate();
         this.mHeader.setExpandedScrollAmount(i2);
-        C2301QS.ScrollListener scrollListener = this.mScrollListener;
+        C2304QS.ScrollListener scrollListener = this.mScrollListener;
         if (scrollListener != null) {
             scrollListener.onQsPanelScrollChanged(i2);
         }
@@ -213,7 +213,7 @@ public class QSFragment extends LifecycleFragment implements C2301QS, CommandQue
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onViewCreated$2$com-android-systemui-qs-QSFragment  reason: not valid java name */
-    public /* synthetic */ void m2911lambda$onViewCreated$2$comandroidsystemuiqsQSFragment(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
+    public /* synthetic */ void m2916lambda$onViewCreated$2$comandroidsystemuiqsQSFragment(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
         if (i6 - i8 != i2 - i4) {
             setQsExpansion(this.mLastQSExpansion, this.mLastPanelFraction, this.mLastHeaderTranslation, this.mSquishinessFraction);
         }
@@ -221,18 +221,18 @@ public class QSFragment extends LifecycleFragment implements C2301QS, CommandQue
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onViewCreated$3$com-android-systemui-qs-QSFragment  reason: not valid java name */
-    public /* synthetic */ void m2912lambda$onViewCreated$3$comandroidsystemuiqsQSFragment() {
+    public /* synthetic */ void m2917lambda$onViewCreated$3$comandroidsystemuiqsQSFragment() {
         this.mQSPanelController.getMediaHost().getHostView().setAlpha(1.0f);
         this.mQSAnimator.requestAnimatorUpdate();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onViewCreated$4$com-android-systemui-qs-QSFragment  reason: not valid java name */
-    public /* synthetic */ void m2913lambda$onViewCreated$4$comandroidsystemuiqsQSFragment() {
+    public /* synthetic */ void m2918lambda$onViewCreated$4$comandroidsystemuiqsQSFragment() {
         this.mHost.reloadTiles();
     }
 
-    public void setScrollListener(C2301QS.ScrollListener scrollListener) {
+    public void setScrollListener(C2304QS.ScrollListener scrollListener) {
         this.mScrollListener = scrollListener;
     }
 
@@ -292,7 +292,7 @@ public class QSFragment extends LifecycleFragment implements C2301QS, CommandQue
         return this.mHeader;
     }
 
-    public void setPanelView(C2301QS.HeightListener heightListener) {
+    public void setPanelView(C2304QS.HeightListener heightListener) {
         this.mPanelView = heightListener;
     }
 
@@ -307,7 +307,7 @@ public class QSFragment extends LifecycleFragment implements C2301QS, CommandQue
             }
         }
         updateQsState();
-        this.mEx.resetOverScrollAmountIfNeeded(this.mQsVisible, getView());
+        this.mEx.resetOverScrollAmountIfNeeded(this.mQsVisible, getView(), this.mState);
     }
 
     public void setFancyClipping(int i, int i2, int i3, boolean z) {
@@ -410,6 +410,9 @@ public class QSFragment extends LifecycleFragment implements C2301QS, CommandQue
     }
 
     public boolean isShowingDetail() {
+        if (this.mEx.isSignalPageChanged()) {
+            return true;
+        }
         return this.mQSCustomizerController.isCustomizing();
     }
 
@@ -548,6 +551,7 @@ public class QSFragment extends LifecycleFragment implements C2301QS, CommandQue
             this.mQSPanelScrollView.setTranslationY(heightDiff);
             if (z2) {
                 this.mQSPanelScrollView.setScrollY(0);
+                this.mEx.resetOverScrollAmountIfNeeded(this.mQsVisible, getView(), this.mState);
             }
             if (!z4) {
                 this.mQsBounds.top = (int) (-this.mQSPanelScrollView.getTranslationY());

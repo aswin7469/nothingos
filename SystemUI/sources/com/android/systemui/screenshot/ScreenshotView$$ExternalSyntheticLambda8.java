@@ -9,6 +9,6 @@ public final /* synthetic */ class ScreenshotView$$ExternalSyntheticLambda8 impl
     }
 
     public final void run() {
-        this.f$0.mo37508xd9671f6();
+        this.f$0.mo37509xd9671f6();
     }
 }

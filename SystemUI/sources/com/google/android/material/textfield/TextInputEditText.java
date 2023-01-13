@@ -13,7 +13,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import androidx.appcompat.widget.AppCompatEditText;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.internal.ManufacturerUtils;
 import com.google.android.material.internal.ThemeEnforcement;
 import com.google.android.material.theme.overlay.MaterialThemeOverlay;
@@ -27,14 +27,14 @@ public class TextInputEditText extends AppCompatEditText {
     }
 
     public TextInputEditText(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, C3621R.attr.editTextStyle);
+        this(context, attributeSet, C3631R.attr.editTextStyle);
     }
 
     public TextInputEditText(Context context, AttributeSet attributeSet, int i) {
         super(MaterialThemeOverlay.wrap(context, attributeSet, i, 0), attributeSet, i);
         this.parentRect = new Rect();
-        TypedArray obtainStyledAttributes = ThemeEnforcement.obtainStyledAttributes(context, attributeSet, C3621R.styleable.TextInputEditText, i, C3621R.style.Widget_Design_TextInputEditText, new int[0]);
-        setTextInputLayoutFocusedRectEnabled(obtainStyledAttributes.getBoolean(C3621R.styleable.TextInputEditText_textInputLayoutFocusedRectEnabled, false));
+        TypedArray obtainStyledAttributes = ThemeEnforcement.obtainStyledAttributes(context, attributeSet, C3631R.styleable.TextInputEditText, i, C3631R.style.Widget_Design_TextInputEditText, new int[0]);
+        setTextInputLayoutFocusedRectEnabled(obtainStyledAttributes.getBoolean(C3631R.styleable.TextInputEditText_textInputLayoutFocusedRectEnabled, false));
         obtainStyledAttributes.recycle();
     }
 

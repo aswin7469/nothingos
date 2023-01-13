@@ -23,6 +23,6 @@ public final /* synthetic */ class ScreenRotationAnimation$$ExternalSyntheticLam
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        this.f$0.mo51270x9a10279a(this.f$1, this.f$2, this.f$3, this.f$4, this.f$5, valueAnimator);
+        this.f$0.mo51281x9a10279a(this.f$1, this.f$2, this.f$3, this.f$4, this.f$5, valueAnimator);
     }
 }

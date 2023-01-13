@@ -17,6 +17,6 @@ public final /* synthetic */ class DozeTriggers$$ExternalSyntheticLambda4 implem
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo32469x64e5e29e(this.f$1, this.f$2, this.f$3, (Boolean) obj);
+        this.f$0.mo32480x64e5e29e(this.f$1, this.f$2, this.f$3, (Boolean) obj);
     }
 }

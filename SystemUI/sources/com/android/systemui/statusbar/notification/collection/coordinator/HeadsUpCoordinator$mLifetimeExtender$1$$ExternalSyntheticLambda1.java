@@ -13,6 +13,6 @@ public final /* synthetic */ class HeadsUpCoordinator$mLifetimeExtender$1$$Exter
     }
 
     public final void run() {
-        HeadsUpCoordinator$mLifetimeExtender$1.m3105maybeExtendLifetime$lambda1(this.f$0, this.f$1);
+        HeadsUpCoordinator$mLifetimeExtender$1.m3109maybeExtendLifetime$lambda1(this.f$0, this.f$1);
     }
 }

@@ -144,7 +144,7 @@ final class ProcessEnvironment {
     private static class StringEnvironment extends AbstractMap<String, String> {
 
         /* renamed from: m */
-        private Map<Variable, Value> f541m;
+        private Map<Variable, Value> f539m;
 
         private static String toString(Value value) {
             if (value == null) {
@@ -154,61 +154,61 @@ final class ProcessEnvironment {
         }
 
         public StringEnvironment(Map<Variable, Value> map) {
-            this.f541m = map;
+            this.f539m = map;
         }
 
         public int size() {
-            return this.f541m.size();
+            return this.f539m.size();
         }
 
         public boolean isEmpty() {
-            return this.f541m.isEmpty();
+            return this.f539m.isEmpty();
         }
 
         public void clear() {
-            this.f541m.clear();
+            this.f539m.clear();
         }
 
         public boolean containsKey(Object obj) {
-            return this.f541m.containsKey(Variable.valueOfQueryOnly(obj));
+            return this.f539m.containsKey(Variable.valueOfQueryOnly(obj));
         }
 
         public boolean containsValue(Object obj) {
-            return this.f541m.containsValue(Value.valueOfQueryOnly(obj));
+            return this.f539m.containsValue(Value.valueOfQueryOnly(obj));
         }
 
         public String get(Object obj) {
-            return toString(this.f541m.get(Variable.valueOfQueryOnly(obj)));
+            return toString(this.f539m.get(Variable.valueOfQueryOnly(obj)));
         }
 
         public String put(String str, String str2) {
-            return toString(this.f541m.put(Variable.valueOf(str), Value.valueOf(str2)));
+            return toString(this.f539m.put(Variable.valueOf(str), Value.valueOf(str2)));
         }
 
         public String remove(Object obj) {
-            return toString(this.f541m.remove(Variable.valueOfQueryOnly(obj)));
+            return toString(this.f539m.remove(Variable.valueOfQueryOnly(obj)));
         }
 
         public Set<String> keySet() {
-            return new StringKeySet(this.f541m.keySet());
+            return new StringKeySet(this.f539m.keySet());
         }
 
         public Set<Map.Entry<String, String>> entrySet() {
-            return new StringEntrySet(this.f541m.entrySet());
+            return new StringEntrySet(this.f539m.entrySet());
         }
 
         public Collection<String> values() {
-            return new StringValues(this.f541m.values());
+            return new StringValues(this.f539m.values());
         }
 
         public byte[] toEnvironmentBlock(int[] iArr) {
-            int size = this.f541m.size() * 2;
-            for (Map.Entry next : this.f541m.entrySet()) {
+            int size = this.f539m.size() * 2;
+            for (Map.Entry next : this.f539m.entrySet()) {
                 size = size + ((Variable) next.getKey()).getBytes().length + ((Value) next.getValue()).getBytes().length;
             }
             byte[] bArr = new byte[size];
             int i = 0;
-            for (Map.Entry next2 : this.f541m.entrySet()) {
+            for (Map.Entry next2 : this.f539m.entrySet()) {
                 byte[] bytes = ((Variable) next2.getKey()).getBytes();
                 byte[] bytes2 = ((Value) next2.getValue()).getBytes();
                 System.arraycopy((Object) bytes, 0, (Object) bArr, i, bytes.length);
@@ -218,7 +218,7 @@ final class ProcessEnvironment {
                 System.arraycopy((Object) bytes2, 0, (Object) bArr, i2, bytes2.length);
                 i = bytes2.length + 1 + i2;
             }
-            iArr[0] = this.f541m.size();
+            iArr[0] = this.f539m.size();
             return bArr;
         }
     }
@@ -234,22 +234,22 @@ final class ProcessEnvironment {
         /* access modifiers changed from: private */
 
         /* renamed from: e */
-        public final Map.Entry<Variable, Value> f538e;
+        public final Map.Entry<Variable, Value> f536e;
 
         public StringEntry(Map.Entry<Variable, Value> entry) {
-            this.f538e = entry;
+            this.f536e = entry;
         }
 
         public String getKey() {
-            return this.f538e.getKey().toString();
+            return this.f536e.getKey().toString();
         }
 
         public String getValue() {
-            return this.f538e.getValue().toString();
+            return this.f536e.getValue().toString();
         }
 
         public String setValue(String str) {
-            return this.f538e.setValue(Value.valueOf(str)).toString();
+            return this.f536e.setValue(Value.valueOf(str)).toString();
         }
 
         public String toString() {
@@ -257,11 +257,11 @@ final class ProcessEnvironment {
         }
 
         public boolean equals(Object obj) {
-            return (obj instanceof StringEntry) && this.f538e.equals(((StringEntry) obj).f538e);
+            return (obj instanceof StringEntry) && this.f536e.equals(((StringEntry) obj).f536e);
         }
 
         public int hashCode() {
-            return this.f538e.hashCode();
+            return this.f536e.hashCode();
         }
     }
 
@@ -269,51 +269,51 @@ final class ProcessEnvironment {
         /* access modifiers changed from: private */
 
         /* renamed from: s */
-        public final Set<Map.Entry<Variable, Value>> f539s;
+        public final Set<Map.Entry<Variable, Value>> f537s;
 
         public StringEntrySet(Set<Map.Entry<Variable, Value>> set) {
-            this.f539s = set;
+            this.f537s = set;
         }
 
         public int size() {
-            return this.f539s.size();
+            return this.f537s.size();
         }
 
         public boolean isEmpty() {
-            return this.f539s.isEmpty();
+            return this.f537s.isEmpty();
         }
 
         public void clear() {
-            this.f539s.clear();
+            this.f537s.clear();
         }
 
         public Iterator<Map.Entry<String, String>> iterator() {
             return new Iterator<Map.Entry<String, String>>() {
 
                 /* renamed from: i */
-                Iterator<Map.Entry<Variable, Value>> f540i;
+                Iterator<Map.Entry<Variable, Value>> f538i;
 
                 {
-                    this.f540i = StringEntrySet.this.f539s.iterator();
+                    this.f538i = StringEntrySet.this.f537s.iterator();
                 }
 
                 public boolean hasNext() {
-                    return this.f540i.hasNext();
+                    return this.f538i.hasNext();
                 }
 
                 public Map.Entry<String, String> next() {
-                    return new StringEntry(this.f540i.next());
+                    return new StringEntry(this.f538i.next());
                 }
 
                 public void remove() {
-                    this.f540i.remove();
+                    this.f538i.remove();
                 }
             };
         }
 
         private static Map.Entry<Variable, Value> vvEntry(final Object obj) {
             if (obj instanceof StringEntry) {
-                return ((StringEntry) obj).f538e;
+                return ((StringEntry) obj).f536e;
             }
             return new Map.Entry<Variable, Value>() {
                 public Variable getKey() {
@@ -331,19 +331,19 @@ final class ProcessEnvironment {
         }
 
         public boolean contains(Object obj) {
-            return this.f539s.contains(vvEntry(obj));
+            return this.f537s.contains(vvEntry(obj));
         }
 
         public boolean remove(Object obj) {
-            return this.f539s.remove(vvEntry(obj));
+            return this.f537s.remove(vvEntry(obj));
         }
 
         public boolean equals(Object obj) {
-            return (obj instanceof StringEntrySet) && this.f539s.equals(((StringEntrySet) obj).f539s);
+            return (obj instanceof StringEntrySet) && this.f537s.equals(((StringEntrySet) obj).f537s);
         }
 
         public int hashCode() {
-            return this.f539s.hashCode();
+            return this.f537s.hashCode();
         }
     }
 
@@ -351,95 +351,32 @@ final class ProcessEnvironment {
         /* access modifiers changed from: private */
 
         /* renamed from: c */
-        public final Collection<Value> f544c;
+        public final Collection<Value> f542c;
 
         public StringValues(Collection<Value> collection) {
-            this.f544c = collection;
+            this.f542c = collection;
         }
 
         public int size() {
-            return this.f544c.size();
+            return this.f542c.size();
         }
 
         public boolean isEmpty() {
-            return this.f544c.isEmpty();
+            return this.f542c.isEmpty();
         }
 
         public void clear() {
-            this.f544c.clear();
+            this.f542c.clear();
         }
 
         public Iterator<String> iterator() {
             return new Iterator<String>() {
 
                 /* renamed from: i */
-                Iterator<Value> f545i;
+                Iterator<Value> f543i;
 
                 {
-                    this.f545i = StringValues.this.f544c.iterator();
-                }
-
-                public boolean hasNext() {
-                    return this.f545i.hasNext();
-                }
-
-                public String next() {
-                    return this.f545i.next().toString();
-                }
-
-                public void remove() {
-                    this.f545i.remove();
-                }
-            };
-        }
-
-        public boolean contains(Object obj) {
-            return this.f544c.contains(Value.valueOfQueryOnly(obj));
-        }
-
-        public boolean remove(Object obj) {
-            return this.f544c.remove(Value.valueOfQueryOnly(obj));
-        }
-
-        public boolean equals(Object obj) {
-            return (obj instanceof StringValues) && this.f544c.equals(((StringValues) obj).f544c);
-        }
-
-        public int hashCode() {
-            return this.f544c.hashCode();
-        }
-    }
-
-    private static class StringKeySet extends AbstractSet<String> {
-        /* access modifiers changed from: private */
-
-        /* renamed from: s */
-        public final Set<Variable> f542s;
-
-        public StringKeySet(Set<Variable> set) {
-            this.f542s = set;
-        }
-
-        public int size() {
-            return this.f542s.size();
-        }
-
-        public boolean isEmpty() {
-            return this.f542s.isEmpty();
-        }
-
-        public void clear() {
-            this.f542s.clear();
-        }
-
-        public Iterator<String> iterator() {
-            return new Iterator<String>() {
-
-                /* renamed from: i */
-                Iterator<Variable> f543i;
-
-                {
-                    this.f543i = StringKeySet.this.f542s.iterator();
+                    this.f543i = StringValues.this.f542c.iterator();
                 }
 
                 public boolean hasNext() {
@@ -457,11 +394,74 @@ final class ProcessEnvironment {
         }
 
         public boolean contains(Object obj) {
-            return this.f542s.contains(Variable.valueOfQueryOnly(obj));
+            return this.f542c.contains(Value.valueOfQueryOnly(obj));
         }
 
         public boolean remove(Object obj) {
-            return this.f542s.remove(Variable.valueOfQueryOnly(obj));
+            return this.f542c.remove(Value.valueOfQueryOnly(obj));
+        }
+
+        public boolean equals(Object obj) {
+            return (obj instanceof StringValues) && this.f542c.equals(((StringValues) obj).f542c);
+        }
+
+        public int hashCode() {
+            return this.f542c.hashCode();
+        }
+    }
+
+    private static class StringKeySet extends AbstractSet<String> {
+        /* access modifiers changed from: private */
+
+        /* renamed from: s */
+        public final Set<Variable> f540s;
+
+        public StringKeySet(Set<Variable> set) {
+            this.f540s = set;
+        }
+
+        public int size() {
+            return this.f540s.size();
+        }
+
+        public boolean isEmpty() {
+            return this.f540s.isEmpty();
+        }
+
+        public void clear() {
+            this.f540s.clear();
+        }
+
+        public Iterator<String> iterator() {
+            return new Iterator<String>() {
+
+                /* renamed from: i */
+                Iterator<Variable> f541i;
+
+                {
+                    this.f541i = StringKeySet.this.f540s.iterator();
+                }
+
+                public boolean hasNext() {
+                    return this.f541i.hasNext();
+                }
+
+                public String next() {
+                    return this.f541i.next().toString();
+                }
+
+                public void remove() {
+                    this.f541i.remove();
+                }
+            };
+        }
+
+        public boolean contains(Object obj) {
+            return this.f540s.contains(Variable.valueOfQueryOnly(obj));
+        }
+
+        public boolean remove(Object obj) {
+            return this.f540s.remove(Variable.valueOfQueryOnly(obj));
         }
     }
 

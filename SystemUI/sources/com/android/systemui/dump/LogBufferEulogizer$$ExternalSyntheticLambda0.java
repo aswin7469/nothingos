@@ -12,6 +12,6 @@ public final /* synthetic */ class LogBufferEulogizer$$ExternalSyntheticLambda0 
     }
 
     public final void accept(Object obj) {
-        LogBufferEulogizer.m2748readEulogyIfPresent$lambda2$lambda1(this.f$0, (String) obj);
+        LogBufferEulogizer.m2753readEulogyIfPresent$lambda2$lambda1(this.f$0, (String) obj);
     }
 }

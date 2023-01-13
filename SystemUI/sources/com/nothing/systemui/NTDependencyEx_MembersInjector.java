@@ -5,10 +5,13 @@ import com.android.systemui.media.MediaDataManager;
 import com.android.systemui.plugins.FalsingManager;
 import com.android.systemui.power.TemperatureController;
 import com.android.systemui.statusbar.LockscreenShadeTransitionController;
+import com.android.systemui.statusbar.notification.stack.NotificationRoundnessManager;
 import com.android.systemui.statusbar.phone.ConfigurationControllerImpl;
 import com.android.systemui.statusbar.phone.ScrimController;
 import com.nothing.gamemode.NTGameModeHelper;
 import com.nothing.keyguard.LockIconViewControllerEx;
+import com.nothing.systemui.assist.AssistManagerEx;
+import com.nothing.systemui.biometrics.AuthRippleControllerEx;
 import com.nothing.systemui.biometrics.NTColorController;
 import com.nothing.systemui.doze.AODController;
 import com.nothing.systemui.doze.LiftWakeGestureController;
@@ -58,6 +61,8 @@ import javax.inject.Provider;
 public final class NTDependencyEx_MembersInjector implements MembersInjector<NTDependencyEx> {
     private final Provider<AODController> mAODControllerProvider;
     private final Provider<AmbientStateEx> mAmbientStateExProvider;
+    private final Provider<AssistManagerEx> mAssistManagerExProvider;
+    private final Provider<AuthRippleControllerEx> mAuthRippleControllerExProvider;
     private final Provider<BatteryControllerImplEx> mBatteryControllerImplExProvider;
     private final Provider<BluetoothTileEx> mBluetoothTileExProvider;
     private final Provider<BrightnessControllerEx> mBrighnessControllerExProvider;
@@ -91,6 +96,7 @@ public final class NTDependencyEx_MembersInjector implements MembersInjector<NTD
     private final Provider<NavigationBarViewEx> mNavigationBarViewExProvider;
     private final Provider<NavigationModeControllerEx> mNavigationModeControllerExProvider;
     private final Provider<NfcController> mNfcControllerProvider;
+    private final Provider<NotificationRoundnessManager> mNotificationRoundnessManagerProvider;
     private final Provider<OngoingPrivacyChipEx> mOngoingPrivacyChipExProvider;
     private final Provider<PrivacyDialogControllerEx> mPrivacyDialogControllerExProvider;
     private final Provider<PrivacyDialogEx> mPrivacyDialogExProvider;
@@ -107,7 +113,7 @@ public final class NTDependencyEx_MembersInjector implements MembersInjector<NTD
     private final Provider<VolumeDialogImplEx> mVolumeDialogImplExProvider;
     private final Provider<WifiSignalControllerEx> mWifiSignalControllerExProvider;
 
-    public NTDependencyEx_MembersInjector(Provider<DumpManager> provider, Provider<BatteryControllerImplEx> provider2, Provider<BluetoothTileEx> provider3, Provider<BrightnessControllerEx> provider4, Provider<InternetTileEx> provider5, Provider<NTColorController> provider6, Provider<VolumeDialogImplEx> provider7, Provider<WifiSignalControllerEx> provider8, Provider<OngoingPrivacyChipEx> provider9, Provider<PrivacyDialogEx> provider10, Provider<PrivacyDialogControllerEx> provider11, Provider<QSFragmentEx> provider12, Provider<QSIconViewImplEx> provider13, Provider<QSTileHostEx> provider14, Provider<QSTileImplEx> provider15, Provider<QSTileViewImplEx> provider16, Provider<QuickStatusBarHeaderEx> provider17, Provider<TileLayoutEx> provider18, Provider<NavigationBarControllerEx> provider19, Provider<NavigationBarEx> provider20, Provider<NavigationBarViewEx> provider21, Provider<NavigationBarInflaterViewEx> provider22, Provider<NavigationModeControllerEx> provider23, Provider<KeyButtonViewEx> provider24, Provider<EdgeBackGestureHandlerEx> provider25, Provider<KeyguardWeatherController> provider26, Provider<AODController> provider27, Provider<LiftWakeGestureController> provider28, Provider<CentralSurfacesImplEx> provider29, Provider<DozeServiceHostEx> provider30, Provider<NfcController> provider31, Provider<TeslaInfoController> provider32, Provider<KeyguardUpdateMonitorEx> provider33, Provider<KeyguardViewMediatorEx> provider34, Provider<FaceRecognitionController> provider35, Provider<NTLightweightHeadsupManager> provider36, Provider<NTGameModeHelper> provider37, Provider<HeadsUpControllerEx> provider38, Provider<FalsingManager> provider39, Provider<TemperatureController> provider40, Provider<KeyguardIndicationControllerEx> provider41, Provider<MobileSignalControllerEx> provider42, Provider<AmbientStateEx> provider43, Provider<CommandQueueEx> provider44, Provider<LockscreenShadeTransitionController> provider45, Provider<ScrimController> provider46, Provider<CalendarManager> provider47, Provider<LockIconViewControllerEx> provider48, Provider<MediaDataManager> provider49, Provider<ConfigurationControllerImpl> provider50) {
+    public NTDependencyEx_MembersInjector(Provider<DumpManager> provider, Provider<BatteryControllerImplEx> provider2, Provider<BluetoothTileEx> provider3, Provider<BrightnessControllerEx> provider4, Provider<InternetTileEx> provider5, Provider<NTColorController> provider6, Provider<VolumeDialogImplEx> provider7, Provider<WifiSignalControllerEx> provider8, Provider<OngoingPrivacyChipEx> provider9, Provider<PrivacyDialogEx> provider10, Provider<PrivacyDialogControllerEx> provider11, Provider<QSFragmentEx> provider12, Provider<QSIconViewImplEx> provider13, Provider<QSTileHostEx> provider14, Provider<QSTileImplEx> provider15, Provider<QSTileViewImplEx> provider16, Provider<QuickStatusBarHeaderEx> provider17, Provider<TileLayoutEx> provider18, Provider<NavigationBarControllerEx> provider19, Provider<NavigationBarEx> provider20, Provider<NavigationBarViewEx> provider21, Provider<NavigationBarInflaterViewEx> provider22, Provider<NavigationModeControllerEx> provider23, Provider<KeyButtonViewEx> provider24, Provider<EdgeBackGestureHandlerEx> provider25, Provider<KeyguardWeatherController> provider26, Provider<AODController> provider27, Provider<LiftWakeGestureController> provider28, Provider<CentralSurfacesImplEx> provider29, Provider<DozeServiceHostEx> provider30, Provider<NfcController> provider31, Provider<TeslaInfoController> provider32, Provider<KeyguardUpdateMonitorEx> provider33, Provider<KeyguardViewMediatorEx> provider34, Provider<FaceRecognitionController> provider35, Provider<NTLightweightHeadsupManager> provider36, Provider<NTGameModeHelper> provider37, Provider<HeadsUpControllerEx> provider38, Provider<FalsingManager> provider39, Provider<TemperatureController> provider40, Provider<KeyguardIndicationControllerEx> provider41, Provider<MobileSignalControllerEx> provider42, Provider<AmbientStateEx> provider43, Provider<CommandQueueEx> provider44, Provider<LockscreenShadeTransitionController> provider45, Provider<ScrimController> provider46, Provider<CalendarManager> provider47, Provider<LockIconViewControllerEx> provider48, Provider<MediaDataManager> provider49, Provider<ConfigurationControllerImpl> provider50, Provider<AssistManagerEx> provider51, Provider<NotificationRoundnessManager> provider52, Provider<AuthRippleControllerEx> provider53) {
         this.mDumpManagerProvider = provider;
         this.mBatteryControllerImplExProvider = provider2;
         this.mBluetoothTileExProvider = provider3;
@@ -158,10 +164,13 @@ public final class NTDependencyEx_MembersInjector implements MembersInjector<NTD
         this.mLockIconViewControllerExProvider = provider48;
         this.mMediaDataManagerProvider = provider49;
         this.mConfigurationControllerImplProvider = provider50;
+        this.mAssistManagerExProvider = provider51;
+        this.mNotificationRoundnessManagerProvider = provider52;
+        this.mAuthRippleControllerExProvider = provider53;
     }
 
-    public static MembersInjector<NTDependencyEx> create(Provider<DumpManager> provider, Provider<BatteryControllerImplEx> provider2, Provider<BluetoothTileEx> provider3, Provider<BrightnessControllerEx> provider4, Provider<InternetTileEx> provider5, Provider<NTColorController> provider6, Provider<VolumeDialogImplEx> provider7, Provider<WifiSignalControllerEx> provider8, Provider<OngoingPrivacyChipEx> provider9, Provider<PrivacyDialogEx> provider10, Provider<PrivacyDialogControllerEx> provider11, Provider<QSFragmentEx> provider12, Provider<QSIconViewImplEx> provider13, Provider<QSTileHostEx> provider14, Provider<QSTileImplEx> provider15, Provider<QSTileViewImplEx> provider16, Provider<QuickStatusBarHeaderEx> provider17, Provider<TileLayoutEx> provider18, Provider<NavigationBarControllerEx> provider19, Provider<NavigationBarEx> provider20, Provider<NavigationBarViewEx> provider21, Provider<NavigationBarInflaterViewEx> provider22, Provider<NavigationModeControllerEx> provider23, Provider<KeyButtonViewEx> provider24, Provider<EdgeBackGestureHandlerEx> provider25, Provider<KeyguardWeatherController> provider26, Provider<AODController> provider27, Provider<LiftWakeGestureController> provider28, Provider<CentralSurfacesImplEx> provider29, Provider<DozeServiceHostEx> provider30, Provider<NfcController> provider31, Provider<TeslaInfoController> provider32, Provider<KeyguardUpdateMonitorEx> provider33, Provider<KeyguardViewMediatorEx> provider34, Provider<FaceRecognitionController> provider35, Provider<NTLightweightHeadsupManager> provider36, Provider<NTGameModeHelper> provider37, Provider<HeadsUpControllerEx> provider38, Provider<FalsingManager> provider39, Provider<TemperatureController> provider40, Provider<KeyguardIndicationControllerEx> provider41, Provider<MobileSignalControllerEx> provider42, Provider<AmbientStateEx> provider43, Provider<CommandQueueEx> provider44, Provider<LockscreenShadeTransitionController> provider45, Provider<ScrimController> provider46, Provider<CalendarManager> provider47, Provider<LockIconViewControllerEx> provider48, Provider<MediaDataManager> provider49, Provider<ConfigurationControllerImpl> provider50) {
-        return new NTDependencyEx_MembersInjector(provider, provider2, provider3, provider4, provider5, provider6, provider7, provider8, provider9, provider10, provider11, provider12, provider13, provider14, provider15, provider16, provider17, provider18, provider19, provider20, provider21, provider22, provider23, provider24, provider25, provider26, provider27, provider28, provider29, provider30, provider31, provider32, provider33, provider34, provider35, provider36, provider37, provider38, provider39, provider40, provider41, provider42, provider43, provider44, provider45, provider46, provider47, provider48, provider49, provider50);
+    public static MembersInjector<NTDependencyEx> create(Provider<DumpManager> provider, Provider<BatteryControllerImplEx> provider2, Provider<BluetoothTileEx> provider3, Provider<BrightnessControllerEx> provider4, Provider<InternetTileEx> provider5, Provider<NTColorController> provider6, Provider<VolumeDialogImplEx> provider7, Provider<WifiSignalControllerEx> provider8, Provider<OngoingPrivacyChipEx> provider9, Provider<PrivacyDialogEx> provider10, Provider<PrivacyDialogControllerEx> provider11, Provider<QSFragmentEx> provider12, Provider<QSIconViewImplEx> provider13, Provider<QSTileHostEx> provider14, Provider<QSTileImplEx> provider15, Provider<QSTileViewImplEx> provider16, Provider<QuickStatusBarHeaderEx> provider17, Provider<TileLayoutEx> provider18, Provider<NavigationBarControllerEx> provider19, Provider<NavigationBarEx> provider20, Provider<NavigationBarViewEx> provider21, Provider<NavigationBarInflaterViewEx> provider22, Provider<NavigationModeControllerEx> provider23, Provider<KeyButtonViewEx> provider24, Provider<EdgeBackGestureHandlerEx> provider25, Provider<KeyguardWeatherController> provider26, Provider<AODController> provider27, Provider<LiftWakeGestureController> provider28, Provider<CentralSurfacesImplEx> provider29, Provider<DozeServiceHostEx> provider30, Provider<NfcController> provider31, Provider<TeslaInfoController> provider32, Provider<KeyguardUpdateMonitorEx> provider33, Provider<KeyguardViewMediatorEx> provider34, Provider<FaceRecognitionController> provider35, Provider<NTLightweightHeadsupManager> provider36, Provider<NTGameModeHelper> provider37, Provider<HeadsUpControllerEx> provider38, Provider<FalsingManager> provider39, Provider<TemperatureController> provider40, Provider<KeyguardIndicationControllerEx> provider41, Provider<MobileSignalControllerEx> provider42, Provider<AmbientStateEx> provider43, Provider<CommandQueueEx> provider44, Provider<LockscreenShadeTransitionController> provider45, Provider<ScrimController> provider46, Provider<CalendarManager> provider47, Provider<LockIconViewControllerEx> provider48, Provider<MediaDataManager> provider49, Provider<ConfigurationControllerImpl> provider50, Provider<AssistManagerEx> provider51, Provider<NotificationRoundnessManager> provider52, Provider<AuthRippleControllerEx> provider53) {
+        return new NTDependencyEx_MembersInjector(provider, provider2, provider3, provider4, provider5, provider6, provider7, provider8, provider9, provider10, provider11, provider12, provider13, provider14, provider15, provider16, provider17, provider18, provider19, provider20, provider21, provider22, provider23, provider24, provider25, provider26, provider27, provider28, provider29, provider30, provider31, provider32, provider33, provider34, provider35, provider36, provider37, provider38, provider39, provider40, provider41, provider42, provider43, provider44, provider45, provider46, provider47, provider48, provider49, provider50, provider51, provider52, provider53);
     }
 
     public void injectMembers(NTDependencyEx nTDependencyEx) {
@@ -215,6 +224,9 @@ public final class NTDependencyEx_MembersInjector implements MembersInjector<NTD
         injectMLockIconViewControllerEx(nTDependencyEx, DoubleCheck.lazy(this.mLockIconViewControllerExProvider));
         injectMMediaDataManager(nTDependencyEx, DoubleCheck.lazy(this.mMediaDataManagerProvider));
         injectMConfigurationControllerImpl(nTDependencyEx, DoubleCheck.lazy(this.mConfigurationControllerImplProvider));
+        injectMAssistManagerEx(nTDependencyEx, DoubleCheck.lazy(this.mAssistManagerExProvider));
+        injectMNotificationRoundnessManager(nTDependencyEx, DoubleCheck.lazy(this.mNotificationRoundnessManagerProvider));
+        injectMAuthRippleControllerEx(nTDependencyEx, DoubleCheck.lazy(this.mAuthRippleControllerExProvider));
     }
 
     public static void injectMDumpManager(NTDependencyEx nTDependencyEx, DumpManager dumpManager) {
@@ -415,5 +427,17 @@ public final class NTDependencyEx_MembersInjector implements MembersInjector<NTD
 
     public static void injectMConfigurationControllerImpl(NTDependencyEx nTDependencyEx, Lazy<ConfigurationControllerImpl> lazy) {
         nTDependencyEx.mConfigurationControllerImpl = lazy;
+    }
+
+    public static void injectMAssistManagerEx(NTDependencyEx nTDependencyEx, Lazy<AssistManagerEx> lazy) {
+        nTDependencyEx.mAssistManagerEx = lazy;
+    }
+
+    public static void injectMNotificationRoundnessManager(NTDependencyEx nTDependencyEx, Lazy<NotificationRoundnessManager> lazy) {
+        nTDependencyEx.mNotificationRoundnessManager = lazy;
+    }
+
+    public static void injectMAuthRippleControllerEx(NTDependencyEx nTDependencyEx, Lazy<AuthRippleControllerEx> lazy) {
+        nTDependencyEx.mAuthRippleControllerEx = lazy;
     }
 }

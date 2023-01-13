@@ -67,7 +67,7 @@ public class BackAnimationController implements RemoteCallable<BackAnimationCont
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-wm-shell-back-BackAnimationController  reason: not valid java name */
-    public /* synthetic */ void m3407lambda$new$0$comandroidwmshellbackBackAnimationController() {
+    public /* synthetic */ void m3411lambda$new$0$comandroidwmshellbackBackAnimationController() {
         finishAnimation();
         this.mTransitionInProgress = false;
     }
@@ -139,32 +139,32 @@ public class BackAnimationController implements RemoteCallable<BackAnimationCont
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onBackMotion$0$com-android-wm-shell-back-BackAnimationController$BackAnimationImpl */
-        public /* synthetic */ void mo48215xab14ae37(float f, float f2, int i, int i2) {
+        public /* synthetic */ void mo48224xab14ae37(float f, float f2, int i, int i2) {
             BackAnimationController.this.onMotionEvent(f, f2, i, i2);
         }
 
         public void onBackMotion(float f, float f2, int i, int i2) {
-            BackAnimationController.this.mShellExecutor.execute(new C3363x542d5223(this, f, f2, i, i2));
+            BackAnimationController.this.mShellExecutor.execute(new C3373x542d5223(this, f, f2, i, i2));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$setTriggerBack$1$com-android-wm-shell-back-BackAnimationController$BackAnimationImpl */
-        public /* synthetic */ void mo48217x21859bf9(boolean z) {
+        public /* synthetic */ void mo48226x21859bf9(boolean z) {
             BackAnimationController.this.setTriggerBack(z);
         }
 
         public void setTriggerBack(boolean z) {
-            BackAnimationController.this.mShellExecutor.execute(new C3362x542d5222(this, z));
+            BackAnimationController.this.mShellExecutor.execute(new C3372x542d5222(this, z));
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$setSwipeThresholds$2$com-android-wm-shell-back-BackAnimationController$BackAnimationImpl */
-        public /* synthetic */ void mo48216xdae5c13d(float f, float f2) {
+        public /* synthetic */ void mo48225xdae5c13d(float f, float f2) {
             BackAnimationController.this.setSwipeThresholds(f, f2);
         }
 
         public void setSwipeThresholds(float f, float f2) {
-            BackAnimationController.this.mShellExecutor.execute(new C3361x542d5221(this, f, f2));
+            BackAnimationController.this.mShellExecutor.execute(new C3371x542d5221(this, f, f2));
         }
     }
 
@@ -177,15 +177,15 @@ public class BackAnimationController implements RemoteCallable<BackAnimationCont
         }
 
         public void setBackToLauncherCallback(IOnBackInvokedCallback iOnBackInvokedCallback) {
-            ExecutorUtils.executeRemoteCallWithTaskPermission(this.mController, "setBackToLauncherCallback", new C3364x62452dae(iOnBackInvokedCallback));
+            ExecutorUtils.executeRemoteCallWithTaskPermission(this.mController, "setBackToLauncherCallback", new C3374x62452dae(iOnBackInvokedCallback));
         }
 
         public void clearBackToLauncherCallback() {
-            ExecutorUtils.executeRemoteCallWithTaskPermission(this.mController, "clearBackToLauncherCallback", new C3366x62452db0());
+            ExecutorUtils.executeRemoteCallWithTaskPermission(this.mController, "clearBackToLauncherCallback", new C3376x62452db0());
         }
 
         public void onBackToLauncherAnimationFinished() {
-            ExecutorUtils.executeRemoteCallWithTaskPermission(this.mController, "onBackToLauncherAnimationFinished", new C3365x62452daf());
+            ExecutorUtils.executeRemoteCallWithTaskPermission(this.mController, "onBackToLauncherAnimationFinished", new C3375x62452daf());
         }
 
         /* access modifiers changed from: package-private */

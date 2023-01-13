@@ -14,6 +14,6 @@ public final /* synthetic */ class UnfoldLightRevealOverlayAnimation$$ExternalSy
     }
 
     public final void finished(SurfaceControl.Transaction transaction) {
-        UnfoldLightRevealOverlayAnimation.m3272addView$lambda6$lambda5(this.f$0, this.f$1, transaction);
+        UnfoldLightRevealOverlayAnimation.m3277addView$lambda6$lambda5(this.f$0, this.f$1, transaction);
     }
 }

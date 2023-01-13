@@ -11,6 +11,6 @@ public final /* synthetic */ class ScreenshotController$$ExternalSyntheticLambda
     }
 
     public final Object get() {
-        return this.f$0.mo37420x46f594f1();
+        return this.f$0.mo37421x46f594f1();
     }
 }

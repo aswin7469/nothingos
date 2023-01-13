@@ -9,6 +9,6 @@ public final /* synthetic */ class SystemStatusAnimationScheduler$$ExternalSynth
     }
 
     public final void run() {
-        SystemStatusAnimationScheduler.m3076runChipAnimation$lambda2(this.f$0);
+        SystemStatusAnimationScheduler.m3080runChipAnimation$lambda2(this.f$0);
     }
 }

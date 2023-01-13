@@ -17,6 +17,7 @@ import com.android.systemui.util.wakelock.WakeLock;
 import com.nothing.systemui.NTDependencyEx;
 import com.nothing.systemui.doze.AODController;
 import com.nothing.systemui.doze.LiftWakeGestureController;
+import com.nothing.systemui.util.NTLogUtil;
 import java.p026io.PrintWriter;
 import java.util.ArrayList;
 import javax.inject.Inject;
@@ -58,7 +59,7 @@ public class DozeMachine {
     }
 
     /* renamed from: com.android.systemui.doze.DozeMachine$1 */
-    static /* synthetic */ class C20581 {
+    static /* synthetic */ class C20601 {
         static final /* synthetic */ int[] $SwitchMap$com$android$systemui$doze$DozeMachine$State;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(26:0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|26) */
@@ -156,7 +157,7 @@ public class DozeMachine {
             L_0x0090:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.doze.DozeMachine.C20581.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.doze.DozeMachine.C20601.<clinit>():void");
         }
     }
 
@@ -176,13 +177,13 @@ public class DozeMachine {
 
         /* access modifiers changed from: package-private */
         public boolean canPulse() {
-            int i = C20581.$SwitchMap$com$android$systemui$doze$DozeMachine$State[ordinal()];
+            int i = C20601.$SwitchMap$com$android$systemui$doze$DozeMachine$State[ordinal()];
             return i == 1 || i == 2 || i == 3 || i == 4 || i == 5;
         }
 
         /* access modifiers changed from: package-private */
         public boolean staysAwake() {
-            int i = C20581.$SwitchMap$com$android$systemui$doze$DozeMachine$State[ordinal()];
+            int i = C20601.$SwitchMap$com$android$systemui$doze$DozeMachine$State[ordinal()];
             return i == 5 || i == 6 || i == 7 || i == 8;
         }
 
@@ -193,7 +194,7 @@ public class DozeMachine {
 
         /* access modifiers changed from: package-private */
         public int screenState(DozeParameters dozeParameters) {
-            switch (C20581.$SwitchMap$com$android$systemui$doze$DozeMachine$State[ordinal()]) {
+            switch (C20601.$SwitchMap$com$android$systemui$doze$DozeMachine$State[ordinal()]) {
                 case 1:
                 case 3:
                     return 1;
@@ -269,10 +270,13 @@ public class DozeMachine {
             this.mWakeLock.acquire(REASON_CHANGE_STATE);
             for (int i2 = 0; i2 < this.mQueuedRequests.size(); i2++) {
                 transitionTo(this.mQueuedRequests.get(i2), i);
+                NTLogUtil.m1686d(TAG, "transitionTo: finish= " + i2 + ", size= " + this.mQueuedRequests.size());
             }
             this.mQueuedRequests.clear();
             this.mWakeLock.release(REASON_CHANGE_STATE);
+            return;
         }
+        NTLogUtil.m1686d(TAG, "queue event: " + state + ", inside queue: " + this.mQueuedRequests);
     }
 
     public State getState() {
@@ -303,6 +307,7 @@ public class DozeMachine {
         if (DEBUG) {
             Log.i(TAG, "transition: old=" + this.mState + " req=" + state + " new=" + transitionPolicy);
         }
+        NTLogUtil.m1686d(TAG, "transition: old=" + this.mState + " req=" + state + " new=" + transitionPolicy);
         if (transitionPolicy != this.mState) {
             validateTransition(transitionPolicy);
             State state2 = this.mState;
@@ -325,11 +330,13 @@ public class DozeMachine {
     }
 
     private void performTransitionOnComponents(State state, State state2) {
-        for (Part transitionTo : this.mParts) {
-            transitionTo.transitionTo(state, state2);
+        for (Part part : this.mParts) {
+            NTLogUtil.m1686d(TAG, "performTransitionOnComponents part: " + part + " start");
+            part.transitionTo(state, state2);
+            NTLogUtil.m1686d(TAG, "performTransitionOnComponents part: " + part + " end");
         }
         this.mDozeLog.traceDozeStateSendComplete(state2);
-        int i = C20581.$SwitchMap$com$android$systemui$doze$DozeMachine$State[state2.ordinal()];
+        int i = C20601.$SwitchMap$com$android$systemui$doze$DozeMachine$State[state2.ordinal()];
         if (i == 4) {
             ((LiftWakeGestureController) NTDependencyEx.get(LiftWakeGestureController.class)).mayCancelLiftSensorTrigger();
         } else if (i == 11) {
@@ -339,14 +346,14 @@ public class DozeMachine {
 
     private void validateTransition(State state) {
         try {
-            int i = C20581.$SwitchMap$com$android$systemui$doze$DozeMachine$State[this.mState.ordinal()];
+            int i = C20601.$SwitchMap$com$android$systemui$doze$DozeMachine$State[this.mState.ordinal()];
             boolean z = true;
             if (i == 9) {
                 Preconditions.checkState(state == State.INITIALIZED);
             } else if (i == 11) {
                 Preconditions.checkState(state == State.FINISH);
             }
-            int i2 = C20581.$SwitchMap$com$android$systemui$doze$DozeMachine$State[state.ordinal()];
+            int i2 = C20601.$SwitchMap$com$android$systemui$doze$DozeMachine$State[state.ordinal()];
             if (i2 == 7) {
                 if (this.mState != State.DOZE_REQUEST_PULSE) {
                     z = false;
@@ -409,7 +416,7 @@ public class DozeMachine {
 
     private void resolveIntermediateState(State state) {
         State state2;
-        int i = C20581.$SwitchMap$com$android$systemui$doze$DozeMachine$State[state.ordinal()];
+        int i = C20601.$SwitchMap$com$android$systemui$doze$DozeMachine$State[state.ordinal()];
         if (i == 10 || i == 12) {
             int wakefulness = this.mWakefulnessLifecycle.getWakefulness();
             if (state != State.INITIALIZED && (wakefulness == 2 || wakefulness == 1)) {

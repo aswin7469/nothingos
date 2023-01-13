@@ -10,6 +10,6 @@ public final /* synthetic */ class DeviceServiceController$$ExternalSyntheticLam
     }
 
     public final void run() {
-        DeviceServiceController.m3490onDeviceServiceConnected$lambda3(this.f$0);
+        DeviceServiceController.m3494onDeviceServiceConnected$lambda3(this.f$0);
     }
 }

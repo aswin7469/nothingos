@@ -17,7 +17,7 @@ import android.view.animation.Interpolator;
 import android.view.animation.PathInterpolator;
 import com.android.internal.jank.InteractionJankMonitor;
 import com.android.settingslib.Utils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Gefingerpoken;
 import com.android.systemui.animation.Interpolators;
 import com.android.systemui.statusbar.notification.FakeShadowView;
@@ -124,8 +124,8 @@ public abstract class ActivatableNotificationView extends ExpandableOutlineView 
 
     private void updateColors() {
         this.mNormalColor = Utils.getColorAttrDefaultColor(this.mContext, 17956909);
-        this.mTintedRippleColor = this.mContext.getColor(C1893R.C1894color.notification_ripple_tinted_color);
-        this.mNormalRippleColor = this.mContext.getColor(C1893R.C1894color.notification_ripple_untinted_color);
+        this.mTintedRippleColor = this.mContext.getColor(C1894R.C1895color.notification_ripple_tinted_color);
+        this.mNormalRippleColor = this.mContext.getColor(C1894R.C1895color.notification_ripple_untinted_color);
     }
 
     public void updateBackgroundColors() {
@@ -144,8 +144,8 @@ public abstract class ActivatableNotificationView extends ExpandableOutlineView 
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mBackgroundNormal = (NotificationBackgroundView) findViewById(C1893R.C1897id.backgroundNormal);
-        FakeShadowView fakeShadowView = (FakeShadowView) findViewById(C1893R.C1897id.fake_shadow);
+        this.mBackgroundNormal = (NotificationBackgroundView) findViewById(C1894R.C1898id.backgroundNormal);
+        FakeShadowView fakeShadowView = (FakeShadowView) findViewById(C1894R.C1898id.fake_shadow);
         this.mFakeShadow = fakeShadowView;
         this.mShadowHidden = fakeShadowView.getVisibility() != 0;
         initBackground();
@@ -155,7 +155,7 @@ public abstract class ActivatableNotificationView extends ExpandableOutlineView 
 
     /* access modifiers changed from: protected */
     public void initBackground() {
-        this.mBackgroundNormal.setCustomBackground((int) C1893R.C1895drawable.notification_material_bg);
+        this.mBackgroundNormal.setCustomBackground((int) C1894R.C1896drawable.notification_material_bg);
     }
 
     /* access modifiers changed from: protected */
@@ -293,7 +293,7 @@ public abstract class ActivatableNotificationView extends ExpandableOutlineView 
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateBackgroundTint$0$com-android-systemui-statusbar-notification-row-ActivatableNotificationView */
-    public /* synthetic */ void mo40898x14e5c68a(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo40901x14e5c68a(ValueAnimator valueAnimator) {
         setBackgroundTintColor(NotificationUtils.interpolateColors(this.mStartTint, this.mTargetTint, valueAnimator.getAnimatedFraction()));
     }
 
@@ -420,7 +420,7 @@ public abstract class ActivatableNotificationView extends ExpandableOutlineView 
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startAppearAnimation$1$com-android-systemui-statusbar-notification-row-ActivatableNotificationView */
-    public /* synthetic */ void mo40897x484fec06(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo40900x484fec06(ValueAnimator valueAnimator) {
         this.mAppearAnimationFraction = ((Float) valueAnimator.getAnimatedValue()).floatValue();
         updateAppearAnimationAlpha();
         updateAppearRect();

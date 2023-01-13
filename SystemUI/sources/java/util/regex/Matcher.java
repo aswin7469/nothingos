@@ -15,7 +15,7 @@ public final class Matcher implements MatchResult {
     String text;
 
     /* renamed from: to */
-    int f775to;
+    int f773to;
     boolean transparentBounds = false;
 
     Matcher(Pattern pattern, CharSequence charSequence) {
@@ -237,7 +237,7 @@ public final class Matcher implements MatchResult {
 
     public StringBuffer appendTail(StringBuffer stringBuffer) {
         int i = this.appendPos;
-        int i2 = this.f775to;
+        int i2 = this.f773to;
         if (i < i2) {
             stringBuffer.append(this.text.substring(i, i2));
         }
@@ -280,7 +280,7 @@ public final class Matcher implements MatchResult {
     }
 
     public int regionEnd() {
-        return this.f775to;
+        return this.f773to;
     }
 
     public boolean hasTransparentBounds() {
@@ -355,7 +355,7 @@ public final class Matcher implements MatchResult {
             this.originalInput = charSequence;
             this.text = charSequence.toString();
             this.from = i;
-            this.f775to = i2;
+            this.f773to = i2;
             resetForInput();
             this.matchFound = false;
             this.appendPos = 0;
@@ -365,7 +365,7 @@ public final class Matcher implements MatchResult {
 
     private void resetForInput() {
         synchronized (this) {
-            this.nativeMatcher.setInput(this.text, this.from, this.f775to);
+            this.nativeMatcher.setInput(this.text, this.from, this.f773to);
             this.nativeMatcher.useAnchoringBounds(this.anchoringBounds);
             this.nativeMatcher.useTransparentBounds(this.transparentBounds);
         }

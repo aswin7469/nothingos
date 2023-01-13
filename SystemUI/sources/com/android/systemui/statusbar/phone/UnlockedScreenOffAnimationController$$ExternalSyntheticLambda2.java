@@ -15,6 +15,6 @@ public final /* synthetic */ class UnlockedScreenOffAnimationController$$Externa
     }
 
     public final void run() {
-        UnlockedScreenOffAnimationController.m3194animateInKeyguard$lambda2(this.f$0, this.f$1, this.f$2);
+        UnlockedScreenOffAnimationController.m3199animateInKeyguard$lambda2(this.f$0, this.f$1, this.f$2);
     }
 }

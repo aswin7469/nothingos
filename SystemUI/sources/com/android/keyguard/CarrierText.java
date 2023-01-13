@@ -7,7 +7,7 @@ import android.text.method.SingleLineTransformationMethod;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import java.util.Locale;
 
 public class CarrierText extends TextView {
@@ -21,7 +21,7 @@ public class CarrierText extends TextView {
     /* JADX INFO: finally extract failed */
     public CarrierText(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        TypedArray obtainStyledAttributes = context.getTheme().obtainStyledAttributes(attributeSet, C1893R.styleable.CarrierText, 0, 0);
+        TypedArray obtainStyledAttributes = context.getTheme().obtainStyledAttributes(attributeSet, C1894R.styleable.CarrierText, 0, 0);
         try {
             boolean z = obtainStyledAttributes.getBoolean(0, false);
             this.mShowAirplaneMode = obtainStyledAttributes.getBoolean(1, false);

@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.WindowInsets;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.ListView;
-import com.google.android.setupdesign.C3953R;
+import com.google.android.setupdesign.C3963R;
 
 public class StickyHeaderListView extends ListView {
     private int statusBarInset = 0;
@@ -36,8 +36,8 @@ public class StickyHeaderListView extends ListView {
 
     private void init(AttributeSet attributeSet, int i) {
         if (!isInEditMode()) {
-            TypedArray obtainStyledAttributes = getContext().obtainStyledAttributes(attributeSet, C3953R.styleable.SudStickyHeaderListView, i, 0);
-            int resourceId = obtainStyledAttributes.getResourceId(C3953R.styleable.SudStickyHeaderListView_sudHeader, 0);
+            TypedArray obtainStyledAttributes = getContext().obtainStyledAttributes(attributeSet, C3963R.styleable.SudStickyHeaderListView, i, 0);
+            int resourceId = obtainStyledAttributes.getResourceId(C3963R.styleable.SudStickyHeaderListView_sudHeader, 0);
             if (resourceId != 0) {
                 addHeaderView(LayoutInflater.from(getContext()).inflate(resourceId, this, false), (Object) null, false);
             }

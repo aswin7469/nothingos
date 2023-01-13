@@ -16,6 +16,6 @@ public final /* synthetic */ class SidefpsControllerKt$$ExternalSyntheticLambda1
     }
 
     public final void onCompositionLoaded(LottieComposition lottieComposition) {
-        SidefpsControllerKt.m2577addOverlayDynamicColor$lambda1(this.f$0, this.f$1, lottieComposition);
+        SidefpsControllerKt.m2583addOverlayDynamicColor$lambda1(this.f$0, this.f$1, lottieComposition);
     }
 }

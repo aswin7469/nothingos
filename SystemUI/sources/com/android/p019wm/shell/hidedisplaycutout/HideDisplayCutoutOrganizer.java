@@ -70,7 +70,7 @@ class HideDisplayCutoutOrganizer extends DisplayAreaOrganizer {
         if (addDisplayAreaInfoAndLeashToMap(displayAreaInfo, surfaceControl)) {
             WindowContainerTransaction windowContainerTransaction = new WindowContainerTransaction();
             SurfaceControl.Transaction transaction = new SurfaceControl.Transaction();
-            mo49580xaf66d44(displayAreaInfo.token, surfaceControl, windowContainerTransaction, transaction);
+            mo49589xaf66d44(displayAreaInfo.token, surfaceControl, windowContainerTransaction, transaction);
             applyTransaction(windowContainerTransaction, transaction);
         }
     }
@@ -83,7 +83,7 @@ class HideDisplayCutoutOrganizer extends DisplayAreaOrganizer {
             }
             WindowContainerTransaction windowContainerTransaction = new WindowContainerTransaction();
             SurfaceControl.Transaction transaction = new SurfaceControl.Transaction();
-            mo49580xaf66d44(displayAreaInfo.token, this.mDisplayAreaMap.get(displayAreaInfo.token), windowContainerTransaction, transaction);
+            mo49589xaf66d44(displayAreaInfo.token, this.mDisplayAreaMap.get(displayAreaInfo.token), windowContainerTransaction, transaction);
             applyTransaction(windowContainerTransaction, transaction);
             this.mDisplayAreaMap.remove(displayAreaInfo.token);
         }
@@ -221,7 +221,7 @@ class HideDisplayCutoutOrganizer extends DisplayAreaOrganizer {
 
     /* access modifiers changed from: package-private */
     /* renamed from: applyBoundsAndOffsets */
-    public void mo49580xaf66d44(WindowContainerToken windowContainerToken, SurfaceControl surfaceControl, WindowContainerTransaction windowContainerTransaction, SurfaceControl.Transaction transaction) {
+    public void mo49589xaf66d44(WindowContainerToken windowContainerToken, SurfaceControl surfaceControl, WindowContainerTransaction windowContainerTransaction, SurfaceControl.Transaction transaction) {
         windowContainerTransaction.setBounds(windowContainerToken, this.mCurrentDisplayBounds);
         transaction.setPosition(surfaceControl, (float) this.mOffsetX, (float) this.mOffsetY);
         transaction.setWindowCrop(surfaceControl, this.mCurrentDisplayBounds.width(), this.mCurrentDisplayBounds.height());

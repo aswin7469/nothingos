@@ -11,7 +11,7 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.TextView;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dependency;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import java.util.Date;
@@ -40,13 +40,13 @@ public class DateView extends TextView {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onReceive$0$com-android-systemui-statusbar-policy-DateView$1 */
-        public /* synthetic */ void mo45676xe21620e0() {
+        public /* synthetic */ void mo45688xe21620e0() {
             DateFormat unused = DateView.this.mDateFormat = null;
         }
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onReceive$1$com-android-systemui-statusbar-policy-DateView$1 */
-        public /* synthetic */ void mo45677xd3bfc6ff() {
+        public /* synthetic */ void mo45689xd3bfc6ff() {
             DateView.this.updateClock();
         }
     };
@@ -55,12 +55,12 @@ public class DateView extends TextView {
     /* JADX INFO: finally extract failed */
     public DateView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        TypedArray obtainStyledAttributes = context.getTheme().obtainStyledAttributes(attributeSet, C1893R.styleable.DateView, 0, 0);
+        TypedArray obtainStyledAttributes = context.getTheme().obtainStyledAttributes(attributeSet, C1894R.styleable.DateView, 0, 0);
         try {
             this.mDatePattern = obtainStyledAttributes.getString(0);
             obtainStyledAttributes.recycle();
             if (this.mDatePattern == null) {
-                this.mDatePattern = getContext().getString(C1893R.string.system_ui_date_pattern);
+                this.mDatePattern = getContext().getString(C1894R.string.system_ui_date_pattern);
             }
             this.mBroadcastDispatcher = (BroadcastDispatcher) Dependency.get(BroadcastDispatcher.class);
         } catch (Throwable th) {

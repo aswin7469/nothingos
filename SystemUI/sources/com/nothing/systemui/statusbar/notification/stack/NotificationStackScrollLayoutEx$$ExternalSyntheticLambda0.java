@@ -11,6 +11,6 @@ public final /* synthetic */ class NotificationStackScrollLayoutEx$$ExternalSynt
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        NotificationStackScrollLayoutEx.m3528resetScrollAnimation$lambda0(this.f$0, valueAnimator);
+        NotificationStackScrollLayoutEx.m3546resetScrollAnimation$lambda0(this.f$0, valueAnimator);
     }
 }

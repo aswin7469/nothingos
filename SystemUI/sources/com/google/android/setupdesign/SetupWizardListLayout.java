@@ -51,7 +51,7 @@ public class SetupWizardListLayout extends SetupWizardLayout {
     /* access modifiers changed from: protected */
     public View onInflateTemplate(LayoutInflater layoutInflater, int i) {
         if (i == 0) {
-            i = C3953R.layout.sud_list_template;
+            i = C3963R.layout.sud_list_template;
         }
         return super.onInflateTemplate(layoutInflater, i);
     }

@@ -14,6 +14,6 @@ public final /* synthetic */ class ShadeListBuilder$$ExternalSyntheticLambda9 im
     }
 
     public final boolean test(Object obj) {
-        return this.f$0.mo40125x98d96d77(this.f$1, (NotificationEntry) obj);
+        return this.f$0.mo40127x98d96d77(this.f$1, (NotificationEntry) obj);
     }
 }

@@ -16,6 +16,6 @@ public final /* synthetic */ class ActionProxyReceiver$$ExternalSyntheticLambda0
     }
 
     public final void run() {
-        this.f$0.mo37280xa2afb14f(this.f$1, this.f$2);
+        this.f$0.mo37281xa2afb14f(this.f$1, this.f$2);
     }
 }

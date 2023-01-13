@@ -160,7 +160,7 @@ public final class DexPathList {
             for (String str2 : str.split(File.pathSeparator)) {
                 if (z) {
                     try {
-                        if (!OsConstants.S_ISDIR(Libcore.f857os.stat(str2).st_mode)) {
+                        if (!OsConstants.S_ISDIR(Libcore.f855os.stat(str2).st_mode)) {
                         }
                     } catch (ErrnoException unused) {
                     }

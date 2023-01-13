@@ -13,6 +13,6 @@ public final /* synthetic */ class DreamOverlayNotificationCountProvider$$Extern
     }
 
     public final void run() {
-        this.f$0.mo32500x434ff17(this.f$1);
+        this.f$0.mo32511x434ff17(this.f$1);
     }
 }

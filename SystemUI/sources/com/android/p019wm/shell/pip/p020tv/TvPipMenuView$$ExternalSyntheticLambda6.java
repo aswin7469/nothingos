@@ -19,6 +19,6 @@ public final /* synthetic */ class TvPipMenuView$$ExternalSyntheticLambda6 imple
     }
 
     public final void accept(Object obj) {
-        this.f$0.m3484lambda$initEduText$0$comandroidwmshellpiptvTvPipMenuView(this.f$1, this.f$2, (Annotation) obj);
+        this.f$0.m3488lambda$initEduText$0$comandroidwmshellpiptvTvPipMenuView(this.f$1, this.f$2, (Annotation) obj);
     }
 }

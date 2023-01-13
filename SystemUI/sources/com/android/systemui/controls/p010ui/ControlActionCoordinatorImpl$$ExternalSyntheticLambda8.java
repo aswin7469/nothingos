@@ -12,6 +12,6 @@ public final /* synthetic */ class ControlActionCoordinatorImpl$$ExternalSynthet
     }
 
     public final void run() {
-        ControlActionCoordinatorImpl.m2675shouldRunAction$lambda0(this.f$0, this.f$1);
+        ControlActionCoordinatorImpl.m2680shouldRunAction$lambda0(this.f$0, this.f$1);
     }
 }

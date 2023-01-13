@@ -10,6 +10,6 @@ public final /* synthetic */ class LetterboxEduWindowManager$$ExternalSyntheticL
     }
 
     public final void run() {
-        this.f$0.mo49458xb7d877c7();
+        this.f$0.mo49467xb7d877c7();
     }
 }

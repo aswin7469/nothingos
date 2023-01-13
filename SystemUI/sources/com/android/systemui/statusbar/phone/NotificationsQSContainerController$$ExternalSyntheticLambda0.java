@@ -11,6 +11,6 @@ public final /* synthetic */ class NotificationsQSContainerController$$ExternalS
     }
 
     public final void onNavigationModeChanged(int i) {
-        NotificationsQSContainerController.m3184onInit$lambda0(this.f$0, i);
+        NotificationsQSContainerController.m3189onInit$lambda0(this.f$0, i);
     }
 }

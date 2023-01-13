@@ -9,6 +9,6 @@ public final /* synthetic */ class StatusBarKeyguardViewManager$$ExternalSynthet
     }
 
     public final void run() {
-        this.f$0.mo45261x8440edd6();
+        this.f$0.mo45273x8440edd6();
     }
 }

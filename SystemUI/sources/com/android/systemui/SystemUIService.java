@@ -45,7 +45,7 @@ public class SystemUIService extends Service {
         ((SystemUIApplication) getApplication()).startServicesIfNeeded();
         this.mLogBufferFreezer.attach(this.mBroadcastDispatcher);
         this.mDumpHandler.init();
-        if (getResources().getBoolean(C1893R.bool.config_showNotificationForUnknownBatteryState)) {
+        if (getResources().getBoolean(C1894R.bool.config_showNotificationForUnknownBatteryState)) {
             this.mBatteryStateNotifier.startListening();
         }
         if (!Build.IS_DEBUGGABLE || !SystemProperties.getBoolean("debug.crash_sysui", false)) {

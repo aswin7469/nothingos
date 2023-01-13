@@ -29,7 +29,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.constraintlayout.motion.widget.Key;
 import com.android.internal.graphics.ColorUtils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.animation.Interpolators;
 import com.android.systemui.controls.ControlsMetricsLogger;
 import com.android.systemui.controls.controller.ControlsController;
@@ -46,7 +46,7 @@ import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Reflection;
 
-@Metadata(mo64986d1 = {"\u0000Ì\u0001\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0007\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\b\n\u0002\u0018\u0002\n\u0002\b\u0007\n\u0002\u0018\u0002\n\u0002\b\t\n\u0002\u0010\u000b\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0010\r\n\u0000\n\u0002\u0018\u0002\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0010\u0007\n\u0002\b\u0015\n\u0002\u0018\u0002\n\u0002\b\n\n\u0002\u0018\u0002\n\u0002\b\u0011\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0004\u0018\u0000 \u00012\u00020\u0001:\u0002\u0001B=\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\u0006\u0010\u0006\u001a\u00020\u0007\u0012\u0006\u0010\b\u001a\u00020\u0007\u0012\u0006\u0010\t\u001a\u00020\n\u0012\u0006\u0010\u000b\u001a\u00020\f\u0012\u0006\u0010\r\u001a\u00020\u000e¢\u0006\u0002\u0010\u000fJ\u000e\u0010i\u001a\u00020P2\u0006\u0010i\u001a\u00020CJ\u000e\u0010j\u001a\u00020P2\u0006\u0010k\u001a\u00020\u000eJ \u0010l\u001a\u00020P2\u0006\u0010m\u001a\u00020>2\u0006\u0010n\u001a\u00020>2\u0006\u0010o\u001a\u00020\u000eH\u0002J\u001e\u0010p\u001a\u00020P2\u0006\u0010m\u001a\u00020>2\f\u0010q\u001a\b\u0012\u0004\u0012\u00020P0OH\u0002J4\u0010r\u001a\u00020P2\u0006\u0010s\u001a\u00020t2\u0006\u0010u\u001a\u00020\u000e2\b\b\u0001\u0010v\u001a\u00020\u000e2\b\b\u0001\u0010w\u001a\u00020\u000e2\u0006\u0010x\u001a\u00020^H\u0002J'\u0010y\u001a\u00020P2\u0006\u0010n\u001a\u00020>2\u0006\u0010z\u001a\u00020\u000e2\b\b\u0002\u0010m\u001a\u00020>H\u0000¢\u0006\u0002\b{J*\u0010|\u001a\u00020\u00132\b\u0010}\u001a\u0004\u0018\u00010\u00132\u000e\u0010~\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u001302\b\b\u0002\u0010z\u001a\u00020\u000eJ\u0018\u0010\u0001\u001a\u00020P2\u0006\u00103\u001a\u0002042\u0007\u0010\u0001\u001a\u00020>J\u0007\u0010\u0001\u001a\u00020PJ\u0010\u0010\u0001\u001a\u000b \u0001*\u0004\u0018\u00010M0MJ\u0011\u0010\u0001\u001a\u00020P2\u0006\u0010n\u001a\u00020>H\u0002J\u0007\u0010\u0001\u001a\u00020PJ\u001b\u0010\u0001\u001a\u00020P2\u0007\u0010\u0001\u001a\u00020M2\t\b\u0002\u0010\u0001\u001a\u00020>J\u0010\u0010\u0001\u001a\u00020P2\u0007\u0010\u0001\u001a\u00020^J-\u0010\u0001\u001a\u00020P2\u0006\u0010s\u001a\u00020t2\u0006\u0010u\u001a\u00020\u000e2\b\b\u0001\u0010v\u001a\u00020\u000e2\b\b\u0001\u0010w\u001a\u00020\u000eH\u0002J\t\u0010\u0001\u001a\u00020PH\u0002J?\u0010\u0001\u001a\u00020P2\u0006\u0010n\u001a\u00020>2\u0007\u0010\u0001\u001a\u00020M2\u0007\u0010\u0001\u001a\u00020t2\b\u0010\u0001\u001a\u00030\u00012\n\u0010\u0001\u001a\u0005\u0018\u00010\u0001H\u0001¢\u0006\u0003\b\u0001J\u0007\u0010\u0001\u001a\u00020>R\u000e\u0010\u0010\u001a\u00020\u0011X\u0004¢\u0006\u0002\n\u0000R\u001c\u0010\u0012\u001a\u0004\u0018\u00010\u0013X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0014\u0010\u0015\"\u0004\b\u0016\u0010\u0017R\u0011\u0010\b\u001a\u00020\u0007¢\u0006\b\n\u0000\u001a\u0004\b\u0018\u0010\u0019R\u0011\u0010\u001a\u001a\u00020\u001b¢\u0006\b\n\u0000\u001a\u0004\b\u001c\u0010\u001dR\u0011\u0010\u001e\u001a\u00020\u001f¢\u0006\b\n\u0000\u001a\u0004\b \u0010!R\u0011\u0010\"\u001a\u00020#¢\u0006\b\n\u0000\u001a\u0004\b$\u0010%R\u0011\u0010\t\u001a\u00020\n¢\u0006\b\n\u0000\u001a\u0004\b&\u0010'R\u0011\u0010(\u001a\u00020\u000e8F¢\u0006\u0006\u001a\u0004\b)\u0010*R\u0011\u0010+\u001a\u00020,8F¢\u0006\u0006\u001a\u0004\b-\u0010.R\u0011\u0010\u0004\u001a\u00020\u0005¢\u0006\b\n\u0000\u001a\u0004\b/\u00100R\u0011\u0010\u000b\u001a\u00020\f¢\u0006\b\n\u0000\u001a\u0004\b1\u00102R\u001a\u00103\u001a\u000204X.¢\u0006\u000e\n\u0000\u001a\u0004\b5\u00106\"\u0004\b7\u00108R\u0011\u00109\u001a\u00020\u000e8F¢\u0006\u0006\u001a\u0004\b:\u0010*R\u0011\u0010;\u001a\u00020\u001b¢\u0006\b\n\u0000\u001a\u0004\b<\u0010\u001dR\u001a\u0010=\u001a\u00020>X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b=\u0010?\"\u0004\b@\u0010AR\u001c\u0010B\u001a\u0004\u0018\u00010CX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\bD\u0010E\"\u0004\bF\u0010GR\u0010\u0010H\u001a\u0004\u0018\u00010IX\u000e¢\u0006\u0002\n\u0000R\u0011\u0010\u0002\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\bJ\u0010KR\u000e\u0010L\u001a\u00020MX\u000e¢\u0006\u0002\n\u0000R\u0014\u0010N\u001a\b\u0012\u0004\u0012\u00020P0OX\u0004¢\u0006\u0002\n\u0000R\u0010\u0010Q\u001a\u0004\u0018\u00010RX\u000e¢\u0006\u0002\n\u0000R\u0011\u0010S\u001a\u00020T¢\u0006\b\n\u0000\u001a\u0004\bU\u0010VR\u0010\u0010W\u001a\u0004\u0018\u00010XX\u000e¢\u0006\u0002\n\u0000R\u0011\u0010Y\u001a\u00020T¢\u0006\b\n\u0000\u001a\u0004\bZ\u0010VR\u0011\u0010[\u001a\u00020T¢\u0006\b\n\u0000\u001a\u0004\b\\\u0010VR\u000e\u0010]\u001a\u00020^X\u0004¢\u0006\u0002\n\u0000R\u0011\u0010\u0006\u001a\u00020\u0007¢\u0006\b\n\u0000\u001a\u0004\b_\u0010\u0019R\u0011\u0010\r\u001a\u00020\u000e¢\u0006\b\n\u0000\u001a\u0004\b`\u0010*R\u001a\u0010a\u001a\u00020>X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\bb\u0010?\"\u0004\bc\u0010AR\u001c\u0010d\u001a\u0004\u0018\u00010IX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\be\u0010f\"\u0004\bg\u0010h¨\u0006\u0001"}, mo64987d2 = {"Lcom/android/systemui/controls/ui/ControlViewHolder;", "", "layout", "Landroid/view/ViewGroup;", "controlsController", "Lcom/android/systemui/controls/controller/ControlsController;", "uiExecutor", "Lcom/android/systemui/util/concurrency/DelayableExecutor;", "bgExecutor", "controlActionCoordinator", "Lcom/android/systemui/controls/ui/ControlActionCoordinator;", "controlsMetricsLogger", "Lcom/android/systemui/controls/ControlsMetricsLogger;", "uid", "", "(Landroid/view/ViewGroup;Lcom/android/systemui/controls/controller/ControlsController;Lcom/android/systemui/util/concurrency/DelayableExecutor;Lcom/android/systemui/util/concurrency/DelayableExecutor;Lcom/android/systemui/controls/ui/ControlActionCoordinator;Lcom/android/systemui/controls/ControlsMetricsLogger;I)V", "baseLayer", "Landroid/graphics/drawable/GradientDrawable;", "behavior", "Lcom/android/systemui/controls/ui/Behavior;", "getBehavior", "()Lcom/android/systemui/controls/ui/Behavior;", "setBehavior", "(Lcom/android/systemui/controls/ui/Behavior;)V", "getBgExecutor", "()Lcom/android/systemui/util/concurrency/DelayableExecutor;", "chevronIcon", "Landroid/widget/ImageView;", "getChevronIcon", "()Landroid/widget/ImageView;", "clipLayer", "Landroid/graphics/drawable/ClipDrawable;", "getClipLayer", "()Landroid/graphics/drawable/ClipDrawable;", "context", "Landroid/content/Context;", "getContext", "()Landroid/content/Context;", "getControlActionCoordinator", "()Lcom/android/systemui/controls/ui/ControlActionCoordinator;", "controlStatus", "getControlStatus", "()I", "controlTemplate", "Landroid/service/controls/templates/ControlTemplate;", "getControlTemplate", "()Landroid/service/controls/templates/ControlTemplate;", "getControlsController", "()Lcom/android/systemui/controls/controller/ControlsController;", "getControlsMetricsLogger", "()Lcom/android/systemui/controls/ControlsMetricsLogger;", "cws", "Lcom/android/systemui/controls/ui/ControlWithState;", "getCws", "()Lcom/android/systemui/controls/ui/ControlWithState;", "setCws", "(Lcom/android/systemui/controls/ui/ControlWithState;)V", "deviceType", "getDeviceType", "icon", "getIcon", "isLoading", "", "()Z", "setLoading", "(Z)V", "lastAction", "Landroid/service/controls/actions/ControlAction;", "getLastAction", "()Landroid/service/controls/actions/ControlAction;", "setLastAction", "(Landroid/service/controls/actions/ControlAction;)V", "lastChallengeDialog", "Landroid/app/Dialog;", "getLayout", "()Landroid/view/ViewGroup;", "nextStatusText", "", "onDialogCancel", "Lkotlin/Function0;", "", "stateAnimator", "Landroid/animation/ValueAnimator;", "status", "Landroid/widget/TextView;", "getStatus", "()Landroid/widget/TextView;", "statusAnimator", "Landroid/animation/Animator;", "subtitle", "getSubtitle", "title", "getTitle", "toggleBackgroundIntensity", "", "getUiExecutor", "getUid", "userInteractionInProgress", "getUserInteractionInProgress", "setUserInteractionInProgress", "visibleDialog", "getVisibleDialog", "()Landroid/app/Dialog;", "setVisibleDialog", "(Landroid/app/Dialog;)V", "action", "actionResponse", "response", "animateBackgroundChange", "animated", "enabled", "bgColor", "animateStatusChange", "statusRowUpdater", "applyBackgroundChange", "clipDrawable", "Landroid/graphics/drawable/Drawable;", "newAlpha", "newClipColor", "newBaseColor", "newLayoutAlpha", "applyRenderInfo", "offset", "applyRenderInfo$SystemUI_nothingRelease", "bindBehavior", "existingBehavior", "supplier", "Ljava/util/function/Supplier;", "bindData", "isLocked", "dismiss", "getStatusText", "kotlin.jvm.PlatformType", "setEnabled", "setErrorStatus", "setStatusText", "text", "immediately", "setStatusTextSize", "textSize", "startBackgroundAnimation", "updateContentDescription", "updateStatusRow", "drawable", "color", "Landroid/content/res/ColorStateList;", "control", "Landroid/service/controls/Control;", "updateStatusRow$SystemUI_nothingRelease", "usePanel", "Companion", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000Ì\u0001\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0007\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\b\n\u0002\u0018\u0002\n\u0002\b\u0007\n\u0002\u0018\u0002\n\u0002\b\t\n\u0002\u0010\u000b\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0010\r\n\u0000\n\u0002\u0018\u0002\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0010\u0007\n\u0002\b\u0015\n\u0002\u0018\u0002\n\u0002\b\n\n\u0002\u0018\u0002\n\u0002\b\u0011\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0004\u0018\u0000 \u00012\u00020\u0001:\u0002\u0001B=\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\u0006\u0010\u0006\u001a\u00020\u0007\u0012\u0006\u0010\b\u001a\u00020\u0007\u0012\u0006\u0010\t\u001a\u00020\n\u0012\u0006\u0010\u000b\u001a\u00020\f\u0012\u0006\u0010\r\u001a\u00020\u000e¢\u0006\u0002\u0010\u000fJ\u000e\u0010i\u001a\u00020P2\u0006\u0010i\u001a\u00020CJ\u000e\u0010j\u001a\u00020P2\u0006\u0010k\u001a\u00020\u000eJ \u0010l\u001a\u00020P2\u0006\u0010m\u001a\u00020>2\u0006\u0010n\u001a\u00020>2\u0006\u0010o\u001a\u00020\u000eH\u0002J\u001e\u0010p\u001a\u00020P2\u0006\u0010m\u001a\u00020>2\f\u0010q\u001a\b\u0012\u0004\u0012\u00020P0OH\u0002J4\u0010r\u001a\u00020P2\u0006\u0010s\u001a\u00020t2\u0006\u0010u\u001a\u00020\u000e2\b\b\u0001\u0010v\u001a\u00020\u000e2\b\b\u0001\u0010w\u001a\u00020\u000e2\u0006\u0010x\u001a\u00020^H\u0002J'\u0010y\u001a\u00020P2\u0006\u0010n\u001a\u00020>2\u0006\u0010z\u001a\u00020\u000e2\b\b\u0002\u0010m\u001a\u00020>H\u0000¢\u0006\u0002\b{J*\u0010|\u001a\u00020\u00132\b\u0010}\u001a\u0004\u0018\u00010\u00132\u000e\u0010~\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u001302\b\b\u0002\u0010z\u001a\u00020\u000eJ\u0018\u0010\u0001\u001a\u00020P2\u0006\u00103\u001a\u0002042\u0007\u0010\u0001\u001a\u00020>J\u0007\u0010\u0001\u001a\u00020PJ\u0010\u0010\u0001\u001a\u000b \u0001*\u0004\u0018\u00010M0MJ\u0011\u0010\u0001\u001a\u00020P2\u0006\u0010n\u001a\u00020>H\u0002J\u0007\u0010\u0001\u001a\u00020PJ\u001b\u0010\u0001\u001a\u00020P2\u0007\u0010\u0001\u001a\u00020M2\t\b\u0002\u0010\u0001\u001a\u00020>J\u0010\u0010\u0001\u001a\u00020P2\u0007\u0010\u0001\u001a\u00020^J-\u0010\u0001\u001a\u00020P2\u0006\u0010s\u001a\u00020t2\u0006\u0010u\u001a\u00020\u000e2\b\b\u0001\u0010v\u001a\u00020\u000e2\b\b\u0001\u0010w\u001a\u00020\u000eH\u0002J\t\u0010\u0001\u001a\u00020PH\u0002J?\u0010\u0001\u001a\u00020P2\u0006\u0010n\u001a\u00020>2\u0007\u0010\u0001\u001a\u00020M2\u0007\u0010\u0001\u001a\u00020t2\b\u0010\u0001\u001a\u00030\u00012\n\u0010\u0001\u001a\u0005\u0018\u00010\u0001H\u0001¢\u0006\u0003\b\u0001J\u0007\u0010\u0001\u001a\u00020>R\u000e\u0010\u0010\u001a\u00020\u0011X\u0004¢\u0006\u0002\n\u0000R\u001c\u0010\u0012\u001a\u0004\u0018\u00010\u0013X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0014\u0010\u0015\"\u0004\b\u0016\u0010\u0017R\u0011\u0010\b\u001a\u00020\u0007¢\u0006\b\n\u0000\u001a\u0004\b\u0018\u0010\u0019R\u0011\u0010\u001a\u001a\u00020\u001b¢\u0006\b\n\u0000\u001a\u0004\b\u001c\u0010\u001dR\u0011\u0010\u001e\u001a\u00020\u001f¢\u0006\b\n\u0000\u001a\u0004\b \u0010!R\u0011\u0010\"\u001a\u00020#¢\u0006\b\n\u0000\u001a\u0004\b$\u0010%R\u0011\u0010\t\u001a\u00020\n¢\u0006\b\n\u0000\u001a\u0004\b&\u0010'R\u0011\u0010(\u001a\u00020\u000e8F¢\u0006\u0006\u001a\u0004\b)\u0010*R\u0011\u0010+\u001a\u00020,8F¢\u0006\u0006\u001a\u0004\b-\u0010.R\u0011\u0010\u0004\u001a\u00020\u0005¢\u0006\b\n\u0000\u001a\u0004\b/\u00100R\u0011\u0010\u000b\u001a\u00020\f¢\u0006\b\n\u0000\u001a\u0004\b1\u00102R\u001a\u00103\u001a\u000204X.¢\u0006\u000e\n\u0000\u001a\u0004\b5\u00106\"\u0004\b7\u00108R\u0011\u00109\u001a\u00020\u000e8F¢\u0006\u0006\u001a\u0004\b:\u0010*R\u0011\u0010;\u001a\u00020\u001b¢\u0006\b\n\u0000\u001a\u0004\b<\u0010\u001dR\u001a\u0010=\u001a\u00020>X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b=\u0010?\"\u0004\b@\u0010AR\u001c\u0010B\u001a\u0004\u0018\u00010CX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\bD\u0010E\"\u0004\bF\u0010GR\u0010\u0010H\u001a\u0004\u0018\u00010IX\u000e¢\u0006\u0002\n\u0000R\u0011\u0010\u0002\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\bJ\u0010KR\u000e\u0010L\u001a\u00020MX\u000e¢\u0006\u0002\n\u0000R\u0014\u0010N\u001a\b\u0012\u0004\u0012\u00020P0OX\u0004¢\u0006\u0002\n\u0000R\u0010\u0010Q\u001a\u0004\u0018\u00010RX\u000e¢\u0006\u0002\n\u0000R\u0011\u0010S\u001a\u00020T¢\u0006\b\n\u0000\u001a\u0004\bU\u0010VR\u0010\u0010W\u001a\u0004\u0018\u00010XX\u000e¢\u0006\u0002\n\u0000R\u0011\u0010Y\u001a\u00020T¢\u0006\b\n\u0000\u001a\u0004\bZ\u0010VR\u0011\u0010[\u001a\u00020T¢\u0006\b\n\u0000\u001a\u0004\b\\\u0010VR\u000e\u0010]\u001a\u00020^X\u0004¢\u0006\u0002\n\u0000R\u0011\u0010\u0006\u001a\u00020\u0007¢\u0006\b\n\u0000\u001a\u0004\b_\u0010\u0019R\u0011\u0010\r\u001a\u00020\u000e¢\u0006\b\n\u0000\u001a\u0004\b`\u0010*R\u001a\u0010a\u001a\u00020>X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\bb\u0010?\"\u0004\bc\u0010AR\u001c\u0010d\u001a\u0004\u0018\u00010IX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\be\u0010f\"\u0004\bg\u0010h¨\u0006\u0001"}, mo65043d2 = {"Lcom/android/systemui/controls/ui/ControlViewHolder;", "", "layout", "Landroid/view/ViewGroup;", "controlsController", "Lcom/android/systemui/controls/controller/ControlsController;", "uiExecutor", "Lcom/android/systemui/util/concurrency/DelayableExecutor;", "bgExecutor", "controlActionCoordinator", "Lcom/android/systemui/controls/ui/ControlActionCoordinator;", "controlsMetricsLogger", "Lcom/android/systemui/controls/ControlsMetricsLogger;", "uid", "", "(Landroid/view/ViewGroup;Lcom/android/systemui/controls/controller/ControlsController;Lcom/android/systemui/util/concurrency/DelayableExecutor;Lcom/android/systemui/util/concurrency/DelayableExecutor;Lcom/android/systemui/controls/ui/ControlActionCoordinator;Lcom/android/systemui/controls/ControlsMetricsLogger;I)V", "baseLayer", "Landroid/graphics/drawable/GradientDrawable;", "behavior", "Lcom/android/systemui/controls/ui/Behavior;", "getBehavior", "()Lcom/android/systemui/controls/ui/Behavior;", "setBehavior", "(Lcom/android/systemui/controls/ui/Behavior;)V", "getBgExecutor", "()Lcom/android/systemui/util/concurrency/DelayableExecutor;", "chevronIcon", "Landroid/widget/ImageView;", "getChevronIcon", "()Landroid/widget/ImageView;", "clipLayer", "Landroid/graphics/drawable/ClipDrawable;", "getClipLayer", "()Landroid/graphics/drawable/ClipDrawable;", "context", "Landroid/content/Context;", "getContext", "()Landroid/content/Context;", "getControlActionCoordinator", "()Lcom/android/systemui/controls/ui/ControlActionCoordinator;", "controlStatus", "getControlStatus", "()I", "controlTemplate", "Landroid/service/controls/templates/ControlTemplate;", "getControlTemplate", "()Landroid/service/controls/templates/ControlTemplate;", "getControlsController", "()Lcom/android/systemui/controls/controller/ControlsController;", "getControlsMetricsLogger", "()Lcom/android/systemui/controls/ControlsMetricsLogger;", "cws", "Lcom/android/systemui/controls/ui/ControlWithState;", "getCws", "()Lcom/android/systemui/controls/ui/ControlWithState;", "setCws", "(Lcom/android/systemui/controls/ui/ControlWithState;)V", "deviceType", "getDeviceType", "icon", "getIcon", "isLoading", "", "()Z", "setLoading", "(Z)V", "lastAction", "Landroid/service/controls/actions/ControlAction;", "getLastAction", "()Landroid/service/controls/actions/ControlAction;", "setLastAction", "(Landroid/service/controls/actions/ControlAction;)V", "lastChallengeDialog", "Landroid/app/Dialog;", "getLayout", "()Landroid/view/ViewGroup;", "nextStatusText", "", "onDialogCancel", "Lkotlin/Function0;", "", "stateAnimator", "Landroid/animation/ValueAnimator;", "status", "Landroid/widget/TextView;", "getStatus", "()Landroid/widget/TextView;", "statusAnimator", "Landroid/animation/Animator;", "subtitle", "getSubtitle", "title", "getTitle", "toggleBackgroundIntensity", "", "getUiExecutor", "getUid", "userInteractionInProgress", "getUserInteractionInProgress", "setUserInteractionInProgress", "visibleDialog", "getVisibleDialog", "()Landroid/app/Dialog;", "setVisibleDialog", "(Landroid/app/Dialog;)V", "action", "actionResponse", "response", "animateBackgroundChange", "animated", "enabled", "bgColor", "animateStatusChange", "statusRowUpdater", "applyBackgroundChange", "clipDrawable", "Landroid/graphics/drawable/Drawable;", "newAlpha", "newClipColor", "newBaseColor", "newLayoutAlpha", "applyRenderInfo", "offset", "applyRenderInfo$SystemUI_nothingRelease", "bindBehavior", "existingBehavior", "supplier", "Ljava/util/function/Supplier;", "bindData", "isLocked", "dismiss", "getStatusText", "kotlin.jvm.PlatformType", "setEnabled", "setErrorStatus", "setStatusText", "text", "immediately", "setStatusTextSize", "textSize", "startBackgroundAnimation", "updateContentDescription", "updateStatusRow", "drawable", "color", "Landroid/content/res/ColorStateList;", "control", "Landroid/service/controls/Control;", "updateStatusRow$SystemUI_nothingRelease", "usePanel", "Companion", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* renamed from: com.android.systemui.controls.ui.ControlViewHolder */
 /* compiled from: ControlViewHolder.kt */
 public final class ControlViewHolder {
@@ -106,21 +106,21 @@ public final class ControlViewHolder {
         this.controlActionCoordinator = controlActionCoordinator2;
         this.controlsMetricsLogger = controlsMetricsLogger2;
         this.uid = i;
-        this.toggleBackgroundIntensity = viewGroup.getContext().getResources().getFraction(C1893R.fraction.controls_toggle_bg_intensity, 1, 1);
-        View requireViewById = viewGroup.requireViewById(C1893R.C1897id.icon);
+        this.toggleBackgroundIntensity = viewGroup.getContext().getResources().getFraction(C1894R.fraction.controls_toggle_bg_intensity, 1, 1);
+        View requireViewById = viewGroup.requireViewById(C1894R.C1898id.icon);
         Intrinsics.checkNotNullExpressionValue(requireViewById, "layout.requireViewById(R.id.icon)");
         this.icon = (ImageView) requireViewById;
-        View requireViewById2 = viewGroup.requireViewById(C1893R.C1897id.status);
+        View requireViewById2 = viewGroup.requireViewById(C1894R.C1898id.status);
         Intrinsics.checkNotNullExpressionValue(requireViewById2, "layout.requireViewById(R.id.status)");
         TextView textView = (TextView) requireViewById2;
         this.status = textView;
-        View requireViewById3 = viewGroup.requireViewById(C1893R.C1897id.title);
+        View requireViewById3 = viewGroup.requireViewById(C1894R.C1898id.title);
         Intrinsics.checkNotNullExpressionValue(requireViewById3, "layout.requireViewById(R.id.title)");
         this.title = (TextView) requireViewById3;
-        View requireViewById4 = viewGroup.requireViewById(C1893R.C1897id.subtitle);
+        View requireViewById4 = viewGroup.requireViewById(C1894R.C1898id.subtitle);
         Intrinsics.checkNotNullExpressionValue(requireViewById4, "layout.requireViewById(R.id.subtitle)");
         this.subtitle = (TextView) requireViewById4;
-        View requireViewById5 = viewGroup.requireViewById(C1893R.C1897id.chevron_icon);
+        View requireViewById5 = viewGroup.requireViewById(C1894R.C1898id.chevron_icon);
         Intrinsics.checkNotNullExpressionValue(requireViewById5, "layout.requireViewById(R.id.chevron_icon)");
         this.chevronIcon = (ImageView) requireViewById5;
         Context context2 = viewGroup.getContext();
@@ -131,10 +131,10 @@ public final class ControlViewHolder {
         if (background != null) {
             LayerDrawable layerDrawable = (LayerDrawable) background;
             layerDrawable.mutate();
-            Drawable findDrawableByLayerId = layerDrawable.findDrawableByLayerId(C1893R.C1897id.clip_layer);
+            Drawable findDrawableByLayerId = layerDrawable.findDrawableByLayerId(C1894R.C1898id.clip_layer);
             if (findDrawableByLayerId != null) {
                 this.clipLayer = (ClipDrawable) findDrawableByLayerId;
-                Drawable findDrawableByLayerId2 = layerDrawable.findDrawableByLayerId(C1893R.C1897id.background);
+                Drawable findDrawableByLayerId2 = layerDrawable.findDrawableByLayerId(C1894R.C1898id.background);
                 if (findDrawableByLayerId2 != null) {
                     this.baseLayer = (GradientDrawable) findDrawableByLayerId2;
                     textView.setSelected(true);
@@ -175,7 +175,7 @@ public final class ControlViewHolder {
         return this.uid;
     }
 
-    @Metadata(mo64986d1 = {"\u0000F\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\b\n\u0002\b\u0002\n\u0002\u0010\u0015\n\u0002\b\u0002\n\u0002\u0010\"\n\u0002\b\u0003\n\u0002\u0010\t\n\u0000\n\u0002\u0010\u0007\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002J&\u0010\u0012\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00140\u00132\u0006\u0010\u0015\u001a\u00020\u00042\u0006\u0010\u0016\u001a\u00020\u00172\u0006\u0010\u0018\u001a\u00020\u0004R\u000e\u0010\u0003\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0005\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0006\u001a\u00020\u0007X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\b\u001a\u00020\u0007X\u0004¢\u0006\u0002\n\u0000R\u0014\u0010\t\u001a\b\u0012\u0004\u0012\u00020\u00040\nX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u000b\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\f\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\r\u001a\u00020\u000eXT¢\u0006\u0002\n\u0000R\u000e\u0010\u000f\u001a\u00020\u0010XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0011\u001a\u00020\u0010XT¢\u0006\u0002\n\u0000¨\u0006\u0019"}, mo64987d2 = {"Lcom/android/systemui/controls/ui/ControlViewHolder$Companion;", "", "()V", "ALPHA_DISABLED", "", "ALPHA_ENABLED", "ATTR_DISABLED", "", "ATTR_ENABLED", "FORCE_PANEL_DEVICES", "", "MAX_LEVEL", "MIN_LEVEL", "STATE_ANIMATION_DURATION", "", "STATUS_ALPHA_DIMMED", "", "STATUS_ALPHA_ENABLED", "findBehaviorClass", "Ljava/util/function/Supplier;", "Lcom/android/systemui/controls/ui/Behavior;", "status", "template", "Landroid/service/controls/templates/ControlTemplate;", "deviceType", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u0000F\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\b\n\u0002\b\u0002\n\u0002\u0010\u0015\n\u0002\b\u0002\n\u0002\u0010\"\n\u0002\b\u0003\n\u0002\u0010\t\n\u0000\n\u0002\u0010\u0007\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002J&\u0010\u0012\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00140\u00132\u0006\u0010\u0015\u001a\u00020\u00042\u0006\u0010\u0016\u001a\u00020\u00172\u0006\u0010\u0018\u001a\u00020\u0004R\u000e\u0010\u0003\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0005\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0006\u001a\u00020\u0007X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\b\u001a\u00020\u0007X\u0004¢\u0006\u0002\n\u0000R\u0014\u0010\t\u001a\b\u0012\u0004\u0012\u00020\u00040\nX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u000b\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\f\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\r\u001a\u00020\u000eXT¢\u0006\u0002\n\u0000R\u000e\u0010\u000f\u001a\u00020\u0010XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0011\u001a\u00020\u0010XT¢\u0006\u0002\n\u0000¨\u0006\u0019"}, mo65043d2 = {"Lcom/android/systemui/controls/ui/ControlViewHolder$Companion;", "", "()V", "ALPHA_DISABLED", "", "ALPHA_ENABLED", "ATTR_DISABLED", "", "ATTR_ENABLED", "FORCE_PANEL_DEVICES", "", "MAX_LEVEL", "MIN_LEVEL", "STATE_ANIMATION_DURATION", "", "STATUS_ALPHA_DIMMED", "", "STATUS_ALPHA_ENABLED", "findBehaviorClass", "Ljava/util/function/Supplier;", "Lcom/android/systemui/controls/ui/Behavior;", "status", "template", "Landroid/service/controls/templates/ControlTemplate;", "deviceType", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* renamed from: com.android.systemui.controls.ui.ControlViewHolder$Companion */
     /* compiled from: ControlViewHolder.kt */
     public static final class Companion {
@@ -188,7 +188,7 @@ public final class ControlViewHolder {
 
         /* access modifiers changed from: private */
         /* renamed from: findBehaviorClass$lambda-0  reason: not valid java name */
-        public static final StatusBehavior m2691findBehaviorClass$lambda0() {
+        public static final StatusBehavior m2696findBehaviorClass$lambda0() {
             return new StatusBehavior();
         }
 
@@ -223,55 +223,55 @@ public final class ControlViewHolder {
 
         /* access modifiers changed from: private */
         /* renamed from: findBehaviorClass$lambda-1  reason: not valid java name */
-        public static final TouchBehavior m2692findBehaviorClass$lambda1() {
+        public static final TouchBehavior m2697findBehaviorClass$lambda1() {
             return new TouchBehavior();
         }
 
         /* access modifiers changed from: private */
         /* renamed from: findBehaviorClass$lambda-2  reason: not valid java name */
-        public static final ThumbnailBehavior m2693findBehaviorClass$lambda2() {
+        public static final ThumbnailBehavior m2698findBehaviorClass$lambda2() {
             return new ThumbnailBehavior();
         }
 
         /* access modifiers changed from: private */
         /* renamed from: findBehaviorClass$lambda-3  reason: not valid java name */
-        public static final TouchBehavior m2694findBehaviorClass$lambda3() {
+        public static final TouchBehavior m2699findBehaviorClass$lambda3() {
             return new TouchBehavior();
         }
 
         /* access modifiers changed from: private */
         /* renamed from: findBehaviorClass$lambda-4  reason: not valid java name */
-        public static final ToggleBehavior m2695findBehaviorClass$lambda4() {
+        public static final ToggleBehavior m2700findBehaviorClass$lambda4() {
             return new ToggleBehavior();
         }
 
         /* access modifiers changed from: private */
         /* renamed from: findBehaviorClass$lambda-5  reason: not valid java name */
-        public static final TouchBehavior m2696findBehaviorClass$lambda5() {
+        public static final TouchBehavior m2701findBehaviorClass$lambda5() {
             return new TouchBehavior();
         }
 
         /* access modifiers changed from: private */
         /* renamed from: findBehaviorClass$lambda-6  reason: not valid java name */
-        public static final ToggleRangeBehavior m2697findBehaviorClass$lambda6() {
+        public static final ToggleRangeBehavior m2702findBehaviorClass$lambda6() {
             return new ToggleRangeBehavior();
         }
 
         /* access modifiers changed from: private */
         /* renamed from: findBehaviorClass$lambda-7  reason: not valid java name */
-        public static final ToggleRangeBehavior m2698findBehaviorClass$lambda7() {
+        public static final ToggleRangeBehavior m2703findBehaviorClass$lambda7() {
             return new ToggleRangeBehavior();
         }
 
         /* access modifiers changed from: private */
         /* renamed from: findBehaviorClass$lambda-8  reason: not valid java name */
-        public static final TemperatureControlBehavior m2699findBehaviorClass$lambda8() {
+        public static final TemperatureControlBehavior m2704findBehaviorClass$lambda8() {
             return new TemperatureControlBehavior();
         }
 
         /* access modifiers changed from: private */
         /* renamed from: findBehaviorClass$lambda-9  reason: not valid java name */
-        public static final DefaultBehavior m2700findBehaviorClass$lambda9() {
+        public static final DefaultBehavior m2705findBehaviorClass$lambda9() {
             return new DefaultBehavior();
         }
     }
@@ -418,7 +418,7 @@ public final class ControlViewHolder {
 
     /* access modifiers changed from: private */
     /* renamed from: bindData$lambda-5$lambda-4  reason: not valid java name */
-    public static final boolean m2685bindData$lambda5$lambda4(ControlViewHolder controlViewHolder, View view) {
+    public static final boolean m2690bindData$lambda5$lambda4(ControlViewHolder controlViewHolder, View view) {
         Intrinsics.checkNotNullParameter(controlViewHolder, "this$0");
         controlViewHolder.controlActionCoordinator.longPress(controlViewHolder);
         return true;
@@ -470,7 +470,7 @@ public final class ControlViewHolder {
     }
 
     public final void setErrorStatus() {
-        animateStatusChange(true, new ControlViewHolder$setErrorStatus$1(this, this.context.getResources().getString(C1893R.string.controls_error_failed)));
+        animateStatusChange(true, new ControlViewHolder$setErrorStatus$1(this, this.context.getResources().getString(C1894R.string.controls_error_failed)));
     }
 
     private final void updateContentDescription() {
@@ -560,7 +560,7 @@ public final class ControlViewHolder {
         List list;
         int i2;
         ColorStateList customColor;
-        int color = this.context.getResources().getColor(C1893R.C1894color.control_default_background, this.context.getTheme());
+        int color = this.context.getResources().getColor(C1894R.C1895color.control_default_background, this.context.getTheme());
         if (z2) {
             Control control = getCws().getControl();
             if (control == null || (customColor = control.getCustomColor()) == null) {
@@ -570,7 +570,7 @@ public final class ControlViewHolder {
             }
             list = CollectionsKt.listOf(Integer.valueOf(i2), 255);
         } else {
-            list = CollectionsKt.listOf(Integer.valueOf(this.context.getResources().getColor(C1893R.C1894color.control_default_background, this.context.getTheme())), 0);
+            list = CollectionsKt.listOf(Integer.valueOf(this.context.getResources().getColor(C1894R.C1895color.control_default_background, this.context.getTheme())), 0);
         }
         int intValue = ((Number) list.get(0)).intValue();
         int intValue2 = ((Number) list.get(1)).intValue();
@@ -658,7 +658,7 @@ public final class ControlViewHolder {
 
     /* access modifiers changed from: private */
     /* renamed from: startBackgroundAnimation$lambda-10$lambda-9  reason: not valid java name */
-    public static final void m2686startBackgroundAnimation$lambda10$lambda9(int i, int i2, int i3, int i4, float f, ControlViewHolder controlViewHolder, Drawable drawable, ValueAnimator valueAnimator) {
+    public static final void m2691startBackgroundAnimation$lambda10$lambda9(int i, int i2, int i3, int i4, float f, ControlViewHolder controlViewHolder, Drawable drawable, ValueAnimator valueAnimator) {
         Intrinsics.checkNotNullParameter(controlViewHolder, "this$0");
         Intrinsics.checkNotNullParameter(drawable, "$clipDrawable");
         Object animatedValue = valueAnimator.getAnimatedValue();

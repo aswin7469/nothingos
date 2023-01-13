@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.button.MaterialButton;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -97,15 +97,15 @@ public final class MaterialCalendar<S> extends PickerFragment<S> {
         LayoutInflater cloneInContext = layoutInflater.cloneInContext(contextThemeWrapper);
         Month start = this.calendarConstraints.getStart();
         if (MaterialDatePicker.isFullscreen(contextThemeWrapper)) {
-            i2 = C3621R.layout.mtrl_calendar_vertical;
+            i2 = C3631R.layout.mtrl_calendar_vertical;
             i = 1;
         } else {
-            i2 = C3621R.layout.mtrl_calendar_horizontal;
+            i2 = C3631R.layout.mtrl_calendar_horizontal;
             i = 0;
         }
         View inflate = cloneInContext.inflate(i2, viewGroup, false);
         inflate.setMinimumHeight(getDialogPickerHeight(requireContext()));
-        GridView gridView = (GridView) inflate.findViewById(C3621R.C3624id.mtrl_calendar_days_of_week);
+        GridView gridView = (GridView) inflate.findViewById(C3631R.C3634id.mtrl_calendar_days_of_week);
         ViewCompat.setAccessibilityDelegate(gridView, new AccessibilityDelegateCompat() {
             public void onInitializeAccessibilityNodeInfo(View view, AccessibilityNodeInfoCompat accessibilityNodeInfoCompat) {
                 super.onInitializeAccessibilityNodeInfo(view, accessibilityNodeInfoCompat);
@@ -115,7 +115,7 @@ public final class MaterialCalendar<S> extends PickerFragment<S> {
         gridView.setAdapter(new DaysOfWeekAdapter());
         gridView.setNumColumns(start.daysInWeek);
         gridView.setEnabled(false);
-        this.recyclerView = (RecyclerView) inflate.findViewById(C3621R.C3624id.mtrl_calendar_months);
+        this.recyclerView = (RecyclerView) inflate.findViewById(C3631R.C3634id.mtrl_calendar_months);
         this.recyclerView.setLayoutManager(new SmoothCalendarLayoutManager(getContext(), i, false) {
             /* access modifiers changed from: protected */
             public void calculateExtraLayoutSpace(RecyclerView.State state, int[] iArr) {
@@ -145,8 +145,8 @@ public final class MaterialCalendar<S> extends PickerFragment<S> {
             }
         });
         this.recyclerView.setAdapter(monthsPagerAdapter);
-        int integer = contextThemeWrapper.getResources().getInteger(C3621R.integer.mtrl_calendar_year_selector_span);
-        RecyclerView recyclerView2 = (RecyclerView) inflate.findViewById(C3621R.C3624id.mtrl_calendar_year_selector_frame);
+        int integer = contextThemeWrapper.getResources().getInteger(C3631R.integer.mtrl_calendar_year_selector_span);
+        RecyclerView recyclerView2 = (RecyclerView) inflate.findViewById(C3631R.C3634id.mtrl_calendar_year_selector_frame);
         this.yearSelector = recyclerView2;
         if (recyclerView2 != null) {
             recyclerView2.setHasFixedSize(true);
@@ -154,7 +154,7 @@ public final class MaterialCalendar<S> extends PickerFragment<S> {
             this.yearSelector.setAdapter(new YearGridAdapter(this));
             this.yearSelector.addItemDecoration(createItemDecoration());
         }
-        if (inflate.findViewById(C3621R.C3624id.month_navigation_fragment_toggle) != null) {
+        if (inflate.findViewById(C3631R.C3634id.month_navigation_fragment_toggle) != null) {
             addActionsToMonthNavigation(inflate, monthsPagerAdapter);
         }
         if (!MaterialDatePicker.isFullscreen(contextThemeWrapper)) {
@@ -249,7 +249,7 @@ public final class MaterialCalendar<S> extends PickerFragment<S> {
     }
 
     static int getDayHeight(Context context) {
-        return context.getResources().getDimensionPixelSize(C3621R.dimen.mtrl_calendar_day_height);
+        return context.getResources().getDimensionPixelSize(C3631R.dimen.mtrl_calendar_day_height);
     }
 
     /* access modifiers changed from: package-private */
@@ -276,26 +276,26 @@ public final class MaterialCalendar<S> extends PickerFragment<S> {
     }
 
     private void addActionsToMonthNavigation(View view, final MonthsPagerAdapter monthsPagerAdapter) {
-        final MaterialButton materialButton = (MaterialButton) view.findViewById(C3621R.C3624id.month_navigation_fragment_toggle);
+        final MaterialButton materialButton = (MaterialButton) view.findViewById(C3631R.C3634id.month_navigation_fragment_toggle);
         materialButton.setTag(SELECTOR_TOGGLE_TAG);
         ViewCompat.setAccessibilityDelegate(materialButton, new AccessibilityDelegateCompat() {
             public void onInitializeAccessibilityNodeInfo(View view, AccessibilityNodeInfoCompat accessibilityNodeInfoCompat) {
                 String str;
                 super.onInitializeAccessibilityNodeInfo(view, accessibilityNodeInfoCompat);
                 if (MaterialCalendar.this.dayFrame.getVisibility() == 0) {
-                    str = MaterialCalendar.this.getString(C3621R.string.mtrl_picker_toggle_to_year_selection);
+                    str = MaterialCalendar.this.getString(C3631R.string.mtrl_picker_toggle_to_year_selection);
                 } else {
-                    str = MaterialCalendar.this.getString(C3621R.string.mtrl_picker_toggle_to_day_selection);
+                    str = MaterialCalendar.this.getString(C3631R.string.mtrl_picker_toggle_to_day_selection);
                 }
                 accessibilityNodeInfoCompat.setHintText(str);
             }
         });
-        MaterialButton materialButton2 = (MaterialButton) view.findViewById(C3621R.C3624id.month_navigation_previous);
+        MaterialButton materialButton2 = (MaterialButton) view.findViewById(C3631R.C3634id.month_navigation_previous);
         materialButton2.setTag(NAVIGATION_PREV_TAG);
-        MaterialButton materialButton3 = (MaterialButton) view.findViewById(C3621R.C3624id.month_navigation_next);
+        MaterialButton materialButton3 = (MaterialButton) view.findViewById(C3631R.C3634id.month_navigation_next);
         materialButton3.setTag(NAVIGATION_NEXT_TAG);
-        this.yearFrame = view.findViewById(C3621R.C3624id.mtrl_calendar_year_selector_frame);
-        this.dayFrame = view.findViewById(C3621R.C3624id.mtrl_calendar_day_selector_frame);
+        this.yearFrame = view.findViewById(C3631R.C3634id.mtrl_calendar_year_selector_frame);
+        this.dayFrame = view.findViewById(C3631R.C3634id.mtrl_calendar_day_selector_frame);
         setSelector(CalendarSelector.DAY);
         materialButton.setText(this.current.getLongName());
         this.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -349,9 +349,9 @@ public final class MaterialCalendar<S> extends PickerFragment<S> {
 
     private static int getDialogPickerHeight(Context context) {
         Resources resources = context.getResources();
-        int dimensionPixelSize = resources.getDimensionPixelSize(C3621R.dimen.mtrl_calendar_navigation_height) + resources.getDimensionPixelOffset(C3621R.dimen.mtrl_calendar_navigation_top_padding) + resources.getDimensionPixelOffset(C3621R.dimen.mtrl_calendar_navigation_bottom_padding);
-        int dimensionPixelSize2 = resources.getDimensionPixelSize(C3621R.dimen.mtrl_calendar_days_of_week_height);
-        return dimensionPixelSize + dimensionPixelSize2 + (MonthAdapter.MAXIMUM_WEEKS * resources.getDimensionPixelSize(C3621R.dimen.mtrl_calendar_day_height)) + ((MonthAdapter.MAXIMUM_WEEKS - 1) * resources.getDimensionPixelOffset(C3621R.dimen.mtrl_calendar_month_vertical_padding)) + resources.getDimensionPixelOffset(C3621R.dimen.mtrl_calendar_bottom_padding);
+        int dimensionPixelSize = resources.getDimensionPixelSize(C3631R.dimen.mtrl_calendar_navigation_height) + resources.getDimensionPixelOffset(C3631R.dimen.mtrl_calendar_navigation_top_padding) + resources.getDimensionPixelOffset(C3631R.dimen.mtrl_calendar_navigation_bottom_padding);
+        int dimensionPixelSize2 = resources.getDimensionPixelSize(C3631R.dimen.mtrl_calendar_days_of_week_height);
+        return dimensionPixelSize + dimensionPixelSize2 + (MonthAdapter.MAXIMUM_WEEKS * resources.getDimensionPixelSize(C3631R.dimen.mtrl_calendar_day_height)) + ((MonthAdapter.MAXIMUM_WEEKS - 1) * resources.getDimensionPixelOffset(C3631R.dimen.mtrl_calendar_month_vertical_padding)) + resources.getDimensionPixelOffset(C3631R.dimen.mtrl_calendar_bottom_padding);
     }
 
     /* access modifiers changed from: package-private */

@@ -11,6 +11,6 @@ public final /* synthetic */ class LatencyTester$$ExternalSyntheticLambda0 imple
     }
 
     public final void onPropertiesChanged(DeviceConfig.Properties properties) {
-        this.f$0.m2521lambda$new$0$comandroidsystemuiLatencyTester(properties);
+        this.f$0.m2527lambda$new$0$comandroidsystemuiLatencyTester(properties);
     }
 }

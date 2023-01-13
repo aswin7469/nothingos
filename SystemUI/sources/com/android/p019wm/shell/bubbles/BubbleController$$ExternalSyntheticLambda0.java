@@ -12,6 +12,6 @@ public final /* synthetic */ class BubbleController$$ExternalSyntheticLambda0 im
     }
 
     public final void run() {
-        this.f$0.mo48347x4595b72d(this.f$1);
+        this.f$0.mo48356x4595b72d(this.f$1);
     }
 }

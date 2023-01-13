@@ -9,6 +9,6 @@ public final /* synthetic */ class KeyguardVisibilityHelper$$ExternalSyntheticLa
     }
 
     public final void run() {
-        this.f$0.m2300lambda$new$1$comandroidkeyguardKeyguardVisibilityHelper();
+        this.f$0.m2306lambda$new$1$comandroidkeyguardKeyguardVisibilityHelper();
     }
 }

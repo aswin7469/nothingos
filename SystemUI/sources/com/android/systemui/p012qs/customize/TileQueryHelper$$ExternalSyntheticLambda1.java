@@ -16,6 +16,6 @@ public final /* synthetic */ class TileQueryHelper$$ExternalSyntheticLambda1 imp
     }
 
     public final void run() {
-        this.f$0.mo36553x8126aa51(this.f$1, this.f$2);
+        this.f$0.mo36557x8126aa51(this.f$1, this.f$2);
     }
 }

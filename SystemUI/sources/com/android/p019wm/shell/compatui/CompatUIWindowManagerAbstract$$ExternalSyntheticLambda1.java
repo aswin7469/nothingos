@@ -17,6 +17,6 @@ public final /* synthetic */ class CompatUIWindowManagerAbstract$$ExternalSynthe
     }
 
     public final void runWithTransaction(SurfaceControl.Transaction transaction) {
-        this.f$0.mo49422xe1721304(this.f$1, this.f$2, transaction);
+        this.f$0.mo49431xe1721304(this.f$1, this.f$2, transaction);
     }
 }

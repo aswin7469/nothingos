@@ -76,8 +76,8 @@ public class SystemUIApplication extends Application implements SystemUIAppCompo
         this.mBootCompleteCache = this.mSysUIComponent.provideBootCacheImpl();
         timingsTraceLog.traceEnd();
         Looper.getMainLooper().setTraceTag(4096);
-        setTheme(C1893R.style.Theme_SystemUI);
-        NTSystemUIUtils.getInstance().setSplitShadeEnabled(getBaseContext().getResources().getBoolean(C1893R.bool.config_use_split_notification_shade));
+        setTheme(C1894R.style.Theme_SystemUI);
+        NTSystemUIUtils.getInstance().setSplitShadeEnabled(getBaseContext().getResources().getBoolean(C1894R.bool.config_use_split_notification_shade));
         if (Process.myUserHandle().equals(UserHandle.SYSTEM)) {
             IntentFilter intentFilter = new IntentFilter("android.intent.action.BOOT_COMPLETED");
             intentFilter.setPriority(1000);
@@ -169,13 +169,13 @@ public class SystemUIApplication extends Application implements SystemUIAppCompo
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startServicesIfNeeded$0$com-android-systemui-SystemUIApplication */
-    public /* synthetic */ void mo29856x898064b0(int i, String str, Map.Entry entry) {
+    public /* synthetic */ void mo29866x898064b0(int i, String str, Map.Entry entry) {
         this.mServices[i] = startStartable(str, (Provider) entry.getValue());
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startServicesIfNeeded$1$com-android-systemui-SystemUIApplication */
-    public /* synthetic */ void mo29857x90e599cf(String str) {
+    public /* synthetic */ void mo29867x90e599cf(String str) {
         CoreStartable[] coreStartableArr = this.mServices;
         coreStartableArr[coreStartableArr.length - 1] = startAdditionalStartable(str);
     }
@@ -229,7 +229,7 @@ public class SystemUIApplication extends Application implements SystemUIAppCompo
     public void onConfigurationChanged(Configuration configuration) {
         if (this.mServicesStarted) {
             this.mSysUIComponent.getConfigurationController().onConfigurationChanged(configuration);
-            NTSystemUIUtils.getInstance().setSplitShadeEnabled(getBaseContext().getResources().getBoolean(C1893R.bool.config_use_split_notification_shade));
+            NTSystemUIUtils.getInstance().setSplitShadeEnabled(getBaseContext().getResources().getBoolean(C1894R.bool.config_use_split_notification_shade));
             for (CoreStartable coreStartable : this.mServices) {
                 if (coreStartable != null) {
                     coreStartable.onConfigurationChanged(configuration);

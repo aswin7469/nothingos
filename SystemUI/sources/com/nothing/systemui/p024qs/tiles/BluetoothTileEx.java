@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Looper;
 import android.provider.DeviceConfig;
 import android.provider.Settings;
 import android.text.TextUtils;
@@ -22,7 +23,7 @@ import com.android.settingslib.Utils;
 import com.android.settingslib.bluetooth.BluetoothUtils;
 import com.android.settingslib.bluetooth.CachedBluetoothDevice;
 import com.android.settingslib.datetime.ZoneGetter;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.p012qs.tiles.BluetoothTile;
 import com.android.systemui.plugins.p011qs.QSIconView;
 import com.android.systemui.plugins.p011qs.QSTile;
@@ -52,7 +53,7 @@ import kotlin.jvm.internal.Intrinsics;
 import kotlin.text.StringsKt;
 import org.json.JSONObject;
 
-@Metadata(mo64986d1 = {"\u0000·\u0001\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\b\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0006\n\u0002\u0018\u0002\n\u0002\u0010\u000e\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u000b\n\u0002\u0018\u0002\n\u0000\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0006\n\u0002\u0010\u000b\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\b\n\u0002\u0010\u0002\n\u0002\b\b\n\u0002\u0010\r\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\n\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0007\n\u0002\u0018\u0002\n\u0002\b\u0007\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u000b*\u0001#\u0018\u0000 y2\u00020\u0001:\u0003wxyB\u0007\b\u0007¢\u0006\u0002\u0010\u0002J\u0012\u00105\u001a\u0004\u0018\u0001062\u0006\u00107\u001a\u000208H\u0002J\u0012\u00109\u001a\u0004\u0018\u00010\u000e2\b\u0010:\u001a\u0004\u0018\u00010\u000eJ\u0012\u0010;\u001a\u0004\u0018\u00010\u000e2\b\u0010<\u001a\u0004\u0018\u00010\u000eJ\u0012\u0010=\u001a\u0004\u0018\u00010\u000e2\b\u0010<\u001a\u0004\u0018\u00010\u000eJ\u000e\u0010>\u001a\u00020\u000e2\u0006\u0010?\u001a\u00020\u000fJ\u0016\u0010@\u001a\u00020A2\u0006\u0010B\u001a\u00020\u00042\u0006\u0010C\u001a\u00020\u000eJ&\u0010@\u001a\u00020A2\u0006\u0010D\u001a\u00020\u00042\u0006\u0010<\u001a\u00020\u000e2\u0006\u0010E\u001a\u00020,2\u0006\u0010F\u001a\u00020\u000eJ\u0006\u0010G\u001a\u00020AJ\u0012\u0010H\u001a\u0004\u0018\u00010\u000e2\b\u0010<\u001a\u0004\u0018\u00010\u000eJ\u0010\u0010I\u001a\u0004\u0018\u00010J2\u0006\u0010K\u001a\u00020LJ\u0006\u0010M\u001a\u00020NJ\u0012\u0010O\u001a\u0004\u0018\u00010\u000e2\b\u0010<\u001a\u0004\u0018\u00010\u000eJ\u0014\u0010P\u001a\u0004\u0018\u00010\u000e2\b\u0010<\u001a\u0004\u0018\u00010\u000eH\u0002J\u0010\u0010Q\u001a\u0004\u0018\u0001062\u0006\u0010R\u001a\u00020\u000eJ\u0006\u0010S\u001a\u00020AJ.\u0010T\u001a\u00020A2\u0006\u0010 \u001a\u00020!2\u0006\u0010U\u001a\u00020\u00152\u0006\u0010V\u001a\u0002022\u0006\u0010W\u001a\u0002042\u0006\u0010X\u001a\u00020YJ\u000e\u0010Z\u001a\u00020,2\u0006\u0010[\u001a\u00020\\J\u0006\u0010]\u001a\u00020,J\u0006\u0010^\u001a\u00020,J\u000e\u0010_\u001a\u00020,2\u0006\u0010`\u001a\u00020\u000eJ\u000e\u0010a\u001a\u00020,2\u0006\u0010`\u001a\u00020\u000eJ\u0018\u0010b\u001a\u00020,2\u0006\u0010c\u001a\u00020d2\u0006\u0010`\u001a\u00020\u000eH\u0002J\u0010\u0010e\u001a\u00020,2\b\u0010<\u001a\u0004\u0018\u00010\u000eJ\u0010\u0010f\u001a\u00020,2\b\u0010<\u001a\u0004\u0018\u00010\u000eJ\u0010\u0010g\u001a\u00020A2\b\u0010<\u001a\u0004\u0018\u00010\u000eJ\u0018\u0010h\u001a\u00020A2\u0006\u00107\u001a\u0002082\b\u0010i\u001a\u0004\u0018\u00010\u000eJ\u0016\u0010j\u001a\u00020A2\u0006\u0010D\u001a\u00020\u00042\u0006\u0010k\u001a\u00020lJ\u000e\u0010m\u001a\u00020A2\u0006\u0010n\u001a\u00020oJ\u000e\u0010p\u001a\u00020A2\u0006\u0010q\u001a\u00020LJ\u0006\u0010r\u001a\u00020,J\b\u0010s\u001a\u00020AH\u0002J\b\u0010t\u001a\u00020AH\u0002J\u0016\u0010u\u001a\u00020A2\u0006\u0010v\u001a\u00020,2\u0006\u0010E\u001a\u00020,R\u000e\u0010\u0003\u001a\u00020\u0004X\u000e¢\u0006\u0002\n\u0000R*\u0010\u0007\u001a\u0004\u0018\u00010\u00062\b\u0010\u0005\u001a\u0004\u0018\u00010\u00068F@FX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\b\u0010\t\"\u0004\b\n\u0010\u000bR&\u0010\f\u001a\u000e\u0012\u0004\u0012\u00020\u000e\u0012\u0004\u0012\u00020\u000f0\rX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0010\u0010\u0011\"\u0004\b\u0012\u0010\u0013R\u0010\u0010\u0014\u001a\u0004\u0018\u00010\u0015X\u000e¢\u0006\u0002\n\u0000R&\u0010\u0016\u001a\u00020\u000e2\u0006\u0010\u0005\u001a\u00020\u000e8F@FX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0017\u0010\u0018\"\u0004\b\u0019\u0010\u001aR&\u0010\u001b\u001a\u00020\u00042\u0006\u0010\u0005\u001a\u00020\u00048F@FX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u001c\u0010\u001d\"\u0004\b\u001e\u0010\u001fR\u0010\u0010 \u001a\u0004\u0018\u00010!X\u000e¢\u0006\u0002\n\u0000R\u0010\u0010\"\u001a\u00020#X\u0004¢\u0006\u0004\n\u0002\u0010$R*\u0010&\u001a\u0004\u0018\u00010%2\b\u0010\u0005\u001a\u0004\u0018\u00010%8F@FX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b'\u0010(\"\u0004\b)\u0010*R\u000e\u0010+\u001a\u00020,X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010-\u001a\u00020.X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010/\u001a\u000200X\u0004¢\u0006\u0002\n\u0000R\u0010\u00101\u001a\u0004\u0018\u000102X\u000e¢\u0006\u0002\n\u0000R\u0010\u00103\u001a\u0004\u0018\u000104X\u000e¢\u0006\u0002\n\u0000¨\u0006z"}, mo64987d2 = {"Lcom/nothing/systemui/qs/tiles/BluetoothTileEx;", "", "()V", "airpodsSwitch", "", "value", "Lcom/nothing/systemui/qs/tiles/BluetoothTileEx$AncCallback;", "ancCallback", "getAncCallback", "()Lcom/nothing/systemui/qs/tiles/BluetoothTileEx$AncCallback;", "setAncCallback", "(Lcom/nothing/systemui/qs/tiles/BluetoothTileEx$AncCallback;)V", "bluetoothBatteryDates", "Ljava/util/HashMap;", "", "Lcom/nothing/systemui/qs/tiles/BluetoothTileEx$BluetoothBatteryDate;", "getBluetoothBatteryDates", "()Ljava/util/HashMap;", "setBluetoothBatteryDates", "(Ljava/util/HashMap;)V", "bluetoothController", "Lcom/android/systemui/statusbar/policy/BluetoothController;", "clickAddress", "getClickAddress", "()Ljava/lang/String;", "setClickAddress", "(Ljava/lang/String;)V", "clickFrom", "getClickFrom", "()I", "setClickFrom", "(I)V", "context", "Landroid/content/Context;", "deviceConnectorCallback", "com/nothing/systemui/qs/tiles/BluetoothTileEx$deviceConnectorCallback$1", "Lcom/nothing/systemui/qs/tiles/BluetoothTileEx$deviceConnectorCallback$1;", "Lcom/nothing/os/device/DeviceServiceController;", "deviceController", "getDeviceController", "()Lcom/nothing/os/device/DeviceServiceController;", "setDeviceController", "(Lcom/nothing/os/device/DeviceServiceController;)V", "isCallbackAdded", "", "qSFragmentEx", "Lcom/nothing/systemui/qs/QSFragmentEx;", "singleThreadExecutor", "Ljava/util/concurrent/ExecutorService;", "teslaInfoController", "Lcom/nothing/systemui/statusbar/policy/TeslaInfoController;", "tile", "Lcom/android/systemui/qs/tiles/BluetoothTile;", "bitmap2Drawable", "Landroid/graphics/drawable/Drawable;", "bitmap", "Landroid/graphics/Bitmap;", "changeToSSPAdress", "classicAddress", "getAirpodsVersion", "address", "getBLEModuleForSettingGlobal", "getBatteryLevel", "bbd", "getCommand", "", "i", "str", "command", "isConnected", "modelId", "getCommandBattery", "getConnectedDevice", "getDeviceSecondLabel", "", "device", "Lcom/android/settingslib/bluetooth/CachedBluetoothDevice;", "getLongClickIntentAndUpdateClickItem", "Landroid/content/Intent;", "getModeID", "getModeIDFromNothingApp", "getModuleIDBitmap", "name", "handleClick", "init", "btController", "teslaController", "bluetoothTile", "handler", "Landroid/os/Handler;", "isAdvancedDetailsHeader", "bluetoothDevice", "Landroid/bluetooth/BluetoothDevice;", "isAirpodsExperimentOn", "isBluetoothEnabled", "isNothingAppEnabled", "pkgName", "isNothingAppHasPermission", "isNothingAppInstalled", "pkgManager", "Landroid/content/pm/PackageManager;", "isNothingEarDevice", "isSupportAnc", "saveConnectedDevice", "saveModuleIDEarBitmap", "modeId", "sendCommand", "bundle", "Landroid/os/Bundle;", "setClickListener", "qSIcon", "Lcom/android/systemui/plugins/qs/QSIconView;", "setModelIdAndDevice", "cachedBluetoothDevice", "shouldShowTeslaInfo", "startDeviceService", "stopDeviceService", "updateDeviceService", "enabled", "AncCallback", "BluetoothBatteryDate", "Companion", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000Ç\u0001\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\u0010\u000e\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0006\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u000b\n\u0002\u0018\u0002\n\u0000\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0006\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0010\u000b\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0006\n\u0002\u0018\u0002\n\u0002\b\u0004\n\u0002\u0010\u0002\n\u0002\b\b\n\u0002\u0010\r\n\u0000\n\u0002\u0018\u0002\n\u0002\b\b\n\u0002\u0018\u0002\n\u0002\b\u0006\n\u0002\u0018\u0002\n\u0002\b\u0007\n\u0002\u0018\u0002\n\u0002\b\f\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\n*\u0001&\u0018\u0000 \u00012\u00020\u0001:\u0006\u0001\u0001\u0001B\u0007\b\u0007¢\u0006\u0002\u0010\u0002J\u0012\u0010=\u001a\u0004\u0018\u00010/2\u0006\u0010>\u001a\u00020?H\u0002J\u0012\u0010@\u001a\u0004\u0018\u00010\u00052\b\u0010A\u001a\u0004\u0018\u00010\u0005J\u0012\u0010B\u001a\u0004\u0018\u00010\u00052\b\u0010C\u001a\u0004\u0018\u00010\u0005J\u0010\u0010D\u001a\u0004\u0018\u00010\u00052\u0006\u0010E\u001a\u00020FJ\u0012\u0010G\u001a\u0004\u0018\u00010\u00052\b\u0010C\u001a\u0004\u0018\u00010\u0005J\u000e\u0010H\u001a\u00020\u00052\u0006\u0010I\u001a\u00020\u0012J\u0016\u0010J\u001a\u00020K2\u0006\u0010L\u001a\u00020\u00072\u0006\u0010M\u001a\u00020\u0005J&\u0010J\u001a\u00020K2\u0006\u0010N\u001a\u00020\u00072\u0006\u0010C\u001a\u00020\u00052\u0006\u0010O\u001a\u0002032\u0006\u0010P\u001a\u00020\u0005J\u0006\u0010Q\u001a\u00020KJ\u0012\u0010R\u001a\u0004\u0018\u00010\u00052\b\u0010C\u001a\u0004\u0018\u00010\u0005J\u0010\u0010S\u001a\u0004\u0018\u00010T2\u0006\u0010E\u001a\u00020FJ\u0006\u0010U\u001a\u00020VJ\u0012\u0010W\u001a\u0004\u0018\u00010\u00052\b\u0010C\u001a\u0004\u0018\u00010\u0005J\u0014\u0010X\u001a\u0004\u0018\u00010\u00052\b\u0010C\u001a\u0004\u0018\u00010\u0005H\u0002J\u0010\u0010Y\u001a\u0004\u0018\u00010\u00052\u0006\u0010E\u001a\u00020FJ\u0010\u0010Z\u001a\u0004\u0018\u00010/2\u0006\u0010[\u001a\u00020\u0005J\u0006\u0010\\\u001a\u00020KJ6\u0010]\u001a\u00020K2\u0006\u0010#\u001a\u00020$2\u0006\u0010^\u001a\u00020_2\u0006\u0010`\u001a\u00020\u00182\u0006\u0010a\u001a\u00020:2\u0006\u0010b\u001a\u00020<2\u0006\u0010c\u001a\u00020\u0010J\u000e\u0010d\u001a\u0002032\u0006\u0010e\u001a\u00020fJ\u0006\u0010g\u001a\u000203J\u0006\u0010h\u001a\u000203J\u000e\u0010i\u001a\u0002032\u0006\u0010j\u001a\u00020\u0005J\u000e\u0010k\u001a\u0002032\u0006\u0010j\u001a\u00020\u0005J\u0018\u0010l\u001a\u0002032\u0006\u0010m\u001a\u00020n2\u0006\u0010j\u001a\u00020\u0005H\u0002J\u0010\u0010o\u001a\u0002032\b\u0010C\u001a\u0004\u0018\u00010\u0005J\u0010\u0010p\u001a\u0002032\b\u0010C\u001a\u0004\u0018\u00010\u0005J\u0010\u0010q\u001a\u0002032\b\u0010C\u001a\u0004\u0018\u00010\u0005J\u0010\u0010r\u001a\u00020K2\b\u0010s\u001a\u0004\u0018\u00010\u0001J\u0018\u0010t\u001a\u00020K2\b\u0010C\u001a\u0004\u0018\u00010\u00052\u0006\u0010u\u001a\u00020\u0005J\u0010\u0010v\u001a\u00020K2\b\u0010C\u001a\u0004\u0018\u00010\u0005J\u0018\u0010w\u001a\u00020K2\u0006\u0010>\u001a\u00020?2\b\u0010x\u001a\u0004\u0018\u00010\u0005J\u0016\u0010y\u001a\u00020K2\u0006\u0010N\u001a\u00020\u00072\u0006\u0010z\u001a\u00020{J\u000e\u0010|\u001a\u00020K2\u0006\u0010}\u001a\u00020~J\u000e\u0010\u001a\u00020K2\u0006\u0010E\u001a\u00020FJ\u0007\u0010\u0001\u001a\u000203J\t\u0010\u0001\u001a\u00020KH\u0002J\t\u0010\u0001\u001a\u00020KH\u0002J\u0010\u0010\u0001\u001a\u00020K2\u0007\u0010\u0001\u001a\u000203R\u001a\u0010\u0003\u001a\u000e\u0012\u0004\u0012\u00020\u0005\u0012\u0004\u0012\u00020\u00050\u0004X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0006\u001a\u00020\u0007X\u000e¢\u0006\u0002\n\u0000R*\u0010\n\u001a\u0004\u0018\u00010\t2\b\u0010\b\u001a\u0004\u0018\u00010\t8F@FX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u000b\u0010\f\"\u0004\b\r\u0010\u000eR\u000e\u0010\u000f\u001a\u00020\u0010X.¢\u0006\u0002\n\u0000R&\u0010\u0011\u001a\u000e\u0012\u0004\u0012\u00020\u0005\u0012\u0004\u0012\u00020\u00120\u0004X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0013\u0010\u0014\"\u0004\b\u0015\u0010\u0016R\u0010\u0010\u0017\u001a\u0004\u0018\u00010\u0018X\u000e¢\u0006\u0002\n\u0000R&\u0010\u0019\u001a\u00020\u00052\u0006\u0010\b\u001a\u00020\u00058F@FX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u001a\u0010\u001b\"\u0004\b\u001c\u0010\u001dR&\u0010\u001e\u001a\u00020\u00072\u0006\u0010\b\u001a\u00020\u00078F@FX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u001f\u0010 \"\u0004\b!\u0010\"R\u0010\u0010#\u001a\u0004\u0018\u00010$X\u000e¢\u0006\u0002\n\u0000R\u0010\u0010%\u001a\u00020&X\u0004¢\u0006\u0004\n\u0002\u0010'R*\u0010)\u001a\u0004\u0018\u00010(2\b\u0010\b\u001a\u0004\u0018\u00010(8F@FX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b*\u0010+\"\u0004\b,\u0010-R&\u0010.\u001a\u000e\u0012\u0004\u0012\u00020\u0005\u0012\u0004\u0012\u00020/0\u0004X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b0\u0010\u0014\"\u0004\b1\u0010\u0016R\u000e\u00102\u001a\u000203X\u000e¢\u0006\u0002\n\u0000R\u001a\u00104\u001a\u000e\u0012\u0004\u0012\u00020\u0005\u0012\u0004\u0012\u00020\u00050\u0004X\u000e¢\u0006\u0002\n\u0000R\u000e\u00105\u001a\u000206X\u0004¢\u0006\u0002\n\u0000R\u000e\u00107\u001a\u000208X\u0004¢\u0006\u0002\n\u0000R\u0010\u00109\u001a\u0004\u0018\u00010:X\u000e¢\u0006\u0002\n\u0000R\u0010\u0010;\u001a\u0004\u0018\u00010<X\u000e¢\u0006\u0002\n\u0000¨\u0006\u0001"}, mo65043d2 = {"Lcom/nothing/systemui/qs/tiles/BluetoothTileEx;", "", "()V", "airpods", "Ljava/util/HashMap;", "", "airpodsSwitch", "", "value", "Lcom/nothing/systemui/qs/tiles/BluetoothTileEx$AncCallback;", "ancCallback", "getAncCallback", "()Lcom/nothing/systemui/qs/tiles/BluetoothTileEx$AncCallback;", "setAncCallback", "(Lcom/nothing/systemui/qs/tiles/BluetoothTileEx$AncCallback;)V", "bgHandler", "Landroid/os/Handler;", "bluetoothBatteryDates", "Lcom/nothing/systemui/qs/tiles/BluetoothTileEx$BluetoothBatteryDate;", "getBluetoothBatteryDates", "()Ljava/util/HashMap;", "setBluetoothBatteryDates", "(Ljava/util/HashMap;)V", "bluetoothController", "Lcom/android/systemui/statusbar/policy/BluetoothController;", "clickAddress", "getClickAddress", "()Ljava/lang/String;", "setClickAddress", "(Ljava/lang/String;)V", "clickFrom", "getClickFrom", "()I", "setClickFrom", "(I)V", "context", "Landroid/content/Context;", "deviceConnectorCallback", "com/nothing/systemui/qs/tiles/BluetoothTileEx$deviceConnectorCallback$1", "Lcom/nothing/systemui/qs/tiles/BluetoothTileEx$deviceConnectorCallback$1;", "Lcom/nothing/os/device/DeviceServiceController;", "deviceController", "getDeviceController", "()Lcom/nothing/os/device/DeviceServiceController;", "setDeviceController", "(Lcom/nothing/os/device/DeviceServiceController;)V", "iconCache", "Landroid/graphics/drawable/Drawable;", "getIconCache", "setIconCache", "isCallbackAdded", "", "nothingEars", "qSFragmentEx", "Lcom/nothing/systemui/qs/QSFragmentEx;", "singleThreadExecutor", "Ljava/util/concurrent/ExecutorService;", "teslaInfoController", "Lcom/nothing/systemui/statusbar/policy/TeslaInfoController;", "tile", "Lcom/android/systemui/qs/tiles/BluetoothTile;", "bitmap2Drawable", "bitmap", "Landroid/graphics/Bitmap;", "changeToSSPAdress", "classicAddress", "getAirpodsVersion", "address", "getAirpodsVersionSetToDeviceControl", "device", "Lcom/android/settingslib/bluetooth/CachedBluetoothDevice;", "getBLEModuleForSettingGlobal", "getBatteryLevel", "bbd", "getCommand", "", "i", "str", "command", "isConnected", "modelId", "getCommandBattery", "getConnectedDevice", "getDeviceSecondLabel", "", "getLongClickIntentAndUpdateClickItem", "Landroid/content/Intent;", "getModeID", "getModeIDFromNothingApp", "getModeIDSetToDeviceControl", "getModuleIDBitmap", "name", "handleClick", "init", "bgLooper", "Landroid/os/Looper;", "btController", "teslaController", "bluetoothTile", "handler", "isAdvancedDetailsHeader", "bluetoothDevice", "Landroid/bluetooth/BluetoothDevice;", "isAirpodsExperimentOn", "isBluetoothEnabled", "isNothingAppEnabled", "pkgName", "isNothingAppHasPermission", "isNothingAppInstalled", "pkgManager", "Landroid/content/pm/PackageManager;", "isNothingEarDevice", "isSupportAirpods", "isSupportAnc", "refreshState", "arg", "saveAirpodsVersion", "version", "saveConnectedDevice", "saveModuleIDEarBitmap", "modeId", "sendCommand", "bundle", "Landroid/os/Bundle;", "setClickListener", "qSIcon", "Lcom/android/systemui/plugins/qs/QSIconView;", "setModelIdAndDevice", "shouldShowTeslaInfo", "startDeviceService", "stopDeviceService", "updateDeviceService", "enabled", "AncCallback", "BluetoothBatteryDate", "Companion", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* renamed from: com.nothing.systemui.qs.tiles.BluetoothTileEx */
 /* compiled from: BluetoothTileEx.kt */
 public final class BluetoothTileEx {
@@ -77,11 +78,13 @@ public final class BluetoothTileEx {
     private static final String PERMISSION_BT_ADVERTISE = "android.permission.BLUETOOTH_ADVERTISE";
     private static final String PERMISSION_BT_CONNECT = "android.permission.BLUETOOTH_CONNECT";
     private static final String PERMISSION_BT_SCAN = "android.permission.BLUETOOTH_SCAN";
+    private static final long REFRESH_STATE_DEBOUNCE_TIME = 1000;
     private static final String TAG = "BluetoothTileEx";
-    private static HashMap<String, String> nothingEars = new HashMap<>();
+    private HashMap<String, String> airpods = new HashMap<>();
     /* access modifiers changed from: private */
     public int airpodsSwitch;
     private AncCallback ancCallback;
+    private Handler bgHandler;
     private HashMap<String, BluetoothBatteryDate> bluetoothBatteryDates = new HashMap<>();
     /* access modifiers changed from: private */
     public BluetoothController bluetoothController;
@@ -90,7 +93,9 @@ public final class BluetoothTileEx {
     private Context context;
     private final BluetoothTileEx$deviceConnectorCallback$1 deviceConnectorCallback;
     private DeviceServiceController deviceController;
+    private HashMap<String, Drawable> iconCache = new HashMap<>();
     private boolean isCallbackAdded;
+    private HashMap<String, String> nothingEars = new HashMap<>();
     /* access modifiers changed from: private */
     public final QSFragmentEx qSFragmentEx;
     private final ExecutorService singleThreadExecutor;
@@ -99,11 +104,13 @@ public final class BluetoothTileEx {
     /* access modifiers changed from: private */
     public BluetoothTile tile;
 
-    @Metadata(mo64986d1 = {"\u0000(\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0004\n\u0002\u0010\b\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0000\bf\u0018\u00002\u00020\u0001J\b\u0010\u0002\u001a\u00020\u0003H&J\b\u0010\u0004\u001a\u00020\u0003H&J\b\u0010\u0005\u001a\u00020\u0003H&J\u0018\u0010\u0006\u001a\u00020\u00032\u0006\u0010\u0007\u001a\u00020\b2\u0006\u0010\t\u001a\u00020\bH&J \u0010\n\u001a\u00020\u00032\u0006\u0010\u000b\u001a\u00020\f2\u0006\u0010\r\u001a\u00020\b2\u0006\u0010\u000e\u001a\u00020\bH&J\u001a\u0010\u000f\u001a\u00020\u00032\u0006\u0010\u0010\u001a\u00020\b2\b\u0010\u0011\u001a\u0004\u0018\u00010\u0012H&ø\u0001\u0000\u0002\u0006\n\u0004\b!0\u0001¨\u0006\u0013À\u0006\u0001"}, mo64987d2 = {"Lcom/nothing/systemui/qs/tiles/BluetoothTileEx$AncCallback;", "", "onDestroy", "", "onDeviceServiceConnected", "onDeviceServiceDisConnected", "onFail", "i", "", "i2", "onProfileConnectionStateChanged", "device", "Lcom/android/settingslib/bluetooth/CachedBluetoothDevice;", "state", "profile", "onSuccess", "command", "bundle", "Landroid/os/Bundle;", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u00006\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0002\n\u0002\u0010\u000e\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0004\n\u0002\u0010\b\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0000\bf\u0018\u00002\u00020\u0001J\b\u0010\u0002\u001a\u00020\u0003H&J\u0018\u0010\u0004\u001a\u00020\u00032\u0006\u0010\u0005\u001a\u00020\u00062\u0006\u0010\u0007\u001a\u00020\bH&J\b\u0010\t\u001a\u00020\u0003H&J\b\u0010\n\u001a\u00020\u0003H&J\u0018\u0010\u000b\u001a\u00020\u00032\u0006\u0010\f\u001a\u00020\r2\u0006\u0010\u000e\u001a\u00020\rH&J \u0010\u000f\u001a\u00020\u00032\u0006\u0010\u0010\u001a\u00020\u00112\u0006\u0010\u0012\u001a\u00020\r2\u0006\u0010\u0013\u001a\u00020\rH&J\u001a\u0010\u0014\u001a\u00020\u00032\u0006\u0010\u0015\u001a\u00020\r2\b\u0010\u0016\u001a\u0004\u0018\u00010\u0017H&ø\u0001\u0000\u0002\u0006\n\u0004\b!0\u0001¨\u0006\u0018À\u0006\u0001"}, mo65043d2 = {"Lcom/nothing/systemui/qs/tiles/BluetoothTileEx$AncCallback;", "", "onDestroy", "", "onDeviceBitmapLoaded", "address", "", "drawable", "Landroid/graphics/drawable/BitmapDrawable;", "onDeviceServiceConnected", "onDeviceServiceDisConnected", "onFail", "i", "", "i2", "onProfileConnectionStateChanged", "device", "Lcom/android/settingslib/bluetooth/CachedBluetoothDevice;", "state", "profile", "onSuccess", "command", "bundle", "Landroid/os/Bundle;", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* renamed from: com.nothing.systemui.qs.tiles.BluetoothTileEx$AncCallback */
     /* compiled from: BluetoothTileEx.kt */
     public interface AncCallback {
         void onDestroy();
+
+        void onDeviceBitmapLoaded(String str, BitmapDrawable bitmapDrawable);
 
         void onDeviceServiceConnected();
 
@@ -116,7 +123,7 @@ public final class BluetoothTileEx {
         void onSuccess(int i, Bundle bundle);
     }
 
-    @Metadata(mo64986d1 = {"\u0000\"\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\u000e\n\u0002\b\b\n\u0002\u0010\b\n\u0002\b\r\n\u0002\u0018\u0002\n\u0000\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u000e\u0010\u0003\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0005\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0006\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0007\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\b\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\t\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\n\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u000b\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\f\u001a\u00020\rXT¢\u0006\u0002\n\u0000R\u000e\u0010\u000e\u001a\u00020\rXT¢\u0006\u0002\n\u0000R\u000e\u0010\u000f\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0010\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0011\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0012\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0013\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0014\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0015\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0016\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0017\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0018\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0019\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u001a\u0010\u001a\u001a\u000e\u0012\u0004\u0012\u00020\u0004\u0012\u0004\u0012\u00020\u00040\u001bX\u000e¢\u0006\u0002\n\u0000¨\u0006\u001c"}, mo64987d2 = {"Lcom/nothing/systemui/qs/tiles/BluetoothTileEx$Companion;", "", "()V", "ADDRESS_FAKE", "", "AIRPODS_EXPERIMENTAL", "AIRPODS_VERSION", "ALREADY_PAIRED_BLUETOOTHDEVICE", "BT_ADVANCED_HEADER_ENABLED", "BT_LE_AUDIO_CONTACT_SHARING_ENABLED", "BT_NEAR_BY_SUGGESTION_ENABLED", "BT_SLICE_SETTINGS_ENABLED", "CLICK_FROM_BLUETOOTH", "", "CLICK_FROM_TESLA", "DEVICE_DETAIL", "GENERIC_EVENT_LOGGING_ENABLED", "NOTHING_EAR_DB", "NOTHING_EAR_MAC_ADDRESS_PREFIX", "NOTHING_SMART_CENTER", "PERMISSION_ACCESS_COARSE_LOCATION", "PERMISSION_ACCESS_FINE_LOCATION", "PERMISSION_BT_ADVERTISE", "PERMISSION_BT_CONNECT", "PERMISSION_BT_SCAN", "TAG", "nothingEars", "Ljava/util/HashMap;", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u0000$\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\u000e\n\u0002\b\b\n\u0002\u0010\b\n\u0002\b\f\n\u0002\u0010\t\n\u0002\b\u0002\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u000e\u0010\u0003\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0005\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0006\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0007\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\b\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\t\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\n\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u000b\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\f\u001a\u00020\rXT¢\u0006\u0002\n\u0000R\u000e\u0010\u000e\u001a\u00020\rXT¢\u0006\u0002\n\u0000R\u000e\u0010\u000f\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0010\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0011\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0012\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0013\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0014\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0015\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0016\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0017\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0018\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0019\u001a\u00020\u001aXT¢\u0006\u0002\n\u0000R\u000e\u0010\u001b\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000¨\u0006\u001c"}, mo65043d2 = {"Lcom/nothing/systemui/qs/tiles/BluetoothTileEx$Companion;", "", "()V", "ADDRESS_FAKE", "", "AIRPODS_EXPERIMENTAL", "AIRPODS_VERSION", "ALREADY_PAIRED_BLUETOOTHDEVICE", "BT_ADVANCED_HEADER_ENABLED", "BT_LE_AUDIO_CONTACT_SHARING_ENABLED", "BT_NEAR_BY_SUGGESTION_ENABLED", "BT_SLICE_SETTINGS_ENABLED", "CLICK_FROM_BLUETOOTH", "", "CLICK_FROM_TESLA", "DEVICE_DETAIL", "GENERIC_EVENT_LOGGING_ENABLED", "NOTHING_EAR_DB", "NOTHING_EAR_MAC_ADDRESS_PREFIX", "NOTHING_SMART_CENTER", "PERMISSION_ACCESS_COARSE_LOCATION", "PERMISSION_ACCESS_FINE_LOCATION", "PERMISSION_BT_ADVERTISE", "PERMISSION_BT_CONNECT", "PERMISSION_BT_SCAN", "REFRESH_STATE_DEBOUNCE_TIME", "", "TAG", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* renamed from: com.nothing.systemui.qs.tiles.BluetoothTileEx$Companion */
     /* compiled from: BluetoothTileEx.kt */
     public static final class Companion {
@@ -130,12 +137,12 @@ public final class BluetoothTileEx {
 
     @Inject
     public BluetoothTileEx() {
+        Object obj = NTDependencyEx.get(QSFragmentEx.class);
+        Intrinsics.checkNotNullExpressionValue(obj, "get(QSFragmentEx::class.java)");
+        this.qSFragmentEx = (QSFragmentEx) obj;
         ExecutorService newSingleThreadExecutor = Executors.newSingleThreadExecutor();
         if (newSingleThreadExecutor != null) {
             this.singleThreadExecutor = newSingleThreadExecutor;
-            Object obj = NTDependencyEx.get(QSFragmentEx.class);
-            Intrinsics.checkNotNullExpressionValue(obj, "get(QSFragmentEx::class.java)");
-            this.qSFragmentEx = (QSFragmentEx) obj;
             this.deviceConnectorCallback = new BluetoothTileEx$deviceConnectorCallback$1(this);
             return;
         }
@@ -149,6 +156,15 @@ public final class BluetoothTileEx {
     public final void setBluetoothBatteryDates(HashMap<String, BluetoothBatteryDate> hashMap) {
         Intrinsics.checkNotNullParameter(hashMap, "<set-?>");
         this.bluetoothBatteryDates = hashMap;
+    }
+
+    public final HashMap<String, Drawable> getIconCache() {
+        return this.iconCache;
+    }
+
+    public final void setIconCache(HashMap<String, Drawable> hashMap) {
+        Intrinsics.checkNotNullParameter(hashMap, "<set-?>");
+        this.iconCache = hashMap;
     }
 
     public final DeviceServiceController getDeviceController() {
@@ -184,8 +200,9 @@ public final class BluetoothTileEx {
         this.clickAddress = str;
     }
 
-    public final void init(Context context2, BluetoothController bluetoothController2, TeslaInfoController teslaInfoController2, BluetoothTile bluetoothTile, Handler handler) {
+    public final void init(Context context2, Looper looper, BluetoothController bluetoothController2, TeslaInfoController teslaInfoController2, BluetoothTile bluetoothTile, Handler handler) {
         Intrinsics.checkNotNullParameter(context2, "context");
+        Intrinsics.checkNotNullParameter(looper, "bgLooper");
         Intrinsics.checkNotNullParameter(bluetoothController2, "btController");
         Intrinsics.checkNotNullParameter(teslaInfoController2, "teslaController");
         Intrinsics.checkNotNullParameter(bluetoothTile, "bluetoothTile");
@@ -194,6 +211,8 @@ public final class BluetoothTileEx {
         this.bluetoothController = bluetoothController2;
         this.teslaInfoController = teslaInfoController2;
         this.tile = bluetoothTile;
+        this.airpodsSwitch = Settings.System.getInt(context2.getContentResolver(), AIRPODS_EXPERIMENTAL, 0);
+        this.bgHandler = new Handler(looper);
         context2.getContentResolver().registerContentObserver(Settings.System.getUriFor(AIRPODS_EXPERIMENTAL), true, new BluetoothTileEx$init$settingsObserver$1(handler, this, context2), -1);
     }
 
@@ -201,6 +220,32 @@ public final class BluetoothTileEx {
         TeslaInfoController teslaInfoController2 = this.teslaInfoController;
         Intrinsics.checkNotNull(teslaInfoController2);
         return teslaInfoController2.shouldShowTeslaInfo();
+    }
+
+    public final void refreshState(Object obj) {
+        Handler handler = this.bgHandler;
+        Handler handler2 = null;
+        if (handler == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("bgHandler");
+            handler = null;
+        }
+        handler.removeCallbacksAndMessages((Object) null);
+        Handler handler3 = this.bgHandler;
+        if (handler3 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("bgHandler");
+        } else {
+            handler2 = handler3;
+        }
+        handler2.postDelayed(new BluetoothTileEx$$ExternalSyntheticLambda1(this, obj), 1000);
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: refreshState$lambda-0  reason: not valid java name */
+    public static final void m3524refreshState$lambda0(BluetoothTileEx bluetoothTileEx, Object obj) {
+        Intrinsics.checkNotNullParameter(bluetoothTileEx, "this$0");
+        BluetoothTile bluetoothTile = bluetoothTileEx.tile;
+        Intrinsics.checkNotNull(bluetoothTile);
+        bluetoothTile.refreshStateInternal(obj);
     }
 
     public final void setClickListener(QSIconView qSIconView) {
@@ -215,7 +260,7 @@ public final class BluetoothTileEx {
         Intrinsics.checkNotNull(bluetoothTile);
         QSTile.BooleanState booleanState = (QSTile.BooleanState) bluetoothTile.getState();
         int btPageIndex = this.qSFragmentEx.getBtPageIndex();
-        NTLogUtil.m1680d(TAG, "LongClick address.size: " + booleanState.addressList.size() + ", page: " + btPageIndex);
+        NTLogUtil.m1686d(TAG, "LongClick address.size: " + booleanState.addressList.size() + ", page: " + btPageIndex);
         TeslaInfoController teslaInfoController2 = this.teslaInfoController;
         Intrinsics.checkNotNull(teslaInfoController2);
         setClickFrom((!teslaInfoController2.shouldShowTeslaInfo() || btPageIndex != 0) ? 1 : 0);
@@ -234,19 +279,22 @@ public final class BluetoothTileEx {
                 int i = btPageIndex - 1;
                 TeslaInfoController teslaInfoController3 = this.teslaInfoController;
                 Intrinsics.checkNotNull(teslaInfoController3);
-                if (teslaInfoController3.shouldShowTeslaInfo()) {
-                    if (btPageIndex > 0) {
-                        setClickAddress(booleanState.addressList.get(i).toString());
-                        intent.putExtra(DeviceConstant.KEY_MAC_ADDRESS, getClickAddress());
+                if (!teslaInfoController3.shouldShowTeslaInfo()) {
+                    if (btPageIndex == 0) {
+                        BluetoothController bluetoothController4 = this.bluetoothController;
+                        Intrinsics.checkNotNull(bluetoothController4);
+                        if (bluetoothController4.getActiveDevice() != null) {
+                            BluetoothController bluetoothController5 = this.bluetoothController;
+                            Intrinsics.checkNotNull(bluetoothController5);
+                            String address2 = bluetoothController5.getActiveDevice().getAddress();
+                            Intrinsics.checkNotNullExpressionValue(address2, "bluetoothController!!.ge…tiveDevice().getAddress()");
+                            setClickAddress(address2);
+                            intent.putExtra(DeviceConstant.KEY_MAC_ADDRESS, getClickAddress());
+                        }
                     }
-                } else if (btPageIndex == 0) {
-                    BluetoothController bluetoothController4 = this.bluetoothController;
-                    Intrinsics.checkNotNull(bluetoothController4);
-                    String address2 = bluetoothController4.getActiveDevice().getAddress();
-                    Intrinsics.checkNotNullExpressionValue(address2, "bluetoothController!!.ge…tiveDevice().getAddress()");
-                    setClickAddress(address2);
+                    setClickAddress(booleanState.addressList.get(i).toString());
                     intent.putExtra(DeviceConstant.KEY_MAC_ADDRESS, getClickAddress());
-                } else {
+                } else if (btPageIndex > 0) {
                     setClickAddress(booleanState.addressList.get(i).toString());
                     intent.putExtra(DeviceConstant.KEY_MAC_ADDRESS, getClickAddress());
                 }
@@ -259,13 +307,22 @@ public final class BluetoothTileEx {
         getLongClickIntentAndUpdateClickItem();
     }
 
-    public final void updateDeviceService(boolean z, boolean z2) {
-        if (!z || !z2) {
+    public final void updateDeviceService(boolean z) {
+        if (z) {
+            startDeviceService();
+        } else {
             stopDeviceService();
-            return;
         }
-        startDeviceService();
-        getCommandBattery();
+        if (this.isCallbackAdded) {
+            BluetoothController bluetoothController2 = this.bluetoothController;
+            List<CachedBluetoothDevice> connectedDevices = bluetoothController2 != null ? bluetoothController2.getConnectedDevices() : null;
+            if (connectedDevices != null) {
+                for (CachedBluetoothDevice next : connectedDevices) {
+                    Intrinsics.checkNotNullExpressionValue(next, "device");
+                    setModelIdAndDevice(next);
+                }
+            }
+        }
     }
 
     private final void startDeviceService() {
@@ -277,7 +334,7 @@ public final class BluetoothTileEx {
                     Intrinsics.checkNotNull(context2);
                     setDeviceController(new DeviceServiceController(context2));
                 }
-                NTLogUtil.m1680d(TAG, "startDeviceService() addCallback");
+                NTLogUtil.m1686d(TAG, "startDeviceService() addCallback");
                 DeviceServiceController deviceController2 = getDeviceController();
                 Intrinsics.checkNotNull(deviceController2);
                 deviceController2.addCallback(this.deviceConnectorCallback);
@@ -292,7 +349,7 @@ public final class BluetoothTileEx {
             this.isCallbackAdded = false;
             this.bluetoothBatteryDates.clear();
             try {
-                NTLogUtil.m1680d(TAG, "stopDeviceService() removeCallback");
+                NTLogUtil.m1686d(TAG, "stopDeviceService() removeCallback");
                 DeviceServiceController deviceController2 = getDeviceController();
                 Intrinsics.checkNotNull(deviceController2);
                 deviceController2.removeCallback(this.deviceConnectorCallback);
@@ -330,7 +387,7 @@ public final class BluetoothTileEx {
             for (CachedBluetoothDevice next : connectedDevices) {
                 try {
                     String bLEModuleForSettingGlobal = getBLEModuleForSettingGlobal(changeToSSPAdress(next.getAddress()));
-                    NTLogUtil.m1680d(TAG, "moduleId: " + bLEModuleForSettingGlobal);
+                    NTLogUtil.m1686d(TAG, "moduleId: " + bLEModuleForSettingGlobal);
                     if (!TextUtils.isEmpty(bLEModuleForSettingGlobal)) {
                         Bundle bundle = new Bundle();
                         bundle.putString(DeviceConstant.KEY_MAC_ADDRESS, next.getAddress());
@@ -341,7 +398,7 @@ public final class BluetoothTileEx {
                         return;
                     }
                 } catch (Exception e) {
-                    NTLogUtil.m1681e(TAG, e.toString());
+                    NTLogUtil.m1687e(TAG, e.toString());
                 }
             }
         }
@@ -365,20 +422,20 @@ public final class BluetoothTileEx {
         if (batteryLevel > -1) {
             Context context2 = this.context;
             Intrinsics.checkNotNull(context2);
-            return context2.getString(C1893R.string.quick_settings_bluetooth_secondary_label_battery_level, new Object[]{Utils.formatPercentage(batteryLevel)});
+            return context2.getString(C1894R.string.quick_settings_bluetooth_secondary_label_battery_level, new Object[]{Utils.formatPercentage(batteryLevel)});
         }
         BluetoothClass btClass = cachedBluetoothDevice.getBtClass();
         if (btClass == null) {
             return null;
         }
         if (cachedBluetoothDevice.isHearingAidDevice()) {
-            num = Integer.valueOf((int) C1893R.string.quick_settings_bluetooth_secondary_label_hearing_aids);
+            num = Integer.valueOf((int) C1894R.string.quick_settings_bluetooth_secondary_label_hearing_aids);
         } else if (btClass.doesClassMatch(1)) {
-            num = Integer.valueOf((int) C1893R.string.quick_settings_bluetooth_secondary_label_audio);
+            num = Integer.valueOf((int) C1894R.string.quick_settings_bluetooth_secondary_label_audio);
         } else if (btClass.doesClassMatch(0)) {
-            num = Integer.valueOf((int) C1893R.string.quick_settings_bluetooth_secondary_label_headset);
+            num = Integer.valueOf((int) C1894R.string.quick_settings_bluetooth_secondary_label_headset);
         } else if (btClass.doesClassMatch(3)) {
-            num = Integer.valueOf((int) C1893R.string.quick_settings_bluetooth_secondary_label_input);
+            num = Integer.valueOf((int) C1894R.string.quick_settings_bluetooth_secondary_label_input);
         } else {
             Integer num2 = null;
             num = null;
@@ -397,7 +454,7 @@ public final class BluetoothTileEx {
         return null;
     }
 
-    @Metadata(mo64986d1 = {"\u0000\u001c\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\u000e\n\u0002\b\u0005\n\u0002\u0010\b\n\u0002\b\b\u0018\u00002\u00020\u0001B\u0005¢\u0006\u0002\u0010\u0002R\u001c\u0010\u0003\u001a\u0004\u0018\u00010\u0004X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0005\u0010\u0006\"\u0004\b\u0007\u0010\bR\u001a\u0010\t\u001a\u00020\nX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u000b\u0010\f\"\u0004\b\r\u0010\u000eR\u001a\u0010\u000f\u001a\u00020\nX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0010\u0010\f\"\u0004\b\u0011\u0010\u000e¨\u0006\u0012"}, mo64987d2 = {"Lcom/nothing/systemui/qs/tiles/BluetoothTileEx$BluetoothBatteryDate;", "", "()V", "address", "", "getAddress", "()Ljava/lang/String;", "setAddress", "(Ljava/lang/String;)V", "batteryLeft", "", "getBatteryLeft", "()I", "setBatteryLeft", "(I)V", "batteryRight", "getBatteryRight", "setBatteryRight", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u0000\u001c\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\u000e\n\u0002\b\u0005\n\u0002\u0010\b\n\u0002\b\b\u0018\u00002\u00020\u0001B\u0005¢\u0006\u0002\u0010\u0002R\u001c\u0010\u0003\u001a\u0004\u0018\u00010\u0004X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0005\u0010\u0006\"\u0004\b\u0007\u0010\bR\u001a\u0010\t\u001a\u00020\nX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u000b\u0010\f\"\u0004\b\r\u0010\u000eR\u001a\u0010\u000f\u001a\u00020\nX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0010\u0010\f\"\u0004\b\u0011\u0010\u000e¨\u0006\u0012"}, mo65043d2 = {"Lcom/nothing/systemui/qs/tiles/BluetoothTileEx$BluetoothBatteryDate;", "", "()V", "address", "", "getAddress", "()Ljava/lang/String;", "setAddress", "(Ljava/lang/String;)V", "batteryLeft", "", "getBatteryLeft", "()I", "setBatteryLeft", "(I)V", "batteryRight", "getBatteryRight", "setBatteryRight", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* renamed from: com.nothing.systemui.qs.tiles.BluetoothTileEx$BluetoothBatteryDate */
     /* compiled from: BluetoothTileEx.kt */
     public static final class BluetoothBatteryDate {
@@ -434,7 +491,7 @@ public final class BluetoothTileEx {
         Context context2 = this.context;
         Intrinsics.checkNotNull(context2);
         String string = Settings.Global.getString(context2.getContentResolver(), NOTHING_EAR_DB);
-        NTLogUtil.m1680d(TAG, "moduleIds isEmpty: " + TextUtils.isEmpty(string));
+        NTLogUtil.m1686d(TAG, "moduleIds isEmpty: " + TextUtils.isEmpty(string));
         try {
             if (TextUtils.isEmpty(string)) {
                 return null;
@@ -454,32 +511,81 @@ public final class BluetoothTileEx {
     }
 
     public final String getAirpodsVersion(String str) {
-        Context context2 = this.context;
-        Intrinsics.checkNotNull(context2);
-        String string = Settings.Global.getString(context2.getContentResolver(), AIRPODS_VERSION);
-        CharSequence charSequence = string;
-        NTLogUtil.m1680d(TAG, "getAirpodsVersion isEmpty: " + TextUtils.isEmpty(charSequence));
-        boolean isEmpty = TextUtils.isEmpty(charSequence);
-        String str2 = "";
-        if (isEmpty) {
-            return str2;
-        }
-        try {
-            String string2 = new JSONObject(string).getString(str);
-            Intrinsics.checkNotNullExpressionValue(string2, "jsonObject.getString(address)");
-            try {
-                NTLogUtil.m1680d(TAG, "getAirpodsVersion version: " + string2);
-                return string2;
-            } catch (Exception e) {
-                e = e;
-                str2 = string2;
-                NTLogUtil.m1681e(TAG, "getAirpodsVersion e: " + e);
-                return str2;
+        String str2 = (String) this.airpods.getOrDefault(AIRPODS_VERSION + str, null);
+        if (str2 == null) {
+            Context context2 = this.context;
+            Intrinsics.checkNotNull(context2);
+            String string = Settings.Global.getString(context2.getContentResolver(), AIRPODS_VERSION);
+            CharSequence charSequence = string;
+            NTLogUtil.m1686d(TAG, "getAirpodsVersion isEmpty: " + TextUtils.isEmpty(charSequence));
+            if (!TextUtils.isEmpty(charSequence)) {
+                try {
+                    str2 = new JSONObject(string).getString(str);
+                    NTLogUtil.m1686d(TAG, "getAirpodsVersion version: " + str2);
+                    if (!TextUtils.isEmpty(str2)) {
+                        this.airpods.put(AIRPODS_VERSION + str, str2);
+                    }
+                } catch (Exception e) {
+                    NTLogUtil.m1687e(TAG, "getAirpodsVersion e: " + e);
+                }
             }
-        } catch (Exception e2) {
-            e = e2;
-            NTLogUtil.m1681e(TAG, "getAirpodsVersion e: " + e);
-            return str2;
+        }
+        return str2;
+    }
+
+    public final String getAirpodsVersionSetToDeviceControl(CachedBluetoothDevice cachedBluetoothDevice) {
+        Intrinsics.checkNotNullParameter(cachedBluetoothDevice, "device");
+        String address = cachedBluetoothDevice.getAddress();
+        String str = (String) this.airpods.getOrDefault(AIRPODS_VERSION + address, null);
+        if (str == null) {
+            Context context2 = this.context;
+            Intrinsics.checkNotNull(context2);
+            String string = Settings.Global.getString(context2.getContentResolver(), AIRPODS_VERSION);
+            CharSequence charSequence = string;
+            NTLogUtil.m1686d(TAG, "getAirpodsVersion isEmpty: " + TextUtils.isEmpty(charSequence));
+            if (!TextUtils.isEmpty(charSequence)) {
+                try {
+                    str = new JSONObject(string).getString(address);
+                    NTLogUtil.m1686d(TAG, "getAirpodsVersion version: " + str);
+                    if (!TextUtils.isEmpty(str)) {
+                        this.airpods.put(AIRPODS_VERSION + address, str);
+                        setModelIdAndDevice(cachedBluetoothDevice);
+                    }
+                } catch (Exception e) {
+                    NTLogUtil.m1687e(TAG, "getAirpodsVersion e: " + e);
+                }
+            }
+        }
+        return str;
+    }
+
+    public final void saveAirpodsVersion(String str, String str2) {
+        JSONObject jSONObject;
+        Intrinsics.checkNotNullParameter(str2, "version");
+        if (str != null) {
+            this.airpods.put(AIRPODS_VERSION + str, str2);
+            try {
+                Context context2 = this.context;
+                Intrinsics.checkNotNull(context2);
+                String string = Settings.Global.getString(context2.getContentResolver(), AIRPODS_VERSION);
+                if (!TextUtils.isEmpty(string)) {
+                    jSONObject = new JSONObject(string);
+                    String string2 = jSONObject.getString(str);
+                    NTLogUtil.m1686d(TAG, "saveAirpodsVersion version: " + string2);
+                    if (!TextUtils.isEmpty(string2)) {
+                        jSONObject.remove(str);
+                    }
+                } else {
+                    jSONObject = new JSONObject();
+                }
+                jSONObject.put(str, (Object) str2);
+                NTLogUtil.m1686d(TAG, "jsonObject.toString(): " + jSONObject);
+                Context context3 = this.context;
+                Intrinsics.checkNotNull(context3);
+                Settings.Global.putString(context3.getContentResolver(), AIRPODS_VERSION, jSONObject.toString());
+            } catch (Exception e) {
+                NTLogUtil.m1687e(TAG, "saveAirpodsVersion e: " + e);
+            }
         }
     }
 
@@ -511,9 +617,47 @@ public final class BluetoothTileEx {
             }
             return null;
         } catch (Exception e) {
-            NTLogUtil.m1681e(TAG, e.toString());
+            NTLogUtil.m1687e(TAG, e.toString());
             return null;
         }
+    }
+
+    public final String getModeIDSetToDeviceControl(CachedBluetoothDevice cachedBluetoothDevice) {
+        Intrinsics.checkNotNullParameter(cachedBluetoothDevice, "device");
+        String address = cachedBluetoothDevice.getAddress();
+        if (TextUtils.isEmpty(address)) {
+            return null;
+        }
+        Intrinsics.checkNotNull(address);
+        String upperCase = address.toUpperCase();
+        Intrinsics.checkNotNullExpressionValue(upperCase, "this as java.lang.String).toUpperCase()");
+        Intrinsics.checkNotNull(upperCase);
+        boolean startsWith$default = StringsKt.startsWith$default(upperCase, NOTHING_EAR_MAC_ADDRESS_PREFIX, false, 2, (Object) null);
+        NTLogUtil.m1686d(TAG, "is ear: " + startsWith$default + ", " + upperCase);
+        if (!startsWith$default) {
+            NTLogUtil.m1686d(TAG, "return not nothing ear");
+            return null;
+        }
+        String changeToSSPAdress = changeToSSPAdress(address);
+        String str = (String) this.nothingEars.get(changeToSSPAdress);
+        CharSequence charSequence = str;
+        if (!TextUtils.isEmpty(charSequence)) {
+            NTLogUtil.m1686d(TAG, "return moduleID = " + str);
+            return str;
+        }
+        if (TextUtils.isEmpty(charSequence)) {
+            str = getBLEModuleForSettingGlobal(changeToSSPAdress);
+            NTLogUtil.m1686d(TAG, "return getBLEModuleForSettingGlobal = " + str);
+        }
+        if (TextUtils.isEmpty(str)) {
+            str = getModeIDFromNothingApp(address);
+        }
+        HashMap<String, String> hashMap = this.nothingEars;
+        Intrinsics.checkNotNull(changeToSSPAdress);
+        Intrinsics.checkNotNull(str);
+        hashMap.put(changeToSSPAdress, str);
+        setModelIdAndDevice(cachedBluetoothDevice);
+        return str;
     }
 
     public final String getModeID(String str) {
@@ -525,26 +669,26 @@ public final class BluetoothTileEx {
         Intrinsics.checkNotNullExpressionValue(upperCase, "this as java.lang.String).toUpperCase()");
         Intrinsics.checkNotNull(upperCase);
         boolean startsWith$default = StringsKt.startsWith$default(upperCase, NOTHING_EAR_MAC_ADDRESS_PREFIX, false, 2, (Object) null);
-        NTLogUtil.m1680d(TAG, "is ear: " + startsWith$default + ", " + upperCase);
+        NTLogUtil.m1686d(TAG, "is ear: " + startsWith$default + ", " + upperCase);
         if (!startsWith$default) {
-            NTLogUtil.m1680d(TAG, "return not nothing ear");
+            NTLogUtil.m1686d(TAG, "return not nothing ear");
             return null;
         }
         String changeToSSPAdress = changeToSSPAdress(str);
-        String str2 = (String) nothingEars.get(changeToSSPAdress);
+        String str2 = (String) this.nothingEars.get(changeToSSPAdress);
         CharSequence charSequence = str2;
         if (!TextUtils.isEmpty(charSequence)) {
-            NTLogUtil.m1680d(TAG, "return moduleID = " + str2);
+            NTLogUtil.m1686d(TAG, "return moduleID = " + str2);
             return str2;
         }
         if (TextUtils.isEmpty(charSequence)) {
             str2 = getBLEModuleForSettingGlobal(changeToSSPAdress);
-            NTLogUtil.m1680d(TAG, "return getBLEModuleForSettingGlobal = " + str2);
+            NTLogUtil.m1686d(TAG, "return getBLEModuleForSettingGlobal = " + str2);
         }
         if (TextUtils.isEmpty(str2)) {
             str2 = getModeIDFromNothingApp(str);
         }
-        HashMap<String, String> hashMap = nothingEars;
+        HashMap<String, String> hashMap = this.nothingEars;
         Intrinsics.checkNotNull(changeToSSPAdress);
         Intrinsics.checkNotNull(str2);
         hashMap.put(changeToSSPAdress, str2);
@@ -559,8 +703,8 @@ public final class BluetoothTileEx {
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: saveModuleIDEarBitmap$lambda-2  reason: not valid java name */
-    public static final void m3517saveModuleIDEarBitmap$lambda2(String str, Bitmap bitmap) {
+    /* renamed from: saveModuleIDEarBitmap$lambda-3  reason: not valid java name */
+    public static final void m3525saveModuleIDEarBitmap$lambda3(String str, Bitmap bitmap) {
         Intrinsics.checkNotNullParameter(bitmap, "$bitmap");
         String str2 = Environment.getExternalStorageDirectory().toString() + "/.nomedia/";
         File file = new File(str2);
@@ -584,7 +728,7 @@ public final class BluetoothTileEx {
 
     public final void setModelIdAndDevice(CachedBluetoothDevice cachedBluetoothDevice) {
         String str;
-        Intrinsics.checkNotNullParameter(cachedBluetoothDevice, "cachedBluetoothDevice");
+        Intrinsics.checkNotNullParameter(cachedBluetoothDevice, "device");
         if (getDeviceController() != null) {
             try {
                 if (getModeID(cachedBluetoothDevice.getAddress()) == null) {
@@ -638,10 +782,10 @@ public final class BluetoothTileEx {
     public final boolean isAdvancedDetailsHeader(BluetoothDevice bluetoothDevice) {
         Intrinsics.checkNotNullParameter(bluetoothDevice, "bluetoothDevice");
         if (!DeviceConfig.getBoolean("settings_ui", "bt_advanced_header_enabled", true)) {
-            NTLogUtil.m1680d(TAG, "isAdvancedDetailsHeader: advancedEnabled is false");
+            NTLogUtil.m1686d(TAG, "isAdvancedDetailsHeader: advancedEnabled is false");
             return false;
         } else if (BluetoothUtils.getBooleanMetaData(bluetoothDevice, 6)) {
-            NTLogUtil.m1680d(TAG, "isAdvancedDetailsHeader: untetheredHeadset is true");
+            NTLogUtil.m1686d(TAG, "isAdvancedDetailsHeader: untetheredHeadset is true");
             return true;
         } else {
             String stringMetaData = BluetoothUtils.getStringMetaData(bluetoothDevice, 17);
@@ -649,13 +793,13 @@ public final class BluetoothTileEx {
             if (!TextUtils.equals(charSequence, "Untethered Headset") && !TextUtils.equals(charSequence, "Watch") && !TextUtils.equals(charSequence, "Default")) {
                 return false;
             }
-            NTLogUtil.m1680d(TAG, "isAdvancedDetailsHeader: deviceType is " + stringMetaData);
+            NTLogUtil.m1686d(TAG, "isAdvancedDetailsHeader: deviceType is " + stringMetaData);
             return true;
         }
     }
 
     public final boolean isAirpodsExperimentOn() {
-        NTLogUtil.m1680d(TAG, "airpodsSwitch: " + this.airpodsSwitch);
+        NTLogUtil.m1686d(TAG, "airpodsSwitch: " + this.airpodsSwitch);
         return this.airpodsSwitch != 0;
     }
 
@@ -699,7 +843,7 @@ public final class BluetoothTileEx {
         if (!isNothingAppInstalled(packageManager, str)) {
             return false;
         }
-        NTLogUtil.m1680d(TAG, "getApplicationEnabledSetting:" + packageManager.getApplicationEnabledSetting(str));
+        NTLogUtil.m1686d(TAG, "getApplicationEnabledSetting:" + packageManager.getApplicationEnabledSetting(str));
         if (packageManager.getApplicationEnabledSetting(str) != 3) {
             return true;
         }
@@ -745,12 +889,32 @@ public final class BluetoothTileEx {
             if (query != null) {
                 while (query.moveToNext()) {
                     z = Boolean.parseBoolean(query.getString(query.getColumnIndex(DeviceConstant.KEY_VALUE_BOOLEAN)));
-                    NTLogUtil.m1680d(TAG, "isSupportAnc: " + z);
+                    NTLogUtil.m1686d(TAG, "isSupportAnc: " + z);
                 }
                 query.close();
             }
         } catch (Exception e) {
-            NTLogUtil.m1680d(TAG, "isSupportAnc e:" + e);
+            NTLogUtil.m1686d(TAG, "isSupportAnc e:" + e);
+        }
+        return z;
+    }
+
+    public final boolean isSupportAirpods(String str) {
+        Uri parse = Uri.parse("content://com.nothing.os.device.provider/support_airpods");
+        boolean z = true;
+        try {
+            Context context2 = this.context;
+            Intrinsics.checkNotNull(context2);
+            Cursor query = context2.getContentResolver().query(parse, (String[]) null, (String) null, new String[]{str}, (String) null);
+            if (query != null) {
+                while (query.moveToNext()) {
+                    z = Boolean.parseBoolean(query.getString(query.getColumnIndex(DeviceConstant.KEY_VALUE_BOOLEAN)));
+                    NTLogUtil.m1686d(TAG, "isSupportAirpods: " + z);
+                }
+                query.close();
+            }
+        } catch (Exception e) {
+            NTLogUtil.m1686d(TAG, "isSupportAirpods e:" + e);
         }
         return z;
     }
@@ -762,18 +926,18 @@ public final class BluetoothTileEx {
             Context context2 = this.context;
             Intrinsics.checkNotNull(context2);
             Cursor query = context2.getContentResolver().query(parse, (String[]) null, (String) null, (String[]) null, (String) null);
-            NTLogUtil.m1680d(TAG, "cursor: " + query + ", classicAddress: " + str);
+            NTLogUtil.m1686d(TAG, "cursor: " + query + ", classicAddress: " + str);
             if (query != null) {
                 while (query.moveToNext()) {
                     String string = query.getString(query.getColumnIndex(DeviceConstant.KEY_MODEL_ID));
                     Intrinsics.checkNotNullExpressionValue(string, "cursor.getString(index)");
                     try {
-                        NTLogUtil.m1680d(TAG, "modeId: " + string);
+                        NTLogUtil.m1686d(TAG, "modeId: " + string);
                         str2 = string;
                     } catch (Exception e) {
                         e = e;
                         str2 = string;
-                        NTLogUtil.m1680d(TAG, "getModeIDFromNothingApp e:" + e);
+                        NTLogUtil.m1686d(TAG, "getModeIDFromNothingApp e:" + e);
                         return str2;
                     }
                 }
@@ -794,21 +958,21 @@ public final class BluetoothTileEx {
         StringBuilder sb = new StringBuilder();
         int batteryLeft = bluetoothBatteryDate.getBatteryLeft();
         int batteryRight = bluetoothBatteryDate.getBatteryRight();
-        NTLogUtil.m1680d(TAG, "getBatteryLevel = " + batteryLeft + " ; right = " + batteryRight);
+        NTLogUtil.m1686d(TAG, "getBatteryLevel = " + batteryLeft + " ; right = " + batteryRight);
         if (batteryLeft != -1) {
             Context context2 = this.context;
             Intrinsics.checkNotNull(context2);
-            sb.append(context2.getResources().getString(C1893R.string.nt_btpanel_battery_level_left, new Object[]{Utils.formatPercentage(batteryLeft)}));
+            sb.append(context2.getResources().getString(C1894R.string.nt_btpanel_battery_level_left, new Object[]{Utils.formatPercentage(batteryLeft)}));
         }
         if (batteryRight != -1) {
             if (batteryLeft != -1) {
                 Context context3 = this.context;
                 Intrinsics.checkNotNull(context3);
-                sb.append(context3.getResources().getString(C1893R.string.nt_btpanel_battery_level_dot));
+                sb.append(context3.getResources().getString(C1894R.string.nt_btpanel_battery_level_dot));
             }
             Context context4 = this.context;
             Intrinsics.checkNotNull(context4);
-            sb.append(context4.getResources().getString(C1893R.string.nt_btpanel_battery_level_right, new Object[]{Utils.formatPercentage(batteryRight)}));
+            sb.append(context4.getResources().getString(C1894R.string.nt_btpanel_battery_level_right, new Object[]{Utils.formatPercentage(batteryRight)}));
         }
         String sb2 = sb.toString();
         Intrinsics.checkNotNullExpressionValue(sb2, "sb.toString()");

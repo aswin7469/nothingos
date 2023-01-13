@@ -37,7 +37,7 @@ import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import androidx.core.widget.TextViewCompat;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.animation.AnimationUtils;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.badge.BadgeUtils;
@@ -55,7 +55,7 @@ public class TabLayout extends HorizontalScrollView {
     static final int DEFAULT_GAP_TEXT_ICON = 8;
     private static final int DEFAULT_HEIGHT = 48;
     private static final int DEFAULT_HEIGHT_WITH_TEXT_ICON = 72;
-    private static final int DEF_STYLE_RES = C3621R.style.Widget_Design_TabLayout;
+    private static final int DEF_STYLE_RES = C3631R.style.Widget_Design_TabLayout;
     static final int FIXED_WRAP_GUTTER_MIN = 16;
     public static final int GRAVITY_CENTER = 1;
     public static final int GRAVITY_FILL = 0;
@@ -158,7 +158,7 @@ public class TabLayout extends HorizontalScrollView {
     }
 
     public TabLayout(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, C3621R.attr.tabStyle);
+        this(context, attributeSet, C3631R.attr.tabStyle);
     }
 
     /* JADX INFO: finally extract failed */
@@ -198,10 +198,10 @@ public class TabLayout extends HorizontalScrollView {
             r1 = -2
             r0.<init>(r1, r6)
             super.addView(r8, r11, r0)
-            int[] r2 = com.google.android.material.C3621R.styleable.TabLayout
+            int[] r2 = com.google.android.material.C3631R.styleable.TabLayout
             r9 = 1
             int[] r5 = new int[r9]
-            int r0 = com.google.android.material.C3621R.styleable.TabLayout_tabTextAppearance
+            int r0 = com.google.android.material.C3631R.styleable.TabLayout_tabTextAppearance
             r5[r11] = r0
             r0 = r7
             r1 = r12
@@ -222,48 +222,48 @@ public class TabLayout extends HorizontalScrollView {
             r0.setElevation(r13)
             androidx.core.view.ViewCompat.setBackground(r10, r0)
         L_0x0084:
-            int r13 = com.google.android.material.C3621R.styleable.TabLayout_tabIndicator
+            int r13 = com.google.android.material.C3631R.styleable.TabLayout_tabIndicator
             android.graphics.drawable.Drawable r13 = com.google.android.material.resources.MaterialResources.getDrawable(r7, r12, r13)
             r10.setSelectedTabIndicator((android.graphics.drawable.Drawable) r13)
-            int r13 = com.google.android.material.C3621R.styleable.TabLayout_tabIndicatorColor
+            int r13 = com.google.android.material.C3631R.styleable.TabLayout_tabIndicatorColor
             int r13 = r12.getColor(r13, r11)
             r10.setSelectedTabIndicatorColor(r13)
-            int r13 = com.google.android.material.C3621R.styleable.TabLayout_tabIndicatorHeight
+            int r13 = com.google.android.material.C3631R.styleable.TabLayout_tabIndicatorHeight
             int r13 = r12.getDimensionPixelSize(r13, r6)
             r8.setSelectedIndicatorHeight(r13)
-            int r13 = com.google.android.material.C3621R.styleable.TabLayout_tabIndicatorGravity
+            int r13 = com.google.android.material.C3631R.styleable.TabLayout_tabIndicatorGravity
             int r13 = r12.getInt(r13, r11)
             r10.setSelectedTabIndicatorGravity(r13)
-            int r13 = com.google.android.material.C3621R.styleable.TabLayout_tabIndicatorAnimationMode
+            int r13 = com.google.android.material.C3631R.styleable.TabLayout_tabIndicatorAnimationMode
             int r13 = r12.getInt(r13, r11)
             r10.setTabIndicatorAnimationMode(r13)
-            int r13 = com.google.android.material.C3621R.styleable.TabLayout_tabIndicatorFullWidth
+            int r13 = com.google.android.material.C3631R.styleable.TabLayout_tabIndicatorFullWidth
             boolean r13 = r12.getBoolean(r13, r9)
             r10.setTabIndicatorFullWidth(r13)
-            int r13 = com.google.android.material.C3621R.styleable.TabLayout_tabPadding
+            int r13 = com.google.android.material.C3631R.styleable.TabLayout_tabPadding
             int r13 = r12.getDimensionPixelSize(r13, r11)
             r10.tabPaddingBottom = r13
             r10.tabPaddingEnd = r13
             r10.tabPaddingTop = r13
             r10.tabPaddingStart = r13
-            int r13 = com.google.android.material.C3621R.styleable.TabLayout_tabPaddingStart
+            int r13 = com.google.android.material.C3631R.styleable.TabLayout_tabPaddingStart
             int r0 = r10.tabPaddingStart
             int r13 = r12.getDimensionPixelSize(r13, r0)
             r10.tabPaddingStart = r13
-            int r13 = com.google.android.material.C3621R.styleable.TabLayout_tabPaddingTop
+            int r13 = com.google.android.material.C3631R.styleable.TabLayout_tabPaddingTop
             int r0 = r10.tabPaddingTop
             int r13 = r12.getDimensionPixelSize(r13, r0)
             r10.tabPaddingTop = r13
-            int r13 = com.google.android.material.C3621R.styleable.TabLayout_tabPaddingEnd
+            int r13 = com.google.android.material.C3631R.styleable.TabLayout_tabPaddingEnd
             int r0 = r10.tabPaddingEnd
             int r13 = r12.getDimensionPixelSize(r13, r0)
             r10.tabPaddingEnd = r13
-            int r13 = com.google.android.material.C3621R.styleable.TabLayout_tabPaddingBottom
+            int r13 = com.google.android.material.C3631R.styleable.TabLayout_tabPaddingBottom
             int r0 = r10.tabPaddingBottom
             int r13 = r12.getDimensionPixelSize(r13, r0)
             r10.tabPaddingBottom = r13
-            int r13 = com.google.android.material.C3621R.styleable.TabLayout_tabTextAppearance
-            int r0 = com.google.android.material.C3621R.style.TextAppearance_Design_Tab
+            int r13 = com.google.android.material.C3631R.styleable.TabLayout_tabTextAppearance
+            int r0 = com.google.android.material.C3631R.style.TextAppearance_Design_Tab
             int r13 = r12.getResourceId(r13, r0)
             r10.tabTextAppearance = r13
             int[] r0 = androidx.appcompat.C0329R.styleable.TextAppearance
@@ -276,69 +276,69 @@ public class TabLayout extends HorizontalScrollView {
             android.content.res.ColorStateList r0 = com.google.android.material.resources.MaterialResources.getColorStateList((android.content.Context) r7, (android.content.res.TypedArray) r13, (int) r0)     // Catch:{ all -> 0x01c1 }
             r10.tabTextColors = r0     // Catch:{ all -> 0x01c1 }
             r13.recycle()
-            int r13 = com.google.android.material.C3621R.styleable.TabLayout_tabTextColor
+            int r13 = com.google.android.material.C3631R.styleable.TabLayout_tabTextColor
             boolean r13 = r12.hasValue(r13)
             if (r13 == 0) goto L_0x0124
-            int r13 = com.google.android.material.C3621R.styleable.TabLayout_tabTextColor
+            int r13 = com.google.android.material.C3631R.styleable.TabLayout_tabTextColor
             android.content.res.ColorStateList r13 = com.google.android.material.resources.MaterialResources.getColorStateList((android.content.Context) r7, (android.content.res.TypedArray) r12, (int) r13)
             r10.tabTextColors = r13
         L_0x0124:
-            int r13 = com.google.android.material.C3621R.styleable.TabLayout_tabSelectedTextColor
+            int r13 = com.google.android.material.C3631R.styleable.TabLayout_tabSelectedTextColor
             boolean r13 = r12.hasValue(r13)
             if (r13 == 0) goto L_0x013e
-            int r13 = com.google.android.material.C3621R.styleable.TabLayout_tabSelectedTextColor
+            int r13 = com.google.android.material.C3631R.styleable.TabLayout_tabSelectedTextColor
             int r13 = r12.getColor(r13, r11)
             android.content.res.ColorStateList r0 = r10.tabTextColors
             int r0 = r0.getDefaultColor()
             android.content.res.ColorStateList r13 = createColorStateList(r0, r13)
             r10.tabTextColors = r13
         L_0x013e:
-            int r13 = com.google.android.material.C3621R.styleable.TabLayout_tabIconTint
+            int r13 = com.google.android.material.C3631R.styleable.TabLayout_tabIconTint
             android.content.res.ColorStateList r13 = com.google.android.material.resources.MaterialResources.getColorStateList((android.content.Context) r7, (android.content.res.TypedArray) r12, (int) r13)
             r10.tabIconTint = r13
-            int r13 = com.google.android.material.C3621R.styleable.TabLayout_tabIconTintMode
+            int r13 = com.google.android.material.C3631R.styleable.TabLayout_tabIconTintMode
             int r13 = r12.getInt(r13, r6)
             r0 = 0
             android.graphics.PorterDuff$Mode r13 = com.google.android.material.internal.ViewUtils.parseTintMode(r13, r0)
             r10.tabIconTintMode = r13
-            int r13 = com.google.android.material.C3621R.styleable.TabLayout_tabRippleColor
+            int r13 = com.google.android.material.C3631R.styleable.TabLayout_tabRippleColor
             android.content.res.ColorStateList r13 = com.google.android.material.resources.MaterialResources.getColorStateList((android.content.Context) r7, (android.content.res.TypedArray) r12, (int) r13)
             r10.tabRippleColorStateList = r13
-            int r13 = com.google.android.material.C3621R.styleable.TabLayout_tabIndicatorAnimationDuration
+            int r13 = com.google.android.material.C3631R.styleable.TabLayout_tabIndicatorAnimationDuration
             r0 = 300(0x12c, float:4.2E-43)
             int r13 = r12.getInt(r13, r0)
             r10.tabIndicatorAnimationDuration = r13
-            int r13 = com.google.android.material.C3621R.styleable.TabLayout_tabMinWidth
+            int r13 = com.google.android.material.C3631R.styleable.TabLayout_tabMinWidth
             int r13 = r12.getDimensionPixelSize(r13, r6)
             r10.requestedTabMinWidth = r13
-            int r13 = com.google.android.material.C3621R.styleable.TabLayout_tabMaxWidth
+            int r13 = com.google.android.material.C3631R.styleable.TabLayout_tabMaxWidth
             int r13 = r12.getDimensionPixelSize(r13, r6)
             r10.requestedTabMaxWidth = r13
-            int r13 = com.google.android.material.C3621R.styleable.TabLayout_tabBackground
+            int r13 = com.google.android.material.C3631R.styleable.TabLayout_tabBackground
             int r13 = r12.getResourceId(r13, r11)
             r10.tabBackgroundResId = r13
-            int r13 = com.google.android.material.C3621R.styleable.TabLayout_tabContentStart
+            int r13 = com.google.android.material.C3631R.styleable.TabLayout_tabContentStart
             int r13 = r12.getDimensionPixelSize(r13, r11)
             r10.contentInsetStart = r13
-            int r13 = com.google.android.material.C3621R.styleable.TabLayout_tabMode
+            int r13 = com.google.android.material.C3631R.styleable.TabLayout_tabMode
             int r13 = r12.getInt(r13, r9)
             r10.mode = r13
-            int r13 = com.google.android.material.C3621R.styleable.TabLayout_tabGravity
+            int r13 = com.google.android.material.C3631R.styleable.TabLayout_tabGravity
             int r13 = r12.getInt(r13, r11)
             r10.tabGravity = r13
-            int r13 = com.google.android.material.C3621R.styleable.TabLayout_tabInlineLabel
+            int r13 = com.google.android.material.C3631R.styleable.TabLayout_tabInlineLabel
             boolean r13 = r12.getBoolean(r13, r11)
             r10.inlineLabel = r13
-            int r13 = com.google.android.material.C3621R.styleable.TabLayout_tabUnboundedRipple
+            int r13 = com.google.android.material.C3631R.styleable.TabLayout_tabUnboundedRipple
             boolean r11 = r12.getBoolean(r13, r11)
             r10.unboundedRipple = r11
             r12.recycle()
             android.content.res.Resources r11 = r10.getResources()
-            int r12 = com.google.android.material.C3621R.dimen.design_tab_text_size_2line
+            int r12 = com.google.android.material.C3631R.dimen.design_tab_text_size_2line
             int r12 = r11.getDimensionPixelSize(r12)
             float r12 = (float) r12
             r10.tabTextMultiLineSize = r12
-            int r12 = com.google.android.material.C3621R.dimen.design_tab_scrollable_min_width
+            int r12 = com.google.android.material.C3631R.dimen.design_tab_scrollable_min_width
             int r11 = r11.getDimensionPixelSize(r12)
             r10.scrollableTabMinWidth = r11
             r10.applyModeAndGravity()
@@ -491,8 +491,8 @@ public class TabLayout extends HorizontalScrollView {
         Tab createTabFromPool = createTabFromPool();
         createTabFromPool.parent = this;
         createTabFromPool.view = createTabView(createTabFromPool);
-        if (createTabFromPool.f447id != -1) {
-            createTabFromPool.view.setId(createTabFromPool.f447id);
+        if (createTabFromPool.f446id != -1) {
+            createTabFromPool.view.setId(createTabFromPool.f446id);
         }
         return createTabFromPool;
     }
@@ -1254,7 +1254,7 @@ public class TabLayout extends HorizontalScrollView {
         /* access modifiers changed from: private */
 
         /* renamed from: id */
-        public int f447id = -1;
+        public int f446id = -1;
         /* access modifiers changed from: private */
         public int labelVisibilityMode = 1;
         public TabLayout parent;
@@ -1274,7 +1274,7 @@ public class TabLayout extends HorizontalScrollView {
         }
 
         public Tab setId(int i) {
-            this.f447id = i;
+            this.f446id = i;
             TabView tabView = this.view;
             if (tabView != null) {
                 tabView.setId(i);
@@ -1283,7 +1283,7 @@ public class TabLayout extends HorizontalScrollView {
         }
 
         public int getId() {
-            return this.f447id;
+            return this.f446id;
         }
 
         public View getCustomView() {
@@ -1436,7 +1436,7 @@ public class TabLayout extends HorizontalScrollView {
             this.view = null;
             this.tag = null;
             this.icon = null;
-            this.f447id = -1;
+            this.f446id = -1;
             this.text = null;
             this.contentDesc = null;
             this.position = -1;
@@ -1600,7 +1600,7 @@ public class TabLayout extends HorizontalScrollView {
                 wrap.setClickable(false);
                 wrap.removeAction(AccessibilityNodeInfoCompat.AccessibilityActionCompat.ACTION_CLICK);
             }
-            wrap.setRoleDescription(getResources().getString(C3621R.string.item_view_role_description));
+            wrap.setRoleDescription(getResources().getString(C3631R.string.item_view_role_description));
         }
 
         public void onMeasure(int i, int i2) {
@@ -1729,7 +1729,7 @@ public class TabLayout extends HorizontalScrollView {
             } else {
                 viewGroup = this;
             }
-            ImageView imageView = (ImageView) LayoutInflater.from(getContext()).inflate(C3621R.layout.design_layout_tab_icon, viewGroup, false);
+            ImageView imageView = (ImageView) LayoutInflater.from(getContext()).inflate(C3631R.layout.design_layout_tab_icon, viewGroup, false);
             this.iconView = imageView;
             viewGroup.addView(imageView, 0);
         }
@@ -1742,7 +1742,7 @@ public class TabLayout extends HorizontalScrollView {
             } else {
                 viewGroup = this;
             }
-            TextView textView2 = (TextView) LayoutInflater.from(getContext()).inflate(C3621R.layout.design_layout_tab_text, viewGroup, false);
+            TextView textView2 = (TextView) LayoutInflater.from(getContext()).inflate(C3631R.layout.design_layout_tab_text, viewGroup, false);
             this.textView = textView2;
             viewGroup.addView(textView2);
         }
@@ -2121,7 +2121,7 @@ public class TabLayout extends HorizontalScrollView {
                 jumpIndicatorToSelectedPosition();
                 return;
             }
-            C38201 r2 = new ValueAnimator.AnimatorUpdateListener() {
+            C38301 r2 = new ValueAnimator.AnimatorUpdateListener() {
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {
                     SlidingTabIndicator.this.tweenIndicatorPosition(childAt, childAt2, valueAnimator.getAnimatedFraction());
                 }

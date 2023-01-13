@@ -17,6 +17,6 @@ public final /* synthetic */ class MenuHostHelper$$ExternalSyntheticLambda1 impl
     }
 
     public final void onStateChanged(LifecycleOwner lifecycleOwner, Lifecycle.Event event) {
-        this.f$0.m2244lambda$addMenuProvider$1$androidxcoreviewMenuHostHelper(this.f$1, this.f$2, lifecycleOwner, event);
+        this.f$0.m2250lambda$addMenuProvider$1$androidxcoreviewMenuHostHelper(this.f$1, this.f$2, lifecycleOwner, event);
     }
 }

@@ -13,7 +13,7 @@ import com.google.android.setupcompat.internal.TemplateLayout;
 import com.google.android.setupcompat.partnerconfig.PartnerConfig;
 import com.google.android.setupcompat.partnerconfig.PartnerConfigHelper;
 import com.google.android.setupcompat.template.Mixin;
-import com.google.android.setupdesign.C3953R;
+import com.google.android.setupdesign.C3963R;
 import com.google.android.setupdesign.DividerItemDecoration;
 import com.google.android.setupdesign.GlifLayout;
 import com.google.android.setupdesign.items.ItemHierarchy;
@@ -52,7 +52,7 @@ public class RecyclerMixin implements Mixin {
     private boolean isShowItemsDivider(Context context) {
         TypedValue typedValue = new TypedValue();
         boolean z = true;
-        context.getTheme().resolveAttribute(C3953R.attr.sudDividerShown, typedValue, true);
+        context.getTheme().resolveAttribute(C3963R.attr.sudDividerShown, typedValue, true);
         if (typedValue.data == 0) {
             z = false;
         }
@@ -63,8 +63,8 @@ public class RecyclerMixin implements Mixin {
         boolean z;
         boolean z2;
         Context context = this.templateLayout.getContext();
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C3953R.styleable.SudRecyclerMixin, i, 0);
-        int resourceId = obtainStyledAttributes.getResourceId(C3953R.styleable.SudRecyclerMixin_android_entries, 0);
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C3963R.styleable.SudRecyclerMixin, i, 0);
+        int resourceId = obtainStyledAttributes.getResourceId(C3963R.styleable.SudRecyclerMixin_android_entries, 0);
         if (resourceId != 0) {
             ItemHierarchy itemHierarchy = (ItemHierarchy) new ItemInflater(context).inflate(resourceId);
             TemplateLayout templateLayout2 = this.templateLayout;
@@ -76,19 +76,19 @@ public class RecyclerMixin implements Mixin {
                 z = false;
             }
             RecyclerItemAdapter recyclerItemAdapter = new RecyclerItemAdapter(itemHierarchy, z2, z);
-            recyclerItemAdapter.setHasStableIds(obtainStyledAttributes.getBoolean(C3953R.styleable.SudRecyclerMixin_sudHasStableIds, false));
+            recyclerItemAdapter.setHasStableIds(obtainStyledAttributes.getBoolean(C3963R.styleable.SudRecyclerMixin_sudHasStableIds, false));
             setAdapter(recyclerItemAdapter);
         }
         if (!this.isDividerDisplay) {
             obtainStyledAttributes.recycle();
             return;
         }
-        int dimensionPixelSize = obtainStyledAttributes.getDimensionPixelSize(C3953R.styleable.SudRecyclerMixin_sudDividerInset, -1);
+        int dimensionPixelSize = obtainStyledAttributes.getDimensionPixelSize(C3963R.styleable.SudRecyclerMixin_sudDividerInset, -1);
         if (dimensionPixelSize != -1) {
             setDividerInset(dimensionPixelSize);
         } else {
-            int dimensionPixelSize2 = obtainStyledAttributes.getDimensionPixelSize(C3953R.styleable.SudRecyclerMixin_sudDividerInsetStart, 0);
-            int dimensionPixelSize3 = obtainStyledAttributes.getDimensionPixelSize(C3953R.styleable.SudRecyclerMixin_sudDividerInsetEnd, 0);
+            int dimensionPixelSize2 = obtainStyledAttributes.getDimensionPixelSize(C3963R.styleable.SudRecyclerMixin_sudDividerInsetStart, 0);
+            int dimensionPixelSize3 = obtainStyledAttributes.getDimensionPixelSize(C3963R.styleable.SudRecyclerMixin_sudDividerInsetEnd, 0);
             if (PartnerStyleHelper.shouldApplyPartnerResource((View) this.templateLayout)) {
                 if (PartnerConfigHelper.get(context).isPartnerConfigAvailable(PartnerConfig.CONFIG_LAYOUT_MARGIN_START)) {
                     dimensionPixelSize2 = (int) PartnerConfigHelper.get(context).getDimension(context, PartnerConfig.CONFIG_LAYOUT_MARGIN_START);

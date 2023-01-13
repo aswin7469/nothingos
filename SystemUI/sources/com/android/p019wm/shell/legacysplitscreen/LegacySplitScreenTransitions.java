@@ -105,7 +105,7 @@ public class LegacySplitScreenTransitions implements Transitions.TransitionHandl
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startExampleAnimation$2$com-android-wm-shell-legacysplitscreen-LegacySplitScreenTransitions */
-    public /* synthetic */ void mo49750x59db86a4(SurfaceControl.Transaction transaction, SurfaceControl surfaceControl, float f, ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo49759x59db86a4(SurfaceControl.Transaction transaction, SurfaceControl surfaceControl, float f, ValueAnimator valueAnimator) {
         transaction.setAlpha(surfaceControl, f);
         transaction.apply();
         this.mTransactionPool.release(transaction);
@@ -114,7 +114,7 @@ public class LegacySplitScreenTransitions implements Transitions.TransitionHandl
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startExampleAnimation$1$com-android-wm-shell-legacysplitscreen-LegacySplitScreenTransitions */
-    public /* synthetic */ void mo49749x6889f723(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo49758x6889f723(ValueAnimator valueAnimator) {
         this.mAnimations.remove((Object) valueAnimator);
         onFinish();
     }
@@ -150,7 +150,7 @@ public class LegacySplitScreenTransitions implements Transitions.TransitionHandl
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startExampleResizeAnimation$5$com-android-wm-shell-legacysplitscreen-LegacySplitScreenTransitions */
-    public /* synthetic */ void mo49752xcd682193(SurfaceControl.Transaction transaction, SurfaceControl surfaceControl, Rect rect, ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo49761xcd682193(SurfaceControl.Transaction transaction, SurfaceControl surfaceControl, Rect rect, ValueAnimator valueAnimator) {
         transaction.setWindowCrop(surfaceControl, 0, 0);
         transaction.setPosition(surfaceControl, (float) rect.left, (float) rect.top);
         transaction.apply();
@@ -160,7 +160,7 @@ public class LegacySplitScreenTransitions implements Transitions.TransitionHandl
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startExampleResizeAnimation$4$com-android-wm-shell-legacysplitscreen-LegacySplitScreenTransitions */
-    public /* synthetic */ void mo49751xdc169212(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo49760xdc169212(ValueAnimator valueAnimator) {
         this.mAnimations.remove((Object) valueAnimator);
         onFinish();
     }
@@ -268,7 +268,7 @@ public class LegacySplitScreenTransitions implements Transitions.TransitionHandl
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$dismissSplit$6$com-android-wm-shell-legacysplitscreen-LegacySplitScreenTransitions */
-    public /* synthetic */ void mo49748xcd4fd9f6(boolean z, WindowContainerTransaction windowContainerTransaction) {
+    public /* synthetic */ void mo49757xcd4fd9f6(boolean z, WindowContainerTransaction windowContainerTransaction) {
         this.mDismissFromSnap = z;
         this.mPendingDismiss = this.mTransitions.startTransition(22, windowContainerTransaction, this);
     }

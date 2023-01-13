@@ -11,6 +11,6 @@ public final /* synthetic */ class LockIconViewController$$ExternalSyntheticLamb
     }
 
     public final void onClick(View view) {
-        this.f$0.m2302lambda$new$1$comandroidkeyguardLockIconViewController(view);
+        this.f$0.m2308lambda$new$1$comandroidkeyguardLockIconViewController(view);
     }
 }

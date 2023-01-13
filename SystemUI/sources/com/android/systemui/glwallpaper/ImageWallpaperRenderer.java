@@ -7,7 +7,7 @@ import android.graphics.Rect;
 import android.opengl.GLES20;
 import android.util.Log;
 import android.util.Size;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import java.p026io.FileDescriptor;
 import java.p026io.PrintWriter;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -51,13 +51,13 @@ public class ImageWallpaperRenderer implements GLWallpaperRenderer {
 
     public void onSurfaceCreated() {
         GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        this.mProgram.useGLProgram(C1893R.raw.image_wallpaper_vertex_shader, C1893R.raw.image_wallpaper_fragment_shader);
+        this.mProgram.useGLProgram(C1894R.raw.image_wallpaper_vertex_shader, C1894R.raw.image_wallpaper_fragment_shader);
         this.mTexture.use(new ImageWallpaperRenderer$$ExternalSyntheticLambda0(this));
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onSurfaceCreated$0$com-android-systemui-glwallpaper-ImageWallpaperRenderer */
-    public /* synthetic */ void mo33070x4ff2f7f9(Bitmap bitmap) {
+    public /* synthetic */ void mo33080x4ff2f7f9(Bitmap bitmap) {
         if (bitmap == null) {
             Log.w(TAG, "reload texture failed!");
         } else {

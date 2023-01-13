@@ -12,7 +12,7 @@ public enum ThaiBuddhistEra implements Era {
     BE;
 
     /* renamed from: of */
-    public static ThaiBuddhistEra m952of(int i) {
+    public static ThaiBuddhistEra m950of(int i) {
         if (i == 0) {
             return BEFORE_BE;
         }
@@ -27,6 +27,6 @@ public enum ThaiBuddhistEra implements Era {
     }
 
     public String getDisplayName(TextStyle textStyle, Locale locale) {
-        return new DateTimeFormatterBuilder().appendText((TemporalField) ChronoField.ERA, textStyle).toFormatter(locale).withChronology(ThaiBuddhistChronology.INSTANCE).format(this == BE ? ThaiBuddhistDate.m951of(1, 1, 1) : ThaiBuddhistDate.m951of(0, 1, 1));
+        return new DateTimeFormatterBuilder().appendText((TemporalField) ChronoField.ERA, textStyle).toFormatter(locale).withChronology(ThaiBuddhistChronology.INSTANCE).format(this == BE ? ThaiBuddhistDate.m949of(1, 1, 1) : ThaiBuddhistDate.m949of(0, 1, 1));
     }
 }

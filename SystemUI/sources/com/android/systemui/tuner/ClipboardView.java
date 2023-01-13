@@ -7,7 +7,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 
 public class ClipboardView extends ImageView implements ClipboardManager.OnPrimaryClipChangedListener {
     private static final int TARGET_COLOR = 1308622847;
@@ -92,6 +92,6 @@ public class ClipboardView extends ImageView implements ClipboardManager.OnPrima
     public void onPrimaryClipChanged() {
         ClipData primaryClip = this.mClipboardManager.getPrimaryClip();
         this.mCurrentClip = primaryClip;
-        setImageResource(primaryClip != null ? C1893R.C1895drawable.clipboard_full : C1893R.C1895drawable.clipboard_empty);
+        setImageResource(primaryClip != null ? C1894R.C1896drawable.clipboard_full : C1894R.C1896drawable.clipboard_empty);
     }
 }

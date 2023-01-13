@@ -103,7 +103,7 @@ public abstract class BaseIconCache {
 
     /* access modifiers changed from: private */
     /* renamed from: updateIconParamsBg */
-    public synchronized void mo26790xaa492de3(int i, int i2) {
+    public synchronized void mo26791xaa492de3(int i, int i2) {
         this.mIconDpi = i;
         this.mDefaultIcon = null;
         this.mUserFlagOpMap.clear();

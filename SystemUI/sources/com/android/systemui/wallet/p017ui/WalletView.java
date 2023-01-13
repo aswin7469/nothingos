@@ -17,7 +17,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.android.settingslib.Utils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.classifier.FalsingCollector;
 import com.android.systemui.wallet.p017ui.WalletCardCarousel;
 import java.util.List;
@@ -65,18 +65,18 @@ public class WalletView extends FrameLayout implements WalletCardCarousel.OnCard
         super(context, attributeSet);
         this.mIsDeviceLocked = false;
         this.mIsUdfpsEnabled = false;
-        inflate(context, C1893R.layout.wallet_fullscreen, this);
-        this.mCardCarouselContainer = (ViewGroup) requireViewById(C1893R.C1897id.card_carousel_container);
-        WalletCardCarousel walletCardCarousel = (WalletCardCarousel) requireViewById(C1893R.C1897id.card_carousel);
+        inflate(context, C1894R.layout.wallet_fullscreen, this);
+        this.mCardCarouselContainer = (ViewGroup) requireViewById(C1894R.C1898id.card_carousel_container);
+        WalletCardCarousel walletCardCarousel = (WalletCardCarousel) requireViewById(C1894R.C1898id.card_carousel);
         this.mCardCarousel = walletCardCarousel;
         walletCardCarousel.setCardScrollListener(this);
-        this.mIcon = (ImageView) requireViewById(C1893R.C1897id.icon);
-        this.mCardLabel = (TextView) requireViewById(C1893R.C1897id.label);
-        this.mAppButton = (Button) requireViewById(C1893R.C1897id.wallet_app_button);
-        this.mToolbarAppButton = (Button) requireViewById(C1893R.C1897id.wallet_toolbar_app_button);
-        this.mActionButton = (Button) requireViewById(C1893R.C1897id.wallet_action_button);
-        this.mErrorView = (TextView) requireViewById(C1893R.C1897id.error_view);
-        this.mEmptyStateView = (ViewGroup) requireViewById(C1893R.C1897id.wallet_empty_state);
+        this.mIcon = (ImageView) requireViewById(C1894R.C1898id.icon);
+        this.mCardLabel = (TextView) requireViewById(C1894R.C1898id.label);
+        this.mAppButton = (Button) requireViewById(C1894R.C1898id.wallet_app_button);
+        this.mToolbarAppButton = (Button) requireViewById(C1894R.C1898id.wallet_toolbar_app_button);
+        this.mActionButton = (Button) requireViewById(C1894R.C1898id.wallet_action_button);
+        this.mErrorView = (TextView) requireViewById(C1894R.C1898id.error_view);
+        this.mEmptyStateView = (ViewGroup) requireViewById(C1894R.C1898id.wallet_empty_state);
         this.mOutInterpolator = AnimationUtils.loadInterpolator(context, 17563650);
         this.mAnimationTranslationX = ((float) walletCardCarousel.getCardWidthPx()) / 4.0f;
     }
@@ -96,7 +96,7 @@ public class WalletView extends FrameLayout implements WalletCardCarousel.OnCard
         this.mCardCarousel.resetAdapter();
         ViewGroup.LayoutParams layoutParams = this.mCardCarouselContainer.getLayoutParams();
         if (layoutParams instanceof ViewGroup.MarginLayoutParams) {
-            ((ViewGroup.MarginLayoutParams) layoutParams).topMargin = getResources().getDimensionPixelSize(C1893R.dimen.wallet_card_carousel_container_top_margin);
+            ((ViewGroup.MarginLayoutParams) layoutParams).topMargin = getResources().getDimensionPixelSize(C1894R.dimen.wallet_card_carousel_container_top_margin);
         }
     }
 
@@ -104,7 +104,7 @@ public class WalletView extends FrameLayout implements WalletCardCarousel.OnCard
         this.mAppButton.setVisibility(0);
         this.mToolbarAppButton.setVisibility(8);
         this.mCardLabel.setVisibility(0);
-        requireViewById(C1893R.C1897id.dynamic_placeholder).setVisibility(0);
+        requireViewById(C1894R.C1898id.dynamic_placeholder).setVisibility(0);
         this.mAppButton.setOnClickListener(this.mShowWalletAppOnClickListener);
     }
 
@@ -112,7 +112,7 @@ public class WalletView extends FrameLayout implements WalletCardCarousel.OnCard
         this.mToolbarAppButton.setVisibility(0);
         this.mAppButton.setVisibility(8);
         this.mCardLabel.setVisibility(8);
-        requireViewById(C1893R.C1897id.dynamic_placeholder).setVisibility(8);
+        requireViewById(C1894R.C1898id.dynamic_placeholder).setVisibility(8);
         this.mToolbarAppButton.setOnClickListener(this.mShowWalletAppOnClickListener);
     }
 
@@ -170,9 +170,9 @@ public class WalletView extends FrameLayout implements WalletCardCarousel.OnCard
         this.mCardCarousel.setVisibility(8);
         this.mIcon.setImageDrawable(drawable);
         this.mIcon.setContentDescription(charSequence);
-        this.mCardLabel.setText(C1893R.string.wallet_empty_state_label);
-        ((ImageView) this.mEmptyStateView.requireViewById(C1893R.C1897id.empty_state_icon)).setImageDrawable(this.mContext.getDrawable(C1893R.C1895drawable.ic_qs_plus));
-        ((TextView) this.mEmptyStateView.requireViewById(C1893R.C1897id.empty_state_title)).setText(charSequence2);
+        this.mCardLabel.setText(C1894R.string.wallet_empty_state_label);
+        ((ImageView) this.mEmptyStateView.requireViewById(C1894R.C1898id.empty_state_icon)).setImageDrawable(this.mContext.getDrawable(C1894R.C1896drawable.ic_qs_plus));
+        ((TextView) this.mEmptyStateView.requireViewById(C1894R.C1898id.empty_state_title)).setText(charSequence2);
         this.mEmptyStateView.setOnClickListener(onClickListener);
         this.mAppButton.setOnClickListener(onClickListener);
     }
@@ -180,7 +180,7 @@ public class WalletView extends FrameLayout implements WalletCardCarousel.OnCard
     /* access modifiers changed from: package-private */
     public void showErrorMessage(CharSequence charSequence) {
         if (TextUtils.isEmpty(charSequence)) {
-            charSequence = getResources().getText(C1893R.string.wallet_error_generic);
+            charSequence = getResources().getText(C1894R.string.wallet_error_generic);
         }
         this.mErrorView.setText(charSequence);
         this.mErrorView.setVisibility(0);

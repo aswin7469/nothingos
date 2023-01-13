@@ -462,7 +462,10 @@ public class StatusBarKeyguardViewManager implements RemoteInputController.Callb
         if (keyguardMessageAreaController != null) {
             keyguardMessageAreaController.setAltBouncerShowing(isShowingAlternateAuth);
         }
-        this.mBypassController.setAltBouncerShowing(isShowingAlternateAuth);
+        KeyguardBypassController keyguardBypassController = this.mBypassController;
+        if (keyguardBypassController != null) {
+            keyguardBypassController.setAltBouncerShowing(isShowingAlternateAuth);
+        }
         this.mKeyguardUpdateManager.setUdfpsBouncerShowing(isShowingAlternateAuth);
         if (z) {
             this.mCentralSurfaces.updateScrimController();
@@ -532,7 +535,7 @@ public class StatusBarKeyguardViewManager implements RemoteInputController.Callb
         if (z7 && z5) {
             SysUiStatsLog.write(62, 3);
             if (this.mCentralSurfaces.isInLaunchTransition()) {
-                C30834 r6 = new Runnable() {
+                C30934 r6 = new Runnable() {
                     public void run() {
                         StatusBarKeyguardViewManager.this.mNotificationShadeWindowController.setKeyguardOccluded(StatusBarKeyguardViewManager.this.mOccluded);
                         StatusBarKeyguardViewManager.this.reset(true);
@@ -565,7 +568,7 @@ public class StatusBarKeyguardViewManager implements RemoteInputController.Callb
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setOccluded$2$com-android-systemui-statusbar-phone-StatusBarKeyguardViewManager */
-    public /* synthetic */ void mo45264x25dfc0e6() {
+    public /* synthetic */ void mo45276x25dfc0e6() {
         this.mNotificationShadeWindowController.setKeyguardOccluded(this.mOccluded);
         reset(true);
     }
@@ -740,19 +743,20 @@ public class StatusBarKeyguardViewManager implements RemoteInputController.Callb
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$hide$3$com-android-systemui-statusbar-phone-StatusBarKeyguardViewManager */
-    public /* synthetic */ void mo45261x8440edd6() {
+    public /* synthetic */ void mo45273x8440edd6() {
         this.mCentralSurfaces.hideKeyguard();
         onKeyguardFadedAway();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$hide$4$com-android-systemui-statusbar-phone-StatusBarKeyguardViewManager */
-    public /* synthetic */ void mo45262x60026997() {
+    public /* synthetic */ void mo45274x60026997() {
         this.mCentralSurfaces.hideKeyguard();
     }
 
     private boolean needsBypassFading() {
-        if ((this.mBiometricUnlockController.getMode() == 7 || this.mBiometricUnlockController.getMode() == 2 || this.mBiometricUnlockController.getMode() == 1) && this.mBypassController.getBypassEnabled()) {
+        KeyguardBypassController keyguardBypassController;
+        if ((this.mBiometricUnlockController.getMode() == 7 || this.mBiometricUnlockController.getMode() == 2 || this.mBiometricUnlockController.getMode() == 1) && (keyguardBypassController = this.mBypassController) != null && keyguardBypassController.getBypassEnabled()) {
             return true;
         }
         return false;
@@ -778,7 +782,7 @@ public class StatusBarKeyguardViewManager implements RemoteInputController.Callb
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onKeyguardFadedAway$5$com-android-systemui-statusbar-phone-StatusBarKeyguardViewManager */
-    public /* synthetic */ void mo45263x2ab54dcd() {
+    public /* synthetic */ void mo45275x2ab54dcd() {
         this.mNotificationShadeWindowController.setKeyguardFadingAway(false);
     }
 

@@ -12,7 +12,7 @@ public final class HttpDate {
     private static final ThreadLocal<DateFormat> STANDARD_DATE_FORMAT = new ThreadLocal<DateFormat>() {
         /* access modifiers changed from: protected */
         public DateFormat initialValue() {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.f700US);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.f698US);
             simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             return simpleDateFormat;
         }
@@ -27,7 +27,7 @@ public final class HttpDate {
             int i = 0;
             while (i < length) {
                 try {
-                    return new SimpleDateFormat(strArr[i], Locale.f700US).parse(str);
+                    return new SimpleDateFormat(strArr[i], Locale.f698US).parse(str);
                 } catch (ParseException unused2) {
                     i++;
                 }

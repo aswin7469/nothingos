@@ -25,7 +25,7 @@ public abstract class TimeZone implements Serializable, Cloneable {
     static final long serialVersionUID = 3581463369166924961L;
 
     /* renamed from: ID */
-    private String f710ID;
+    private String f708ID;
 
     private static native String getSystemGMTOffsetID();
 
@@ -67,12 +67,12 @@ public abstract class TimeZone implements Serializable, Cloneable {
     }
 
     public String getID() {
-        return this.f710ID;
+        return this.f708ID;
     }
 
     public void setID(String str) {
         str.getClass();
-        this.f710ID = str;
+        this.f708ID = str;
     }
 
     public final String getDisplayName() {
@@ -238,7 +238,7 @@ public abstract class TimeZone implements Serializable, Cloneable {
     }
 
     public ZoneId toZoneId() {
-        return ZoneId.m933of(getID(), ZoneId.SHORT_IDS);
+        return ZoneId.m931of(getID(), ZoneId.SHORT_IDS);
     }
 
     private static TimeZone getCustomTimeZone(String str) {

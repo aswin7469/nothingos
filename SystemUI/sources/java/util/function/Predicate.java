@@ -24,7 +24,7 @@ public interface Predicate<T> {
     }
 
     /* renamed from: or */
-    Predicate<T> mo63140or(Predicate<? super T> predicate) {
+    Predicate<T> mo63196or(Predicate<? super T> predicate) {
         Objects.requireNonNull(predicate);
         return new Predicate$$ExternalSyntheticLambda4(this, predicate);
     }

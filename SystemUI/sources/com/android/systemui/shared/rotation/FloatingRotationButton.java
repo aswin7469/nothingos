@@ -96,7 +96,7 @@ public class FloatingRotationButton implements RotationButton {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$show$0$com-android-systemui-shared-rotation-FloatingRotationButton */
-    public /* synthetic */ void mo37950xd22dc85f() {
+    public /* synthetic */ void mo37951xd22dc85f() {
         RotationButton.RotationButtonUpdatesCallback rotationButtonUpdatesCallback;
         if (this.mIsShowing && (rotationButtonUpdatesCallback = this.mUpdatesCallback) != null) {
             rotationButtonUpdatesCallback.onVisibilityChanged(true);
@@ -204,7 +204,7 @@ public class FloatingRotationButton implements RotationButton {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateTranslation$1$com-android-systemui-shared-rotation-FloatingRotationButton */
-    public /* synthetic */ void mo37951xb2e8ddf1() {
+    public /* synthetic */ void mo37952xb2e8ddf1() {
         RotationButton.RotationButtonUpdatesCallback rotationButtonUpdatesCallback = this.mUpdatesCallback;
         if (rotationButtonUpdatesCallback != null && this.mIsShowing) {
             rotationButtonUpdatesCallback.onPositionChanged();

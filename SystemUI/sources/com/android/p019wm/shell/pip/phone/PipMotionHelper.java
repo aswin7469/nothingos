@@ -7,7 +7,7 @@ import android.os.Looper;
 import android.util.ArrayMap;
 import android.view.Choreographer;
 import androidx.dynamicanimation.animation.FrameCallbackScheduler;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.animation.FloatProperties;
 import com.android.p019wm.shell.animation.PhysicsAnimator;
 import com.android.p019wm.shell.common.FloatingContentCoordinator;
@@ -59,7 +59,7 @@ public class PipMotionHelper implements PipAppOpsListener.Callback, FloatingCont
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-wm-shell-pip-phone-PipMotionHelper  reason: not valid java name */
-    public /* synthetic */ FrameCallbackScheduler m3469lambda$new$0$comandroidwmshellpipphonePipMotionHelper() {
+    public /* synthetic */ FrameCallbackScheduler m3473lambda$new$0$comandroidwmshellpipphonePipMotionHelper() {
         final Looper myLooper = Looper.myLooper();
         return new FrameCallbackScheduler() {
             public void postFrameCallback(Runnable runnable) {
@@ -74,7 +74,7 @@ public class PipMotionHelper implements PipAppOpsListener.Callback, FloatingCont
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$1$com-android-wm-shell-pip-phone-PipMotionHelper  reason: not valid java name */
-    public /* synthetic */ void m3470lambda$new$1$comandroidwmshellpipphonePipMotionHelper(Rect rect) {
+    public /* synthetic */ void m3474lambda$new$1$comandroidwmshellpipphonePipMotionHelper(Rect rect) {
         if (!this.mPipBoundsState.getBounds().equals(rect)) {
             this.mMenuController.updateMenuLayout(rect);
             this.mPipBoundsState.setBounds(rect);
@@ -82,7 +82,7 @@ public class PipMotionHelper implements PipAppOpsListener.Callback, FloatingCont
     }
 
     public PipMotionHelper(Context context, PipBoundsState pipBoundsState, PipTaskOrganizer pipTaskOrganizer, PhonePipMenuController phonePipMenuController, PipSnapAlgorithm pipSnapAlgorithm, PipTransitionController pipTransitionController, FloatingContentCoordinator floatingContentCoordinator) {
-        C35352 r0 = new PipTransitionController.PipTransitionCallback() {
+        C35452 r0 = new PipTransitionController.PipTransitionCallback() {
             public void onPipTransitionCanceled(int i) {
             }
 
@@ -109,7 +109,7 @@ public class PipMotionHelper implements PipAppOpsListener.Callback, FloatingCont
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$2$com-android-wm-shell-pip-phone-PipMotionHelper  reason: not valid java name */
-    public /* synthetic */ void m3471lambda$new$2$comandroidwmshellpipphonePipMotionHelper(Rect rect, ArrayMap arrayMap) {
+    public /* synthetic */ void m3475lambda$new$2$comandroidwmshellpipphonePipMotionHelper(Rect rect, ArrayMap arrayMap) {
         if (this.mPipBoundsState.getMotionBoundsState().isInMotion()) {
             this.mPipTaskOrganizer.scheduleUserResizePip(getBounds(), this.mPipBoundsState.getMotionBoundsState().getBoundsInMotion(), (Consumer<Rect>) null);
         }
@@ -169,14 +169,14 @@ public class PipMotionHelper implements PipAppOpsListener.Callback, FloatingCont
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$movePip$3$com-android-wm-shell-pip-phone-PipMotionHelper  reason: not valid java name */
-    public /* synthetic */ void m3468lambda$movePip$3$comandroidwmshellpipphonePipMotionHelper(Rect rect) {
+    public /* synthetic */ void m3472lambda$movePip$3$comandroidwmshellpipphonePipMotionHelper(Rect rect) {
         this.mMenuController.updateMenuLayout(rect);
     }
 
     /* access modifiers changed from: package-private */
     public void animateIntoDismissTarget(MagnetizedObject.MagneticTarget magneticTarget, float f, float f2, boolean z, Function0<Unit> function0) {
         PointF centerOnScreen = magneticTarget.getCenterOnScreen();
-        float dimensionPixelSize = ((float) this.mContext.getResources().getDimensionPixelSize(C3343R.dimen.dismiss_circle_size)) * DISMISS_CIRCLE_PERCENT;
+        float dimensionPixelSize = ((float) this.mContext.getResources().getDimensionPixelSize(C3353R.dimen.dismiss_circle_size)) * DISMISS_CIRCLE_PERCENT;
         float width = dimensionPixelSize / (((float) getBounds().width()) / ((float) getBounds().height()));
         float f3 = centerOnScreen.x - (dimensionPixelSize / 2.0f);
         float f4 = centerOnScreen.y - (width / 2.0f);

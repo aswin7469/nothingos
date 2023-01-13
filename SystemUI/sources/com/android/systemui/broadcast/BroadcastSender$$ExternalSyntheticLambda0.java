@@ -16,6 +16,6 @@ public final /* synthetic */ class BroadcastSender$$ExternalSyntheticLambda0 imp
     }
 
     public final void run() {
-        BroadcastSender.m2595sendInBackground$lambda0(this.f$0, this.f$1, this.f$2);
+        BroadcastSender.m2600sendInBackground$lambda0(this.f$0, this.f$1, this.f$2);
     }
 }

@@ -78,7 +78,7 @@ public class SystemActions extends CoreStartable {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-accessibility-SystemActions  reason: not valid java name */
-    public /* synthetic */ void m2531lambda$new$0$comandroidsystemuiaccessibilitySystemActions(boolean z, boolean z2, boolean z3, boolean z4) {
+    public /* synthetic */ void m2537lambda$new$0$comandroidsystemuiaccessibilitySystemActions(boolean z, boolean z2, boolean z3, boolean z4) {
         registerOrUnregisterDismissNotificationShadeAction();
     }
 

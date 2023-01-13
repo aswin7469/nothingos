@@ -1145,7 +1145,7 @@ public class ConnectivityManager {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$stop$0$android-net-ConnectivityManager$PacketKeepalive  reason: not valid java name */
-        public /* synthetic */ void m1873lambda$stop$0$androidnetConnectivityManager$PacketKeepalive() {
+        public /* synthetic */ void m1879lambda$stop$0$androidnetConnectivityManager$PacketKeepalive() {
             try {
                 if (this.mSlot != null) {
                     ConnectivityManager.this.mService.stopKeepalive(this.mNetwork, this.mSlot.intValue());
@@ -2502,7 +2502,7 @@ public class ConnectivityManager {
         if (i != 0) {
             builder.setPreferenceEnterpriseId(1);
         }
-        setProfileNetworkPreferences(userHandle, List.m1723of(builder.build()), executor, runnable);
+        setProfileNetworkPreferences(userHandle, List.m1729of(builder.build()), executor, runnable);
     }
 
     @SystemApi(client = SystemApi.Client.MODULE_LIBRARIES)

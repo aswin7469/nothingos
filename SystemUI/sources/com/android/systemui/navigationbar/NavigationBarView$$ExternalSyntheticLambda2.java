@@ -11,6 +11,6 @@ public final /* synthetic */ class NavigationBarView$$ExternalSyntheticLambda2 i
     }
 
     public final Object get() {
-        return this.f$0.mo34785x59ac49cb();
+        return this.f$0.mo34789x59ac49cb();
     }
 }

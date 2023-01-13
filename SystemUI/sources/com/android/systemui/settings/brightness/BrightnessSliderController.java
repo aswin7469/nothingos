@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
 import com.android.settingslib.RestrictedLockUtils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Gefingerpoken;
 import com.android.systemui.plugins.FalsingManager;
 import com.android.systemui.settings.brightness.BrightnessSliderView;
@@ -169,7 +169,7 @@ public class BrightnessSliderController extends ViewController<BrightnessSliderV
         private final FalsingManager mFalsingManager;
 
         private int getLayout() {
-            return C1893R.layout.quick_settings_brightness_dialog;
+            return C1894R.layout.quick_settings_brightness_dialog;
         }
 
         @Inject

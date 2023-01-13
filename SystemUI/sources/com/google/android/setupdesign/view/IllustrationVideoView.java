@@ -13,7 +13,7 @@ import android.view.TextureView;
 import android.view.View;
 import com.google.android.setupcompat.partnerconfig.ResourceEntry;
 import com.google.android.setupcompat.util.BuildCompatUtils;
-import com.google.android.setupdesign.C3953R;
+import com.google.android.setupdesign.C3963R;
 import com.google.android.setupdesign.util.Partner;
 import java.p026io.IOException;
 import java.util.Map;
@@ -54,10 +54,10 @@ public class IllustrationVideoView extends TextureView implements Animatable, Te
     }
 
     private void init(Context context, AttributeSet attributeSet) {
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C3953R.styleable.SudIllustrationVideoView);
-        int resourceId = obtainStyledAttributes.getResourceId(C3953R.styleable.SudIllustrationVideoView_sudVideo, 0);
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C3963R.styleable.SudIllustrationVideoView);
+        int resourceId = obtainStyledAttributes.getResourceId(C3963R.styleable.SudIllustrationVideoView_sudVideo, 0);
         if (BuildCompatUtils.isAtLeastS()) {
-            setPauseVideoWhenFinished(obtainStyledAttributes.getBoolean(C3953R.styleable.SudIllustrationVideoView_sudPauseVideoWhenFinished, true));
+            setPauseVideoWhenFinished(obtainStyledAttributes.getBoolean(C3963R.styleable.SudIllustrationVideoView_sudPauseVideoWhenFinished, true));
         }
         obtainStyledAttributes.recycle();
         setVideoResource(resourceId);
@@ -90,7 +90,7 @@ public class IllustrationVideoView extends TextureView implements Animatable, Te
     }
 
     public void setVideoResourceEntry(Partner.ResourceEntry resourceEntry) {
-        setVideoResource(resourceEntry.f459id, resourceEntry.packageName);
+        setVideoResource(resourceEntry.f458id, resourceEntry.packageName);
     }
 
     public void setVideoResourceEntry(ResourceEntry resourceEntry) {

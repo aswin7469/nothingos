@@ -164,7 +164,7 @@ public class AppPairsController {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$pair$0$com-android-wm-shell-apppairs-AppPairsController$AppPairsImpl */
-        public /* synthetic */ void mo48194xe2052ddc(boolean[] zArr, int i, int i2) {
+        public /* synthetic */ void mo48203xe2052ddc(boolean[] zArr, int i, int i2) {
             zArr[0] = AppPairsController.this.pair(i, i2);
         }
 
@@ -180,7 +180,7 @@ public class AppPairsController {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$pair$1$com-android-wm-shell-apppairs-AppPairsController$AppPairsImpl */
-        public /* synthetic */ void mo48195xd594b21d(boolean[] zArr, ActivityManager.RunningTaskInfo runningTaskInfo, ActivityManager.RunningTaskInfo runningTaskInfo2) {
+        public /* synthetic */ void mo48204xd594b21d(boolean[] zArr, ActivityManager.RunningTaskInfo runningTaskInfo, ActivityManager.RunningTaskInfo runningTaskInfo2) {
             zArr[0] = AppPairsController.this.pair(runningTaskInfo, runningTaskInfo2);
         }
 
@@ -190,7 +190,7 @@ public class AppPairsController {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$unpair$2$com-android-wm-shell-apppairs-AppPairsController$AppPairsImpl */
-        public /* synthetic */ void mo48196x5fa14d37(int i) {
+        public /* synthetic */ void mo48205x5fa14d37(int i) {
             AppPairsController.this.unpair(i);
         }
     }

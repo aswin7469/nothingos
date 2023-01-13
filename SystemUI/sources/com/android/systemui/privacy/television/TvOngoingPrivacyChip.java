@@ -20,7 +20,7 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.CoreStartable;
 import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.privacy.PrivacyChipBuilder;
@@ -92,11 +92,11 @@ public class TvOngoingPrivacyChip extends CoreStartable implements PrivacyItemCo
         this.mPrivacyItemController = privacyItemController;
         this.mIWindowManager = iWindowManager;
         Resources resources = context.getResources();
-        this.mIconMarginStart = Math.round(resources.getDimension(C1893R.dimen.privacy_chip_icon_margin_in_between));
-        this.mIconSize = resources.getDimensionPixelSize(C1893R.dimen.privacy_chip_icon_size);
+        this.mIconMarginStart = Math.round(resources.getDimension(C1894R.dimen.privacy_chip_icon_margin_in_between));
+        this.mIconSize = resources.getDimensionPixelSize(C1894R.dimen.privacy_chip_icon_size);
         this.mIsRtl = context.getResources().getConfiguration().getLayoutDirection() == 1 ? true : z;
         updateStaticPrivacyIndicatorBounds();
-        this.mAnimationDurationMs = resources.getInteger(C1893R.integer.privacy_chip_animation_millis);
+        this.mAnimationDurationMs = resources.getInteger(C1894R.integer.privacy_chip_animation_millis);
         this.mMicCameraIndicatorFlagEnabled = privacyItemController.getMicCameraAvailable();
         this.mAllIndicatorsEnabled = privacyItemController.getAllIndicatorsAvailable();
     }
@@ -141,9 +141,9 @@ public class TvOngoingPrivacyChip extends CoreStartable implements PrivacyItemCo
         int i;
         int i2;
         Resources resources = this.mContext.getResources();
-        int dimensionPixelSize = resources.getDimensionPixelSize(C1893R.dimen.privacy_chip_max_width);
-        int dimensionPixelSize2 = resources.getDimensionPixelSize(C1893R.dimen.privacy_chip_height);
-        int dimensionPixelSize3 = resources.getDimensionPixelSize(C1893R.dimen.privacy_chip_margin) * 2;
+        int dimensionPixelSize = resources.getDimensionPixelSize(C1894R.dimen.privacy_chip_max_width);
+        int dimensionPixelSize2 = resources.getDimensionPixelSize(C1894R.dimen.privacy_chip_height);
+        int dimensionPixelSize3 = resources.getDimensionPixelSize(C1894R.dimen.privacy_chip_margin) * 2;
         Rect bounds = ((WindowManager) this.mContext.getSystemService(WindowManager.class)).getCurrentWindowMetrics().getBounds();
         Rect[] rectArr = this.mBounds;
         if (this.mIsRtl) {
@@ -245,7 +245,7 @@ public class TvOngoingPrivacyChip extends CoreStartable implements PrivacyItemCo
         if (this.mIndicatorView != null || this.mViewAndWindowAdded) {
             removeIndicatorView();
         }
-        ViewGroup viewGroup = (ViewGroup) LayoutInflater.from(this.mContext).inflate(C1893R.layout.tv_ongoing_privacy_chip, (ViewGroup) null);
+        ViewGroup viewGroup = (ViewGroup) LayoutInflater.from(this.mContext).inflate(C1894R.layout.tv_ongoing_privacy_chip, (ViewGroup) null);
         this.mIndicatorView = viewGroup;
         viewGroup.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             public void onGlobalLayout() {
@@ -262,11 +262,11 @@ public class TvOngoingPrivacyChip extends CoreStartable implements PrivacyItemCo
         this.mChipDrawable = privacyChipDrawable;
         privacyChipDrawable.setListener(this);
         this.mChipDrawable.setRtl(this.mIsRtl);
-        ImageView imageView = (ImageView) this.mIndicatorView.findViewById(C1893R.C1897id.chip_drawable);
+        ImageView imageView = (ImageView) this.mIndicatorView.findViewById(C1894R.C1898id.chip_drawable);
         if (imageView != null) {
             imageView.setImageDrawable(this.mChipDrawable);
         }
-        LinearLayout linearLayout = (LinearLayout) this.mIndicatorView.findViewById(C1893R.C1897id.icons_container);
+        LinearLayout linearLayout = (LinearLayout) this.mIndicatorView.findViewById(C1894R.C1898id.icons_container);
         this.mIconsContainer = linearLayout;
         linearLayout.setAlpha(0.0f);
         updateIcons();
@@ -286,7 +286,7 @@ public class TvOngoingPrivacyChip extends CoreStartable implements PrivacyItemCo
         this.mIconsContainer.removeAllViews();
         for (int i = 0; i < generateIcons.size(); i++) {
             Drawable drawable = generateIcons.get(i);
-            drawable.mutate().setTint(this.mContext.getColor(C1893R.C1894color.privacy_icon_tint));
+            drawable.mutate().setTint(this.mContext.getColor(C1894R.C1895color.privacy_icon_tint));
             ImageView imageView = new ImageView(this.mContext);
             imageView.setImageDrawable(drawable);
             imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
@@ -405,20 +405,20 @@ public class TvOngoingPrivacyChip extends CoreStartable implements PrivacyItemCo
             boolean listContainsPrivacyType3 = listContainsPrivacyType(this.mItemsBeforeLastAnnouncement, PrivacyType.TYPE_MICROPHONE);
             boolean listContainsPrivacyType4 = listContainsPrivacyType(this.mPrivacyItems, PrivacyType.TYPE_MICROPHONE);
             if (!listContainsPrivacyType && listContainsPrivacyType2 && !listContainsPrivacyType3 && listContainsPrivacyType4) {
-                i = C1893R.string.mic_and_camera_recording_announcement;
+                i = C1894R.string.mic_and_camera_recording_announcement;
             } else if (!listContainsPrivacyType || listContainsPrivacyType2 || !listContainsPrivacyType3 || listContainsPrivacyType4) {
-                i = (!listContainsPrivacyType || listContainsPrivacyType2) ? (listContainsPrivacyType || !listContainsPrivacyType2) ? 0 : C1893R.string.camera_recording_announcement : C1893R.string.camera_stopped_recording_announcement;
+                i = (!listContainsPrivacyType || listContainsPrivacyType2) ? (listContainsPrivacyType || !listContainsPrivacyType2) ? 0 : C1894R.string.camera_recording_announcement : C1894R.string.camera_stopped_recording_announcement;
                 if (i != 0) {
                     this.mIndicatorView.announceForAccessibility(this.mContext.getString(i));
                     i = 0;
                 }
                 if (listContainsPrivacyType3 && !listContainsPrivacyType4) {
-                    i = C1893R.string.mic_stopped_recording_announcement;
+                    i = C1894R.string.mic_stopped_recording_announcement;
                 } else if (!listContainsPrivacyType3 && listContainsPrivacyType4) {
-                    i = C1893R.string.mic_recording_announcement;
+                    i = C1894R.string.mic_recording_announcement;
                 }
             } else {
-                i = C1893R.string.mic_camera_stopped_recording_announcement;
+                i = C1894R.string.mic_camera_stopped_recording_announcement;
             }
             if (i != 0) {
                 this.mIndicatorView.announceForAccessibility(this.mContext.getString(i));

@@ -37,7 +37,7 @@ class AppPair implements ShellTaskOrganizer.TaskListener, SplitLayout.SplitLayou
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onLeashReady$0$com-android-wm-shell-apppairs-AppPair$1  reason: not valid java name */
-        public /* synthetic */ void m3406lambda$onLeashReady$0$comandroidwmshellapppairsAppPair$1(SurfaceControl surfaceControl, SurfaceControl.Transaction transaction) {
+        public /* synthetic */ void m3410lambda$onLeashReady$0$comandroidwmshellapppairsAppPair$1(SurfaceControl surfaceControl, SurfaceControl.Transaction transaction) {
             transaction.show(surfaceControl).setLayer(surfaceControl, Integer.MAX_VALUE).setPosition(surfaceControl, (float) AppPair.this.mSplitLayout.getDividerBounds().left, (float) AppPair.this.mSplitLayout.getDividerBounds().top);
         }
     };
@@ -158,19 +158,19 @@ class AppPair implements ShellTaskOrganizer.TaskListener, SplitLayout.SplitLayou
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onTaskAppeared$0$com-android-wm-shell-apppairs-AppPair  reason: not valid java name */
-    public /* synthetic */ void m3400lambda$onTaskAppeared$0$comandroidwmshellapppairsAppPair(SurfaceControl.Transaction transaction) {
+    public /* synthetic */ void m3404lambda$onTaskAppeared$0$comandroidwmshellapppairsAppPair(SurfaceControl.Transaction transaction) {
         this.mDimLayer1 = SurfaceUtils.makeDimLayer(transaction, this.mTaskLeash1, "Dim layer", this.mSurfaceSession);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onTaskAppeared$1$com-android-wm-shell-apppairs-AppPair  reason: not valid java name */
-    public /* synthetic */ void m3401lambda$onTaskAppeared$1$comandroidwmshellapppairsAppPair(SurfaceControl.Transaction transaction) {
+    public /* synthetic */ void m3405lambda$onTaskAppeared$1$comandroidwmshellapppairsAppPair(SurfaceControl.Transaction transaction) {
         this.mDimLayer2 = SurfaceUtils.makeDimLayer(transaction, this.mTaskLeash2, "Dim layer", this.mSurfaceSession);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onTaskAppeared$2$com-android-wm-shell-apppairs-AppPair  reason: not valid java name */
-    public /* synthetic */ void m3402lambda$onTaskAppeared$2$comandroidwmshellapppairsAppPair(SurfaceControl.Transaction transaction) {
+    public /* synthetic */ void m3406lambda$onTaskAppeared$2$comandroidwmshellapppairsAppPair(SurfaceControl.Transaction transaction) {
         transaction.show(this.mRootTaskLeash).show(this.mTaskLeash1).show(this.mTaskLeash2).setPosition(this.mTaskLeash1, (float) this.mTaskInfo1.positionInParent.x, (float) this.mTaskInfo1.positionInParent.y).setPosition(this.mTaskLeash2, (float) this.mTaskInfo2.positionInParent.x, (float) this.mTaskInfo2.positionInParent.y);
     }
 
@@ -197,7 +197,7 @@ class AppPair implements ShellTaskOrganizer.TaskListener, SplitLayout.SplitLayou
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onTaskInfoChanged$3$com-android-wm-shell-apppairs-AppPair  reason: not valid java name */
-    public /* synthetic */ void m3403lambda$onTaskInfoChanged$3$comandroidwmshellapppairsAppPair(ActivityManager.RunningTaskInfo runningTaskInfo, SurfaceControl.Transaction transaction) {
+    public /* synthetic */ void m3407lambda$onTaskInfoChanged$3$comandroidwmshellapppairsAppPair(ActivityManager.RunningTaskInfo runningTaskInfo, SurfaceControl.Transaction transaction) {
         if (runningTaskInfo.isVisible) {
             transaction.show(this.mRootTaskLeash);
         } else {
@@ -232,13 +232,13 @@ class AppPair implements ShellTaskOrganizer.TaskListener, SplitLayout.SplitLayou
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onTaskVanished$4$com-android-wm-shell-apppairs-AppPair  reason: not valid java name */
-    public /* synthetic */ void m3404lambda$onTaskVanished$4$comandroidwmshellapppairsAppPair(SurfaceControl.Transaction transaction) {
+    public /* synthetic */ void m3408lambda$onTaskVanished$4$comandroidwmshellapppairsAppPair(SurfaceControl.Transaction transaction) {
         transaction.remove(this.mDimLayer1);
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onTaskVanished$5$com-android-wm-shell-apppairs-AppPair  reason: not valid java name */
-    public /* synthetic */ void m3405lambda$onTaskVanished$5$comandroidwmshellapppairsAppPair(SurfaceControl.Transaction transaction) {
+    public /* synthetic */ void m3409lambda$onTaskVanished$5$comandroidwmshellapppairsAppPair(SurfaceControl.Transaction transaction) {
         transaction.remove(this.mDimLayer2);
     }
 
@@ -292,7 +292,7 @@ class AppPair implements ShellTaskOrganizer.TaskListener, SplitLayout.SplitLayou
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onLayoutPositionChanging$6$com-android-wm-shell-apppairs-AppPair */
-    public /* synthetic */ void mo48158xc90fc31a(SplitLayout splitLayout, SurfaceControl.Transaction transaction) {
+    public /* synthetic */ void mo48167xc90fc31a(SplitLayout splitLayout, SurfaceControl.Transaction transaction) {
         splitLayout.applySurfaceChanges(transaction, this.mTaskLeash1, this.mTaskLeash2, this.mDimLayer1, this.mDimLayer2, true);
     }
 
@@ -302,7 +302,7 @@ class AppPair implements ShellTaskOrganizer.TaskListener, SplitLayout.SplitLayou
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onLayoutSizeChanging$7$com-android-wm-shell-apppairs-AppPair */
-    public /* synthetic */ void mo48160xaf230433(SplitLayout splitLayout, SurfaceControl.Transaction transaction) {
+    public /* synthetic */ void mo48169xaf230433(SplitLayout splitLayout, SurfaceControl.Transaction transaction) {
         splitLayout.applySurfaceChanges(transaction, this.mTaskLeash1, this.mTaskLeash2, this.mDimLayer1, this.mDimLayer2, true);
     }
 
@@ -315,7 +315,7 @@ class AppPair implements ShellTaskOrganizer.TaskListener, SplitLayout.SplitLayou
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onLayoutSizeChanged$8$com-android-wm-shell-apppairs-AppPair */
-    public /* synthetic */ void mo48159x50fd130d(SplitLayout splitLayout, SurfaceControl.Transaction transaction) {
+    public /* synthetic */ void mo48168x50fd130d(SplitLayout splitLayout, SurfaceControl.Transaction transaction) {
         splitLayout.applySurfaceChanges(transaction, this.mTaskLeash1, this.mTaskLeash2, this.mDimLayer1, this.mDimLayer2, false);
     }
 

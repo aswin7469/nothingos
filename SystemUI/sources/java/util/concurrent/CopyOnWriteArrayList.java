@@ -1133,14 +1133,14 @@ public class CopyOnWriteArrayList<E> implements List<E>, RandomAccess, Cloneable
     private static class COWSubListIterator<E> implements ListIterator<E> {
 
         /* renamed from: it */
-        private final ListIterator<E> f749it;
+        private final ListIterator<E> f747it;
         private final int offset;
         private final int size;
 
         COWSubListIterator(List<E> list, int i, int i2, int i3) {
             this.offset = i2;
             this.size = i3;
-            this.f749it = list.listIterator(i + i2);
+            this.f747it = list.listIterator(i + i2);
         }
 
         public boolean hasNext() {
@@ -1149,7 +1149,7 @@ public class CopyOnWriteArrayList<E> implements List<E>, RandomAccess, Cloneable
 
         public E next() {
             if (hasNext()) {
-                return this.f749it.next();
+                return this.f747it.next();
             }
             throw new NoSuchElementException();
         }
@@ -1160,17 +1160,17 @@ public class CopyOnWriteArrayList<E> implements List<E>, RandomAccess, Cloneable
 
         public E previous() {
             if (hasPrevious()) {
-                return this.f749it.previous();
+                return this.f747it.previous();
             }
             throw new NoSuchElementException();
         }
 
         public int nextIndex() {
-            return this.f749it.nextIndex() - this.offset;
+            return this.f747it.nextIndex() - this.offset;
         }
 
         public int previousIndex() {
-            return this.f749it.previousIndex() - this.offset;
+            return this.f747it.previousIndex() - this.offset;
         }
 
         public void remove() {
@@ -1188,7 +1188,7 @@ public class CopyOnWriteArrayList<E> implements List<E>, RandomAccess, Cloneable
         public void forEachRemaining(Consumer<? super E> consumer) {
             Objects.requireNonNull(consumer);
             while (hasNext()) {
-                consumer.accept(this.f749it.next());
+                consumer.accept(this.f747it.next());
             }
         }
     }

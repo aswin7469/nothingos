@@ -15,7 +15,7 @@ import com.google.android.material.internal.ParcelableSparseArray;
 public class NavigationBarPresenter implements MenuPresenter {
 
     /* renamed from: id */
-    private int f444id;
+    private int f443id;
     private MenuBuilder menu;
     private NavigationBarMenuView menuView;
     private boolean updateSuspended = false;
@@ -66,11 +66,11 @@ public class NavigationBarPresenter implements MenuPresenter {
     }
 
     public void setId(int i) {
-        this.f444id = i;
+        this.f443id = i;
     }
 
     public int getId() {
-        return this.f444id;
+        return this.f443id;
     }
 
     public Parcelable onSaveInstanceState() {

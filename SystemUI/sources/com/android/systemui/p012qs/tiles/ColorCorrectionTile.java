@@ -6,7 +6,7 @@ import android.os.Looper;
 import android.view.View;
 import android.widget.Switch;
 import com.android.internal.logging.MetricsLogger;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.qualifiers.Background;
 import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.p012qs.QSHost;
@@ -23,7 +23,7 @@ import javax.inject.Inject;
 
 /* renamed from: com.android.systemui.qs.tiles.ColorCorrectionTile */
 public class ColorCorrectionTile extends QSTileImpl<QSTile.BooleanState> {
-    private final QSTile.Icon mIcon = QSTileImpl.ResourceIcon.get(C1893R.C1895drawable.ic_qs_color_correction);
+    private final QSTile.Icon mIcon = QSTileImpl.ResourceIcon.get(C1894R.C1896drawable.ic_qs_color_correction);
     private final SettingObserver mSetting;
 
     public int getMetricsCategory() {
@@ -72,7 +72,7 @@ public class ColorCorrectionTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     public CharSequence getTileLabel() {
-        return this.mContext.getString(C1893R.string.quick_settings_color_correction_label);
+        return this.mContext.getString(C1894R.string.quick_settings_color_correction_label);
     }
 
     /* access modifiers changed from: protected */
@@ -83,7 +83,7 @@ public class ColorCorrectionTile extends QSTileImpl<QSTile.BooleanState> {
             i = 2;
         }
         booleanState.state = i;
-        booleanState.label = this.mContext.getString(C1893R.string.quick_settings_color_correction_label);
+        booleanState.label = this.mContext.getString(C1894R.string.quick_settings_color_correction_label);
         booleanState.icon = this.mIcon;
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
         booleanState.contentDescription = booleanState.label;

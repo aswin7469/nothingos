@@ -14,6 +14,6 @@ public final /* synthetic */ class BubbleData$$ExternalSyntheticLambda8 implemen
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo48484x12646c12(this.f$1, (Bubble) obj);
+        this.f$0.mo48493x12646c12(this.f$1, (Bubble) obj);
     }
 }

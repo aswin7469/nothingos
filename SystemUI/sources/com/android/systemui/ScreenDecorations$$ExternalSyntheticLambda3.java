@@ -15,6 +15,6 @@ public final /* synthetic */ class ScreenDecorations$$ExternalSyntheticLambda3 i
     }
 
     public final void accept(Object obj) {
-        this.f$0.m2524lambda$initOverlay$3$comandroidsystemuiScreenDecorations(this.f$1, (DecorProvider) obj);
+        this.f$0.m2530lambda$initOverlay$3$comandroidsystemuiScreenDecorations(this.f$1, (DecorProvider) obj);
     }
 }

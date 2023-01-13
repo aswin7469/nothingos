@@ -13,6 +13,6 @@ public final /* synthetic */ class PipController$$ExternalSyntheticLambda6 imple
     }
 
     public final void accept(Object obj) {
-        this.f$0.m3461lambda$init$4$comandroidwmshellpipphonePipController((OneHandedController) obj);
+        this.f$0.m3465lambda$init$4$comandroidwmshellpipphonePipController((OneHandedController) obj);
     }
 }

@@ -16,6 +16,6 @@ public final /* synthetic */ class MediaOutputBroadcastDialog$$ExternalSynthetic
     }
 
     public final void onClick(DialogInterface dialogInterface, int i) {
-        this.f$0.mo34371xe92903c2(this.f$1, this.f$2, dialogInterface, i);
+        this.f$0.mo34375xe92903c2(this.f$1, this.f$2, dialogInterface, i);
     }
 }

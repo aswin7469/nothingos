@@ -30,7 +30,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.customview.view.AbsSavedState;
 import androidx.drawerlayout.widget.DrawerLayout;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.internal.ContextUtils;
 import com.google.android.material.internal.NavigationMenu;
 import com.google.android.material.internal.NavigationMenuPresenter;
@@ -43,7 +43,7 @@ import com.google.android.material.shape.ShapeAppearancePathProvider;
 
 public class NavigationView extends ScrimInsetsFrameLayout {
     private static final int[] CHECKED_STATE_SET = {16842912};
-    private static final int DEF_STYLE_RES = C3621R.style.Widget_Design_NavigationView;
+    private static final int DEF_STYLE_RES = C3631R.style.Widget_Design_NavigationView;
     private static final int[] DISABLED_STATE_SET = {-16842910};
     private static final int PRESENTER_NAVIGATION_VIEW_ID = 1;
     private boolean bottomInsetScrimEnabled;
@@ -71,7 +71,7 @@ public class NavigationView extends ScrimInsetsFrameLayout {
     }
 
     public NavigationView(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, C3621R.attr.navigationViewStyle);
+        this(context, attributeSet, C3631R.attr.navigationViewStyle);
     }
 
     /* JADX WARNING: Illegal instructions before constructor call */
@@ -105,24 +105,24 @@ public class NavigationView extends ScrimInsetsFrameLayout {
             com.google.android.material.internal.NavigationMenu r14 = new com.google.android.material.internal.NavigationMenu
             r14.<init>(r13)
             r0.menu = r14
-            int[] r3 = com.google.android.material.C3621R.styleable.NavigationView
+            int[] r3 = com.google.android.material.C3631R.styleable.NavigationView
             int[] r6 = new int[r12]
             r1 = r13
             r2 = r18
             r4 = r19
             r5 = r9
             androidx.appcompat.widget.TintTypedArray r1 = com.google.android.material.internal.ThemeEnforcement.obtainTintedStyledAttributes(r1, r2, r3, r4, r5, r6)
-            int r2 = com.google.android.material.C3621R.styleable.NavigationView_android_background
+            int r2 = com.google.android.material.C3631R.styleable.NavigationView_android_background
             boolean r2 = r1.hasValue(r2)
             if (r2 == 0) goto L_0x0058
-            int r2 = com.google.android.material.C3621R.styleable.NavigationView_android_background
+            int r2 = com.google.android.material.C3631R.styleable.NavigationView_android_background
             android.graphics.drawable.Drawable r2 = r1.getDrawable(r2)
             androidx.core.view.ViewCompat.setBackground(r0, r2)
         L_0x0058:
-            int r2 = com.google.android.material.C3621R.styleable.NavigationView_drawerLayoutCornerSize
+            int r2 = com.google.android.material.C3631R.styleable.NavigationView_drawerLayoutCornerSize
             int r2 = r1.getDimensionPixelSize(r2, r12)
             r0.drawerLayoutCornerSize = r2
-            int r2 = com.google.android.material.C3621R.styleable.NavigationView_android_layout_gravity
+            int r2 = com.google.android.material.C3631R.styleable.NavigationView_android_layout_gravity
             int r2 = r1.getInt(r2, r12)
             r0.layoutGravity = r2
             android.graphics.drawable.Drawable r2 = r16.getBackground()
@@ -146,34 +146,34 @@ public class NavigationView extends ScrimInsetsFrameLayout {
             r4.initializeElevationOverlay(r13)
             androidx.core.view.ViewCompat.setBackground(r0, r4)
         L_0x009e:
-            int r2 = com.google.android.material.C3621R.styleable.NavigationView_elevation
+            int r2 = com.google.android.material.C3631R.styleable.NavigationView_elevation
             boolean r2 = r1.hasValue(r2)
             if (r2 == 0) goto L_0x00b0
-            int r2 = com.google.android.material.C3621R.styleable.NavigationView_elevation
+            int r2 = com.google.android.material.C3631R.styleable.NavigationView_elevation
             int r2 = r1.getDimensionPixelSize(r2, r12)
             float r2 = (float) r2
             r0.setElevation(r2)
         L_0x00b0:
-            int r2 = com.google.android.material.C3621R.styleable.NavigationView_android_fitsSystemWindows
+            int r2 = com.google.android.material.C3631R.styleable.NavigationView_android_fitsSystemWindows
             boolean r2 = r1.getBoolean(r2, r12)
             r0.setFitsSystemWindows(r2)
-            int r2 = com.google.android.material.C3621R.styleable.NavigationView_android_maxWidth
+            int r2 = com.google.android.material.C3631R.styleable.NavigationView_android_maxWidth
             int r2 = r1.getDimensionPixelSize(r2, r12)
             r0.maxWidth = r2
-            int r2 = com.google.android.material.C3621R.styleable.NavigationView_subheaderColor
+            int r2 = com.google.android.material.C3631R.styleable.NavigationView_subheaderColor
             boolean r2 = r1.hasValue(r2)
             r3 = 0
             if (r2 == 0) goto L_0x00d1
-            int r2 = com.google.android.material.C3621R.styleable.NavigationView_subheaderColor
+            int r2 = com.google.android.material.C3631R.styleable.NavigationView_subheaderColor
             android.content.res.ColorStateList r2 = r1.getColorStateList(r2)
             goto L_0x00d2
         L_0x00d1:
             r2 = r3
         L_0x00d2:
-            int r4 = com.google.android.material.C3621R.styleable.NavigationView_subheaderTextAppearance
+            int r4 = com.google.android.material.C3631R.styleable.NavigationView_subheaderTextAppearance
             boolean r4 = r1.hasValue(r4)
             if (r4 == 0) goto L_0x00e1
-            int r4 = com.google.android.material.C3621R.styleable.NavigationView_subheaderTextAppearance
+            int r4 = com.google.android.material.C3631R.styleable.NavigationView_subheaderTextAppearance
             int r4 = r1.getResourceId(r4, r12)
             goto L_0x00e2
         L_0x00e1:
@@ -184,35 +184,35 @@ public class NavigationView extends ScrimInsetsFrameLayout {
             if (r2 != 0) goto L_0x00ed
             android.content.res.ColorStateList r2 = r0.createDefaultColorStateList(r5)
         L_0x00ed:
-            int r6 = com.google.android.material.C3621R.styleable.NavigationView_itemIconTint
+            int r6 = com.google.android.material.C3631R.styleable.NavigationView_itemIconTint
             boolean r6 = r1.hasValue(r6)
             if (r6 == 0) goto L_0x00fc
-            int r5 = com.google.android.material.C3621R.styleable.NavigationView_itemIconTint
+            int r5 = com.google.android.material.C3631R.styleable.NavigationView_itemIconTint
             android.content.res.ColorStateList r5 = r1.getColorStateList(r5)
             goto L_0x0100
         L_0x00fc:
             android.content.res.ColorStateList r5 = r0.createDefaultColorStateList(r5)
         L_0x0100:
-            int r6 = com.google.android.material.C3621R.styleable.NavigationView_itemTextAppearance
+            int r6 = com.google.android.material.C3631R.styleable.NavigationView_itemTextAppearance
             boolean r6 = r1.hasValue(r6)
             if (r6 == 0) goto L_0x010f
-            int r6 = com.google.android.material.C3621R.styleable.NavigationView_itemTextAppearance
+            int r6 = com.google.android.material.C3631R.styleable.NavigationView_itemTextAppearance
             int r6 = r1.getResourceId(r6, r12)
             goto L_0x0110
         L_0x010f:
             r6 = r12
         L_0x0110:
-            int r7 = com.google.android.material.C3621R.styleable.NavigationView_itemIconSize
+            int r7 = com.google.android.material.C3631R.styleable.NavigationView_itemIconSize
             boolean r7 = r1.hasValue(r7)
             if (r7 == 0) goto L_0x0121
-            int r7 = com.google.android.material.C3621R.styleable.NavigationView_itemIconSize
+            int r7 = com.google.android.material.C3631R.styleable.NavigationView_itemIconSize
             int r7 = r1.getDimensionPixelSize(r7, r12)
             r0.setItemIconSize(r7)
         L_0x0121:
-            int r7 = com.google.android.material.C3621R.styleable.NavigationView_itemTextColor
+            int r7 = com.google.android.material.C3631R.styleable.NavigationView_itemTextColor
             boolean r7 = r1.hasValue(r7)
             if (r7 == 0) goto L_0x0130
-            int r7 = com.google.android.material.C3621R.styleable.NavigationView_itemTextColor
+            int r7 = com.google.android.material.C3631R.styleable.NavigationView_itemTextColor
             android.content.res.ColorStateList r7 = r1.getColorStateList(r7)
             goto L_0x0131
         L_0x0130:
@@ -223,13 +223,13 @@ public class NavigationView extends ScrimInsetsFrameLayout {
             r7 = 16842806(0x1010036, float:2.369371E-38)
             android.content.res.ColorStateList r7 = r0.createDefaultColorStateList(r7)
         L_0x013c:
-            int r8 = com.google.android.material.C3621R.styleable.NavigationView_itemBackground
+            int r8 = com.google.android.material.C3631R.styleable.NavigationView_itemBackground
             android.graphics.drawable.Drawable r8 = r1.getDrawable(r8)
             if (r8 != 0) goto L_0x0166
             boolean r9 = r0.hasShapeAppearance(r1)
             if (r9 == 0) goto L_0x0166
             android.graphics.drawable.Drawable r8 = r0.createDefaultItemBackground(r1)
-            int r9 = com.google.android.material.C3621R.styleable.NavigationView_itemRippleColor
+            int r9 = com.google.android.material.C3631R.styleable.NavigationView_itemRippleColor
             android.content.res.ColorStateList r9 = com.google.android.material.resources.MaterialResources.getColorStateList((android.content.Context) r13, (androidx.appcompat.widget.TintTypedArray) r1, (int) r9)
             if (r9 == 0) goto L_0x0166
             android.graphics.drawable.Drawable r15 = r0.createDefaultItemDrawable(r1, r3)
@@ -238,43 +238,43 @@ public class NavigationView extends ScrimInsetsFrameLayout {
             r11.<init>(r9, r3, r15)
             r10.setItemForeground(r11)
         L_0x0166:
-            int r3 = com.google.android.material.C3621R.styleable.NavigationView_itemHorizontalPadding
+            int r3 = com.google.android.material.C3631R.styleable.NavigationView_itemHorizontalPadding
             boolean r3 = r1.hasValue(r3)
             if (r3 == 0) goto L_0x0177
-            int r3 = com.google.android.material.C3621R.styleable.NavigationView_itemHorizontalPadding
+            int r3 = com.google.android.material.C3631R.styleable.NavigationView_itemHorizontalPadding
             int r3 = r1.getDimensionPixelSize(r3, r12)
             r0.setItemHorizontalPadding(r3)
         L_0x0177:
-            int r3 = com.google.android.material.C3621R.styleable.NavigationView_itemVerticalPadding
+            int r3 = com.google.android.material.C3631R.styleable.NavigationView_itemVerticalPadding
             boolean r3 = r1.hasValue(r3)
             if (r3 == 0) goto L_0x0188
-            int r3 = com.google.android.material.C3621R.styleable.NavigationView_itemVerticalPadding
+            int r3 = com.google.android.material.C3631R.styleable.NavigationView_itemVerticalPadding
             int r3 = r1.getDimensionPixelSize(r3, r12)
             r0.setItemVerticalPadding(r3)
         L_0x0188:
-            int r3 = com.google.android.material.C3621R.styleable.NavigationView_dividerInsetStart
+            int r3 = com.google.android.material.C3631R.styleable.NavigationView_dividerInsetStart
             int r3 = r1.getDimensionPixelSize(r3, r12)
             r0.setDividerInsetStart(r3)
-            int r3 = com.google.android.material.C3621R.styleable.NavigationView_dividerInsetEnd
+            int r3 = com.google.android.material.C3631R.styleable.NavigationView_dividerInsetEnd
             int r3 = r1.getDimensionPixelSize(r3, r12)
             r0.setDividerInsetEnd(r3)
-            int r3 = com.google.android.material.C3621R.styleable.NavigationView_subheaderInsetStart
+            int r3 = com.google.android.material.C3631R.styleable.NavigationView_subheaderInsetStart
             int r3 = r1.getDimensionPixelSize(r3, r12)
             r0.setSubheaderInsetStart(r3)
-            int r3 = com.google.android.material.C3621R.styleable.NavigationView_subheaderInsetEnd
+            int r3 = com.google.android.material.C3631R.styleable.NavigationView_subheaderInsetEnd
             int r3 = r1.getDimensionPixelSize(r3, r12)
             r0.setSubheaderInsetEnd(r3)
-            int r3 = com.google.android.material.C3621R.styleable.NavigationView_topInsetScrimEnabled
+            int r3 = com.google.android.material.C3631R.styleable.NavigationView_topInsetScrimEnabled
             boolean r9 = r0.topInsetScrimEnabled
             boolean r3 = r1.getBoolean(r3, r9)
             r0.setTopInsetScrimEnabled(r3)
-            int r3 = com.google.android.material.C3621R.styleable.NavigationView_bottomInsetScrimEnabled
+            int r3 = com.google.android.material.C3631R.styleable.NavigationView_bottomInsetScrimEnabled
             boolean r9 = r0.bottomInsetScrimEnabled
             boolean r3 = r1.getBoolean(r3, r9)
             r0.setBottomInsetScrimEnabled(r3)
-            int r3 = com.google.android.material.C3621R.styleable.NavigationView_itemIconPadding
+            int r3 = com.google.android.material.C3631R.styleable.NavigationView_itemIconPadding
             int r3 = r1.getDimensionPixelSize(r3, r12)
-            int r9 = com.google.android.material.C3621R.styleable.NavigationView_itemMaxLines
+            int r9 = com.google.android.material.C3631R.styleable.NavigationView_itemMaxLines
             r11 = 1
             int r9 = r1.getInt(r9, r11)
             r0.setItemMaxLines(r9)
@@ -300,17 +300,17 @@ public class NavigationView extends ScrimInsetsFrameLayout {
             androidx.appcompat.view.menu.MenuView r2 = r10.getMenuView(r0)
             android.view.View r2 = (android.view.View) r2
             r0.addView(r2)
-            int r2 = com.google.android.material.C3621R.styleable.NavigationView_menu
+            int r2 = com.google.android.material.C3631R.styleable.NavigationView_menu
             boolean r2 = r1.hasValue(r2)
             if (r2 == 0) goto L_0x021d
-            int r2 = com.google.android.material.C3621R.styleable.NavigationView_menu
+            int r2 = com.google.android.material.C3631R.styleable.NavigationView_menu
             int r2 = r1.getResourceId(r2, r12)
             r0.inflateMenu(r2)
         L_0x021d:
-            int r2 = com.google.android.material.C3621R.styleable.NavigationView_headerLayout
+            int r2 = com.google.android.material.C3631R.styleable.NavigationView_headerLayout
             boolean r2 = r1.hasValue(r2)
             if (r2 == 0) goto L_0x022e
-            int r2 = com.google.android.material.C3621R.styleable.NavigationView_headerLayout
+            int r2 = com.google.android.material.C3631R.styleable.NavigationView_headerLayout
             int r2 = r1.getResourceId(r2, r12)
             r0.inflateHeaderView(r2)
         L_0x022e:
@@ -355,7 +355,7 @@ public class NavigationView extends ScrimInsetsFrameLayout {
     }
 
     private boolean hasShapeAppearance(TintTypedArray tintTypedArray) {
-        return tintTypedArray.hasValue(C3621R.styleable.NavigationView_itemShapeAppearance) || tintTypedArray.hasValue(C3621R.styleable.NavigationView_itemShapeAppearanceOverlay);
+        return tintTypedArray.hasValue(C3631R.styleable.NavigationView_itemShapeAppearance) || tintTypedArray.hasValue(C3631R.styleable.NavigationView_itemShapeAppearanceOverlay);
     }
 
     /* access modifiers changed from: protected */
@@ -376,13 +376,13 @@ public class NavigationView extends ScrimInsetsFrameLayout {
     }
 
     private Drawable createDefaultItemBackground(TintTypedArray tintTypedArray) {
-        return createDefaultItemDrawable(tintTypedArray, MaterialResources.getColorStateList(getContext(), tintTypedArray, C3621R.styleable.NavigationView_itemShapeFillColor));
+        return createDefaultItemDrawable(tintTypedArray, MaterialResources.getColorStateList(getContext(), tintTypedArray, C3631R.styleable.NavigationView_itemShapeFillColor));
     }
 
     private Drawable createDefaultItemDrawable(TintTypedArray tintTypedArray, ColorStateList colorStateList) {
-        MaterialShapeDrawable materialShapeDrawable = new MaterialShapeDrawable(ShapeAppearanceModel.builder(getContext(), tintTypedArray.getResourceId(C3621R.styleable.NavigationView_itemShapeAppearance, 0), tintTypedArray.getResourceId(C3621R.styleable.NavigationView_itemShapeAppearanceOverlay, 0)).build());
+        MaterialShapeDrawable materialShapeDrawable = new MaterialShapeDrawable(ShapeAppearanceModel.builder(getContext(), tintTypedArray.getResourceId(C3631R.styleable.NavigationView_itemShapeAppearance, 0), tintTypedArray.getResourceId(C3631R.styleable.NavigationView_itemShapeAppearanceOverlay, 0)).build());
         materialShapeDrawable.setFillColor(colorStateList);
-        return new InsetDrawable(materialShapeDrawable, tintTypedArray.getDimensionPixelSize(C3621R.styleable.NavigationView_itemShapeInsetStart, 0), tintTypedArray.getDimensionPixelSize(C3621R.styleable.NavigationView_itemShapeInsetTop, 0), tintTypedArray.getDimensionPixelSize(C3621R.styleable.NavigationView_itemShapeInsetEnd, 0), tintTypedArray.getDimensionPixelSize(C3621R.styleable.NavigationView_itemShapeInsetBottom, 0));
+        return new InsetDrawable(materialShapeDrawable, tintTypedArray.getDimensionPixelSize(C3631R.styleable.NavigationView_itemShapeInsetStart, 0), tintTypedArray.getDimensionPixelSize(C3631R.styleable.NavigationView_itemShapeInsetTop, 0), tintTypedArray.getDimensionPixelSize(C3631R.styleable.NavigationView_itemShapeInsetEnd, 0), tintTypedArray.getDimensionPixelSize(C3631R.styleable.NavigationView_itemShapeInsetBottom, 0));
     }
 
     /* access modifiers changed from: protected */

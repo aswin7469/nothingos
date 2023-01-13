@@ -27,7 +27,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import androidx.core.view.ViewCompat;
 import com.android.internal.util.ContrastColorUtil;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.navigationbar.NavigationBarInflaterView;
 import com.android.systemui.statusbar.notification.NotificationUtils;
 import java.text.BreakIterator;
@@ -53,7 +53,7 @@ public class SmartReplyView extends ViewGroup {
     private final int mDefaultTextColor;
     private final int mDefaultTextColorDarkBg;
     private boolean mDidHideSystemReplies;
-    private final int mHeightUpperLimit = NotificationUtils.getFontScaledHeight(this.mContext, C1893R.dimen.smart_reply_button_max_height);
+    private final int mHeightUpperLimit = NotificationUtils.getFontScaledHeight(this.mContext, C1894R.dimen.smart_reply_button_max_height);
     private long mLastDispatchDrawTime;
     private long mLastDrawChildTime;
     private long mLastMeasureTime;
@@ -84,17 +84,17 @@ public class SmartReplyView extends ViewGroup {
 
     public SmartReplyView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        int color = context.getColor(C1893R.C1894color.smart_reply_button_background);
+        int color = context.getColor(C1894R.C1895color.smart_reply_button_background);
         this.mDefaultBackgroundColor = color;
-        this.mDefaultTextColor = this.mContext.getColor(C1893R.C1894color.smart_reply_button_text);
-        this.mDefaultTextColorDarkBg = this.mContext.getColor(C1893R.C1894color.smart_reply_button_text_dark_bg);
-        int color2 = this.mContext.getColor(C1893R.C1894color.smart_reply_button_stroke);
+        this.mDefaultTextColor = this.mContext.getColor(C1894R.C1895color.smart_reply_button_text);
+        this.mDefaultTextColorDarkBg = this.mContext.getColor(C1894R.C1895color.smart_reply_button_text_dark_bg);
+        int color2 = this.mContext.getColor(C1894R.C1895color.smart_reply_button_stroke);
         this.mDefaultStrokeColor = color2;
-        int color3 = this.mContext.getColor(C1893R.C1894color.notification_ripple_untinted_color);
+        int color3 = this.mContext.getColor(C1894R.C1895color.notification_ripple_untinted_color);
         this.mRippleColor = color3;
         this.mRippleColorDarkBg = Color.argb(Color.alpha(color3), 255, 255, 255);
         this.mMinStrokeContrast = ContrastColorUtil.calculateContrast(color2, color);
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C1893R.styleable.SmartReplyView, 0, 0);
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C1894R.styleable.SmartReplyView, 0, 0);
         int indexCount = obtainStyledAttributes.getIndexCount();
         int i = 0;
         int i2 = 0;
@@ -115,7 +115,7 @@ public class SmartReplyView extends ViewGroup {
     }
 
     public static SmartReplyView inflate(Context context, SmartReplyConstants smartReplyConstants) {
-        SmartReplyView smartReplyView = (SmartReplyView) LayoutInflater.from(context).inflate(C1893R.layout.smart_reply_view, (ViewGroup) null);
+        SmartReplyView smartReplyView = (SmartReplyView) LayoutInflater.from(context).inflate(C1894R.layout.smart_reply_view, (ViewGroup) null);
         smartReplyView.setMaxNumActions(smartReplyConstants.getMaxNumActions());
         smartReplyView.setMaxSqueezeRemeasureAttempts(smartReplyConstants.getMaxSqueezeRemeasureAttempts());
         smartReplyView.setMinNumSystemGeneratedReplies(smartReplyConstants.getMinNumSystemGeneratedReplies());

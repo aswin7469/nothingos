@@ -11,6 +11,6 @@ public final /* synthetic */ class LightBarController$$ExternalSyntheticLambda0 
     }
 
     public final void onNavigationModeChanged(int i) {
-        this.f$0.mo44370x3a2764af(i);
+        this.f$0.mo44385x3a2764af(i);
     }
 }

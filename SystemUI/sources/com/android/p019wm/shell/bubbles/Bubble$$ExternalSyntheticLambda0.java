@@ -18,6 +18,6 @@ public final /* synthetic */ class Bubble$$ExternalSyntheticLambda0 implements P
     }
 
     public final void onCanceled(PendingIntent pendingIntent) {
-        this.f$0.m3409lambda$new$1$comandroidwmshellbubblesBubble(this.f$1, this.f$2, pendingIntent);
+        this.f$0.m3413lambda$new$1$comandroidwmshellbubblesBubble(this.f$1, this.f$2, pendingIntent);
     }
 }

@@ -6,7 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.nothing.systemui.util.NTLogUtil;
 
 public class CalendarPermissionActivity extends Activity {
@@ -18,7 +18,7 @@ public class CalendarPermissionActivity extends Activity {
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         if (hasCalendarReadPermission()) {
-            NTLogUtil.m1680d("PermissionActivity", "CalendarReadPermission already granted");
+            NTLogUtil.m1686d("PermissionActivity", "CalendarReadPermission already granted");
         } else if (shouldShowRequestPermissionRationale("android.permission.READ_CALENDAR")) {
             requestCalendarReadPermission();
         } else {
@@ -41,33 +41,33 @@ public class CalendarPermissionActivity extends Activity {
     public void onRequestPermissionsResult(int i, String[] strArr, int[] iArr) {
         if (i == 1) {
             if (iArr.length <= 0 || iArr[0] != 0) {
-                NTLogUtil.m1680d("PermissionActivity", "Not Granted");
+                NTLogUtil.m1686d("PermissionActivity", "Not Granted");
             } else {
-                NTLogUtil.m1680d("PermissionActivity", "Granted");
+                NTLogUtil.m1686d("PermissionActivity", "Granted");
             }
             finish();
         }
     }
 
     private AlertDialog createGoToSettingDialog() {
-        return new AlertDialog.Builder(this).setTitle(C1893R.string.quick_look_widget_calendar_setting_title).setMessage(C1893R.string.quick_look_widget_calendar_setting_msg).setNegativeButton(17039360, new CalendarPermissionActivity$$ExternalSyntheticLambda0(this)).setPositiveButton(C1893R.string.quick_look_widget_calendar_setting_btn_submit, new CalendarPermissionActivity$$ExternalSyntheticLambda1(this)).create();
+        return new AlertDialog.Builder(this).setTitle(C1894R.string.quick_look_widget_calendar_setting_title).setMessage(C1894R.string.quick_look_widget_calendar_setting_msg).setNegativeButton(17039360, new CalendarPermissionActivity$$ExternalSyntheticLambda0(this)).setPositiveButton(C1894R.string.quick_look_widget_calendar_setting_btn_submit, new CalendarPermissionActivity$$ExternalSyntheticLambda1(this)).create();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$createGoToSettingDialog$0$com-nothing-utils-CalendarPermissionActivity */
-    public /* synthetic */ void mo58259x71977780(DialogInterface dialogInterface, int i) {
+    public /* synthetic */ void mo58315x71977780(DialogInterface dialogInterface, int i) {
         finish();
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$createGoToSettingDialog$1$com-nothing-utils-CalendarPermissionActivity */
-    public /* synthetic */ void mo58260x2b0f051f(DialogInterface dialogInterface, int i) {
+    public /* synthetic */ void mo58316x2b0f051f(DialogInterface dialogInterface, int i) {
         try {
             Intent intent = new Intent("android.settings.APPLICATION_DETAILS_SETTINGS");
             intent.setData(Uri.parse("package:" + getPackageName()));
             startActivity(intent);
         } catch (Exception unused) {
-            NTLogUtil.m1681e("PermissionActivity", "Start calendar event activity error.");
+            NTLogUtil.m1687e("PermissionActivity", "Start calendar event activity error.");
         }
     }
 

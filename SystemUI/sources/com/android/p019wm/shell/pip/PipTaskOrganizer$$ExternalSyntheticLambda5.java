@@ -10,6 +10,6 @@ public final /* synthetic */ class PipTaskOrganizer$$ExternalSyntheticLambda5 im
     }
 
     public final void run() {
-        this.f$0.m3457lambda$new$0$comandroidwmshellpipPipTaskOrganizer();
+        this.f$0.m3461lambda$new$0$comandroidwmshellpipPipTaskOrganizer();
     }
 }

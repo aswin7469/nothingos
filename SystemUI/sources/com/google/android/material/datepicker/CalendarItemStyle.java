@@ -9,7 +9,7 @@ import android.graphics.drawable.RippleDrawable;
 import android.widget.TextView;
 import androidx.core.util.Preconditions;
 import androidx.core.view.ViewCompat;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.resources.MaterialResources;
 import com.google.android.material.shape.MaterialShapeDrawable;
 import com.google.android.material.shape.ShapeAppearanceModel;
@@ -37,13 +37,13 @@ final class CalendarItemStyle {
 
     static CalendarItemStyle create(Context context, int i) {
         Preconditions.checkArgument(i != 0, "Cannot create a CalendarItemStyle with a styleResId of 0");
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(i, C3621R.styleable.MaterialCalendarItem);
-        Rect rect = new Rect(obtainStyledAttributes.getDimensionPixelOffset(C3621R.styleable.MaterialCalendarItem_android_insetLeft, 0), obtainStyledAttributes.getDimensionPixelOffset(C3621R.styleable.MaterialCalendarItem_android_insetTop, 0), obtainStyledAttributes.getDimensionPixelOffset(C3621R.styleable.MaterialCalendarItem_android_insetRight, 0), obtainStyledAttributes.getDimensionPixelOffset(C3621R.styleable.MaterialCalendarItem_android_insetBottom, 0));
-        ColorStateList colorStateList = MaterialResources.getColorStateList(context, obtainStyledAttributes, C3621R.styleable.MaterialCalendarItem_itemFillColor);
-        ColorStateList colorStateList2 = MaterialResources.getColorStateList(context, obtainStyledAttributes, C3621R.styleable.MaterialCalendarItem_itemTextColor);
-        ColorStateList colorStateList3 = MaterialResources.getColorStateList(context, obtainStyledAttributes, C3621R.styleable.MaterialCalendarItem_itemStrokeColor);
-        int dimensionPixelSize = obtainStyledAttributes.getDimensionPixelSize(C3621R.styleable.MaterialCalendarItem_itemStrokeWidth, 0);
-        ShapeAppearanceModel build = ShapeAppearanceModel.builder(context, obtainStyledAttributes.getResourceId(C3621R.styleable.MaterialCalendarItem_itemShapeAppearance, 0), obtainStyledAttributes.getResourceId(C3621R.styleable.MaterialCalendarItem_itemShapeAppearanceOverlay, 0)).build();
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(i, C3631R.styleable.MaterialCalendarItem);
+        Rect rect = new Rect(obtainStyledAttributes.getDimensionPixelOffset(C3631R.styleable.MaterialCalendarItem_android_insetLeft, 0), obtainStyledAttributes.getDimensionPixelOffset(C3631R.styleable.MaterialCalendarItem_android_insetTop, 0), obtainStyledAttributes.getDimensionPixelOffset(C3631R.styleable.MaterialCalendarItem_android_insetRight, 0), obtainStyledAttributes.getDimensionPixelOffset(C3631R.styleable.MaterialCalendarItem_android_insetBottom, 0));
+        ColorStateList colorStateList = MaterialResources.getColorStateList(context, obtainStyledAttributes, C3631R.styleable.MaterialCalendarItem_itemFillColor);
+        ColorStateList colorStateList2 = MaterialResources.getColorStateList(context, obtainStyledAttributes, C3631R.styleable.MaterialCalendarItem_itemTextColor);
+        ColorStateList colorStateList3 = MaterialResources.getColorStateList(context, obtainStyledAttributes, C3631R.styleable.MaterialCalendarItem_itemStrokeColor);
+        int dimensionPixelSize = obtainStyledAttributes.getDimensionPixelSize(C3631R.styleable.MaterialCalendarItem_itemStrokeWidth, 0);
+        ShapeAppearanceModel build = ShapeAppearanceModel.builder(context, obtainStyledAttributes.getResourceId(C3631R.styleable.MaterialCalendarItem_itemShapeAppearance, 0), obtainStyledAttributes.getResourceId(C3631R.styleable.MaterialCalendarItem_itemShapeAppearanceOverlay, 0)).build();
         obtainStyledAttributes.recycle();
         return new CalendarItemStyle(colorStateList, colorStateList2, colorStateList3, dimensionPixelSize, build, rect);
     }

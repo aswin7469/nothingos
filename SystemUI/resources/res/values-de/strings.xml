@@ -708,9 +708,15 @@
     <string name="force_rtl_layout_all_locales_summary">Für alle Sprachen wird das linksläufige Bildschirmlayout verwendet</string>
     <string name="forced_resizable_secondary_display">Die App funktioniert auf einem sekundären Display möglicherweise nicht.</string>
     <string name="game_status">Spielt</string>
+    <string name="gamemode_description">Der Spielmodus erkennt, ob Sie gerade spielen, und schaltet sich automatisch für Sie ein</string>
+    <string name="gamemode_gamedashboard_title">Spiel-Dashboard</string>
+    <string name="gamemode_notification_content">Zum Aufrufen der Einstellungen antippen</string>
+    <string name="gamemode_notification_title">Spielmodus ist derzeit aktiv</string>
     <string name="global_action_lock_message">Entsperre dein Smartphone für weitere Optionen</string>
     <string name="global_action_screenshot">Screenshot</string>
     <string name="global_action_smart_lock_disabled">Smart Lock deaktiviert</string>
+    <string name="gm_guide_status_on">EIN</string>
+    <string name="gm_notification_title">Spielmodus</string>
     <string name="go_to_web">Browser öffnen</string>
     <string name="got_it">Ok</string>
     <string name="guest_exit_guest">Gast entfernen</string>

@@ -61,7 +61,7 @@ public class NotificationInterruptStateProviderImpl implements NotificationInter
         this.mLogger = notificationInterruptLogger;
         this.mFlags = notifPipelineFlags;
         this.mKeyguardNotificationVisibilityProvider = keyguardNotificationVisibilityProvider;
-        C27241 r3 = new ContentObserver(handler) {
+        C27301 r3 = new ContentObserver(handler) {
             public void onChange(boolean z) {
                 boolean z2 = NotificationInterruptStateProviderImpl.this.mUseHeadsUp;
                 NotificationInterruptStateProviderImpl notificationInterruptStateProviderImpl = NotificationInterruptStateProviderImpl.this;

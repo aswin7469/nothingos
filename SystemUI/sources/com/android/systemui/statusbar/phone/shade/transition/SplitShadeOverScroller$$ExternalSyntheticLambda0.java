@@ -11,6 +11,6 @@ public final /* synthetic */ class SplitShadeOverScroller$$ExternalSyntheticLamb
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        SplitShadeOverScroller.m3216releaseOverScroll$lambda0(this.f$0, valueAnimator);
+        SplitShadeOverScroller.m3221releaseOverScroll$lambda0(this.f$0, valueAnimator);
     }
 }

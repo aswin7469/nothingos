@@ -33,8 +33,8 @@ import sun.security.x509.X509CRLImpl;
 import sun.security.x509.X509CertImpl;
 
 public final class AlgorithmChecker extends PKIXCertPathChecker {
-    private static final Set<CryptoPrimitive> KU_PRIMITIVE_SET = Collections.unmodifiableSet(EnumSet.m1719of(CryptoPrimitive.SIGNATURE, CryptoPrimitive.KEY_ENCAPSULATION, CryptoPrimitive.PUBLIC_KEY_ENCRYPTION, CryptoPrimitive.KEY_AGREEMENT));
-    private static final Set<CryptoPrimitive> SIGNATURE_PRIMITIVE_SET = Collections.unmodifiableSet(EnumSet.m1716of(CryptoPrimitive.SIGNATURE));
+    private static final Set<CryptoPrimitive> KU_PRIMITIVE_SET = Collections.unmodifiableSet(EnumSet.m1725of(CryptoPrimitive.SIGNATURE, CryptoPrimitive.KEY_ENCAPSULATION, CryptoPrimitive.PUBLIC_KEY_ENCRYPTION, CryptoPrimitive.KEY_AGREEMENT));
+    private static final Set<CryptoPrimitive> SIGNATURE_PRIMITIVE_SET = Collections.unmodifiableSet(EnumSet.m1722of(CryptoPrimitive.SIGNATURE));
     private static final DisabledAlgorithmConstraints certPathDefaultConstraints;
     private static final Debug debug = Debug.getInstance("certpath");
     private static final boolean publicCALimits;

@@ -46,7 +46,7 @@ public class SystemWindows {
     public final IWindowManager mWmService;
 
     public SystemWindows(DisplayController displayController, IWindowManager iWindowManager) {
-        C34381 r0 = new DisplayController.OnDisplaysChangedListener() {
+        C34481 r0 = new DisplayController.OnDisplaysChangedListener() {
             public void onDisplayAdded(int i) {
             }
 

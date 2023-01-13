@@ -158,7 +158,7 @@ abstract class BaseParceledListSlice<T> implements Parcelable {
             }
             if (i2 < size) {
                 parcel.writeInt(0);
-                C33331 r2 = new Binder() {
+                C33431 r2 = new Binder() {
                     /* access modifiers changed from: protected */
                     public boolean onTransact(int i, Parcel parcel, Parcel parcel2, int i2) throws RemoteException {
                         if (i != 1) {

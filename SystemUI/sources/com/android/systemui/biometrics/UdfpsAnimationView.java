@@ -11,6 +11,7 @@ public abstract class UdfpsAnimationView extends FrameLayout {
     private int mAlpha;
     private float mDialogSuggestedAlpha = 1.0f;
     private float mNotificationShadeExpansion = 0.0f;
+    private boolean mOnExpansionChangedTriggered = false;
     boolean mPauseAuth;
 
     private int expansionToAlpha(float f) {
@@ -68,12 +69,12 @@ public abstract class UdfpsAnimationView extends FrameLayout {
             return false;
         }
         this.mPauseAuth = z;
-        updateAlpha();
+        updateAlpha("setPauseAuth " + this.mPauseAuth);
         return true;
     }
 
     /* access modifiers changed from: protected */
-    public int updateAlpha() {
+    public int updateAlpha(String str) {
         int calculateAlpha = calculateAlpha();
         getDrawable().setAlpha(calculateAlpha);
         if (!this.mPauseAuth || calculateAlpha != 0 || getParent() == null) {
@@ -101,7 +102,7 @@ public abstract class UdfpsAnimationView extends FrameLayout {
 
     public void setDialogSuggestedAlpha(float f) {
         this.mDialogSuggestedAlpha = f;
-        updateAlpha();
+        updateAlpha("setDialogSuggestedAlpha " + this.mDialogSuggestedAlpha);
     }
 
     public float getDialogSuggestedAlpha() {
@@ -109,7 +110,11 @@ public abstract class UdfpsAnimationView extends FrameLayout {
     }
 
     public void onExpansionChanged(float f) {
+        float f2 = this.mNotificationShadeExpansion;
         this.mNotificationShadeExpansion = f;
-        updateAlpha();
+        if (f != f2 || !this.mOnExpansionChangedTriggered) {
+            this.mOnExpansionChangedTriggered = true;
+            updateAlpha("onExpansionChanged " + f);
+        }
     }
 }

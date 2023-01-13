@@ -60,7 +60,7 @@ public final class FileTime implements Comparable<FileTime> {
     }
 
     /* renamed from: to */
-    public long mo61298to(TimeUnit timeUnit) {
+    public long mo61354to(TimeUnit timeUnit) {
         Objects.requireNonNull(timeUnit, "unit");
         TimeUnit timeUnit2 = this.unit;
         if (timeUnit2 != null) {
@@ -121,7 +121,7 @@ public final class FileTime implements Comparable<FileTime> {
             r12 = this;
             java.time.Instant r0 = r12.instant
             if (r0 != 0) goto L_0x00a5
-            int[] r0 = java.nio.file.attribute.FileTime.C43651.$SwitchMap$java$util$concurrent$TimeUnit
+            int[] r0 = java.nio.file.attribute.FileTime.C43771.$SwitchMap$java$util$concurrent$TimeUnit
             java.util.concurrent.TimeUnit r1 = r12.unit
             int r1 = r1.ordinal()
             r0 = r0[r1]
@@ -218,7 +218,7 @@ public final class FileTime implements Comparable<FileTime> {
     }
 
     /* renamed from: java.nio.file.attribute.FileTime$1 */
-    static /* synthetic */ class C43651 {
+    static /* synthetic */ class C43771 {
         static final /* synthetic */ int[] $SwitchMap$java$util$concurrent$TimeUnit;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(14:0|1|2|3|4|5|6|7|8|9|10|11|12|(3:13|14|16)) */
@@ -279,7 +279,7 @@ public final class FileTime implements Comparable<FileTime> {
             L_0x0054:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: java.nio.file.attribute.FileTime.C43651.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: java.nio.file.attribute.FileTime.C43771.<clinit>():void");
         }
     }
 

@@ -27,7 +27,7 @@ import androidx.dynamicanimation.animation.SpringForce;
 import com.android.internal.util.LatencyTracker;
 import com.android.p019wm.shell.back.BackAnimation;
 import com.android.settingslib.Utils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dependency;
 import com.android.systemui.animation.Interpolators;
 import com.android.systemui.plugins.NavigationEdgeBackPlugin;
@@ -219,8 +219,8 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
         loadDimens();
         loadColors(context);
         updateArrowDirection();
-        this.mSwipeTriggerThreshold = context.getResources().getDimension(C1893R.dimen.navigation_edge_action_drag_threshold);
-        this.mSwipeProgressThreshold = context.getResources().getDimension(C1893R.dimen.navigation_edge_action_progress_threshold);
+        this.mSwipeTriggerThreshold = context.getResources().getDimension(C1894R.dimen.navigation_edge_action_drag_threshold);
+        this.mSwipeProgressThreshold = context.getResources().getDimension(C1894R.dimen.navigation_edge_action_progress_threshold);
         initializeBackAnimation();
         setVisibility(8);
         Executor executor = (Executor) Dependency.get(Dependency.BACKGROUND_EXECUTOR);
@@ -246,13 +246,13 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-navigationbar-gestural-NavigationBarEdgePanel */
-    public /* synthetic */ void mo35074x6e8f2d95(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo35078x6e8f2d95(ValueAnimator valueAnimator) {
         setCurrentArrowColor(ColorUtils.blendARGB(this.mArrowStartColor, this.mArrowColor, valueAnimator.getAnimatedFraction()));
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$1$com-android-systemui-navigationbar-gestural-NavigationBarEdgePanel */
-    public /* synthetic */ void mo35075xafd29f4(ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo35079xafd29f4(ValueAnimator valueAnimator) {
         this.mDisappearAmount = ((Float) valueAnimator.getAnimatedValue()).floatValue();
         invalidate();
     }
@@ -409,9 +409,9 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
 
     private void loadDimens() {
         Resources resources = getResources();
-        this.mArrowPaddingEnd = resources.getDimensionPixelSize(C1893R.dimen.navigation_edge_panel_padding);
-        this.mMinArrowPosition = resources.getDimensionPixelSize(C1893R.dimen.navigation_edge_arrow_min_y);
-        this.mFingerOffset = resources.getDimensionPixelSize(C1893R.dimen.navigation_edge_finger_offset);
+        this.mArrowPaddingEnd = resources.getDimensionPixelSize(C1894R.dimen.navigation_edge_panel_padding);
+        this.mMinArrowPosition = resources.getDimensionPixelSize(C1894R.dimen.navigation_edge_arrow_min_y);
+        this.mFingerOffset = resources.getDimensionPixelSize(C1894R.dimen.navigation_edge_finger_offset);
     }
 
     private void updateArrowDirection() {
@@ -420,11 +420,11 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
     }
 
     private void loadColors(Context context) {
-        int themeAttr = Utils.getThemeAttr(context, C1893R.attr.darkIconTheme);
-        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(context, Utils.getThemeAttr(context, C1893R.attr.lightIconTheme));
+        int themeAttr = Utils.getThemeAttr(context, C1894R.attr.darkIconTheme);
+        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(context, Utils.getThemeAttr(context, C1894R.attr.lightIconTheme));
         ContextThemeWrapper contextThemeWrapper2 = new ContextThemeWrapper(context, themeAttr);
-        this.mArrowColorLight = Utils.getColorAttrDefaultColor(contextThemeWrapper, C1893R.attr.singleToneColor);
-        int colorAttrDefaultColor = Utils.getColorAttrDefaultColor(contextThemeWrapper2, C1893R.attr.singleToneColor);
+        this.mArrowColorLight = Utils.getColorAttrDefaultColor(contextThemeWrapper, C1894R.attr.singleToneColor);
+        int colorAttrDefaultColor = Utils.getColorAttrDefaultColor(contextThemeWrapper2, C1894R.attr.singleToneColor);
         this.mArrowColorDark = colorAttrDefaultColor;
         this.mProtectionColorDark = this.mArrowColorLight;
         this.mProtectionColorLight = colorAttrDefaultColor;
@@ -517,7 +517,7 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$triggerBack$3$com-android-systemui-navigationbar-gestural-NavigationBarEdgePanel */
-    public /* synthetic */ void mo35077xd9d95ff3() {
+    public /* synthetic */ void mo35081xd9d95ff3() {
         this.mAngleOffset = Math.max(0.0f, this.mAngleOffset + 8.0f);
         updateAngle(true);
         this.mTranslationAnimation.setSpring(this.mTriggerBackSpring);
@@ -529,7 +529,7 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$triggerBack$2$com-android-systemui-navigationbar-gestural-NavigationBarEdgePanel */
-    public /* synthetic */ void mo35076x3d6b6394() {
+    public /* synthetic */ void mo35080x3d6b6394() {
         setVisibility(8);
     }
 

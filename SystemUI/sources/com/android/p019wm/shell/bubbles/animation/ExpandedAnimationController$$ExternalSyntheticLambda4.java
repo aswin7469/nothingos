@@ -10,6 +10,6 @@ public final /* synthetic */ class ExpandedAnimationController$$ExternalSyntheti
     }
 
     public final void run() {
-        this.f$0.mo48854x9f77d3b6();
+        this.f$0.mo48863x9f77d3b6();
     }
 }

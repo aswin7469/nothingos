@@ -13,6 +13,6 @@ public final /* synthetic */ class NotificationGutsManager$$ExternalSyntheticLam
     }
 
     public final void onHeightChanged(NotificationGuts notificationGuts) {
-        this.f$0.mo41607x6f8ac8ed(this.f$1, notificationGuts);
+        this.f$0.mo41615x6f8ac8ed(this.f$1, notificationGuts);
     }
 }

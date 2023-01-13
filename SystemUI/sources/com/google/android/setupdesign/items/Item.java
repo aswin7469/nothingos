@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.google.android.setupdesign.C3953R;
+import com.google.android.setupdesign.C3963R;
 import com.google.android.setupdesign.util.ItemStyler;
 import com.google.android.setupdesign.util.LayoutStyler;
 
@@ -38,22 +38,22 @@ public class Item extends AbstractItem {
         this.visible = true;
         this.iconTint = 0;
         this.iconGravity = 16;
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C3953R.styleable.SudItem);
-        this.enabled = obtainStyledAttributes.getBoolean(C3953R.styleable.SudItem_android_enabled, true);
-        this.icon = obtainStyledAttributes.getDrawable(C3953R.styleable.SudItem_android_icon);
-        this.title = obtainStyledAttributes.getText(C3953R.styleable.SudItem_android_title);
-        this.summary = obtainStyledAttributes.getText(C3953R.styleable.SudItem_android_summary);
-        this.contentDescription = obtainStyledAttributes.getText(C3953R.styleable.SudItem_android_contentDescription);
-        this.layoutRes = obtainStyledAttributes.getResourceId(C3953R.styleable.SudItem_android_layout, getDefaultLayoutResource());
-        this.visible = obtainStyledAttributes.getBoolean(C3953R.styleable.SudItem_android_visible, true);
-        this.iconTint = obtainStyledAttributes.getColor(C3953R.styleable.SudItem_sudIconTint, 0);
-        this.iconGravity = obtainStyledAttributes.getInt(C3953R.styleable.SudItem_sudIconGravity, 16);
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C3963R.styleable.SudItem);
+        this.enabled = obtainStyledAttributes.getBoolean(C3963R.styleable.SudItem_android_enabled, true);
+        this.icon = obtainStyledAttributes.getDrawable(C3963R.styleable.SudItem_android_icon);
+        this.title = obtainStyledAttributes.getText(C3963R.styleable.SudItem_android_title);
+        this.summary = obtainStyledAttributes.getText(C3963R.styleable.SudItem_android_summary);
+        this.contentDescription = obtainStyledAttributes.getText(C3963R.styleable.SudItem_android_contentDescription);
+        this.layoutRes = obtainStyledAttributes.getResourceId(C3963R.styleable.SudItem_android_layout, getDefaultLayoutResource());
+        this.visible = obtainStyledAttributes.getBoolean(C3963R.styleable.SudItem_android_visible, true);
+        this.iconTint = obtainStyledAttributes.getColor(C3963R.styleable.SudItem_sudIconTint, 0);
+        this.iconGravity = obtainStyledAttributes.getInt(C3963R.styleable.SudItem_sudIconGravity, 16);
         obtainStyledAttributes.recycle();
     }
 
     /* access modifiers changed from: protected */
     public int getDefaultLayoutResource() {
-        return C3953R.layout.sud_items_default;
+        return C3963R.layout.sud_items_default;
     }
 
     public void setEnabled(boolean z) {
@@ -154,8 +154,8 @@ public class Item extends AbstractItem {
     }
 
     public void onBindView(View view) {
-        ((TextView) view.findViewById(C3953R.C3956id.sud_items_title)).setText(getTitle());
-        TextView textView = (TextView) view.findViewById(C3953R.C3956id.sud_items_summary);
+        ((TextView) view.findViewById(C3963R.C3966id.sud_items_title)).setText(getTitle());
+        TextView textView = (TextView) view.findViewById(C3963R.C3966id.sud_items_summary);
         CharSequence summary2 = getSummary();
         if (hasSummary(summary2)) {
             textView.setText(summary2);
@@ -164,10 +164,10 @@ public class Item extends AbstractItem {
             textView.setVisibility(8);
         }
         view.setContentDescription(getContentDescription());
-        View findViewById = view.findViewById(C3953R.C3956id.sud_items_icon_container);
+        View findViewById = view.findViewById(C3963R.C3966id.sud_items_icon_container);
         Drawable icon2 = getIcon();
         if (icon2 != null) {
-            ImageView imageView = (ImageView) view.findViewById(C3953R.C3956id.sud_items_icon);
+            ImageView imageView = (ImageView) view.findViewById(C3963R.C3966id.sud_items_icon);
             imageView.setImageDrawable((Drawable) null);
             onMergeIconStateAndLevels(imageView, icon2);
             imageView.setImageDrawable(icon2);
@@ -186,7 +186,7 @@ public class Item extends AbstractItem {
             findViewById.setVisibility(8);
         }
         view.setId(getViewId());
-        if (!(this instanceof ExpandableSwitchItem) && view.getId() != C3953R.C3956id.sud_layout_header) {
+        if (!(this instanceof ExpandableSwitchItem) && view.getId() != C3963R.C3966id.sud_layout_header) {
             LayoutStyler.applyPartnerCustomizationLayoutPaddingStyle(view);
         }
         ItemStyler.applyPartnerCustomizationItemStyle(view);

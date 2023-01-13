@@ -13,6 +13,6 @@ public final /* synthetic */ class BubbleController$$ExternalSyntheticLambda6 im
     }
 
     public final void onVisibilityChanged(int i, LocusId locusId, boolean z) {
-        this.f$0.mo48349x308a03af(i, locusId, z);
+        this.f$0.mo48358x308a03af(i, locusId, z);
     }
 }

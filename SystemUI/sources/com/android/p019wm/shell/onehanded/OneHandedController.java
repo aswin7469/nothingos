@@ -17,7 +17,7 @@ import android.window.WindowContainerTransaction;
 import androidx.slice.core.SliceHints;
 import com.android.internal.jank.InteractionJankMonitor;
 import com.android.internal.logging.UiEventLogger;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.common.DisplayChangeController;
 import com.android.p019wm.shell.common.DisplayController;
 import com.android.p019wm.shell.common.DisplayLayout;
@@ -105,7 +105,7 @@ public class OneHandedController implements RemoteCallable<OneHandedController>,
 
     OneHandedController(Context context, DisplayController displayController, OneHandedDisplayAreaOrganizer oneHandedDisplayAreaOrganizer, OneHandedTouchHandler oneHandedTouchHandler, OneHandedTutorialHandler oneHandedTutorialHandler, OneHandedSettingsUtil oneHandedSettingsUtil, OneHandedAccessibilityUtil oneHandedAccessibilityUtil, OneHandedTimeoutHandler oneHandedTimeoutHandler, OneHandedState oneHandedState, InteractionJankMonitor interactionJankMonitor, OneHandedUiEventLogger oneHandedUiEventLogger, IOverlayManager iOverlayManager, TaskStackListenerImpl taskStackListenerImpl, ShellExecutor shellExecutor, Handler handler) {
         OneHandedState oneHandedState2 = oneHandedState;
-        C34951 r5 = new DisplayController.OnDisplaysChangedListener() {
+        C35051 r5 = new DisplayController.OnDisplaysChangedListener() {
             public void onDisplayConfigurationChanged(int i, Configuration configuration) {
                 if (i == 0 && OneHandedController.this.isInitialized()) {
                     OneHandedController.this.updateDisplayLayout(i);
@@ -164,7 +164,7 @@ public class OneHandedController implements RemoteCallable<OneHandedController>,
         this.mOneHandedUiEventLogger = oneHandedUiEventLogger;
         this.mTaskStackListener = taskStackListenerImpl;
         displayController.addDisplayWindowListener(r5);
-        int i = SystemProperties.getInt(ONE_HANDED_MODE_OFFSET_PERCENTAGE, Math.round(context.getResources().getFraction(C3343R.fraction.config_one_handed_offset, 1, 1) * 100.0f));
+        int i = SystemProperties.getInt(ONE_HANDED_MODE_OFFSET_PERCENTAGE, Math.round(context.getResources().getFraction(C3353R.fraction.config_one_handed_offset, 1, 1) * 100.0f));
         this.mUserId = UserHandle.myUserId();
         this.mOffSetFraction = ((float) i) / 100.0f;
         this.mIsOneHandedEnabled = oneHandedSettingsUtil.getSettingsOneHandedModeEnabled(context.getContentResolver(), this.mUserId);
@@ -249,7 +249,7 @@ public class OneHandedController implements RemoteCallable<OneHandedController>,
 
     /* access modifiers changed from: package-private */
     /* renamed from: stopOneHanded */
-    public void mo49860x88c4cccf() {
+    public void mo49869x88c4cccf() {
         stopOneHanded(1);
     }
 
@@ -286,7 +286,7 @@ public class OneHandedController implements RemoteCallable<OneHandedController>,
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setupCallback$0$com-android-wm-shell-onehanded-OneHandedController */
-    public /* synthetic */ void mo49858x48d93ae0() {
+    public /* synthetic */ void mo49867x48d93ae0() {
         stopOneHanded(2);
     }
 
@@ -340,7 +340,7 @@ public class OneHandedController implements RemoteCallable<OneHandedController>,
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$notifyExpandNotification$1$com-android-wm-shell-onehanded-OneHandedController */
-    public /* synthetic */ void mo49857x5cea96b9() {
+    public /* synthetic */ void mo49866x5cea96b9() {
         this.mEventCallback.notifyExpandNotification();
     }
 
@@ -368,7 +368,7 @@ public class OneHandedController implements RemoteCallable<OneHandedController>,
         if (oneHandedModeActivated) {
             startOneHanded();
         } else {
-            mo49860x88c4cccf();
+            mo49869x88c4cccf();
         }
     }
 
@@ -400,7 +400,7 @@ public class OneHandedController implements RemoteCallable<OneHandedController>,
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setupTimeoutListener$2$com-android-wm-shell-onehanded-OneHandedController */
-    public /* synthetic */ void mo49859x137dffae(int i) {
+    public /* synthetic */ void mo49868x137dffae(int i) {
         stopOneHanded(6);
     }
 
@@ -550,7 +550,7 @@ public class OneHandedController implements RemoteCallable<OneHandedController>,
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$startOneHanded$0$com-android-wm-shell-onehanded-OneHandedController$OneHandedImpl */
-        public /* synthetic */ void mo49885x4b4ba4a6() {
+        public /* synthetic */ void mo49894x4b4ba4a6() {
             OneHandedController.this.startOneHanded();
         }
 
@@ -560,8 +560,8 @@ public class OneHandedController implements RemoteCallable<OneHandedController>,
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$stopOneHanded$1$com-android-wm-shell-onehanded-OneHandedController$OneHandedImpl */
-        public /* synthetic */ void mo49886x3795df3f() {
-            OneHandedController.this.mo49860x88c4cccf();
+        public /* synthetic */ void mo49895x3795df3f() {
+            OneHandedController.this.mo49869x88c4cccf();
         }
 
         public void stopOneHanded(int i) {
@@ -570,7 +570,7 @@ public class OneHandedController implements RemoteCallable<OneHandedController>,
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$stopOneHanded$2$com-android-wm-shell-onehanded-OneHandedController$OneHandedImpl */
-        public /* synthetic */ void mo49887xa1c5675e(int i) {
+        public /* synthetic */ void mo49896xa1c5675e(int i) {
             OneHandedController.this.stopOneHanded(i);
         }
 
@@ -580,7 +580,7 @@ public class OneHandedController implements RemoteCallable<OneHandedController>,
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$setLockedDisabled$3$com-android-wm-shell-onehanded-OneHandedController$OneHandedImpl */
-        public /* synthetic */ void mo49884x56e9a607(boolean z, boolean z2) {
+        public /* synthetic */ void mo49893x56e9a607(boolean z, boolean z2) {
             OneHandedController.this.setLockedDisabled(z, z2);
         }
 
@@ -590,7 +590,7 @@ public class OneHandedController implements RemoteCallable<OneHandedController>,
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$registerEventCallback$4$com-android-wm-shell-onehanded-OneHandedController$OneHandedImpl */
-        public /* synthetic */ void mo49882x3b8520b2(OneHandedEventCallback oneHandedEventCallback) {
+        public /* synthetic */ void mo49891x3b8520b2(OneHandedEventCallback oneHandedEventCallback) {
             OneHandedController.this.registerEventCallback(oneHandedEventCallback);
         }
 
@@ -600,7 +600,7 @@ public class OneHandedController implements RemoteCallable<OneHandedController>,
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$registerTransitionCallback$5$com-android-wm-shell-onehanded-OneHandedController$OneHandedImpl */
-        public /* synthetic */ void mo49883x9ff9dd36(OneHandedTransitionCallback oneHandedTransitionCallback) {
+        public /* synthetic */ void mo49892x9ff9dd36(OneHandedTransitionCallback oneHandedTransitionCallback) {
             OneHandedController.this.registerTransitionCallback(oneHandedTransitionCallback);
         }
 
@@ -610,7 +610,7 @@ public class OneHandedController implements RemoteCallable<OneHandedController>,
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onConfigChanged$6$com-android-wm-shell-onehanded-OneHandedController$OneHandedImpl */
-        public /* synthetic */ void mo49879xd82a38f9(Configuration configuration) {
+        public /* synthetic */ void mo49888xd82a38f9(Configuration configuration) {
             OneHandedController.this.onConfigChanged(configuration);
         }
 
@@ -620,7 +620,7 @@ public class OneHandedController implements RemoteCallable<OneHandedController>,
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onUserSwitch$7$com-android-wm-shell-onehanded-OneHandedController$OneHandedImpl */
-        public /* synthetic */ void mo49881xb2ec71b3(int i) {
+        public /* synthetic */ void mo49890xb2ec71b3(int i) {
             OneHandedController.this.onUserSwitch(i);
         }
 
@@ -630,7 +630,7 @@ public class OneHandedController implements RemoteCallable<OneHandedController>,
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onKeyguardVisibilityChanged$8$com-android-wm-shell-onehanded-OneHandedController$OneHandedImpl */
-        public /* synthetic */ void mo49880xb43963cd(boolean z) {
+        public /* synthetic */ void mo49889xb43963cd(boolean z) {
             OneHandedController.this.onKeyguardVisibilityChanged(z);
         }
     }

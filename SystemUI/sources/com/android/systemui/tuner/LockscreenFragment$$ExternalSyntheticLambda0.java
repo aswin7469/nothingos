@@ -17,6 +17,6 @@ public final /* synthetic */ class LockscreenFragment$$ExternalSyntheticLambda0 
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo46394x9fc62522(this.f$1, this.f$2, (LockscreenFragment.Item) obj);
+        this.f$0.mo46406x9fc62522(this.f$1, this.f$2, (LockscreenFragment.Item) obj);
     }
 }

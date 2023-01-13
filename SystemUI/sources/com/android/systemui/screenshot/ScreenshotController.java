@@ -54,7 +54,7 @@ import androidx.concurrent.futures.CallbackToFutureAdapter;
 import com.android.internal.logging.UiEventLogger;
 import com.android.internal.policy.PhoneWindow;
 import com.android.settingslib.applications.InterestingConfigChanges;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.broadcast.BroadcastSender;
 import com.android.systemui.clipboardoverlay.ClipboardOverlayController;
 import com.android.systemui.dagger.qualifiers.Main;
@@ -248,7 +248,7 @@ public class ScreenshotController {
         interestingConfigChanges.applyNewConfig(context.getResources());
         reloadAssets();
         this.mCameraSound = loadCameraSound();
-        C24432 r8 = new BroadcastReceiver() {
+        C24492 r8 = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
                 if (ClipboardOverlayController.COPY_OVERLAY_ACTION.equals(intent.getAction())) {
                     ScreenshotController.this.mUiEventLogger.log(ScreenshotEvent.SCREENSHOT_DISMISSED_OTHER);
@@ -262,7 +262,7 @@ public class ScreenshotController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-screenshot-ScreenshotController */
-    public /* synthetic */ void mo37423xa1bd19de() {
+    public /* synthetic */ void mo37424xa1bd19de() {
         this.mUiEventLogger.log(ScreenshotEvent.SCREENSHOT_INTERACTION_TIMEOUT, 0, this.mPackageName);
         dismissScreenshot(false);
     }
@@ -273,7 +273,7 @@ public class ScreenshotController {
         this.mCurrentRequestCallback = requestCallback;
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getDefaultDisplay().getRealMetrics(displayMetrics);
-        mo37437x926e76e9(componentName, consumer, new Rect(0, 0, displayMetrics.widthPixels, displayMetrics.heightPixels));
+        mo37438x926e76e9(componentName, consumer, new Rect(0, 0, displayMetrics.widthPixels, displayMetrics.heightPixels));
     }
 
     /* access modifiers changed from: package-private */
@@ -281,7 +281,7 @@ public class ScreenshotController {
         Assert.isMainThread();
         if (bitmap == null) {
             Log.e(TAG, "Got null bitmap from screenshot message");
-            this.mNotificationsController.notifyScreenshotError(C1893R.string.screenshot_failed_to_capture_text);
+            this.mNotificationsController.notifyScreenshotError(C1894R.string.screenshot_failed_to_capture_text);
             requestCallback.reportError();
             return;
         }
@@ -347,7 +347,7 @@ public class ScreenshotController {
     }
 
     private void reloadAssets() {
-        ScreenshotView screenshotView = (ScreenshotView) LayoutInflater.from(this.mContext).inflate(C1893R.layout.screenshot, (ViewGroup) null);
+        ScreenshotView screenshotView = (ScreenshotView) LayoutInflater.from(this.mContext).inflate(C1894R.layout.screenshot, (ViewGroup) null);
         this.mScreenshotView = screenshotView;
         screenshotView.init(this.mUiEventLogger, new ScreenshotView.ScreenshotViewCallback() {
             public void onUserInteraction() {
@@ -369,7 +369,7 @@ public class ScreenshotController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$reloadAssets$2$com-android-systemui-screenshot-ScreenshotController */
-    public /* synthetic */ boolean mo37427x396f9d66(View view, int i, KeyEvent keyEvent) {
+    public /* synthetic */ boolean mo37428x396f9d66(View view, int i, KeyEvent keyEvent) {
         if (i != 4) {
             return false;
         }
@@ -379,7 +379,7 @@ public class ScreenshotController {
 
     /* access modifiers changed from: private */
     /* renamed from: takeScreenshotInternal */
-    public void mo37437x926e76e9(ComponentName componentName, Consumer<Uri> consumer, Rect rect) {
+    public void mo37438x926e76e9(ComponentName componentName, Consumer<Uri> consumer, Rect rect) {
         boolean z = true;
         if (this.mContext.getResources().getConfiguration().orientation != 1) {
             z = false;
@@ -389,7 +389,7 @@ public class ScreenshotController {
         Bitmap captureScreenshot = captureScreenshot(rect);
         if (captureScreenshot == null) {
             Log.e(TAG, "takeScreenshotInternal: Screenshot bitmap was null");
-            this.mNotificationsController.notifyScreenshotError(C1893R.string.screenshot_failed_to_capture_text);
+            this.mNotificationsController.notifyScreenshotError(C1894R.string.screenshot_failed_to_capture_text);
             TakeScreenshotService.RequestCallback requestCallback = this.mCurrentRequestCallback;
             if (requestCallback != null) {
                 requestCallback.reportError();
@@ -461,13 +461,13 @@ public class ScreenshotController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$saveScreenshot$3$com-android-systemui-screenshot-ScreenshotController */
-    public /* synthetic */ void mo37431xebf89b1e() {
-        this.mScreenshotView.announceForAccessibility(this.mContext.getResources().getString(C1893R.string.screenshot_saving_title));
+    public /* synthetic */ void mo37432xebf89b1e() {
+        this.mScreenshotView.announceForAccessibility(this.mContext.getResources().getString(C1894R.string.screenshot_saving_title));
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$saveScreenshot$4$com-android-systemui-screenshot-ScreenshotController */
-    public /* synthetic */ void mo37432x61419bd() {
+    public /* synthetic */ void mo37433x61419bd() {
         requestScrollCapture();
         this.mWindow.peekDecorView().getViewRootImpl().setActivityConfigCallback(new ViewRootImpl.ActivityConfigCallback() {
             public void onConfigurationChanged(Configuration configuration, int i) {
@@ -505,7 +505,7 @@ public class ScreenshotController {
 
     /* access modifiers changed from: private */
     /* renamed from: onScrollCaptureResponseReady */
-    public void mo37428x79cdd634(Future<ScrollCaptureResponse> future) {
+    public void mo37429x79cdd634(Future<ScrollCaptureResponse> future) {
         try {
             ScrollCaptureResponse scrollCaptureResponse = this.mLastScrollCaptureResponse;
             if (scrollCaptureResponse != null) {
@@ -530,7 +530,7 @@ public class ScreenshotController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onScrollCaptureResponseReady$8$com-android-systemui-screenshot-ScreenshotController */
-    public /* synthetic */ void mo37425xdfd75c34(ScrollCaptureResponse scrollCaptureResponse) {
+    public /* synthetic */ void mo37426xdfd75c34(ScrollCaptureResponse scrollCaptureResponse) {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getDefaultDisplay().getRealMetrics(displayMetrics);
         this.mScreenshotView.prepareScrollingTransition(scrollCaptureResponse, this.mScreenBitmap, captureScreenshot(new Rect(0, 0, displayMetrics.widthPixels, displayMetrics.heightPixels)), this.mScreenshotTakenInPortrait);
@@ -539,7 +539,7 @@ public class ScreenshotController {
 
     /* access modifiers changed from: private */
     /* renamed from: runBatchScrollCapture */
-    public void mo37424xc5bbdd95(ScrollCaptureResponse scrollCaptureResponse) {
+    public void mo37425xc5bbdd95(ScrollCaptureResponse scrollCaptureResponse) {
         this.mLastScrollCaptureResponse = null;
         ListenableFuture<ScrollCaptureController.LongScreenshot> listenableFuture = this.mLongScreenshotFuture;
         if (listenableFuture != null) {
@@ -552,7 +552,7 @@ public class ScreenshotController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$runBatchScrollCapture$10$com-android-systemui-screenshot-ScreenshotController */
-    public /* synthetic */ void mo37429x1ee2c497() {
+    public /* synthetic */ void mo37430x1ee2c497() {
         try {
             ScrollCaptureController.LongScreenshot longScreenshot = this.mLongScreenshotFuture.get();
             if (longScreenshot.getHeight() == 0) {
@@ -580,7 +580,7 @@ public class ScreenshotController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$runBatchScrollCapture$9$com-android-systemui-screenshot-ScreenshotController */
-    public /* synthetic */ void mo37430x61d93a0b(ScrollCaptureController.LongScreenshot longScreenshot, Rect rect, Runnable runnable) {
+    public /* synthetic */ void mo37431x61d93a0b(ScrollCaptureController.LongScreenshot longScreenshot, Rect rect, Runnable runnable) {
         this.mScreenshotView.startLongScreenshotTransition(rect, runnable, longScreenshot);
     }
 
@@ -633,21 +633,21 @@ public class ScreenshotController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$loadCameraSound$12$com-android-systemui-screenshot-ScreenshotController */
-    public /* synthetic */ Object mo37422xb98335af(CallbackToFutureAdapter.Completer completer) throws Exception {
+    public /* synthetic */ Object mo37423xb98335af(CallbackToFutureAdapter.Completer completer) throws Exception {
         this.mBgExecutor.execute(new ScreenshotController$$ExternalSyntheticLambda12(this, completer));
         return "ScreenshotController#loadCameraSound";
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$loadCameraSound$11$com-android-systemui-screenshot-ScreenshotController */
-    public /* synthetic */ void mo37421x9f67b710(CallbackToFutureAdapter.Completer completer) {
+    public /* synthetic */ void mo37422x9f67b710(CallbackToFutureAdapter.Completer completer) {
         WindowContext windowContext = this.mContext;
         completer.set(MediaPlayer.create(windowContext, Uri.fromFile(ScreenshotControllerEx.getScreenshotSound(windowContext)), (SurfaceHolder) null, new AudioAttributes.Builder().setUsage(13).setContentType(4).build(), AudioSystem.newAudioSessionId()));
     }
 
     private void playCameraSound() {
         if (!ScreenshotControllerEx.isScreenshotSoundEnable(this.mContext)) {
-            NTLogUtil.m1680d(TAG, "Screenshot Sound is disable.");
+            NTLogUtil.m1686d(TAG, "Screenshot Sound is disable.");
         } else {
             this.mCameraSound.addListener(new ScreenshotController$$ExternalSyntheticLambda15(this), this.mBgExecutor);
         }
@@ -655,7 +655,7 @@ public class ScreenshotController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$playCameraSound$13$com-android-systemui-screenshot-ScreenshotController */
-    public /* synthetic */ void mo37426x8ab21340() {
+    public /* synthetic */ void mo37427x8ab21340() {
         try {
             MediaPlayer mediaPlayer = this.mCameraSound.get();
             if (mediaPlayer != null) {
@@ -672,11 +672,11 @@ public class ScreenshotController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$saveScreenshotAndToast$15$com-android-systemui-screenshot-ScreenshotController */
-    public /* synthetic */ void mo37434x5b040d35(Consumer consumer, SavedImageData savedImageData) {
+    public /* synthetic */ void mo37435x5b040d35(Consumer consumer, SavedImageData savedImageData) {
         consumer.accept(savedImageData.uri);
         if (savedImageData.uri == null) {
             this.mUiEventLogger.log(ScreenshotEvent.SCREENSHOT_NOT_SAVED, 0, this.mPackageName);
-            this.mNotificationsController.notifyScreenshotError(C1893R.string.screenshot_failed_to_save_text);
+            this.mNotificationsController.notifyScreenshotError(C1894R.string.screenshot_failed_to_save_text);
             return;
         }
         this.mUiEventLogger.log(ScreenshotEvent.SCREENSHOT_SAVED, 0, this.mPackageName);
@@ -685,8 +685,8 @@ public class ScreenshotController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$saveScreenshotAndToast$14$com-android-systemui-screenshot-ScreenshotController */
-    public /* synthetic */ void mo37433x40e88e96() {
-        Toast.makeText(this.mContext, C1893R.string.screenshot_saved_title, 0).show();
+    public /* synthetic */ void mo37434x40e88e96() {
+        Toast.makeText(this.mContext, C1894R.string.screenshot_saved_title, 0).show();
     }
 
     /* access modifiers changed from: private */
@@ -752,7 +752,7 @@ public class ScreenshotController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$showUiOnActionsReady$16$com-android-systemui-screenshot-ScreenshotController */
-    public /* synthetic */ void mo37435x970a5a97(final SavedImageData savedImageData) {
+    public /* synthetic */ void mo37436x970a5a97(final SavedImageData savedImageData) {
         Animator animator = this.mScreenshotAnimation;
         if (animator == null || !animator.isRunning()) {
             this.mScreenshotView.setChipIntents(savedImageData);
@@ -775,7 +775,7 @@ public class ScreenshotController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$showUiOnQuickShareActionReady$17$com-android-systemui-screenshot-ScreenshotController */
-    public /* synthetic */ void mo37436x70a5cdd1(final QuickShareData quickShareData) {
+    public /* synthetic */ void mo37437x70a5cdd1(final QuickShareData quickShareData) {
         Animator animator = this.mScreenshotAnimation;
         if (animator == null || !animator.isRunning()) {
             this.mScreenshotView.addQuickShareChip(quickShareData.quickShareAction);
@@ -795,7 +795,7 @@ public class ScreenshotController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$getActionTransitionSupplier$19$com-android-systemui-screenshot-ScreenshotController */
-    public /* synthetic */ SavedImageData.ActionTransition mo37420x46f594f1() {
+    public /* synthetic */ SavedImageData.ActionTransition mo37421x46f594f1() {
         Pair startSharedElementAnimation = ActivityOptions.startSharedElementAnimation(this.mWindow, new ScreenshotExitTransitionCallbacksSupplier(true).get(), (SharedElementCallback) null, new Pair[]{Pair.create(this.mScreenshotView.getScreenshotPreview(), "screenshot_preview_image")});
         ((ExitTransitionCoordinator) startSharedElementAnimation.second).startExit();
         SavedImageData.ActionTransition actionTransition = new SavedImageData.ActionTransition();
@@ -806,7 +806,7 @@ public class ScreenshotController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$getActionTransitionSupplier$18$com-android-systemui-screenshot-ScreenshotController */
-    public /* synthetic */ void mo37419x2cda1652() {
+    public /* synthetic */ void mo37420x2cda1652() {
         ActivityOptions.stopSharedElementAnimation(this.mWindow);
     }
 
@@ -814,7 +814,7 @@ public class ScreenshotController {
     public void logSuccessOnActionsReady(SavedImageData savedImageData) {
         if (savedImageData.uri == null) {
             this.mUiEventLogger.log(ScreenshotEvent.SCREENSHOT_NOT_SAVED, 0, this.mPackageName);
-            this.mNotificationsController.notifyScreenshotError(C1893R.string.screenshot_failed_to_save_text);
+            this.mNotificationsController.notifyScreenshotError(C1894R.string.screenshot_failed_to_save_text);
             return;
         }
         this.mUiEventLogger.log(ScreenshotEvent.SCREENSHOT_SAVED, 0, this.mPackageName);

@@ -39,7 +39,7 @@ public class CookieManager extends CookieHandler {
         if (uri == null || map == null) {
             throw new IllegalArgumentException("Argument is null");
         } else if (this.cookieJar == null) {
-            return Map.m1734of();
+            return Map.m1740of();
         } else {
             boolean equalsIgnoreCase = "https".equalsIgnoreCase(uri.getScheme());
             ArrayList arrayList = new ArrayList();
@@ -62,7 +62,7 @@ public class CookieManager extends CookieHandler {
             if (arrayList.isEmpty()) {
                 return Collections.emptyMap();
             }
-            return Map.m1735of("Cookie", sortByPath(arrayList));
+            return Map.m1741of("Cookie", sortByPath(arrayList));
         }
     }
 

@@ -526,7 +526,7 @@ public class DecimalFormat extends NumberFormat {
     }
 
     /* renamed from: java.text.DecimalFormat$1 */
-    static /* synthetic */ class C28471 {
+    static /* synthetic */ class C28531 {
         static final /* synthetic */ int[] $SwitchMap$java$math$RoundingMode;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(18:0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|18) */
@@ -596,12 +596,12 @@ public class DecimalFormat extends NumberFormat {
             L_0x0060:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: java.text.DecimalFormat.C28471.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: java.text.DecimalFormat.C28531.<clinit>():void");
         }
     }
 
     private static int convertRoundingMode(RoundingMode roundingMode2) {
-        switch (C28471.$SwitchMap$java$math$RoundingMode[roundingMode2.ordinal()]) {
+        switch (C28531.$SwitchMap$java$math$RoundingMode[roundingMode2.ordinal()]) {
             case 1:
                 return 0;
             case 2:

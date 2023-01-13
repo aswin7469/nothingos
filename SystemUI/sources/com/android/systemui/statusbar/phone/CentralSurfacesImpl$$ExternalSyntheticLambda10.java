@@ -15,6 +15,6 @@ public final /* synthetic */ class CentralSurfacesImpl$$ExternalSyntheticLambda1
     }
 
     public final int startPendingIntent(RemoteAnimationAdapter remoteAnimationAdapter) {
-        return this.f$0.mo43909x578fd696(this.f$1, remoteAnimationAdapter);
+        return this.f$0.mo43918x578fd696(this.f$1, remoteAnimationAdapter);
     }
 }

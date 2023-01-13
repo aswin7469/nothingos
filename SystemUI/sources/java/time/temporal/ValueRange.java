@@ -14,7 +14,7 @@ public final class ValueRange implements Serializable {
     private final long minSmallest;
 
     /* renamed from: of */
-    public static ValueRange m955of(long j, long j2) {
+    public static ValueRange m953of(long j, long j2) {
         if (j <= j2) {
             return new ValueRange(j, j, j2, j2);
         }
@@ -22,12 +22,12 @@ public final class ValueRange implements Serializable {
     }
 
     /* renamed from: of */
-    public static ValueRange m956of(long j, long j2, long j3) {
-        return m957of(j, j, j2, j3);
+    public static ValueRange m954of(long j, long j2, long j3) {
+        return m955of(j, j, j2, j3);
     }
 
     /* renamed from: of */
-    public static ValueRange m957of(long j, long j2, long j3, long j4) {
+    public static ValueRange m955of(long j, long j2, long j3, long j4) {
         if (j > j2) {
             throw new IllegalArgumentException("Smallest minimum value must be less than largest minimum value");
         } else if (j3 > j4) {

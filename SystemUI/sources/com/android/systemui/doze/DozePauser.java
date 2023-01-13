@@ -26,7 +26,7 @@ public class DozePauser implements DozeMachine.Part {
     }
 
     /* renamed from: com.android.systemui.doze.DozePauser$1 */
-    static /* synthetic */ class C20591 {
+    static /* synthetic */ class C20611 {
         static final /* synthetic */ int[] $SwitchMap$com$android$systemui$doze$DozeMachine$State;
 
         static {
@@ -40,7 +40,7 @@ public class DozePauser implements DozeMachine.Part {
     }
 
     public void transitionTo(DozeMachine.State state, DozeMachine.State state2) {
-        if (C20591.$SwitchMap$com$android$systemui$doze$DozeMachine$State[state2.ordinal()] != 1) {
+        if (C20611.$SwitchMap$com$android$systemui$doze$DozeMachine$State[state2.ordinal()] != 1) {
             this.mPauseTimeout.cancel();
         } else {
             this.mPauseTimeout.schedule(this.mPolicy.proxScreenOffDelayMs, 1);

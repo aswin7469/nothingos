@@ -17,7 +17,7 @@ import android.view.accessibility.AccessibilityManager;
 import android.widget.TextView;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.settingslib.Utils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 
 public class NumPadKey extends ViewGroup {
     static String[] sKlondike;
@@ -52,11 +52,11 @@ public class NumPadKey extends ViewGroup {
     }
 
     public NumPadKey(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, C1893R.attr.numPadKeyStyle);
+        this(context, attributeSet, C1894R.attr.numPadKeyStyle);
     }
 
     public NumPadKey(Context context, AttributeSet attributeSet, int i) {
-        this(context, attributeSet, i, C1893R.layout.keyguard_num_pad_key);
+        this(context, attributeSet, i, C1894R.layout.keyguard_num_pad_key);
     }
 
     /* JADX INFO: finally extract failed */
@@ -77,7 +77,7 @@ public class NumPadKey extends ViewGroup {
             }
         };
         setFocusable(true);
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C1893R.styleable.NumPadKey, i, i2);
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C1894R.styleable.NumPadKey, i, i2);
         try {
             this.mDigit = obtainStyledAttributes.getInt(0, this.mDigit);
             this.mTextViewResId = obtainStyledAttributes.getResourceId(1, 0);
@@ -87,14 +87,14 @@ public class NumPadKey extends ViewGroup {
             this.mLockPatternUtils = new LockPatternUtils(context);
             this.mPM = (PowerManager) this.mContext.getSystemService("power");
             ((LayoutInflater) getContext().getSystemService("layout_inflater")).inflate(i2, this, true);
-            TextView textView = (TextView) findViewById(C1893R.C1897id.digit_text);
+            TextView textView = (TextView) findViewById(C1894R.C1898id.digit_text);
             this.mDigitText = textView;
             textView.setText(Integer.toString(this.mDigit));
-            TextView textView2 = (TextView) findViewById(C1893R.C1897id.klondike_text);
+            TextView textView2 = (TextView) findViewById(C1894R.C1898id.klondike_text);
             this.mKlondikeText = textView2;
             if (this.mDigit >= 0) {
                 if (sKlondike == null) {
-                    sKlondike = getResources().getStringArray(C1893R.array.lockscreen_num_pad_klondike);
+                    sKlondike = getResources().getStringArray(C1894R.array.lockscreen_num_pad_klondike);
                 }
                 String[] strArr = sKlondike;
                 if (strArr != null && strArr.length > (i3 = this.mDigit)) {
@@ -109,7 +109,7 @@ public class NumPadKey extends ViewGroup {
             setContentDescription(textView.getText().toString());
             Drawable background = getBackground();
             if (background instanceof GradientDrawable) {
-                this.mAnimator = new NumPadAnimator(context, background.mutate(), C1893R.style.NumPadKey, textView, (Drawable) null);
+                this.mAnimator = new NumPadAnimator(context, background.mutate(), C1894R.style.NumPadKey, textView, (Drawable) null);
                 return;
             }
             this.mAnimator = null;

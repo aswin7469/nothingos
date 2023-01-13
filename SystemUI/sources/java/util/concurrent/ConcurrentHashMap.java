@@ -63,7 +63,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
     static final int TREEIFY_THRESHOLD = 8;
 
     /* renamed from: U */
-    private static final Unsafe f737U;
+    private static final Unsafe f735U;
     static final int UNTREEIFY_THRESHOLD = 6;
     private static final ObjectStreamField[] serialPersistentFields = {new ObjectStreamField("segments", Segment[].class), new ObjectStreamField("segmentMask", Integer.TYPE), new ObjectStreamField("segmentShift", Integer.TYPE)};
     private static final long serialVersionUID = 7249069246763182397L;
@@ -84,7 +84,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
 
     static {
         Unsafe unsafe = Unsafe.getUnsafe();
-        f737U = unsafe;
+        f735U = unsafe;
         Class<ConcurrentHashMap> cls = ConcurrentHashMap.class;
         SIZECTL = unsafe.objectFieldOffset(cls, "sizeCtl");
         TRANSFERINDEX = unsafe.objectFieldOffset(cls, "transferIndex");
@@ -242,15 +242,15 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
     }
 
     static final <K, V> Node<K, V> tabAt(Node<K, V>[] nodeArr, int i) {
-        return (Node) f737U.getObjectAcquire(nodeArr, (((long) i) << ASHIFT) + ((long) ABASE));
+        return (Node) f735U.getObjectAcquire(nodeArr, (((long) i) << ASHIFT) + ((long) ABASE));
     }
 
     static final <K, V> boolean casTabAt(Node<K, V>[] nodeArr, int i, Node<K, V> node, Node<K, V> node2) {
-        return f737U.compareAndSetObject(nodeArr, (((long) i) << ASHIFT) + ((long) ABASE), node, node2);
+        return f735U.compareAndSetObject(nodeArr, (((long) i) << ASHIFT) + ((long) ABASE), node, node2);
     }
 
     static final <K, V> void setTabAt(Node<K, V>[] nodeArr, int i, Node<K, V> node) {
-        f737U.putObjectRelease(nodeArr, (((long) i) << ASHIFT) + ((long) ABASE), node);
+        f735U.putObjectRelease(nodeArr, (((long) i) << ASHIFT) + ((long) ABASE), node);
     }
 
     public ConcurrentHashMap() {
@@ -1793,7 +1793,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
             if (i < 0) {
                 Thread.yield();
             } else {
-                if (f737U.compareAndSetInt(this, SIZECTL, i, -1)) {
+                if (f735U.compareAndSetInt(this, SIZECTL, i, -1)) {
                     try {
                         Node<K, V>[] nodeArr2 = this.table;
                         if (nodeArr2 == null || nodeArr2.length == 0) {
@@ -1823,7 +1823,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
             r11 = this;
             java.util.concurrent.ConcurrentHashMap$CounterCell[] r0 = r11.counterCells
             if (r0 != 0) goto L_0x0014
-            jdk.internal.misc.Unsafe r1 = f737U
+            jdk.internal.misc.Unsafe r1 = f735U
             long r3 = BASECOUNT
             long r5 = r11.baseCount
             long r9 = r5 + r12
@@ -1841,7 +1841,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
             r2 = r2 & r3
             r4 = r0[r2]
             if (r4 == 0) goto L_0x0094
-            jdk.internal.misc.Unsafe r3 = f737U
+            jdk.internal.misc.Unsafe r3 = f735U
             long r5 = CELLVALUE
             long r7 = r4.value
             long r9 = r7 + r12
@@ -1881,7 +1881,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
             if (r14 > 0) goto L_0x006a
             goto L_0x0093
         L_0x006a:
-            jdk.internal.misc.Unsafe r0 = f737U
+            jdk.internal.misc.Unsafe r0 = f735U
             long r2 = SIZECTL
             int r5 = r4 + 1
             r1 = r11
@@ -1890,7 +1890,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
             r11.transfer(r12, r13)
             goto L_0x008e
         L_0x007b:
-            jdk.internal.misc.Unsafe r0 = f737U
+            jdk.internal.misc.Unsafe r0 = f735U
             long r2 = SIZECTL
             int r13 = r13 << 16
             int r5 = r13 + 2
@@ -1923,7 +1923,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
             if (nodeArr2 != this.nextTable || this.table != nodeArr || (i = this.sizeCtl) >= 0 || (i >>> 16) != resizeStamp || i == resizeStamp + 1 || i == 65535 + resizeStamp || this.transferIndex <= 0) {
                 break;
             }
-            if (f737U.compareAndSetInt(this, SIZECTL, i, i + 1)) {
+            if (f735U.compareAndSetInt(this, SIZECTL, i, i + 1)) {
                 transfer(nodeArr, nodeArr2);
                 break;
             }
@@ -1940,7 +1940,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
                 Node<K, V>[] nodeArr = this.table;
                 if (nodeArr == null || (length = nodeArr.length) == 0) {
                     int i3 = i2 > tableSizeFor ? i2 : tableSizeFor;
-                    if (f737U.compareAndSetInt(this, SIZECTL, i2, -1)) {
+                    if (f735U.compareAndSetInt(this, SIZECTL, i2, -1)) {
                         try {
                             if (this.table == nodeArr) {
                                 this.table = new Node[i3];
@@ -1952,7 +1952,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
                     }
                 } else if (tableSizeFor > i2 && length < 1073741824) {
                     if (nodeArr == this.table) {
-                        if (f737U.compareAndSetInt(this, SIZECTL, i2, (resizeStamp(length) << 16) + 2)) {
+                        if (f735U.compareAndSetInt(this, SIZECTL, i2, (resizeStamp(length) << 16) + 2)) {
                             transfer(nodeArr, (Node<K, V>[]) null);
                         }
                     }
@@ -2038,7 +2038,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
             r6 = r1
             goto L_0x007a
         L_0x0046:
-            jdk.internal.misc.Unsafe r1 = f737U
+            jdk.internal.misc.Unsafe r1 = f735U
             long r18 = TRANSFERINDEX
             if (r3 <= r11) goto L_0x0051
             int r2 = r3 - r11
@@ -2295,7 +2295,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
         L_0x01c2:
             r9 = r30
             r10 = 1
-            jdk.internal.misc.Unsafe r1 = f737U
+            jdk.internal.misc.Unsafe r1 = f735U
             long r3 = SIZECTL
             int r11 = r9.sizeCtl
             int r13 = r11 + -1
@@ -2400,7 +2400,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
             r7.<init>(r10)
             int r1 = r9.cellsBusy
             if (r1 != 0) goto L_0x0061
-            jdk.internal.misc.Unsafe r1 = f737U
+            jdk.internal.misc.Unsafe r1 = f735U
             long r3 = CELLSBUSY
             r5 = 0
             r6 = 1
@@ -2436,7 +2436,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
             r0 = r12
             goto L_0x00b1
         L_0x0067:
-            jdk.internal.misc.Unsafe r2 = f737U
+            jdk.internal.misc.Unsafe r2 = f735U
             long r18 = CELLVALUE
             long r3 = r1.value
             long r22 = r3 + r10
@@ -2488,7 +2488,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
             if (r1 != 0) goto L_0x00ec
             java.util.concurrent.ConcurrentHashMap$CounterCell[] r1 = r9.counterCells
             if (r1 != r7) goto L_0x00ec
-            jdk.internal.misc.Unsafe r1 = f737U
+            jdk.internal.misc.Unsafe r1 = f735U
             long r3 = CELLSBUSY
             r5 = 0
             r6 = 1
@@ -2517,7 +2517,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
             r9.cellsBusy = r13
             throw r0
         L_0x00ec:
-            jdk.internal.misc.Unsafe r1 = f737U
+            jdk.internal.misc.Unsafe r1 = f735U
             long r3 = BASECOUNT
             long r5 = r9.baseCount
             long r7 = r5 + r10
@@ -2640,7 +2640,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
         static final int READER = 4;
 
         /* renamed from: U */
-        private static final Unsafe f738U;
+        private static final Unsafe f736U;
         static final int WAITER = 2;
         static final int WRITER = 1;
         volatile TreeNode<K, V> first;
@@ -2651,7 +2651,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
         static {
             Class<ConcurrentHashMap> cls = ConcurrentHashMap.class;
             Unsafe unsafe = Unsafe.getUnsafe();
-            f738U = unsafe;
+            f736U = unsafe;
             LOCKSTATE = unsafe.objectFieldOffset(TreeBin.class, "lockState");
         }
 
@@ -2749,7 +2749,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
         }
 
         private final void lockRoot() {
-            if (!f738U.compareAndSetInt(this, LOCKSTATE, 0, 1)) {
+            if (!f736U.compareAndSetInt(this, LOCKSTATE, 0, 1)) {
                 contendedLock();
             }
         }
@@ -2763,11 +2763,11 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
             while (true) {
                 int i = this.lockState;
                 if ((i & -3) == 0) {
-                    if (f738U.compareAndSetInt(this, LOCKSTATE, i, 1)) {
+                    if (f736U.compareAndSetInt(this, LOCKSTATE, i, 1)) {
                         break;
                     }
                 } else if ((i & 2) == 0) {
-                    if (f738U.compareAndSetInt(this, LOCKSTATE, i, i | 2)) {
+                    if (f736U.compareAndSetInt(this, LOCKSTATE, i, i | 2)) {
                         this.waiter = Thread.currentThread();
                         z = true;
                     }
@@ -2791,7 +2791,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
                 while (node != null) {
                     int i2 = this.lockState;
                     if ((i2 & 3) == 0) {
-                        Unsafe unsafe = f738U;
+                        Unsafe unsafe = f736U;
                         long j = LOCKSTATE;
                         if (unsafe.compareAndSetInt(this, j, i2, i2 + 4)) {
                             try {
@@ -2804,7 +2804,7 @@ public class ConcurrentHashMap<K, V> extends AbstractMap<K, V> implements Concur
                                 }
                                 return treeNode;
                             } catch (Throwable th) {
-                                if (f738U.getAndAddInt(this, LOCKSTATE, -4) == 6 && (thread = this.waiter) != null) {
+                                if (f736U.getAndAddInt(this, LOCKSTATE, -4) == 6 && (thread = this.waiter) != null) {
                                     LockSupport.unpark(thread);
                                 }
                                 throw th;

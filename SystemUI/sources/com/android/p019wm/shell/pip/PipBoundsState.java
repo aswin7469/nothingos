@@ -13,7 +13,7 @@ import android.util.ArraySet;
 import android.util.Size;
 import com.android.internal.protolog.common.ProtoLog;
 import com.android.internal.util.function.TriConsumer;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.common.DisplayLayout;
 import com.android.p019wm.shell.protolog.ShellProtoLogGroup;
 import java.lang.annotation.Retention;
@@ -78,7 +78,7 @@ public class PipBoundsState {
     }
 
     private void reloadResources() {
-        this.mStashOffset = this.mContext.getResources().getDimensionPixelSize(C3343R.dimen.pip_stash_offset);
+        this.mStashOffset = this.mContext.getResources().getDimensionPixelSize(C3353R.dimen.pip_stash_offset);
     }
 
     public void setBounds(Rect rect) {

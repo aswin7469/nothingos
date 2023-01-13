@@ -54,9 +54,9 @@ public class KeyguardWeatherControllerImpl implements KeyguardWeatherController,
 
     @Inject
     public KeyguardWeatherControllerImpl(Context context, @Main Handler handler, KeyguardUpdateMonitor keyguardUpdateMonitor) {
-        C41741 r1 = new KeyguardUpdateMonitorCallback() {
+        C41861 r1 = new KeyguardUpdateMonitorCallback() {
             public void onUserUnlocked() {
-                NTLogUtil.m1682i(KeyguardWeatherControllerImpl.TAG, "onUserUnlocked, mFirstTime=" + KeyguardWeatherControllerImpl.this.mFirstTime);
+                NTLogUtil.m1688i(KeyguardWeatherControllerImpl.TAG, "onUserUnlocked, mFirstTime=" + KeyguardWeatherControllerImpl.this.mFirstTime);
                 if (KeyguardWeatherControllerImpl.this.mFirstTime) {
                     KeyguardWeatherControllerImpl.this.fireWeatherDataChanged();
                     boolean unused = KeyguardWeatherControllerImpl.this.mFirstTime = false;
@@ -108,7 +108,7 @@ public class KeyguardWeatherControllerImpl implements KeyguardWeatherController,
             if (this.mRegistered) {
                 this.mResolver.unregisterContentObserver(this);
             }
-            NTLogUtil.m1682i(KeyguardWeatherControllerImpl.TAG, "register");
+            NTLogUtil.m1688i(KeyguardWeatherControllerImpl.TAG, "register");
             this.mResolver.registerContentObserver(KeyguardWeatherControllerImpl.mWeatherSwitchUri, true, this);
             this.mResolver.registerContentObserver(KeyguardWeatherControllerImpl.mWeatherDataUri, true, this);
             this.mResolver.registerContentObserver(KeyguardWeatherControllerImpl.mWeatherTempOptionUri, true, this);
@@ -122,7 +122,7 @@ public class KeyguardWeatherControllerImpl implements KeyguardWeatherController,
         }
 
         public void onChange(boolean z, Uri uri) {
-            NTLogUtil.m1682i(KeyguardWeatherControllerImpl.TAG, "onChange uri=" + uri);
+            NTLogUtil.m1688i(KeyguardWeatherControllerImpl.TAG, "onChange uri=" + uri);
             if (KeyguardWeatherControllerImpl.mWeatherSwitchUri.equals(uri)) {
                 KeyguardWeatherControllerImpl keyguardWeatherControllerImpl = KeyguardWeatherControllerImpl.this;
                 boolean unused = keyguardWeatherControllerImpl.mSwitchOn = keyguardWeatherControllerImpl.isWeatherSwitchOn();
@@ -157,7 +157,7 @@ public class KeyguardWeatherControllerImpl implements KeyguardWeatherController,
 
     /* access modifiers changed from: private */
     public void fireWeatherSwitchChanged() {
-        NTLogUtil.m1682i(TAG, "fireWeatherSwitchChanged =" + this.mSwitchOn);
+        NTLogUtil.m1688i(TAG, "fireWeatherSwitchChanged =" + this.mSwitchOn);
         synchronized (this.mCallbacksLock) {
             Utils.safeForeach(this.mCallbacks, new KeyguardWeatherControllerImpl$$ExternalSyntheticLambda0(this));
             fireWeatherDataChanged();
@@ -166,13 +166,13 @@ public class KeyguardWeatherControllerImpl implements KeyguardWeatherController,
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$fireWeatherSwitchChanged$0$com-nothing-systemui-keyguard-weather-KeyguardWeatherControllerImpl */
-    public /* synthetic */ void mo57465x5218f0f(KeyguardWeatherController.Callback callback) {
+    public /* synthetic */ void mo57486x5218f0f(KeyguardWeatherController.Callback callback) {
         callback.onWeatherSwitchChanged(this.mSwitchOn);
     }
 
     /* access modifiers changed from: private */
     public void fireWeatherDataChanged() {
-        NTLogUtil.m1682i(TAG, "fireWeatherDataChanged =" + this.mSwitchOn);
+        NTLogUtil.m1688i(TAG, "fireWeatherDataChanged =" + this.mSwitchOn);
         if (this.mSwitchOn) {
             updateDataAndNotify();
         }
@@ -194,7 +194,7 @@ public class KeyguardWeatherControllerImpl implements KeyguardWeatherController,
     /* JADX WARNING: Removed duplicated region for block: B:35:0x00f5  */
     /* renamed from: lambda$updateDataAndNotify$3$com-nothing-systemui-keyguard-weather-KeyguardWeatherControllerImpl */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    public /* synthetic */ void mo57467xfcac0ac3() {
+    public /* synthetic */ void mo57488xfcac0ac3() {
         /*
             r14 = this;
             java.lang.String r0 = "updateDataAndNotify , data.getLastUpdateTime="
@@ -219,7 +219,7 @@ public class KeyguardWeatherControllerImpl implements KeyguardWeatherController,
             r10.<init>((java.lang.String) r4)     // Catch:{ Exception -> 0x00cd, all -> 0x00ca }
             java.lang.StringBuilder r4 = r10.append((java.lang.Object) r8)     // Catch:{ Exception -> 0x00cd, all -> 0x00ca }
             java.lang.String r4 = r4.toString()     // Catch:{ Exception -> 0x00cd, all -> 0x00ca }
-            com.nothing.systemui.util.NTLogUtil.m1680d(r9, r4)     // Catch:{ Exception -> 0x00cd, all -> 0x00ca }
+            com.nothing.systemui.util.NTLogUtil.m1686d(r9, r4)     // Catch:{ Exception -> 0x00cd, all -> 0x00ca }
             if (r8 == 0) goto L_0x00a6
             java.lang.String r4 = "KeyguardWeather"
             java.lang.StringBuilder r9 = new java.lang.StringBuilder     // Catch:{ Exception -> 0x00cd, all -> 0x00ca }
@@ -230,7 +230,7 @@ public class KeyguardWeatherControllerImpl implements KeyguardWeatherController,
             boolean r9 = r8.moveToFirst()     // Catch:{ Exception -> 0x00cd, all -> 0x00ca }
             java.lang.StringBuilder r2 = r2.append((boolean) r9)     // Catch:{ Exception -> 0x00cd, all -> 0x00ca }
             java.lang.String r2 = r2.toString()     // Catch:{ Exception -> 0x00cd, all -> 0x00ca }
-            com.nothing.systemui.util.NTLogUtil.m1680d(r4, r2)     // Catch:{ Exception -> 0x00cd, all -> 0x00ca }
+            com.nothing.systemui.util.NTLogUtil.m1686d(r4, r2)     // Catch:{ Exception -> 0x00cd, all -> 0x00ca }
             boolean r2 = r8.moveToFirst()     // Catch:{ Exception -> 0x00cd, all -> 0x00ca }
             if (r2 == 0) goto L_0x00a6
             java.lang.String r2 = "data"
@@ -242,7 +242,7 @@ public class KeyguardWeatherControllerImpl implements KeyguardWeatherController,
             r9.<init>((java.lang.String) r1)     // Catch:{ Exception -> 0x00cd, all -> 0x00ca }
             java.lang.StringBuilder r1 = r9.append((java.lang.String) r2)     // Catch:{ Exception -> 0x00cd, all -> 0x00ca }
             java.lang.String r1 = r1.toString()     // Catch:{ Exception -> 0x00cd, all -> 0x00ca }
-            com.nothing.systemui.util.NTLogUtil.m1680d(r4, r1)     // Catch:{ Exception -> 0x00cd, all -> 0x00ca }
+            com.nothing.systemui.util.NTLogUtil.m1686d(r4, r1)     // Catch:{ Exception -> 0x00cd, all -> 0x00ca }
             if (r7 == 0) goto L_0x00a6
             java.lang.String r1 = "KeyguardWeather"
             java.lang.StringBuilder r2 = new java.lang.StringBuilder     // Catch:{ Exception -> 0x00cd, all -> 0x00ca }
@@ -254,14 +254,14 @@ public class KeyguardWeatherControllerImpl implements KeyguardWeatherController,
             java.lang.String r2 = r7.getLocationKey()     // Catch:{ Exception -> 0x00cd, all -> 0x00ca }
             java.lang.StringBuilder r0 = r0.append((java.lang.String) r2)     // Catch:{ Exception -> 0x00cd, all -> 0x00ca }
             java.lang.String r0 = r0.toString()     // Catch:{ Exception -> 0x00cd, all -> 0x00ca }
-            com.nothing.systemui.util.NTLogUtil.m1680d(r1, r0)     // Catch:{ Exception -> 0x00cd, all -> 0x00ca }
+            com.nothing.systemui.util.NTLogUtil.m1686d(r1, r0)     // Catch:{ Exception -> 0x00cd, all -> 0x00ca }
         L_0x00a6:
             java.lang.String r0 = "KeyguardWeather"
             java.lang.StringBuilder r1 = new java.lang.StringBuilder     // Catch:{ Exception -> 0x00cd, all -> 0x00ca }
             r1.<init>((java.lang.String) r3)     // Catch:{ Exception -> 0x00cd, all -> 0x00ca }
             java.lang.StringBuilder r1 = r1.append((java.lang.Object) r7)     // Catch:{ Exception -> 0x00cd, all -> 0x00ca }
             java.lang.String r1 = r1.toString()     // Catch:{ Exception -> 0x00cd, all -> 0x00ca }
-            com.nothing.systemui.util.NTLogUtil.m1680d(r0, r1)     // Catch:{ Exception -> 0x00cd, all -> 0x00ca }
+            com.nothing.systemui.util.NTLogUtil.m1686d(r0, r1)     // Catch:{ Exception -> 0x00cd, all -> 0x00ca }
             r14.mWeatherData = r7     // Catch:{ Exception -> 0x00cd, all -> 0x00ca }
             android.os.Handler r0 = r14.mMainHandler     // Catch:{ Exception -> 0x00cd, all -> 0x00ca }
             com.nothing.systemui.keyguard.weather.KeyguardWeatherControllerImpl$$ExternalSyntheticLambda2 r1 = new com.nothing.systemui.keyguard.weather.KeyguardWeatherControllerImpl$$ExternalSyntheticLambda2     // Catch:{ Exception -> 0x00cd, all -> 0x00ca }
@@ -290,7 +290,7 @@ public class KeyguardWeatherControllerImpl implements KeyguardWeatherController,
             java.lang.String r2 = r14.toString()     // Catch:{ all -> 0x00d0 }
             java.lang.StringBuilder r1 = r1.append((java.lang.String) r2)     // Catch:{ all -> 0x00d0 }
             java.lang.String r1 = r1.toString()     // Catch:{ all -> 0x00d0 }
-            com.nothing.systemui.util.NTLogUtil.m1680d(r0, r1)     // Catch:{ all -> 0x00d0 }
+            com.nothing.systemui.util.NTLogUtil.m1686d(r0, r1)     // Catch:{ all -> 0x00d0 }
             r14.printStackTrace()     // Catch:{ all -> 0x00d0 }
             if (r7 == 0) goto L_0x00f1
             r7.close()     // Catch:{ all -> 0x00f9 }
@@ -307,17 +307,17 @@ public class KeyguardWeatherControllerImpl implements KeyguardWeatherController,
             monitor-exit(r6)     // Catch:{ all -> 0x00f9 }
             throw r14
         */
-        throw new UnsupportedOperationException("Method not decompiled: com.nothing.systemui.keyguard.weather.KeyguardWeatherControllerImpl.mo57467xfcac0ac3():void");
+        throw new UnsupportedOperationException("Method not decompiled: com.nothing.systemui.keyguard.weather.KeyguardWeatherControllerImpl.mo57488xfcac0ac3():void");
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateDataAndNotify$2$com-nothing-systemui-keyguard-weather-KeyguardWeatherControllerImpl */
-    public /* synthetic */ void mo57466xb5a7b42() {
+    public /* synthetic */ void mo57487xb5a7b42() {
         Utils.safeForeach(this.mCallbacks, new KeyguardWeatherControllerImpl$$ExternalSyntheticLambda3());
     }
 
     public WeatherData getWeatherData() {
-        NTLogUtil.m1680d(TAG, "getWeatherData=" + this.mWeatherData);
+        NTLogUtil.m1686d(TAG, "getWeatherData=" + this.mWeatherData);
         return this.mWeatherData;
     }
 }

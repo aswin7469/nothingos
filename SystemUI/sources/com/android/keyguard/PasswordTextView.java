@@ -25,7 +25,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 import android.widget.EditText;
 import com.android.settingslib.Utils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -100,12 +100,12 @@ public class PasswordTextView extends View {
             setFocusable(z2);
             setFocusableInTouchMode(z3);
             obtainStyledAttributes.recycle();
-            TypedArray obtainStyledAttributes2 = context.obtainStyledAttributes(attributeSet, C1893R.styleable.PasswordTextView);
+            TypedArray obtainStyledAttributes2 = context.obtainStyledAttributes(attributeSet, C1894R.styleable.PasswordTextView);
             try {
                 this.mTextHeightRaw = obtainStyledAttributes2.getInt(4, 0);
                 this.mGravity = obtainStyledAttributes2.getInt(1, 17);
-                this.mDotSize = obtainStyledAttributes2.getDimensionPixelSize(3, getContext().getResources().getDimensionPixelSize(C1893R.dimen.password_dot_size));
-                this.mCharPadding = obtainStyledAttributes2.getDimensionPixelSize(2, getContext().getResources().getDimensionPixelSize(C1893R.dimen.password_char_padding));
+                this.mDotSize = obtainStyledAttributes2.getDimensionPixelSize(3, getContext().getResources().getDimensionPixelSize(C1894R.dimen.password_dot_size));
+                this.mCharPadding = obtainStyledAttributes2.getDimensionPixelSize(2, getContext().getResources().getDimensionPixelSize(C1894R.dimen.password_char_padding));
                 paint.setColor(obtainStyledAttributes2.getColor(0, -1));
                 obtainStyledAttributes2.recycle();
                 paint.setFlags(129);
@@ -128,7 +128,7 @@ public class PasswordTextView extends View {
 
     /* access modifiers changed from: protected */
     public void onConfigurationChanged(Configuration configuration) {
-        this.mTextHeightRaw = getContext().getResources().getInteger(C1893R.integer.scaled_password_text_size);
+        this.mTextHeightRaw = getContext().getResources().getInteger(C1894R.integer.scaled_password_text_size);
     }
 
     /* access modifiers changed from: protected */

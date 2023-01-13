@@ -12,6 +12,6 @@ public final /* synthetic */ class TileServices$$ExternalSyntheticLambda1 implem
     }
 
     public final void run() {
-        this.f$0.mo36672xe19e37(this.f$1);
+        this.f$0.mo36676xe19e37(this.f$1);
     }
 }

@@ -38,11 +38,11 @@ public final class MonthDay implements TemporalAccessor, TemporalAdjuster, Compa
 
     public static MonthDay now(Clock clock) {
         LocalDate now = LocalDate.now(clock);
-        return m922of(now.getMonth(), now.getDayOfMonth());
+        return m920of(now.getMonth(), now.getDayOfMonth());
     }
 
     /* renamed from: of */
-    public static MonthDay m922of(Month month2, int i) {
+    public static MonthDay m920of(Month month2, int i) {
         Objects.requireNonNull(month2, "month");
         ChronoField.DAY_OF_MONTH.checkValidValue((long) i);
         if (i <= month2.maxLength()) {
@@ -52,8 +52,8 @@ public final class MonthDay implements TemporalAccessor, TemporalAdjuster, Compa
     }
 
     /* renamed from: of */
-    public static MonthDay m921of(int i, int i2) {
-        return m922of(Month.m920of(i), i2);
+    public static MonthDay m919of(int i, int i2) {
+        return m920of(Month.m918of(i), i2);
     }
 
     public static MonthDay from(TemporalAccessor temporalAccessor) {
@@ -64,7 +64,7 @@ public final class MonthDay implements TemporalAccessor, TemporalAdjuster, Compa
             if (!IsoChronology.INSTANCE.equals(Chronology.from(temporalAccessor))) {
                 temporalAccessor = LocalDate.from(temporalAccessor);
             }
-            return m921of(temporalAccessor.get(ChronoField.MONTH_OF_YEAR), temporalAccessor.get(ChronoField.DAY_OF_MONTH));
+            return m919of(temporalAccessor.get(ChronoField.MONTH_OF_YEAR), temporalAccessor.get(ChronoField.DAY_OF_MONTH));
         } catch (DateTimeException e) {
             throw new DateTimeException("Unable to obtain MonthDay from TemporalAccessor: " + temporalAccessor + " of type " + temporalAccessor.getClass().getName(), e);
         }
@@ -102,7 +102,7 @@ public final class MonthDay implements TemporalAccessor, TemporalAdjuster, Compa
             return temporalField.range();
         }
         if (temporalField == ChronoField.DAY_OF_MONTH) {
-            return ValueRange.m956of(1, (long) getMonth().minLength(), (long) getMonth().maxLength());
+            return ValueRange.m954of(1, (long) getMonth().minLength(), (long) getMonth().maxLength());
         }
         return super.range(temporalField);
     }
@@ -112,7 +112,7 @@ public final class MonthDay implements TemporalAccessor, TemporalAdjuster, Compa
     }
 
     /* renamed from: java.time.MonthDay$1 */
-    static /* synthetic */ class C28551 {
+    static /* synthetic */ class C28611 {
         static final /* synthetic */ int[] $SwitchMap$java$time$temporal$ChronoField;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(6:0|1|2|3|4|6) */
@@ -140,7 +140,7 @@ public final class MonthDay implements TemporalAccessor, TemporalAdjuster, Compa
             L_0x001d:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: java.time.MonthDay.C28551.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: java.time.MonthDay.C28611.<clinit>():void");
         }
     }
 
@@ -149,7 +149,7 @@ public final class MonthDay implements TemporalAccessor, TemporalAdjuster, Compa
         if (!(temporalField instanceof ChronoField)) {
             return temporalField.getFrom(this);
         }
-        int i2 = C28551.$SwitchMap$java$time$temporal$ChronoField[((ChronoField) temporalField).ordinal()];
+        int i2 = C28611.$SwitchMap$java$time$temporal$ChronoField[((ChronoField) temporalField).ordinal()];
         if (i2 == 1) {
             i = this.day;
         } else if (i2 == 2) {
@@ -165,7 +165,7 @@ public final class MonthDay implements TemporalAccessor, TemporalAdjuster, Compa
     }
 
     public Month getMonth() {
-        return Month.m920of(this.month);
+        return Month.m918of(this.month);
     }
 
     public int getDayOfMonth() {
@@ -177,7 +177,7 @@ public final class MonthDay implements TemporalAccessor, TemporalAdjuster, Compa
     }
 
     public MonthDay withMonth(int i) {
-        return with(Month.m920of(i));
+        return with(Month.m918of(i));
     }
 
     public MonthDay with(Month month2) {
@@ -192,7 +192,7 @@ public final class MonthDay implements TemporalAccessor, TemporalAdjuster, Compa
         if (i == this.day) {
             return this;
         }
-        return m921of(this.month, i);
+        return m919of(this.month, i);
     }
 
     public <R> R query(TemporalQuery<R> temporalQuery) {
@@ -216,7 +216,7 @@ public final class MonthDay implements TemporalAccessor, TemporalAdjuster, Compa
     }
 
     public LocalDate atYear(int i) {
-        return LocalDate.m908of(i, this.month, isValidYear(i) ? this.day : 28);
+        return LocalDate.m906of(i, this.month, isValidYear(i) ? this.day : 28);
     }
 
     public int compareTo(MonthDay monthDay) {
@@ -275,6 +275,6 @@ public final class MonthDay implements TemporalAccessor, TemporalAdjuster, Compa
     }
 
     static MonthDay readExternal(DataInput dataInput) throws IOException {
-        return m921of((int) dataInput.readByte(), (int) dataInput.readByte());
+        return m919of((int) dataInput.readByte(), (int) dataInput.readByte());
     }
 }

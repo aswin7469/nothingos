@@ -11,6 +11,6 @@ public final /* synthetic */ class OperatorNameViewController$$ExternalSynthetic
     }
 
     public final void onTuningChanged(String str, String str2) {
-        this.f$0.mo38981xb0b0eda8(str, str2);
+        this.f$0.mo38982xb0b0eda8(str, str2);
     }
 }

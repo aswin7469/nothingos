@@ -6,7 +6,7 @@ import android.content.res.Resources;
 import android.util.AttributeSet;
 import android.util.IndentingPrintWriter;
 import android.view.View;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.statusbar.notification.stack.ExpandableViewState;
 import com.android.systemui.statusbar.notification.stack.ViewState;
 import com.android.systemui.util.DumpUtilsKt;
@@ -25,12 +25,12 @@ public class FooterView extends StackScrollerDecorView {
 
     /* access modifiers changed from: protected */
     public View findContentView() {
-        return findViewById(C1893R.C1897id.content);
+        return findViewById(C1894R.C1898id.content);
     }
 
     /* access modifiers changed from: protected */
     public View findSecondaryView() {
-        return findViewById(C1893R.C1897id.dismiss_text);
+        return findViewById(C1894R.C1898id.dismiss_text);
     }
 
     public void dump(PrintWriter printWriter, String[] strArr) {
@@ -41,7 +41,7 @@ public class FooterView extends StackScrollerDecorView {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$dump$0$com-android-systemui-statusbar-notification-row-FooterView */
-    public /* synthetic */ void mo41344x433bc4b0(IndentingPrintWriter indentingPrintWriter) {
+    public /* synthetic */ void mo41350x433bc4b0(IndentingPrintWriter indentingPrintWriter) {
         indentingPrintWriter.println("visibility: " + DumpUtilsKt.visibilityString(getVisibility()));
         indentingPrintWriter.println("manageButton showHistory: " + this.mShowHistory);
         indentingPrintWriter.println("manageButton visibility: " + DumpUtilsKt.visibilityString(this.mClearAllButton.getVisibility()));
@@ -52,7 +52,7 @@ public class FooterView extends StackScrollerDecorView {
     public void onFinishInflate() {
         super.onFinishInflate();
         this.mClearAllButton = (FooterViewButton) findSecondaryView();
-        this.mManageButton = (FooterViewButton) findViewById(C1893R.C1897id.manage_text);
+        this.mManageButton = (FooterViewButton) findViewById(C1894R.C1898id.manage_text);
         updateResources();
         updateText();
     }
@@ -94,24 +94,24 @@ public class FooterView extends StackScrollerDecorView {
     public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
         updateColors();
-        this.mClearAllButton.setText(C1893R.string.clear_all_notifications_text);
-        this.mClearAllButton.setContentDescription(this.mContext.getString(C1893R.string.accessibility_clear_all));
+        this.mClearAllButton.setText(C1894R.string.clear_all_notifications_text);
+        this.mClearAllButton.setContentDescription(this.mContext.getString(C1894R.string.accessibility_clear_all));
         updateResources();
         updateText();
     }
 
     public void updateColors() {
         Resources.Theme theme = this.mContext.getTheme();
-        int color = getResources().getColor(C1893R.C1894color.notif_pill_text, theme);
-        this.mClearAllButton.setBackground(theme.getDrawable(C1893R.C1895drawable.notif_footer_btn_background));
+        int color = getResources().getColor(C1894R.C1895color.notif_pill_text, theme);
+        this.mClearAllButton.setBackground(theme.getDrawable(C1894R.C1896drawable.notif_footer_btn_background));
         this.mClearAllButton.setTextColor(color);
-        this.mManageButton.setBackground(theme.getDrawable(C1893R.C1895drawable.notif_footer_btn_background));
+        this.mManageButton.setBackground(theme.getDrawable(C1894R.C1896drawable.notif_footer_btn_background));
         this.mManageButton.setTextColor(color);
     }
 
     private void updateResources() {
-        this.mManageNotificationText = getContext().getString(C1893R.string.manage_notifications_text);
-        this.mManageNotificationHistoryText = getContext().getString(C1893R.string.manage_notifications_history_text);
+        this.mManageNotificationText = getContext().getString(C1894R.string.manage_notifications_text);
+        this.mManageNotificationHistoryText = getContext().getString(C1894R.string.manage_notifications_history_text);
     }
 
     public ExpandableViewState createExpandableViewState() {

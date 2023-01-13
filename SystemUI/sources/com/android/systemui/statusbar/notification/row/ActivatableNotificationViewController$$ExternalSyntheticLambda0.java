@@ -11,6 +11,6 @@ public final /* synthetic */ class ActivatableNotificationViewController$$Extern
     }
 
     public final void onActiveChanged(boolean z) {
-        this.f$0.mo40937x68f3f9da(z);
+        this.f$0.mo40940x68f3f9da(z);
     }
 }

@@ -155,7 +155,7 @@ public class MethodHandles {
         }
 
         /* renamed from: in */
-        public Lookup mo59898in(Class<?> cls) {
+        public Lookup mo59954in(Class<?> cls) {
             cls.getClass();
             Class<?> cls2 = this.lookupClass;
             if (cls == cls2) {
@@ -1160,7 +1160,7 @@ public class MethodHandles {
         ArrayList arrayList2 = new ArrayList();
         ArrayList arrayList3 = new ArrayList();
         ArrayList arrayList4 = new ArrayList();
-        Stream.m1781of((T[]) methodHandleArr).filter(new MethodHandles$$ExternalSyntheticLambda24()).forEach(new MethodHandles$$ExternalSyntheticLambda5(arrayList, arrayList2, arrayList3, arrayList4));
+        Stream.m1787of((T[]) methodHandleArr).filter(new MethodHandles$$ExternalSyntheticLambda24()).forEach(new MethodHandles$$ExternalSyntheticLambda5(arrayList, arrayList2, arrayList3, arrayList4));
         int size = arrayList.size();
         ArrayList arrayList5 = new ArrayList();
         for (int i = 0; i < size; i++) {
@@ -1235,9 +1235,9 @@ public class MethodHandles {
     private static void loopChecks0(MethodHandle[][] methodHandleArr) {
         if (methodHandleArr == null || methodHandleArr.length == 0) {
             throw MethodHandleStatics.newIllegalArgumentException("null or no clauses passed");
-        } else if (Stream.m1781of((T[]) methodHandleArr).anyMatch(new MethodHandles$$ExternalSyntheticLambda12())) {
+        } else if (Stream.m1787of((T[]) methodHandleArr).anyMatch(new MethodHandles$$ExternalSyntheticLambda12())) {
             throw MethodHandleStatics.newIllegalArgumentException("null clauses are not allowed");
-        } else if (Stream.m1781of((T[]) methodHandleArr).anyMatch(new MethodHandles$$ExternalSyntheticLambda13())) {
+        } else if (Stream.m1787of((T[]) methodHandleArr).anyMatch(new MethodHandles$$ExternalSyntheticLambda13())) {
             throw MethodHandleStatics.newIllegalArgumentException("All loop clauses must be represented as MethodHandle arrays with at most 4 elements.");
         }
     }
@@ -1253,7 +1253,7 @@ public class MethodHandles {
     }
 
     private static List<Class<?>> longestParameterList(Stream<MethodHandle> stream, int i) {
-        List<Class<?>> of = List.m1722of();
+        List<Class<?>> of = List.m1728of();
         List list = (List) stream.filter(new MethodHandles$$ExternalSyntheticLambda10()).map(new MethodHandles$$ExternalSyntheticLambda17()).filter(new MethodHandles$$ExternalSyntheticLambda19(i)).map(new MethodHandles$$ExternalSyntheticLambda20()).reduce(new MethodHandles$$ExternalSyntheticLambda21()).orElse(of);
         return list.size() == 0 ? of : list.subList(i, list.size());
     }
@@ -1267,7 +1267,7 @@ public class MethodHandles {
     }
 
     private static List<Class<?>> longestParameterList(List<List<Class<?>>> list) {
-        return list.stream().reduce(new MethodHandles$$ExternalSyntheticLambda23()).orElse(List.m1722of());
+        return list.stream().reduce(new MethodHandles$$ExternalSyntheticLambda23()).orElse(List.m1728of());
     }
 
     static /* synthetic */ List lambda$longestParameterList$12(List list, List list2) {
@@ -1275,7 +1275,7 @@ public class MethodHandles {
     }
 
     private static List<Class<?>> buildCommonSuffix(List<MethodHandle> list, List<MethodHandle> list2, List<MethodHandle> list3, List<MethodHandle> list4, int i) {
-        return longestParameterList(Arrays.asList(longestParameterList(Stream.m1781of((T[]) new List[]{list2, list3, list4}).flatMap(new WifiPickerTracker$$ExternalSyntheticLambda13()), i), longestParameterList(list.stream(), 0)));
+        return longestParameterList(Arrays.asList(longestParameterList(Stream.m1787of((T[]) new List[]{list2, list3, list4}).flatMap(new WifiPickerTracker$$ExternalSyntheticLambda13()), i), longestParameterList(list.stream(), 0)));
     }
 
     private static void loopChecks1b(List<MethodHandle> list, List<Class<?>> list2) {
@@ -1303,7 +1303,7 @@ public class MethodHandles {
     }
 
     private static void loopChecks2(List<MethodHandle> list, List<MethodHandle> list2, List<MethodHandle> list3, List<Class<?>> list4) {
-        if (Stream.m1781of((T[]) new List[]{list, list2, list3}).flatMap(new WifiPickerTracker$$ExternalSyntheticLambda13()).filter(new MethodHandles$$ExternalSyntheticLambda10()).map(new MethodHandles$$ExternalSyntheticLambda17()).anyMatch(new MethodHandles$$ExternalSyntheticLambda18(list4))) {
+        if (Stream.m1787of((T[]) new List[]{list, list2, list3}).flatMap(new WifiPickerTracker$$ExternalSyntheticLambda13()).filter(new MethodHandles$$ExternalSyntheticLambda10()).map(new MethodHandles$$ExternalSyntheticLambda17()).anyMatch(new MethodHandles$$ExternalSyntheticLambda18(list4))) {
             throw MethodHandleStatics.newIllegalArgumentException("found non-effectively identical parameter type lists:\nstep: " + list + "\npred: " + list2 + "\nfini: " + list3 + " (common parameter sequence: " + list4 + NavigationBarInflaterView.KEY_CODE_END);
         }
     }

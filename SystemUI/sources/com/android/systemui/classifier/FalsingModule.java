@@ -2,7 +2,7 @@ package com.android.systemui.classifier;
 
 import android.content.res.Resources;
 import android.view.ViewConfiguration;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.statusbar.phone.NotificationTapHelper;
@@ -42,7 +42,7 @@ public interface FalsingModule {
     @Provides
     @Named("falsing_double_tap_touch_slop")
     static float providesDoubleTapTouchSlop(@Main Resources resources) {
-        return resources.getDimension(C1893R.dimen.double_tap_slop);
+        return resources.getDimension(C1894R.dimen.double_tap_slop);
     }
 
     @Provides

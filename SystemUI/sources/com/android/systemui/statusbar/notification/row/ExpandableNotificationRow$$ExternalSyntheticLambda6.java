@@ -14,6 +14,6 @@ public final /* synthetic */ class ExpandableNotificationRow$$ExternalSyntheticL
     }
 
     public final void onClick(View view) {
-        this.f$0.mo41132xc8edba90(this.f$1, view);
+        this.f$0.mo41135xc8edba90(this.f$1, view);
     }
 }

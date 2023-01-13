@@ -12,6 +12,6 @@ public final /* synthetic */ class CreateUserActivity$$ExternalSyntheticLambda0 
     }
 
     public final void startActivityForResult(Intent intent, int i) {
-        this.f$0.mo46669x5fd23fef(intent, i);
+        this.f$0.mo46681x5fd23fef(intent, i);
     }
 }

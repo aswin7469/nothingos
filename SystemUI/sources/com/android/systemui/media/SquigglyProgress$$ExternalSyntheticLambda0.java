@@ -11,6 +11,6 @@ public final /* synthetic */ class SquigglyProgress$$ExternalSyntheticLambda0 im
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        SquigglyProgress.m2841_set_animate_$lambda1$lambda0(this.f$0, valueAnimator);
+        SquigglyProgress.m2846_set_animate_$lambda1$lambda0(this.f$0, valueAnimator);
     }
 }

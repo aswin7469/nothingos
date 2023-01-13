@@ -23,12 +23,12 @@ public final class Optional<T> {
     }
 
     /* renamed from: of */
-    public static <T> Optional<T> m1745of(T t) {
+    public static <T> Optional<T> m1751of(T t) {
         return new Optional<>(t);
     }
 
     public static <T> Optional<T> ofNullable(T t) {
-        return t == null ? empty() : m1745of(t);
+        return t == null ? empty() : m1751of(t);
     }
 
     public T get() {
@@ -85,7 +85,7 @@ public final class Optional<T> {
     }
 
     /* renamed from: or */
-    public Optional<T> mo61744or(Supplier<? extends Optional<? extends T>> supplier) {
+    public Optional<T> mo61800or(Supplier<? extends Optional<? extends T>> supplier) {
         Objects.requireNonNull(supplier);
         if (isPresent()) {
             return this;
@@ -97,7 +97,7 @@ public final class Optional<T> {
         if (!isPresent()) {
             return Stream.empty();
         }
-        return Stream.m1780of(this.value);
+        return Stream.m1786of(this.value);
     }
 
     public T orElse(T t) {

@@ -68,7 +68,7 @@ public class ScrimView extends View {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-scrim-ScrimView  reason: not valid java name */
-    public /* synthetic */ void m3005lambda$new$0$comandroidsystemuiscrimScrimView() {
+    public /* synthetic */ void m3009lambda$new$0$comandroidsystemuiscrimScrimView() {
         updateColorWithTint(false);
     }
 
@@ -91,7 +91,7 @@ public class ScrimView extends View {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setDrawable$1$com-android-systemui-scrim-ScrimView  reason: not valid java name */
-    public /* synthetic */ void m3008lambda$setDrawable$1$comandroidsystemuiscrimScrimView(Drawable drawable) {
+    public /* synthetic */ void m3012lambda$setDrawable$1$comandroidsystemuiscrimScrimView(Drawable drawable) {
         this.mDrawable = drawable;
         drawable.setCallback(this);
         this.mDrawable.setBounds(getLeft(), getTop(), getRight(), getBottom());
@@ -124,7 +124,7 @@ public class ScrimView extends View {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setClickable$2$com-android-systemui-scrim-ScrimView  reason: not valid java name */
-    public /* synthetic */ void m3006lambda$setClickable$2$comandroidsystemuiscrimScrimView(boolean z) {
+    public /* synthetic */ void m3010lambda$setClickable$2$comandroidsystemuiscrimScrimView(boolean z) {
         super.setClickable(z);
     }
 
@@ -142,7 +142,7 @@ public class ScrimView extends View {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setColors$3$com-android-systemui-scrim-ScrimView  reason: not valid java name */
-    public /* synthetic */ void m3007lambda$setColors$3$comandroidsystemuiscrimScrimView(ColorExtractor.GradientColors gradientColors, boolean z) {
+    public /* synthetic */ void m3011lambda$setColors$3$comandroidsystemuiscrimScrimView(ColorExtractor.GradientColors gradientColors, boolean z) {
         synchronized (this.mColorLock) {
             if (!this.mColors.equals(gradientColors)) {
                 this.mColors.set(gradientColors);
@@ -180,7 +180,7 @@ public class ScrimView extends View {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setTint$4$com-android-systemui-scrim-ScrimView  reason: not valid java name */
-    public /* synthetic */ void m3009lambda$setTint$4$comandroidsystemuiscrimScrimView(int i, boolean z) {
+    public /* synthetic */ void m3013lambda$setTint$4$comandroidsystemuiscrimScrimView(int i, boolean z) {
         if (this.mTintColor != i) {
             this.mTintColor = i;
             updateColorWithTint(z);
@@ -231,7 +231,7 @@ public class ScrimView extends View {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setViewAlpha$5$com-android-systemui-scrim-ScrimView  reason: not valid java name */
-    public /* synthetic */ void m3010lambda$setViewAlpha$5$comandroidsystemuiscrimScrimView(float f) {
+    public /* synthetic */ void m3014lambda$setViewAlpha$5$comandroidsystemuiscrimScrimView(float f) {
         if (f != this.mViewAlpha) {
             this.mViewAlpha = f;
             this.mDrawable.setAlpha((int) (f * 255.0f));

@@ -11,6 +11,6 @@ public final /* synthetic */ class TakeScreenshotService$$ExternalSyntheticLambd
     }
 
     public final Object get() {
-        return this.f$0.mo37606xb9000f8c();
+        return this.f$0.mo37607xb9000f8c();
     }
 }

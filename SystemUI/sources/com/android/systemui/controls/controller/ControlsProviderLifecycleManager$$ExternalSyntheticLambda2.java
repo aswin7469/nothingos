@@ -11,6 +11,6 @@ public final /* synthetic */ class ControlsProviderLifecycleManager$$ExternalSyn
     }
 
     public final void run() {
-        ControlsProviderLifecycleManager.m2627bindService$lambda3(this.f$0, this.f$1);
+        ControlsProviderLifecycleManager.m2632bindService$lambda3(this.f$0, this.f$1);
     }
 }

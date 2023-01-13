@@ -26,6 +26,6 @@ public final /* synthetic */ class SmartReplyInflaterImpl$$ExternalSyntheticLamb
     }
 
     public final void onClick(View view) {
-        SmartReplyInflaterImpl.m3243inflateReplyButton$lambda1$lambda0(this.f$0, this.f$1, this.f$2, this.f$3, this.f$4, this.f$5, this.f$6, view);
+        SmartReplyInflaterImpl.m3248inflateReplyButton$lambda1$lambda0(this.f$0, this.f$1, this.f$2, this.f$3, this.f$4, this.f$5, this.f$6, view);
     }
 }

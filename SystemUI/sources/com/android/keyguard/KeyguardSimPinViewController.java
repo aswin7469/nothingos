@@ -17,7 +17,7 @@ import com.android.internal.util.LatencyTracker;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.keyguard.KeyguardMessageAreaController;
 import com.android.keyguard.KeyguardSecurityModel;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.classifier.FalsingCollector;
 import com.android.systemui.navigationbar.NavigationBarInflaterView;
 import java.sql.Types;
@@ -64,7 +64,7 @@ public class KeyguardSimPinViewController extends KeyguardPinBasedInputViewContr
         super(keyguardSimPinView, keyguardUpdateMonitor, securityMode, lockPatternUtils, keyguardSecurityCallback, factory, latencyTracker, liftToActivateListener, emergencyButtonController, falsingCollector);
         this.mKeyguardUpdateMonitor = keyguardUpdateMonitor;
         this.mTelephonyManager = telephonyManager;
-        this.mSimImageView = (ImageView) ((KeyguardSimPinView) this.mView).findViewById(C1893R.C1897id.keyguard_sim);
+        this.mSimImageView = (ImageView) ((KeyguardSimPinView) this.mView).findViewById(C1894R.C1898id.keyguard_sim);
     }
 
     /* access modifiers changed from: protected */
@@ -108,7 +108,7 @@ public class KeyguardSimPinViewController extends KeyguardPinBasedInputViewContr
     /* access modifiers changed from: protected */
     public void verifyPasswordAndUnlock() {
         if (this.mPasswordEntry.getText().length() < 4) {
-            this.mMessageAreaController.setMessage((int) C1893R.string.kg_invalid_sim_pin_hint);
+            this.mMessageAreaController.setMessage((int) C1894R.string.kg_invalid_sim_pin_hint);
             ((KeyguardSimPinView) this.mView).resetPasswordText(true, true);
             getKeyguardSecurityCallback().userActivity();
             return;
@@ -137,7 +137,7 @@ public class KeyguardSimPinViewController extends KeyguardPinBasedInputViewContr
                     } else {
                         boolean unused4 = KeyguardSimPinViewController.this.mShowDefaultMessage = false;
                         if (pinResult.getResult() != 1) {
-                            KeyguardSimPinViewController.this.mMessageAreaController.setMessage((CharSequence) ((KeyguardSimPinView) KeyguardSimPinViewController.this.mView).getResources().getString(C1893R.string.kg_password_pin_failed));
+                            KeyguardSimPinViewController.this.mMessageAreaController.setMessage((CharSequence) ((KeyguardSimPinView) KeyguardSimPinViewController.this.mView).getResources().getString(C1894R.string.kg_password_pin_failed));
                         } else if (pinResult.getAttemptsRemaining() <= 2) {
                             KeyguardSimPinViewController.this.getSimRemainingAttemptsDialog(pinResult.getAttemptsRemaining()).show();
                         } else {
@@ -158,7 +158,7 @@ public class KeyguardSimPinViewController extends KeyguardPinBasedInputViewContr
         if (this.mSimUnlockProgressDialog == null) {
             ProgressDialog progressDialog = new ProgressDialog(((KeyguardSimPinView) this.mView).getContext());
             this.mSimUnlockProgressDialog = progressDialog;
-            progressDialog.setMessage(((KeyguardSimPinView) this.mView).getResources().getString(C1893R.string.kg_sim_unlock_progress_dialog_message));
+            progressDialog.setMessage(((KeyguardSimPinView) this.mView).getResources().getString(C1894R.string.kg_sim_unlock_progress_dialog_message));
             this.mSimUnlockProgressDialog.setIndeterminate(true);
             this.mSimUnlockProgressDialog.setCancelable(false);
             this.mSimUnlockProgressDialog.getWindow().setType(Types.SQLXML);
@@ -174,7 +174,7 @@ public class KeyguardSimPinViewController extends KeyguardPinBasedInputViewContr
             AlertDialog.Builder builder = new AlertDialog.Builder(((KeyguardSimPinView) this.mView).getContext());
             builder.setMessage(pinPasswordErrorMessage);
             builder.setCancelable(false);
-            builder.setNeutralButton(C1893R.string.f262ok, (DialogInterface.OnClickListener) null);
+            builder.setNeutralButton(C1894R.string.f262ok, (DialogInterface.OnClickListener) null);
             AlertDialog create = builder.create();
             this.mRemainingAttemptsDialog = create;
             create.getWindow().setType(Types.SQLXML);
@@ -188,16 +188,16 @@ public class KeyguardSimPinViewController extends KeyguardPinBasedInputViewContr
     public String getPinPasswordErrorMessage(int i, boolean z) {
         String str;
         if (i == 0) {
-            str = ((KeyguardSimPinView) this.mView).getResources().getString(C1893R.string.kg_password_wrong_pin_code_pukked);
+            str = ((KeyguardSimPinView) this.mView).getResources().getString(C1894R.string.kg_password_wrong_pin_code_pukked);
         } else if (i <= 0) {
-            str = ((KeyguardSimPinView) this.mView).getResources().getString(z ? C1893R.string.kg_sim_pin_instructions : C1893R.string.kg_password_pin_failed);
+            str = ((KeyguardSimPinView) this.mView).getResources().getString(z ? C1894R.string.kg_sim_pin_instructions : C1894R.string.kg_password_pin_failed);
         } else if (TelephonyManager.getDefault().getSimCount() > 1) {
-            str = ((KeyguardSimPinView) this.mView).getContext().getResources().getQuantityString(z ? C1893R.plurals.kg_password_default_pin_message_multi_sim : C1893R.plurals.kg_password_wrong_pin_code_multi_sim, i, new Object[]{Integer.valueOf(this.mSlotId), Integer.valueOf(i)});
+            str = ((KeyguardSimPinView) this.mView).getContext().getResources().getQuantityString(z ? C1894R.plurals.kg_password_default_pin_message_multi_sim : C1894R.plurals.kg_password_wrong_pin_code_multi_sim, i, new Object[]{Integer.valueOf(this.mSlotId), Integer.valueOf(i)});
         } else {
-            str = ((KeyguardSimPinView) this.mView).getContext().getResources().getQuantityString(z ? C1893R.plurals.kg_password_default_pin_message : C1893R.plurals.kg_password_wrong_pin_code, i, new Object[]{Integer.valueOf(i)});
+            str = ((KeyguardSimPinView) this.mView).getContext().getResources().getQuantityString(z ? C1894R.plurals.kg_password_default_pin_message : C1894R.plurals.kg_password_wrong_pin_code, i, new Object[]{Integer.valueOf(i)});
         }
         if (KeyguardEsimArea.isEsimLocked(((KeyguardSimPinView) this.mView).getContext(), this.mSubId)) {
-            str = ((KeyguardSimPinView) this.mView).getResources().getString(C1893R.string.kg_sim_lock_esim_instructions, new Object[]{str});
+            str = ((KeyguardSimPinView) this.mView).getResources().getString(C1894R.string.kg_sim_lock_esim_instructions, new Object[]{str});
         }
         Log.d("KeyguardSimPinView", "getPinPasswordErrorMessage: attemptsRemaining=" + i + " displayMessage=" + str);
         return str;
@@ -252,17 +252,17 @@ public class KeyguardSimPinViewController extends KeyguardPinBasedInputViewContr
         int color = obtainStyledAttributes.getColor(0, -1);
         obtainStyledAttributes.recycle();
         if (activeModemCount < 2) {
-            str = resources.getString(C1893R.string.kg_sim_pin_instructions);
+            str = resources.getString(C1894R.string.kg_sim_pin_instructions);
         } else {
             SubscriptionInfo subscriptionInfoForSubId = this.mKeyguardUpdateMonitor.getSubscriptionInfoForSubId(this.mSubId);
-            String string = resources.getString(C1893R.string.kg_sim_pin_instructions_multi, new Object[]{subscriptionInfoForSubId != null ? subscriptionInfoForSubId.getDisplayName() : ""});
+            String string = resources.getString(C1894R.string.kg_sim_pin_instructions_multi, new Object[]{subscriptionInfoForSubId != null ? subscriptionInfoForSubId.getDisplayName() : ""});
             if (subscriptionInfoForSubId != null) {
                 color = subscriptionInfoForSubId.getIconTint();
             }
             str = string;
         }
         if (isEsimLocked) {
-            str = resources.getString(C1893R.string.kg_sim_lock_esim_instructions, new Object[]{str});
+            str = resources.getString(C1894R.string.kg_sim_lock_esim_instructions, new Object[]{str});
         }
         if (((KeyguardSimPinView) this.mView).getVisibility() == 0) {
             this.mMessageAreaController.setMessage((CharSequence) str);

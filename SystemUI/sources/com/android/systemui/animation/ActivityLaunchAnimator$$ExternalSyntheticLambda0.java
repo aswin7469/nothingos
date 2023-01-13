@@ -13,6 +13,6 @@ public final /* synthetic */ class ActivityLaunchAnimator$$ExternalSyntheticLamb
     }
 
     public final void run() {
-        ActivityLaunchAnimator.m2532callOnIntentStartedOnMainThread$lambda0(this.f$0, this.f$1);
+        ActivityLaunchAnimator.m2538callOnIntentStartedOnMainThread$lambda0(this.f$0, this.f$1);
     }
 }

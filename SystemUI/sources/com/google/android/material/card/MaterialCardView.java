@@ -11,7 +11,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Checkable;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.cardview.widget.CardView;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.shape.MaterialShapeUtils;
 import com.google.android.material.shape.ShapeAppearanceModel;
 import com.google.android.material.shape.Shapeable;
@@ -26,8 +26,8 @@ public class MaterialCardView extends CardView implements Checkable, Shapeable {
     public static final int CHECKED_ICON_GRAVITY_TOP_END = 8388661;
     public static final int CHECKED_ICON_GRAVITY_TOP_START = 8388659;
     private static final int[] CHECKED_STATE_SET = {16842912};
-    private static final int DEF_STYLE_RES = C3621R.style.Widget_MaterialComponents_CardView;
-    private static final int[] DRAGGED_STATE_SET = {C3621R.attr.state_dragged};
+    private static final int DEF_STYLE_RES = C3631R.style.Widget_MaterialComponents_CardView;
+    private static final int[] DRAGGED_STATE_SET = {C3631R.attr.state_dragged};
     private static final String LOG_TAG = "MaterialCardView";
     private final MaterialCardViewHelper cardViewHelper;
     private boolean checked;
@@ -48,7 +48,7 @@ public class MaterialCardView extends CardView implements Checkable, Shapeable {
     }
 
     public MaterialCardView(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, C3621R.attr.materialCardViewStyle);
+        this(context, attributeSet, C3631R.attr.materialCardViewStyle);
     }
 
     /* JADX WARNING: Illegal instructions before constructor call */
@@ -65,7 +65,7 @@ public class MaterialCardView extends CardView implements Checkable, Shapeable {
             r0 = 1
             r7.isParentCardViewDoneInitializing = r0
             android.content.Context r0 = r7.getContext()
-            int[] r2 = com.google.android.material.C3621R.styleable.MaterialCardView
+            int[] r2 = com.google.android.material.C3631R.styleable.MaterialCardView
             int[] r5 = new int[r8]
             r1 = r9
             r3 = r10

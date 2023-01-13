@@ -11,6 +11,6 @@ public final /* synthetic */ class StatusBarHideIconsForBouncerManager$$External
     }
 
     public final void onStatusBarWindowStateChanged(int i) {
-        StatusBarHideIconsForBouncerManager.m3190_init_$lambda0(this.f$0, i);
+        StatusBarHideIconsForBouncerManager.m3195_init_$lambda0(this.f$0, i);
     }
 }

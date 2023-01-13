@@ -1,7 +1,7 @@
 package com.android.systemui.util.service.dagger;
 
 import android.content.res.Resources;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.dagger.qualifiers.Main;
 import dagger.Module;
 import dagger.Provides;
@@ -18,18 +18,18 @@ public class ObservableServiceModule {
     @Provides
     @Named("max_reconnect_attempts")
     static int providesMaxReconnectAttempts(@Main Resources resources) {
-        return resources.getInteger(C1893R.integer.config_communalSourceMaxReconnectAttempts);
+        return resources.getInteger(C1894R.integer.config_communalSourceMaxReconnectAttempts);
     }
 
     @Provides
     @Named("base_reconnect_attempts")
     static int provideBaseReconnectDelayMs(@Main Resources resources) {
-        return resources.getInteger(C1893R.integer.config_communalSourceReconnectBaseDelay);
+        return resources.getInteger(C1894R.integer.config_communalSourceReconnectBaseDelay);
     }
 
     @Provides
     @Named("min_connection_duration_ms")
     static int providesMinConnectionDuration(@Main Resources resources) {
-        return resources.getInteger(C1893R.integer.config_connectionMinDuration);
+        return resources.getInteger(C1894R.integer.config_connectionMinDuration);
     }
 }

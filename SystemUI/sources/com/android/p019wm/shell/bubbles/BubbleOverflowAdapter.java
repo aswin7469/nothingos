@@ -11,7 +11,7 @@ import android.widget.TextView;
 import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import com.android.internal.util.ContrastColorUtil;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.bubbles.BadgedImageView;
 import java.util.List;
 import java.util.function.Consumer;
@@ -34,12 +34,12 @@ class BubbleOverflowAdapter extends RecyclerView.Adapter<ViewHolder> {
     }
 
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(viewGroup.getContext()).inflate(C3343R.layout.bubble_overflow_view, viewGroup, false);
+        LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(viewGroup.getContext()).inflate(C3353R.layout.bubble_overflow_view, viewGroup, false);
         linearLayout.setLayoutParams(new LinearLayout.LayoutParams(-2, -2));
         TypedArray obtainStyledAttributes = this.mContext.obtainStyledAttributes(new int[]{16844002, 16842806});
         int ensureTextContrast = ContrastColorUtil.ensureTextContrast(obtainStyledAttributes.getColor(1, ViewCompat.MEASURED_STATE_MASK), obtainStyledAttributes.getColor(0, -1), true);
         obtainStyledAttributes.recycle();
-        ((TextView) linearLayout.findViewById(C3343R.C3346id.bubble_view_name)).setTextColor(ensureTextContrast);
+        ((TextView) linearLayout.findViewById(C3353R.C3356id.bubble_view_name)).setTextColor(ensureTextContrast);
         return new ViewHolder(linearLayout, this.mPositioner);
     }
 
@@ -51,13 +51,13 @@ class BubbleOverflowAdapter extends RecyclerView.Adapter<ViewHolder> {
         viewHolder.iconView.setOnClickListener(new BubbleOverflowAdapter$$ExternalSyntheticLambda0(this, bubble));
         String title = bubble.getTitle();
         if (title == null) {
-            title = this.mContext.getResources().getString(C3343R.string.notification_bubble_title);
+            title = this.mContext.getResources().getString(C3353R.string.notification_bubble_title);
         }
-        viewHolder.iconView.setContentDescription(this.mContext.getResources().getString(C3343R.string.bubble_content_description_single, new Object[]{title, bubble.getAppName()}));
+        viewHolder.iconView.setContentDescription(this.mContext.getResources().getString(C3353R.string.bubble_content_description_single, new Object[]{title, bubble.getAppName()}));
         viewHolder.iconView.setAccessibilityDelegate(new View.AccessibilityDelegate() {
             public void onInitializeAccessibilityNodeInfo(View view, AccessibilityNodeInfo accessibilityNodeInfo) {
                 super.onInitializeAccessibilityNodeInfo(view, accessibilityNodeInfo);
-                accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(16, BubbleOverflowAdapter.this.mContext.getResources().getString(C3343R.string.bubble_accessibility_action_add_back)));
+                accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(16, BubbleOverflowAdapter.this.mContext.getResources().getString(C3353R.string.bubble_accessibility_action_add_back)));
             }
         });
         if (bubble.getShortcutInfo() != null) {
@@ -70,7 +70,7 @@ class BubbleOverflowAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onBindViewHolder$0$com-android-wm-shell-bubbles-BubbleOverflowAdapter */
-    public /* synthetic */ void mo48599xcdab84df(Bubble bubble, View view) {
+    public /* synthetic */ void mo48608xcdab84df(Bubble bubble, View view) {
         this.mBubbles.remove((Object) bubble);
         notifyDataSetChanged();
         this.mPromoteBubbleFromOverflow.accept(bubble);
@@ -88,10 +88,10 @@ class BubbleOverflowAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         ViewHolder(LinearLayout linearLayout, BubblePositioner bubblePositioner) {
             super(linearLayout);
-            BadgedImageView badgedImageView = (BadgedImageView) linearLayout.findViewById(C3343R.C3346id.bubble_view);
+            BadgedImageView badgedImageView = (BadgedImageView) linearLayout.findViewById(C3353R.C3356id.bubble_view);
             this.iconView = badgedImageView;
             badgedImageView.initialize(bubblePositioner);
-            this.textView = (TextView) linearLayout.findViewById(C3343R.C3346id.bubble_view_name);
+            this.textView = (TextView) linearLayout.findViewById(C3353R.C3356id.bubble_view_name);
         }
     }
 }

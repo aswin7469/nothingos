@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Handler;
 import android.util.Log;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.CoreStartable;
 import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.p012qs.tiles.DndTile;
@@ -26,8 +26,8 @@ public class VolumeUI extends CoreStartable {
     }
 
     public void start() {
-        boolean z = this.mContext.getResources().getBoolean(C1893R.bool.enable_volume_ui);
-        boolean z2 = this.mContext.getResources().getBoolean(C1893R.bool.enable_safety_warning);
+        boolean z = this.mContext.getResources().getBoolean(C1894R.bool.enable_volume_ui);
+        boolean z2 = this.mContext.getResources().getBoolean(C1894R.bool.enable_safety_warning);
         boolean z3 = z || z2;
         this.mEnabled = z3;
         if (z3) {

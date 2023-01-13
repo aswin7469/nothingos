@@ -29,7 +29,7 @@ public interface Collector<T, A, R> {
     Supplier<A> supplier();
 
     /* renamed from: of */
-    static <T, R> Collector<T, R, R> m1773of(Supplier<R> supplier, BiConsumer<R, T> biConsumer, BinaryOperator<R> binaryOperator, Characteristics... characteristicsArr) {
+    static <T, R> Collector<T, R, R> m1779of(Supplier<R> supplier, BiConsumer<R, T> biConsumer, BinaryOperator<R> binaryOperator, Characteristics... characteristicsArr) {
         Set<Characteristics> set;
         Objects.requireNonNull(supplier);
         Objects.requireNonNull(biConsumer);
@@ -38,13 +38,13 @@ public interface Collector<T, A, R> {
         if (characteristicsArr.length == 0) {
             set = Collectors.CH_ID;
         } else {
-            set = Collections.unmodifiableSet(EnumSet.m1721of(Characteristics.IDENTITY_FINISH, (E[]) characteristicsArr));
+            set = Collections.unmodifiableSet(EnumSet.m1727of(Characteristics.IDENTITY_FINISH, (E[]) characteristicsArr));
         }
         return new Collectors.CollectorImpl(supplier, biConsumer, binaryOperator, set);
     }
 
     /* renamed from: of */
-    static <T, A, R> Collector<T, A, R> m1772of(Supplier<A> supplier, BiConsumer<A, T> biConsumer, BinaryOperator<A> binaryOperator, Function<A, R> function, Characteristics... characteristicsArr) {
+    static <T, A, R> Collector<T, A, R> m1778of(Supplier<A> supplier, BiConsumer<A, T> biConsumer, BinaryOperator<A> binaryOperator, Function<A, R> function, Characteristics... characteristicsArr) {
         Objects.requireNonNull(supplier);
         Objects.requireNonNull(biConsumer);
         Objects.requireNonNull(binaryOperator);

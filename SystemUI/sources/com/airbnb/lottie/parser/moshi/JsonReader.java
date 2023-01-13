@@ -129,7 +129,7 @@ public abstract class JsonReader implements Closeable {
                     buffer.readByte();
                     byteStringArr[i] = buffer.readByteString();
                 }
-                return new Options((String[]) strArr.clone(), okio.Options.m1817of(byteStringArr));
+                return new Options((String[]) strArr.clone(), okio.Options.m1823of(byteStringArr));
             } catch (IOException e) {
                 throw new AssertionError((Object) e);
             }

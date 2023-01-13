@@ -4,7 +4,7 @@ import android.net.wifi.hotspot2.pps.UpdateParameter;
 import androidx.core.view.MotionEventCompat;
 import java.time.Year;
 import java.util.Objects;
-import jdk.internal.misc.C4581VM;
+import jdk.internal.misc.C4593VM;
 import sun.util.locale.LanguageTag;
 
 public final class Integer extends Number implements Comparable<Integer> {
@@ -478,7 +478,7 @@ public final class Integer extends Number implements Comparable<Integer> {
 
         static {
             Class<Integer> cls = Integer.class;
-            String savedProperty = C4581VM.getSavedProperty("java.lang.Integer.IntegerCache.high");
+            String savedProperty = C4593VM.getSavedProperty("java.lang.Integer.IntegerCache.high");
             int i = 127;
             if (savedProperty != null) {
                 try {

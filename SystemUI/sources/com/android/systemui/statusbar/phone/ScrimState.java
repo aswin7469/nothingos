@@ -3,6 +3,8 @@ package com.android.systemui.statusbar.phone;
 import android.graphics.Color;
 import android.os.Trace;
 import androidx.core.view.ViewCompat;
+import com.android.keyguard.KeyguardUpdateMonitor;
+import com.android.systemui.Dependency;
 import com.android.systemui.dock.DockManager;
 import com.android.systemui.scrim.ScrimView;
 import com.nothing.systemui.util.NTColorUtil;
@@ -117,12 +119,13 @@ public enum ScrimState {
 
         public void prepare(ScrimState scrimState) {
             float f;
-            boolean alwaysOn = this.mDozeParameters.getAlwaysOn();
+            boolean z = false;
+            boolean z2 = this.mDozeParameters.getAlwaysOn() || ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).isUdfpsEnrolled();
             boolean isQuickPickupEnabled = this.mDozeParameters.isQuickPickupEnabled();
             boolean isDocked = this.mDockManager.isDocked();
             this.mBlankScreen = this.mDisplayRequiresBlanking;
             this.mFrontTint = ViewCompat.MEASURED_STATE_MASK;
-            if (alwaysOn || isDocked || isQuickPickupEnabled) {
+            if (z2 || isDocked || isQuickPickupEnabled) {
                 f = this.mAodFrontScrimAlpha;
             } else {
                 f = 1.0f;
@@ -131,7 +134,10 @@ public enum ScrimState {
             this.mBehindTint = ViewCompat.MEASURED_STATE_MASK;
             this.mBehindAlpha = 0.0f;
             this.mAnimationDuration = 1000;
-            this.mAnimateChange = this.mDozeParameters.shouldControlScreenOff() && !this.mDozeParameters.shouldShowLightRevealScrim();
+            if (this.mDozeParameters.shouldControlScreenOff() && !this.mDozeParameters.shouldShowLightRevealScrim()) {
+                z = true;
+            }
+            this.mAnimateChange = z;
         }
 
         public float getMaxLightRevealScrimAlpha() {

@@ -12,6 +12,6 @@ public final /* synthetic */ class BluetoothTileEx$setClickListener$1$$ExternalS
     }
 
     public final void run() {
-        BluetoothTileEx$setClickListener$1.m3518onClick$lambda0(this.f$0, this.f$1);
+        BluetoothTileEx$setClickListener$1.m3526onClick$lambda0(this.f$0, this.f$1);
     }
 }

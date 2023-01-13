@@ -73,7 +73,7 @@ public class KeyguardUserSwitcherListView extends AlphaOptimizedLinearLayout {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$updateVisibilities$0$com-android-systemui-statusbar-policy-KeyguardUserSwitcherListView */
-    public /* synthetic */ void mo45900xbcc43ce6(boolean z, KeyguardUserDetailItemView[] keyguardUserDetailItemViewArr) {
+    public /* synthetic */ void mo45912xbcc43ce6(boolean z, KeyguardUserDetailItemView[] keyguardUserDetailItemViewArr) {
         setClipChildren(true);
         setClipToPadding(true);
         this.mAnimating = false;

@@ -13,6 +13,8 @@ public class NTUdfpsSurfaceView extends SurfaceView implements SurfaceHolder.Cal
     private static final String TAG = "NTUdfpsSurfaceView";
     boolean mHasValidSurface;
     private final SurfaceHolder mHolder;
+    boolean mPendingDraw = false;
+    RectF mRectF = null;
     private final Paint mSensorPaint;
 
     public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i2, int i3) {
@@ -33,30 +35,42 @@ public class NTUdfpsSurfaceView extends SurfaceView implements SurfaceHolder.Cal
     }
 
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
+        RectF rectF;
         this.mHasValidSurface = true;
+        NTLogUtil.m1686d(TAG, "surfaceCreated mPendingDraw:" + this.mPendingDraw);
+        if (this.mPendingDraw && (rectF = this.mRectF) != null) {
+            drawIlluminationDot(rectF);
+        }
     }
 
     public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
+        NTLogUtil.m1686d(TAG, "surfaceDestroyed");
         this.mHasValidSurface = false;
     }
 
     public void drawIlluminationDot(RectF rectF) {
+        this.mPendingDraw = false;
         Canvas canvas = null;
         try {
-            NTLogUtil.m1680d(TAG, "drawIlluminationDot");
-            canvas = this.mHolder.lockCanvas();
-            canvas.drawOval(rectF, this.mSensorPaint);
+            NTLogUtil.m1686d(TAG, "drawIlluminationDot " + this.mHolder + " mHasValidSurface " + this.mHasValidSurface);
+            if (this.mHasValidSurface) {
+                canvas = this.mHolder.lockCanvas();
+                canvas.drawOval(rectF, this.mSensorPaint);
+            } else {
+                this.mPendingDraw = true;
+                this.mRectF = rectF;
+            }
             if (canvas == null) {
                 return;
             }
         } catch (Exception e) {
-            NTLogUtil.m1680d(TAG, "drawIlluminationDot Exception=" + e.toString());
-            if (canvas == null) {
+            NTLogUtil.m1686d(TAG, "drawIlluminationDot Exception=" + e.toString());
+            if (0 == 0) {
                 return;
             }
         } catch (Throwable th) {
-            if (canvas != null) {
-                this.mHolder.unlockCanvasAndPost(canvas);
+            if (0 != 0) {
+                this.mHolder.unlockCanvasAndPost((Canvas) null);
             }
             throw th;
         }

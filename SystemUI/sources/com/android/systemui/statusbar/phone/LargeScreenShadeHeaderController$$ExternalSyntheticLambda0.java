@@ -11,6 +11,6 @@ public final /* synthetic */ class LargeScreenShadeHeaderController$$ExternalSyn
     }
 
     public final void onSingleCarrierChanged(boolean z) {
-        LargeScreenShadeHeaderController.m3179updateListeners$lambda0(this.f$0, z);
+        LargeScreenShadeHeaderController.m3184updateListeners$lambda0(this.f$0, z);
     }
 }

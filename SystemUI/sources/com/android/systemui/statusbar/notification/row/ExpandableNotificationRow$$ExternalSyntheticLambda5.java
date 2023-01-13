@@ -13,6 +13,6 @@ public final /* synthetic */ class ExpandableNotificationRow$$ExternalSyntheticL
     }
 
     public final void run() {
-        this.f$0.mo41125xeea0a7ca(this.f$1);
+        this.f$0.mo41128xeea0a7ca(this.f$1);
     }
 }

@@ -14,6 +14,6 @@ public final /* synthetic */ class ControlsFavoritingActivity$$ExternalSynthetic
     }
 
     public final void onClick(View view) {
-        ControlsFavoritingActivity.m2641bindButtons$lambda16$lambda15(this.f$0, this.f$1, view);
+        ControlsFavoritingActivity.m2646bindButtons$lambda16$lambda15(this.f$0, this.f$1, view);
     }
 }

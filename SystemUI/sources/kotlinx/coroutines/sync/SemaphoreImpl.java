@@ -14,7 +14,7 @@ import kotlinx.coroutines.CancellableContinuation;
 import kotlinx.coroutines.CancellableContinuationImpl;
 import kotlinx.coroutines.CancellableContinuationKt;
 
-@Metadata(mo64986d1 = {"\u00002\n\u0002\u0018\u0002\n\u0002\u0010\b\n\u0002\b\u0004\n\u0002\u0010\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u000b\n\u0002\b\u000b\n\u0002\u0018\u0002\n\u0002\u0010\u0003\n\u0002\b\u0004\n\u0002\u0018\u0002\b\u0002\u0018\u00002\u00020\u001eB\u0017\u0012\u0006\u0010\u0002\u001a\u00020\u0001\u0012\u0006\u0010\u0003\u001a\u00020\u0001¢\u0006\u0004\b\u0004\u0010\u0005J\u0013\u0010\u0007\u001a\u00020\u0006H@ø\u0001\u0000¢\u0006\u0004\b\u0007\u0010\bJ\u0013\u0010\t\u001a\u00020\u0006H@ø\u0001\u0000¢\u0006\u0004\b\t\u0010\bJ\u001d\u0010\r\u001a\u00020\f2\f\u0010\u000b\u001a\b\u0012\u0004\u0012\u00020\u00060\nH\u0002¢\u0006\u0004\b\r\u0010\u000eJ\u000f\u0010\u000f\u001a\u00020\u0006H\u0016¢\u0006\u0004\b\u000f\u0010\u0010J\u000f\u0010\u0011\u001a\u00020\fH\u0016¢\u0006\u0004\b\u0011\u0010\u0012J\u000f\u0010\u0013\u001a\u00020\fH\u0002¢\u0006\u0004\b\u0013\u0010\u0012J\u0019\u0010\u0014\u001a\u00020\f*\b\u0012\u0004\u0012\u00020\u00060\nH\u0002¢\u0006\u0004\b\u0014\u0010\u000eR\u0016\u0010\u0017\u001a\u00020\u00018V@\u0016X\u0004¢\u0006\u0006\u001a\u0004\b\u0015\u0010\u0016R\"\u0010\u001a\u001a\u000e\u0012\u0004\u0012\u00020\u0019\u0012\u0004\u0012\u00020\u00060\u00188\u0002@\u0002X\u0004¢\u0006\u0006\n\u0004\b\u001a\u0010\u001bR\u0016\u0010\u0002\u001a\u00020\u00018\u0002@\u0002X\u0004¢\u0006\u0006\n\u0004\b\u0002\u0010\u001c\u0002\u0004\n\u0002\b\u0019¨\u0006\u001d"}, mo64987d2 = {"Lkotlinx/coroutines/sync/SemaphoreImpl;", "", "permits", "acquiredPermits", "<init>", "(II)V", "", "acquire", "(Lkotlin/coroutines/Continuation;)Ljava/lang/Object;", "acquireSlowPath", "Lkotlinx/coroutines/CancellableContinuation;", "cont", "", "addAcquireToQueue", "(Lkotlinx/coroutines/CancellableContinuation;)Z", "release", "()V", "tryAcquire", "()Z", "tryResumeNextFromQueue", "tryResumeAcquire", "getAvailablePermits", "()I", "availablePermits", "Lkotlin/Function1;", "", "onCancellationRelease", "Lkotlin/jvm/functions/Function1;", "I", "kotlinx-coroutines-core", "Lkotlinx/coroutines/sync/Semaphore;"}, mo64988k = 1, mo64989mv = {1, 5, 1}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u00002\n\u0002\u0018\u0002\n\u0002\u0010\b\n\u0002\b\u0004\n\u0002\u0010\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u000b\n\u0002\b\u000b\n\u0002\u0018\u0002\n\u0002\u0010\u0003\n\u0002\b\u0004\n\u0002\u0018\u0002\b\u0002\u0018\u00002\u00020\u001eB\u0017\u0012\u0006\u0010\u0002\u001a\u00020\u0001\u0012\u0006\u0010\u0003\u001a\u00020\u0001¢\u0006\u0004\b\u0004\u0010\u0005J\u0013\u0010\u0007\u001a\u00020\u0006H@ø\u0001\u0000¢\u0006\u0004\b\u0007\u0010\bJ\u0013\u0010\t\u001a\u00020\u0006H@ø\u0001\u0000¢\u0006\u0004\b\t\u0010\bJ\u001d\u0010\r\u001a\u00020\f2\f\u0010\u000b\u001a\b\u0012\u0004\u0012\u00020\u00060\nH\u0002¢\u0006\u0004\b\r\u0010\u000eJ\u000f\u0010\u000f\u001a\u00020\u0006H\u0016¢\u0006\u0004\b\u000f\u0010\u0010J\u000f\u0010\u0011\u001a\u00020\fH\u0016¢\u0006\u0004\b\u0011\u0010\u0012J\u000f\u0010\u0013\u001a\u00020\fH\u0002¢\u0006\u0004\b\u0013\u0010\u0012J\u0019\u0010\u0014\u001a\u00020\f*\b\u0012\u0004\u0012\u00020\u00060\nH\u0002¢\u0006\u0004\b\u0014\u0010\u000eR\u0016\u0010\u0017\u001a\u00020\u00018V@\u0016X\u0004¢\u0006\u0006\u001a\u0004\b\u0015\u0010\u0016R\"\u0010\u001a\u001a\u000e\u0012\u0004\u0012\u00020\u0019\u0012\u0004\u0012\u00020\u00060\u00188\u0002@\u0002X\u0004¢\u0006\u0006\n\u0004\b\u001a\u0010\u001bR\u0016\u0010\u0002\u001a\u00020\u00018\u0002@\u0002X\u0004¢\u0006\u0006\n\u0004\b\u0002\u0010\u001c\u0002\u0004\n\u0002\b\u0019¨\u0006\u001d"}, mo65043d2 = {"Lkotlinx/coroutines/sync/SemaphoreImpl;", "", "permits", "acquiredPermits", "<init>", "(II)V", "", "acquire", "(Lkotlin/coroutines/Continuation;)Ljava/lang/Object;", "acquireSlowPath", "Lkotlinx/coroutines/CancellableContinuation;", "cont", "", "addAcquireToQueue", "(Lkotlinx/coroutines/CancellableContinuation;)Z", "release", "()V", "tryAcquire", "()Z", "tryResumeNextFromQueue", "tryResumeAcquire", "getAvailablePermits", "()I", "availablePermits", "Lkotlin/Function1;", "", "onCancellationRelease", "Lkotlin/jvm/functions/Function1;", "I", "kotlinx-coroutines-core", "Lkotlinx/coroutines/sync/Semaphore;"}, mo65044k = 1, mo65045mv = {1, 5, 1}, mo65047xi = 48)
 /* compiled from: Semaphore.kt */
 final class SemaphoreImpl implements Semaphore {
     static final /* synthetic */ AtomicIntegerFieldUpdater _availablePermits$FU;
@@ -98,7 +98,7 @@ final class SemaphoreImpl implements Semaphore {
             if (r6 == 0) goto L_0x0023
             goto L_0x0028
         L_0x0023:
-            java.lang.Object r5 = kotlinx.coroutines.internal.SegmentOrClosed.m5481constructorimpl(r5)
+            java.lang.Object r5 = kotlinx.coroutines.internal.SegmentOrClosed.m5499constructorimpl(r5)
             goto L_0x003d
         L_0x0028:
             r6 = r5
@@ -107,13 +107,13 @@ final class SemaphoreImpl implements Semaphore {
             kotlinx.coroutines.internal.Symbol r7 = kotlinx.coroutines.internal.ConcurrentLinkedListKt.CLOSED
             if (r6 != r7) goto L_0x00db
             kotlinx.coroutines.internal.Symbol r5 = kotlinx.coroutines.internal.ConcurrentLinkedListKt.CLOSED
-            java.lang.Object r5 = kotlinx.coroutines.internal.SegmentOrClosed.m5481constructorimpl(r5)
+            java.lang.Object r5 = kotlinx.coroutines.internal.SegmentOrClosed.m5499constructorimpl(r5)
         L_0x003d:
-            boolean r6 = kotlinx.coroutines.internal.SegmentOrClosed.m5486isClosedimpl(r5)
+            boolean r6 = kotlinx.coroutines.internal.SegmentOrClosed.m5504isClosedimpl(r5)
             r7 = 0
             r8 = 1
             if (r6 != 0) goto L_0x0082
-            kotlinx.coroutines.internal.Segment r6 = kotlinx.coroutines.internal.SegmentOrClosed.m5484getSegmentimpl(r5)
+            kotlinx.coroutines.internal.Segment r6 = kotlinx.coroutines.internal.SegmentOrClosed.m5502getSegmentimpl(r5)
         L_0x0049:
             java.lang.Object r9 = r14.tail
             kotlinx.coroutines.internal.Segment r9 = (kotlinx.coroutines.internal.Segment) r9
@@ -146,7 +146,7 @@ final class SemaphoreImpl implements Semaphore {
             r6.remove()
             goto L_0x0049
         L_0x0082:
-            kotlinx.coroutines.internal.Segment r0 = kotlinx.coroutines.internal.SegmentOrClosed.m5484getSegmentimpl(r5)
+            kotlinx.coroutines.internal.Segment r0 = kotlinx.coroutines.internal.SegmentOrClosed.m5502getSegmentimpl(r5)
             kotlinx.coroutines.sync.SemaphoreSegment r0 = (kotlinx.coroutines.sync.SemaphoreSegment) r0
             int r3 = kotlinx.coroutines.sync.SemaphoreKt.SEGMENT_SIZE
             long r3 = (long) r3
@@ -246,7 +246,7 @@ final class SemaphoreImpl implements Semaphore {
             if (r6 == 0) goto L_0x0023
             goto L_0x0028
         L_0x0023:
-            java.lang.Object r5 = kotlinx.coroutines.internal.SegmentOrClosed.m5481constructorimpl(r5)
+            java.lang.Object r5 = kotlinx.coroutines.internal.SegmentOrClosed.m5499constructorimpl(r5)
             goto L_0x003d
         L_0x0028:
             r6 = r5
@@ -255,13 +255,13 @@ final class SemaphoreImpl implements Semaphore {
             kotlinx.coroutines.internal.Symbol r7 = kotlinx.coroutines.internal.ConcurrentLinkedListKt.CLOSED
             if (r6 != r7) goto L_0x00db
             kotlinx.coroutines.internal.Symbol r5 = kotlinx.coroutines.internal.ConcurrentLinkedListKt.CLOSED
-            java.lang.Object r5 = kotlinx.coroutines.internal.SegmentOrClosed.m5481constructorimpl(r5)
+            java.lang.Object r5 = kotlinx.coroutines.internal.SegmentOrClosed.m5499constructorimpl(r5)
         L_0x003d:
-            boolean r6 = kotlinx.coroutines.internal.SegmentOrClosed.m5486isClosedimpl(r5)
+            boolean r6 = kotlinx.coroutines.internal.SegmentOrClosed.m5504isClosedimpl(r5)
             r7 = 0
             r8 = 1
             if (r6 != 0) goto L_0x0082
-            kotlinx.coroutines.internal.Segment r6 = kotlinx.coroutines.internal.SegmentOrClosed.m5484getSegmentimpl(r5)
+            kotlinx.coroutines.internal.Segment r6 = kotlinx.coroutines.internal.SegmentOrClosed.m5502getSegmentimpl(r5)
         L_0x0049:
             java.lang.Object r9 = r14.head
             kotlinx.coroutines.internal.Segment r9 = (kotlinx.coroutines.internal.Segment) r9
@@ -294,7 +294,7 @@ final class SemaphoreImpl implements Semaphore {
             r6.remove()
             goto L_0x0049
         L_0x0082:
-            kotlinx.coroutines.internal.Segment r0 = kotlinx.coroutines.internal.SegmentOrClosed.m5484getSegmentimpl(r5)
+            kotlinx.coroutines.internal.Segment r0 = kotlinx.coroutines.internal.SegmentOrClosed.m5502getSegmentimpl(r5)
             kotlinx.coroutines.sync.SemaphoreSegment r0 = (kotlinx.coroutines.sync.SemaphoreSegment) r0
             r0.cleanPrev()
             long r5 = r0.getId()

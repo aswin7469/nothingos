@@ -12,6 +12,6 @@ public final /* synthetic */ class StatusBarUserInfoTracker$$ExternalSyntheticLa
     }
 
     public final void onUserInfoChanged(String str, Drawable drawable, String str2) {
-        StatusBarUserInfoTracker.m3220userInfoChangedListener$lambda0(this.f$0, str, drawable, str2);
+        StatusBarUserInfoTracker.m3225userInfoChangedListener$lambda0(this.f$0, str, drawable, str2);
     }
 }

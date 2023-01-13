@@ -11,6 +11,6 @@ public final /* synthetic */ class EmergencyButton$$ExternalSyntheticLambda0 imp
     }
 
     public final boolean onLongClick(View view) {
-        return this.f$0.m2281lambda$onFinishInflate$0$comandroidkeyguardEmergencyButton(view);
+        return this.f$0.m2287lambda$onFinishInflate$0$comandroidkeyguardEmergencyButton(view);
     }
 }

@@ -7,7 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.DrawableWrapper;
 import android.graphics.drawable.InsetDrawable;
 import android.util.AttributeSet;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import java.p026io.IOException;
 import org.xmlpull.p032v1.XmlPullParser;
 import org.xmlpull.p032v1.XmlPullParserException;
@@ -26,7 +26,7 @@ public class AlphaTintDrawableWrapper extends InsetDrawable {
     }
 
     public void inflate(Resources resources, XmlPullParser xmlPullParser, AttributeSet attributeSet, Resources.Theme theme) throws XmlPullParserException, IOException {
-        TypedArray obtainAttributes = obtainAttributes(resources, theme, attributeSet, C1893R.styleable.AlphaTintDrawableWrapper);
+        TypedArray obtainAttributes = obtainAttributes(resources, theme, attributeSet, C1894R.styleable.AlphaTintDrawableWrapper);
         super.inflate(resources, xmlPullParser, attributeSet, theme);
         this.mThemeAttrs = obtainAttributes.extractThemeAttrs();
         updateStateFromTypedArray(obtainAttributes);
@@ -38,7 +38,7 @@ public class AlphaTintDrawableWrapper extends InsetDrawable {
         super.applyTheme(theme);
         int[] iArr = this.mThemeAttrs;
         if (!(iArr == null || theme == null)) {
-            TypedArray resolveAttributes = theme.resolveAttributes(iArr, C1893R.styleable.AlphaTintDrawableWrapper);
+            TypedArray resolveAttributes = theme.resolveAttributes(iArr, C1894R.styleable.AlphaTintDrawableWrapper);
             updateStateFromTypedArray(resolveAttributes);
             resolveAttributes.recycle();
         }

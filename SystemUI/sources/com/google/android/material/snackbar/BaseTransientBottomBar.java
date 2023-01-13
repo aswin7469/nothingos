@@ -36,7 +36,7 @@ import androidx.core.view.OnApplyWindowInsetsListener;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.animation.AnimationUtils;
 import com.google.android.material.behavior.SwipeDismissBehavior;
 import com.google.android.material.color.MaterialColors;
@@ -65,7 +65,7 @@ public abstract class BaseTransientBottomBar<B extends BaseTransientBottomBar<B>
     public static final int LENGTH_SHORT = -1;
     static final int MSG_DISMISS = 1;
     static final int MSG_SHOW = 0;
-    private static final int[] SNACKBAR_STYLE_ATTR = {C3621R.attr.snackbarStyle};
+    private static final int[] SNACKBAR_STYLE_ATTR = {C3631R.attr.snackbarStyle};
     /* access modifiers changed from: private */
     public static final String TAG = "BaseTransientBottomBar";
     /* access modifiers changed from: private */
@@ -251,7 +251,7 @@ public abstract class BaseTransientBottomBar<B extends BaseTransientBottomBar<B>
 
     /* access modifiers changed from: protected */
     public int getSnackbarBaseLayoutResId() {
-        return hasSnackbarStyleAttr() ? C3621R.layout.mtrl_layout_snackbar : C3621R.layout.design_layout_snackbar;
+        return hasSnackbarStyleAttr() ? C3631R.layout.mtrl_layout_snackbar : C3631R.layout.design_layout_snackbar;
     }
 
     /* access modifiers changed from: protected */
@@ -741,17 +741,17 @@ public abstract class BaseTransientBottomBar<B extends BaseTransientBottomBar<B>
         protected SnackbarBaseLayout(Context context, AttributeSet attributeSet) {
             super(MaterialThemeOverlay.wrap(context, attributeSet, 0, 0), attributeSet);
             Context context2 = getContext();
-            TypedArray obtainStyledAttributes = context2.obtainStyledAttributes(attributeSet, C3621R.styleable.SnackbarLayout);
-            if (obtainStyledAttributes.hasValue(C3621R.styleable.SnackbarLayout_elevation)) {
-                ViewCompat.setElevation(this, (float) obtainStyledAttributes.getDimensionPixelSize(C3621R.styleable.SnackbarLayout_elevation, 0));
+            TypedArray obtainStyledAttributes = context2.obtainStyledAttributes(attributeSet, C3631R.styleable.SnackbarLayout);
+            if (obtainStyledAttributes.hasValue(C3631R.styleable.SnackbarLayout_elevation)) {
+                ViewCompat.setElevation(this, (float) obtainStyledAttributes.getDimensionPixelSize(C3631R.styleable.SnackbarLayout_elevation, 0));
             }
-            this.animationMode = obtainStyledAttributes.getInt(C3621R.styleable.SnackbarLayout_animationMode, 0);
-            this.backgroundOverlayColorAlpha = obtainStyledAttributes.getFloat(C3621R.styleable.SnackbarLayout_backgroundOverlayColorAlpha, 1.0f);
-            setBackgroundTintList(MaterialResources.getColorStateList(context2, obtainStyledAttributes, C3621R.styleable.SnackbarLayout_backgroundTint));
-            setBackgroundTintMode(ViewUtils.parseTintMode(obtainStyledAttributes.getInt(C3621R.styleable.SnackbarLayout_backgroundTintMode, -1), PorterDuff.Mode.SRC_IN));
-            this.actionTextColorAlpha = obtainStyledAttributes.getFloat(C3621R.styleable.SnackbarLayout_actionTextColorAlpha, 1.0f);
-            this.maxWidth = obtainStyledAttributes.getDimensionPixelSize(C3621R.styleable.SnackbarLayout_android_maxWidth, -1);
-            this.maxInlineActionWidth = obtainStyledAttributes.getDimensionPixelSize(C3621R.styleable.SnackbarLayout_maxActionInlineWidth, -1);
+            this.animationMode = obtainStyledAttributes.getInt(C3631R.styleable.SnackbarLayout_animationMode, 0);
+            this.backgroundOverlayColorAlpha = obtainStyledAttributes.getFloat(C3631R.styleable.SnackbarLayout_backgroundOverlayColorAlpha, 1.0f);
+            setBackgroundTintList(MaterialResources.getColorStateList(context2, obtainStyledAttributes, C3631R.styleable.SnackbarLayout_backgroundTint));
+            setBackgroundTintMode(ViewUtils.parseTintMode(obtainStyledAttributes.getInt(C3631R.styleable.SnackbarLayout_backgroundTintMode, -1), PorterDuff.Mode.SRC_IN));
+            this.actionTextColorAlpha = obtainStyledAttributes.getFloat(C3631R.styleable.SnackbarLayout_actionTextColorAlpha, 1.0f);
+            this.maxWidth = obtainStyledAttributes.getDimensionPixelSize(C3631R.styleable.SnackbarLayout_android_maxWidth, -1);
+            this.maxInlineActionWidth = obtainStyledAttributes.getDimensionPixelSize(C3631R.styleable.SnackbarLayout_maxActionInlineWidth, -1);
             obtainStyledAttributes.recycle();
             setOnTouchListener(consumeAllTouchListener);
             setFocusable(true);
@@ -896,11 +896,11 @@ public abstract class BaseTransientBottomBar<B extends BaseTransientBottomBar<B>
         }
 
         private Drawable createThemedBackground() {
-            float dimension = getResources().getDimension(C3621R.dimen.mtrl_snackbar_background_corner_radius);
+            float dimension = getResources().getDimension(C3631R.dimen.mtrl_snackbar_background_corner_radius);
             GradientDrawable gradientDrawable = new GradientDrawable();
             gradientDrawable.setShape(0);
             gradientDrawable.setCornerRadius(dimension);
-            gradientDrawable.setColor(MaterialColors.layer(this, C3621R.attr.colorSurface, C3621R.attr.colorOnSurface, getBackgroundOverlayColorAlpha()));
+            gradientDrawable.setColor(MaterialColors.layer(this, C3631R.attr.colorSurface, C3631R.attr.colorOnSurface, getBackgroundOverlayColorAlpha()));
             if (this.backgroundTint == null) {
                 return DrawableCompat.wrap(gradientDrawable);
             }

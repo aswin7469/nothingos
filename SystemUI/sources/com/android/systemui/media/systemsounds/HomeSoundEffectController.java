@@ -6,7 +6,7 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.util.Slog;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.CoreStartable;
 import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.shared.system.ActivityManagerWrapper;
@@ -37,8 +37,8 @@ public class HomeSoundEffectController extends CoreStartable {
         this.mTaskStackChangeListeners = taskStackChangeListeners;
         this.mActivityManagerWrapper = activityManagerWrapper;
         this.mPm = packageManager;
-        this.mPlayHomeSoundAfterAssistant = context.getResources().getBoolean(C1893R.bool.config_playHomeSoundAfterAssistant);
-        this.mPlayHomeSoundAfterDream = context.getResources().getBoolean(C1893R.bool.config_playHomeSoundAfterDream);
+        this.mPlayHomeSoundAfterAssistant = context.getResources().getBoolean(C1894R.bool.config_playHomeSoundAfterAssistant);
+        this.mPlayHomeSoundAfterDream = context.getResources().getBoolean(C1894R.bool.config_playHomeSoundAfterDream);
     }
 
     public void start() {

@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowInsets;
 import android.view.WindowManager;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.bubbles.DismissView;
 import com.android.p019wm.shell.common.DismissCircleView;
 import com.android.p019wm.shell.common.ShellExecutor;
@@ -53,8 +53,8 @@ public class PipDismissTargetHandler implements ViewTreeObserver.OnPreDrawListen
 
     public void init() {
         Resources resources = this.mContext.getResources();
-        this.mEnableDismissDragToEdge = resources.getBoolean(C3343R.bool.config_pipEnableDismissDragToEdge);
-        this.mDismissAreaHeight = resources.getDimensionPixelSize(C3343R.dimen.floating_dismiss_gradient_height);
+        this.mEnableDismissDragToEdge = resources.getBoolean(C3353R.bool.config_pipEnableDismissDragToEdge);
+        this.mDismissAreaHeight = resources.getDimensionPixelSize(C3353R.dimen.floating_dismiss_gradient_height);
         if (this.mTargetViewContainer != null) {
             cleanUpDismissTarget();
         }
@@ -92,7 +92,7 @@ public class PipDismissTargetHandler implements ViewTreeObserver.OnPreDrawListen
 
             /* access modifiers changed from: package-private */
             /* renamed from: lambda$onReleasedInTarget$0$com-android-wm-shell-pip-phone-PipDismissTargetHandler$1 */
-            public /* synthetic */ void mo50360xabbb01bd() {
+            public /* synthetic */ void mo50369xabbb01bd() {
                 PipDismissTargetHandler.this.mMotionHelper.notifyDismissalPending();
                 PipDismissTargetHandler.this.mMotionHelper.animateDismiss();
                 PipDismissTargetHandler.this.hideDismissTargetMaybe();
@@ -103,7 +103,7 @@ public class PipDismissTargetHandler implements ViewTreeObserver.OnPreDrawListen
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$init$0$com-android-wm-shell-pip-phone-PipDismissTargetHandler */
-    public /* synthetic */ WindowInsets mo50352x4d27b292(View view, WindowInsets windowInsets) {
+    public /* synthetic */ WindowInsets mo50361x4d27b292(View view, WindowInsets windowInsets) {
         if (!windowInsets.equals(this.mWindowInsets)) {
             this.mWindowInsets = windowInsets;
             updateMagneticTargetSize();
@@ -113,7 +113,7 @@ public class PipDismissTargetHandler implements ViewTreeObserver.OnPreDrawListen
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$init$1$com-android-wm-shell-pip-phone-PipDismissTargetHandler */
-    public /* synthetic */ Unit mo50353x4e5e0571(MagnetizedObject.MagneticTarget magneticTarget, Float f, Float f2, Boolean bool, Function0 function0) {
+    public /* synthetic */ Unit mo50362x4e5e0571(MagnetizedObject.MagneticTarget magneticTarget, Float f, Float f2, Boolean bool, Function0 function0) {
         if (this.mEnableDismissDragToEdge) {
             this.mMotionHelper.animateIntoDismissTarget(magneticTarget, f.floatValue(), f2.floatValue(), bool.booleanValue(), function0);
         }
@@ -138,8 +138,8 @@ public class PipDismissTargetHandler implements ViewTreeObserver.OnPreDrawListen
                 dismissView.updateResources();
             }
             Resources resources = this.mContext.getResources();
-            this.mTargetSize = resources.getDimensionPixelSize(C3343R.dimen.dismiss_circle_size);
-            this.mDismissAreaHeight = resources.getDimensionPixelSize(C3343R.dimen.floating_dismiss_gradient_height);
+            this.mTargetSize = resources.getDimensionPixelSize(C3353R.dimen.dismiss_circle_size);
+            this.mDismissAreaHeight = resources.getDimensionPixelSize(C3353R.dimen.floating_dismiss_gradient_height);
             setMagneticFieldRadiusPercent(this.mMagneticFieldRadiusPercent);
         }
     }

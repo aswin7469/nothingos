@@ -4,13 +4,13 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.util.AttributeSet;
 import androidx.appcompat.widget.SwitchCompat;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.elevation.ElevationOverlayProvider;
 import com.google.android.material.internal.ViewUtils;
 
 public class SwitchMaterial extends SwitchCompat {
-    private static final int DEF_STYLE_RES = C3621R.style.Widget_MaterialComponents_CompoundButton_Switch;
+    private static final int DEF_STYLE_RES = C3631R.style.Widget_MaterialComponents_CompoundButton_Switch;
     private static final int[][] ENABLED_CHECKED_STATES = {new int[]{16842910, 16842912}, new int[]{16842910, -16842912}, new int[]{-16842910, 16842912}, new int[]{-16842910, -16842912}};
     private final ElevationOverlayProvider elevationOverlayProvider;
     private ColorStateList materialThemeColorsThumbTintList;
@@ -22,7 +22,7 @@ public class SwitchMaterial extends SwitchCompat {
     }
 
     public SwitchMaterial(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, C3621R.attr.switchStyle);
+        this(context, attributeSet, C3631R.attr.switchStyle);
     }
 
     /* JADX WARNING: Illegal instructions before constructor call */
@@ -37,13 +37,13 @@ public class SwitchMaterial extends SwitchCompat {
             com.google.android.material.elevation.ElevationOverlayProvider r7 = new com.google.android.material.elevation.ElevationOverlayProvider
             r7.<init>(r0)
             r6.elevationOverlayProvider = r7
-            int[] r2 = com.google.android.material.C3621R.styleable.SwitchMaterial
+            int[] r2 = com.google.android.material.C3631R.styleable.SwitchMaterial
             r7 = 0
             int[] r5 = new int[r7]
             r1 = r8
             r3 = r9
             android.content.res.TypedArray r8 = com.google.android.material.internal.ThemeEnforcement.obtainStyledAttributes(r0, r1, r2, r3, r4, r5)
-            int r9 = com.google.android.material.C3621R.styleable.SwitchMaterial_useMaterialThemeColors
+            int r9 = com.google.android.material.C3631R.styleable.SwitchMaterial_useMaterialThemeColors
             boolean r7 = r8.getBoolean(r9, r7)
             r6.useMaterialThemeColors = r7
             r8.recycle()
@@ -80,9 +80,9 @@ public class SwitchMaterial extends SwitchCompat {
 
     private ColorStateList getMaterialThemeColorsThumbTintList() {
         if (this.materialThemeColorsThumbTintList == null) {
-            int color = MaterialColors.getColor(this, C3621R.attr.colorSurface);
-            int color2 = MaterialColors.getColor(this, C3621R.attr.colorControlActivated);
-            float dimension = getResources().getDimension(C3621R.dimen.mtrl_switch_thumb_elevation);
+            int color = MaterialColors.getColor(this, C3631R.attr.colorSurface);
+            int color2 = MaterialColors.getColor(this, C3631R.attr.colorControlActivated);
+            float dimension = getResources().getDimension(C3631R.dimen.mtrl_switch_thumb_elevation);
             if (this.elevationOverlayProvider.isThemeElevationOverlayEnabled()) {
                 dimension += ViewUtils.getParentAbsoluteElevation(this);
             }
@@ -102,9 +102,9 @@ public class SwitchMaterial extends SwitchCompat {
         if (this.materialThemeColorsTrackTintList == null) {
             int[][] iArr = ENABLED_CHECKED_STATES;
             int[] iArr2 = new int[iArr.length];
-            int color = MaterialColors.getColor(this, C3621R.attr.colorSurface);
-            int color2 = MaterialColors.getColor(this, C3621R.attr.colorControlActivated);
-            int color3 = MaterialColors.getColor(this, C3621R.attr.colorOnSurface);
+            int color = MaterialColors.getColor(this, C3631R.attr.colorSurface);
+            int color2 = MaterialColors.getColor(this, C3631R.attr.colorControlActivated);
+            int color3 = MaterialColors.getColor(this, C3631R.attr.colorOnSurface);
             iArr2[0] = MaterialColors.layer(color, color2, 0.54f);
             iArr2[1] = MaterialColors.layer(color, color3, 0.32f);
             iArr2[2] = MaterialColors.layer(color, color2, 0.12f);

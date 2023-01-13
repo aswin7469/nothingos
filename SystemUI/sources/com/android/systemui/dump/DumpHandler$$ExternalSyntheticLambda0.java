@@ -11,6 +11,6 @@ public final /* synthetic */ class DumpHandler$$ExternalSyntheticLambda0 impleme
     }
 
     public final void uncaughtException(Thread thread, Throwable th) {
-        DumpHandler.m2747init$lambda0(this.f$0, thread, th);
+        DumpHandler.m2752init$lambda0(this.f$0, thread, th);
     }
 }

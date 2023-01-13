@@ -15,6 +15,6 @@ public final /* synthetic */ class StartingSurfaceDrawer$$ExternalSyntheticLambd
     }
 
     public final void onResult(Bundle bundle) {
-        this.f$0.mo51164xa34a6c3e(this.f$1, bundle);
+        this.f$0.mo51175xa34a6c3e(this.f$1, bundle);
     }
 }

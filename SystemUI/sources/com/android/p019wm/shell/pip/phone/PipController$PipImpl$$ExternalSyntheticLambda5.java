@@ -16,6 +16,6 @@ public final /* synthetic */ class PipController$PipImpl$$ExternalSyntheticLambd
     }
 
     public final void run() {
-        this.f$0.mo50339x1c263b79(this.f$1, this.f$2);
+        this.f$0.mo50348x1c263b79(this.f$1, this.f$2);
     }
 }

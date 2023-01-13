@@ -26,7 +26,7 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import com.android.internal.jank.InteractionJankMonitor;
 import com.android.internal.logging.UiEventLogger;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.p012qs.QSPanel;
 import com.android.systemui.p012qs.QSPanelControllerBase;
 import com.android.systemui.plugins.p011qs.QSTile;
@@ -100,7 +100,7 @@ public class PagedTileLayout extends ViewPager implements QSPanel.QSTileLayout {
 
     public PagedTileLayout(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        C23222 r0 = new ViewPager.SimpleOnPageChangeListener() {
+        C23252 r0 = new ViewPager.SimpleOnPageChangeListener() {
             private int mCurrentScrollState = 0;
             private boolean mIsScrollJankTraceBegin = false;
 
@@ -150,7 +150,7 @@ public class PagedTileLayout extends ViewPager implements QSPanel.QSTileLayout {
             }
         };
         this.mOnPageChangeListener = r0;
-        C23233 r1 = new PagerAdapter() {
+        C23263 r1 = new PagerAdapter() {
             public boolean isViewFromObject(View view, Object obj) {
                 return view == obj;
             }
@@ -184,7 +184,7 @@ public class PagedTileLayout extends ViewPager implements QSPanel.QSTileLayout {
         setCurrentItem(0, false);
         this.mLayoutOrientation = getResources().getConfiguration().orientation;
         this.mLayoutDirection = getLayoutDirection();
-        this.mRadius = getResources().getDimensionPixelSize(C1893R.dimen.page_tile_layout_corner_radius);
+        this.mRadius = getResources().getDimensionPixelSize(C1894R.dimen.page_tile_layout_corner_radius);
     }
 
     public void setPageMargin(int i) {
@@ -311,7 +311,7 @@ public class PagedTileLayout extends ViewPager implements QSPanel.QSTileLayout {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$fakeDragBy$1$com-android-systemui-qs-PagedTileLayout  reason: not valid java name */
-    public /* synthetic */ void m2906lambda$fakeDragBy$1$comandroidsystemuiqsPagedTileLayout(int i) {
+    public /* synthetic */ void m2911lambda$fakeDragBy$1$comandroidsystemuiqsPagedTileLayout(int i) {
         setCurrentItem(i, true);
         AnimatorSet animatorSet = this.mBounceAnimatorSet;
         if (animatorSet != null) {
@@ -353,7 +353,7 @@ public class PagedTileLayout extends ViewPager implements QSPanel.QSTileLayout {
     }
 
     private TileLayout createTileLayout() {
-        TileLayout tileLayout = (TileLayout) LayoutInflater.from(getContext()).inflate(C1893R.layout.qs_paged_page, this, false);
+        TileLayout tileLayout = (TileLayout) LayoutInflater.from(getContext()).inflate(C1894R.layout.qs_paged_page, this, false);
         tileLayout.setMinRows(this.mMinRows);
         tileLayout.setMaxColumns(this.mMaxColumns);
         return tileLayout;

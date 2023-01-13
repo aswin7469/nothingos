@@ -9,6 +9,6 @@ public final /* synthetic */ class NotificationSwipeHelper$$ExternalSyntheticLam
     }
 
     public final void run() {
-        this.f$0.mo42574x9fcf074d();
+        this.f$0.mo42582x9fcf074d();
     }
 }

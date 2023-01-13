@@ -17,7 +17,7 @@ class ZipUtils {
     }
 
     public static final long fileTimeToWinTime(FileTime fileTime) {
-        return (fileTime.mo61298to(TimeUnit.MICROSECONDS) - WINDOWS_EPOCH_IN_MICROSECONDS) * 10;
+        return (fileTime.mo61354to(TimeUnit.MICROSECONDS) - WINDOWS_EPOCH_IN_MICROSECONDS) * 10;
     }
 
     public static final FileTime unixTimeToFileTime(long j) {
@@ -25,7 +25,7 @@ class ZipUtils {
     }
 
     public static final long fileTimeToUnixTime(FileTime fileTime) {
-        return fileTime.mo61298to(TimeUnit.SECONDS);
+        return fileTime.mo61354to(TimeUnit.SECONDS);
     }
 
     private static long dosToJavaTime(long j) {

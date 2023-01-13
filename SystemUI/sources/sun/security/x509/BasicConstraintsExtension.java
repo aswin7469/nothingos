@@ -13,7 +13,7 @@ public class BasicConstraintsExtension extends Extension implements CertAttrSet<
     public static final String PATH_LEN = "path_len";
 
     /* renamed from: ca */
-    private boolean f928ca;
+    private boolean f926ca;
     private int pathLen;
 
     public String getName() {
@@ -23,7 +23,7 @@ public class BasicConstraintsExtension extends Extension implements CertAttrSet<
     private void encodeThis() throws IOException {
         DerOutputStream derOutputStream = new DerOutputStream();
         DerOutputStream derOutputStream2 = new DerOutputStream();
-        boolean z = this.f928ca;
+        boolean z = this.f926ca;
         if (z) {
             derOutputStream2.putBoolean(z);
             int i = this.pathLen;
@@ -40,7 +40,7 @@ public class BasicConstraintsExtension extends Extension implements CertAttrSet<
     }
 
     public BasicConstraintsExtension(Boolean bool, boolean z, int i) throws IOException {
-        this.f928ca = z;
+        this.f926ca = z;
         this.pathLen = i;
         this.extensionId = PKIXExtensions.BasicConstraints_Id;
         this.critical = bool.booleanValue();
@@ -48,7 +48,7 @@ public class BasicConstraintsExtension extends Extension implements CertAttrSet<
     }
 
     public BasicConstraintsExtension(Boolean bool, Object obj) throws IOException {
-        this.f928ca = false;
+        this.f926ca = false;
         this.pathLen = -1;
         this.extensionId = PKIXExtensions.BasicConstraints_Id;
         this.critical = bool.booleanValue();
@@ -59,7 +59,7 @@ public class BasicConstraintsExtension extends Extension implements CertAttrSet<
         } else if (derValue.data != null && derValue.data.available() != 0) {
             DerValue derValue2 = derValue.data.getDerValue();
             if (derValue2.tag == 1) {
-                this.f928ca = derValue2.getBoolean();
+                this.f926ca = derValue2.getBoolean();
                 if (derValue.data.available() == 0) {
                     this.pathLen = Integer.MAX_VALUE;
                     return;
@@ -78,7 +78,7 @@ public class BasicConstraintsExtension extends Extension implements CertAttrSet<
         String str;
         StringBuilder sb = new StringBuilder();
         sb.append(super.toString() + "BasicConstraints:[\n");
-        sb.append(this.f928ca ? "  CA:true" : "  CA:false");
+        sb.append(this.f926ca ? "  CA:true" : "  CA:false");
         sb.append("\n");
         String sb2 = sb.toString();
         if (this.pathLen >= 0) {
@@ -93,7 +93,7 @@ public class BasicConstraintsExtension extends Extension implements CertAttrSet<
         DerOutputStream derOutputStream = new DerOutputStream();
         if (this.extensionValue == null) {
             this.extensionId = PKIXExtensions.BasicConstraints_Id;
-            if (this.f928ca) {
+            if (this.f926ca) {
                 this.critical = true;
             } else {
                 this.critical = false;
@@ -107,7 +107,7 @@ public class BasicConstraintsExtension extends Extension implements CertAttrSet<
     public void set(String str, Object obj) throws IOException {
         if (str.equalsIgnoreCase(IS_CA)) {
             if (obj instanceof Boolean) {
-                this.f928ca = ((Boolean) obj).booleanValue();
+                this.f926ca = ((Boolean) obj).booleanValue();
             } else {
                 throw new IOException("Attribute value should be of type Boolean.");
             }
@@ -123,7 +123,7 @@ public class BasicConstraintsExtension extends Extension implements CertAttrSet<
 
     public Object get(String str) throws IOException {
         if (str.equalsIgnoreCase(IS_CA)) {
-            return Boolean.valueOf(this.f928ca);
+            return Boolean.valueOf(this.f926ca);
         }
         if (str.equalsIgnoreCase(PATH_LEN)) {
             return Integer.valueOf(this.pathLen);
@@ -133,7 +133,7 @@ public class BasicConstraintsExtension extends Extension implements CertAttrSet<
 
     public void delete(String str) throws IOException {
         if (str.equalsIgnoreCase(IS_CA)) {
-            this.f928ca = false;
+            this.f926ca = false;
         } else if (str.equalsIgnoreCase(PATH_LEN)) {
             this.pathLen = -1;
         } else {

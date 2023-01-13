@@ -28,7 +28,7 @@ public class OnUserInteractionCallbackImplLegacy implements OnUserInteractionCal
 
     /* access modifiers changed from: private */
     /* renamed from: onDismiss */
-    public void mo40393xbaba125(NotificationEntry notificationEntry, int i, NotificationEntry notificationEntry2) {
+    public void mo40396xbaba125(NotificationEntry notificationEntry, int i, NotificationEntry notificationEntry2) {
         int i2;
         if (this.mHeadsUpManager.isAlerting(notificationEntry.getKey())) {
             i2 = 1;
@@ -36,7 +36,7 @@ public class OnUserInteractionCallbackImplLegacy implements OnUserInteractionCal
             i2 = this.mStatusBarStateController.isDozing() ? 2 : 3;
         }
         if (notificationEntry2 != null) {
-            mo40393xbaba125(notificationEntry2, i, (NotificationEntry) null);
+            mo40396xbaba125(notificationEntry2, i, (NotificationEntry) null);
         }
         this.mNotificationEntryManager.performRemoveNotification(notificationEntry.getSbn(), new DismissedByUserStats(i2, 1, this.mVisibilityProvider.obtain(notificationEntry, true)), i);
     }

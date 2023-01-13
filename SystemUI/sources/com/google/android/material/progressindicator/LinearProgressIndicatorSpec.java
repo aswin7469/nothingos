@@ -3,7 +3,7 @@ package com.google.android.material.progressindicator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.internal.ThemeEnforcement;
 
 public final class LinearProgressIndicatorSpec extends BaseProgressIndicatorSpec {
@@ -12,7 +12,7 @@ public final class LinearProgressIndicatorSpec extends BaseProgressIndicatorSpec
     public int indicatorDirection;
 
     public LinearProgressIndicatorSpec(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, C3621R.attr.linearProgressIndicatorStyle);
+        this(context, attributeSet, C3631R.attr.linearProgressIndicatorStyle);
     }
 
     public LinearProgressIndicatorSpec(Context context, AttributeSet attributeSet, int i) {
@@ -22,9 +22,9 @@ public final class LinearProgressIndicatorSpec extends BaseProgressIndicatorSpec
     public LinearProgressIndicatorSpec(Context context, AttributeSet attributeSet, int i, int i2) {
         super(context, attributeSet, i, i2);
         boolean z = false;
-        TypedArray obtainStyledAttributes = ThemeEnforcement.obtainStyledAttributes(context, attributeSet, C3621R.styleable.LinearProgressIndicator, C3621R.attr.linearProgressIndicatorStyle, LinearProgressIndicator.DEF_STYLE_RES, new int[0]);
-        this.indeterminateAnimationType = obtainStyledAttributes.getInt(C3621R.styleable.LinearProgressIndicator_indeterminateAnimationType, 1);
-        this.indicatorDirection = obtainStyledAttributes.getInt(C3621R.styleable.LinearProgressIndicator_indicatorDirectionLinear, 0);
+        TypedArray obtainStyledAttributes = ThemeEnforcement.obtainStyledAttributes(context, attributeSet, C3631R.styleable.LinearProgressIndicator, C3631R.attr.linearProgressIndicatorStyle, LinearProgressIndicator.DEF_STYLE_RES, new int[0]);
+        this.indeterminateAnimationType = obtainStyledAttributes.getInt(C3631R.styleable.LinearProgressIndicator_indeterminateAnimationType, 1);
+        this.indicatorDirection = obtainStyledAttributes.getInt(C3631R.styleable.LinearProgressIndicator_indicatorDirectionLinear, 0);
         obtainStyledAttributes.recycle();
         validateSpec();
         this.drawHorizontallyInverse = this.indicatorDirection == 1 ? true : z;

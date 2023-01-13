@@ -13,6 +13,6 @@ public final /* synthetic */ class BubbleController$$ExternalSyntheticLambda11 i
     }
 
     public final WindowInsets onApplyWindowInsets(View view, WindowInsets windowInsets) {
-        return this.f$0.mo48345x78e0266d(view, windowInsets);
+        return this.f$0.mo48354x78e0266d(view, windowInsets);
     }
 }

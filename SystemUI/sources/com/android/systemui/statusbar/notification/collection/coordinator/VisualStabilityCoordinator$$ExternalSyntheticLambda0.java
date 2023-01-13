@@ -11,6 +11,6 @@ public final /* synthetic */ class VisualStabilityCoordinator$$ExternalSynthetic
     }
 
     public final void run() {
-        this.f$0.mo40310x23f5a63b(this.f$1);
+        this.f$0.mo40313x23f5a63b(this.f$1);
     }
 }

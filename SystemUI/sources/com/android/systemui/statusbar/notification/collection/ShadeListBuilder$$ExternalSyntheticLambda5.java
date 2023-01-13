@@ -11,6 +11,6 @@ public final /* synthetic */ class ShadeListBuilder$$ExternalSyntheticLambda5 im
     }
 
     public final int compare(Object obj, Object obj2) {
-        return this.f$0.mo40123xfadc8176((ListEntry) obj, (ListEntry) obj2);
+        return this.f$0.mo40125xfadc8176((ListEntry) obj, (ListEntry) obj2);
     }
 }

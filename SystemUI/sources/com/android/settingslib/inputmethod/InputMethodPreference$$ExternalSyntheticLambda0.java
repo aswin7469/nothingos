@@ -11,6 +11,6 @@ public final /* synthetic */ class InputMethodPreference$$ExternalSyntheticLambd
     }
 
     public final void onClick(DialogInterface dialogInterface, int i) {
-        this.f$0.mo28806x43b71f1e(dialogInterface, i);
+        this.f$0.mo28811x43b71f1e(dialogInterface, i);
     }
 }

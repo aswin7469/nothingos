@@ -11,6 +11,6 @@ public final /* synthetic */ class ClockManager$$ExternalSyntheticLambda1 implem
     }
 
     public final void onChanged(Object obj) {
-        this.f$0.m2314lambda$new$0$comandroidkeyguardclockClockManager((Integer) obj);
+        this.f$0.m2320lambda$new$0$comandroidkeyguardclockClockManager((Integer) obj);
     }
 }

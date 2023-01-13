@@ -23,7 +23,7 @@ import android.view.WindowlessWindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import com.android.launcher3.icons.IconProvider;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.common.SurfaceUtils;
 
 /* renamed from: com.android.wm.shell.common.split.SplitDecorManager */
@@ -65,9 +65,9 @@ public class SplitDecorManager extends WindowlessWindowManager {
             Context createWindowContext = context.createWindowContext(context.getDisplay(), 2038, (Bundle) null);
             this.mHostLeash = surfaceControl;
             this.mViewHost = new SurfaceControlViewHost(createWindowContext, createWindowContext.getDisplay(), this);
-            this.mIconSize = createWindowContext.getResources().getDimensionPixelSize(C3343R.dimen.split_icon_size);
-            FrameLayout frameLayout = (FrameLayout) LayoutInflater.from(createWindowContext).inflate(C3343R.layout.split_decor, (ViewGroup) null);
-            this.mResizingIconView = (ImageView) frameLayout.findViewById(C3343R.C3346id.split_resizing_icon);
+            this.mIconSize = createWindowContext.getResources().getDimensionPixelSize(C3353R.dimen.split_icon_size);
+            FrameLayout frameLayout = (FrameLayout) LayoutInflater.from(createWindowContext).inflate(C3353R.layout.split_decor, (ViewGroup) null);
+            this.mResizingIconView = (ImageView) frameLayout.findViewById(C3353R.C3356id.split_resizing_icon);
             WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(0, 0, 2038, 24, -3);
             layoutParams.width = rect.width();
             layoutParams.height = rect.height();
@@ -204,7 +204,7 @@ public class SplitDecorManager extends WindowlessWindowManager {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startFadeAnimation$0$com-android-wm-shell-common-split-SplitDecorManager */
-    public /* synthetic */ void mo49296xc8f85c2(SurfaceControl.Transaction transaction, boolean z, ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo49305xc8f85c2(SurfaceControl.Transaction transaction, boolean z, ValueAnimator valueAnimator) {
         float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
         SurfaceControl surfaceControl = this.mBackgroundLeash;
         if (surfaceControl != null) {

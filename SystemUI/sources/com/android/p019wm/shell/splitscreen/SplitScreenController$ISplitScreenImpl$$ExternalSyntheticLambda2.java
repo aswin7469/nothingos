@@ -13,6 +13,6 @@ public final /* synthetic */ class SplitScreenController$ISplitScreenImpl$$Exter
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo50785x9f3cdb3c((SplitScreenController) obj);
+        this.f$0.mo50794x9f3cdb3c((SplitScreenController) obj);
     }
 }

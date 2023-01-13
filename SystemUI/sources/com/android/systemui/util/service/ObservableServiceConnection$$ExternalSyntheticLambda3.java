@@ -13,6 +13,6 @@ public final /* synthetic */ class ObservableServiceConnection$$ExternalSyntheti
     }
 
     public final void run() {
-        this.f$0.mo47106x2dd4631d(this.f$1);
+        this.f$0.mo47118x2dd4631d(this.f$1);
     }
 }

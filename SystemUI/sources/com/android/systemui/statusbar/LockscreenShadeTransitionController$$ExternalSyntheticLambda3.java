@@ -11,6 +11,6 @@ public final /* synthetic */ class LockscreenShadeTransitionController$$External
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        LockscreenShadeTransitionController.m3033setPulseHeight$lambda9(this.f$0, valueAnimator);
+        LockscreenShadeTransitionController.m3037setPulseHeight$lambda9(this.f$0, valueAnimator);
     }
 }

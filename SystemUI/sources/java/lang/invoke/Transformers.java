@@ -75,7 +75,7 @@ public class Transformers {
         DropArguments(MethodType methodType, MethodHandle methodHandle, int i, int i2) {
             super(methodType);
             this.delegate = methodHandle;
-            this.range1 = EmulatedStackFrame.Range.m1687of(methodType, 0, i);
+            this.range1 = EmulatedStackFrame.Range.m1693of(methodType, 0, i);
             this.range2 = EmulatedStackFrame.Range.from(methodType, i + i2);
         }
 
@@ -99,7 +99,7 @@ public class Transformers {
             this.target = methodHandle;
             this.handler = methodHandle2;
             this.exType = cls;
-            this.handlerArgsRange = EmulatedStackFrame.Range.m1687of(methodHandle.type(), 0, methodHandle2.type().parameterCount() - 1);
+            this.handlerArgsRange = EmulatedStackFrame.Range.m1693of(methodHandle.type(), 0, methodHandle2.type().parameterCount() - 1);
         }
 
         public void transform(EmulatedStackFrame emulatedStackFrame) throws Throwable {
@@ -221,7 +221,7 @@ public class Transformers {
             this.test = methodHandle;
             this.target = methodHandle2;
             this.fallback = methodHandle3;
-            this.testArgsRange = EmulatedStackFrame.Range.m1687of(methodHandle2.type(), 0, methodHandle.type().parameterCount());
+            this.testArgsRange = EmulatedStackFrame.Range.m1693of(methodHandle2.type(), 0, methodHandle.type().parameterCount());
         }
 
         public void transform(EmulatedStackFrame emulatedStackFrame) throws Throwable {
@@ -940,7 +940,7 @@ public class Transformers {
             this.componentType = componentType2;
             if (componentType2 != null) {
                 this.numArrayArgs = i2;
-                this.leadingRange = EmulatedStackFrame.Range.m1687of(methodType, 0, i);
+                this.leadingRange = EmulatedStackFrame.Range.m1693of(methodType, 0, i);
                 this.trailingRange = EmulatedStackFrame.Range.from(methodType, i + 1);
                 return;
             }
@@ -1055,7 +1055,7 @@ public class Transformers {
             this.arrayOffset = i;
             this.arrayLength = i2;
             this.arrayType = cls;
-            this.leadingRange = EmulatedStackFrame.Range.m1687of(type(), 0, i);
+            this.leadingRange = EmulatedStackFrame.Range.m1693of(type(), 0, i);
             this.trailingRange = EmulatedStackFrame.Range.from(type(), i + i2);
         }
 
@@ -1218,8 +1218,8 @@ public class Transformers {
             this.collector = methodHandle2;
             this.pos = i;
             int parameterCount = methodHandle2.type().parameterCount() + i;
-            this.collectorRange = EmulatedStackFrame.Range.m1687of(type(), i, parameterCount);
-            this.range1 = EmulatedStackFrame.Range.m1687of(type(), 0, i);
+            this.collectorRange = EmulatedStackFrame.Range.m1693of(type(), i, parameterCount);
+            this.range1 = EmulatedStackFrame.Range.m1693of(type(), 0, i);
             this.range2 = EmulatedStackFrame.Range.from(type(), parameterCount);
             Class<?> rtype = methodHandle2.type().rtype();
             if (rtype == Void.TYPE) {
@@ -1268,8 +1268,8 @@ public class Transformers {
             this.target = methodHandle;
             this.combiner = methodHandle2;
             this.position = i;
-            this.combinerArgs = EmulatedStackFrame.Range.m1687of(type(), i, methodHandle2.type().parameterCount() + i);
-            this.leadingArgs = EmulatedStackFrame.Range.m1687of(type(), 0, i);
+            this.combinerArgs = EmulatedStackFrame.Range.m1693of(type(), i, methodHandle2.type().parameterCount() + i);
+            this.leadingArgs = EmulatedStackFrame.Range.m1693of(type(), 0, i);
             this.trailingArgs = EmulatedStackFrame.Range.from(type(), i);
             Class<?> rtype = methodHandle2.type().rtype();
             if (rtype == Void.TYPE) {
@@ -1323,8 +1323,8 @@ public class Transformers {
             this.pos = i;
             this.values = objArr;
             MethodType type = type();
-            this.range1 = EmulatedStackFrame.Range.m1687of(type, 0, i);
-            this.range2 = EmulatedStackFrame.Range.m1687of(type, i, type.parameterCount());
+            this.range1 = EmulatedStackFrame.Range.m1693of(type, 0, i);
+            this.range2 = EmulatedStackFrame.Range.m1693of(type, i, type.parameterCount());
         }
 
         public void transform(EmulatedStackFrame emulatedStackFrame) throws Throwable {

@@ -64,7 +64,7 @@ public class DozeScreenBrightness extends BroadcastReceiver implements DozeMachi
 
     @Inject
     public DozeScreenBrightness(Context context, @WrappedService DozeMachine.Service service, AsyncSensorManager asyncSensorManager, @BrightnessSensor Optional<Sensor>[] optionalArr, DozeHost dozeHost, Handler handler, AlwaysOnDisplayPolicy alwaysOnDisplayPolicy, WakefulnessLifecycle wakefulnessLifecycle, DozeParameters dozeParameters, DevicePostureController devicePostureController, DozeLog dozeLog) {
-        C20601 r0 = new DevicePostureController.Callback() {
+        C20621 r0 = new DevicePostureController.Callback() {
             public void onPostureChanged(int i) {
                 if (DozeScreenBrightness.this.mDevicePosture != i && DozeScreenBrightness.this.mLightSensorOptional.length >= 2 && i < DozeScreenBrightness.this.mLightSensorOptional.length) {
                     Sensor sensor = (Sensor) DozeScreenBrightness.this.mLightSensorOptional[DozeScreenBrightness.this.mDevicePosture].get();
@@ -105,7 +105,7 @@ public class DozeScreenBrightness extends BroadcastReceiver implements DozeMachi
     }
 
     /* renamed from: com.android.systemui.doze.DozeScreenBrightness$2 */
-    static /* synthetic */ class C20612 {
+    static /* synthetic */ class C20632 {
         static final /* synthetic */ int[] $SwitchMap$com$android$systemui$doze$DozeMachine$State;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(14:0|1|2|3|4|5|6|7|8|9|10|11|12|(3:13|14|16)) */
@@ -166,14 +166,14 @@ public class DozeScreenBrightness extends BroadcastReceiver implements DozeMachi
             L_0x0054:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.doze.DozeScreenBrightness.C20612.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.doze.DozeScreenBrightness.C20632.<clinit>():void");
         }
     }
 
     public void transitionTo(DozeMachine.State state, DozeMachine.State state2) {
         this.mState = state2;
         boolean z = true;
-        switch (C20612.$SwitchMap$com$android$systemui$doze$DozeMachine$State[state2.ordinal()]) {
+        switch (C20632.$SwitchMap$com$android$systemui$doze$DozeMachine$State[state2.ordinal()]) {
             case 1:
                 resetBrightnessToDefault();
                 break;

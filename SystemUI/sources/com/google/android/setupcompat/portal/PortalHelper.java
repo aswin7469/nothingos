@@ -52,7 +52,7 @@ public class PortalHelper {
         try {
             return context.bindService(NOTIFICATION_SERVICE_INTENT, serviceConnection, 1);
         } catch (SecurityException e) {
-            LOG.mo55160e("Exception occurred while binding SetupNotificationService", e);
+            LOG.mo55171e("Exception occurred while binding SetupNotificationService", e);
             return false;
         }
     }
@@ -88,7 +88,7 @@ public class PortalHelper {
                 }
             }
         })) {
-            LOG.mo55159e("Failed to bind SetupNotificationService.");
+            LOG.mo55170e("Failed to bind SetupNotificationService.");
             registerCallback.onFailure(new SecurityException("Failed to bind SetupNotificationService."));
         }
     }
@@ -103,14 +103,14 @@ public class PortalHelper {
                     try {
                         PortalAvailableResultListener.this.onResult(ISetupNotificationService.Stub.asInterface(iBinder).isPortalAvailable());
                     } catch (RemoteException unused) {
-                        PortalHelper.LOG.mo55159e("Failed to invoke SetupNotificationService#isPortalAvailable");
+                        PortalHelper.LOG.mo55170e("Failed to invoke SetupNotificationService#isPortalAvailable");
                         PortalAvailableResultListener.this.onResult(false);
                     }
                 }
                 context.unbindService(this);
             }
         })) {
-            LOG.mo55159e("Failed to bind SetupNotificationService. Do you have permission \"com.google.android.setupwizard.SETUP_PROGRESS_SERVICE\"");
+            LOG.mo55170e("Failed to bind SetupNotificationService. Do you have permission \"com.google.android.setupwizard.SETUP_PROGRESS_SERVICE\"");
             portalAvailableResultListener.onResult(false);
         }
     }
@@ -128,14 +128,14 @@ public class PortalHelper {
                     try {
                         ProgressServiceAliveResultListener.this.onResult(ISetupNotificationService.Stub.asInterface(iBinder).isProgressServiceAlive(progressServiceComponent, PortalHelper.getCurrentUserHandle()));
                     } catch (RemoteException unused) {
-                        PortalHelper.LOG.mo55164w("Failed to invoke SetupNotificationService#isProgressServiceAlive");
+                        PortalHelper.LOG.mo55175w("Failed to invoke SetupNotificationService#isProgressServiceAlive");
                         ProgressServiceAliveResultListener.this.onResult(false);
                     }
                 }
                 context.unbindService(this);
             }
         })) {
-            LOG.mo55159e("Failed to bind SetupNotificationService. Do you have permission \"com.google.android.setupwizard.SETUP_PROGRESS_SERVICE\"");
+            LOG.mo55170e("Failed to bind SetupNotificationService. Do you have permission \"com.google.android.setupwizard.SETUP_PROGRESS_SERVICE\"");
             progressServiceAliveResultListener.onResult(false);
         }
     }

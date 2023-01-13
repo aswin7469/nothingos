@@ -10,6 +10,6 @@ public final /* synthetic */ class QSTileImpl$$ExternalSyntheticLambda1 implemen
     }
 
     public final void run() {
-        this.f$0.mo36754xa8915309();
+        this.f$0.mo36758xa8915309();
     }
 }

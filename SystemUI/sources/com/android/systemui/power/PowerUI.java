@@ -20,7 +20,7 @@ import android.util.Log;
 import android.util.Slog;
 import com.android.settingslib.fuelgauge.Estimate;
 import com.android.settingslib.utils.ThreadUtils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.CoreStartable;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.dagger.SysUISingleton;
@@ -133,7 +133,7 @@ public class PowerUI extends CoreStartable implements CommandQueue.Callbacks {
     public void start() {
         this.mScreenOffTime = this.mPowerManager.isScreenOn() ? -1 : SystemClock.elapsedRealtime();
         this.mLastConfiguration.setTo(this.mContext.getResources().getConfiguration());
-        C23061 r0 = new ContentObserver(this.mHandler) {
+        C23091 r0 = new ContentObserver(this.mHandler) {
             public void onChange(boolean z) {
                 PowerUI.this.updateBatteryWarningLevels();
             }
@@ -166,8 +166,8 @@ public class PowerUI extends CoreStartable implements CommandQueue.Callbacks {
 
     /* access modifiers changed from: package-private */
     public void updateBatteryWarningLevels() {
-        int integer = this.mContext.getResources().getInteger(C1893R.integer.config_criticalBatteryWarningLevel);
-        int integer2 = this.mContext.getResources().getInteger(C1893R.integer.config_lowBatteryWarningLevel);
+        int integer = this.mContext.getResources().getInteger(C1894R.integer.config_criticalBatteryWarningLevel);
+        int integer2 = this.mContext.getResources().getInteger(C1894R.integer.config_lowBatteryWarningLevel);
         if (integer2 < integer) {
             integer2 = integer;
         }
@@ -280,7 +280,7 @@ public class PowerUI extends CoreStartable implements CommandQueue.Callbacks {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onReceive$0$com-android-systemui-power-PowerUI$Receiver  reason: not valid java name */
-        public /* synthetic */ void m2860lambda$onReceive$0$comandroidsystemuipowerPowerUI$Receiver() {
+        public /* synthetic */ void m2865lambda$onReceive$0$comandroidsystemuipowerPowerUI$Receiver() {
             if (PowerUI.this.mPowerManager.isPowerSaveMode()) {
                 PowerUI.this.mWarnings.dismissLowBatteryWarning();
             }
@@ -288,7 +288,7 @@ public class PowerUI extends CoreStartable implements CommandQueue.Callbacks {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onReceive$1$com-android-systemui-power-PowerUI$Receiver  reason: not valid java name */
-        public /* synthetic */ void m2861lambda$onReceive$1$comandroidsystemuipowerPowerUI$Receiver(boolean z, int i) {
+        public /* synthetic */ void m2866lambda$onReceive$1$comandroidsystemuipowerPowerUI$Receiver(boolean z, int i) {
             PowerUI.this.maybeShowBatteryWarningV2(z, i);
         }
     }
@@ -436,7 +436,7 @@ public class PowerUI extends CoreStartable implements CommandQueue.Callbacks {
         boolean z;
         boolean z2 = this.mEnableSkinTemperatureWarning;
         boolean z3 = true;
-        boolean z4 = Settings.Global.getInt(this.mContext.getContentResolver(), "show_temperature_warning", this.mContext.getResources().getInteger(C1893R.integer.config_showTemperatureWarning)) != 0;
+        boolean z4 = Settings.Global.getInt(this.mContext.getContentResolver(), "show_temperature_warning", this.mContext.getResources().getInteger(C1894R.integer.config_showTemperatureWarning)) != 0;
         this.mEnableSkinTemperatureWarning = z4;
         if (z4 != z2) {
             try {
@@ -470,7 +470,7 @@ public class PowerUI extends CoreStartable implements CommandQueue.Callbacks {
         boolean z;
         boolean z2 = this.mEnableUsbTemperatureAlarm;
         boolean z3 = true;
-        boolean z4 = Settings.Global.getInt(this.mContext.getContentResolver(), "show_usb_temperature_alarm", this.mContext.getResources().getInteger(C1893R.integer.config_showUsbPortAlarm)) != 0;
+        boolean z4 = Settings.Global.getInt(this.mContext.getContentResolver(), "show_usb_temperature_alarm", this.mContext.getResources().getInteger(C1894R.integer.config_showUsbPortAlarm)) != 0;
         this.mEnableUsbTemperatureAlarm = z4;
         if (z4 != z2) {
             try {

@@ -5,7 +5,7 @@ import android.graphics.Color;
 import android.view.View;
 import android.widget.ImageView;
 import com.android.internal.util.ContrastColorUtil;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.statusbar.notification.collection.ListEntry;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 
@@ -20,12 +20,12 @@ public class NotificationUtils {
     }
 
     public static boolean isGrayscale(ImageView imageView, ContrastColorUtil contrastColorUtil) {
-        Object tag = imageView.getTag(C1893R.C1897id.icon_is_grayscale);
+        Object tag = imageView.getTag(C1894R.C1898id.icon_is_grayscale);
         if (tag != null) {
             return Boolean.TRUE.equals(tag);
         }
         boolean isGrayscaleIcon = contrastColorUtil.isGrayscaleIcon(imageView.getDrawable());
-        imageView.setTag(C1893R.C1897id.icon_is_grayscale, Boolean.valueOf(isGrayscaleIcon));
+        imageView.setTag(C1894R.C1898id.icon_is_grayscale, Boolean.valueOf(isGrayscaleIcon));
         return isGrayscaleIcon;
     }
 

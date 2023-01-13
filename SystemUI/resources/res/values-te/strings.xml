@@ -708,9 +708,15 @@
     <string name="force_rtl_layout_all_locales_summary">అన్ని లొకేల్‌ల కోసం RTLకి స్క్రీన్ లేఅవుట్ దిశను నిర్భందించు</string>
     <string name="forced_resizable_secondary_display">ప్రత్యామ్నాయ డిస్‌ప్లేలో యాప్ పని చేయకపోవచ్చు.</string>
     <string name="game_status">ఆడుతున్నారు</string>
+    <string name="gamemode_description">మీరు గేమ్‌లో ఉన్నట్లయితే గేమ్ మోడ్ గుర్తించబడుతుంది మరియు ఆటోమేటిక్‌గా మీ కోసం ఆన్ చేయబడుతుంది</string>
+    <string name="gamemode_gamedashboard_title">గేమ్ డ్యాష్‌బోర్డ్</string>
+    <string name="gamemode_notification_content">సెట్టింగ్‌లకు వెళ్లడానికి ట్యాప్ చేయండి</string>
+    <string name="gamemode_notification_title">గేమ్ మోడ్ ప్రస్తుతం ఆన్‌లో ఉంది</string>
     <string name="global_action_lock_message">మరిన్ని ఆప్షన్‌ల కోసం మీ ఫోన్‌ను అన్‌లాక్ చేయండి</string>
     <string name="global_action_screenshot">స్క్రీన్‌షాట్</string>
     <string name="global_action_smart_lock_disabled">Smart Lock డిజేబుల్ చేయబడింది</string>
+    <string name="gm_guide_status_on">ఆన్ చేయబడింది</string>
+    <string name="gm_notification_title">గేమ్ మోడ్</string>
     <string name="go_to_web">బ్రౌజర్‌కు వెళ్లండి</string>
     <string name="got_it">అర్థమైంది</string>
     <string name="guest_exit_guest">గెస్ట్‌ను తీసివేయండి</string>

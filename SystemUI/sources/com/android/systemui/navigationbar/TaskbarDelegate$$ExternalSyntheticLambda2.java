@@ -11,6 +11,6 @@ public final /* synthetic */ class TaskbarDelegate$$ExternalSyntheticLambda2 imp
     }
 
     public final void accept(Object obj) {
-        this.f$0.m2855lambda$new$0$comandroidsystemuinavigationbarTaskbarDelegate((Boolean) obj);
+        this.f$0.m2860lambda$new$0$comandroidsystemuinavigationbarTaskbarDelegate((Boolean) obj);
     }
 }

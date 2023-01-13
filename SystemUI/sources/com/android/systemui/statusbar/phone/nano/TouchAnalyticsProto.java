@@ -41,7 +41,7 @@ public interface TouchAnalyticsProto {
             public static final int POINTER_UP = 6;
 
             /* renamed from: UP */
-            public static final int f388UP = 1;
+            public static final int f387UP = 1;
             private static volatile TouchEvent[] _emptyArray;
             public int action;
             public int actionIndex;
@@ -125,17 +125,17 @@ public interface TouchAnalyticsProto {
                 private static volatile Pointer[] _emptyArray;
 
                 /* renamed from: id */
-                public int f389id;
+                public int f388id;
                 public float pressure;
                 public BoundingBox removedBoundingBox;
                 public float removedLength;
                 public float size;
 
                 /* renamed from: x */
-                public float f390x;
+                public float f389x;
 
                 /* renamed from: y */
-                public float f391y;
+                public float f390y;
 
                 public static Pointer[] emptyArray() {
                     if (_emptyArray == null) {
@@ -153,11 +153,11 @@ public interface TouchAnalyticsProto {
                 }
 
                 public Pointer clear() {
-                    this.f390x = 0.0f;
-                    this.f391y = 0.0f;
+                    this.f389x = 0.0f;
+                    this.f390y = 0.0f;
                     this.size = 0.0f;
                     this.pressure = 0.0f;
-                    this.f389id = 0;
+                    this.f388id = 0;
                     this.removedLength = 0.0f;
                     this.removedBoundingBox = null;
                     this.cachedSize = -1;
@@ -165,11 +165,11 @@ public interface TouchAnalyticsProto {
                 }
 
                 public void writeTo(CodedOutputByteBufferNano codedOutputByteBufferNano) throws IOException {
-                    if (Float.floatToIntBits(this.f390x) != Float.floatToIntBits(0.0f)) {
-                        codedOutputByteBufferNano.writeFloat(1, this.f390x);
+                    if (Float.floatToIntBits(this.f389x) != Float.floatToIntBits(0.0f)) {
+                        codedOutputByteBufferNano.writeFloat(1, this.f389x);
                     }
-                    if (Float.floatToIntBits(this.f391y) != Float.floatToIntBits(0.0f)) {
-                        codedOutputByteBufferNano.writeFloat(2, this.f391y);
+                    if (Float.floatToIntBits(this.f390y) != Float.floatToIntBits(0.0f)) {
+                        codedOutputByteBufferNano.writeFloat(2, this.f390y);
                     }
                     if (Float.floatToIntBits(this.size) != Float.floatToIntBits(0.0f)) {
                         codedOutputByteBufferNano.writeFloat(3, this.size);
@@ -177,7 +177,7 @@ public interface TouchAnalyticsProto {
                     if (Float.floatToIntBits(this.pressure) != Float.floatToIntBits(0.0f)) {
                         codedOutputByteBufferNano.writeFloat(4, this.pressure);
                     }
-                    int i = this.f389id;
+                    int i = this.f388id;
                     if (i != 0) {
                         codedOutputByteBufferNano.writeInt32(5, i);
                     }
@@ -194,11 +194,11 @@ public interface TouchAnalyticsProto {
                 /* access modifiers changed from: protected */
                 public int computeSerializedSize() {
                     int computeSerializedSize = super.computeSerializedSize();
-                    if (Float.floatToIntBits(this.f390x) != Float.floatToIntBits(0.0f)) {
-                        computeSerializedSize += CodedOutputByteBufferNano.computeFloatSize(1, this.f390x);
+                    if (Float.floatToIntBits(this.f389x) != Float.floatToIntBits(0.0f)) {
+                        computeSerializedSize += CodedOutputByteBufferNano.computeFloatSize(1, this.f389x);
                     }
-                    if (Float.floatToIntBits(this.f391y) != Float.floatToIntBits(0.0f)) {
-                        computeSerializedSize += CodedOutputByteBufferNano.computeFloatSize(2, this.f391y);
+                    if (Float.floatToIntBits(this.f390y) != Float.floatToIntBits(0.0f)) {
+                        computeSerializedSize += CodedOutputByteBufferNano.computeFloatSize(2, this.f390y);
                     }
                     if (Float.floatToIntBits(this.size) != Float.floatToIntBits(0.0f)) {
                         computeSerializedSize += CodedOutputByteBufferNano.computeFloatSize(3, this.size);
@@ -206,7 +206,7 @@ public interface TouchAnalyticsProto {
                     if (Float.floatToIntBits(this.pressure) != Float.floatToIntBits(0.0f)) {
                         computeSerializedSize += CodedOutputByteBufferNano.computeFloatSize(4, this.pressure);
                     }
-                    int i = this.f389id;
+                    int i = this.f388id;
                     if (i != 0) {
                         computeSerializedSize += CodedOutputByteBufferNano.computeInt32Size(5, i);
                     }
@@ -224,15 +224,15 @@ public interface TouchAnalyticsProto {
                             return this;
                         }
                         if (readTag == 13) {
-                            this.f390x = codedInputByteBufferNano.readFloat();
+                            this.f389x = codedInputByteBufferNano.readFloat();
                         } else if (readTag == 21) {
-                            this.f391y = codedInputByteBufferNano.readFloat();
+                            this.f390y = codedInputByteBufferNano.readFloat();
                         } else if (readTag == 29) {
                             this.size = codedInputByteBufferNano.readFloat();
                         } else if (readTag == 37) {
                             this.pressure = codedInputByteBufferNano.readFloat();
                         } else if (readTag == 40) {
-                            this.f389id = codedInputByteBufferNano.readInt32();
+                            this.f388id = codedInputByteBufferNano.readInt32();
                         } else if (readTag == 53) {
                             this.removedLength = codedInputByteBufferNano.readFloat();
                         } else if (readTag == 58) {

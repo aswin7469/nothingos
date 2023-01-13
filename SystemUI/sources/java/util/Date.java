@@ -624,7 +624,7 @@ public class Date implements Serializable, Cloneable, Comparable<Date> {
         CalendarUtils.sprintf0d(sb, normalize.getSeconds(), 2).append(' ');
         TimeZone zone = normalize.getZone();
         if (zone != null) {
-            sb.append(zone.getDisplayName(normalize.isDaylightTime(), 0, Locale.f700US));
+            sb.append(zone.getDisplayName(normalize.isDaylightTime(), 0, Locale.f698US));
         } else {
             sb.append("GMT");
         }

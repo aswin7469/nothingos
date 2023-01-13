@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import com.google.android.setupdesign.C3953R;
+import com.google.android.setupdesign.C3963R;
 
 public class FillContentLayout extends FrameLayout {
     private int maxHeight;
@@ -17,7 +17,7 @@ public class FillContentLayout extends FrameLayout {
     }
 
     public FillContentLayout(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, C3953R.attr.sudFillContentLayoutStyle);
+        this(context, attributeSet, C3963R.attr.sudFillContentLayoutStyle);
     }
 
     public FillContentLayout(Context context, AttributeSet attributeSet, int i) {
@@ -27,9 +27,9 @@ public class FillContentLayout extends FrameLayout {
 
     private void init(Context context, AttributeSet attributeSet, int i) {
         if (!isInEditMode()) {
-            TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C3953R.styleable.SudFillContentLayout, i, 0);
-            this.maxHeight = obtainStyledAttributes.getDimensionPixelSize(C3953R.styleable.SudFillContentLayout_android_maxHeight, -1);
-            this.maxWidth = obtainStyledAttributes.getDimensionPixelSize(C3953R.styleable.SudFillContentLayout_android_maxWidth, -1);
+            TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C3963R.styleable.SudFillContentLayout, i, 0);
+            this.maxHeight = obtainStyledAttributes.getDimensionPixelSize(C3963R.styleable.SudFillContentLayout_android_maxHeight, -1);
+            this.maxWidth = obtainStyledAttributes.getDimensionPixelSize(C3963R.styleable.SudFillContentLayout_android_maxWidth, -1);
             obtainStyledAttributes.recycle();
         }
     }

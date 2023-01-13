@@ -9,6 +9,6 @@ public final /* synthetic */ class FoldAodAnimationController$$ExternalSynthetic
     }
 
     public final void run() {
-        FoldAodAnimationController.m3264startAnimationRunnable$lambda1$lambda0(this.f$0);
+        FoldAodAnimationController.m3269startAnimationRunnable$lambda1$lambda0(this.f$0);
     }
 }

@@ -5,7 +5,7 @@ import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.view.SurfaceControl;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.transition.Transitions;
 
 /* renamed from: com.android.wm.shell.pip.PipSurfaceTransactionHelper */
@@ -24,8 +24,8 @@ public class PipSurfaceTransactionHelper {
     }
 
     public void onDensityOrFontScaleChanged(Context context) {
-        this.mCornerRadius = context.getResources().getDimensionPixelSize(C3343R.dimen.pip_corner_radius);
-        this.mShadowRadius = context.getResources().getDimensionPixelSize(C3343R.dimen.pip_shadow_radius);
+        this.mCornerRadius = context.getResources().getDimensionPixelSize(C3353R.dimen.pip_corner_radius);
+        this.mShadowRadius = context.getResources().getDimensionPixelSize(C3353R.dimen.pip_shadow_radius);
     }
 
     public PipSurfaceTransactionHelper alpha(SurfaceControl.Transaction transaction, SurfaceControl surfaceControl, float f) {

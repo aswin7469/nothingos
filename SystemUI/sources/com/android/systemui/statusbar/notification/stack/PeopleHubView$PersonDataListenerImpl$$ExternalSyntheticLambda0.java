@@ -13,6 +13,6 @@ public final /* synthetic */ class PeopleHubView$PersonDataListenerImpl$$Externa
     }
 
     public final void onClick(View view) {
-        PeopleHubView.PersonDataListenerImpl.m3151onDataChanged$lambda1(this.f$0, view);
+        PeopleHubView.PersonDataListenerImpl.m3155onDataChanged$lambda1(this.f$0, view);
     }
 }

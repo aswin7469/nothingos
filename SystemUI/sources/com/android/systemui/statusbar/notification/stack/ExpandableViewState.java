@@ -6,7 +6,7 @@ import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
 import android.util.Property;
 import android.view.View;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.animation.Interpolators;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 import com.android.systemui.statusbar.notification.row.ExpandableView;
@@ -21,13 +21,13 @@ public class ExpandableViewState extends ViewState {
     public static final int LOCATION_UNKNOWN = 0;
     private static final int TAG_ANIMATOR_BOTTOM_INSET = 2131427562;
     private static final int TAG_ANIMATOR_HEIGHT = 2131428061;
-    private static final int TAG_ANIMATOR_TOP_INSET = 2131429065;
+    private static final int TAG_ANIMATOR_TOP_INSET = 2131429082;
     private static final int TAG_END_BOTTOM_INSET = 2131427560;
     private static final int TAG_END_HEIGHT = 2131428059;
-    private static final int TAG_END_TOP_INSET = 2131429063;
+    private static final int TAG_END_TOP_INSET = 2131429080;
     private static final int TAG_START_BOTTOM_INSET = 2131427561;
     private static final int TAG_START_HEIGHT = 2131428060;
-    private static final int TAG_START_TOP_INSET = 2131429064;
+    private static final int TAG_START_TOP_INSET = 2131429081;
     public static final int VISIBLE_LOCATIONS = 5;
     public boolean belowSpeedBump;
     public int clipBottomAmount;
@@ -91,17 +91,17 @@ public class ExpandableViewState extends ViewState {
             if (this.height != expandableView.getActualHeight()) {
                 startHeightAnimation(expandableView, animationProperties);
             } else {
-                abortAnimation(view, C1893R.C1897id.height_animator_tag);
+                abortAnimation(view, C1894R.C1898id.height_animator_tag);
             }
             if (this.clipTopAmount != expandableView.getClipTopAmount()) {
                 startClipAnimation(expandableView, animationProperties, true);
             } else {
-                abortAnimation(view, C1893R.C1897id.top_inset_animator_tag);
+                abortAnimation(view, C1894R.C1898id.top_inset_animator_tag);
             }
             if (this.clipBottomAmount != expandableView.getClipBottomAmount()) {
                 startClipAnimation(expandableView, animationProperties, false);
             } else {
-                abortAnimation(view, C1893R.C1897id.bottom_inset_animator_tag);
+                abortAnimation(view, C1894R.C1898id.bottom_inset_animator_tag);
             }
             expandableView.setDimmed(this.dimmed, animationFilter.animateDimmed);
             expandableView.setBelowSpeedBump(this.belowSpeedBump);
@@ -120,11 +120,11 @@ public class ExpandableViewState extends ViewState {
     }
 
     private void startHeightAnimation(final ExpandableView expandableView, AnimationProperties animationProperties) {
-        Integer num = (Integer) getChildTag(expandableView, C1893R.C1897id.height_animator_start_value_tag);
-        Integer num2 = (Integer) getChildTag(expandableView, C1893R.C1897id.height_animator_end_value_tag);
+        Integer num = (Integer) getChildTag(expandableView, C1894R.C1898id.height_animator_start_value_tag);
+        Integer num2 = (Integer) getChildTag(expandableView, C1894R.C1898id.height_animator_end_value_tag);
         int i = this.height;
         if (num2 == null || num2.intValue() != i) {
-            ValueAnimator valueAnimator = (ValueAnimator) getChildTag(expandableView, C1893R.C1897id.height_animator_tag);
+            ValueAnimator valueAnimator = (ValueAnimator) getChildTag(expandableView, C1894R.C1898id.height_animator_tag);
             if (animationProperties.getAnimationFilter().animateHeight) {
                 ValueAnimator ofInt = ValueAnimator.ofInt(new int[]{expandableView.getActualHeight(), i});
                 ofInt.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -145,9 +145,9 @@ public class ExpandableViewState extends ViewState {
                     boolean mWasCancelled;
 
                     public void onAnimationEnd(Animator animator) {
-                        expandableView.setTag(C1893R.C1897id.height_animator_tag, (Object) null);
-                        expandableView.setTag(C1893R.C1897id.height_animator_start_value_tag, (Object) null);
-                        expandableView.setTag(C1893R.C1897id.height_animator_end_value_tag, (Object) null);
+                        expandableView.setTag(C1894R.C1898id.height_animator_tag, (Object) null);
+                        expandableView.setTag(C1894R.C1898id.height_animator_start_value_tag, (Object) null);
+                        expandableView.setTag(C1894R.C1898id.height_animator_end_value_tag, (Object) null);
                         expandableView.setActualHeightAnimating(false);
                         if (!this.mWasCancelled) {
                             ExpandableView expandableView = expandableView;
@@ -166,16 +166,16 @@ public class ExpandableViewState extends ViewState {
                     }
                 });
                 startAnimator(ofInt, animationFinishListener);
-                expandableView.setTag(C1893R.C1897id.height_animator_tag, ofInt);
-                expandableView.setTag(C1893R.C1897id.height_animator_start_value_tag, Integer.valueOf(expandableView.getActualHeight()));
-                expandableView.setTag(C1893R.C1897id.height_animator_end_value_tag, Integer.valueOf(i));
+                expandableView.setTag(C1894R.C1898id.height_animator_tag, ofInt);
+                expandableView.setTag(C1894R.C1898id.height_animator_start_value_tag, Integer.valueOf(expandableView.getActualHeight()));
+                expandableView.setTag(C1894R.C1898id.height_animator_end_value_tag, Integer.valueOf(i));
                 expandableView.setActualHeightAnimating(true);
             } else if (valueAnimator != null) {
                 PropertyValuesHolder[] values = valueAnimator.getValues();
                 int intValue = num.intValue() + (i - num2.intValue());
                 values[0].setIntValues(new int[]{intValue, i});
-                expandableView.setTag(C1893R.C1897id.height_animator_start_value_tag, Integer.valueOf(intValue));
-                expandableView.setTag(C1893R.C1897id.height_animator_end_value_tag, Integer.valueOf(i));
+                expandableView.setTag(C1894R.C1898id.height_animator_start_value_tag, Integer.valueOf(intValue));
+                expandableView.setTag(C1894R.C1898id.height_animator_end_value_tag, Integer.valueOf(i));
                 valueAnimator.setCurrentPlayTime(valueAnimator.getCurrentPlayTime());
             } else {
                 expandableView.setActualHeight(i, false);
@@ -187,13 +187,13 @@ public class ExpandableViewState extends ViewState {
         final ExpandableView expandableView2 = expandableView;
         AnimationProperties animationProperties2 = animationProperties;
         final boolean z2 = z;
-        Integer num = (Integer) getChildTag(expandableView2, z2 ? C1893R.C1897id.top_inset_animator_start_value_tag : C1893R.C1897id.bottom_inset_animator_start_value_tag);
-        int i = C1893R.C1897id.top_inset_animator_end_value_tag;
-        Integer num2 = (Integer) getChildTag(expandableView2, z2 ? C1893R.C1897id.top_inset_animator_end_value_tag : C1893R.C1897id.bottom_inset_animator_end_value_tag);
+        Integer num = (Integer) getChildTag(expandableView2, z2 ? C1894R.C1898id.top_inset_animator_start_value_tag : C1894R.C1898id.bottom_inset_animator_start_value_tag);
+        int i = C1894R.C1898id.top_inset_animator_end_value_tag;
+        Integer num2 = (Integer) getChildTag(expandableView2, z2 ? C1894R.C1898id.top_inset_animator_end_value_tag : C1894R.C1898id.bottom_inset_animator_end_value_tag);
         int i2 = z2 ? this.clipTopAmount : this.clipBottomAmount;
         if (num2 == null || num2.intValue() != i2) {
-            int i3 = C1893R.C1897id.top_inset_animator_tag;
-            ValueAnimator valueAnimator = (ValueAnimator) getChildTag(expandableView2, z2 ? C1893R.C1897id.top_inset_animator_tag : C1893R.C1897id.bottom_inset_animator_tag);
+            int i3 = C1894R.C1898id.top_inset_animator_tag;
+            ValueAnimator valueAnimator = (ValueAnimator) getChildTag(expandableView2, z2 ? C1894R.C1898id.top_inset_animator_tag : C1894R.C1898id.bottom_inset_animator_tag);
             AnimationFilter animationFilter = animationProperties.getAnimationFilter();
             if ((!z2 || animationFilter.animateTopInset) && z2) {
                 int[] iArr = new int[2];
@@ -212,28 +212,28 @@ public class ExpandableViewState extends ViewState {
                 }
                 ofInt.addListener(new AnimatorListenerAdapter() {
                     public void onAnimationEnd(Animator animator) {
-                        expandableView2.setTag(z2 ? C1893R.C1897id.top_inset_animator_tag : C1893R.C1897id.bottom_inset_animator_tag, (Object) null);
-                        expandableView2.setTag(z2 ? C1893R.C1897id.top_inset_animator_start_value_tag : C1893R.C1897id.bottom_inset_animator_start_value_tag, (Object) null);
-                        expandableView2.setTag(z2 ? C1893R.C1897id.top_inset_animator_end_value_tag : C1893R.C1897id.bottom_inset_animator_end_value_tag, (Object) null);
+                        expandableView2.setTag(z2 ? C1894R.C1898id.top_inset_animator_tag : C1894R.C1898id.bottom_inset_animator_tag, (Object) null);
+                        expandableView2.setTag(z2 ? C1894R.C1898id.top_inset_animator_start_value_tag : C1894R.C1898id.bottom_inset_animator_start_value_tag, (Object) null);
+                        expandableView2.setTag(z2 ? C1894R.C1898id.top_inset_animator_end_value_tag : C1894R.C1898id.bottom_inset_animator_end_value_tag, (Object) null);
                     }
                 });
                 startAnimator(ofInt, animationFinishListener);
                 if (!z2) {
-                    i3 = C1893R.C1897id.bottom_inset_animator_tag;
+                    i3 = C1894R.C1898id.bottom_inset_animator_tag;
                 }
                 expandableView2.setTag(i3, ofInt);
-                expandableView2.setTag(z2 ? C1893R.C1897id.top_inset_animator_start_value_tag : C1893R.C1897id.bottom_inset_animator_start_value_tag, Integer.valueOf(z2 ? expandableView.getClipTopAmount() : expandableView.getClipBottomAmount()));
+                expandableView2.setTag(z2 ? C1894R.C1898id.top_inset_animator_start_value_tag : C1894R.C1898id.bottom_inset_animator_start_value_tag, Integer.valueOf(z2 ? expandableView.getClipTopAmount() : expandableView.getClipBottomAmount()));
                 if (!z2) {
-                    i = C1893R.C1897id.bottom_inset_animator_end_value_tag;
+                    i = C1894R.C1898id.bottom_inset_animator_end_value_tag;
                 }
                 expandableView2.setTag(i, Integer.valueOf(i2));
             } else if (valueAnimator != null) {
                 PropertyValuesHolder[] values = valueAnimator.getValues();
                 int intValue = num.intValue() + (i2 - num2.intValue());
                 values[0].setIntValues(new int[]{intValue, i2});
-                expandableView2.setTag(z2 ? C1893R.C1897id.top_inset_animator_start_value_tag : C1893R.C1897id.bottom_inset_animator_start_value_tag, Integer.valueOf(intValue));
+                expandableView2.setTag(z2 ? C1894R.C1898id.top_inset_animator_start_value_tag : C1894R.C1898id.bottom_inset_animator_start_value_tag, Integer.valueOf(intValue));
                 if (!z2) {
-                    i = C1893R.C1897id.bottom_inset_animator_end_value_tag;
+                    i = C1894R.C1898id.bottom_inset_animator_end_value_tag;
                 }
                 expandableView2.setTag(i, Integer.valueOf(i2));
                 valueAnimator.setCurrentPlayTime(valueAnimator.getCurrentPlayTime());
@@ -257,19 +257,19 @@ public class ExpandableViewState extends ViewState {
         if (expandableView == null) {
             return 0;
         }
-        if (((ValueAnimator) getChildTag(expandableView, C1893R.C1897id.height_animator_tag)) == null) {
+        if (((ValueAnimator) getChildTag(expandableView, C1894R.C1898id.height_animator_tag)) == null) {
             return expandableView.getActualHeight();
         }
-        return ((Integer) getChildTag(expandableView, C1893R.C1897id.height_animator_end_value_tag)).intValue();
+        return ((Integer) getChildTag(expandableView, C1894R.C1898id.height_animator_end_value_tag)).intValue();
     }
 
     public void cancelAnimations(View view) {
         super.cancelAnimations(view);
-        Animator animator = (Animator) getChildTag(view, C1893R.C1897id.height_animator_tag);
+        Animator animator = (Animator) getChildTag(view, C1894R.C1898id.height_animator_tag);
         if (animator != null) {
             animator.cancel();
         }
-        Animator animator2 = (Animator) getChildTag(view, C1893R.C1897id.top_inset_animator_tag);
+        Animator animator2 = (Animator) getChildTag(view, C1894R.C1898id.top_inset_animator_tag);
         if (animator2 != null) {
             animator2.cancel();
         }

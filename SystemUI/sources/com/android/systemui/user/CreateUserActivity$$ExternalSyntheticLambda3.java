@@ -12,6 +12,6 @@ public final /* synthetic */ class CreateUserActivity$$ExternalSyntheticLambda3 
     }
 
     public final void accept(Object obj) {
-        this.f$0.m3291lambda$addUserNow$1$comandroidsystemuiuserCreateUserActivity((UserInfo) obj);
+        this.f$0.m3296lambda$addUserNow$1$comandroidsystemuiuserCreateUserActivity((UserInfo) obj);
     }
 }

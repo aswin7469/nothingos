@@ -43,17 +43,17 @@ public final class YearMonth implements Temporal, TemporalAdjuster, Comparable<Y
 
     public static YearMonth now(Clock clock) {
         LocalDate now = LocalDate.now(clock);
-        return m931of(now.getYear(), now.getMonth());
+        return m929of(now.getYear(), now.getMonth());
     }
 
     /* renamed from: of */
-    public static YearMonth m931of(int i, Month month2) {
+    public static YearMonth m929of(int i, Month month2) {
         Objects.requireNonNull(month2, "month");
-        return m930of(i, month2.getValue());
+        return m928of(i, month2.getValue());
     }
 
     /* renamed from: of */
-    public static YearMonth m930of(int i, int i2) {
+    public static YearMonth m928of(int i, int i2) {
         ChronoField.YEAR.checkValidValue((long) i);
         ChronoField.MONTH_OF_YEAR.checkValidValue((long) i2);
         return new YearMonth(i, i2);
@@ -68,7 +68,7 @@ public final class YearMonth implements Temporal, TemporalAdjuster, Comparable<Y
             if (!IsoChronology.INSTANCE.equals(Chronology.from(temporalAccessor))) {
                 temporalAccessor = LocalDate.from(temporalAccessor);
             }
-            return m930of(temporalAccessor.get(ChronoField.YEAR), temporalAccessor.get(ChronoField.MONTH_OF_YEAR));
+            return m928of(temporalAccessor.get(ChronoField.YEAR), temporalAccessor.get(ChronoField.MONTH_OF_YEAR));
         } catch (DateTimeException e) {
             throw new DateTimeException("Unable to obtain YearMonth from TemporalAccessor: " + temporalAccessor + " of type " + temporalAccessor.getClass().getName(), e);
         }
@@ -125,7 +125,7 @@ public final class YearMonth implements Temporal, TemporalAdjuster, Comparable<Y
         if (temporalField != ChronoField.YEAR_OF_ERA) {
             return super.range(temporalField);
         }
-        return ValueRange.m955of(1, getYear() <= 0 ? 1000000000 : 999999999);
+        return ValueRange.m953of(1, getYear() <= 0 ? 1000000000 : 999999999);
     }
 
     public int get(TemporalField temporalField) {
@@ -137,7 +137,7 @@ public final class YearMonth implements Temporal, TemporalAdjuster, Comparable<Y
         if (!(temporalField instanceof ChronoField)) {
             return temporalField.getFrom(this);
         }
-        int i2 = C28591.$SwitchMap$java$time$temporal$ChronoField[((ChronoField) temporalField).ordinal()];
+        int i2 = C28651.$SwitchMap$java$time$temporal$ChronoField[((ChronoField) temporalField).ordinal()];
         int i3 = 1;
         if (i2 == 1) {
             i = this.month;
@@ -177,7 +177,7 @@ public final class YearMonth implements Temporal, TemporalAdjuster, Comparable<Y
     }
 
     public Month getMonth() {
-        return Month.m920of(this.month);
+        return Month.m918of(this.month);
     }
 
     public boolean isLeapYear() {
@@ -206,7 +206,7 @@ public final class YearMonth implements Temporal, TemporalAdjuster, Comparable<Y
         }
         ChronoField chronoField = (ChronoField) temporalField;
         chronoField.checkValidValue(j);
-        int i = C28591.$SwitchMap$java$time$temporal$ChronoField[chronoField.ordinal()];
+        int i = C28651.$SwitchMap$java$time$temporal$ChronoField[chronoField.ordinal()];
         if (i == 1) {
             return withMonth((int) j);
         }
@@ -243,7 +243,7 @@ public final class YearMonth implements Temporal, TemporalAdjuster, Comparable<Y
     }
 
     /* renamed from: java.time.YearMonth$1 */
-    static /* synthetic */ class C28591 {
+    static /* synthetic */ class C28651 {
         static final /* synthetic */ int[] $SwitchMap$java$time$temporal$ChronoField;
         static final /* synthetic */ int[] $SwitchMap$java$time$temporal$ChronoUnit;
 
@@ -327,7 +327,7 @@ public final class YearMonth implements Temporal, TemporalAdjuster, Comparable<Y
             L_0x0082:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: java.time.YearMonth.C28591.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: java.time.YearMonth.C28651.<clinit>():void");
         }
     }
 
@@ -335,7 +335,7 @@ public final class YearMonth implements Temporal, TemporalAdjuster, Comparable<Y
         if (!(temporalUnit instanceof ChronoUnit)) {
             return (YearMonth) temporalUnit.addTo(this, j);
         }
-        switch (C28591.$SwitchMap$java$time$temporal$ChronoUnit[((ChronoUnit) temporalUnit).ordinal()]) {
+        switch (C28651.$SwitchMap$java$time$temporal$ChronoUnit[((ChronoUnit) temporalUnit).ordinal()]) {
             case 1:
                 return plusMonths(j);
             case 2:
@@ -428,7 +428,7 @@ public final class YearMonth implements Temporal, TemporalAdjuster, Comparable<Y
             return temporalUnit.between(this, from);
         }
         long prolepticMonth = from.getProlepticMonth() - getProlepticMonth();
-        switch (C28591.$SwitchMap$java$time$temporal$ChronoUnit[((ChronoUnit) temporalUnit).ordinal()]) {
+        switch (C28651.$SwitchMap$java$time$temporal$ChronoUnit[((ChronoUnit) temporalUnit).ordinal()]) {
             case 1:
                 return prolepticMonth;
             case 2:
@@ -452,11 +452,11 @@ public final class YearMonth implements Temporal, TemporalAdjuster, Comparable<Y
     }
 
     public LocalDate atDay(int i) {
-        return LocalDate.m908of(this.year, this.month, i);
+        return LocalDate.m906of(this.year, this.month, i);
     }
 
     public LocalDate atEndOfMonth() {
-        return LocalDate.m908of(this.year, this.month, lengthOfMonth());
+        return LocalDate.m906of(this.year, this.month, lengthOfMonth());
     }
 
     public int compareTo(YearMonth yearMonth) {
@@ -525,6 +525,6 @@ public final class YearMonth implements Temporal, TemporalAdjuster, Comparable<Y
     }
 
     static YearMonth readExternal(DataInput dataInput) throws IOException {
-        return m930of(dataInput.readInt(), (int) dataInput.readByte());
+        return m928of(dataInput.readInt(), (int) dataInput.readByte());
     }
 }

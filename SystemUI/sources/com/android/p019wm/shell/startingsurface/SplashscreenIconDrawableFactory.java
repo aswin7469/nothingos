@@ -64,17 +64,17 @@ public class SplashscreenIconDrawableFactory {
             Matrix matrix = new Matrix();
             this.mMatrix = matrix;
             if (z) {
-                handler.post(new C3593xa76c91d0(this, drawable, i2));
+                handler.post(new C3603xa76c91d0(this, drawable, i2));
                 return;
             }
             float f = ((float) i2) / ((float) i);
             matrix.setScale(f, f);
-            handler.post(new C3594xa76c91d1(this, drawable, i));
+            handler.post(new C3604xa76c91d1(this, drawable, i));
         }
 
         /* access modifiers changed from: private */
         /* renamed from: preDrawIcon */
-        public void mo51146xbc58ebb7(Drawable drawable, int i) {
+        public void mo51157xbc58ebb7(Drawable drawable, int i) {
             synchronized (this.mPaint) {
                 Trace.traceBegin(32, "preDrawIcon");
                 this.mIconBitmap = Bitmap.createBitmap(i, i, Bitmap.Config.ARGB_8888);

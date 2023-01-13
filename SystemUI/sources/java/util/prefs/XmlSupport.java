@@ -200,7 +200,7 @@ class XmlSupport {
         try {
             DocumentBuilder newDocumentBuilder = newInstance.newDocumentBuilder();
             newDocumentBuilder.setEntityResolver(new Resolver());
-            newDocumentBuilder.setErrorHandler(new C4438EH());
+            newDocumentBuilder.setErrorHandler(new C4450EH());
             return newDocumentBuilder.parse(new InputSource(inputStream));
         } catch (ParserConfigurationException e) {
             throw new AssertionError((Object) e);
@@ -401,8 +401,8 @@ class XmlSupport {
     }
 
     /* renamed from: java.util.prefs.XmlSupport$EH */
-    private static class C4438EH implements ErrorHandler {
-        private C4438EH() {
+    private static class C4450EH implements ErrorHandler {
+        private C4450EH() {
         }
 
         public void error(SAXParseException sAXParseException) throws SAXException {

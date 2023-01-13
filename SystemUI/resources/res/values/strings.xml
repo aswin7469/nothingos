@@ -781,13 +781,16 @@
     <string name="force_rtl_layout_all_locales">Force RTL layout direction</string>
     <string name="force_rtl_layout_all_locales_summary">Force screen layout direction to RTL for all locales</string>
     <string name="forced_resizable_secondary_display">App may not work on a secondary display.</string>
-    <string name="game_mode">Game mode</string>
-    <string name="game_mode_notification_content">Tap to go to Settings</string>
-    <string name="game_mode_notification_title">Game Mode is currently on</string>
     <string name="game_status">Playing</string>
+    <string name="gamemode_description">Game Mode will determine if you\'re in a game and will automatically turn on for you</string>
+    <string name="gamemode_gamedashboard_title">Game dashboard</string>
+    <string name="gamemode_notification_content">Tap to go to Settings</string>
+    <string name="gamemode_notification_title">Game Mode is currently on</string>
     <string name="global_action_lock_message">Unlock your phone for more options</string>
     <string name="global_action_screenshot">Screenshot</string>
     <string name="global_action_smart_lock_disabled">Smart Lock disabled</string>
+    <string name="gm_guide_status_on">ON</string>
+    <string name="gm_notification_title">Game Mode</string>
     <string name="go_to_web">Go to browser</string>
     <string name="got_it">Got it</string>
     <string name="guest_exit_guest">Remove guest</string>
@@ -1322,6 +1325,8 @@
     <string name="nt_face_recognition_error">Face not recognised. System error.</string>
     <string name="nt_face_recognition_fail">Face not recognised. Try again.</string>
     <string name="nt_face_recognition_timeout">Tap the icon and try again</string>
+    <string name="nt_ip_address_ipv4_prefix">IPv4:</string>
+    <string name="nt_ip_address_ipv6_prefix">IPv6:</string>
     <string name="nt_qs_header_privacy_icons">NTQSHeaderPrivacyChip</string>
     <string name="nt_quick_settings_tiles_default">wifi,cell,bt,flashlight,glyphs,wallet,controls,dnd,rotation,battery,airplane,custom(com.google.android.gms/.nearby.sharing.SharingTileService),hotspot,alarm,night,dark,batteryshare,nfc,qr_code_scanner</string>
     <string name="nt_system_ui_date_pattern">?unknown_ref: 10408cf</string>
@@ -1331,7 +1336,6 @@
     <string name="oem_unlock_enable_summary">Allow the bootloader to be unlocked</string>
     <string name="ok">@android:string/ok</string>
     <string name="okay">OK</string>
-    <string name="on">On</string>
     <string name="one_handed_tutorial_description">To exit, swipe up from the bottom of the screen or tap anywhere above the app</string>
     <string name="one_handed_tutorial_title">Using one-handed mode</string>
     <string name="one_week_timestamp">1 week ago</string>

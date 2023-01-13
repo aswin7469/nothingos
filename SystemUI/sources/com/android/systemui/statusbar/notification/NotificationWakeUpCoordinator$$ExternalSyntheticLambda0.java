@@ -9,6 +9,6 @@ public final /* synthetic */ class NotificationWakeUpCoordinator$$ExternalSynthe
     }
 
     public final void run() {
-        NotificationWakeUpCoordinator.m3093setStackScroller$lambda0(this.f$0);
+        NotificationWakeUpCoordinator.m3097setStackScroller$lambda0(this.f$0);
     }
 }

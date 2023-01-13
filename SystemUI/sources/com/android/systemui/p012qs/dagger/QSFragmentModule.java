@@ -5,7 +5,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.battery.BatteryMeterView;
 import com.android.systemui.battery.BatteryMeterViewController;
 import com.android.systemui.broadcast.BroadcastDispatcher;
@@ -21,7 +21,7 @@ import com.android.systemui.p012qs.QSPanel;
 import com.android.systemui.p012qs.QuickQSPanel;
 import com.android.systemui.p012qs.QuickStatusBarHeader;
 import com.android.systemui.p012qs.customize.QSCustomizer;
-import com.android.systemui.plugins.p011qs.C2301QS;
+import com.android.systemui.plugins.p011qs.C2304QS;
 import com.android.systemui.privacy.OngoingPrivacyChip;
 import com.android.systemui.statusbar.phone.StatusIconContainer;
 import com.android.systemui.statusbar.policy.BatteryController;
@@ -45,7 +45,7 @@ public interface QSFragmentModule {
     public static final String QS_USING_MEDIA_PLAYER = "qs_using_media_player";
 
     @Binds
-    C2301QS bindQS(QSFragment qSFragment);
+    C2304QS bindQS(QSFragment qSFragment);
 
     @QSThemedContext
     @Provides
@@ -67,37 +67,37 @@ public interface QSFragmentModule {
 
     @Provides
     static QSPanel provideQSPanel(@RootView View view) {
-        return (QSPanel) view.findViewById(C1893R.C1897id.quick_settings_panel);
+        return (QSPanel) view.findViewById(C1894R.C1898id.quick_settings_panel);
     }
 
     @Provides
     static QSContainerImpl providesQSContainerImpl(@RootView View view) {
-        return (QSContainerImpl) view.findViewById(C1893R.C1897id.quick_settings_container);
+        return (QSContainerImpl) view.findViewById(C1894R.C1898id.quick_settings_container);
     }
 
     @Provides
     static QuickStatusBarHeader providesQuickStatusBarHeader(@RootView View view) {
-        return (QuickStatusBarHeader) view.findViewById(C1893R.C1897id.header);
+        return (QuickStatusBarHeader) view.findViewById(C1894R.C1898id.header);
     }
 
     @Provides
     static QuickQSPanel providesQuickQSPanel(QuickStatusBarHeader quickStatusBarHeader) {
-        return (QuickQSPanel) quickStatusBarHeader.findViewById(C1893R.C1897id.quick_qs_panel);
+        return (QuickQSPanel) quickStatusBarHeader.findViewById(C1894R.C1898id.quick_qs_panel);
     }
 
     @Provides
     static BatteryMeterView providesBatteryMeterView(QuickStatusBarHeader quickStatusBarHeader) {
-        return (BatteryMeterView) quickStatusBarHeader.findViewById(C1893R.C1897id.batteryRemainingIcon);
+        return (BatteryMeterView) quickStatusBarHeader.findViewById(C1894R.C1898id.batteryRemainingIcon);
     }
 
     @Provides
     static QSFooterView providesQSFooterView(@RootView View view) {
-        return (QSFooterView) view.findViewById(C1893R.C1897id.qs_footer);
+        return (QSFooterView) view.findViewById(C1894R.C1898id.qs_footer);
     }
 
     @Provides
     static FooterActionsView providesQSFooterActionsView(@RootView View view) {
-        return (FooterActionsView) view.findViewById(C1893R.C1897id.qs_footer_actions);
+        return (FooterActionsView) view.findViewById(C1894R.C1898id.qs_footer_actions);
     }
 
     @QSScope
@@ -110,14 +110,14 @@ public interface QSFragmentModule {
     @QSScope
     @Provides
     static QSCustomizer providesQSCutomizer(@RootView View view) {
-        return (QSCustomizer) view.findViewById(C1893R.C1897id.qs_customize);
+        return (QSCustomizer) view.findViewById(C1894R.C1898id.qs_customize);
     }
 
     @QSScope
     @Provides
     @Named("qs_security_footer")
     static View providesQSSecurityFooterView(@QSThemedContext LayoutInflater layoutInflater, FooterActionsView footerActionsView) {
-        return layoutInflater.inflate(C1893R.layout.quick_settings_security_footer, footerActionsView, false);
+        return layoutInflater.inflate(C1894R.layout.quick_settings_security_footer, footerActionsView, false);
     }
 
     @Provides
@@ -135,31 +135,31 @@ public interface QSFragmentModule {
     @QSScope
     @Provides
     static OngoingPrivacyChip providesPrivacyChip(QuickStatusBarHeader quickStatusBarHeader) {
-        return (OngoingPrivacyChip) quickStatusBarHeader.findViewById(C1893R.C1897id.privacy_chip);
+        return (OngoingPrivacyChip) quickStatusBarHeader.findViewById(C1894R.C1898id.privacy_chip);
     }
 
     @QSScope
     @Provides
     static StatusIconContainer providesStatusIconContainer(QuickStatusBarHeader quickStatusBarHeader) {
-        return (StatusIconContainer) quickStatusBarHeader.findViewById(C1893R.C1897id.statusIcons);
+        return (StatusIconContainer) quickStatusBarHeader.findViewById(C1894R.C1898id.statusIcons);
     }
 
     @QSScope
     @Provides
     @Named("qs_fgs_manager_footer")
     static View providesQSFgsManagerFooterView(@QSThemedContext LayoutInflater layoutInflater, FooterActionsView footerActionsView) {
-        return layoutInflater.inflate(C1893R.layout.fgs_footer, footerActionsView, false);
+        return layoutInflater.inflate(C1894R.layout.fgs_footer, footerActionsView, false);
     }
 
     @Provides
     static NTQSStatusBar providesNTQSStatusBar(@RootView View view) {
-        return (NTQSStatusBar) view.findViewById(C1893R.C1897id.qs_status_bar_layout);
+        return (NTQSStatusBar) view.findViewById(C1894R.C1898id.qs_status_bar_layout);
     }
 
     @Provides
     @Named("nt_qs_header_battery_meter_view")
     static BatteryMeterView getBatteryMeterView(QuickStatusBarHeader quickStatusBarHeader) {
-        return (BatteryMeterView) quickStatusBarHeader.findViewById(C1893R.C1897id.qs_batteryRemainingIcon);
+        return (BatteryMeterView) quickStatusBarHeader.findViewById(C1894R.C1898id.qs_batteryRemainingIcon);
     }
 
     @Provides

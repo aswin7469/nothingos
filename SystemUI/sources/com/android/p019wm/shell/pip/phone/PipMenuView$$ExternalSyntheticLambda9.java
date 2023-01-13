@@ -17,6 +17,6 @@ public final /* synthetic */ class PipMenuView$$ExternalSyntheticLambda9 impleme
     }
 
     public final void onClick(View view) {
-        this.f$0.mo50397xdc89797b(this.f$1, this.f$2, view);
+        this.f$0.mo50406xdc89797b(this.f$1, this.f$2, view);
     }
 }

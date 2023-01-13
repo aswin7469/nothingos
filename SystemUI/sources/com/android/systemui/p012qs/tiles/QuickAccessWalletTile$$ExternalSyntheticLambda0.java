@@ -14,6 +14,6 @@ public final /* synthetic */ class QuickAccessWalletTile$$ExternalSyntheticLambd
     }
 
     public final void run() {
-        this.f$0.mo36906xdf3da830(this.f$1);
+        this.f$0.mo36904xdf3da830(this.f$1);
     }
 }

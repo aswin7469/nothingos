@@ -9,6 +9,6 @@ public final /* synthetic */ class WifiSignalController$$ExternalSyntheticLambda
     }
 
     public final void run() {
-        this.f$0.mo39457xdd29ecb1();
+        this.f$0.mo39459xdd29ecb1();
     }
 }

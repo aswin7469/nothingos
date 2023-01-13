@@ -13,7 +13,7 @@ import android.view.ViewOverlay;
 import android.view.ViewParent;
 import android.widget.LinearLayout;
 import androidx.core.widget.NestedScrollView;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.p012qs.touch.OverScroll;
 import com.android.systemui.p012qs.touch.SwipeDetector;
 
@@ -31,7 +31,7 @@ public class QSScrollLayout extends NestedScrollView {
     };
     /* access modifiers changed from: private */
     public float mContentTranslationY;
-    private final int mFooterHeight = getResources().getDimensionPixelSize(C1893R.dimen.qs_footer_height);
+    private final int mFooterHeight = getResources().getDimensionPixelSize(C1894R.dimen.qs_footer_height);
     private int mLastMotionY;
     private final OverScrollHelper mOverScrollHelper;
     private final SwipeDetector mSwipeDetector;

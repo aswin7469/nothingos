@@ -13,6 +13,6 @@ public final /* synthetic */ class TetheringManager$4$$ExternalSyntheticLambda4 
     }
 
     public final void run() {
-        this.f$0.m1954lambda$onTetherStatesChanged$5$androidnetTetheringManager$4(this.f$1);
+        this.f$0.m1960lambda$onTetherStatesChanged$5$androidnetTetheringManager$4(this.f$1);
     }
 }

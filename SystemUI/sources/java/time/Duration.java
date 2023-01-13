@@ -76,7 +76,7 @@ public final class Duration implements TemporalAmount, Comparable<Duration>, Ser
     }
 
     /* renamed from: of */
-    public static Duration m907of(long j, TemporalUnit temporalUnit) {
+    public static Duration m905of(long j, TemporalUnit temporalUnit) {
         return ZERO.plus(j, temporalUnit);
     }
 
@@ -243,7 +243,7 @@ public final class Duration implements TemporalAmount, Comparable<Duration>, Ser
             return this;
         } else {
             if (temporalUnit instanceof ChronoUnit) {
-                int i = C28491.$SwitchMap$java$time$temporal$ChronoUnit[((ChronoUnit) temporalUnit).ordinal()];
+                int i = C28551.$SwitchMap$java$time$temporal$ChronoUnit[((ChronoUnit) temporalUnit).ordinal()];
                 if (i == 1) {
                     return plusNanos(j);
                 }
@@ -264,7 +264,7 @@ public final class Duration implements TemporalAmount, Comparable<Duration>, Ser
     }
 
     /* renamed from: java.time.Duration$1 */
-    static /* synthetic */ class C28491 {
+    static /* synthetic */ class C28551 {
         static final /* synthetic */ int[] $SwitchMap$java$time$temporal$ChronoUnit;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(8:0|1|2|3|4|5|6|(3:7|8|10)) */
@@ -303,7 +303,7 @@ public final class Duration implements TemporalAmount, Comparable<Duration>, Ser
             L_0x0033:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: java.time.Duration.C28491.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: java.time.Duration.C28551.<clinit>():void");
         }
     }
 

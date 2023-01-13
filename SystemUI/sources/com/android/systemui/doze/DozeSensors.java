@@ -113,7 +113,7 @@ public class DozeSensors {
         };
         DozeSensors$$ExternalSyntheticLambda0 dozeSensors$$ExternalSyntheticLambda0 = new DozeSensors$$ExternalSyntheticLambda0(this);
         this.mDevicePostureCallback = dozeSensors$$ExternalSyntheticLambda0;
-        C20642 r1 = new AuthController.Callback() {
+        C20662 r1 = new AuthController.Callback() {
             public void onAllAuthenticatorsRegistered() {
                 updateUdfpsEnrolled();
             }
@@ -175,7 +175,7 @@ public class DozeSensors {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-doze-DozeSensors  reason: not valid java name */
-    public /* synthetic */ void m2736lambda$new$0$comandroidsystemuidozeDozeSensors(ThresholdSensorEvent thresholdSensorEvent) {
+    public /* synthetic */ void m2741lambda$new$0$comandroidsystemuidozeDozeSensors(ThresholdSensorEvent thresholdSensorEvent) {
         if (thresholdSensorEvent != null) {
             this.mProxCallback.accept(Boolean.valueOf(!thresholdSensorEvent.getBelow()));
         }
@@ -482,7 +482,7 @@ public class DozeSensors {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onTrigger$0$com-android-systemui-doze-DozeSensors$TriggerSensor */
-        public /* synthetic */ void mo32448xcd5a5dfe(TriggerEvent triggerEvent, Sensor sensor) {
+        public /* synthetic */ void mo32459xcd5a5dfe(TriggerEvent triggerEvent, Sensor sensor) {
             float f;
             float f2;
             if (DozeSensors.DEBUG) {
@@ -603,7 +603,7 @@ public class DozeSensors {
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onSensorChanged$0$com-android-systemui-doze-DozeSensors$PluginSensor */
-        public /* synthetic */ void mo32443x4d4cfd3f(SensorManagerPlugin.SensorEvent sensorEvent) {
+        public /* synthetic */ void mo32454x4d4cfd3f(SensorManagerPlugin.SensorEvent sensorEvent) {
             if (SystemClock.uptimeMillis() < this.this$0.mDebounceFrom + this.mDebounce) {
                 Log.d(DozeSensors.TAG, "onSensorEvent dropped: " + triggerEventToString(sensorEvent));
                 return;
@@ -617,7 +617,7 @@ public class DozeSensors {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$1$com-android-systemui-doze-DozeSensors  reason: not valid java name */
-    public /* synthetic */ void m2737lambda$new$1$comandroidsystemuidozeDozeSensors(int i) {
+    public /* synthetic */ void m2742lambda$new$1$comandroidsystemuidozeDozeSensors(int i) {
         if (this.mDevicePosture != i) {
             this.mDevicePosture = i;
             for (TriggerSensor posture : this.mTriggerSensors) {

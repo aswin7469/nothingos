@@ -16,6 +16,6 @@ public final /* synthetic */ class ScrimController$$ExternalSyntheticLambda5 imp
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        this.f$0.mo45048x6161ffc9(this.f$1, this.f$2, valueAnimator);
+        this.f$0.mo45063x6161ffc9(this.f$1, this.f$2, valueAnimator);
     }
 }

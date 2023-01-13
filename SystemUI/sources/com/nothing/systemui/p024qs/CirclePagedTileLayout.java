@@ -118,7 +118,7 @@ public class CirclePagedTileLayout extends ViewPager implements QSPanel.QSTileLa
         this.mMaxColumns = 100;
         this.mPath = new Path();
         this.mEx = (QSFragmentEx) NTDependencyEx.get(QSFragmentEx.class);
-        C41801 r1 = new ViewPager.SimpleOnPageChangeListener() {
+        C41921 r1 = new ViewPager.SimpleOnPageChangeListener() {
             public void onPageSelected(int i) {
                 CirclePagedTileLayout.this.updateSelected();
                 if (CirclePagedTileLayout.this.mPageIndicator != null) {
@@ -143,19 +143,19 @@ public class CirclePagedTileLayout extends ViewPager implements QSPanel.QSTileLa
             }
         };
         this.mOnPageChangeListener = r1;
-        C41812 r2 = new PagerAdapter() {
+        C41932 r2 = new PagerAdapter() {
             public boolean isViewFromObject(View view, Object obj) {
                 return view == obj;
             }
 
             public void destroyItem(ViewGroup viewGroup, int i, Object obj) {
-                NTLogUtil.m1680d(CirclePagedTileLayout.TAG, "Destantiating " + i);
+                NTLogUtil.m1686d(CirclePagedTileLayout.TAG, "Destantiating " + i);
                 viewGroup.removeView((View) obj);
                 CirclePagedTileLayout.this.updateListening();
             }
 
             public Object instantiateItem(ViewGroup viewGroup, int i) {
-                NTLogUtil.m1680d(CirclePagedTileLayout.TAG, "Instantiating " + i);
+                NTLogUtil.m1686d(CirclePagedTileLayout.TAG, "Instantiating " + i);
                 if (CirclePagedTileLayout.this.isLayoutRtl()) {
                     i = (CirclePagedTileLayout.this.mPages.size() - 1) - i;
                 }
@@ -286,14 +286,14 @@ public class CirclePagedTileLayout extends ViewPager implements QSPanel.QSTileLa
             super.fakeDragBy(f);
             postInvalidateOnAnimation();
         } catch (NullPointerException e) {
-            NTLogUtil.m1681e(TAG, "FakeDragBy called before begin: " + e);
+            NTLogUtil.m1687e(TAG, "FakeDragBy called before begin: " + e);
             post(new CirclePagedTileLayout$$ExternalSyntheticLambda0(this, this.mPages.size() - 1));
         }
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$fakeDragBy$1$com-nothing-systemui-qs-CirclePagedTileLayout */
-    public /* synthetic */ void mo57592xeb001256(int i) {
+    public /* synthetic */ void mo57613xeb001256(int i) {
         setCurrentItem(i, true);
         AnimatorSet animatorSet = this.mBounceAnimatorSet;
         if (animatorSet != null) {
@@ -306,7 +306,7 @@ public class CirclePagedTileLayout extends ViewPager implements QSPanel.QSTileLa
         try {
             super.endFakeDrag();
         } catch (NullPointerException e) {
-            NTLogUtil.m1681e(TAG, "endFakeDrag called without velocityTracker: " + e);
+            NTLogUtil.m1687e(TAG, "endFakeDrag called without velocityTracker: " + e);
         }
     }
 
@@ -405,7 +405,7 @@ public class CirclePagedTileLayout extends ViewPager implements QSPanel.QSTileLa
             ((QSTileViewCircle) this.mPages.get(i)).setExpansion(f);
             if (f == 1.0f) {
                 invalidate();
-                NTLogUtil.m1680d(TAG, "setExpansion: mLastExpansion = " + this.mLastExpansion + " try again dispatchDraw");
+                NTLogUtil.m1686d(TAG, "setExpansion: mLastExpansion = " + this.mLastExpansion + " try again dispatchDraw");
             }
         }
     }
@@ -433,7 +433,7 @@ public class CirclePagedTileLayout extends ViewPager implements QSPanel.QSTileLa
             setImportantForAccessibility(0);
         } else if (!this.mHasUnselected) {
             for (int i2 = 0; i2 < this.mPages.size(); i2++) {
-                NTLogUtil.m1680d(TAG, "updateSelected: mHasUnselected");
+                NTLogUtil.m1686d(TAG, "updateSelected: mHasUnselected");
                 this.mPages.get(i2).setSelected(false);
             }
             setSelected(false);

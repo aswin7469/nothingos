@@ -107,9 +107,9 @@ public class StandardWifiEntry extends WifiEntry {
     public synchronized String getSummary(boolean z) {
         String str;
         if (hasAdminRestrictions()) {
-            return this.mContext.getString(C3341R.string.wifitrackerlib_admin_restricted_network);
+            return this.mContext.getString(C3351R.string.wifitrackerlib_admin_restricted_network);
         }
-        StringJoiner stringJoiner = new StringJoiner(this.mContext.getString(C3341R.string.wifitrackerlib_summary_separator));
+        StringJoiner stringJoiner = new StringJoiner(this.mContext.getString(C3351R.string.wifitrackerlib_summary_separator));
         int connectedState = getConnectedState();
         if (connectedState == 0) {
             str = Utils.getDisconnectedDescription(this.mInjector, this.mContext, this.mTargetWifiConfig, this.mForSavedNetworksPage, z);
@@ -470,7 +470,7 @@ public class StandardWifiEntry extends WifiEntry {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$disconnect$2$com-android-wifitrackerlib-StandardWifiEntry  reason: not valid java name */
-    public /* synthetic */ void m3373lambda$disconnect$2$comandroidwifitrackerlibStandardWifiEntry(WifiEntry.DisconnectCallback disconnectCallback) {
+    public /* synthetic */ void m3377lambda$disconnect$2$comandroidwifitrackerlibStandardWifiEntry(WifiEntry.DisconnectCallback disconnectCallback) {
         if (disconnectCallback != null && this.mCalledDisconnect) {
             disconnectCallback.onDisconnectResult(1);
         }
@@ -810,7 +810,7 @@ public class StandardWifiEntry extends WifiEntry {
             goto L_0x0018
         L_0x0010:
             android.content.Context r6 = r5.mContext     // Catch:{ all -> 0x019f }
-            int r0 = com.android.wifitrackerlib.C3341R.string.wifitrackerlib_wifi_security_none     // Catch:{ all -> 0x019f }
+            int r0 = com.android.wifitrackerlib.C3351R.string.wifitrackerlib_wifi_security_none     // Catch:{ all -> 0x019f }
             java.lang.String r6 = r6.getString(r0)     // Catch:{ all -> 0x019f }
         L_0x0018:
             monitor-exit(r5)
@@ -842,12 +842,12 @@ public class StandardWifiEntry extends WifiEntry {
         L_0x0039:
             if (r6 == 0) goto L_0x0044
             android.content.Context r6 = r5.mContext     // Catch:{ all -> 0x019f }
-            int r0 = com.android.wifitrackerlib.C3341R.string.wifitrackerlib_wifi_security_short_owe     // Catch:{ all -> 0x019f }
+            int r0 = com.android.wifitrackerlib.C3351R.string.wifitrackerlib_wifi_security_short_owe     // Catch:{ all -> 0x019f }
             java.lang.String r6 = r6.getString(r0)     // Catch:{ all -> 0x019f }
             goto L_0x004c
         L_0x0044:
             android.content.Context r6 = r5.mContext     // Catch:{ all -> 0x019f }
-            int r0 = com.android.wifitrackerlib.C3341R.string.wifitrackerlib_wifi_security_owe     // Catch:{ all -> 0x019f }
+            int r0 = com.android.wifitrackerlib.C3351R.string.wifitrackerlib_wifi_security_owe     // Catch:{ all -> 0x019f }
             java.lang.String r6 = r6.getString(r0)     // Catch:{ all -> 0x019f }
         L_0x004c:
             monitor-exit(r5)
@@ -855,12 +855,12 @@ public class StandardWifiEntry extends WifiEntry {
         L_0x004e:
             if (r6 == 0) goto L_0x0059
             android.content.Context r6 = r5.mContext     // Catch:{ all -> 0x019f }
-            int r0 = com.android.wifitrackerlib.C3341R.string.wifitrackerlib_wifi_security_short_eap_suiteb     // Catch:{ all -> 0x019f }
+            int r0 = com.android.wifitrackerlib.C3351R.string.wifitrackerlib_wifi_security_short_eap_suiteb     // Catch:{ all -> 0x019f }
             java.lang.String r6 = r6.getString(r0)     // Catch:{ all -> 0x019f }
             goto L_0x0061
         L_0x0059:
             android.content.Context r6 = r5.mContext     // Catch:{ all -> 0x019f }
-            int r0 = com.android.wifitrackerlib.C3341R.string.wifitrackerlib_wifi_security_eap_suiteb     // Catch:{ all -> 0x019f }
+            int r0 = com.android.wifitrackerlib.C3351R.string.wifitrackerlib_wifi_security_eap_suiteb     // Catch:{ all -> 0x019f }
             java.lang.String r6 = r6.getString(r0)     // Catch:{ all -> 0x019f }
         L_0x0061:
             monitor-exit(r5)
@@ -868,12 +868,12 @@ public class StandardWifiEntry extends WifiEntry {
         L_0x0063:
             if (r6 == 0) goto L_0x006e
             android.content.Context r6 = r5.mContext     // Catch:{ all -> 0x019f }
-            int r0 = com.android.wifitrackerlib.C3341R.string.wifitrackerlib_wifi_security_short_sae     // Catch:{ all -> 0x019f }
+            int r0 = com.android.wifitrackerlib.C3351R.string.wifitrackerlib_wifi_security_short_sae     // Catch:{ all -> 0x019f }
             java.lang.String r6 = r6.getString(r0)     // Catch:{ all -> 0x019f }
             goto L_0x0076
         L_0x006e:
             android.content.Context r6 = r5.mContext     // Catch:{ all -> 0x019f }
-            int r0 = com.android.wifitrackerlib.C3341R.string.wifitrackerlib_wifi_security_sae     // Catch:{ all -> 0x019f }
+            int r0 = com.android.wifitrackerlib.C3351R.string.wifitrackerlib_wifi_security_sae     // Catch:{ all -> 0x019f }
             java.lang.String r6 = r6.getString(r0)     // Catch:{ all -> 0x019f }
         L_0x0076:
             monitor-exit(r5)
@@ -881,12 +881,12 @@ public class StandardWifiEntry extends WifiEntry {
         L_0x0078:
             if (r6 == 0) goto L_0x0083
             android.content.Context r6 = r5.mContext     // Catch:{ all -> 0x019f }
-            int r0 = com.android.wifitrackerlib.C3341R.string.wifitrackerlib_wifi_security_short_eap_wpa_wpa2     // Catch:{ all -> 0x019f }
+            int r0 = com.android.wifitrackerlib.C3351R.string.wifitrackerlib_wifi_security_short_eap_wpa_wpa2     // Catch:{ all -> 0x019f }
             java.lang.String r6 = r6.getString(r0)     // Catch:{ all -> 0x019f }
             goto L_0x008b
         L_0x0083:
             android.content.Context r6 = r5.mContext     // Catch:{ all -> 0x019f }
-            int r0 = com.android.wifitrackerlib.C3341R.string.wifitrackerlib_wifi_security_eap_wpa_wpa2     // Catch:{ all -> 0x019f }
+            int r0 = com.android.wifitrackerlib.C3351R.string.wifitrackerlib_wifi_security_eap_wpa_wpa2     // Catch:{ all -> 0x019f }
             java.lang.String r6 = r6.getString(r0)     // Catch:{ all -> 0x019f }
         L_0x008b:
             monitor-exit(r5)
@@ -894,19 +894,19 @@ public class StandardWifiEntry extends WifiEntry {
         L_0x008d:
             if (r6 == 0) goto L_0x0098
             android.content.Context r6 = r5.mContext     // Catch:{ all -> 0x019f }
-            int r0 = com.android.wifitrackerlib.C3341R.string.wifitrackerlib_wifi_security_short_wpa_wpa2     // Catch:{ all -> 0x019f }
+            int r0 = com.android.wifitrackerlib.C3351R.string.wifitrackerlib_wifi_security_short_wpa_wpa2     // Catch:{ all -> 0x019f }
             java.lang.String r6 = r6.getString(r0)     // Catch:{ all -> 0x019f }
             goto L_0x00a0
         L_0x0098:
             android.content.Context r6 = r5.mContext     // Catch:{ all -> 0x019f }
-            int r0 = com.android.wifitrackerlib.C3341R.string.wifitrackerlib_wifi_security_wpa_wpa2     // Catch:{ all -> 0x019f }
+            int r0 = com.android.wifitrackerlib.C3351R.string.wifitrackerlib_wifi_security_wpa_wpa2     // Catch:{ all -> 0x019f }
             java.lang.String r6 = r6.getString(r0)     // Catch:{ all -> 0x019f }
         L_0x00a0:
             monitor-exit(r5)
             return r6
         L_0x00a2:
             android.content.Context r6 = r5.mContext     // Catch:{ all -> 0x019f }
-            int r0 = com.android.wifitrackerlib.C3341R.string.wifitrackerlib_wifi_security_wep     // Catch:{ all -> 0x019f }
+            int r0 = com.android.wifitrackerlib.C3351R.string.wifitrackerlib_wifi_security_wep     // Catch:{ all -> 0x019f }
             java.lang.String r6 = r6.getString(r0)     // Catch:{ all -> 0x019f }
             monitor-exit(r5)
             return r6
@@ -916,7 +916,7 @@ public class StandardWifiEntry extends WifiEntry {
             goto L_0x00b9
         L_0x00b1:
             android.content.Context r6 = r5.mContext     // Catch:{ all -> 0x019f }
-            int r0 = com.android.wifitrackerlib.C3341R.string.wifitrackerlib_wifi_security_none     // Catch:{ all -> 0x019f }
+            int r0 = com.android.wifitrackerlib.C3351R.string.wifitrackerlib_wifi_security_none     // Catch:{ all -> 0x019f }
             java.lang.String r6 = r6.getString(r0)     // Catch:{ all -> 0x019f }
         L_0x00b9:
             monitor-exit(r5)
@@ -924,12 +924,12 @@ public class StandardWifiEntry extends WifiEntry {
         L_0x00bb:
             if (r6 == 0) goto L_0x00c6
             android.content.Context r6 = r5.mContext     // Catch:{ all -> 0x019f }
-            int r0 = com.android.wifitrackerlib.C3341R.string.wifitrackerlib_wifi_security_short_eap_wpa3     // Catch:{ all -> 0x019f }
+            int r0 = com.android.wifitrackerlib.C3351R.string.wifitrackerlib_wifi_security_short_eap_wpa3     // Catch:{ all -> 0x019f }
             java.lang.String r6 = r6.getString(r0)     // Catch:{ all -> 0x019f }
             goto L_0x00ce
         L_0x00c6:
             android.content.Context r6 = r5.mContext     // Catch:{ all -> 0x019f }
-            int r0 = com.android.wifitrackerlib.C3341R.string.wifitrackerlib_wifi_security_eap_wpa3     // Catch:{ all -> 0x019f }
+            int r0 = com.android.wifitrackerlib.C3351R.string.wifitrackerlib_wifi_security_eap_wpa3     // Catch:{ all -> 0x019f }
             java.lang.String r6 = r6.getString(r0)     // Catch:{ all -> 0x019f }
         L_0x00ce:
             monitor-exit(r5)
@@ -952,17 +952,17 @@ public class StandardWifiEntry extends WifiEntry {
             java.lang.String r1 = "/"
             r0.<init>(r1)     // Catch:{ all -> 0x019f }
             android.content.Context r1 = r5.mContext     // Catch:{ all -> 0x019f }
-            int r2 = com.android.wifitrackerlib.C3341R.string.wifitrackerlib_wifi_security_none     // Catch:{ all -> 0x019f }
+            int r2 = com.android.wifitrackerlib.C3351R.string.wifitrackerlib_wifi_security_none     // Catch:{ all -> 0x019f }
             java.lang.String r1 = r1.getString(r2)     // Catch:{ all -> 0x019f }
             r0.add(r1)     // Catch:{ all -> 0x019f }
             if (r6 == 0) goto L_0x010f
             android.content.Context r6 = r5.mContext     // Catch:{ all -> 0x019f }
-            int r1 = com.android.wifitrackerlib.C3341R.string.wifitrackerlib_wifi_security_short_owe     // Catch:{ all -> 0x019f }
+            int r1 = com.android.wifitrackerlib.C3351R.string.wifitrackerlib_wifi_security_short_owe     // Catch:{ all -> 0x019f }
             java.lang.String r6 = r6.getString(r1)     // Catch:{ all -> 0x019f }
             goto L_0x0117
         L_0x010f:
             android.content.Context r6 = r5.mContext     // Catch:{ all -> 0x019f }
-            int r1 = com.android.wifitrackerlib.C3341R.string.wifitrackerlib_wifi_security_owe     // Catch:{ all -> 0x019f }
+            int r1 = com.android.wifitrackerlib.C3351R.string.wifitrackerlib_wifi_security_owe     // Catch:{ all -> 0x019f }
             java.lang.String r6 = r6.getString(r1)     // Catch:{ all -> 0x019f }
         L_0x0117:
             r0.add(r6)     // Catch:{ all -> 0x019f }
@@ -981,12 +981,12 @@ public class StandardWifiEntry extends WifiEntry {
             if (r1 == 0) goto L_0x014e
             if (r6 == 0) goto L_0x0144
             android.content.Context r6 = r5.mContext     // Catch:{ all -> 0x019f }
-            int r0 = com.android.wifitrackerlib.C3341R.string.wifitrackerlib_wifi_security_short_wpa_wpa2_wpa3     // Catch:{ all -> 0x019f }
+            int r0 = com.android.wifitrackerlib.C3351R.string.wifitrackerlib_wifi_security_short_wpa_wpa2_wpa3     // Catch:{ all -> 0x019f }
             java.lang.String r6 = r6.getString(r0)     // Catch:{ all -> 0x019f }
             goto L_0x014c
         L_0x0144:
             android.content.Context r6 = r5.mContext     // Catch:{ all -> 0x019f }
-            int r0 = com.android.wifitrackerlib.C3341R.string.wifitrackerlib_wifi_security_wpa_wpa2_wpa3     // Catch:{ all -> 0x019f }
+            int r0 = com.android.wifitrackerlib.C3351R.string.wifitrackerlib_wifi_security_wpa_wpa2_wpa3     // Catch:{ all -> 0x019f }
             java.lang.String r6 = r6.getString(r0)     // Catch:{ all -> 0x019f }
         L_0x014c:
             monitor-exit(r5)
@@ -1003,12 +1003,12 @@ public class StandardWifiEntry extends WifiEntry {
             if (r1 == 0) goto L_0x017c
             if (r6 == 0) goto L_0x0172
             android.content.Context r6 = r5.mContext     // Catch:{ all -> 0x019f }
-            int r0 = com.android.wifitrackerlib.C3341R.string.wifitrackerlib_wifi_security_short_eap_wpa_wpa2_wpa3     // Catch:{ all -> 0x019f }
+            int r0 = com.android.wifitrackerlib.C3351R.string.wifitrackerlib_wifi_security_short_eap_wpa_wpa2_wpa3     // Catch:{ all -> 0x019f }
             java.lang.String r6 = r6.getString(r0)     // Catch:{ all -> 0x019f }
             goto L_0x017a
         L_0x0172:
             android.content.Context r6 = r5.mContext     // Catch:{ all -> 0x019f }
-            int r0 = com.android.wifitrackerlib.C3341R.string.wifitrackerlib_wifi_security_eap_wpa_wpa2_wpa3     // Catch:{ all -> 0x019f }
+            int r0 = com.android.wifitrackerlib.C3351R.string.wifitrackerlib_wifi_security_eap_wpa_wpa2_wpa3     // Catch:{ all -> 0x019f }
             java.lang.String r6 = r6.getString(r0)     // Catch:{ all -> 0x019f }
         L_0x017a:
             monitor-exit(r5)
@@ -1026,7 +1026,7 @@ public class StandardWifiEntry extends WifiEntry {
             goto L_0x019d
         L_0x0195:
             android.content.Context r6 = r5.mContext     // Catch:{ all -> 0x019f }
-            int r0 = com.android.wifitrackerlib.C3341R.string.wifitrackerlib_wifi_security_none     // Catch:{ all -> 0x019f }
+            int r0 = com.android.wifitrackerlib.C3351R.string.wifitrackerlib_wifi_security_none     // Catch:{ all -> 0x019f }
             java.lang.String r6 = r6.getString(r0)     // Catch:{ all -> 0x019f }
         L_0x019d:
             monitor-exit(r5)
@@ -1341,7 +1341,7 @@ public class StandardWifiEntry extends WifiEntry {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$getScanResultDescription$6$com-android-wifitrackerlib-StandardWifiEntry */
-    public /* synthetic */ void mo47850x2217af08(StringBuilder sb, long j, ScanResult scanResult) {
+    public /* synthetic */ void mo47859x2217af08(StringBuilder sb, long j, ScanResult scanResult) {
         sb.append(getScanResultDescription(scanResult, j));
     }
 

@@ -23,7 +23,7 @@ import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 import kotlin.jvm.internal.Intrinsics;
 
-@Metadata(mo64986d1 = {"\u0000y\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0000\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u000b\n\u0002\b\u0006\n\u0002\u0018\u0002\n\u0002\u0010\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0002\b\u0006\n\u0002\u0010\t\n\u0002\b\u0010*\u0001\r\u0018\u00002\u00020\u0001:\u0005GHIJKB\u0011\b\u0007\u0012\b\b\u0001\u0010\u0002\u001a\u00020\u0003¢\u0006\u0002\u0010\u0004J\u000e\u00103\u001a\u00020 2\u0006\u00104\u001a\u000205J\b\u00106\u001a\u00020 H\u0003J\b\u00107\u001a\u00020 H\u0003J\b\u00108\u001a\u00020 H\u0007J\b\u00109\u001a\u00020 H\u0007J\u0010\u0010:\u001a\u00020 2\u0006\u0010;\u001a\u00020<H\u0007J\b\u0010=\u001a\u00020 H\u0007J\u0010\u0010>\u001a\u00020 2\u0006\u0010;\u001a\u00020<H\u0007J\b\u0010?\u001a\u00020 H\u0007J\u000e\u0010@\u001a\u00020 2\u0006\u0010A\u001a\u00020\u0016J\u000e\u0010B\u001a\u00020 2\u0006\u0010A\u001a\u00020.J\u000e\u0010C\u001a\u00020 2\u0006\u0010A\u001a\u00020\u0016J\u000e\u0010D\u001a\u00020 2\u0006\u0010A\u001a\u00020.J\u0012\u0010E\u001a\u00020 2\b\u0010F\u001a\u0004\u0018\u00010\u0011H\u0007R\u001e\u0010\u0007\u001a\u00020\u00062\u0006\u0010\u0005\u001a\u00020\u0006@BX\u000e¢\u0006\b\n\u0000\"\u0004\b\b\u0010\tR\u0014\u0010\n\u001a\b\u0012\u0004\u0012\u00020\u00060\u000bX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0002\u001a\u00020\u0003X\u0004¢\u0006\u0002\n\u0000R\u0010\u0010\f\u001a\u00020\rX\u000e¢\u0006\u0004\n\u0002\u0010\u000eR\u0010\u0010\u000f\u001a\u0004\u0018\u00010\u0010X\u000e¢\u0006\u0002\n\u0000R\"\u0010\u0012\u001a\u0004\u0018\u00010\u00112\b\u0010\u0005\u001a\u0004\u0018\u00010\u0011@BX\u000e¢\u0006\b\n\u0000\"\u0004\b\u0013\u0010\u0014R\u0010\u0010\u0015\u001a\u0004\u0018\u00010\u0016X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0017\u001a\u00020\u0018X\u000e¢\u0006\u0002\n\u0000R$\u0010\u0019\u001a\u00020\u00182\u0006\u0010\u0005\u001a\u00020\u0018@FX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u001a\u0010\u001b\"\u0004\b\u001c\u0010\u001dR \u0010\u001e\u001a\b\u0012\u0004\u0012\u00020 0\u001fX.¢\u0006\u000e\n\u0000\u001a\u0004\b!\u0010\"\"\u0004\b#\u0010$R\u0010\u0010%\u001a\u0004\u0018\u00010&X\u000e¢\u0006\u0002\n\u0000R\u0017\u0010'\u001a\b\u0012\u0004\u0012\u00020\u00060(8F¢\u0006\u0006\u001a\u0004\b)\u0010*R\u001e\u0010+\u001a\u00020\u00182\u0006\u0010\u0005\u001a\u00020\u0018@BX\u000e¢\u0006\b\n\u0000\"\u0004\b,\u0010\u001dR\u0010\u0010-\u001a\u0004\u0018\u00010.X\u000e¢\u0006\u0002\n\u0000R\u0011\u0010/\u001a\u0002008F¢\u0006\u0006\u001a\u0004\b1\u00102¨\u0006L"}, mo64987d2 = {"Lcom/android/systemui/media/SeekBarViewModel;", "", "bgExecutor", "Lcom/android/systemui/util/concurrency/RepeatableExecutor;", "(Lcom/android/systemui/util/concurrency/RepeatableExecutor;)V", "value", "Lcom/android/systemui/media/SeekBarViewModel$Progress;", "_data", "set_data", "(Lcom/android/systemui/media/SeekBarViewModel$Progress;)V", "_progress", "Landroidx/lifecycle/MutableLiveData;", "callback", "com/android/systemui/media/SeekBarViewModel$callback$1", "Lcom/android/systemui/media/SeekBarViewModel$callback$1;", "cancel", "Ljava/lang/Runnable;", "Landroid/media/session/MediaController;", "controller", "setController", "(Landroid/media/session/MediaController;)V", "enabledChangeListener", "Lcom/android/systemui/media/SeekBarViewModel$EnabledChangeListener;", "isFalseSeek", "", "listening", "getListening", "()Z", "setListening", "(Z)V", "logSeek", "Lkotlin/Function0;", "", "getLogSeek", "()Lkotlin/jvm/functions/Function0;", "setLogSeek", "(Lkotlin/jvm/functions/Function0;)V", "playbackState", "Landroid/media/session/PlaybackState;", "progress", "Landroidx/lifecycle/LiveData;", "getProgress", "()Landroidx/lifecycle/LiveData;", "scrubbing", "setScrubbing", "scrubbingChangeListener", "Lcom/android/systemui/media/SeekBarViewModel$ScrubbingChangeListener;", "seekBarListener", "Landroid/widget/SeekBar$OnSeekBarChangeListener;", "getSeekBarListener", "()Landroid/widget/SeekBar$OnSeekBarChangeListener;", "attachTouchHandlers", "bar", "Landroid/widget/SeekBar;", "checkIfPollingNeeded", "checkPlaybackPosition", "clearController", "onDestroy", "onSeek", "position", "", "onSeekFalse", "onSeekProgress", "onSeekStarting", "removeEnabledChangeListener", "listener", "removeScrubbingChangeListener", "setEnabledChangeListener", "setScrubbingChangeListener", "updateController", "mediaController", "EnabledChangeListener", "Progress", "ScrubbingChangeListener", "SeekBarChangeListener", "SeekBarTouchListener", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000y\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0000\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u000b\n\u0002\b\u0006\n\u0002\u0018\u0002\n\u0002\u0010\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0002\b\u0006\n\u0002\u0010\t\n\u0002\b\u0010*\u0001\r\u0018\u00002\u00020\u0001:\u0005GHIJKB\u0011\b\u0007\u0012\b\b\u0001\u0010\u0002\u001a\u00020\u0003¢\u0006\u0002\u0010\u0004J\u000e\u00103\u001a\u00020 2\u0006\u00104\u001a\u000205J\b\u00106\u001a\u00020 H\u0003J\b\u00107\u001a\u00020 H\u0003J\b\u00108\u001a\u00020 H\u0007J\b\u00109\u001a\u00020 H\u0007J\u0010\u0010:\u001a\u00020 2\u0006\u0010;\u001a\u00020<H\u0007J\b\u0010=\u001a\u00020 H\u0007J\u0010\u0010>\u001a\u00020 2\u0006\u0010;\u001a\u00020<H\u0007J\b\u0010?\u001a\u00020 H\u0007J\u000e\u0010@\u001a\u00020 2\u0006\u0010A\u001a\u00020\u0016J\u000e\u0010B\u001a\u00020 2\u0006\u0010A\u001a\u00020.J\u000e\u0010C\u001a\u00020 2\u0006\u0010A\u001a\u00020\u0016J\u000e\u0010D\u001a\u00020 2\u0006\u0010A\u001a\u00020.J\u0012\u0010E\u001a\u00020 2\b\u0010F\u001a\u0004\u0018\u00010\u0011H\u0007R\u001e\u0010\u0007\u001a\u00020\u00062\u0006\u0010\u0005\u001a\u00020\u0006@BX\u000e¢\u0006\b\n\u0000\"\u0004\b\b\u0010\tR\u0014\u0010\n\u001a\b\u0012\u0004\u0012\u00020\u00060\u000bX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0002\u001a\u00020\u0003X\u0004¢\u0006\u0002\n\u0000R\u0010\u0010\f\u001a\u00020\rX\u000e¢\u0006\u0004\n\u0002\u0010\u000eR\u0010\u0010\u000f\u001a\u0004\u0018\u00010\u0010X\u000e¢\u0006\u0002\n\u0000R\"\u0010\u0012\u001a\u0004\u0018\u00010\u00112\b\u0010\u0005\u001a\u0004\u0018\u00010\u0011@BX\u000e¢\u0006\b\n\u0000\"\u0004\b\u0013\u0010\u0014R\u0010\u0010\u0015\u001a\u0004\u0018\u00010\u0016X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0017\u001a\u00020\u0018X\u000e¢\u0006\u0002\n\u0000R$\u0010\u0019\u001a\u00020\u00182\u0006\u0010\u0005\u001a\u00020\u0018@FX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u001a\u0010\u001b\"\u0004\b\u001c\u0010\u001dR \u0010\u001e\u001a\b\u0012\u0004\u0012\u00020 0\u001fX.¢\u0006\u000e\n\u0000\u001a\u0004\b!\u0010\"\"\u0004\b#\u0010$R\u0010\u0010%\u001a\u0004\u0018\u00010&X\u000e¢\u0006\u0002\n\u0000R\u0017\u0010'\u001a\b\u0012\u0004\u0012\u00020\u00060(8F¢\u0006\u0006\u001a\u0004\b)\u0010*R\u001e\u0010+\u001a\u00020\u00182\u0006\u0010\u0005\u001a\u00020\u0018@BX\u000e¢\u0006\b\n\u0000\"\u0004\b,\u0010\u001dR\u0010\u0010-\u001a\u0004\u0018\u00010.X\u000e¢\u0006\u0002\n\u0000R\u0011\u0010/\u001a\u0002008F¢\u0006\u0006\u001a\u0004\b1\u00102¨\u0006L"}, mo65043d2 = {"Lcom/android/systemui/media/SeekBarViewModel;", "", "bgExecutor", "Lcom/android/systemui/util/concurrency/RepeatableExecutor;", "(Lcom/android/systemui/util/concurrency/RepeatableExecutor;)V", "value", "Lcom/android/systemui/media/SeekBarViewModel$Progress;", "_data", "set_data", "(Lcom/android/systemui/media/SeekBarViewModel$Progress;)V", "_progress", "Landroidx/lifecycle/MutableLiveData;", "callback", "com/android/systemui/media/SeekBarViewModel$callback$1", "Lcom/android/systemui/media/SeekBarViewModel$callback$1;", "cancel", "Ljava/lang/Runnable;", "Landroid/media/session/MediaController;", "controller", "setController", "(Landroid/media/session/MediaController;)V", "enabledChangeListener", "Lcom/android/systemui/media/SeekBarViewModel$EnabledChangeListener;", "isFalseSeek", "", "listening", "getListening", "()Z", "setListening", "(Z)V", "logSeek", "Lkotlin/Function0;", "", "getLogSeek", "()Lkotlin/jvm/functions/Function0;", "setLogSeek", "(Lkotlin/jvm/functions/Function0;)V", "playbackState", "Landroid/media/session/PlaybackState;", "progress", "Landroidx/lifecycle/LiveData;", "getProgress", "()Landroidx/lifecycle/LiveData;", "scrubbing", "setScrubbing", "scrubbingChangeListener", "Lcom/android/systemui/media/SeekBarViewModel$ScrubbingChangeListener;", "seekBarListener", "Landroid/widget/SeekBar$OnSeekBarChangeListener;", "getSeekBarListener", "()Landroid/widget/SeekBar$OnSeekBarChangeListener;", "attachTouchHandlers", "bar", "Landroid/widget/SeekBar;", "checkIfPollingNeeded", "checkPlaybackPosition", "clearController", "onDestroy", "onSeek", "position", "", "onSeekFalse", "onSeekProgress", "onSeekStarting", "removeEnabledChangeListener", "listener", "removeScrubbingChangeListener", "setEnabledChangeListener", "setScrubbingChangeListener", "updateController", "mediaController", "EnabledChangeListener", "Progress", "ScrubbingChangeListener", "SeekBarChangeListener", "SeekBarTouchListener", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
 /* compiled from: SeekBarViewModel.kt */
 public final class SeekBarViewModel {
     private Progress _data = new Progress(false, false, false, false, (Integer) null, 0);
@@ -41,13 +41,13 @@ public final class SeekBarViewModel {
     private boolean scrubbing;
     private ScrubbingChangeListener scrubbingChangeListener;
 
-    @Metadata(mo64986d1 = {"\u0000\u0016\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0010\u000b\n\u0000\bf\u0018\u00002\u00020\u0001J\u0010\u0010\u0002\u001a\u00020\u00032\u0006\u0010\u0004\u001a\u00020\u0005H&ø\u0001\u0000\u0002\u0006\n\u0004\b!0\u0001¨\u0006\u0006À\u0006\u0001"}, mo64987d2 = {"Lcom/android/systemui/media/SeekBarViewModel$EnabledChangeListener;", "", "onEnabledChanged", "", "enabled", "", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u0000\u0016\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0010\u000b\n\u0000\bf\u0018\u00002\u00020\u0001J\u0010\u0010\u0002\u001a\u00020\u00032\u0006\u0010\u0004\u001a\u00020\u0005H&ø\u0001\u0000\u0002\u0006\n\u0004\b!0\u0001¨\u0006\u0006À\u0006\u0001"}, mo65043d2 = {"Lcom/android/systemui/media/SeekBarViewModel$EnabledChangeListener;", "", "onEnabledChanged", "", "enabled", "", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* compiled from: SeekBarViewModel.kt */
     public interface EnabledChangeListener {
         void onEnabledChanged(boolean z);
     }
 
-    @Metadata(mo64986d1 = {"\u0000\u0016\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0010\u000b\n\u0000\bf\u0018\u00002\u00020\u0001J\u0010\u0010\u0002\u001a\u00020\u00032\u0006\u0010\u0004\u001a\u00020\u0005H&ø\u0001\u0000\u0002\u0006\n\u0004\b!0\u0001¨\u0006\u0006À\u0006\u0001"}, mo64987d2 = {"Lcom/android/systemui/media/SeekBarViewModel$ScrubbingChangeListener;", "", "onScrubbingChanged", "", "scrubbing", "", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u0000\u0016\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0010\u000b\n\u0000\bf\u0018\u00002\u00020\u0001J\u0010\u0010\u0002\u001a\u00020\u00032\u0006\u0010\u0004\u001a\u00020\u0005H&ø\u0001\u0000\u0002\u0006\n\u0004\b!0\u0001¨\u0006\u0006À\u0006\u0001"}, mo65043d2 = {"Lcom/android/systemui/media/SeekBarViewModel$ScrubbingChangeListener;", "", "onScrubbingChanged", "", "scrubbing", "", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* compiled from: SeekBarViewModel.kt */
     public interface ScrubbingChangeListener {
         void onScrubbingChanged(boolean z);
@@ -107,7 +107,7 @@ public final class SeekBarViewModel {
 
     /* access modifiers changed from: private */
     /* renamed from: _set_listening_$lambda-1  reason: not valid java name */
-    public static final void m2833_set_listening_$lambda1(SeekBarViewModel seekBarViewModel, boolean z) {
+    public static final void m2838_set_listening_$lambda1(SeekBarViewModel seekBarViewModel, boolean z) {
         Intrinsics.checkNotNullParameter(seekBarViewModel, "this$0");
         if (seekBarViewModel.listening != z) {
             seekBarViewModel.listening = z;
@@ -147,7 +147,7 @@ public final class SeekBarViewModel {
 
     /* access modifiers changed from: private */
     /* renamed from: onSeekStarting$lambda-2  reason: not valid java name */
-    public static final void m2839onSeekStarting$lambda2(SeekBarViewModel seekBarViewModel) {
+    public static final void m2844onSeekStarting$lambda2(SeekBarViewModel seekBarViewModel) {
         Intrinsics.checkNotNullParameter(seekBarViewModel, "this$0");
         seekBarViewModel.setScrubbing(true);
         seekBarViewModel.isFalseSeek = false;
@@ -159,7 +159,7 @@ public final class SeekBarViewModel {
 
     /* access modifiers changed from: private */
     /* renamed from: onSeekProgress$lambda-3  reason: not valid java name */
-    public static final void m2838onSeekProgress$lambda3(SeekBarViewModel seekBarViewModel, long j) {
+    public static final void m2843onSeekProgress$lambda3(SeekBarViewModel seekBarViewModel, long j) {
         Intrinsics.checkNotNullParameter(seekBarViewModel, "this$0");
         if (seekBarViewModel.scrubbing) {
             seekBarViewModel.set_data(Progress.copy$default(seekBarViewModel._data, false, false, false, false, Integer.valueOf((int) j), 0, 47, (Object) null));
@@ -174,7 +174,7 @@ public final class SeekBarViewModel {
 
     /* access modifiers changed from: private */
     /* renamed from: onSeekFalse$lambda-4  reason: not valid java name */
-    public static final void m2837onSeekFalse$lambda4(SeekBarViewModel seekBarViewModel) {
+    public static final void m2842onSeekFalse$lambda4(SeekBarViewModel seekBarViewModel) {
         Intrinsics.checkNotNullParameter(seekBarViewModel, "this$0");
         if (seekBarViewModel.scrubbing) {
             seekBarViewModel.isFalseSeek = true;
@@ -187,7 +187,7 @@ public final class SeekBarViewModel {
 
     /* access modifiers changed from: private */
     /* renamed from: onSeek$lambda-5  reason: not valid java name */
-    public static final void m2836onSeek$lambda5(SeekBarViewModel seekBarViewModel, long j) {
+    public static final void m2841onSeek$lambda5(SeekBarViewModel seekBarViewModel, long j) {
         MediaController.TransportControls transportControls;
         Intrinsics.checkNotNullParameter(seekBarViewModel, "this$0");
         if (seekBarViewModel.isFalseSeek) {
@@ -241,7 +241,7 @@ public final class SeekBarViewModel {
 
     /* access modifiers changed from: private */
     /* renamed from: clearController$lambda-6  reason: not valid java name */
-    public static final void m2834clearController$lambda6(SeekBarViewModel seekBarViewModel) {
+    public static final void m2839clearController$lambda6(SeekBarViewModel seekBarViewModel) {
         Intrinsics.checkNotNullParameter(seekBarViewModel, "this$0");
         seekBarViewModel.setController((MediaController) null);
         seekBarViewModel.playbackState = null;
@@ -259,7 +259,7 @@ public final class SeekBarViewModel {
 
     /* access modifiers changed from: private */
     /* renamed from: onDestroy$lambda-7  reason: not valid java name */
-    public static final void m2835onDestroy$lambda7(SeekBarViewModel seekBarViewModel) {
+    public static final void m2840onDestroy$lambda7(SeekBarViewModel seekBarViewModel) {
         Intrinsics.checkNotNullParameter(seekBarViewModel, "this$0");
         seekBarViewModel.setController((MediaController) null);
         seekBarViewModel.playbackState = null;
@@ -283,23 +283,65 @@ public final class SeekBarViewModel {
     }
 
     /* access modifiers changed from: private */
+    /* JADX WARNING: Removed duplicated region for block: B:12:0x001b  */
+    /* JADX WARNING: Removed duplicated region for block: B:15:0x0031  */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
     public final void checkIfPollingNeeded() {
-        boolean z = false;
-        if (this.listening && !this.scrubbing) {
-            PlaybackState playbackState2 = this.playbackState;
-            if (playbackState2 != null ? SeekBarViewModelKt.isInMotion(playbackState2) : false) {
-                z = true;
-            }
-        }
-        if (!z) {
-            Runnable runnable = this.cancel;
-            if (runnable != null) {
-                runnable.run();
-            }
-            this.cancel = null;
-        } else if (this.cancel == null) {
-            this.cancel = this.bgExecutor.executeRepeatedly(new SeekBarViewModel$$ExternalSyntheticLambda0(this), 0, 100);
-        }
+        /*
+            r7 = this;
+            boolean r0 = r7.listening
+            r1 = 1
+            r2 = 0
+            if (r0 == 0) goto L_0x0018
+            boolean r0 = r7.scrubbing
+            if (r0 != 0) goto L_0x0018
+            android.media.session.PlaybackState r0 = r7.playbackState
+            if (r0 == 0) goto L_0x0013
+            boolean r0 = com.android.systemui.media.SeekBarViewModelKt.isInMotion(r0)
+            goto L_0x0014
+        L_0x0013:
+            r0 = r2
+        L_0x0014:
+            if (r0 == 0) goto L_0x0018
+            r0 = r1
+            goto L_0x0019
+        L_0x0018:
+            r0 = r2
+        L_0x0019:
+            if (r0 == 0) goto L_0x0031
+            java.lang.Runnable r0 = r7.cancel
+            if (r0 != 0) goto L_0x004d
+            com.android.systemui.util.concurrency.RepeatableExecutor r1 = r7.bgExecutor
+            com.android.systemui.media.SeekBarViewModel$$ExternalSyntheticLambda0 r2 = new com.android.systemui.media.SeekBarViewModel$$ExternalSyntheticLambda0
+            r2.<init>(r7)
+            r3 = 0
+            r5 = 100
+            java.lang.Runnable r0 = r1.executeRepeatedly(r2, r3, r5)
+            r7.cancel = r0
+            goto L_0x004d
+        L_0x0031:
+            android.media.session.PlaybackState r0 = r7.playbackState
+            if (r0 == 0) goto L_0x003d
+            int r0 = r0.getState()
+            r3 = 2
+            if (r0 != r3) goto L_0x003d
+            goto L_0x003e
+        L_0x003d:
+            r1 = r2
+        L_0x003e:
+            if (r1 == 0) goto L_0x0043
+            r7.checkPlaybackPosition()
+        L_0x0043:
+            java.lang.Runnable r0 = r7.cancel
+            if (r0 == 0) goto L_0x004a
+            r0.run()
+        L_0x004a:
+            r0 = 0
+            r7.cancel = r0
+        L_0x004d:
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.media.SeekBarViewModel.checkIfPollingNeeded():void");
     }
 
     public final SeekBar.OnSeekBarChangeListener getSeekBarListener() {
@@ -336,7 +378,7 @@ public final class SeekBarViewModel {
         }
     }
 
-    @Metadata(mo64986d1 = {"\u0000,\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0004\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0010\u000b\n\u0002\b\u0003\b\u0002\u0018\u00002\u00020\u0001B\r\u0012\u0006\u0010\u0002\u001a\u00020\u0003¢\u0006\u0002\u0010\u0004J \u0010\u0007\u001a\u00020\b2\u0006\u0010\t\u001a\u00020\n2\u0006\u0010\u000b\u001a\u00020\f2\u0006\u0010\r\u001a\u00020\u000eH\u0016J\u0010\u0010\u000f\u001a\u00020\b2\u0006\u0010\t\u001a\u00020\nH\u0016J\u0010\u0010\u0010\u001a\u00020\b2\u0006\u0010\t\u001a\u00020\nH\u0016R\u0011\u0010\u0002\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\u0005\u0010\u0006¨\u0006\u0011"}, mo64987d2 = {"Lcom/android/systemui/media/SeekBarViewModel$SeekBarChangeListener;", "Landroid/widget/SeekBar$OnSeekBarChangeListener;", "viewModel", "Lcom/android/systemui/media/SeekBarViewModel;", "(Lcom/android/systemui/media/SeekBarViewModel;)V", "getViewModel", "()Lcom/android/systemui/media/SeekBarViewModel;", "onProgressChanged", "", "bar", "Landroid/widget/SeekBar;", "progress", "", "fromUser", "", "onStartTrackingTouch", "onStopTrackingTouch", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u0000,\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0004\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0010\u000b\n\u0002\b\u0003\b\u0002\u0018\u00002\u00020\u0001B\r\u0012\u0006\u0010\u0002\u001a\u00020\u0003¢\u0006\u0002\u0010\u0004J \u0010\u0007\u001a\u00020\b2\u0006\u0010\t\u001a\u00020\n2\u0006\u0010\u000b\u001a\u00020\f2\u0006\u0010\r\u001a\u00020\u000eH\u0016J\u0010\u0010\u000f\u001a\u00020\b2\u0006\u0010\t\u001a\u00020\nH\u0016J\u0010\u0010\u0010\u001a\u00020\b2\u0006\u0010\t\u001a\u00020\nH\u0016R\u0011\u0010\u0002\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\u0005\u0010\u0006¨\u0006\u0011"}, mo65043d2 = {"Lcom/android/systemui/media/SeekBarViewModel$SeekBarChangeListener;", "Landroid/widget/SeekBar$OnSeekBarChangeListener;", "viewModel", "Lcom/android/systemui/media/SeekBarViewModel;", "(Lcom/android/systemui/media/SeekBarViewModel;)V", "getViewModel", "()Lcom/android/systemui/media/SeekBarViewModel;", "onProgressChanged", "", "bar", "Landroid/widget/SeekBar;", "progress", "", "fromUser", "", "onStartTrackingTouch", "onStopTrackingTouch", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* compiled from: SeekBarViewModel.kt */
     private static final class SeekBarChangeListener implements SeekBar.OnSeekBarChangeListener {
         private final SeekBarViewModel viewModel;
@@ -368,7 +410,7 @@ public final class SeekBarViewModel {
         }
     }
 
-    @Metadata(mo64986d1 = {"\u0000N\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0010\u000b\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0010\u0007\n\u0002\b\u0002\n\u0002\u0010\u0002\n\u0002\b\u0007\n\u0002\u0018\u0002\n\u0000\b\u0002\u0018\u00002\u00020\u00012\u00020\u0002B\u0015\u0012\u0006\u0010\u0003\u001a\u00020\u0004\u0012\u0006\u0010\u0005\u001a\u00020\u0006¢\u0006\u0002\u0010\u0007J\u0010\u0010\u000e\u001a\u00020\r2\u0006\u0010\u000f\u001a\u00020\u0010H\u0016J(\u0010\u0011\u001a\u00020\r2\u0006\u0010\u0012\u001a\u00020\u00102\u0006\u0010\u000f\u001a\u00020\u00102\u0006\u0010\u0013\u001a\u00020\u00142\u0006\u0010\u0015\u001a\u00020\u0014H\u0016J\u0010\u0010\u0016\u001a\u00020\u00172\u0006\u0010\u000f\u001a\u00020\u0010H\u0016J(\u0010\u0018\u001a\u00020\r2\u0006\u0010\u0012\u001a\u00020\u00102\u0006\u0010\u000f\u001a\u00020\u00102\u0006\u0010\u0019\u001a\u00020\u00142\u0006\u0010\u001a\u001a\u00020\u0014H\u0016J\u0010\u0010\u001b\u001a\u00020\u00172\u0006\u0010\u000f\u001a\u00020\u0010H\u0016J\u0010\u0010\u001c\u001a\u00020\r2\u0006\u0010\u000f\u001a\u00020\u0010H\u0016J\u0018\u0010\u001d\u001a\u00020\r2\u0006\u0010\u001e\u001a\u00020\u001f2\u0006\u0010\u000f\u001a\u00020\u0010H\u0016R\u000e\u0010\u0005\u001a\u00020\u0006X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\b\u001a\u00020\tX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\n\u001a\u00020\u000bX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\f\u001a\u00020\rX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0003\u001a\u00020\u0004X\u0004¢\u0006\u0002\n\u0000¨\u0006 "}, mo64987d2 = {"Lcom/android/systemui/media/SeekBarViewModel$SeekBarTouchListener;", "Landroid/view/View$OnTouchListener;", "Landroid/view/GestureDetector$OnGestureListener;", "viewModel", "Lcom/android/systemui/media/SeekBarViewModel;", "bar", "Landroid/widget/SeekBar;", "(Lcom/android/systemui/media/SeekBarViewModel;Landroid/widget/SeekBar;)V", "detector", "Landroidx/core/view/GestureDetectorCompat;", "flingVelocity", "", "shouldGoToSeekBar", "", "onDown", "event", "Landroid/view/MotionEvent;", "onFling", "eventStart", "velocityX", "", "velocityY", "onLongPress", "", "onScroll", "distanceX", "distanceY", "onShowPress", "onSingleTapUp", "onTouch", "view", "Landroid/view/View;", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u0000N\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0010\u000b\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0010\u0007\n\u0002\b\u0002\n\u0002\u0010\u0002\n\u0002\b\u0007\n\u0002\u0018\u0002\n\u0000\b\u0002\u0018\u00002\u00020\u00012\u00020\u0002B\u0015\u0012\u0006\u0010\u0003\u001a\u00020\u0004\u0012\u0006\u0010\u0005\u001a\u00020\u0006¢\u0006\u0002\u0010\u0007J\u0010\u0010\u000e\u001a\u00020\r2\u0006\u0010\u000f\u001a\u00020\u0010H\u0016J(\u0010\u0011\u001a\u00020\r2\u0006\u0010\u0012\u001a\u00020\u00102\u0006\u0010\u000f\u001a\u00020\u00102\u0006\u0010\u0013\u001a\u00020\u00142\u0006\u0010\u0015\u001a\u00020\u0014H\u0016J\u0010\u0010\u0016\u001a\u00020\u00172\u0006\u0010\u000f\u001a\u00020\u0010H\u0016J(\u0010\u0018\u001a\u00020\r2\u0006\u0010\u0012\u001a\u00020\u00102\u0006\u0010\u000f\u001a\u00020\u00102\u0006\u0010\u0019\u001a\u00020\u00142\u0006\u0010\u001a\u001a\u00020\u0014H\u0016J\u0010\u0010\u001b\u001a\u00020\u00172\u0006\u0010\u000f\u001a\u00020\u0010H\u0016J\u0010\u0010\u001c\u001a\u00020\r2\u0006\u0010\u000f\u001a\u00020\u0010H\u0016J\u0018\u0010\u001d\u001a\u00020\r2\u0006\u0010\u001e\u001a\u00020\u001f2\u0006\u0010\u000f\u001a\u00020\u0010H\u0016R\u000e\u0010\u0005\u001a\u00020\u0006X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\b\u001a\u00020\tX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\n\u001a\u00020\u000bX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\f\u001a\u00020\rX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0003\u001a\u00020\u0004X\u0004¢\u0006\u0002\n\u0000¨\u0006 "}, mo65043d2 = {"Lcom/android/systemui/media/SeekBarViewModel$SeekBarTouchListener;", "Landroid/view/View$OnTouchListener;", "Landroid/view/GestureDetector$OnGestureListener;", "viewModel", "Lcom/android/systemui/media/SeekBarViewModel;", "bar", "Landroid/widget/SeekBar;", "(Lcom/android/systemui/media/SeekBarViewModel;Landroid/widget/SeekBar;)V", "detector", "Landroidx/core/view/GestureDetectorCompat;", "flingVelocity", "", "shouldGoToSeekBar", "", "onDown", "event", "Landroid/view/MotionEvent;", "onFling", "eventStart", "velocityX", "", "velocityY", "onLongPress", "", "onScroll", "distanceX", "distanceY", "onShowPress", "onSingleTapUp", "onTouch", "view", "Landroid/view/View;", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* compiled from: SeekBarViewModel.kt */
     private static final class SeekBarTouchListener implements View.OnTouchListener, GestureDetector.OnGestureListener {
         private final SeekBar bar;
@@ -457,7 +499,7 @@ public final class SeekBarViewModel {
         }
     }
 
-    @Metadata(mo64986d1 = {"\u0000 \n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\u000b\n\u0002\b\u0004\n\u0002\u0010\b\n\u0002\b\u0018\n\u0002\u0010\u000e\n\u0000\b\b\u0018\u00002\u00020\u0001B7\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0003\u0012\u0006\u0010\u0005\u001a\u00020\u0003\u0012\u0006\u0010\u0006\u001a\u00020\u0003\u0012\b\u0010\u0007\u001a\u0004\u0018\u00010\b\u0012\u0006\u0010\t\u001a\u00020\b¢\u0006\u0002\u0010\nJ\t\u0010\u0015\u001a\u00020\u0003HÆ\u0003J\t\u0010\u0016\u001a\u00020\u0003HÆ\u0003J\t\u0010\u0017\u001a\u00020\u0003HÆ\u0003J\t\u0010\u0018\u001a\u00020\u0003HÆ\u0003J\u0010\u0010\u0019\u001a\u0004\u0018\u00010\bHÆ\u0003¢\u0006\u0002\u0010\u000eJ\t\u0010\u001a\u001a\u00020\bHÆ\u0003JL\u0010\u001b\u001a\u00020\u00002\b\b\u0002\u0010\u0002\u001a\u00020\u00032\b\b\u0002\u0010\u0004\u001a\u00020\u00032\b\b\u0002\u0010\u0005\u001a\u00020\u00032\b\b\u0002\u0010\u0006\u001a\u00020\u00032\n\b\u0002\u0010\u0007\u001a\u0004\u0018\u00010\b2\b\b\u0002\u0010\t\u001a\u00020\bHÆ\u0001¢\u0006\u0002\u0010\u001cJ\u0013\u0010\u001d\u001a\u00020\u00032\b\u0010\u001e\u001a\u0004\u0018\u00010\u0001HÖ\u0003J\t\u0010\u001f\u001a\u00020\bHÖ\u0001J\t\u0010 \u001a\u00020!HÖ\u0001R\u0011\u0010\t\u001a\u00020\b¢\u0006\b\n\u0000\u001a\u0004\b\u000b\u0010\fR\u0015\u0010\u0007\u001a\u0004\u0018\u00010\b¢\u0006\n\n\u0002\u0010\u000f\u001a\u0004\b\r\u0010\u000eR\u0011\u0010\u0002\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\u0010\u0010\u0011R\u0011\u0010\u0005\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\u0012\u0010\u0011R\u0011\u0010\u0006\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\u0013\u0010\u0011R\u0011\u0010\u0004\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\u0014\u0010\u0011¨\u0006\""}, mo64987d2 = {"Lcom/android/systemui/media/SeekBarViewModel$Progress;", "", "enabled", "", "seekAvailable", "playing", "scrubbing", "elapsedTime", "", "duration", "(ZZZZLjava/lang/Integer;I)V", "getDuration", "()I", "getElapsedTime", "()Ljava/lang/Integer;", "Ljava/lang/Integer;", "getEnabled", "()Z", "getPlaying", "getScrubbing", "getSeekAvailable", "component1", "component2", "component3", "component4", "component5", "component6", "copy", "(ZZZZLjava/lang/Integer;I)Lcom/android/systemui/media/SeekBarViewModel$Progress;", "equals", "other", "hashCode", "toString", "", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    @Metadata(mo65042d1 = {"\u0000 \n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\u000b\n\u0002\b\u0004\n\u0002\u0010\b\n\u0002\b\u0018\n\u0002\u0010\u000e\n\u0000\b\b\u0018\u00002\u00020\u0001B7\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0003\u0012\u0006\u0010\u0005\u001a\u00020\u0003\u0012\u0006\u0010\u0006\u001a\u00020\u0003\u0012\b\u0010\u0007\u001a\u0004\u0018\u00010\b\u0012\u0006\u0010\t\u001a\u00020\b¢\u0006\u0002\u0010\nJ\t\u0010\u0015\u001a\u00020\u0003HÆ\u0003J\t\u0010\u0016\u001a\u00020\u0003HÆ\u0003J\t\u0010\u0017\u001a\u00020\u0003HÆ\u0003J\t\u0010\u0018\u001a\u00020\u0003HÆ\u0003J\u0010\u0010\u0019\u001a\u0004\u0018\u00010\bHÆ\u0003¢\u0006\u0002\u0010\u000eJ\t\u0010\u001a\u001a\u00020\bHÆ\u0003JL\u0010\u001b\u001a\u00020\u00002\b\b\u0002\u0010\u0002\u001a\u00020\u00032\b\b\u0002\u0010\u0004\u001a\u00020\u00032\b\b\u0002\u0010\u0005\u001a\u00020\u00032\b\b\u0002\u0010\u0006\u001a\u00020\u00032\n\b\u0002\u0010\u0007\u001a\u0004\u0018\u00010\b2\b\b\u0002\u0010\t\u001a\u00020\bHÆ\u0001¢\u0006\u0002\u0010\u001cJ\u0013\u0010\u001d\u001a\u00020\u00032\b\u0010\u001e\u001a\u0004\u0018\u00010\u0001HÖ\u0003J\t\u0010\u001f\u001a\u00020\bHÖ\u0001J\t\u0010 \u001a\u00020!HÖ\u0001R\u0011\u0010\t\u001a\u00020\b¢\u0006\b\n\u0000\u001a\u0004\b\u000b\u0010\fR\u0015\u0010\u0007\u001a\u0004\u0018\u00010\b¢\u0006\n\n\u0002\u0010\u000f\u001a\u0004\b\r\u0010\u000eR\u0011\u0010\u0002\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\u0010\u0010\u0011R\u0011\u0010\u0005\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\u0012\u0010\u0011R\u0011\u0010\u0006\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\u0013\u0010\u0011R\u0011\u0010\u0004\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\u0014\u0010\u0011¨\u0006\""}, mo65043d2 = {"Lcom/android/systemui/media/SeekBarViewModel$Progress;", "", "enabled", "", "seekAvailable", "playing", "scrubbing", "elapsedTime", "", "duration", "(ZZZZLjava/lang/Integer;I)V", "getDuration", "()I", "getElapsedTime", "()Ljava/lang/Integer;", "Ljava/lang/Integer;", "getEnabled", "()Z", "getPlaying", "getScrubbing", "getSeekAvailable", "component1", "component2", "component3", "component4", "component5", "component6", "copy", "(ZZZZLjava/lang/Integer;I)Lcom/android/systemui/media/SeekBarViewModel$Progress;", "equals", "other", "hashCode", "toString", "", "SystemUI_nothingRelease"}, mo65044k = 1, mo65045mv = {1, 6, 0}, mo65047xi = 48)
     /* compiled from: SeekBarViewModel.kt */
     public static final class Progress {
         private final int duration;

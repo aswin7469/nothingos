@@ -11,6 +11,6 @@ public final /* synthetic */ class MultiUserSwitchController$$ExternalSyntheticL
     }
 
     public final Object get() {
-        return this.f$0.mo44442x1fc8e3dc();
+        return this.f$0.mo44457x1fc8e3dc();
     }
 }

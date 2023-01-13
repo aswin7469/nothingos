@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewOverlay;
 import android.widget.FrameLayout;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.doze.util.BurnInHelperKt;
 
 public class ClockLayout extends FrameLayout {
@@ -46,10 +46,10 @@ public class ClockLayout extends FrameLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mAnalogClock = findViewById(C1893R.C1897id.analog_clock);
+        this.mAnalogClock = findViewById(C1894R.C1898id.analog_clock);
         Resources resources = getResources();
-        this.mBurnInPreventionOffsetX = resources.getDimensionPixelSize(C1893R.dimen.burn_in_prevention_offset_x);
-        this.mBurnInPreventionOffsetY = resources.getDimensionPixelSize(C1893R.dimen.burn_in_prevention_offset_y);
+        this.mBurnInPreventionOffsetX = resources.getDimensionPixelSize(C1894R.dimen.burn_in_prevention_offset_x);
+        this.mBurnInPreventionOffsetY = resources.getDimensionPixelSize(C1894R.dimen.burn_in_prevention_offset_y);
     }
 
     /* access modifiers changed from: protected */

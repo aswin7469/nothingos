@@ -12,6 +12,6 @@ public final /* synthetic */ class HeaderPrivacyIconsController$$ExternalSynthet
     }
 
     public final void onClick(View view) {
-        HeaderPrivacyIconsController.m2903onParentVisible$lambda1(this.f$0, view);
+        HeaderPrivacyIconsController.m2908onParentVisible$lambda1(this.f$0, view);
     }
 }

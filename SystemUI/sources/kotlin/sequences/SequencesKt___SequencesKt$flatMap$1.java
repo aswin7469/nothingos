@@ -6,7 +6,7 @@ import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.FunctionReferenceImpl;
 import kotlin.jvm.internal.Intrinsics;
 
-@Metadata(mo64988k = 3, mo64989mv = {1, 7, 1}, mo64991xi = 48)
+@Metadata(mo65044k = 3, mo65045mv = {1, 7, 1}, mo65047xi = 48)
 /* compiled from: _Sequences.kt */
 /* synthetic */ class SequencesKt___SequencesKt$flatMap$1 extends FunctionReferenceImpl implements Function1<Iterable<? extends R>, Iterator<? extends R>> {
     public static final SequencesKt___SequencesKt$flatMap$1 INSTANCE = new SequencesKt___SequencesKt$flatMap$1();

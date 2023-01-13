@@ -37,7 +37,7 @@ import android.view.DisplayInfo;
 import android.view.WindowManager;
 import com.android.internal.os.SomeArgs;
 import com.android.internal.widget.LockPatternUtils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.CoreStartable;
 import com.android.systemui.biometrics.AuthContainerView;
 import com.android.systemui.biometrics.BiometricDisplayListener;
@@ -79,7 +79,7 @@ public class AuthController extends CoreStartable implements CommandQueue.Callba
 
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onEnrollmentsChanged$0$com-android-systemui-biometrics-AuthController$3 */
-        public /* synthetic */ void mo30632xccf0943c(int i, int i2, boolean z) {
+        public /* synthetic */ void mo30643xccf0943c(int i, int i2, boolean z) {
             AuthController.this.handleEnrollmentsChanged(i, i2, z);
         }
     };
@@ -97,7 +97,7 @@ public class AuthController extends CoreStartable implements CommandQueue.Callba
     private final IFingerprintAuthenticatorsRegisteredCallback mFingerprintAuthenticatorsRegisteredCallback = new IFingerprintAuthenticatorsRegisteredCallback.Stub() {
         /* access modifiers changed from: package-private */
         /* renamed from: lambda$onAllAuthenticatorsRegistered$0$com-android-systemui-biometrics-AuthController$2 */
-        public /* synthetic */ void mo30630xf644ebf5(List list) {
+        public /* synthetic */ void mo30641xf644ebf5(List list) {
             AuthController.this.handleAllFingerprintAuthenticatorsRegistered(list);
         }
 
@@ -429,7 +429,7 @@ public class AuthController extends CoreStartable implements CommandQueue.Callba
         Context context2 = context;
         FaceManager faceManager2 = faceManager;
         StatusBarStateController statusBarStateController2 = statusBarStateController;
-        C19664 r10 = new BroadcastReceiver() {
+        C19674 r10 = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
                 if (AuthController.this.mCurrentDialog != null && "android.intent.action.CLOSE_SYSTEM_DIALOGS".equals(intent.getAction())) {
                     Log.w(AuthController.TAG, "ACTION_CLOSE_SYSTEM_DIALOGS received");
@@ -476,7 +476,7 @@ public class AuthController extends CoreStartable implements CommandQueue.Callba
             }
         });
         this.mFaceProps = faceManager2 != null ? faceManager.getSensorPropertiesInternal() : null;
-        int[] intArray = context.getResources().getIntArray(C1893R.array.config_face_auth_props);
+        int[] intArray = context.getResources().getIntArray(C1894R.array.config_face_auth_props);
         if (intArray == null || intArray.length < 2) {
             this.mFaceAuthSensorLocation = null;
         } else {
@@ -491,7 +491,7 @@ public class AuthController extends CoreStartable implements CommandQueue.Callba
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-biometrics-AuthController  reason: not valid java name */
-    public /* synthetic */ Unit m2557lambda$new$0$comandroidsystemuibiometricsAuthController() {
+    public /* synthetic */ Unit m2563lambda$new$0$comandroidsystemuibiometricsAuthController() {
         onOrientationChanged();
         return Unit.INSTANCE;
     }
@@ -505,10 +505,10 @@ public class AuthController extends CoreStartable implements CommandQueue.Callba
     private void updateFingerprintLocation() {
         int displayWidth = getDisplayWidth() / 2;
         try {
-            displayWidth = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.physical_fingerprint_sensor_center_screen_location_x);
+            displayWidth = this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.physical_fingerprint_sensor_center_screen_location_x);
         } catch (Resources.NotFoundException unused) {
         }
-        this.mFingerprintLocation = new PointF((float) displayWidth, (float) this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.physical_fingerprint_sensor_center_screen_location_y));
+        this.mFingerprintLocation = new PointF((float) displayWidth, (float) this.mContext.getResources().getDimensionPixelSize(C1894R.dimen.physical_fingerprint_sensor_center_screen_location_y));
     }
 
     /* access modifiers changed from: private */
@@ -668,7 +668,7 @@ public class AuthController extends CoreStartable implements CommandQueue.Callba
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onBiometricError$1$com-android-systemui-biometrics-AuthController */
-    public /* synthetic */ void mo30612x1f6803c1(int i) {
+    public /* synthetic */ void mo30623x1f6803c1(int i) {
         this.mCurrentDialog.onAuthenticationFailed(i, this.mContext.getString(17040307));
     }
 
@@ -808,16 +808,16 @@ public class AuthController extends CoreStartable implements CommandQueue.Callba
         }
     }
 
-    public void dismissFingerprintIcon() {
-        Log.d(TAG, "dismissFingerprintIcon: ");
+    public void dismissFingerprintIcon(String str) {
+        Log.d(TAG, "dismissFingerprintIcon: " + str);
         UdfpsController udfpsController = this.mUdfpsController;
         if (udfpsController != null) {
             udfpsController.dismissFingerprintIcon();
         }
     }
 
-    public void showFingerprintIcon() {
-        Log.d(TAG, "showFingerprintIcon: ");
+    public void showFingerprintIcon(String str) {
+        Log.d(TAG, "showFingerprintIcon: " + str);
         UdfpsController udfpsController = this.mUdfpsController;
         if (udfpsController != null) {
             udfpsController.showFingerprintIcon();
@@ -837,5 +837,9 @@ public class AuthController extends CoreStartable implements CommandQueue.Callba
             return null;
         }
         return new RectF(this.mUdfpsBounds);
+    }
+
+    public void handleShowShutdownUi(boolean z, String str) {
+        dismissFingerprintIcon("handleShowShutdownUi");
     }
 }

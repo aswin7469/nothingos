@@ -11,6 +11,6 @@ public final /* synthetic */ class NavigationBar$$ExternalSyntheticLambda3 imple
     }
 
     public final void onGlobalLayout() {
-        this.f$0.mo34633x2a92272a();
+        this.f$0.mo34637x2a92272a();
     }
 }

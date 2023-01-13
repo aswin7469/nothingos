@@ -222,7 +222,7 @@ public class RemoteInputController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$dump$0$com-android-systemui-statusbar-RemoteInputController */
-    public /* synthetic */ void mo39012xfac918bb(IndentingPrintWriter indentingPrintWriter) {
+    public /* synthetic */ void mo39013xfac918bb(IndentingPrintWriter indentingPrintWriter) {
         String str;
         Iterator<Pair<WeakReference<NotificationEntry>, Object>> it = this.mOpen.iterator();
         while (it.hasNext()) {
@@ -238,7 +238,7 @@ public class RemoteInputController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$dump$1$com-android-systemui-statusbar-RemoteInputController */
-    public /* synthetic */ void mo39013x14e4975a(IndentingPrintWriter indentingPrintWriter) {
+    public /* synthetic */ void mo39014x14e4975a(IndentingPrintWriter indentingPrintWriter) {
         for (String println : this.mSpinning.keySet()) {
             indentingPrintWriter.println(println);
         }

@@ -306,7 +306,7 @@ public final class NumericShaper implements Serializable {
     }
 
     public static NumericShaper getShaper(Range range) {
-        return new NumericShaper(range, (Set<Range>) EnumSet.m1716of(range));
+        return new NumericShaper(range, (Set<Range>) EnumSet.m1722of(range));
     }
 
     public static NumericShaper getContextualShaper(int i) {

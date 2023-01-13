@@ -13,7 +13,7 @@ public class PipedInputStream extends InputStream {
     boolean connected;
 
     /* renamed from: in */
-    protected int f528in;
+    protected int f526in;
     protected int out;
     Thread readSide;
     Thread writeSide;
@@ -23,20 +23,20 @@ public class PipedInputStream extends InputStream {
     }
 
     public PipedInputStream(PipedOutputStream pipedOutputStream, int i) throws IOException {
-        this.f528in = -1;
+        this.f526in = -1;
         this.out = 0;
         initPipe(i);
         connect(pipedOutputStream);
     }
 
     public PipedInputStream() {
-        this.f528in = -1;
+        this.f526in = -1;
         this.out = 0;
         initPipe(1024);
     }
 
     public PipedInputStream(int i) {
-        this.f528in = -1;
+        this.f526in = -1;
         this.out = 0;
         initPipe(i);
     }
@@ -57,20 +57,20 @@ public class PipedInputStream extends InputStream {
     public synchronized void receive(int i) throws IOException {
         checkStateForReceive();
         this.writeSide = Thread.currentThread();
-        if (this.f528in == this.out) {
+        if (this.f526in == this.out) {
             awaitSpace();
         }
-        if (this.f528in < 0) {
-            this.f528in = 0;
+        if (this.f526in < 0) {
+            this.f526in = 0;
             this.out = 0;
         }
         byte[] bArr = this.buffer;
-        int i2 = this.f528in;
+        int i2 = this.f526in;
         int i3 = i2 + 1;
-        this.f528in = i3;
+        this.f526in = i3;
         bArr[i2] = (byte) (i & 255);
         if (i3 >= bArr.length) {
-            this.f528in = 0;
+            this.f526in = 0;
         }
     }
 
@@ -88,13 +88,13 @@ public class PipedInputStream extends InputStream {
             r4.writeSide = r0     // Catch:{ all -> 0x004b }
         L_0x000a:
             if (r7 <= 0) goto L_0x0049
-            int r0 = r4.f528in     // Catch:{ all -> 0x004b }
+            int r0 = r4.f526in     // Catch:{ all -> 0x004b }
             int r1 = r4.out     // Catch:{ all -> 0x004b }
             if (r0 != r1) goto L_0x0015
             r4.awaitSpace()     // Catch:{ all -> 0x004b }
         L_0x0015:
             int r0 = r4.out     // Catch:{ all -> 0x004b }
-            int r1 = r4.f528in     // Catch:{ all -> 0x004b }
+            int r1 = r4.f526in     // Catch:{ all -> 0x004b }
             r2 = 0
             if (r0 >= r1) goto L_0x0021
             byte[] r0 = r4.buffer     // Catch:{ all -> 0x004b }
@@ -107,7 +107,7 @@ public class PipedInputStream extends InputStream {
             r3 = -1
             if (r1 != r3) goto L_0x001f
             r4.out = r2     // Catch:{ all -> 0x004b }
-            r4.f528in = r2     // Catch:{ all -> 0x004b }
+            r4.f526in = r2     // Catch:{ all -> 0x004b }
             byte[] r0 = r4.buffer     // Catch:{ all -> 0x004b }
             int r0 = r0.length     // Catch:{ all -> 0x004b }
             int r0 = r0 - r2
@@ -119,17 +119,17 @@ public class PipedInputStream extends InputStream {
             r0 = r7
         L_0x0033:
             byte[] r1 = r4.buffer     // Catch:{ all -> 0x004b }
-            int r3 = r4.f528in     // Catch:{ all -> 0x004b }
+            int r3 = r4.f526in     // Catch:{ all -> 0x004b }
             java.lang.System.arraycopy((java.lang.Object) r5, (int) r6, (java.lang.Object) r1, (int) r3, (int) r0)     // Catch:{ all -> 0x004b }
             int r7 = r7 - r0
             int r6 = r6 + r0
-            int r1 = r4.f528in     // Catch:{ all -> 0x004b }
+            int r1 = r4.f526in     // Catch:{ all -> 0x004b }
             int r1 = r1 + r0
-            r4.f528in = r1     // Catch:{ all -> 0x004b }
+            r4.f526in = r1     // Catch:{ all -> 0x004b }
             byte[] r0 = r4.buffer     // Catch:{ all -> 0x004b }
             int r0 = r0.length     // Catch:{ all -> 0x004b }
             if (r1 < r0) goto L_0x000a
-            r4.f528in = r2     // Catch:{ all -> 0x004b }
+            r4.f526in = r2     // Catch:{ all -> 0x004b }
             goto L_0x000a
         L_0x0049:
             monitor-exit(r4)
@@ -156,7 +156,7 @@ public class PipedInputStream extends InputStream {
     }
 
     private void awaitSpace() throws IOException {
-        while (this.f528in == this.out) {
+        while (this.f526in == this.out) {
             checkStateForReceive();
             notifyAll();
             try {
@@ -196,7 +196,7 @@ public class PipedInputStream extends InputStream {
             if (r0 != 0) goto L_0x0024
             boolean r0 = r5.closedByWriter     // Catch:{ all -> 0x0084 }
             if (r0 != 0) goto L_0x0024
-            int r0 = r5.f528in     // Catch:{ all -> 0x0084 }
+            int r0 = r5.f526in     // Catch:{ all -> 0x0084 }
             if (r0 < 0) goto L_0x001c
             goto L_0x0024
         L_0x001c:
@@ -209,7 +209,7 @@ public class PipedInputStream extends InputStream {
             r5.readSide = r0     // Catch:{ all -> 0x0084 }
             r0 = 2
         L_0x002b:
-            int r1 = r5.f528in     // Catch:{ all -> 0x0084 }
+            int r1 = r5.f526in     // Catch:{ all -> 0x0084 }
             r2 = -1
             if (r1 >= 0) goto L_0x005a
             boolean r1 = r5.closedByWriter     // Catch:{ all -> 0x0084 }
@@ -251,7 +251,7 @@ public class PipedInputStream extends InputStream {
         L_0x006c:
             int r0 = r5.out     // Catch:{ all -> 0x0084 }
             if (r1 != r0) goto L_0x0072
-            r5.f528in = r2     // Catch:{ all -> 0x0084 }
+            r5.f526in = r2     // Catch:{ all -> 0x0084 }
         L_0x0072:
             monitor-exit(r5)
             return r3
@@ -303,7 +303,7 @@ public class PipedInputStream extends InputStream {
             r1 = 1
             r3 = r1
         L_0x001e:
-            int r4 = r8.f528in     // Catch:{ all -> 0x0069 }
+            int r4 = r8.f526in     // Catch:{ all -> 0x0069 }
             if (r4 < 0) goto L_0x005b
             if (r11 <= r1) goto L_0x005b
             int r5 = r8.out     // Catch:{ all -> 0x0069 }
@@ -337,10 +337,10 @@ public class PipedInputStream extends InputStream {
             if (r5 < r4) goto L_0x0052
             r8.out = r0     // Catch:{ all -> 0x0069 }
         L_0x0052:
-            int r4 = r8.f528in     // Catch:{ all -> 0x0069 }
+            int r4 = r8.f526in     // Catch:{ all -> 0x0069 }
             int r5 = r8.out     // Catch:{ all -> 0x0069 }
             if (r4 != r5) goto L_0x001e
-            r8.f528in = r2     // Catch:{ all -> 0x0069 }
+            r8.f526in = r2     // Catch:{ all -> 0x0069 }
             goto L_0x001e
         L_0x005b:
             monitor-exit(r8)
@@ -362,7 +362,7 @@ public class PipedInputStream extends InputStream {
     }
 
     public synchronized int available() throws IOException {
-        int i = this.f528in;
+        int i = this.f526in;
         if (i < 0) {
             return 0;
         }
@@ -379,7 +379,7 @@ public class PipedInputStream extends InputStream {
     public void close() throws IOException {
         this.closedByReader = true;
         synchronized (this) {
-            this.f528in = -1;
+            this.f526in = -1;
         }
     }
 }

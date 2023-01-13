@@ -12,6 +12,6 @@ public final /* synthetic */ class BluetoothPanelDialog$$ExternalSyntheticLambda
     }
 
     public final void onClick(View view) {
-        this.f$0.mo57848xb8efffb3(view);
+        this.f$0.mo57884xb8efffb3(view);
     }
 }

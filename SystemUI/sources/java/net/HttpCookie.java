@@ -432,7 +432,7 @@ public final class HttpCookie implements Cloneable {
     }
 
     private static boolean isToken(String str) {
-        if (RESERVED_NAMES.contains(str.toLowerCase(Locale.f700US))) {
+        if (RESERVED_NAMES.contains(str.toLowerCase(Locale.f698US))) {
             return false;
         }
         int length = str.length();

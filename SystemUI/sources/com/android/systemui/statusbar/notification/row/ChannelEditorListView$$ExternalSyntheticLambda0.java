@@ -11,6 +11,6 @@ public final /* synthetic */ class ChannelEditorListView$$ExternalSyntheticLambd
     }
 
     public final void onCheckedChanged(CompoundButton compoundButton, boolean z) {
-        ChannelEditorListView.m3139updateAppControlRow$lambda0(this.f$0, compoundButton, z);
+        ChannelEditorListView.m3143updateAppControlRow$lambda0(this.f$0, compoundButton, z);
     }
 }

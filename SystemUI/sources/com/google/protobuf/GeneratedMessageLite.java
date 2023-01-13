@@ -124,7 +124,7 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
 
     public int hashCode() {
         if (this.memoizedHashCode == 0) {
-            HashCodeVisitor hashCodeVisitor = new HashCodeVisitor((C40651) null);
+            HashCodeVisitor hashCodeVisitor = new HashCodeVisitor((C40751) null);
             visit(hashCodeVisitor, this);
             this.memoizedHashCode = hashCodeVisitor.hashCode;
         }
@@ -427,7 +427,7 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
                 r7.popLimit(r8)
                 goto L_0x012b
             L_0x009b:
-                int[] r9 = com.google.protobuf.GeneratedMessageLite.C40651.$SwitchMap$com$google$protobuf$WireFormat$JavaType
+                int[] r9 = com.google.protobuf.GeneratedMessageLite.C40751.$SwitchMap$com$google$protobuf$WireFormat$JavaType
                 com.google.protobuf.GeneratedMessageLite$ExtensionDescriptor r0 = r6.descriptor
                 com.google.protobuf.WireFormat$JavaType r0 = r0.getLiteJavaType()
                 int r0 = r0.ordinal()
@@ -549,7 +549,7 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
             private final boolean messageSetWireFormat;
             private Map.Entry<ExtensionDescriptor, Object> next;
 
-            /* synthetic */ ExtensionWriter(ExtendableMessage extendableMessage, boolean z, C40651 r3) {
+            /* synthetic */ ExtensionWriter(ExtendableMessage extendableMessage, boolean z, C40751 r3) {
                 this(z);
             }
 
@@ -586,12 +586,12 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
 
         /* access modifiers changed from: protected */
         public ExtendableMessage<MessageType, BuilderType>.ExtensionWriter newExtensionWriter() {
-            return new ExtensionWriter(this, false, (C40651) null);
+            return new ExtensionWriter(this, false, (C40751) null);
         }
 
         /* access modifiers changed from: protected */
         public ExtendableMessage<MessageType, BuilderType>.ExtensionWriter newMessageSetExtensionWriter() {
-            return new ExtensionWriter(this, true, (C40651) null);
+            return new ExtensionWriter(this, true, (C40751) null);
         }
 
         /* access modifiers changed from: protected */
@@ -606,7 +606,7 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
     }
 
     /* renamed from: com.google.protobuf.GeneratedMessageLite$1 */
-    static /* synthetic */ class C40651 {
+    static /* synthetic */ class C40751 {
         static final /* synthetic */ int[] $SwitchMap$com$google$protobuf$WireFormat$JavaType;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(6:0|1|2|3|4|6) */
@@ -634,7 +634,7 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
             L_0x001d:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: com.google.protobuf.GeneratedMessageLite.C40651.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: com.google.protobuf.GeneratedMessageLite.C40751.<clinit>():void");
         }
     }
 
@@ -906,7 +906,7 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
         private final String messageClassName;
 
         /* renamed from: of */
-        public static SerializedForm m1658of(MessageLite messageLite) {
+        public static SerializedForm m1657of(MessageLite messageLite) {
             return new SerializedForm(messageLite);
         }
 
@@ -1374,7 +1374,7 @@ public abstract class GeneratedMessageLite<MessageType extends GeneratedMessageL
             this.hashCode = 0;
         }
 
-        /* synthetic */ HashCodeVisitor(C40651 r1) {
+        /* synthetic */ HashCodeVisitor(C40751 r1) {
             this();
         }
 

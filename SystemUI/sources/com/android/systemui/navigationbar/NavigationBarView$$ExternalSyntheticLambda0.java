@@ -11,6 +11,6 @@ public final /* synthetic */ class NavigationBarView$$ExternalSyntheticLambda0 i
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo34787x8de34709((Boolean) obj);
+        this.f$0.mo34791x8de34709((Boolean) obj);
     }
 }

@@ -12,6 +12,6 @@ public final /* synthetic */ class Transitions$SettingsObserver$$ExternalSynthet
     }
 
     public final void run() {
-        this.f$0.mo51296x7f68e1f9();
+        this.f$0.mo51307x7f68e1f9();
     }
 }

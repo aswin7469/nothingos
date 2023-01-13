@@ -11,6 +11,6 @@ public final /* synthetic */ class AppOpsPrivacyItemMonitor$$ExternalSyntheticLa
     }
 
     public final void run() {
-        AppOpsPrivacyItemMonitor.m2862dispatchOnPrivacyItemsChanged$lambda8(this.f$0);
+        AppOpsPrivacyItemMonitor.m2867dispatchOnPrivacyItemsChanged$lambda8(this.f$0);
     }
 }

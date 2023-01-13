@@ -27,7 +27,7 @@ public final class NattSocketKeepalive extends SocketKeepalive {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$startImpl$0$android-net-NattSocketKeepalive  reason: not valid java name */
-    public /* synthetic */ void m1883lambda$startImpl$0$androidnetNattSocketKeepalive(int i) {
+    public /* synthetic */ void m1889lambda$startImpl$0$androidnetNattSocketKeepalive(int i) {
         try {
             this.mService.startNattKeepaliveWithFd(this.mNetwork, this.mPfd, this.mResourceId, i, this.mCallback, this.mSource.getHostAddress(), this.mDestination.getHostAddress());
         } catch (RemoteException e) {
@@ -43,7 +43,7 @@ public final class NattSocketKeepalive extends SocketKeepalive {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$stopImpl$1$android-net-NattSocketKeepalive  reason: not valid java name */
-    public /* synthetic */ void m1884lambda$stopImpl$1$androidnetNattSocketKeepalive() {
+    public /* synthetic */ void m1890lambda$stopImpl$1$androidnetNattSocketKeepalive() {
         try {
             if (this.mSlot != null) {
                 this.mService.stopKeepalive(this.mNetwork, this.mSlot.intValue());

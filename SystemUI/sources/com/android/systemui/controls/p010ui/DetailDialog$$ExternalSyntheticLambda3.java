@@ -7,6 +7,6 @@ import android.view.WindowInsets;
 /* compiled from: D8$$SyntheticClass */
 public final /* synthetic */ class DetailDialog$$ExternalSyntheticLambda3 implements View.OnApplyWindowInsetsListener {
     public final WindowInsets onApplyWindowInsets(View view, WindowInsets windowInsets) {
-        return DetailDialog.m2712_init_$lambda9(view, windowInsets);
+        return DetailDialog.m2717_init_$lambda9(view, windowInsets);
     }
 }

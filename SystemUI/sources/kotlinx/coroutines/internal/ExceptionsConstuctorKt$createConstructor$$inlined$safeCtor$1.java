@@ -7,7 +7,7 @@ import kotlin.ResultKt;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Lambda;
 
-@Metadata(mo64986d1 = {"\u0000\n\n\u0000\n\u0002\u0010\u0003\n\u0002\b\u0002\u0010\u0000\u001a\u0004\u0018\u00010\u00012\u0006\u0010\u0002\u001a\u00020\u0001H\n¨\u0006\u0003"}, mo64987d2 = {"<anonymous>", "", "e", "kotlinx/coroutines/internal/ExceptionsConstuctorKt$safeCtor$1"}, mo64988k = 3, mo64989mv = {1, 5, 1}, mo64991xi = 48)
+@Metadata(mo65042d1 = {"\u0000\n\n\u0000\n\u0002\u0010\u0003\n\u0002\b\u0002\u0010\u0000\u001a\u0004\u0018\u00010\u00012\u0006\u0010\u0002\u001a\u00020\u0001H\n¨\u0006\u0003"}, mo65043d2 = {"<anonymous>", "", "e", "kotlinx/coroutines/internal/ExceptionsConstuctorKt$safeCtor$1"}, mo65044k = 3, mo65045mv = {1, 5, 1}, mo65047xi = 48)
 /* compiled from: ExceptionsConstuctor.kt */
 public final class ExceptionsConstuctorKt$createConstructor$$inlined$safeCtor$1 extends Lambda implements Function1<Throwable, Throwable> {
     final /* synthetic */ Constructor $constructor$inlined;
@@ -24,8 +24,8 @@ public final class ExceptionsConstuctorKt$createConstructor$$inlined$safeCtor$1 
             Result.Companion companion = Result.Companion;
             Object newInstance = this.$constructor$inlined.newInstance(th.getMessage(), th);
             if (newInstance != null) {
-                obj = Result.m3936constructorimpl((Throwable) newInstance);
-                if (Result.m3942isFailureimpl(obj)) {
+                obj = Result.m3954constructorimpl((Throwable) newInstance);
+                if (Result.m3960isFailureimpl(obj)) {
                     obj = null;
                 }
                 return (Throwable) obj;
@@ -33,7 +33,7 @@ public final class ExceptionsConstuctorKt$createConstructor$$inlined$safeCtor$1 
             throw new NullPointerException("null cannot be cast to non-null type kotlin.Throwable");
         } catch (Throwable th2) {
             Result.Companion companion2 = Result.Companion;
-            obj = Result.m3936constructorimpl(ResultKt.createFailure(th2));
+            obj = Result.m3954constructorimpl(ResultKt.createFailure(th2));
         }
     }
 }

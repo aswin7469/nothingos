@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import androidx.core.view.ViewCompat;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.badge.BadgeState;
 import com.google.android.material.internal.TextDrawableHelper;
 import com.google.android.material.internal.ThemeEnforcement;
@@ -28,8 +28,8 @@ public class BadgeDrawable extends Drawable implements TextDrawableHelper.TextDr
     public static final int BOTTOM_END = 8388693;
     public static final int BOTTOM_START = 8388691;
     static final String DEFAULT_EXCEED_MAX_BADGE_NUMBER_SUFFIX = "+";
-    private static final int DEFAULT_STYLE = C3621R.style.Widget_MaterialComponents_Badge;
-    private static final int DEFAULT_THEME_ATTR = C3621R.attr.badgeStyle;
+    private static final int DEFAULT_STYLE = C3631R.style.Widget_MaterialComponents_Badge;
+    private static final int DEFAULT_THEME_ATTR = C3631R.attr.badgeStyle;
     private static final int MAX_CIRCULAR_BADGE_NUMBER_COUNT = 9;
     public static final int TOP_END = 8388661;
     public static final int TOP_START = 8388659;
@@ -109,7 +109,7 @@ public class BadgeDrawable extends Drawable implements TextDrawableHelper.TextDr
         TextDrawableHelper textDrawableHelper2 = new TextDrawableHelper(this);
         this.textDrawableHelper = textDrawableHelper2;
         textDrawableHelper2.getTextPaint().setTextAlign(Paint.Align.CENTER);
-        setTextAppearanceResource(C3621R.style.TextAppearance_MaterialComponents_Badge);
+        setTextAppearanceResource(C3631R.style.TextAppearance_MaterialComponents_Badge);
         this.state = new BadgeState(context, i, i2, i3, state2);
         restoreState();
     }
@@ -151,12 +151,12 @@ public class BadgeDrawable extends Drawable implements TextDrawableHelper.TextDr
 
     private void tryWrapAnchorInCompatParent(final View view) {
         ViewGroup viewGroup = (ViewGroup) view.getParent();
-        if (viewGroup == null || viewGroup.getId() != C3621R.C3624id.mtrl_anchor_parent) {
+        if (viewGroup == null || viewGroup.getId() != C3631R.C3634id.mtrl_anchor_parent) {
             WeakReference<FrameLayout> weakReference = this.customBadgeParentRef;
             if (weakReference == null || weakReference.get() != viewGroup) {
                 updateAnchorParentToNotClip(view);
                 final FrameLayout frameLayout = new FrameLayout(view.getContext());
-                frameLayout.setId(C3621R.C3624id.mtrl_anchor_parent);
+                frameLayout.setId(C3631R.C3634id.mtrl_anchor_parent);
                 frameLayout.setClipChildren(false);
                 frameLayout.setClipToPadding(false);
                 frameLayout.setLayoutParams(view.getLayoutParams());
@@ -517,9 +517,9 @@ public class BadgeDrawable extends Drawable implements TextDrawableHelper.TextDr
         }
         Resources resources = context.getResources();
         if (hasNumber()) {
-            i = C3621R.dimen.mtrl_badge_text_horizontal_edge_offset;
+            i = C3631R.dimen.mtrl_badge_text_horizontal_edge_offset;
         } else {
-            i = C3621R.dimen.mtrl_badge_horizontal_edge_offset;
+            i = C3631R.dimen.mtrl_badge_horizontal_edge_offset;
         }
         int dimensionPixelSize = resources.getDimensionPixelSize(i);
         int totalHorizontalOffsetForState = getTotalHorizontalOffsetForState();
@@ -556,7 +556,7 @@ public class BadgeDrawable extends Drawable implements TextDrawableHelper.TextDr
         if (context == null) {
             return "";
         }
-        return String.format(this.state.getNumberLocale(), context.getString(C3621R.string.mtrl_exceed_max_badge_number_suffix), Integer.valueOf(this.maxBadgeNumber), DEFAULT_EXCEED_MAX_BADGE_NUMBER_SUFFIX);
+        return String.format(this.state.getNumberLocale(), context.getString(C3631R.string.mtrl_exceed_max_badge_number_suffix), Integer.valueOf(this.maxBadgeNumber), DEFAULT_EXCEED_MAX_BADGE_NUMBER_SUFFIX);
     }
 
     private void updateMaxBadgeNumber() {

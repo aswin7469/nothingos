@@ -89,7 +89,7 @@ public class MobileStatusTracker {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-settingslib-mobile-MobileStatusTracker  reason: not valid java name */
-    public /* synthetic */ void m2505lambda$new$0$comandroidsettingslibmobileMobileStatusTracker() {
+    public /* synthetic */ void m2511lambda$new$0$comandroidsettingslibmobileMobileStatusTracker() {
         this.mCallback.onMobileStatusChanged(false, new MobileStatus(this.mMobileStatus));
     }
 

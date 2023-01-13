@@ -17,6 +17,6 @@ public final /* synthetic */ class StatusBarRemoteInputCallback$$ExternalSynthet
     }
 
     public final boolean onDismiss() {
-        return this.f$0.mo45335xedfc7ef6(this.f$1, this.f$2);
+        return this.f$0.mo45347xedfc7ef6(this.f$1, this.f$2);
     }
 }

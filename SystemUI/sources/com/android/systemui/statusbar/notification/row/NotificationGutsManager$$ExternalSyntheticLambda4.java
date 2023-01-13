@@ -16,6 +16,6 @@ public final /* synthetic */ class NotificationGutsManager$$ExternalSyntheticLam
     }
 
     public final void onClick() {
-        this.f$0.mo41602xe8233ea3(this.f$1, this.f$2);
+        this.f$0.mo41610xe8233ea3(this.f$1, this.f$2);
     }
 }

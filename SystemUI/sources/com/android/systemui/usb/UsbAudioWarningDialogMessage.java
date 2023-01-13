@@ -1,7 +1,7 @@
 package com.android.systemui.usb;
 
 import android.util.Log;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
@@ -46,23 +46,23 @@ public class UsbAudioWarningDialogMessage {
             return getUsbAccessoryPromptId();
         }
         if (hasRecordPermission() && isUsbAudioDevice()) {
-            return C1893R.string.usb_audio_device_prompt;
+            return C1894R.string.usb_audio_device_prompt;
         }
         if (!hasRecordPermission() && isUsbAudioDevice() && hasAudioPlayback() && !hasAudioCapture()) {
-            return C1893R.string.usb_audio_device_prompt;
+            return C1894R.string.usb_audio_device_prompt;
         }
         if (!hasRecordPermission() && isUsbAudioDevice() && hasAudioCapture()) {
-            return C1893R.string.usb_audio_device_prompt_warn;
+            return C1894R.string.usb_audio_device_prompt_warn;
         }
         Log.w(TAG, "Only shows title with empty content description!");
         return 0;
     }
 
     public int getPromptTitleId() {
-        return this.mDialogType == 0 ? C1893R.string.usb_audio_device_permission_prompt_title : C1893R.string.usb_audio_device_confirm_prompt_title;
+        return this.mDialogType == 0 ? C1894R.string.usb_audio_device_permission_prompt_title : C1894R.string.usb_audio_device_confirm_prompt_title;
     }
 
     public int getUsbAccessoryPromptId() {
-        return this.mDialogType == 0 ? C1893R.string.usb_accessory_permission_prompt : C1893R.string.usb_accessory_confirm_prompt;
+        return this.mDialogType == 0 ? C1894R.string.usb_accessory_permission_prompt : C1894R.string.usb_accessory_confirm_prompt;
     }
 }

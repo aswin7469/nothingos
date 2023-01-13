@@ -10,7 +10,7 @@ import android.view.ViewStub;
 import android.widget.ProgressBar;
 import com.google.android.setupcompat.internal.TemplateLayout;
 import com.google.android.setupcompat.template.Mixin;
-import com.google.android.setupdesign.C3953R;
+import com.google.android.setupdesign.C3963R;
 import com.google.android.setupdesign.util.HeaderAreaStyler;
 import com.google.android.setupdesign.util.PartnerStyleHelper;
 
@@ -32,8 +32,8 @@ public class ProgressBarMixin implements Mixin {
         this.templateLayout = templateLayout2;
         boolean z = false;
         if (attributeSet != null) {
-            TypedArray obtainStyledAttributes = templateLayout2.getContext().obtainStyledAttributes(attributeSet, C3953R.styleable.SudProgressBarMixin, i, 0);
-            boolean z2 = obtainStyledAttributes.hasValue(C3953R.styleable.SudProgressBarMixin_sudUseBottomProgressBar) ? obtainStyledAttributes.getBoolean(C3953R.styleable.SudProgressBarMixin_sudUseBottomProgressBar, false) : false;
+            TypedArray obtainStyledAttributes = templateLayout2.getContext().obtainStyledAttributes(attributeSet, C3963R.styleable.SudProgressBarMixin, i, 0);
+            boolean z2 = obtainStyledAttributes.hasValue(C3963R.styleable.SudProgressBarMixin_sudUseBottomProgressBar) ? obtainStyledAttributes.getBoolean(C3963R.styleable.SudProgressBarMixin_sudUseBottomProgressBar, false) : false;
             obtainStyledAttributes.recycle();
             setShown(false);
             z = z2;
@@ -42,7 +42,7 @@ public class ProgressBarMixin implements Mixin {
     }
 
     public boolean isShown() {
-        View findManagedViewById = this.templateLayout.findManagedViewById(this.useBottomProgressBar ? C3953R.C3956id.sud_glif_progress_bar : C3953R.C3956id.sud_layout_progress);
+        View findManagedViewById = this.templateLayout.findManagedViewById(this.useBottomProgressBar ? C3963R.C3966id.sud_glif_progress_bar : C3963R.C3966id.sud_layout_progress);
         return findManagedViewById != null && findManagedViewById.getVisibility() == 0;
     }
 
@@ -63,7 +63,7 @@ public class ProgressBarMixin implements Mixin {
 
     private ProgressBar getProgressBar() {
         if (peekProgressBar() == null && !this.useBottomProgressBar) {
-            ViewStub viewStub = (ViewStub) this.templateLayout.findManagedViewById(C3953R.C3956id.sud_layout_progress_stub);
+            ViewStub viewStub = (ViewStub) this.templateLayout.findManagedViewById(C3963R.C3966id.sud_layout_progress_stub);
             if (viewStub != null) {
                 viewStub.inflate();
             }
@@ -73,7 +73,7 @@ public class ProgressBarMixin implements Mixin {
     }
 
     public ProgressBar peekProgressBar() {
-        return (ProgressBar) this.templateLayout.findManagedViewById(this.useBottomProgressBar ? C3953R.C3956id.sud_glif_progress_bar : C3953R.C3956id.sud_layout_progress);
+        return (ProgressBar) this.templateLayout.findManagedViewById(this.useBottomProgressBar ? C3963R.C3966id.sud_glif_progress_bar : C3963R.C3966id.sud_layout_progress);
     }
 
     public void setColor(ColorStateList colorStateList) {
@@ -100,7 +100,7 @@ public class ProgressBarMixin implements Mixin {
             ViewGroup.LayoutParams layoutParams = peekProgressBar.getLayoutParams();
             if (layoutParams instanceof ViewGroup.MarginLayoutParams) {
                 ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) layoutParams;
-                marginLayoutParams.setMargins(marginLayoutParams.leftMargin, (int) context.getResources().getDimension(C3953R.dimen.sud_progress_bar_margin_top), marginLayoutParams.rightMargin, (int) context.getResources().getDimension(C3953R.dimen.sud_progress_bar_margin_bottom));
+                marginLayoutParams.setMargins(marginLayoutParams.leftMargin, (int) context.getResources().getDimension(C3963R.dimen.sud_progress_bar_margin_top), marginLayoutParams.rightMargin, (int) context.getResources().getDimension(C3963R.dimen.sud_progress_bar_margin_bottom));
             }
         }
     }

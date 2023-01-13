@@ -121,7 +121,7 @@ public final class Files {
     }
 
     public static Path createFile(Path path, FileAttribute<?>... fileAttributeArr) throws IOException {
-        newByteChannel(path, EnumSet.m1717of(StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE), fileAttributeArr).close();
+        newByteChannel(path, EnumSet.m1723of(StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE), fileAttributeArr).close();
         return path;
     }
 
@@ -452,7 +452,7 @@ public final class Files {
         try {
             FileTreeWalker.Event walk = fileTreeWalker.walk(path);
             while (true) {
-                int i2 = C43623.$SwitchMap$java$nio$file$FileTreeWalker$EventType[walk.type().ordinal()];
+                int i2 = C43743.$SwitchMap$java$nio$file$FileTreeWalker$EventType[walk.type().ordinal()];
                 if (i2 == 1) {
                     IOException ioeException = walk.ioeException();
                     fileVisitResult = ioeException == null ? fileVisitor.visitFile(walk.file(), walk.attributes()) : fileVisitor.visitFileFailed(walk.file(), ioeException);
@@ -490,7 +490,7 @@ public final class Files {
     }
 
     /* renamed from: java.nio.file.Files$3 */
-    static /* synthetic */ class C43623 {
+    static /* synthetic */ class C43743 {
         static final /* synthetic */ int[] $SwitchMap$java$nio$file$FileTreeWalker$EventType;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(6:0|1|2|3|4|(3:5|6|8)) */
@@ -522,7 +522,7 @@ public final class Files {
             L_0x0028:
                 return
             */
-            throw new UnsupportedOperationException("Method not decompiled: java.nio.file.Files.C43623.<clinit>():void");
+            throw new UnsupportedOperationException("Method not decompiled: java.nio.file.Files.C43743.<clinit>():void");
         }
     }
 

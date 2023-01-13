@@ -56,7 +56,7 @@ public class AppOpsControllerImpl extends BroadcastReceiver implements AppOpsCon
             AppOpsControllerImpl.this.updateSensorDisabledStatus();
         }
     };
-    private C1942H mBGHandler;
+    private C1943H mBGHandler;
     private final List<AppOpsController.Callback> mCallbacks = new ArrayList();
     private final SparseArray<Set<AppOpsController.Callback>> mCallbacksByCode = new SparseArray<>();
     private boolean mCameraDisabled;
@@ -82,7 +82,7 @@ public class AppOpsControllerImpl extends BroadcastReceiver implements AppOpsCon
     public AppOpsControllerImpl(Context context, @Background Looper looper, DumpManager dumpManager, AudioManager audioManager, IndividualSensorPrivacyController individualSensorPrivacyController, BroadcastDispatcher broadcastDispatcher, SystemClock systemClock) {
         this.mDispatcher = broadcastDispatcher;
         this.mAppOps = (AppOpsManager) context.getSystemService("appops");
-        this.mBGHandler = new C1942H(looper);
+        this.mBGHandler = new C1943H(looper);
         boolean z = false;
         for (int put : OPS) {
             this.mCallbacksByCode.put(put, new ArraySet());
@@ -97,7 +97,7 @@ public class AppOpsControllerImpl extends BroadcastReceiver implements AppOpsCon
     }
 
     /* access modifiers changed from: protected */
-    public void setBGHandler(C1942H h) {
+    public void setBGHandler(C1943H h) {
         this.mBGHandler = h;
     }
 
@@ -138,7 +138,7 @@ public class AppOpsControllerImpl extends BroadcastReceiver implements AppOpsCon
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$setListening$0$com-android-systemui-appops-AppOpsControllerImpl */
-    public /* synthetic */ void mo30325x442deb4b() {
+    public /* synthetic */ void mo30335x442deb4b() {
         this.mAudioRecordingCallback.onRecordingConfigChanged(this.mAudioManager.getActiveRecordingConfigurations());
     }
 
@@ -307,7 +307,7 @@ public class AppOpsControllerImpl extends BroadcastReceiver implements AppOpsCon
         L_0x0022:
             monitor-exit(r1)     // Catch:{ all -> 0x0029 }
             if (r0 != 0) goto L_0x0028
-            r3.mo30323x425823ed(r4, r5, r6, r2)
+            r3.mo30333x425823ed(r4, r5, r6, r2)
         L_0x0028:
             return
         L_0x0029:
@@ -412,7 +412,7 @@ public class AppOpsControllerImpl extends BroadcastReceiver implements AppOpsCon
 
     /* access modifiers changed from: private */
     /* renamed from: notifySuscribersWorker */
-    public void mo30323x425823ed(int i, int i2, String str, boolean z) {
+    public void mo30333x425823ed(int i, int i2, String str, boolean z) {
         if (this.mCallbacksByCode.contains(i) && isUserVisible(str)) {
             for (AppOpsController.Callback onActiveStateChanged : this.mCallbacksByCode.get(i)) {
                 onActiveStateChanged.onActiveStateChanged(i, i2, str, z);
@@ -487,7 +487,7 @@ public class AppOpsControllerImpl extends BroadcastReceiver implements AppOpsCon
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onSensorBlockedChanged$2$com-android-systemui-appops-AppOpsControllerImpl */
-    public /* synthetic */ void mo30324xcfa81741(int i, boolean z) {
+    public /* synthetic */ void mo30334xcfa81741(int i, boolean z) {
         if (i == 2) {
             this.mCameraDisabled = z;
         } else {
@@ -507,8 +507,8 @@ public class AppOpsControllerImpl extends BroadcastReceiver implements AppOpsCon
     }
 
     /* renamed from: com.android.systemui.appops.AppOpsControllerImpl$H */
-    protected class C1942H extends Handler {
-        C1942H(Looper looper) {
+    protected class C1943H extends Handler {
+        C1943H(Looper looper) {
             super(looper);
         }
 

@@ -115,7 +115,7 @@ public class ScrollCaptureController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$run$1$com-android-systemui-screenshot-ScrollCaptureController */
-    public /* synthetic */ Object mo37593xfbe3cca5(ScrollCaptureResponse scrollCaptureResponse, CallbackToFutureAdapter.Completer completer) throws Exception {
+    public /* synthetic */ Object mo37594xfbe3cca5(ScrollCaptureResponse scrollCaptureResponse, CallbackToFutureAdapter.Completer completer) throws Exception {
         this.mCaptureCompleter = completer;
         this.mWindowOwner = scrollCaptureResponse.getPackageName();
         this.mCaptureCompleter.addCancellationListener(new ScrollCaptureController$$ExternalSyntheticLambda1(this), this.mBgExecutor);
@@ -125,7 +125,7 @@ public class ScrollCaptureController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$run$0$com-android-systemui-screenshot-ScrollCaptureController */
-    public /* synthetic */ void mo37592xd64fc3a4(ScrollCaptureResponse scrollCaptureResponse) {
+    public /* synthetic */ void mo37593xd64fc3a4(ScrollCaptureResponse scrollCaptureResponse) {
         ListenableFuture<ScrollCaptureClient.Session> start = this.mClient.start(scrollCaptureResponse, Settings.Secure.getFloat(this.mContext.getContentResolver(), SETTING_KEY_MAX_PAGES, 3.0f));
         this.mSessionFuture = start;
         start.addListener(new ScrollCaptureController$$ExternalSyntheticLambda3(this), this.mContext.getMainExecutor());
@@ -174,7 +174,7 @@ public class ScrollCaptureController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$requestNextTile$2$com-android-systemui-screenshot-ScrollCaptureController */
-    public /* synthetic */ void mo37591x1a1bde4b() {
+    public /* synthetic */ void mo37592x1a1bde4b() {
         try {
             onCaptureResult(this.mTileFuture.get());
         } catch (CancellationException unused) {
@@ -206,7 +206,7 @@ public class ScrollCaptureController {
             this.mScrollingUp = false;
         }
         if (!z) {
-            this.mImageTileSet.m2998lambda$addTile$0$comandroidsystemuiscreenshotImageTileSet(new ImageTile(captureResult.image, captureResult.captured));
+            this.mImageTileSet.m3002lambda$addTile$0$comandroidsystemuiscreenshotImageTileSet(new ImageTile(captureResult.image, captureResult.captured));
         }
         Rect gaps = this.mImageTileSet.getGaps();
         if (!gaps.isEmpty()) {
@@ -247,7 +247,7 @@ public class ScrollCaptureController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$finishCapture$3$com-android-systemui-screenshot-ScrollCaptureController */
-    public /* synthetic */ void mo37590x6ef2598f() {
+    public /* synthetic */ void mo37591x6ef2598f() {
         this.mCaptureCompleter.set(new LongScreenshot(this.mSession, this.mImageTileSet));
     }
 }

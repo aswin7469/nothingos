@@ -16,6 +16,6 @@ public final /* synthetic */ class ControlsControllerImpl$$ExternalSyntheticLamb
     }
 
     public final void run() {
-        ControlsControllerImpl.m2617seedFavoritesForComponents$lambda3(this.f$0, this.f$1, this.f$2);
+        ControlsControllerImpl.m2622seedFavoritesForComponents$lambda3(this.f$0, this.f$1, this.f$2);
     }
 }

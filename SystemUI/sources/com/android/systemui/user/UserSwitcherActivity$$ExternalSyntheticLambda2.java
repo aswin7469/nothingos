@@ -11,6 +11,6 @@ public final /* synthetic */ class UserSwitcherActivity$$ExternalSyntheticLambda
     }
 
     public final void onClick(View view) {
-        UserSwitcherActivity.m3298onCreate$lambda3$lambda2(this.f$0, view);
+        UserSwitcherActivity.m3303onCreate$lambda3$lambda2(this.f$0, view);
     }
 }

@@ -12,6 +12,6 @@ public final /* synthetic */ class BubbleCoordinator$$ExternalSyntheticLambda0 i
     }
 
     public final void accept(Object obj) {
-        this.f$0.mo40179x34e6e404((BubblesManager) obj);
+        this.f$0.mo40181x34e6e404((BubblesManager) obj);
     }
 }

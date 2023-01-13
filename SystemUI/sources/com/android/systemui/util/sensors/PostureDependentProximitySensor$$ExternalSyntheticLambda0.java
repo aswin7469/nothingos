@@ -11,6 +11,6 @@ public final /* synthetic */ class PostureDependentProximitySensor$$ExternalSynt
     }
 
     public final void onPostureChanged(int i) {
-        this.f$0.mo47063xb7bbe84e(i);
+        this.f$0.mo47075xb7bbe84e(i);
     }
 }

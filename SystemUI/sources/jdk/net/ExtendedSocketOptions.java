@@ -123,7 +123,7 @@ public final class ExtendedSocketOptions {
             hashSet.add(TCP_QUICKACK);
         }
         if (keepAliveOptSupported) {
-            hashSet.addAll(Set.m1753of(TCP_KEEPCOUNT, TCP_KEEPIDLE, TCP_KEEPINTERVAL));
+            hashSet.addAll(Set.m1759of(TCP_KEEPCOUNT, TCP_KEEPIDLE, TCP_KEEPINTERVAL));
         }
         return Collections.unmodifiableSet(hashSet);
     }

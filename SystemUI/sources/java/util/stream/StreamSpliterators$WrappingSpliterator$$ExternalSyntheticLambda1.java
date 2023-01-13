@@ -12,6 +12,6 @@ public final /* synthetic */ class StreamSpliterators$WrappingSpliterator$$Exter
     }
 
     public final boolean getAsBoolean() {
-        return this.f$0.mo63819xf58cc34f();
+        return this.f$0.mo63875xf58cc34f();
     }
 }

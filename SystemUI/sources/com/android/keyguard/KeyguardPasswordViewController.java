@@ -23,7 +23,7 @@ import com.android.internal.widget.LockPatternUtils;
 import com.android.keyguard.KeyguardMessageAreaController;
 import com.android.keyguard.KeyguardSecurityModel;
 import com.android.settingslib.Utils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.classifier.FalsingCollector;
 import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.util.concurrency.DelayableExecutor;
@@ -64,7 +64,7 @@ public class KeyguardPasswordViewController extends KeyguardAbsKeyInputViewContr
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-keyguard-KeyguardPasswordViewController  reason: not valid java name */
-    public /* synthetic */ boolean m2287lambda$new$0$comandroidkeyguardKeyguardPasswordViewController(TextView textView, int i, KeyEvent keyEvent) {
+    public /* synthetic */ boolean m2293lambda$new$0$comandroidkeyguardKeyguardPasswordViewController(TextView textView, int i, KeyEvent keyEvent) {
         boolean z = keyEvent == null && (i == 0 || i == 6 || i == 5);
         boolean z2 = keyEvent != null && KeyEvent.isConfirmKey(keyEvent.getKeyCode()) && keyEvent.getAction() == 0;
         if (!z && !z2) {
@@ -91,9 +91,9 @@ public class KeyguardPasswordViewController extends KeyguardAbsKeyInputViewContr
         this.mInputMethodManager = inputMethodManager;
         this.mMainExecutor = delayableExecutor;
         this.mKeyguardViewController = keyguardViewController;
-        this.mShowImeAtScreenOn = resources.getBoolean(C1893R.bool.kg_show_ime_at_screen_on);
+        this.mShowImeAtScreenOn = resources.getBoolean(C1894R.bool.kg_show_ime_at_screen_on);
         this.mPasswordEntry = (EditText) ((KeyguardPasswordView) this.mView).findViewById(((KeyguardPasswordView) this.mView).getPasswordTextViewId());
-        this.mSwitchImeButton = (ImageView) ((KeyguardPasswordView) this.mView).findViewById(C1893R.C1897id.switch_ime_button);
+        this.mSwitchImeButton = (ImageView) ((KeyguardPasswordView) this.mView).findViewById(C1894R.C1898id.switch_ime_button);
         this.mLockPatternUtils = lockPatternUtils;
     }
 
@@ -108,7 +108,7 @@ public class KeyguardPasswordViewController extends KeyguardAbsKeyInputViewContr
         this.mPasswordEntry.addTextChangedListener(this.mTextWatcher);
         this.mPasswordEntry.setOnClickListener(new KeyguardPasswordViewController$$ExternalSyntheticLambda2(this));
         this.mSwitchImeButton.setOnClickListener(new KeyguardPasswordViewController$$ExternalSyntheticLambda3(this));
-        View findViewById = ((KeyguardPasswordView) this.mView).findViewById(C1893R.C1897id.cancel_button);
+        View findViewById = ((KeyguardPasswordView) this.mView).findViewById(C1894R.C1898id.cancel_button);
         if (findViewById != null) {
             findViewById.setOnClickListener(new KeyguardPasswordViewController$$ExternalSyntheticLambda4(this));
         }

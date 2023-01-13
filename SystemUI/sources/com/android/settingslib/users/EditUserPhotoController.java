@@ -46,7 +46,7 @@ public class EditUserPhotoController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-settingslib-users-EditUserPhotoController */
-    public /* synthetic */ void mo29237x883584ca(View view) {
+    public /* synthetic */ void mo29242x883584ca(View view) {
         showAvatarPicker();
     }
 
@@ -83,7 +83,7 @@ public class EditUserPhotoController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onDefaultIconSelected$2$com-android-settingslib-users-EditUserPhotoController */
-    public /* synthetic */ void mo29239x9c87bba2(int i) {
+    public /* synthetic */ void mo29244x9c87bba2(int i) {
         Resources resources = this.mActivity.getResources();
         ThreadUtils.postOnMainThread(new EditUserPhotoController$$ExternalSyntheticLambda3(this, UserIcons.convertToBitmapAtUserIconSize(resources, UserIcons.getDefaultUserIconInColor(resources, i))));
     }
@@ -110,7 +110,7 @@ public class EditUserPhotoController {
     /* JADX WARNING: Removed duplicated region for block: B:31:? A[RETURN, SYNTHETIC] */
     /* renamed from: lambda$onPhotoCropped$4$com-android-settingslib-users-EditUserPhotoController */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    public /* synthetic */ void mo29241x34ca5c74(android.net.Uri r6) {
+    public /* synthetic */ void mo29246x34ca5c74(android.net.Uri r6) {
         /*
             r5 = this;
             java.lang.String r0 = "Cannot close image stream"
@@ -161,12 +161,12 @@ public class EditUserPhotoController {
         L_0x0045:
             throw r5
         */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.settingslib.users.EditUserPhotoController.mo29241x34ca5c74(android.net.Uri):void");
+        throw new UnsupportedOperationException("Method not decompiled: com.android.settingslib.users.EditUserPhotoController.mo29246x34ca5c74(android.net.Uri):void");
     }
 
     /* access modifiers changed from: private */
     /* renamed from: onPhotoProcessed */
-    public void mo29240xb760733(Bitmap bitmap) {
+    public void mo29245xb760733(Bitmap bitmap) {
         if (bitmap != null) {
             this.mNewUserPhotoBitmap = bitmap;
             CircleFramedDrawable instance = CircleFramedDrawable.getInstance(this.mImageView.getContext(), this.mNewUserPhotoBitmap);

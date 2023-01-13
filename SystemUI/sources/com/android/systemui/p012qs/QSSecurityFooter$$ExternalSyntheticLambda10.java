@@ -12,6 +12,6 @@ public final /* synthetic */ class QSSecurityFooter$$ExternalSyntheticLambda10 i
     }
 
     public final Object get() {
-        return this.f$0.m2929lambda$new$12$comandroidsystemuiqsQSSecurityFooter();
+        return this.f$0.m2934lambda$new$12$comandroidsystemuiqsQSSecurityFooter();
     }
 }

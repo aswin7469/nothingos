@@ -6,8 +6,8 @@ import java.util.Objects;
 public final class Libcore {
 
     /* renamed from: os */
-    public static volatile C4699Os f857os;
-    public static final C4699Os rawOs;
+    public static volatile C4711Os f855os;
+    public static final C4711Os rawOs;
 
     private Libcore() {
     }
@@ -15,25 +15,25 @@ public final class Libcore {
     static {
         Linux linux = new Linux();
         rawOs = linux;
-        f857os = new BlockGuardOs(linux);
+        f855os = new BlockGuardOs(linux);
     }
 
-    public static C4699Os getOs() {
-        return f857os;
+    public static C4711Os getOs() {
+        return f855os;
     }
 
-    public static boolean compareAndSetOs(C4699Os os, C4699Os os2) {
+    public static boolean compareAndSetOs(C4711Os os, C4711Os os2) {
         Objects.requireNonNull(os2);
         boolean z = false;
-        if (f857os != os) {
+        if (f855os != os) {
             return false;
         }
         synchronized (Libcore.class) {
-            if (f857os == os) {
+            if (f855os == os) {
                 z = true;
             }
             if (z) {
-                f857os = os2;
+                f855os = os2;
             }
         }
         return z;

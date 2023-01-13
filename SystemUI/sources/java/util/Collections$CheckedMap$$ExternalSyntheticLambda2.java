@@ -14,6 +14,6 @@ public final /* synthetic */ class Collections$CheckedMap$$ExternalSyntheticLamb
     }
 
     public final Object apply(Object obj, Object obj2) {
-        return this.f$0.m3738lambda$typeCheck$0$javautilCollections$CheckedMap(this.f$1, obj, obj2);
+        return this.f$0.m3756lambda$typeCheck$0$javautilCollections$CheckedMap(this.f$1, obj, obj2);
     }
 }

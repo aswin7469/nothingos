@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import com.android.internal.policy.SystemBarUtils;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.animation.ActivityLaunchAnimator;
 import com.android.systemui.animation.DelegateLaunchAnimatorController;
 import com.android.systemui.dagger.SysUISingleton;
@@ -48,7 +48,7 @@ public class StatusBarWindowController {
         this.mIWindowManager = iWindowManager;
         this.mContentInsetsProvider = statusBarContentInsetsProvider;
         this.mStatusBarWindowView = statusBarWindowView;
-        this.mLaunchAnimationContainer = (ViewGroup) statusBarWindowView.findViewById(C1893R.C1897id.status_bar_launch_animation_container);
+        this.mLaunchAnimationContainer = (ViewGroup) statusBarWindowView.findViewById(C1894R.C1898id.status_bar_launch_animation_container);
         this.mLpChanged = new WindowManager.LayoutParams();
         if (this.mBarHeight < 0) {
             this.mBarHeight = SystemBarUtils.getStatusBarHeight(context);
@@ -58,13 +58,13 @@ public class StatusBarWindowController {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$1$com-android-systemui-statusbar-window-StatusBarWindowController */
-    public /* synthetic */ void mo46272xe1f6d108(UnfoldTransitionProgressProvider unfoldTransitionProgressProvider) {
+    public /* synthetic */ void mo46284xe1f6d108(UnfoldTransitionProgressProvider unfoldTransitionProgressProvider) {
         unfoldTransitionProgressProvider.addCallback(new JankMonitorTransitionProgressListener(new StatusBarWindowController$$ExternalSyntheticLambda1(this)));
     }
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$new$0$com-android-systemui-statusbar-window-StatusBarWindowController */
-    public /* synthetic */ View mo46271x94375907() {
+    public /* synthetic */ View mo46283x94375907() {
         return this.mStatusBarWindowView;
     }
 
@@ -97,7 +97,7 @@ public class StatusBarWindowController {
     }
 
     public View getBackgroundView() {
-        return this.mStatusBarWindowView.findViewById(C1893R.C1897id.status_bar_container);
+        return this.mStatusBarWindowView.findViewById(C1894R.C1898id.status_bar_container);
     }
 
     public FragmentHostManager getFragmentHostManager() {
@@ -109,7 +109,7 @@ public class StatusBarWindowController {
             return Optional.empty();
         }
         controller.setLaunchContainer(this.mLaunchAnimationContainer);
-        return Optional.m1745of(new DelegateLaunchAnimatorController(controller) {
+        return Optional.m1751of(new DelegateLaunchAnimatorController(controller) {
             public void onLaunchAnimationStart(boolean z) {
                 getDelegate().onLaunchAnimationStart(z);
                 StatusBarWindowController.this.setLaunchAnimationRunning(true);

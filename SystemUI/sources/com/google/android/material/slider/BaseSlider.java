@@ -35,7 +35,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import androidx.customview.widget.ExploreByTouchHelper;
 import com.android.systemui.navigationbar.NavigationBarInflaterView;
-import com.google.android.material.C3621R;
+import com.google.android.material.C3631R;
 import com.google.android.material.animation.AnimationUtils;
 import com.google.android.material.drawable.DrawableUtils;
 import com.google.android.material.internal.DescendantOffsetUtils;
@@ -58,7 +58,7 @@ import java.util.Iterator;
 import java.util.List;
 
 abstract class BaseSlider<S extends BaseSlider<S, L, T>, L extends BaseOnChangeListener<S>, T extends BaseOnSliderTouchListener<S>> extends View {
-    static final int DEF_STYLE_RES = C3621R.style.Widget_MaterialComponents_Slider;
+    static final int DEF_STYLE_RES = C3631R.style.Widget_MaterialComponents_Slider;
     private static final String EXCEPTION_ILLEGAL_DISCRETE_VALUE = "Value(%s) must be equal to valueFrom(%s) plus a multiple of stepSize(%s) when using stepSize(%s)";
     private static final String EXCEPTION_ILLEGAL_MIN_SEPARATION = "minSeparation(%s) must be greater or equal to 0";
     private static final String EXCEPTION_ILLEGAL_MIN_SEPARATION_STEP_SIZE = "minSeparation(%s) must be greater or equal and a multiple of stepSize(%s) when using stepSize(%s)";
@@ -146,7 +146,7 @@ abstract class BaseSlider<S extends BaseSlider<S, L, T>, L extends BaseOnChangeL
     }
 
     public BaseSlider(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, C3621R.attr.sliderStyle);
+        this(context, attributeSet, C3631R.attr.sliderStyle);
     }
 
     public BaseSlider(Context context, final AttributeSet attributeSet, final int i) {
@@ -193,7 +193,7 @@ abstract class BaseSlider<S extends BaseSlider<S, L, T>, L extends BaseOnChangeL
         loadResources(context2.getResources());
         this.labelMaker = new TooltipDrawableFactory() {
             public TooltipDrawable createTooltipDrawable() {
-                TypedArray obtainStyledAttributes = ThemeEnforcement.obtainStyledAttributes(BaseSlider.this.getContext(), attributeSet, C3621R.styleable.Slider, i, BaseSlider.DEF_STYLE_RES, new int[0]);
+                TypedArray obtainStyledAttributes = ThemeEnforcement.obtainStyledAttributes(BaseSlider.this.getContext(), attributeSet, C3631R.styleable.Slider, i, BaseSlider.DEF_STYLE_RES, new int[0]);
                 TooltipDrawable access$000 = BaseSlider.parseLabelDrawable(BaseSlider.this.getContext(), obtainStyledAttributes);
                 obtainStyledAttributes.recycle();
                 return access$000;
@@ -211,64 +211,64 @@ abstract class BaseSlider<S extends BaseSlider<S, L, T>, L extends BaseOnChangeL
     }
 
     private void loadResources(Resources resources) {
-        this.widgetHeight = resources.getDimensionPixelSize(C3621R.dimen.mtrl_slider_widget_height);
-        int dimensionPixelOffset = resources.getDimensionPixelOffset(C3621R.dimen.mtrl_slider_track_side_padding);
+        this.widgetHeight = resources.getDimensionPixelSize(C3631R.dimen.mtrl_slider_widget_height);
+        int dimensionPixelOffset = resources.getDimensionPixelOffset(C3631R.dimen.mtrl_slider_track_side_padding);
         this.minTrackSidePadding = dimensionPixelOffset;
         this.trackSidePadding = dimensionPixelOffset;
-        this.defaultThumbRadius = resources.getDimensionPixelSize(C3621R.dimen.mtrl_slider_thumb_radius);
-        this.trackTop = resources.getDimensionPixelOffset(C3621R.dimen.mtrl_slider_track_top);
-        this.labelPadding = resources.getDimensionPixelSize(C3621R.dimen.mtrl_slider_label_padding);
+        this.defaultThumbRadius = resources.getDimensionPixelSize(C3631R.dimen.mtrl_slider_thumb_radius);
+        this.trackTop = resources.getDimensionPixelOffset(C3631R.dimen.mtrl_slider_track_top);
+        this.labelPadding = resources.getDimensionPixelSize(C3631R.dimen.mtrl_slider_label_padding);
     }
 
     private void processAttributes(Context context, AttributeSet attributeSet, int i) {
-        TypedArray obtainStyledAttributes = ThemeEnforcement.obtainStyledAttributes(context, attributeSet, C3621R.styleable.Slider, i, DEF_STYLE_RES, new int[0]);
-        this.valueFrom = obtainStyledAttributes.getFloat(C3621R.styleable.Slider_android_valueFrom, 0.0f);
-        this.valueTo = obtainStyledAttributes.getFloat(C3621R.styleable.Slider_android_valueTo, 1.0f);
+        TypedArray obtainStyledAttributes = ThemeEnforcement.obtainStyledAttributes(context, attributeSet, C3631R.styleable.Slider, i, DEF_STYLE_RES, new int[0]);
+        this.valueFrom = obtainStyledAttributes.getFloat(C3631R.styleable.Slider_android_valueFrom, 0.0f);
+        this.valueTo = obtainStyledAttributes.getFloat(C3631R.styleable.Slider_android_valueTo, 1.0f);
         setValues(Float.valueOf(this.valueFrom));
-        this.stepSize = obtainStyledAttributes.getFloat(C3621R.styleable.Slider_android_stepSize, 0.0f);
-        boolean hasValue = obtainStyledAttributes.hasValue(C3621R.styleable.Slider_trackColor);
-        int i2 = hasValue ? C3621R.styleable.Slider_trackColor : C3621R.styleable.Slider_trackColorInactive;
-        int i3 = hasValue ? C3621R.styleable.Slider_trackColor : C3621R.styleable.Slider_trackColorActive;
+        this.stepSize = obtainStyledAttributes.getFloat(C3631R.styleable.Slider_android_stepSize, 0.0f);
+        boolean hasValue = obtainStyledAttributes.hasValue(C3631R.styleable.Slider_trackColor);
+        int i2 = hasValue ? C3631R.styleable.Slider_trackColor : C3631R.styleable.Slider_trackColorInactive;
+        int i3 = hasValue ? C3631R.styleable.Slider_trackColor : C3631R.styleable.Slider_trackColorActive;
         ColorStateList colorStateList = MaterialResources.getColorStateList(context, obtainStyledAttributes, i2);
         if (colorStateList == null) {
-            colorStateList = AppCompatResources.getColorStateList(context, C3621R.C3622color.material_slider_inactive_track_color);
+            colorStateList = AppCompatResources.getColorStateList(context, C3631R.C3632color.material_slider_inactive_track_color);
         }
         setTrackInactiveTintList(colorStateList);
         ColorStateList colorStateList2 = MaterialResources.getColorStateList(context, obtainStyledAttributes, i3);
         if (colorStateList2 == null) {
-            colorStateList2 = AppCompatResources.getColorStateList(context, C3621R.C3622color.material_slider_active_track_color);
+            colorStateList2 = AppCompatResources.getColorStateList(context, C3631R.C3632color.material_slider_active_track_color);
         }
         setTrackActiveTintList(colorStateList2);
-        this.defaultThumbDrawable.setFillColor(MaterialResources.getColorStateList(context, obtainStyledAttributes, C3621R.styleable.Slider_thumbColor));
-        if (obtainStyledAttributes.hasValue(C3621R.styleable.Slider_thumbStrokeColor)) {
-            setThumbStrokeColor(MaterialResources.getColorStateList(context, obtainStyledAttributes, C3621R.styleable.Slider_thumbStrokeColor));
+        this.defaultThumbDrawable.setFillColor(MaterialResources.getColorStateList(context, obtainStyledAttributes, C3631R.styleable.Slider_thumbColor));
+        if (obtainStyledAttributes.hasValue(C3631R.styleable.Slider_thumbStrokeColor)) {
+            setThumbStrokeColor(MaterialResources.getColorStateList(context, obtainStyledAttributes, C3631R.styleable.Slider_thumbStrokeColor));
         }
-        setThumbStrokeWidth(obtainStyledAttributes.getDimension(C3621R.styleable.Slider_thumbStrokeWidth, 0.0f));
-        ColorStateList colorStateList3 = MaterialResources.getColorStateList(context, obtainStyledAttributes, C3621R.styleable.Slider_haloColor);
+        setThumbStrokeWidth(obtainStyledAttributes.getDimension(C3631R.styleable.Slider_thumbStrokeWidth, 0.0f));
+        ColorStateList colorStateList3 = MaterialResources.getColorStateList(context, obtainStyledAttributes, C3631R.styleable.Slider_haloColor);
         if (colorStateList3 == null) {
-            colorStateList3 = AppCompatResources.getColorStateList(context, C3621R.C3622color.material_slider_halo_color);
+            colorStateList3 = AppCompatResources.getColorStateList(context, C3631R.C3632color.material_slider_halo_color);
         }
         setHaloTintList(colorStateList3);
-        this.tickVisible = obtainStyledAttributes.getBoolean(C3621R.styleable.Slider_tickVisible, true);
-        boolean hasValue2 = obtainStyledAttributes.hasValue(C3621R.styleable.Slider_tickColor);
-        int i4 = hasValue2 ? C3621R.styleable.Slider_tickColor : C3621R.styleable.Slider_tickColorInactive;
-        int i5 = hasValue2 ? C3621R.styleable.Slider_tickColor : C3621R.styleable.Slider_tickColorActive;
+        this.tickVisible = obtainStyledAttributes.getBoolean(C3631R.styleable.Slider_tickVisible, true);
+        boolean hasValue2 = obtainStyledAttributes.hasValue(C3631R.styleable.Slider_tickColor);
+        int i4 = hasValue2 ? C3631R.styleable.Slider_tickColor : C3631R.styleable.Slider_tickColorInactive;
+        int i5 = hasValue2 ? C3631R.styleable.Slider_tickColor : C3631R.styleable.Slider_tickColorActive;
         ColorStateList colorStateList4 = MaterialResources.getColorStateList(context, obtainStyledAttributes, i4);
         if (colorStateList4 == null) {
-            colorStateList4 = AppCompatResources.getColorStateList(context, C3621R.C3622color.material_slider_inactive_tick_marks_color);
+            colorStateList4 = AppCompatResources.getColorStateList(context, C3631R.C3632color.material_slider_inactive_tick_marks_color);
         }
         setTickInactiveTintList(colorStateList4);
         ColorStateList colorStateList5 = MaterialResources.getColorStateList(context, obtainStyledAttributes, i5);
         if (colorStateList5 == null) {
-            colorStateList5 = AppCompatResources.getColorStateList(context, C3621R.C3622color.material_slider_active_tick_marks_color);
+            colorStateList5 = AppCompatResources.getColorStateList(context, C3631R.C3632color.material_slider_active_tick_marks_color);
         }
         setTickActiveTintList(colorStateList5);
-        setThumbRadius(obtainStyledAttributes.getDimensionPixelSize(C3621R.styleable.Slider_thumbRadius, 0));
-        setHaloRadius(obtainStyledAttributes.getDimensionPixelSize(C3621R.styleable.Slider_haloRadius, 0));
-        setThumbElevation(obtainStyledAttributes.getDimension(C3621R.styleable.Slider_thumbElevation, 0.0f));
-        setTrackHeight(obtainStyledAttributes.getDimensionPixelSize(C3621R.styleable.Slider_trackHeight, 0));
-        setLabelBehavior(obtainStyledAttributes.getInt(C3621R.styleable.Slider_labelBehavior, 0));
-        if (!obtainStyledAttributes.getBoolean(C3621R.styleable.Slider_android_enabled, true)) {
+        setThumbRadius(obtainStyledAttributes.getDimensionPixelSize(C3631R.styleable.Slider_thumbRadius, 0));
+        setHaloRadius(obtainStyledAttributes.getDimensionPixelSize(C3631R.styleable.Slider_haloRadius, 0));
+        setThumbElevation(obtainStyledAttributes.getDimension(C3631R.styleable.Slider_thumbElevation, 0.0f));
+        setTrackHeight(obtainStyledAttributes.getDimensionPixelSize(C3631R.styleable.Slider_trackHeight, 0));
+        setLabelBehavior(obtainStyledAttributes.getInt(C3631R.styleable.Slider_labelBehavior, 0));
+        if (!obtainStyledAttributes.getBoolean(C3631R.styleable.Slider_android_enabled, true)) {
             setEnabled(false);
         }
         obtainStyledAttributes.recycle();
@@ -276,7 +276,7 @@ abstract class BaseSlider<S extends BaseSlider<S, L, T>, L extends BaseOnChangeL
 
     /* access modifiers changed from: private */
     public static TooltipDrawable parseLabelDrawable(Context context, TypedArray typedArray) {
-        return TooltipDrawable.createFromAttributes(context, (AttributeSet) null, 0, typedArray.getResourceId(C3621R.styleable.Slider_labelStyle, C3621R.style.Widget_MaterialComponents_Tooltip));
+        return TooltipDrawable.createFromAttributes(context, (AttributeSet) null, 0, typedArray.getResourceId(C3631R.styleable.Slider_labelStyle, C3631R.style.Widget_MaterialComponents_Tooltip));
     }
 
     private void maybeIncreaseTrackSidePadding() {
@@ -1730,9 +1730,9 @@ abstract class BaseSlider<S extends BaseSlider<S, L, T>, L extends BaseOnChangeL
 
         private String startOrEndDescription(int i) {
             if (i == this.slider.getValues().size() - 1) {
-                return this.slider.getContext().getString(C3621R.string.material_slider_range_end);
+                return this.slider.getContext().getString(C3631R.string.material_slider_range_end);
             }
-            return i == 0 ? this.slider.getContext().getString(C3621R.string.material_slider_range_start) : "";
+            return i == 0 ? this.slider.getContext().getString(C3631R.string.material_slider_range_start) : "";
         }
 
         /* access modifiers changed from: protected */

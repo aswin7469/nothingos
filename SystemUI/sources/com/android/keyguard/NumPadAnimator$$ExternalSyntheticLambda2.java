@@ -11,6 +11,6 @@ public final /* synthetic */ class NumPadAnimator$$ExternalSyntheticLambda2 impl
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        this.f$0.m2306lambda$createAnimators$2$comandroidkeyguardNumPadAnimator(valueAnimator);
+        this.f$0.m2312lambda$createAnimators$2$comandroidkeyguardNumPadAnimator(valueAnimator);
     }
 }

@@ -9,6 +9,6 @@ public final /* synthetic */ class NotificationLockscreenUserManagerImpl$$Extern
     }
 
     public final void run() {
-        this.f$0.mo38761x1ee04e87();
+        this.f$0.mo38762x1ee04e87();
     }
 }

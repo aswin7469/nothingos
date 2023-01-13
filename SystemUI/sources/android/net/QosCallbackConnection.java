@@ -53,7 +53,7 @@ class QosCallbackConnection extends IQosCallback.Stub {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onQosSessionLost$2$android-net-QosCallbackConnection  reason: not valid java name */
-    public /* synthetic */ void m1930lambda$onQosSessionLost$2$androidnetQosCallbackConnection(QosSession qosSession) {
+    public /* synthetic */ void m1936lambda$onQosSessionLost$2$androidnetQosCallbackConnection(QosSession qosSession) {
         QosCallback qosCallback = this.mCallback;
         if (qosCallback != null) {
             qosCallback.onQosSessionLost(qosSession);
@@ -66,7 +66,7 @@ class QosCallbackConnection extends IQosCallback.Stub {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$onError$3$android-net-QosCallbackConnection  reason: not valid java name */
-    public /* synthetic */ void m1929lambda$onError$3$androidnetQosCallbackConnection(int i) {
+    public /* synthetic */ void m1935lambda$onError$3$androidnetQosCallbackConnection(int i) {
         QosCallback qosCallback = this.mCallback;
         if (qosCallback != null) {
             stopReceivingMessages();

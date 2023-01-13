@@ -19,6 +19,6 @@ public final /* synthetic */ class HeadsUpViewBinder$$ExternalSyntheticLambda1 i
     }
 
     public final void onBindFinished(NotificationEntry notificationEntry) {
-        this.f$0.mo40707xea628d4a(this.f$1, this.f$2, this.f$3, notificationEntry);
+        this.f$0.mo40710xea628d4a(this.f$1, this.f$2, this.f$3, notificationEntry);
     }
 }

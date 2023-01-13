@@ -9,7 +9,7 @@ import android.util.ArrayMap;
 import android.view.View;
 import com.android.internal.logging.UiEventLogger;
 import com.android.settingslib.datetime.ZoneGetter;
-import com.android.systemui.C1893R;
+import com.android.systemui.C1894R;
 import com.android.systemui.Dependency;
 import com.android.systemui.FontSizeUtils;
 import com.android.systemui.battery.BatteryMeterView;
@@ -49,7 +49,7 @@ public class NTQSStatusBarController extends ViewController<NTQSStatusBar> {
     private final ConfigurationController.ConfigurationListener mConfigurationListener = new ConfigurationController.ConfigurationListener() {
         public void onDensityOrFontScaleChanged() {
             NTQSStatusBarController.this.mClock.onDensityOrFontScaleChanged();
-            FontSizeUtils.updateFontSize(NTQSStatusBarController.this.mDate, C1893R.dimen.status_bar_clock_size);
+            FontSizeUtils.updateFontSize(NTQSStatusBarController.this.mDate, C1894R.dimen.status_bar_clock_size);
         }
     };
     /* access modifiers changed from: private */
@@ -75,7 +75,7 @@ public class NTQSStatusBarController extends ViewController<NTQSStatusBar> {
                 boolean booleanExtra = intent.getBooleanExtra("show_ui", false);
                 int intExtra = intent.getIntExtra("mic_mode", 0);
                 boolean booleanExtra2 = intent.getBooleanExtra("speaker_mode", false);
-                NTLogUtil.m1682i(NTQSStatusBarController.TAG, "pkg = " + stringExtra + ", showUI = " + booleanExtra + ",mic_mode = " + intExtra + ",speake_mode = " + booleanExtra2);
+                NTLogUtil.m1688i(NTQSStatusBarController.TAG, "pkg = " + stringExtra + ", showUI = " + booleanExtra + ",mic_mode = " + intExtra + ",speake_mode = " + booleanExtra2);
                 if (!booleanExtra || TextUtils.isEmpty(stringExtra)) {
                     NTQSStatusBarController.this.mMicModeInfoList.remove(stringExtra);
                 } else {
@@ -157,16 +157,16 @@ public class NTQSStatusBarController extends ViewController<NTQSStatusBar> {
         this.mContext = context;
         this.mBatteryMeterViewController = batteryMeterViewController;
         batteryMeterViewController.ignoreTunerUpdates();
-        this.mBatteryRemainingIcon = (BatteryMeterView) ((NTQSStatusBar) this.mView).findViewById(C1893R.C1897id.qs_batteryRemainingIcon);
-        this.mClock = (Clock) ((NTQSStatusBar) this.mView).findViewById(C1893R.C1897id.qs_clock);
-        this.mDate = (DateView) ((NTQSStatusBar) this.mView).findViewById(C1893R.C1897id.qs_date);
+        this.mBatteryRemainingIcon = (BatteryMeterView) ((NTQSStatusBar) this.mView).findViewById(C1894R.C1898id.qs_batteryRemainingIcon);
+        this.mClock = (Clock) ((NTQSStatusBar) this.mView).findViewById(C1894R.C1898id.qs_clock);
+        this.mDate = (DateView) ((NTQSStatusBar) this.mView).findViewById(C1894R.C1898id.qs_date);
         this.mPrivacyDialogController = privacyDialogController;
         this.mPrivacyItemController = privacyItemController;
-        OngoingPrivacyChip ongoingPrivacyChip = (OngoingPrivacyChip) ((NTQSStatusBar) this.mView).findViewById(C1893R.C1897id.privacy_chip);
+        OngoingPrivacyChip ongoingPrivacyChip = (OngoingPrivacyChip) ((NTQSStatusBar) this.mView).findViewById(C1894R.C1898id.privacy_chip);
         this.mPrivacyChip = ongoingPrivacyChip;
-        ongoingPrivacyChip.setTag(context.getString(C1893R.string.nt_qs_header_privacy_icons));
+        ongoingPrivacyChip.setTag(context.getString(C1894R.string.nt_qs_header_privacy_icons));
         this.mConfigurationController = configurationController;
-        this.mIconContainer = (StatusIconContainer) ((NTQSStatusBar) this.mView).findViewById(C1893R.C1897id.qs_statusIcons);
+        this.mIconContainer = (StatusIconContainer) ((NTQSStatusBar) this.mView).findViewById(C1894R.C1898id.qs_statusIcons);
         this.mFeatureFlags = (FeatureFlags) Dependency.get(FeatureFlags.class);
         this.mIconManager = new StatusBarIconController.TintedIconManager(this.mIconContainer, this.mFeatureFlags);
         this.mStatusBarIconController = (StatusBarIconController) Dependency.get(StatusBarIconController.class);
@@ -223,7 +223,7 @@ public class NTQSStatusBarController extends ViewController<NTQSStatusBar> {
             i = 8;
         }
         ongoingPrivacyChip.setVisibility(i);
-        NTLogUtil.m1682i(TAG, "setChipVisibility " + this.mChipVisible);
+        NTLogUtil.m1688i(TAG, "setChipVisibility " + this.mChipVisible);
         if (z) {
             this.mIconContainer.setMaxIconsToDisplay(5);
             this.mIconContainer.requestLayout();

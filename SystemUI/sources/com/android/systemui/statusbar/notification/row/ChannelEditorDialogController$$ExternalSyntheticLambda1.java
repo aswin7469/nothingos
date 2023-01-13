@@ -13,6 +13,6 @@ public final /* synthetic */ class ChannelEditorDialogController$$ExternalSynthe
     }
 
     public final void onShow(DialogInterface dialogInterface) {
-        ChannelEditorDialogController.m3135initDialog$lambda9$lambda4(this.f$0, this.f$1, dialogInterface);
+        ChannelEditorDialogController.m3139initDialog$lambda9$lambda4(this.f$0, this.f$1, dialogInterface);
     }
 }

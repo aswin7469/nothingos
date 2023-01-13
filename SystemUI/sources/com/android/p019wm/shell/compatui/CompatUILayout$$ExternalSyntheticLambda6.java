@@ -12,6 +12,6 @@ public final /* synthetic */ class CompatUILayout$$ExternalSyntheticLambda6 impl
     }
 
     public final boolean onLongClick(View view) {
-        return this.f$0.mo49380xb1d0cf07(view);
+        return this.f$0.mo49389xb1d0cf07(view);
     }
 }

@@ -9,6 +9,6 @@ public final /* synthetic */ class MediaCarouselScrollHandler$$ExternalSynthetic
     }
 
     public final void run() {
-        MediaCarouselScrollHandler.m2775onTouch$lambda1(this.f$0);
+        MediaCarouselScrollHandler.m2780onTouch$lambda1(this.f$0);
     }
 }

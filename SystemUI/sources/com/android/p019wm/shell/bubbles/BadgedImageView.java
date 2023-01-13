@@ -19,7 +19,7 @@ import android.widget.ImageView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import com.android.launcher3.icons.DotRenderer;
 import com.android.launcher3.icons.IconNormalizer;
-import com.android.p019wm.shell.C3343R;
+import com.android.p019wm.shell.C3353R;
 import com.android.p019wm.shell.animation.Interpolators;
 import java.util.EnumSet;
 
@@ -65,16 +65,16 @@ public class BadgedImageView extends ConstraintLayout {
 
     public BadgedImageView(Context context, AttributeSet attributeSet, int i, int i2) {
         super(context, attributeSet, i, i2);
-        this.mDotSuppressionFlags = EnumSet.m1716of(SuppressionFlag.FLYOUT_VISIBLE);
+        this.mDotSuppressionFlags = EnumSet.m1722of(SuppressionFlag.FLYOUT_VISIBLE);
         this.mDotScale = 0.0f;
         this.mAnimatingToDotScale = 0.0f;
         this.mDotIsAnimating = false;
         this.mTempBounds = new Rect();
         setLayoutDirection(0);
-        LayoutInflater.from(context).inflate(C3343R.layout.badged_image_view, this);
-        ImageView imageView = (ImageView) findViewById(C3343R.C3346id.icon_view);
+        LayoutInflater.from(context).inflate(C3353R.layout.badged_image_view, this);
+        ImageView imageView = (ImageView) findViewById(C3353R.C3356id.icon_view);
         this.mBubbleIcon = imageView;
-        this.mAppIcon = (ImageView) findViewById(C3343R.C3346id.app_icon_view);
+        this.mAppIcon = (ImageView) findViewById(C3353R.C3356id.app_icon_view);
         TypedArray obtainStyledAttributes = this.mContext.obtainStyledAttributes(attributeSet, new int[]{16843033}, i, i2);
         imageView.setImageResource(obtainStyledAttributes.getResourceId(0, 0));
         obtainStyledAttributes.recycle();
@@ -225,7 +225,7 @@ public class BadgedImageView extends ConstraintLayout {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$animateDotBadgePositions$0$com-android-wm-shell-bubbles-BadgedImageView */
-    public /* synthetic */ void mo48239x5bd4d39b() {
+    public /* synthetic */ void mo48248x5bd4d39b() {
         invalidate();
         animateDotScale(1.0f, (Runnable) null);
     }
@@ -258,7 +258,7 @@ public class BadgedImageView extends ConstraintLayout {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$animateDotScale$1$com-android-wm-shell-bubbles-BadgedImageView */
-    public /* synthetic */ void mo48240x608b2681(boolean z, ValueAnimator valueAnimator) {
+    public /* synthetic */ void mo48249x608b2681(boolean z, ValueAnimator valueAnimator) {
         float animatedFraction = valueAnimator.getAnimatedFraction();
         if (!z) {
             animatedFraction = 1.0f - animatedFraction;
@@ -268,7 +268,7 @@ public class BadgedImageView extends ConstraintLayout {
 
     /* access modifiers changed from: package-private */
     /* renamed from: lambda$animateDotScale$2$com-android-wm-shell-bubbles-BadgedImageView */
-    public /* synthetic */ void mo48241x1a02b420(boolean z, Runnable runnable) {
+    public /* synthetic */ void mo48250x1a02b420(boolean z, Runnable runnable) {
         setDotScale(z ? 1.0f : 0.0f);
         this.mDotIsAnimating = false;
         if (runnable != null) {
